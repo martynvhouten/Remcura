@@ -1,0 +1,48 @@
+{
+  "name": "medstock-pro",
+  "version": "1.0.0",
+  "description": "MedStock Pro - Professional medical supply inventory management system",
+  "private": true,
+  "scripts": {
+    "dev": "quasar dev",
+    "build": "quasar build",
+    "lint": "eslint --ext .js,.ts,.vue ./",
+    "format": "prettier --write \"**/*.{js,ts,vue,scss,html,md,json}\" --ignore-path .gitignore",
+    "test": "echo \"No test specified\" && exit 0",
+    "test:unit": "vitest",
+    "test:unit:ci": "vitest run"
+  },
+  "dependencies": {
+    "@quasar/extras": "^1.16.4",
+    "@supabase/supabase-js": "^2.39.0",
+    "pinia": "^2.0.11",
+    "quasar": "^2.6.0",
+    "vue": "^3.5.17",
+    "vue-i18n": "^9.2.2",
+    "vue-router": "^4.0.0"
+  },
+  "devDependencies": {
+    "@fullhuman/postcss-purgecss": "^7.0.2",
+    "@intlify/vite-plugin-vue-i18n": "^7.0.0",
+    "@quasar/app-vite": "^2.2.1",
+    "@types/node": "^18.0.0",
+    "@typescript-eslint/eslint-plugin": "^5.62.0",
+    "@typescript-eslint/parser": "^5.62.0",
+    "@vue/eslint-config-typescript": "^12.0.0",
+    "@vue/test-utils": "^2.0.0",
+    "autoprefixer": "^10.4.21",
+    "eslint": "^8.10.0",
+    "eslint-config-prettier": "^8.1.0",
+    "eslint-plugin-vue": "^9.33.0",
+    "eslint-webpack-plugin": "^5.0.2",
+    "postcss-import": "^16.1.1",
+    "prettier": "^2.5.1",
+    "typescript": "^5.8.3",
+    "vitest": "^3.2.4"
+  },
+  "engines": {
+    "node": "^18 || ^16 || ^14.19",
+    "npm": ">= 6.13.4",
+    "yarn": ">= 1.21.1"
+  }
+}
