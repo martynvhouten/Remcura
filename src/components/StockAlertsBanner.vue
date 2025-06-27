@@ -9,13 +9,13 @@
       >
         <div class="notification-icon">
           <q-icon name="warning" size="16px" />
-        </div>
+            </div>
         <div class="notification-content">
           <div class="notification-title">Low Stock</div>
           <div class="notification-message">
             {{ lowStockCount }} {{ lowStockCount === 1 ? 'product needs' : 'products need' }} attention
-          </div>
-        </div>
+            </div>
+      </div>
         <q-btn
           flat
           round
@@ -24,9 +24,9 @@
           icon="close"
           @click.stop="dismissLowStockAlert"
           class="notification-dismiss"
-        >
+              >
           <q-tooltip>Dismiss</q-tooltip>
-        </q-btn>
+              </q-btn>
       </div>
     </Transition>
 
@@ -39,13 +39,13 @@
       >
         <div class="notification-icon">
           <q-icon name="error" size="16px" />
-        </div>
+            </div>
         <div class="notification-content">
           <div class="notification-title">Out of Stock</div>
           <div class="notification-message">
             {{ outOfStockCount }} {{ outOfStockCount === 1 ? 'product is' : 'products are' }} unavailable
-          </div>
-        </div>
+            </div>
+      </div>
         <q-btn
           flat
           round
@@ -54,9 +54,9 @@
           icon="close"
           @click.stop="dismissOutOfStockAlert"
           class="notification-dismiss"
-        >
+              >
           <q-tooltip>Dismiss</q-tooltip>
-        </q-btn>
+              </q-btn>
       </div>
     </Transition>
   </div>
@@ -179,9 +179,9 @@ watch(() => outOfStockCount.value, (newCount: number, oldCount: number) => {
   width: 32px;
   height: 32px;
   border-radius: 8px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
   flex-shrink: 0;
 }
 
@@ -206,8 +206,8 @@ watch(() => outOfStockCount.value, (newCount: number, oldCount: number) => {
 .notification-dismiss {
   color: #94a3b8;
   flex-shrink: 0;
-  
-  &:hover {
+      
+      &:hover {
     background: rgba(148, 163, 184, 0.1);
     color: #64748b;
   }
@@ -247,7 +247,7 @@ watch(() => outOfStockCount.value, (newCount: number, oldCount: number) => {
 }
 
 .notification-slide-leave-to {
-  opacity: 0;
+    opacity: 0;
   transform: translateX(100%);
 }
 
