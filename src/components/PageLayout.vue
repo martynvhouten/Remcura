@@ -58,9 +58,10 @@ const pageClasses = computed(() => {
     if (!props.noBottomPadding) classes.push(`q-pb-${props.verticalSpacing}`)
   }
   
-  if (!props.noHorizontalPadding) {
-    classes.push(`q-px-${props.padding}`)
-  }
+  // Remove horizontal padding from Quasar classes - we handle it in CSS
+  // if (!props.noHorizontalPadding) {
+  //   classes.push(`q-px-${props.padding}`)
+  // }
   
   return classes
 })
@@ -93,9 +94,14 @@ const containerStyles = computed(() => {
     margin: 0 auto;
     width: 100%;
     background-color: v-bind('containerStyles.backgroundColor');
+    box-sizing: border-box; // Ensure padding is included in width calculation
+    overflow-x: hidden; // Prevent horizontal scroll only on the container
+    
+    // Apply consistent horizontal padding
+    padding-left: var(--space-6);
+    padding-right: var(--space-6);
     
     @media (max-width: 1280px) {
-      max-width: 100%;
       padding-left: var(--space-4);
       padding-right: var(--space-4);
     }
@@ -136,38 +142,22 @@ const containerStyles = computed(() => {
   }
 }
 
-// Responsive container adjustments
-@media (max-width: 1280px) {
-  .page-layout {
-    .page-layout-container {
-      padding-left: var(--space-4);
-      padding-right: var(--space-4);
+// Ensure proper containment without breaking scroll behavior
+.page-layout {
+  * {
+    box-sizing: border-box;
+  }
+  
+  // Ensure content doesn't exceed container width
+  .page-content-section {
+    width: 100%;
+    max-width: 100%;
+    
+    // Apply to direct children to prevent overflow
+    > * {
+      max-width: 100%;
+      box-sizing: border-box;
     }
   }
-}
-
-@media (max-width: 768px) {
-  .page-layout {
-    .page-layout-container {
-      padding-left: var(--space-3);
-      padding-right: var(--space-3);
-    }
-  }
-}
-
-// Override Quasar's default page padding when using this layout
-.page-layout.q-px-lg {
-  padding-left: 0 !important;
-  padding-right: 0 !important;
-}
-
-.page-layout.q-px-md {
-  padding-left: 0 !important;
-  padding-right: 0 !important;
-}
-
-.page-layout.q-px-sm {
-  padding-left: 0 !important;
-  padding-right: 0 !important;
 }
 </style> 

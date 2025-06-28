@@ -33,17 +33,19 @@
     </template>
 
       <!-- Filters and Search -->
-      <q-card flat class="filters-card q-pa-md" role="search" aria-label="Product filters">
-        <div class="row q-gutter-md items-end">
-          <div class="col-12 col-sm-6 col-md-4">
+      <q-card flat class="filters-card glass-modern" role="search" aria-label="Product filters">
+        <q-card-section class="q-pa-md">
+          <div class="filters-grid">
+            <div class="search-section">
             <q-input
               v-model="searchQuery"
-              :label="$t('common.search')"
+                :label="$t('common.search') || 'Zoeken'"
               outlined
               dense
               clearable
               debounce="300"
-              :aria-label="$t('products.searchProducts') || 'Search products by name or SKU'"
+                class="search-input modern-input"
+                :aria-label="$t('products.searchProducts') || 'Zoek producten op naam of SKU'"
             >
               <template v-slot:prepend>
                 <q-icon name="search" aria-hidden="true" />
@@ -51,23 +53,36 @@
             </q-input>
           </div>
           
-          <div class="col-12 col-sm-6 col-md-3">
+            <div class="filter-section">
             <q-select
               v-model="stockFilter"
               :options="stockFilterOptions"
-              :label="$t('products.filterByStockStatus')"
+                :label="$t('products.filterByStockStatus') || 'Filter op voorraadstatus'"
               outlined
               dense
               emit-value
               map-options
-              :aria-label="$t('products.filterByStockStatus') || 'Filter products by stock status'"
+                class="filter-select modern-input"
+                :aria-label="$t('products.filterByStockStatus') || 'Filter producten op voorraadstatus'"
+              />
+            </div>
+            
+            <div class="actions-section">
+              <q-btn
+                color="primary"
+                icon="filter_alt"
+                :label="$t('products.advancedFilters') || 'Geavanceerd'"
+                outline
+                dense
+                class="btn-modern filter-btn"
             />
           </div>
         </div>
+        </q-card-section>
       </q-card>
 
       <!-- Products Table -->
-      <q-card class="table-card">
+      <q-card class="table-card card-modern">
         <q-table
           :rows="filteredProducts"
           :columns="tableColumns"
@@ -76,9 +91,11 @@
           :pagination="{ rowsPerPage: 10 }"
           :filter="searchQuery"
           :filter-method="filterMethod"
-          class="products-table"
+          class="products-table modern-table"
           role="table"
-          :aria-label="$t('products.productsTableLabel') || 'Products inventory table'"
+          :aria-label="$t('products.productsTableLabel') || 'Producten voorraad tabel'"
+          flat
+          bordered
         >
           <!-- Custom column templates -->
           <template v-slot:body-cell-stock_status="props">
@@ -114,6 +131,7 @@
 
           <template v-slot:body-cell-actions="props">
             <q-td :props="props">
+              <div class="action-buttons">
               <q-btn
                 flat
                 round
@@ -121,8 +139,11 @@
                 icon="edit"
                 color="primary"
                 @click="editProduct(props.row)"
-                :aria-label="`Edit ${props.row.product_name}`"
-              />
+                  :aria-label="`Bewerk ${props.row.product_name}`"
+                  class="action-btn btn-hover"
+                >
+                  <q-tooltip class="bg-primary">Bewerken</q-tooltip>
+                </q-btn>
               <q-btn
                 flat
                 round
@@ -130,8 +151,12 @@
                 icon="delete"
                 color="negative"
                 @click="confirmDeleteProduct(props.row)"
-                :aria-label="`Delete ${props.row.product_name}`"
-              />
+                  :aria-label="`Verwijder ${props.row.product_name}`"
+                  class="action-btn btn-hover btn-danger"
+                >
+                  <q-tooltip class="bg-negative">Verwijderen</q-tooltip>
+                </q-btn>
+              </div>
             </q-td>
           </template>
         </q-table>
@@ -363,8 +388,70 @@ watch(() => showAddProductDialog.value, (newVal: boolean) => {
 .filters-card {
   margin-bottom: var(--space-6);
   border-radius: var(--radius-xl);
-  border: 1px solid var(--neutral-200);
-  background: var(--neutral-100);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  background: linear-gradient(145deg, rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.7));
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  box-shadow: var(--shadow-sm);
+  transition: all var(--transition-base);
+  
+  &:hover {
+    box-shadow: var(--shadow-md);
+    border-color: rgba(255, 255, 255, 0.3);
+  }
+}
+
+.glass-modern {
+  background: linear-gradient(145deg, rgba(255, 255, 255, 0.95), rgba(255, 255, 255, 0.85));
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.filters-grid {
+  display: grid;
+  grid-template-columns: 2fr 1fr auto;
+  gap: var(--space-4);
+  align-items: end;
+  
+  @media (max-width: 768px) {
+    grid-template-columns: 1fr;
+    gap: var(--space-3);
+  }
+  
+  @media (max-width: 1024px) and (min-width: 769px) {
+    grid-template-columns: 1fr 1fr;
+    
+    .actions-section {
+      grid-column: 1 / -1;
+      justify-self: start;
+    }
+  }
+}
+
+.modern-input {
+  .q-field__control {
+    border-radius: var(--radius-lg);
+    transition: all var(--transition-base);
+    
+    &:hover {
+      box-shadow: var(--shadow-sm);
+      border-color: var(--brand-primary);
+    }
+  }
+  
+  &.q-field--focused .q-field__control {
+    box-shadow: var(--focus-ring);
+  }
+}
+
+.filter-btn {
+  min-width: 120px;
+  border-radius: var(--radius-lg);
+  
+  @media (max-width: 768px) {
+    width: 100%;
+  }
 }
 
 .table-card {
@@ -413,7 +500,44 @@ watch(() => showAddProductDialog.value, (newVal: boolean) => {
     
     tbody tr:hover {
       background-color: var(--neutral-50);
+      transform: translateY(-1px);
+      transition: all var(--transition-base);
     }
+    
+    tbody tr {
+      transition: all var(--transition-base);
+    }
+  }
+}
+
+.action-buttons {
+  display: flex;
+  gap: var(--space-1);
+  justify-content: center;
+  
+  .action-btn {
+    transition: all var(--transition-base);
+    border-radius: var(--radius-full);
+    
+    &.btn-hover:hover {
+      transform: scale(1.1);
+      box-shadow: var(--shadow-sm);
+    }
+    
+    &.btn-danger:hover {
+      background-color: rgba(239, 68, 68, 0.1);
+    }
+  }
+}
+
+.modern-table {
+  :deep(.q-table__container) {
+    border-radius: var(--radius-xl);
+    overflow: hidden;
+  }
+  
+  :deep(.q-table__middle) {
+    border-radius: var(--radius-xl);
   }
 }
 

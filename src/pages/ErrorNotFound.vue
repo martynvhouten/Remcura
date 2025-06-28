@@ -34,8 +34,8 @@
 
         <!-- Error Message -->
         <div class="error-message-section">
-          <h1 class="error-title">{{ $t('error.pageNotFound') }}</h1>
-          <p class="error-description">{{ $t('error.pageNotFoundDescription') }}</p>
+          <h1 class="error-title">{{ $t('error.pageNotFound') || 'Pagina niet gevonden' }}</h1>
+          <p class="error-description">{{ $t('error.pageNotFoundDescription') || 'De pagina die je zoekt bestaat niet of is verplaatst.' }}</p>
         </div>
 
         <!-- Action Buttons -->
@@ -44,23 +44,23 @@
             color="primary"
             size="lg"
             icon="home"
-            :label="$t('error.goHome')"
+            :label="$t('error.goHome') || 'Naar Dashboard'"
             @click="goHome"
-            class="btn-modern btn-primary"
+            class="btn-modern btn-primary hover-lift"
             unelevated
             no-caps
-            :aria-label="$t('error.goHome') + ' - Navigate to dashboard'"
+            :aria-label="($t('error.goHome') || 'Naar Dashboard') + ' - Navigeer naar het dashboard'"
           />
           <q-btn
             color="primary"
             size="lg"
             icon="arrow_back"
-            :label="$t('error.goBack')"
+            :label="$t('error.goBack') || 'Terug'"
             @click="goBack"
-            class="btn-modern btn-secondary"
+            class="btn-modern btn-secondary hover-lift"
             outline
             no-caps
-            :aria-label="$t('error.goBack') + ' - Go to previous page'"
+            :aria-label="($t('error.goBack') || 'Terug') + ' - Ga naar de vorige pagina'"
           />
         </div>
 

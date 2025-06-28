@@ -121,13 +121,23 @@
 
           <q-card-section class="card-content">
             <!-- Empty state -->
-            <div v-if="lowStockItems.length === 0" class="empty-state">
+            <div v-if="lowStockItems.length === 0" class="empty-state animate-fade-in">
               <div class="empty-icon">
                 <q-icon name="check_circle" color="positive" class="empty-state-icon" aria-hidden="true" />
               </div>
-              <h3 class="empty-title">{{ $t('dashboard.noLowStock') }}</h3>
-              <p class="empty-description">{{ $t('dashboard.allProductsWellStocked') }}</p>
+              <h3 class="empty-title">{{ $t('dashboard.noLowStock') || 'Geen lage voorraad' }}</h3>
+              <p class="empty-description">{{ $t('dashboard.allProductsWellStocked') || 'Alle producten zijn goed op voorraad' }}</p>
+              <div class="empty-actions">
+                <q-btn 
+                  color="primary" 
+                  icon="inventory_2" 
+                  label="Bekijk alle producten" 
+                  @click="goToProducts"
+                  outline
+                  class="btn-modern"
+                />
               </div>
+            </div>
 
             <!-- Items list -->
             <q-list v-else class="items-list" role="list" :aria-label="$t('dashboard.lowStockItemsList') || 'Low stock items list'">
@@ -227,9 +237,9 @@
                   clickable 
                   v-ripple 
                   @click="goToProducts"
-                  class="action-item glass-card"
+                  class="action-item glass-card hover-lift"
                   role="listitem"
-                  :aria-label="$t('dashboard.addProduct')"
+                  :aria-label="$t('dashboard.addProduct') || 'Product toevoegen'"
                   tabindex="0"
                   @keydown.enter="goToProducts"
                   @keydown.space="goToProducts"
@@ -238,8 +248,8 @@
                     <q-icon name="add_box" color="primary" class="action-icon icon-lg" aria-hidden="true" />
                   </q-item-section>
                   <q-item-section>
-                    <q-item-label class="action-label">{{ $t('dashboard.addProduct') }}</q-item-label>
-                    <q-item-label caption class="action-caption">{{ $t('dashboard.addNewProduct') }}</q-item-label>
+                    <q-item-label class="action-label">{{ $t('dashboard.addProduct') || 'Product toevoegen' }}</q-item-label>
+                    <q-item-label caption class="action-caption">{{ $t('dashboard.addNewProduct') || 'Voeg een nieuw product toe aan de voorraad' }}</q-item-label>
                   </q-item-section>
                   <q-item-section side>
                     <q-icon name="arrow_forward" aria-hidden="true" />
@@ -250,9 +260,9 @@
                   clickable 
                   v-ripple 
                   @click="goToProducts"
-                  class="action-item glass-card"
+                  class="action-item glass-card hover-lift"
                   role="listitem"
-                  :aria-label="$t('dashboard.manageStock')"
+                  :aria-label="$t('dashboard.manageStock') || 'Voorraad beheren'"
                   tabindex="0"
                   @keydown.enter="goToProducts"
                   @keydown.space="goToProducts"
@@ -261,8 +271,8 @@
                     <q-icon name="inventory" color="secondary" class="action-icon icon-lg" aria-hidden="true" />
                   </q-item-section>
                   <q-item-section>
-                    <q-item-label class="action-label">{{ $t('dashboard.manageStock') }}</q-item-label>
-                    <q-item-label caption class="action-caption">{{ $t('dashboard.updateStockLevels') }}</q-item-label>
+                    <q-item-label class="action-label">{{ $t('dashboard.manageStock') || 'Voorraad beheren' }}</q-item-label>
+                    <q-item-label caption class="action-caption">{{ $t('dashboard.updateStockLevels') || 'Werk voorraadniveaus bij' }}</q-item-label>
                   </q-item-section>
                   <q-item-section side>
                     <q-icon name="arrow_forward" aria-hidden="true" />
@@ -273,9 +283,9 @@
                   clickable 
                   v-ripple 
                   @click="$router.push({ name: 'orders' })"
-                  class="action-item glass-card"
+                  class="action-item glass-card hover-lift"
                   role="listitem"
-                  :aria-label="$t('dashboard.viewOrders')"
+                  :aria-label="$t('dashboard.viewOrders') || 'Bestellingen bekijken'"
                   tabindex="0"
                   @keydown.enter="$router.push({ name: 'orders' })"
                   @keydown.space="$router.push({ name: 'orders' })"
@@ -284,8 +294,8 @@
                     <q-icon name="shopping_cart" color="warning" class="action-icon icon-lg" aria-hidden="true" />
                   </q-item-section>
                   <q-item-section>
-                    <q-item-label class="action-label">{{ $t('dashboard.viewOrders') }}</q-item-label>
-                    <q-item-label caption class="action-caption">{{ $t('dashboard.manageOrders') }}</q-item-label>
+                    <q-item-label class="action-label">{{ $t('dashboard.viewOrders') || 'Bestellingen bekijken' }}</q-item-label>
+                    <q-item-label caption class="action-caption">{{ $t('dashboard.manageOrders') || 'Beheer bestellingen en leveringen' }}</q-item-label>
                   </q-item-section>
                   <q-item-section side>
                     <q-icon name="arrow_forward" aria-hidden="true" />
@@ -528,6 +538,7 @@ onMounted(() => {
         
         .empty-state-icon {
           font-size: 64px;
+          filter: drop-shadow(0 4px 8px rgba(34, 197, 94, 0.1));
         }
       }
       
@@ -541,7 +552,14 @@ onMounted(() => {
       .empty-description {
         font-size: var(--text-base);
         color: var(--neutral-600);
-        margin: 0;
+        margin: 0 0 var(--space-6);
+        max-width: 40ch;
+        margin-left: auto;
+        margin-right: auto;
+      }
+      
+      .empty-actions {
+        margin-top: var(--space-6);
       }
     }
 
@@ -671,10 +689,16 @@ onMounted(() => {
         border-radius: var(--radius-lg);
         margin-bottom: var(--space-2);
         
-        &:hover {
-          background-color: var(--neutral-50);
+        &:hover, &.hover-lift:hover {
+          background: linear-gradient(145deg, rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.7));
+          transform: translateY(-2px);
+          box-shadow: var(--shadow-md);
+          border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        &:active {
           transform: translateY(-1px);
-          box-shadow: var(--shadow-sm);
+          transition-duration: 100ms;
         }
         
         &:last-child {
@@ -903,6 +927,10 @@ body.body--dark {
   animation: scaleIn 0.3s ease-out;
 }
 
+.animate-fade-in {
+  animation: fadeIn 0.5s ease-out;
+}
+
 @keyframes slideUp {
   from {
     opacity: 0;
@@ -922,6 +950,15 @@ body.body--dark {
   to {
     opacity: 1;
     transform: scale(1);
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
   }
 }
 

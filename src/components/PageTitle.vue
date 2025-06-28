@@ -192,6 +192,19 @@ const slots = defineSlots<{
         min-width: 120px;
       }
     }
+    
+    :deep(.btn-modern) {
+      transition: all var(--transition-base);
+      
+      &:hover {
+        transform: translateY(-1px);
+        box-shadow: var(--shadow-md);
+      }
+      
+      &:active {
+        transform: translateY(0);
+      }
+    }
   }
 }
 

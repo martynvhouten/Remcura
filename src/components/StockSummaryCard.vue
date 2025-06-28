@@ -32,7 +32,7 @@
         <!-- Content section -->
         <div class="text-section">
           <div class="card-title" :id="`card-title-${$attrs.id || title.replace(/\s+/g, '-').toLowerCase()}`">{{ title }}</div>
-          <div class="card-value" :class="`text-${color}`" :aria-labelledby="`card-title-${$attrs.id || title.replace(/\s+/g, '-').toLowerCase()}`">
+          <div class="card-value" :class="[`text-${color}`, { 'loading-shimmer': loading }]" :aria-labelledby="`card-title-${$attrs.id || title.replace(/\s+/g, '-').toLowerCase()}`">
             {{ formattedValue }}
           </div>
           <div class="card-trend" v-if="trend" role="status" :aria-label="`Trend: ${trend.direction === 'up' ? 'increased' : 'decreased'} by ${trend.percentage} percent compared to last month`">
@@ -319,7 +319,15 @@ const handleClick = () => {
           &.text-negative { color: var(--brand-danger); }
           &.text-warning { color: var(--brand-warning); }
           &.text-info { color: var(--brand-info); }
-  }
+          
+          &.loading-shimmer {
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+            background-size: 200% 100%;
+            animation: shimmer 1.5s infinite;
+            border-radius: var(--radius-base);
+            color: transparent;
+          }
+        }
   
         .card-trend {
           display: flex;
@@ -463,6 +471,16 @@ body.body--dark .stock-summary-card {
   }
 }
 
+// Loading shimmer animation
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
 // Reduce motion for accessibility
 @media (prefers-reduced-motion: reduce) {
   .stock-summary-card {
@@ -475,6 +493,10 @@ body.body--dark .stock-summary-card {
     
     &.card-interactive:hover {
       transform: none !important;
+    }
+    
+    .loading-shimmer {
+      animation: none !important;
     }
   }
 }

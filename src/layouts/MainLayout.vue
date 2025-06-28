@@ -350,6 +350,15 @@ onUnmounted(() => {
 
 <style lang="scss" scoped>
 .layout-modern {
+  width: 100%;
+  max-width: 100vw;
+  box-sizing: border-box;
+  
+  // Ensure all child elements don't overflow
+  * {
+    box-sizing: border-box;
+  }
+  
   // Modern header styling
   .header-modern {
     background: rgba(255, 255, 255, 0.8) !important;
@@ -367,6 +376,8 @@ onUnmounted(() => {
   .toolbar-modern {
     padding: var(--space-4) var(--space-6);
     min-height: 72px;
+    width: 100%;
+    max-width: 100%;
     
     .menu-toggle-btn {
       color: var(--neutral-700);

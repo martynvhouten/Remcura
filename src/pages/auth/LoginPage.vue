@@ -4,13 +4,13 @@
       <!-- Email Input -->
       <div class="form-field">
         <q-input
-      v-model="email.value.value"
+          v-model="email.value.value"
           type="email"
-          :label="$t('auth.email')"
+          :label="$t('auth.email') || 'E-mailadres'"
           outlined
-      :error="!!email.error.value"
-      :error-message="email.error.value"
-          class="input-modern"
+          :error="!!email.error.value"
+          :error-message="email.error.value"
+          class="input-modern focus-ring"
           autocomplete="email"
           required
           :aria-describedby="email.error.value ? 'email-error' : undefined"
@@ -25,13 +25,13 @@
       <!-- Password Input -->
       <div class="form-field">
         <q-input
-      v-model="password.value.value"
+          v-model="password.value.value"
           :type="showPassword ? 'text' : 'password'"
-          :label="$t('auth.password')"
+          :label="$t('auth.password') || 'Wachtwoord'"
           outlined
-      :error="!!password.error.value"
-      :error-message="password.error.value"
-          class="input-modern"
+          :error="!!password.error.value"
+          :error-message="password.error.value"
+          class="input-modern focus-ring"
           autocomplete="current-password"
           required
           :aria-describedby="password.error.value ? 'password-error' : 'password-help'"
@@ -63,14 +63,14 @@
           type="submit"
           color="primary"
           size="lg"
-          class="login-btn btn-modern"
-          :label="$t('auth.login')"
-        unelevated
+          class="login-btn btn-modern hover-lift"
+          :label="$t('auth.login') || 'Inloggen'"
+          unelevated
           no-caps
           :aria-describedby="loading ? 'login-loading' : undefined"
         />
-        <div v-if="loading" id="login-loading" class="sr-only">{{ $t('auth.signingIn') || 'Signing in, please wait' }}</div>
-    </div>
+        <div v-if="loading" id="login-loading" class="sr-only">{{ $t('auth.signingIn') || 'Bezig met inloggen, even geduld' }}</div>
+      </div>
 
       <!-- Separator -->
       <div class="form-separator" role="separator" aria-label="or">
@@ -86,9 +86,9 @@
             flat
             dense
             color="secondary"
-            :label="$t('auth.demoAccount')"
+            :label="$t('auth.demoAccount') || 'Demo account'"
             @click="fillDemoCredentials"
-            class="demo-btn btn-modern"
+            class="demo-btn btn-modern hover-lift"
             icon="person"
             no-caps
             :aria-describedby="'demo-help'"
@@ -98,9 +98,9 @@
             flat
             dense
             color="primary"
-            :label="$t('auth.forgotPassword')"
+            :label="$t('auth.forgotPassword') || 'Wachtwoord vergeten?'"
             @click="handleForgotPassword"
-            class="forgot-btn btn-modern"
+            class="forgot-btn btn-modern hover-lift"
             no-caps
           />
         </div>
