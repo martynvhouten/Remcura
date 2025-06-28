@@ -21,9 +21,9 @@
             unelevated
           />
           <q-btn
-            color="secondary"
+            color="primary"
             icon="analytics"
-            label="View Analytics"
+            :label="$t('dashboard.viewAnalytics')"
             outline
             class="btn-modern"
             @click="() => $router.push('/analytics')"
@@ -34,7 +34,8 @@
 
     <!-- Summary Cards Grid -->
     <div class="summary-section animate-slide-up">
-      <div class="summary-grid">
+      <div class="summary-grid" role="region" aria-labelledby="summary-title">
+        <h2 id="summary-title" class="sr-only">{{ $t('dashboard.summaryOverview') || 'Dashboard Summary' }}</h2>
         <StockSummaryCard
           :title="$t('dashboard.totalProducts')"
           :value="totalProducts"
@@ -43,6 +44,7 @@
           :clickable="true"
           :trend="{ direction: 'up', percentage: 12 }"
           @click="goToProducts"
+          :aria-label="`${$t('dashboard.totalProducts')}: ${totalProducts} products. Click to view all products.`"
         />
         
         <StockSummaryCard
@@ -53,6 +55,7 @@
           :clickable="true"
           :trend="{ direction: 'down', percentage: 8 }"
           @click="goToProducts"
+          :aria-label="`${$t('dashboard.lowStockItems')}: ${lowStockCount} items with low stock. Click to view details.`"
         />
         
         <StockSummaryCard
@@ -63,6 +66,7 @@
           :clickable="true"
           :trend="{ direction: 'down', percentage: 0 }"
           @click="goToProducts"
+          :aria-label="`${$t('dashboard.outOfStockItems')}: ${outOfStockCount} items out of stock. Click to view details.`"
         />
         
         <StockSummaryCard
@@ -73,6 +77,7 @@
           :clickable="true"
           :trend="{ direction: 'up', percentage: 15 }"
           @click="goToProducts"
+          :aria-label="`${$t('dashboard.reorderSuggestions')}: ${reorderSuggestionsCount} items suggested for reorder. Click to view details.`"
         />
       </div>
     </div>
@@ -85,9 +90,9 @@
           <q-card-section class="card-header">
             <div class="card-header-content">
               <div class="card-title-section">
-                <q-icon name="warning" color="warning" class="title-icon icon-lg" />
+                <q-icon name="warning" color="warning" class="title-icon icon-lg" aria-hidden="true" />
                 <div class="title-content">
-                  <h3 id="low-stock-title" class="card-title">{{ $t('dashboard.lowStockItems') }}</h3>
+                  <h2 id="low-stock-title" class="card-title">{{ $t('dashboard.lowStockItems') }}</h2>
                   <p class="card-subtitle">{{ $t('dashboard.itemsRequiringAttention') }}</p>
                 </div>
               </div>
@@ -96,10 +101,10 @@
                 round
                 icon="more_vert"
                 class="options-btn"
-                aria-label="Menu options"
+                :aria-label="$t('dashboard.moreOptions') || 'More options'"
               >
                 <q-menu>
-                  <q-list role="menu">
+                  <q-list role="menu" :aria-label="$t('dashboard.optionsMenu') || 'Options menu'">
                     <q-item clickable @click="goToProducts" role="menuitem">
                       <q-item-section>{{ $t('dashboard.viewAllProducts') }}</q-item-section>
                     </q-item>
@@ -118,14 +123,14 @@
             <!-- Empty state -->
             <div v-if="lowStockItems.length === 0" class="empty-state">
               <div class="empty-icon">
-                <q-icon name="check_circle" color="positive" class="empty-state-icon" />
+                <q-icon name="check_circle" color="positive" class="empty-state-icon" aria-hidden="true" />
               </div>
-              <h4 class="empty-title">{{ $t('dashboard.noLowStock') }}</h4>
+              <h3 class="empty-title">{{ $t('dashboard.noLowStock') }}</h3>
               <p class="empty-description">{{ $t('dashboard.allProductsWellStocked') }}</p>
               </div>
 
             <!-- Items list -->
-            <q-list v-else class="items-list" role="list">
+            <q-list v-else class="items-list" role="list" :aria-label="$t('dashboard.lowStockItemsList') || 'Low stock items list'">
               <q-item
                 v-for="product in lowStockItems.slice(0, 8)"
                 :key="product.id"
@@ -134,8 +139,10 @@
                 clickable
                 @click="goToProducts"
                 role="listitem"
-                :aria-label="`${product.product_name} - ${product.current_stock} units in stock, minimum ${product.minimum_stock}`"
+                :aria-label="`${product.product_name} - ${product.current_stock} units in stock, minimum ${product.minimum_stock}. ${product.current_stock === 0 ? 'Out of stock.' : 'Low stock.'} Click to view details.`"
                 tabindex="0"
+                @keydown.enter="goToProducts"
+                @keydown.space="goToProducts"
               >
                   <q-item-section avatar>
                     <q-avatar 
@@ -143,7 +150,7 @@
                       text-color="white"
                       class="product-avatar"
                     >
-                      <q-icon name="inventory_2" class="product-icon" />
+                      <q-icon name="inventory_2" class="product-icon" aria-hidden="true" />
                     </q-avatar>
                   </q-item-section>
 
@@ -177,6 +184,8 @@
                       icon="arrow_forward"
                     color="primary"
                     class="action-btn"
+                    :aria-label="$t('dashboard.viewProductDetails') || 'View product details'"
+                    tabindex="-1"
                     />
                   </q-item-section>
                 </q-item>
@@ -189,6 +198,7 @@
                 :label="$t('dashboard.viewMore', { count: lowStockItems.length - 8 })"
                   @click="goToProducts"
                 class="view-more-btn"
+                :aria-label="`View ${lowStockItems.length - 8} more low stock items`"
                 />
               </div>
             </q-card-section>
@@ -201,7 +211,7 @@
         <q-card class="card-modern actions-card" role="region" aria-labelledby="quick-actions-title">
           <q-card-section class="card-header">
             <div class="card-title-section">
-              <q-icon name="bolt" color="accent" class="title-icon icon-lg" />
+              <q-icon name="bolt" color="accent" class="title-icon icon-lg" aria-hidden="true" />
               <div class="title-content">
                 <h3 id="quick-actions-title" class="card-title">{{ $t('dashboard.quickActions') }}</h3>
                 <p class="card-subtitle">{{ $t('dashboard.commonTasks') }}</p>
@@ -212,25 +222,27 @@
           <q-separator />
 
           <q-card-section class="card-content">
-            <div class="actions-list">
+            <div class="actions-list" role="list" :aria-label="$t('dashboard.quickActionsList') || 'Quick actions list'">
                 <q-item 
                   clickable 
                   v-ripple 
                   @click="goToProducts"
                   class="action-item glass-card"
-                  role="button"
+                  role="listitem"
                   :aria-label="$t('dashboard.addProduct')"
                   tabindex="0"
+                  @keydown.enter="goToProducts"
+                  @keydown.space="goToProducts"
                 >
                   <q-item-section avatar>
-                    <q-icon name="add_box" color="primary" class="action-icon icon-lg" />
+                    <q-icon name="add_box" color="primary" class="action-icon icon-lg" aria-hidden="true" />
                   </q-item-section>
                   <q-item-section>
                     <q-item-label class="action-label">{{ $t('dashboard.addProduct') }}</q-item-label>
                     <q-item-label caption class="action-caption">{{ $t('dashboard.addNewProduct') }}</q-item-label>
                   </q-item-section>
                   <q-item-section side>
-                    <q-icon name="arrow_forward" />
+                    <q-icon name="arrow_forward" aria-hidden="true" />
                   </q-item-section>
                 </q-item>
 
@@ -239,19 +251,21 @@
                   v-ripple 
                   @click="goToProducts"
                   class="action-item glass-card"
-                  role="button"
+                  role="listitem"
                   :aria-label="$t('dashboard.manageStock')"
                   tabindex="0"
+                  @keydown.enter="goToProducts"
+                  @keydown.space="goToProducts"
                 >
                   <q-item-section avatar>
-                    <q-icon name="inventory" color="secondary" class="action-icon icon-lg" />
+                    <q-icon name="inventory" color="secondary" class="action-icon icon-lg" aria-hidden="true" />
                   </q-item-section>
                   <q-item-section>
                     <q-item-label class="action-label">{{ $t('dashboard.manageStock') }}</q-item-label>
                     <q-item-label caption class="action-caption">{{ $t('dashboard.updateStockLevels') }}</q-item-label>
                   </q-item-section>
                   <q-item-section side>
-                    <q-icon name="arrow_forward" />
+                    <q-icon name="arrow_forward" aria-hidden="true" />
                   </q-item-section>
                 </q-item>
 
@@ -260,19 +274,21 @@
                   v-ripple 
                   @click="$router.push({ name: 'orders' })"
                   class="action-item glass-card"
-                  role="button"
+                  role="listitem"
                   :aria-label="$t('dashboard.viewOrders')"
                   tabindex="0"
+                  @keydown.enter="$router.push({ name: 'orders' })"
+                  @keydown.space="$router.push({ name: 'orders' })"
                 >
                   <q-item-section avatar>
-                    <q-icon name="shopping_cart" color="warning" class="action-icon icon-lg" />
+                    <q-icon name="shopping_cart" color="warning" class="action-icon icon-lg" aria-hidden="true" />
                   </q-item-section>
                   <q-item-section>
                     <q-item-label class="action-label">{{ $t('dashboard.viewOrders') }}</q-item-label>
                     <q-item-label caption class="action-caption">{{ $t('dashboard.manageOrders') }}</q-item-label>
                   </q-item-section>
                   <q-item-section side>
-                    <q-icon name="arrow_forward" />
+                    <q-icon name="arrow_forward" aria-hidden="true" />
                   </q-item-section>
                 </q-item>
             </div>
@@ -283,7 +299,7 @@
         <q-card class="card-modern activity-card" role="region" aria-labelledby="recent-activity-title">
           <q-card-section class="card-header">
             <div class="card-title-section">
-              <q-icon name="history" color="info" class="title-icon icon-lg" />
+              <q-icon name="history" color="info" class="title-icon icon-lg" aria-hidden="true" />
               <div class="title-content">
                 <h3 id="recent-activity-title" class="card-title">{{ $t('dashboard.recentActivity') }}</h3>
                 <p class="card-subtitle">{{ $t('dashboard.latestUpdates') }}</p>
@@ -297,7 +313,7 @@
             <div class="activity-list">
               <div class="activity-item">
                 <div class="activity-icon">
-                  <q-icon name="add" color="positive" class="activity-item-icon" />
+                  <q-icon name="add" color="positive" class="activity-item-icon" aria-hidden="true" />
                 </div>
                 <div class="activity-content">
                   <div class="activity-text">Added 50 units of Paracetamol</div>
@@ -307,7 +323,7 @@
               
               <div class="activity-item">
                 <div class="activity-icon">
-                  <q-icon name="warning" color="warning" class="activity-item-icon" />
+                  <q-icon name="warning" color="warning" class="activity-item-icon" aria-hidden="true" />
                 </div>
                 <div class="activity-content">
                   <div class="activity-text">Low stock alert: Insulin</div>
@@ -317,7 +333,7 @@
               
               <div class="activity-item">
                 <div class="activity-icon">
-                  <q-icon name="shopping_cart" color="info" class="activity-item-icon" />
+                  <q-icon name="shopping_cart" color="info" class="activity-item-icon" aria-hidden="true" />
                 </div>
                 <div class="activity-content">
                   <div class="activity-text">New order created #ORD-2024-001</div>
@@ -466,6 +482,14 @@ onMounted(() => {
           line-height: var(--leading-tight);
         }
         
+        h2.card-title {
+          font-size: var(--text-lg);
+          font-weight: var(--font-weight-semibold);
+          color: var(--neutral-900);
+          margin: 0;
+          line-height: var(--leading-tight);
+        }
+        
         .card-subtitle {
           font-size: var(--text-sm);
           color: var(--neutral-500);
@@ -481,6 +505,11 @@ onMounted(() => {
         
         &:hover {
           background-color: var(--neutral-100);
+        }
+        
+        &:focus {
+          outline: 2px solid var(--brand-primary);
+          outline-offset: 2px;
         }
       }
     }
@@ -894,5 +923,64 @@ body.body--dark {
     opacity: 1;
     transform: scale(1);
   }
+}
+
+// Enhanced button styling for dashboard
+:deep(.btn-modern) {
+  border-radius: var(--radius-lg);
+  font-weight: var(--font-weight-semibold);
+  letter-spacing: 0.025em;
+  transition: all var(--transition-base);
+  
+  &:hover {
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-md);
+  }
+  
+  // Primary outline button styling with enhanced colors
+  &.q-btn--outline.q-btn--standard {
+    border-width: 2px;
+    border-color: var(--brand-primary);
+    color: var(--brand-primary);
+    
+    &:hover {
+      background: var(--brand-primary);
+      color: white;
+      border-color: var(--brand-primary);
+      box-shadow: var(--shadow-lg);
+    }
+  }
+}
+
+// Screen reader only content
+.sr-only {
+  position: absolute !important;
+  width: 1px !important;
+  height: 1px !important;
+  padding: 0 !important;
+  margin: -1px !important;
+  overflow: hidden !important;
+  clip: rect(0, 0, 0, 0) !important;
+  white-space: nowrap !important;
+  border: 0 !important;
+}
+
+// Focus styles for interactive elements
+.item-row:focus {
+  outline: 2px solid var(--brand-primary);
+  outline-offset: 2px;
+  background-color: var(--neutral-50);
+}
+
+.action-item:focus {
+  outline: 2px solid var(--brand-primary);
+  outline-offset: 2px;
+  background-color: var(--neutral-50);
+  transform: translateY(-2px);
+}
+
+.view-more-btn:focus {
+  outline: 2px solid var(--brand-primary);
+  outline-offset: 2px;
 }
 </style> 

@@ -4,6 +4,9 @@
     @update:model-value="$emit('update:modelValue', $event)"
     persistent
     class="product-dialog"
+    role="dialog"
+    :aria-labelledby="isEditing ? 'edit-product-title' : 'add-product-title'"
+    aria-modal="true"
   >
     <q-card class="dialog-card card-modern">
       <!-- Dialog Header -->
@@ -15,9 +18,9 @@
             </q-avatar>
           </div>
           <div class="header-text">
-            <h3 class="dialog-title">
+            <h2 class="dialog-title" :id="isEditing ? 'edit-product-title' : 'add-product-title'">
           {{ isEditing ? t('products.editProduct') : t('products.addProduct') }}
-            </h3>
+            </h2>
             <p class="dialog-subtitle">
               {{ isEditing ? 'Wijzig de productgegevens' : 'Voeg een nieuw product toe aan je voorraad' }}
             </p>
@@ -30,6 +33,7 @@
           @click="$emit('update:modelValue', false)" 
             class="close-btn"
             size="md"
+            :aria-label="$t('common.close') || 'Close dialog'"
         />
         </div>
       </q-card-section>
@@ -38,7 +42,7 @@
 
       <!-- Dialog Content -->
       <q-card-section class="dialog-content">
-        <q-form @submit="handleSubmit" class="product-form">
+        <q-form @submit="handleSubmit" class="product-form" novalidate>
           <!-- Product Name -->
           <div class="form-group">
           <q-input
@@ -49,11 +53,15 @@
             clearable
               class="input-modern"
               :error="hasError('product_name')"
+              :aria-describedby="hasError('product_name') ? 'product-name-error' : 'product-name-help'"
+              required
             >
               <template v-slot:prepend>
-                <q-icon name="inventory_2" />
+                <q-icon name="inventory_2" aria-hidden="true" />
               </template>
             </q-input>
+            <div v-if="hasError('product_name')" id="product-name-error" class="sr-only">{{ formErrors.product_name }}</div>
+            <div id="product-name-help" class="sr-only">{{ $t('products.productNameHelp') || 'Enter the product name' }}</div>
           </div>
 
           <!-- Product SKU -->
@@ -65,17 +73,19 @@
             clearable
               class="input-modern"
               hint="Optioneel - wordt automatisch gegenereerd indien leeg"
+              :aria-describedby="'product-sku-help'"
             >
               <template v-slot:prepend>
-                <q-icon name="tag" />
+                <q-icon name="tag" aria-hidden="true" />
               </template>
             </q-input>
+            <div id="product-sku-help" class="sr-only">{{ $t('products.skuHelp') || 'Optional - will be auto-generated if left empty' }}</div>
           </div>
 
           <!-- Stock Numbers Grid -->
           <div class="form-group">
-            <div class="form-label">Voorraad gegevens</div>
-            <div class="stock-grid">
+            <div class="form-label" id="stock-group-label">Voorraad gegevens</div>
+            <div class="stock-grid" role="group" aria-labelledby="stock-group-label">
             <q-input
               v-model.number="form.current_stock"
               :label="t('products.currentStock')"
@@ -85,14 +95,17 @@
               outlined
                 class="input-modern"
                 :error="hasError('current_stock')"
+                :aria-describedby="hasError('current_stock') ? 'current-stock-error' : 'current-stock-help'"
               >
                 <template v-slot:prepend>
-                  <q-icon name="inventory" />
+                  <q-icon name="inventory" aria-hidden="true" />
                 </template>
                 <template v-slot:append>
                   <span class="input-unit">stuks</span>
                 </template>
               </q-input>
+              <div v-if="hasError('current_stock')" id="current-stock-error" class="sr-only">{{ formErrors.current_stock }}</div>
+              <div id="current-stock-help" class="sr-only">{{ $t('products.currentStockHelp') || 'Current number of items in stock' }}</div>
 
             <q-input
               v-model.number="form.minimum_stock"
@@ -104,14 +117,17 @@
                 class="input-modern"
                 :error="hasError('minimum_stock')"
                 hint="Waarschuwingsgrens"
+                :aria-describedby="hasError('minimum_stock') ? 'minimum-stock-error' : 'minimum-stock-help'"
               >
                 <template v-slot:prepend>
-                  <q-icon name="warning" />
+                  <q-icon name="warning" aria-hidden="true" />
                 </template>
                 <template v-slot:append>
                   <span class="input-unit">stuks</span>
                 </template>
               </q-input>
+              <div v-if="hasError('minimum_stock')" id="minimum-stock-error" class="sr-only">{{ formErrors.minimum_stock }}</div>
+              <div id="minimum-stock-help" class="sr-only">{{ $t('products.minimumStockHelp') || 'Minimum stock level before warning alert' }}</div>
 
           <q-input
             v-model.number="form.maximum_stock"
@@ -122,15 +138,18 @@
             outlined
                 class="input-modern"
                 :error="hasError('maximum_stock')"
-                hint="Maximale voorraad"
+                :hint="$t('products.maxStockHint')"
+                :aria-describedby="hasError('maximum_stock') ? 'maximum-stock-error' : 'maximum-stock-help'"
               >
                 <template v-slot:prepend>
-                  <q-icon name="inventory_2" />
+                  <q-icon name="inventory_2" aria-hidden="true" />
                 </template>
                 <template v-slot:append>
                   <span class="input-unit">stuks</span>
                 </template>
               </q-input>
+              <div v-if="hasError('maximum_stock')" id="maximum-stock-error" class="sr-only">{{ formErrors.maximum_stock }}</div>
+              <div id="maximum-stock-help" class="sr-only">{{ $t('products.maximumStockHelp') || 'Maximum recommended stock level' }}</div>
             </div>
           </div>
 
@@ -145,17 +164,19 @@
             clearable
               class="input-modern"
               hint="Optionele beschrijving van het product"
+              :aria-describedby="'product-description-help'"
             >
               <template v-slot:prepend>
-                <q-icon name="description" />
+                <q-icon name="description" aria-hidden="true" />
               </template>
             </q-input>
+            <div id="product-description-help" class="sr-only">{{ $t('products.descriptionHelp') || 'Optional product description' }}</div>
           </div>
 
           <!-- Stock Status Preview -->
           <div class="form-group" v-if="form.current_stock !== null && form.minimum_stock !== null">
-            <div class="form-label">Voorraad status preview</div>
-            <div class="status-preview glass-card">
+            <div class="form-label" id="preview-label">Voorraad status preview</div>
+            <div class="status-preview glass-card" role="status" aria-labelledby="preview-label">
               <div class="preview-item">
                 <span class="preview-label">Huidige status:</span>
                 <q-chip 
@@ -163,13 +184,14 @@
                   text-color="white"
                   :icon="getPreviewStatusIcon()"
                   size="sm"
+                  :aria-label="`Status: ${getPreviewStatusText()}`"
                 >
                   {{ getPreviewStatusText() }}
                 </q-chip>
               </div>
-              <div class="preview-item" v-if="form.current_stock <= form.minimum_stock">
-                <q-icon name="info" color="info" size="16px" />
-                <span class="preview-warning">Dit product zal als 'Lage voorraad' worden gemarkeerd</span>
+              <div class="preview-item" v-if="form.current_stock <= form.minimum_stock" role="alert">
+                <q-icon name="info" color="info" size="16px" aria-hidden="true" />
+                <span class="preview-warning">{{ $t('products.lowStockWarningPreview') }}</span>
               </div>
             </div>
           </div>
@@ -255,9 +277,9 @@ const getPreviewStatusIcon = () => {
 }
 
 const getPreviewStatusText = () => {
-  if (form.value.current_stock === 0) return 'Uitverkocht'
-  if (form.value.current_stock <= form.value.minimum_stock) return 'Lage voorraad'
-  return 'Op voorraad'
+      if (form.value.current_stock === 0) return t('products.outOfStock')
+      if (form.value.current_stock <= form.value.minimum_stock) return t('products.lowStock')
+    return t('products.inStock')
 }
 
 // Watch for product changes to populate form
@@ -613,5 +635,34 @@ body.body--dark {
   :deep(.q-btn__content) {
     opacity: 0.7;
   }
+}
+
+// Focus states for inputs
+.input-modern:focus-within {
+  :deep(.q-field__control) {
+    outline: 2px solid var(--brand-primary);
+    outline-offset: 2px;
+  }
+}
+
+// Screen reader only content
+.sr-only {
+  position: absolute !important;
+  width: 1px !important;
+  height: 1px !important;
+  padding: 0 !important;
+  margin: -1px !important;
+  overflow: hidden !important;
+  clip: rect(0, 0, 0, 0) !important;
+  white-space: nowrap !important;
+  border: 0 !important;
+}
+
+// Button focus styles
+.close-btn:focus,
+.cancel-btn:focus,
+.save-btn:focus {
+  outline: 2px solid var(--brand-primary);
+  outline-offset: 2px;
 }
 </style> 

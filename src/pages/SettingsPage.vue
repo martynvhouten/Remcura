@@ -3,7 +3,7 @@
     <template #header>
       <PageTitle
         :title="$t('settings.title')"
-        subtitle="Beheer je instellingen en voorkeuren voor een optimale ervaring"
+        :subtitle="$t('settings.manageSettingsSubtitle')"
         icon="settings"
         :meta="[
           { icon: 'person', text: userProfile?.full_name || 'User' },
@@ -14,7 +14,7 @@
           <q-btn
             color="primary"
             icon="save"
-            label="Instellingen opslaan"
+            :label="$t('settings.saveSettings')"
             @click="saveSettings"
             :loading="saving"
             class="btn-modern"
@@ -32,9 +32,9 @@
           <q-card-section class="card-header">
             <div class="card-header-content">
               <div class="card-title-section">
-                <q-icon name="person" color="primary" size="24px" />
+                <q-icon name="person" color="primary" size="24px" aria-hidden="true" />
                 <div>
-                  <h3 class="card-title">{{ $t('settings.profile') }}</h3>
+                  <h2 class="card-title">{{ $t('settings.profile') }}</h2>
                   <p class="card-subtitle">Persoonlijke accountgegevens</p>
                 </div>
               </div>
@@ -44,16 +44,17 @@
           <q-separator />
 
           <q-card-section class="card-content">
-            <div class="form-grid">
+            <div class="form-grid" role="group" aria-labelledby="profile-title">
                 <q-input
                   v-model="userSettings.fullName"
                   :label="$t('auth.fullName')"
                   outlined
                   readonly
                 class="input-modern"
+                  :aria-label="`${$t('auth.fullName')}: ${userSettings.fullName}`"
                 >
                 <template v-slot:prepend>
-                    <q-icon name="person" />
+                    <q-icon name="person" aria-hidden="true" />
                   </template>
                 </q-input>
 
@@ -63,21 +64,23 @@
                   outlined
                   readonly
                 class="input-modern"
+                  :aria-label="`${$t('auth.email')}: ${userSettings.email}`"
                 >
                 <template v-slot:prepend>
-                    <q-icon name="email" />
+                    <q-icon name="email" aria-hidden="true" />
                   </template>
                 </q-input>
 
                 <q-input
                   v-model="userSettings.role"
-                  label="Rol"
+                  :label="$t('settings.role')"
                   outlined
                   readonly
                 class="input-modern"
+                  :aria-label="`${$t('settings.role')}: ${userSettings.role}`"
                 >
                 <template v-slot:prepend>
-                    <q-icon name="badge" />
+                    <q-icon name="badge" aria-hidden="true" />
                   </template>
                 </q-input>
               </div>
@@ -91,9 +94,9 @@
           <q-card-section class="card-header">
             <div class="card-header-content">
               <div class="card-title-section">
-                <q-icon name="palette" color="secondary" size="24px" />
+                <q-icon name="palette" color="secondary" size="24px" aria-hidden="true" />
                 <div>
-                  <h3 class="card-title">Weergave</h3>
+                  <h2 class="card-title">Weergave</h2>
                   <p class="card-subtitle">Interface en taalinstellingen</p>
                 </div>
               </div>
@@ -103,11 +106,11 @@
           <q-separator />
 
           <q-card-section class="card-content">
-            <div class="settings-items">
+            <div class="settings-items" role="group" aria-labelledby="appearance-title">
               <!-- Dark Mode Toggle -->
               <div class="setting-item glass-card">
                 <div class="setting-info">
-                  <div class="setting-label">{{ $t('settings.darkMode') }}</div>
+                  <div class="setting-label" id="dark-mode-label">{{ $t('settings.darkMode') }}</div>
                   <div class="setting-description">
                       Schakel tussen lichte en donkere modus
                   </div>
@@ -119,14 +122,17 @@
                       color="primary"
                       size="lg"
                     class="toggle-modern"
+                      :aria-labelledby="'dark-mode-label'"
+                      :aria-describedby="'dark-mode-description'"
                     />
+                    <div id="dark-mode-description" class="sr-only">{{ isDarkMode ? 'Dark mode is enabled' : 'Light mode is enabled' }}</div>
                   </div>
                 </div>
 
               <!-- Language Setting -->
               <div class="setting-item glass-card">
                 <div class="setting-info">
-                  <div class="setting-label">Taal</div>
+                  <div class="setting-label" id="language-label">Taal</div>
                   <div class="setting-description">
                       Selecteer je voorkeurstaal (alleen Nederlands beschikbaar)
                   </div>
@@ -140,6 +146,7 @@
                     class="select-modern"
                     readonly
                       style="width: 150px"
+                      :aria-labelledby="'language-label'"
                     />
                 </div>
                 </div>
@@ -154,9 +161,9 @@
           <q-card-section class="card-header">
             <div class="card-header-content">
               <div class="card-title-section">
-                <q-icon name="business" color="info" size="24px" />
+                <q-icon name="business" color="info" size="24px" aria-hidden="true" />
                 <div>
-                  <h3 class="card-title">{{ $t('settings.clinic') }}</h3>
+                  <h2 class="card-title">{{ $t('settings.clinic') }}</h2>
                   <p class="card-subtitle">Kliniek informatie en contactgegevens</p>
                 </div>
               </div>
@@ -166,52 +173,56 @@
           <q-separator />
 
           <q-card-section class="card-content">
-            <div class="clinic-form-grid">
+            <div class="clinic-form-grid" role="group" aria-labelledby="clinic-title">
                   <q-input
                     v-model="clinicSettings.name"
-                    label="Kliniek naam"
+                    :label="$t('settings.clinicName')"
                     outlined
                     readonly
                 class="input-modern"
+                    :aria-label="`${$t('settings.clinicName')}: ${clinicSettings.name}`"
                   >
                 <template v-slot:prepend>
-                      <q-icon name="business" />
+                      <q-icon name="business" aria-hidden="true" />
                     </template>
                   </q-input>
 
                   <q-input
                     v-model="clinicSettings.contactEmail"
-                    label="Contact e-mail"
+                    :label="$t('settings.contactEmail')"
                     outlined
                     readonly
                 class="input-modern"
+                    :aria-label="`${$t('settings.contactEmail')}: ${clinicSettings.contactEmail}`"
                   >
                 <template v-slot:prepend>
-                      <q-icon name="email" />
+                      <q-icon name="email" aria-hidden="true" />
                     </template>
                   </q-input>
 
                   <q-input
                     v-model="clinicSettings.contactPhone"
-                    label="Telefoonnummer"
+                    :label="$t('settings.phoneNumber')"
                     outlined
                     readonly
                 class="input-modern"
+                    :aria-label="`${$t('settings.phoneNumber')}: ${clinicSettings.contactPhone}`"
                   >
                 <template v-slot:prepend>
-                      <q-icon name="phone" />
+                      <q-icon name="phone" aria-hidden="true" />
                     </template>
                   </q-input>
 
                   <q-input
                     v-model="clinicSettings.address"
-                    label="Adres"
+                    :label="$t('settings.address')"
                     outlined
                     readonly
                 class="input-modern"
+                    :aria-label="`${$t('settings.address')}: ${clinicSettings.address}`"
                   >
                 <template v-slot:prepend>
-                      <q-icon name="location_on" />
+                      <q-icon name="location_on" aria-hidden="true" />
                     </template>
                   </q-input>
               </div>
@@ -682,5 +693,29 @@ body.body--dark {
   .card-subtitle {
     color: var(--neutral-600);
   }
+}
+
+// Screen reader only content
+.sr-only {
+  position: absolute !important;
+  width: 1px !important;
+  height: 1px !important;
+  padding: 0 !important;
+  margin: -1px !important;
+  overflow: hidden !important;
+  clip: rect(0, 0, 0, 0) !important;
+  white-space: nowrap !important;
+  border: 0 !important;
+}
+
+// Focus styles for interactive elements
+.toggle-modern:focus {
+  outline: 2px solid var(--brand-primary);
+  outline-offset: 2px;
+}
+
+.select-modern:focus-within {
+  outline: 2px solid var(--brand-primary);
+  outline-offset: 2px;
 }
 </style> 

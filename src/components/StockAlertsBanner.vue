@@ -1,19 +1,24 @@
 <template>
-  <div v-if="hasAlerts" class="stock-notifications">
+  <div v-if="hasAlerts" class="stock-notifications" role="region" aria-label="Stock alerts">
     <!-- Low stock notification -->
     <Transition name="notification-slide" appear>
       <div
         v-if="lowStockCount > 0 && !lowStockDismissed"
         class="notification-card warning"
         @click="goToProducts"
+        role="alert"
+        :aria-label="`Low stock alert: ${lowStockMessage}. Click to view products.`"
+        tabindex="0"
+        @keydown.enter="goToProducts"
+        @keydown.space="goToProducts"
       >
-        <div class="notification-icon">
+        <div class="notification-icon" aria-hidden="true">
           <q-icon name="warning" size="16px" />
             </div>
         <div class="notification-content">
           <div class="notification-title">Low Stock</div>
           <div class="notification-message">
-            {{ lowStockCount }} {{ lowStockCount === 1 ? 'product needs' : 'products need' }} attention
+            {{ lowStockMessage }}
             </div>
       </div>
         <q-btn
@@ -24,8 +29,9 @@
           icon="close"
           @click.stop="dismissLowStockAlert"
           class="notification-dismiss"
+          :aria-label="$t('common.dismiss') || 'Dismiss low stock alert'"
               >
-          <q-tooltip>Dismiss</q-tooltip>
+          <q-tooltip>{{ $t('common.dismiss') || 'Dismiss' }}</q-tooltip>
               </q-btn>
       </div>
     </Transition>
@@ -36,14 +42,19 @@
         v-if="outOfStockCount > 0 && !outOfStockDismissed"
         class="notification-card critical"
         @click="goToProducts"
+        role="alert"
+        :aria-label="`Out of stock alert: ${outOfStockMessage}. Click to view products.`"
+        tabindex="0"
+        @keydown.enter="goToProducts"
+        @keydown.space="goToProducts"
       >
-        <div class="notification-icon">
+        <div class="notification-icon" aria-hidden="true">
           <q-icon name="error" size="16px" />
             </div>
         <div class="notification-content">
           <div class="notification-title">Out of Stock</div>
           <div class="notification-message">
-            {{ outOfStockCount }} {{ outOfStockCount === 1 ? 'product is' : 'products are' }} unavailable
+            {{ outOfStockMessage }}
             </div>
       </div>
         <q-btn
@@ -54,8 +65,9 @@
           icon="close"
           @click.stop="dismissOutOfStockAlert"
           class="notification-dismiss"
+          :aria-label="$t('common.dismiss') || 'Dismiss out of stock alert'"
               >
-          <q-tooltip>Dismiss</q-tooltip>
+          <q-tooltip>{{ $t('common.dismiss') || 'Dismiss' }}</q-tooltip>
               </q-btn>
       </div>
     </Transition>
@@ -84,6 +96,22 @@ const hasAlerts = computed(() =>
   (lowStockCount.value > 0 && !lowStockDismissed.value) ||
   (outOfStockCount.value > 0 && !outOfStockDismissed.value)
 )
+
+const lowStockMessage = computed(() => {
+  const count = lowStockCount.value
+  if (count === 1) {
+    return t('alerts.lowStockSingular')
+  }
+  return t('alerts.lowStockPlural', { count })
+})
+
+const outOfStockMessage = computed(() => {
+  const count = outOfStockCount.value
+  if (count === 1) {
+    return t('alerts.outOfStockSingular')
+  }
+  return t('alerts.outOfStockPlural', { count })
+})
 
 // Methods
 const goToProducts = () => {
@@ -140,6 +168,12 @@ watch(() => outOfStockCount.value, (newCount: number, oldCount: number) => {
   &:hover {
     transform: translateY(-2px);
     box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+  }
+  
+  &:focus {
+    outline: 2px solid var(--brand-primary);
+    outline-offset: 2px;
+    transform: translateY(-1px);
   }
   
   &.warning {
@@ -210,6 +244,12 @@ watch(() => outOfStockCount.value, (newCount: number, oldCount: number) => {
       &:hover {
     background: rgba(148, 163, 184, 0.1);
     color: #64748b;
+  }
+  
+  &:focus {
+    outline: 2px solid var(--brand-primary);
+    outline-offset: 2px;
+    background: rgba(148, 163, 184, 0.1);
   }
 }
 

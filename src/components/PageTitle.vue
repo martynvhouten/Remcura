@@ -9,9 +9,10 @@
             :size="props.iconSize" 
             :color="props.iconColor"
             class="title-icon"
+            aria-hidden="true"
           />
           <div class="title-text">
-            <h1 class="page-title">{{ props.title }}</h1>
+            <h1 class="page-title" :id="`page-title-${title.replace(/\s+/g, '-').toLowerCase()}`">{{ props.title }}</h1>
             <p v-if="props.subtitle" class="page-subtitle">{{ props.subtitle }}</p>
           </div>
           <q-badge 
@@ -19,22 +20,24 @@
             :color="props.badgeColor" 
             :label="props.badge" 
             class="title-badge"
+            :aria-label="`Status: ${props.badge}`"
           />
         </div>
         
-        <div v-if="props.meta && props.meta.length > 0" class="title-meta">
+        <div v-if="props.meta && props.meta.length > 0" class="title-meta" role="list" aria-label="Page metadata">
           <div 
             v-for="(item, index) in props.meta" 
             :key="index" 
             class="meta-item"
+            role="listitem"
           >
-            <q-icon :name="item.icon" size="16px" />
+            <q-icon :name="item.icon" size="16px" aria-hidden="true" />
             <span>{{ item.text }}</span>
           </div>
         </div>
       </div>
       
-      <div v-if="slots.actions" class="title-actions">
+      <div v-if="slots.actions" class="title-actions" role="group" aria-label="Page actions">
         <slot name="actions" />
       </div>
     </div>

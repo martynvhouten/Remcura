@@ -6,9 +6,14 @@
       `card-${color}`
     ]"
     @click="handleClick"
+    :role="clickable ? 'button' : undefined"
+    :tabindex="clickable ? 0 : undefined"
+    :aria-label="clickable ? $attrs['aria-label'] || `${title}: ${formattedValue}. Click for details.` : `${title}: ${formattedValue}`"
+    @keydown.enter="handleClick"
+    @keydown.space="handleClick"
   >
     <!-- Background decoration -->
-    <div class="card-decoration" :class="`decoration-${color}`"></div>
+    <div class="card-decoration" :class="`decoration-${color}`" aria-hidden="true"></div>
     
     <q-card-section class="card-content">
       <div class="content-layout">
@@ -19,38 +24,40 @@
               :name="icon" 
               size="28px"
               class="card-icon"
+              aria-hidden="true"
             />
           </div>
         </div>
         
         <!-- Content section -->
         <div class="text-section">
-          <div class="card-title">{{ title }}</div>
-          <div class="card-value" :class="`text-${color}`">
+          <div class="card-title" :id="`card-title-${$attrs.id || title.replace(/\s+/g, '-').toLowerCase()}`">{{ title }}</div>
+          <div class="card-value" :class="`text-${color}`" :aria-labelledby="`card-title-${$attrs.id || title.replace(/\s+/g, '-').toLowerCase()}`">
             {{ formattedValue }}
           </div>
-          <div class="card-trend" v-if="trend">
+          <div class="card-trend" v-if="trend" role="status" :aria-label="`Trend: ${trend.direction === 'up' ? 'increased' : 'decreased'} by ${trend.percentage} percent compared to last month`">
           <q-icon 
               :name="trend.direction === 'up' ? 'trending_up' : 'trending_down'"
               :color="trend.direction === 'up' ? 'positive' : 'negative'"
               size="14px"
+              aria-hidden="true"
             />
             <span :class="trend.direction === 'up' ? 'text-positive' : 'text-negative'">
               {{ trend.percentage }}%
             </span>
-            <span class="trend-period">vs last month</span>
+            <span class="trend-period">{{ $t('dashboard.vsLastMonth') }}</span>
           </div>
         </div>
       </div>
     </q-card-section>
     
     <!-- Interactive indicator -->
-    <div v-if="clickable" class="interaction-indicator">
+    <div v-if="clickable" class="interaction-indicator" aria-hidden="true">
       <q-icon name="arrow_forward" size="16px" />
     </div>
     
     <!-- Hover effect overlay -->
-    <div class="hover-overlay"></div>
+    <div class="hover-overlay" aria-hidden="true"></div>
   </q-card>
 </template>
 
@@ -330,38 +337,40 @@ const handleClick = () => {
     }
   }
   
-  // Interactive states - Beautiful hover effects
+  // Interactive cards (clickable)
   &.card-interactive {
     cursor: pointer;
+    transition: all var(--transition-base);
     
     &:hover {
-      transform: translateY(-2px);
+      transform: translateY(-4px) scale(1.02);
       box-shadow: var(--shadow-lg);
+      border-color: var(--card-accent);
       
       .card-decoration {
-        transform: rotate(45deg) scale(1.2);
         opacity: 0.12;
-        filter: blur(0.5px);
-        
-        &::after {
-          transform: scale(1.3);
-          opacity: 0.6;
-        }
+        transform: rotate(45deg) scale(1.4);
       }
       
-      .icon-container {
-        transform: scale(1.05);
-        box-shadow: var(--shadow-sm);
+      .hover-overlay {
+        opacity: 0.05;
       }
       
       .interaction-indicator {
         opacity: 1;
-        transform: translateX(0);
+        transform: translateX(4px);
       }
-      
-      .hover-overlay {
-        opacity: 1;
-      }
+    }
+    
+    &:focus {
+      outline: 2px solid var(--brand-primary);
+      outline-offset: 2px;
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-md);
+    }
+    
+    &:active {
+      transform: translateY(-1px) scale(1.01);
     }
   }
   

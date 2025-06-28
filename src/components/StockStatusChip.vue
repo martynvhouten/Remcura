@@ -10,9 +10,11 @@
         `chip-${chipVariant}`,
         { 'chip-critical': isCritical }
       ]"
+      :aria-label="chipAriaLabel"
+      role="status"
     >
       <span class="chip-label">{{ chipLabel }}</span>
-      <div v-if="isCritical" class="urgency-indicator"></div>
+      <div v-if="isCritical" class="urgency-indicator" aria-hidden="true"></div>
     </q-chip>
   </div>
 </template>
@@ -54,6 +56,12 @@ const chipLabel = computed(() => {
 })
 
 const isCritical = computed(() => props.product.current_stock === 0)
+
+const chipAriaLabel = computed(() => {
+  if (props.product.current_stock === 0) return t('products.outOfStock')
+  if (props.product.current_stock <= props.product.minimum_stock) return t('products.lowStock')
+  return t('products.inStock')
+})
 </script>
 
 <style lang="scss" scoped>

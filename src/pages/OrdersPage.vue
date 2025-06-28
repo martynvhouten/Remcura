@@ -3,9 +3,9 @@
     <template #header>
       <PageTitle
         :title="$t('nav.orders')"
-        subtitle="Bekijk en beheer je bestellingen met onze geavanceerde orderbeheersysteem"
+        :subtitle="$t('orders.manageOrdersSubtitle')"
         icon="shopping_cart"
-        badge="Binnenkort"
+                  :badge="$t('common.comingSoon')"
         badge-color="info"
         :meta="[
           { icon: 'shopping_cart', text: 'Bestellingen module' },
@@ -16,7 +16,7 @@
           <q-btn
             color="primary"
             icon="arrow_back"
-            label="Terug naar Dashboard"
+            :label="$t('orders.backToDashboard')"
             @click="goToDashboard"
             class="btn-modern"
             unelevated
@@ -28,9 +28,9 @@
     <!-- Coming Soon Section -->
     <div class="coming-soon-section animate-slide-up">
       <!-- Main Coming Soon Card -->
-      <q-card class="coming-soon-card card-modern card-elevated">
+      <q-card class="coming-soon-card card-modern card-elevated" role="main">
         <q-card-section class="coming-soon-content">
-          <div class="coming-soon-icon">
+          <div class="coming-soon-icon" aria-hidden="true">
             <div class="icon-container">
               <q-icon name="shopping_cart" size="80px" />
             </div>
@@ -45,7 +45,7 @@
           </div>
 
           <!-- Progress Indicator -->
-          <div class="development-progress">
+          <div class="development-progress" role="progressbar" :aria-valuenow="75" aria-valuemin="0" aria-valuemax="100" aria-label="Development progress: 75%">
             <div class="progress-header">
               <span class="progress-label">Ontwikkelingsvoortgang</span>
               <span class="progress-percentage">75%</span>
@@ -68,9 +68,9 @@
           <p class="features-subtitle">Ontdek wat er allemaal mogelijk wordt</p>
         </div>
         
-        <div class="features-grid">
-          <div class="feature-card glass-card animate-scale-in" style="animation-delay: 0.1s">
-            <div class="feature-icon">
+        <div class="features-grid" role="grid" aria-label="Planned features">
+          <div class="feature-card glass-card animate-scale-in" style="animation-delay: 0.1s" role="gridcell">
+            <div class="feature-icon" aria-hidden="true">
               <q-icon name="history" size="32px" color="primary" />
             </div>
             <div class="feature-content">
@@ -79,13 +79,13 @@
                 Bekijk alle vorige bestellingen met gedetailleerde informatie en statusupdates
               </p>
               <div class="feature-status">
-                <q-chip color="info" text-color="white" size="sm">In ontwikkeling</q-chip>
+                <q-chip color="info" text-color="white" size="sm" :aria-label="'Status: In ontwikkeling'">In ontwikkeling</q-chip>
               </div>
             </div>
           </div>
 
-          <div class="feature-card glass-card animate-scale-in" style="animation-delay: 0.2s">
-            <div class="feature-icon">
+          <div class="feature-card glass-card animate-scale-in" style="animation-delay: 0.2s" role="gridcell">
+            <div class="feature-icon" aria-hidden="true">
               <q-icon name="add_shopping_cart" size="32px" color="secondary" />
             </div>
             <div class="feature-content">
@@ -94,13 +94,13 @@
                 Plaats bestellingen direct vanuit voorraad met automatische leverancier matching
               </p>
               <div class="feature-status">
-                <q-chip color="warning" text-color="dark" size="sm">Gepland</q-chip>
+                <q-chip color="warning" text-color="dark" size="sm" :aria-label="'Status: Gepland'">Gepland</q-chip>
               </div>
             </div>
           </div>
 
-          <div class="feature-card glass-card animate-scale-in" style="animation-delay: 0.3s">
-            <div class="feature-icon">
+          <div class="feature-card glass-card animate-scale-in" style="animation-delay: 0.3s" role="gridcell">
+            <div class="feature-icon" aria-hidden="true">
               <q-icon name="receipt" size="32px" color="accent" />
             </div>
             <div class="feature-content">
@@ -109,13 +109,13 @@
                 Download en beheer facturen met automatische boekhouding integratie
               </p>
               <div class="feature-status">
-                <q-chip color="positive" text-color="white" size="sm">Bijna klaar</q-chip>
+                <q-chip color="positive" text-color="white" size="sm" :aria-label="'Status: Bijna klaar'">Bijna klaar</q-chip>
               </div>
             </div>
           </div>
 
-          <div class="feature-card glass-card animate-scale-in" style="animation-delay: 0.4s">
-            <div class="feature-icon">
+          <div class="feature-card glass-card animate-scale-in" style="animation-delay: 0.4s" role="gridcell">
+            <div class="feature-icon" aria-hidden="true">
               <q-icon name="track_changes" size="32px" color="info" />
             </div>
             <div class="feature-content">
@@ -124,13 +124,13 @@
                 Volg de status van je bestellingen in real-time met notificaties
               </p>
               <div class="feature-status">
-                <q-chip color="info" text-color="white" size="sm">In ontwikkeling</q-chip>
+                <q-chip color="info" text-color="white" size="sm" :aria-label="'Status: In ontwikkeling'">In ontwikkeling</q-chip>
               </div>
             </div>
           </div>
 
-          <div class="feature-card glass-card animate-scale-in" style="animation-delay: 0.5s">
-            <div class="feature-icon">
+          <div class="feature-card glass-card animate-scale-in" style="animation-delay: 0.5s" role="gridcell">
+            <div class="feature-icon" aria-hidden="true">
               <q-icon name="auto_awesome" size="32px" color="warning" />
             </div>
             <div class="feature-content">
@@ -139,13 +139,13 @@
                 Stel automatische bestellingen in gebaseerd op voorraadniveaus
               </p>
               <div class="feature-status">
-                <q-chip color="warning" text-color="dark" size="sm">Gepland</q-chip>
+                <q-chip color="warning" text-color="dark" size="sm" :aria-label="'Status: Gepland'">Gepland</q-chip>
               </div>
             </div>
           </div>
 
-          <div class="feature-card glass-card animate-scale-in" style="animation-delay: 0.6s">
-            <div class="feature-icon">
+          <div class="feature-card glass-card animate-scale-in" style="animation-delay: 0.6s" role="gridcell">
+            <div class="feature-icon" aria-hidden="true">
               <q-icon name="integration_instructions" size="32px" color="positive" />
             </div>
             <div class="feature-content">
@@ -154,7 +154,7 @@
                 Directe koppeling met webshop voor naadloze orderverwerking
               </p>
               <div class="feature-status">
-                <q-chip color="positive" text-color="white" size="sm">Bijna klaar</q-chip>
+                <q-chip color="positive" text-color="white" size="sm" :aria-label="'Status: Bijna klaar'">Bijna klaar</q-chip>
               </div>
             </div>
           </div>
@@ -166,7 +166,7 @@
         <q-expansion-item
           class="technical-expansion"
           icon="code"
-          label="Technische informatie (voor ontwikkelaars)"
+          :label="$t('orders.technicalInfoForDevelopers')"
           header-class="technical-header"
         >
           <q-card class="technical-card card-modern">

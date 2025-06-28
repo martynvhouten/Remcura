@@ -99,17 +99,17 @@ export default configure(function (ctx) {
       config: {
         dark: 'auto', // or Boolean true/false or 'auto'
         brand: {
-          primary: '#6366f1',
-          secondary: '#06b6d4',
+          primary: '#4f46e5',
+          secondary: '#0891b2',
           accent: '#f59e0b',
 
-          dark: '#171717',
+          dark: '#1c1917',
           'dark-page': '#0a0a0a',
 
-          positive: '#10b981',
-          negative: '#ef4444',
-          info: '#06b6d4',
-          warning: '#f59e0b'
+          positive: '#059669',
+          negative: '#dc2626',
+          info: '#0369a1',
+          warning: '#d97706'
         }
       },
 

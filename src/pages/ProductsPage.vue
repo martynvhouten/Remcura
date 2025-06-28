@@ -3,16 +3,16 @@
     <template #header>
       <PageTitle
         :title="$t('products.title')"
-        subtitle="Beheer je medische voorraad en ontvang automatische herbestelmeldingen"
+        :subtitle="$t('products.manageInventorySubtitle')"
         icon="inventory_2"
         :meta="[
-          { icon: 'inventory_2', text: 'Voorraad beheer' },
-          { icon: 'analytics', text: `${totalProducts} producten` }
+          { icon: 'inventory_2', text: $t('products.inventoryManagement') },
+          { icon: 'analytics', text: $t('products.totalProductsCount', { count: totalProducts }) }
         ]"
       >
         <template #actions>
           <q-btn
-            color="secondary"
+            color="primary"
             icon="refresh"
             :label="$t('common.refresh')"
             @click="refreshProducts"
@@ -33,7 +33,7 @@
     </template>
 
       <!-- Filters and Search -->
-      <q-card flat class="filters-card q-pa-md">
+      <q-card flat class="filters-card q-pa-md" role="search" aria-label="Product filters">
         <div class="row q-gutter-md items-end">
           <div class="col-12 col-sm-6 col-md-4">
             <q-input
@@ -43,9 +43,10 @@
               dense
               clearable
               debounce="300"
+              :aria-label="$t('products.searchProducts') || 'Search products by name or SKU'"
             >
               <template v-slot:prepend>
-                <q-icon name="search" />
+                <q-icon name="search" aria-hidden="true" />
               </template>
             </q-input>
           </div>
@@ -54,11 +55,12 @@
             <q-select
               v-model="stockFilter"
               :options="stockFilterOptions"
-              :label="'Filter op voorraadstatus'"
+              :label="$t('products.filterByStockStatus')"
               outlined
               dense
               emit-value
               map-options
+              :aria-label="$t('products.filterByStockStatus') || 'Filter products by stock status'"
             />
           </div>
         </div>
@@ -75,6 +77,8 @@
           :filter="searchQuery"
           :filter-method="filterMethod"
           class="products-table"
+          role="table"
+          :aria-label="$t('products.productsTableLabel') || 'Products inventory table'"
         >
           <!-- Custom column templates -->
           <template v-slot:body-cell-stock_status="props">
@@ -88,6 +92,7 @@
               <q-badge 
                 :color="getStockColor(props.row)"
                 :label="props.value"
+                :aria-label="`Current stock: ${props.value} units`"
               />
             </q-td>
           </template>
@@ -100,6 +105,7 @@
                 text-color="white"
                 icon="add_shopping_cart"
                 size="sm"
+                :aria-label="`Reorder suggestion: ${getReorderSuggestion(props.row)} units`"
               >
                 +{{ getReorderSuggestion(props.row) }}
               </q-chip>
@@ -115,6 +121,7 @@
                 icon="edit"
                 color="primary"
                 @click="editProduct(props.row)"
+                :aria-label="`Edit ${props.row.product_name}`"
               />
               <q-btn
                 flat
@@ -123,6 +130,7 @@
                 icon="delete"
                 color="negative"
                 @click="confirmDeleteProduct(props.row)"
+                :aria-label="`Delete ${props.row.product_name}`"
               />
             </q-td>
           </template>

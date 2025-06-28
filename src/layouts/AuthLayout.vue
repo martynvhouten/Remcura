@@ -23,57 +23,57 @@
                   <q-icon name="local_hospital" size="32px" color="primary" />
                 </q-avatar>
                 <div class="brand-text">
-                  <h1 class="brand-title">MedStock Pro</h1>
+                  <h1 class="brand-title">{{ $t('brand.name') }}</h1>
                   <p class="brand-subtitle">{{ $t('auth.pleaseLogin') }}</p>
                 </div>
               </div>
           </div>
           
             <!-- Main Content -->
-          <div class="auth-content">
+          <div class="auth-content" role="main">
             <router-view />
           </div>
           
             <!-- Footer Section -->
             <div class="auth-footer">
               <div class="footer-links">
-                <a href="#" class="footer-link">{{ $t('auth.privacyPolicy') }}</a>
-                <span class="separator">•</span>
-                <a href="#" class="footer-link">{{ $t('auth.termsOfService') }}</a>
-                <span class="separator">•</span>
-                <a href="#" class="footer-link">{{ $t('auth.support') }}</a>
+                <a href="#" class="footer-link" role="button" tabindex="0" :aria-label="$t('auth.privacyPolicy')">{{ $t('auth.privacyPolicy') }}</a>
+                <span class="separator" aria-hidden="true">•</span>
+                <a href="#" class="footer-link" role="button" tabindex="0" :aria-label="$t('auth.termsOfService')">{{ $t('auth.termsOfService') }}</a>
+                <span class="separator" aria-hidden="true">•</span>
+                <a href="#" class="footer-link" role="button" tabindex="0" :aria-label="$t('auth.support')">{{ $t('auth.support') }}</a>
               </div>
               <p class="copyright">
-                © 2024 MedStock Pro. {{ $t('auth.allRightsReserved') }}.
+                {{ $t('auth.copyright', { year: 2025, company: $t('brand.name') }) }}
               </p>
             </div>
           </div>
 
           <!-- Side Information Panel -->
-          <div class="info-panel animate-slide-up">
+          <div class="info-panel animate-slide-up" role="complementary" aria-labelledby="info-title">
             <div class="info-content">
               <div class="info-icon">
                 <q-icon name="medical_services" size="48px" />
               </div>
-              <h2 class="info-title">{{ $t('auth.professionalInventory') }}</h2>
+              <h2 id="info-title" class="info-title">{{ $t('auth.professionalInventory') }}</h2>
               <p class="info-description">
                 {{ $t('auth.platformDescription') }}
               </p>
               
-              <div class="features-list">
-                <div class="feature-item">
+              <div class="features-list" role="list">
+                <div class="feature-item" role="listitem">
                   <q-icon name="check_circle" color="positive" />
                   <span>{{ $t('auth.realtimeTracking') }}</span>
                 </div>
-                <div class="feature-item">
+                <div class="feature-item" role="listitem">
                   <q-icon name="check_circle" color="positive" />
                   <span>{{ $t('auth.automatedAlerts') }}</span>
                 </div>
-                <div class="feature-item">
+                <div class="feature-item" role="listitem">
                   <q-icon name="check_circle" color="positive" />
                   <span>{{ $t('auth.complianceReporting') }}</span>
                 </div>
-                <div class="feature-item">
+                <div class="feature-item" role="listitem">
                   <q-icon name="check_circle" color="positive" />
                   <span>{{ $t('auth.multilocationSupport') }}</span>
                 </div>

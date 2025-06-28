@@ -5,6 +5,7 @@
       elevated 
       class="header-modern glass"
       :class="{ 'header-scrolled': isScrolled }"
+      role="banner"
     >
       <q-toolbar class="toolbar-modern">
         <q-btn
@@ -12,7 +13,7 @@
           dense
           round
           icon="menu"
-          aria-label="Menu"
+          :aria-label="$t('nav.openNavigation') || 'Open navigation menu'"
           @click="toggleLeftDrawer"
           class="menu-toggle-btn"
         />
@@ -22,14 +23,14 @@
             <q-icon name="local_hospital" size="18px" />
           </q-avatar>
           <div class="brand-text">
-            <div class="brand-title">MedStock Pro</div>
-            <div class="brand-subtitle">Enterprise Edition</div>
+            <div class="brand-title">{{ $t('brand.name') }}</div>
+            <div class="brand-subtitle">{{ $t('brand.edition') }}</div>
           </div>
         </div>
 
         <q-space />
 
-        <div class="header-actions">
+        <div class="header-actions" role="navigation" aria-label="User actions">
           <!-- Notifications -->
           <q-btn
             flat
@@ -37,9 +38,10 @@
             dense
             icon="notifications"
             class="action-btn"
+            :aria-label="$t('nav.notifications') || 'Notifications (3 unread)'"
           >
             <q-badge color="danger" floating>3</q-badge>
-            <q-tooltip>Notifications</q-tooltip>
+            <q-tooltip>{{ $t('nav.notifications') || 'Notifications' }}</q-tooltip>
           </q-btn>
 
           <!-- Dark mode toggle -->
@@ -50,8 +52,9 @@
             :icon="$q.dark.isActive ? 'light_mode' : 'dark_mode'"
             @click="toggleDarkMode"
             class="action-btn"
+            :aria-label="$q.dark.isActive ? ($t('nav.lightMode') || 'Switch to light mode') : ($t('nav.darkMode') || 'Switch to dark mode')"
           >
-            <q-tooltip>{{ $q.dark.isActive ? 'Light Mode' : 'Dark Mode' }}</q-tooltip>
+            <q-tooltip>{{ $q.dark.isActive ? ($t('nav.lightMode') || 'Light Mode') : ($t('nav.darkMode') || 'Dark Mode') }}</q-tooltip>
           </q-btn>
           
           <!-- User menu -->
@@ -61,19 +64,20 @@
             dense
             class="user-menu-btn"
             dropdown-icon="none"
+            :aria-label="$t('nav.userMenu') || 'User menu'"
           >
             <template v-slot:label>
               <q-avatar size="32px" color="primary">
-                <img v-if="userProfile?.avatar_url" :src="userProfile.avatar_url" />
+                <img v-if="userProfile?.avatar_url" :src="userProfile.avatar_url" :alt="`${userProfile?.full_name || 'User'} avatar`" />
                 <span v-else>{{ getUserInitials() }}</span>
               </q-avatar>
             </template>
 
-            <q-list class="user-menu-list">
-              <q-item class="user-info-item">
+            <q-list class="user-menu-list" role="menu">
+              <q-item class="user-info-item" role="none">
                 <q-item-section avatar>
                   <q-avatar size="40px" color="primary">
-                    <img v-if="userProfile?.avatar_url" :src="userProfile.avatar_url" />
+                    <img v-if="userProfile?.avatar_url" :src="userProfile.avatar_url" :alt="`${userProfile?.full_name || 'User'} avatar`" />
                     <span v-else>{{ getUserInitials() }}</span>
                   </q-avatar>
                 </q-item-section>
@@ -87,7 +91,7 @@
               
               <q-separator class="q-my-sm" />
               
-              <q-item clickable v-close-popup @click="goToSettings" class="menu-item">
+              <q-item clickable v-close-popup @click="goToSettings" class="menu-item" role="menuitem">
                 <q-item-section avatar>
                   <q-icon name="settings" />
                 </q-item-section>
@@ -96,18 +100,18 @@
                 </q-item-section>
               </q-item>
               
-              <q-item clickable v-close-popup class="menu-item">
+              <q-item clickable v-close-popup class="menu-item" role="menuitem">
                 <q-item-section avatar>
                   <q-icon name="help_outline" />
                 </q-item-section>
                 <q-item-section>
-                  <q-item-label>Help & Support</q-item-label>
+                  <q-item-label>{{ $t('nav.helpSupport') }}</q-item-label>
                 </q-item-section>
               </q-item>
               
               <q-separator class="q-my-sm" />
               
-              <q-item clickable v-close-popup @click="handleLogout" class="menu-item logout-item">
+              <q-item clickable v-close-popup @click="handleLogout" class="menu-item logout-item" role="menuitem">
                 <q-item-section avatar>
                   <q-icon name="logout" />
                 </q-item-section>
@@ -128,9 +132,11 @@
       bordered
       class="navigation-drawer"
       :width="280"
+      role="navigation"
+      aria-label="Main navigation"
     >
       <!-- Clinic Info Section -->
-      <div class="clinic-info-section">
+      <div class="clinic-info-section" role="banner">
         <div class="clinic-avatar">
           <q-avatar size="48px" color="primary" text-color="white">
             <q-icon name="domain" size="24px" />
@@ -138,14 +144,14 @@
         </div>
         <div class="clinic-details">
           <div class="clinic-name">{{ clinicName }}</div>
-          <div class="clinic-plan">Professional Plan</div>
+          <div class="clinic-plan">{{ $t('clinic.professionalPlan') }}</div>
         </div>
       </div>
 
       <!-- Main Navigation -->
       <q-list class="navigation-list">
         <q-item-label header class="navigation-header">
-          Navigation
+          {{ $t('nav.navigation') }}
         </q-item-label>
 
         <q-item
@@ -157,6 +163,7 @@
           :active="$route.name === link.routeName"
           active-class="nav-item-active"
           class="nav-item"
+          :aria-label="`${link.title} - ${link.caption}${link.badge ? ' (' + link.badge + ' items)' : ''}`"
         >
           <q-item-section avatar>
             <q-icon :name="link.icon" size="20px" />
@@ -168,25 +175,25 @@
           </q-item-section>
 
           <q-item-section side v-if="link.badge">
-            <q-badge :color="link.badgeColor || 'primary'" :label="link.badge" />
+            <q-badge :color="link.badgeColor || 'primary'" :label="link.badge" :aria-label="`${link.badge} items requiring attention`" />
           </q-item-section>
         </q-item>
       </q-list>
 
       <!-- Quick Stats Section -->
-      <div class="quick-stats-section">
-        <q-item-label header class="navigation-header">
-          Quick Stats
+      <div class="quick-stats-section" role="region" aria-labelledby="quick-stats-title">
+        <q-item-label header class="navigation-header" id="quick-stats-title">
+          {{ $t('nav.quickStats') }}
         </q-item-label>
         
         <div class="stats-grid">
-          <div class="stat-item">
+          <div class="stat-item" tabindex="0" role="button" :aria-label="`${totalProducts} ${$t('nav.products')}`">
             <div class="stat-number">{{ totalProducts }}</div>
-            <div class="stat-label">Products</div>
+            <div class="stat-label">{{ $t('nav.products') }}</div>
           </div>
-          <div class="stat-item">
+          <div class="stat-item" tabindex="0" role="button" :aria-label="`${lowStockCount} ${$t('dashboard.lowStock')} items`">
             <div class="stat-number text-warning">{{ lowStockCount }}</div>
-            <div class="stat-label">Low Stock</div>
+            <div class="stat-label">{{ $t('dashboard.lowStock') }}</div>
           </div>
         </div>
       </div>
@@ -196,13 +203,13 @@
 
       <!-- Footer Section -->
       <div class="drawer-footer">
-        <q-item class="upgrade-item glass-card">
+        <q-item class="upgrade-item glass-card" clickable tabindex="0" role="button" :aria-label="$t('nav.upgradePlan')">
           <q-item-section avatar>
             <q-icon name="upgrade" color="accent" />
           </q-item-section>
           <q-item-section>
-            <q-item-label class="text-weight-medium">Upgrade Plan</q-item-label>
-            <q-item-label caption>Get advanced features</q-item-label>
+            <q-item-label class="text-weight-medium">{{ $t('nav.upgradePlan') }}</q-item-label>
+            <q-item-label caption>{{ $t('nav.getAdvancedFeatures') }}</q-item-label>
           </q-item-section>
         </q-item>
       </div>
@@ -214,7 +221,7 @@
       <StockAlertsBanner />
       
       <!-- Main content area -->
-      <div class="page-content">
+      <div class="page-content" role="main">
       <router-view />
       </div>
     </q-page-container>
@@ -243,7 +250,7 @@ const isScrolled = ref(false)
 // Computed properties
 const userProfile = computed(() => authStore.userProfile)
 const userEmail = computed(() => authStore.userEmail)
-const clinicName = computed(() => clinicStore.clinic?.name || 'Kliniek')
+const clinicName = computed(() => clinicStore.clinic?.name || t('clinic.defaultName'))
 
 // Mock stats - these would come from your store in a real app
 const totalProducts = computed(() => 247)
@@ -253,14 +260,14 @@ const lowStockCount = computed(() => 12)
 const navigationLinks = computed(() => [
   {
     title: t('nav.dashboard'),
-    caption: 'Overview & analytics',
+    caption: t('nav.overviewAnalytics'),
     icon: 'dashboard',
     to: '/',
     routeName: 'dashboard'
   },
   {
     title: t('nav.products'),
-    caption: 'Inventory management',
+    caption: t('nav.inventoryManagement'),
     icon: 'inventory_2',
     to: '/products',
     routeName: 'products',
@@ -269,21 +276,21 @@ const navigationLinks = computed(() => [
   },
   {
     title: t('nav.orders'),
-    caption: 'Purchase orders',
+    caption: t('nav.purchaseOrders'),
     icon: 'shopping_cart',
     to: '/orders',
     routeName: 'orders'
   },
   {
-    title: 'Analytics',
-    caption: 'Reports & insights',
+    title: t('nav.analytics'),
+    caption: t('nav.reportsInsights'),
     icon: 'analytics',
     to: '/analytics',
     routeName: 'analytics'
   },
   {
-    title: 'Suppliers',
-    caption: 'Vendor management',
+    title: t('nav.suppliers'),
+    caption: t('nav.vendorManagement'),
     icon: 'store',
     to: '/suppliers',
     routeName: 'suppliers'
@@ -524,6 +531,12 @@ body.body--dark .layout-modern .header-modern {
         transform: translateX(4px);
       }
       
+      &:focus {
+        outline: 2px solid var(--brand-primary);
+        outline-offset: 2px;
+        background-color: var(--neutral-100);
+      }
+      
       &.nav-item-active {
         background: linear-gradient(135deg, var(--brand-primary), var(--brand-primary-light));
         color: white;
@@ -567,10 +580,17 @@ body.body--dark .layout-modern .header-modern {
         background: var(--neutral-100);
         border-radius: var(--radius-lg);
         transition: all var(--transition-base);
+        cursor: pointer;
         
         &:hover {
           transform: translateY(-2px);
           box-shadow: var(--shadow-sm);
+        }
+        
+        &:focus {
+          outline: 2px solid var(--brand-primary);
+          outline-offset: 2px;
+          background-color: var(--neutral-200);
         }
         
         .stat-number {
@@ -600,6 +620,12 @@ body.body--dark .layout-modern .header-modern {
       
       &:hover {
         transform: translateY(-2px);
+        box-shadow: var(--shadow-lg);
+      }
+      
+      &:focus {
+        outline: 2px solid var(--brand-primary);
+        outline-offset: 2px;
         box-shadow: var(--shadow-lg);
       }
     }

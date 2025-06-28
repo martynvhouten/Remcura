@@ -1,6 +1,6 @@
 <template>
   <div class="login-form-container">
-    <q-form @submit.prevent="handleLogin" class="login-form">
+    <q-form @submit.prevent="handleLogin" class="login-form" novalidate>
       <!-- Email Input -->
       <div class="form-field">
         <q-input
@@ -12,11 +12,14 @@
       :error-message="email.error.value"
           class="input-modern"
           autocomplete="email"
+          required
+          :aria-describedby="email.error.value ? 'email-error' : undefined"
         >
           <template v-slot:prepend>
-            <q-icon name="email" />
+            <q-icon name="email" aria-hidden="true" />
           </template>
         </q-input>
+        <div v-if="email.error.value" id="email-error" class="sr-only">{{ email.error.value }}</div>
       </div>
 
       <!-- Password Input -->
@@ -30,9 +33,11 @@
       :error-message="password.error.value"
           class="input-modern"
           autocomplete="current-password"
+          required
+          :aria-describedby="password.error.value ? 'password-error' : 'password-help'"
         >
           <template v-slot:prepend>
-            <q-icon name="lock" />
+            <q-icon name="lock" aria-hidden="true" />
           </template>
           <template v-slot:append>
             <q-btn
@@ -43,9 +48,12 @@
               @click="showPassword = !showPassword"
               class="password-toggle"
               tabindex="-1"
+              :aria-label="showPassword ? $t('auth.hidePassword') || 'Hide password' : $t('auth.showPassword') || 'Show password'"
             />
           </template>
         </q-input>
+        <div v-if="password.error.value" id="password-error" class="sr-only">{{ password.error.value }}</div>
+        <div id="password-help" class="sr-only">{{ $t('auth.passwordHelp') || 'Enter your password to sign in' }}</div>
       </div>
 
       <!-- Login Button -->
@@ -59,11 +67,13 @@
           :label="$t('auth.login')"
         unelevated
           no-caps
+          :aria-describedby="loading ? 'login-loading' : undefined"
         />
+        <div v-if="loading" id="login-loading" class="sr-only">{{ $t('auth.signingIn') || 'Signing in, please wait' }}</div>
     </div>
 
       <!-- Separator -->
-      <div class="form-separator">
+      <div class="form-separator" role="separator" aria-label="or">
         <q-separator class="separator-line" />
         <span class="separator-text">{{ $t('auth.or') || 'of' }}</span>
         <q-separator class="separator-line" />
@@ -76,11 +86,12 @@
             flat
             dense
             color="secondary"
-            :label="$t('auth.demoAccount') || 'Demo Account'"
+            :label="$t('auth.demoAccount')"
             @click="fillDemoCredentials"
             class="demo-btn btn-modern"
             icon="person"
             no-caps
+            :aria-describedby="'demo-help'"
           />
           
           <q-btn
@@ -94,9 +105,11 @@
           />
         </div>
         
+        <div id="demo-help" class="sr-only">{{ $t('auth.demoHelp') || 'Use demo credentials to try the application' }}</div>
+        
         <!-- Security Notice -->
-        <div class="security-notice">
-          <q-icon name="shield" size="16px" />
+        <div class="security-notice" role="status" aria-live="polite">
+          <q-icon name="shield" size="16px" aria-hidden="true" />
           <span>{{ $t('auth.secureConnection') }}</span>
         </div>
       </div>
@@ -179,7 +192,7 @@ const fillDemoCredentials = () => {
   
   $q.notify({
     type: 'info',
-    message: 'Demo credentials ingevuld. Klik op Inloggen om door te gaan.',
+    message: t('auth.demoCredentialsFilled'),
     timeout: 3000,
     position: 'top-right',
     icon: 'info'
@@ -189,7 +202,7 @@ const fillDemoCredentials = () => {
 const handleForgotPassword = () => {
   $q.notify({
     type: 'info',
-    message: 'Wachtwoord reset functionaliteit komt binnenkort beschikbaar.',
+    message: t('auth.passwordResetComingSoon'),
     timeout: 3000,
     position: 'top-right',
     icon: 'info'
@@ -456,6 +469,33 @@ body.body--dark {
     outline: 2px solid var(--brand-primary);
     outline-offset: 2px;
   }
+}
+
+// Screen reader only content
+.sr-only {
+  position: absolute !important;
+  width: 1px !important;
+  height: 1px !important;
+  padding: 0 !important;
+  margin: -1px !important;
+  overflow: hidden !important;
+  clip: rect(0, 0, 0, 0) !important;
+  white-space: nowrap !important;
+  border: 0 !important;
+}
+
+// Focus styles for buttons
+.demo-btn:focus,
+.forgot-btn:focus,
+.login-btn:focus {
+  outline: 2px solid var(--brand-primary);
+  outline-offset: 2px;
+}
+
+.password-toggle:focus {
+  outline: 2px solid var(--brand-primary);
+  outline-offset: 2px;
+  border-radius: var(--radius-sm);
 }
 
 // Loading state
