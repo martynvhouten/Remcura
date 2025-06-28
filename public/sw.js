@@ -16,7 +16,10 @@ self.addEventListener('install', (event) => {
   event.waitUntil(
     caches.open(CACHE_NAME)
       .then((cache) => {
-        console.log('Service Worker: Caching static files')
+        // Only log in development
+        if (typeof importScripts !== 'undefined') {
+          console.log('Service Worker: Caching static files')
+        }
         return cache.addAll(STATIC_CACHE_URLS)
       })
       .then(() => {
@@ -33,7 +36,10 @@ self.addEventListener('activate', (event) => {
         return Promise.all(
           cacheNames.map((cacheName) => {
             if (cacheName !== CACHE_NAME) {
-              console.log('Service Worker: Clearing old cache', cacheName)
+              // Only log in development
+              if (typeof importScripts !== 'undefined') {
+                console.log('Service Worker: Clearing old cache', cacheName)
+              }
               return caches.delete(cacheName)
             }
           })

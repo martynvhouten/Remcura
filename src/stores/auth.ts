@@ -4,6 +4,8 @@ import { supabase } from 'src/boot/supabase'
 import type { User, Session } from '@supabase/supabase-js'
 import type { UserProfile } from 'src/types/supabase'
 import { ErrorHandler } from 'src/utils/error-handler'
+import { authLogger } from 'src/utils/logger'
+import { monitoringService } from 'src/services/monitoring'
 
 export const useAuthStore = defineStore('auth', () => {
   // State
@@ -24,6 +26,8 @@ export const useAuthStore = defineStore('auth', () => {
 
     loading.value = true
     try {
+      authLogger.info('Initializing authentication store')
+      
       // First check localStorage for persisted session
       const savedSession = localStorage.getItem('medstock_auth_session')
       const savedUser = localStorage.getItem('medstock_auth_user')
@@ -36,7 +40,17 @@ export const useAuthStore = defineStore('auth', () => {
           if (savedProfile) {
             userProfile.value = JSON.parse(savedProfile)
           }
+          authLogger.info('Restored session from localStorage')
+          
+          // Set user context for monitoring
+          if (user.value) {
+            monitoringService.setUserContext({
+              id: user.value.id,
+              ...(user.value.email && { email: user.value.email })
+            })
+          }
         } catch (e) {
+          authLogger.warn('Corrupted localStorage data, clearing')
           // Clear corrupted localStorage data
           clearAuthData()
         }
@@ -44,24 +58,39 @@ export const useAuthStore = defineStore('auth', () => {
 
       // If no localStorage session, check Supabase
       if (!session.value) {
+        authLogger.info('No localStorage session, checking Supabase')
         const { data: { session: initialSession } } = await supabase.auth.getSession()
         
         if (initialSession) {
+          authLogger.info('Found Supabase session')
           await setAuthData(initialSession)
+        } else {
+          authLogger.info('No active session found')
         }
       }
 
       // Listen for auth changes
       supabase.auth.onAuthStateChange(async (event, newSession) => {
+        authLogger.info('Auth state changed', { event })
+        
         if (event === 'SIGNED_IN' && newSession) {
           await setAuthData(newSession)
+          monitoringService.trackEvent('auth_state_change', { event: 'signed_in' })
         } else if (event === 'SIGNED_OUT') {
           clearAuthData()
+          monitoringService.trackEvent('auth_state_change', { event: 'signed_out' })
         }
       })
 
       initialized.value = true
+      authLogger.info('Authentication store initialized successfully')
     } catch (error) {
+      authLogger.error('Failed to initialize auth store', error as Error)
+      monitoringService.captureError(error as Error, {
+        url: window.location.href,
+        userAgent: navigator.userAgent,
+        timestamp: new Date().toISOString()
+      })
       ErrorHandler.handle(error as Error, 'Auth Initialization')
     } finally {
       loading.value = false
@@ -71,9 +100,13 @@ export const useAuthStore = defineStore('auth', () => {
   const login = async (email: string, password: string) => {
     loading.value = true
     try {
+      authLogger.info('Starting login process', { email })
+      
       // Demo mode - bypass Supabase for demo account
       if (email === 'demo@medstock-pro.com' && password === 'demo123') {
+        authLogger.info('Demo login detected')
         await setDemoAuthData()
+        monitoringService.trackEvent('login_success', { method: 'demo' })
         return { success: true }
       }
 
@@ -82,14 +115,30 @@ export const useAuthStore = defineStore('auth', () => {
         password
       })
 
-      if (error) throw error
+      if (error) {
+        authLogger.warn('Login failed', { email, error: error.message })
+        monitoringService.trackEvent('login_failed', { 
+          email, 
+          error: error.message,
+          method: 'supabase' 
+        })
+        throw error
+      }
 
       if (data.session) {
+        authLogger.info('Login successful', { userId: data.session.user.id })
         await setAuthData(data.session)
+        monitoringService.trackEvent('login_success', { method: 'supabase' })
       }
 
       return { success: true }
     } catch (error: any) {
+      authLogger.error('Login error', error)
+      monitoringService.captureError(error, {
+        url: window.location.href,
+        userAgent: navigator.userAgent,
+        timestamp: new Date().toISOString()
+      })
       return { 
         success: false, 
         error: ErrorHandler.getErrorMessage(error)
@@ -102,12 +151,24 @@ export const useAuthStore = defineStore('auth', () => {
   const logout = async () => {
     loading.value = true
     try {
+      authLogger.info('Starting logout process')
       const { error } = await supabase.auth.signOut()
-      if (error) throw error
+      if (error) {
+        authLogger.error('Logout error', error)
+        throw error
+      }
       
+      authLogger.info('Logout successful')
       clearAuthData()
+      monitoringService.trackEvent('logout_success')
       return { success: true }
     } catch (error: any) {
+      authLogger.error('Logout failed', error)
+      monitoringService.captureError(error, {
+        url: window.location.href,
+        userAgent: navigator.userAgent,
+        timestamp: new Date().toISOString()
+      })
       return { 
         success: false, 
         error: ErrorHandler.getErrorMessage(error)
@@ -120,6 +181,12 @@ export const useAuthStore = defineStore('auth', () => {
   const setAuthData = async (newSession: Session) => {
     session.value = newSession
     user.value = newSession.user
+
+    // Set user context for monitoring
+    monitoringService.setUserContext({
+      id: newSession.user.id,
+      ...(newSession.user.email && { email: newSession.user.email })
+    })
 
     // Persist to localStorage for page reload persistence
     localStorage.setItem('medstock_auth_session', JSON.stringify(newSession))
@@ -188,6 +255,7 @@ export const useAuthStore = defineStore('auth', () => {
       email: 'demo@medstock-pro.com',
       full_name: 'Demo User',
       role: 'admin',
+      avatar_url: null,
       created_at: new Date().toISOString(),
       updated_at: new Date().toISOString()
     }

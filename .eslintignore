@@ -1,0 +1,15 @@
+# Generated build files
+/dist/**
+/.quasar/**
+
+# Dependencies
+/node_modules/**
+
+# Generated types
+*.d.ts
+
+# Generated configuration files
+/quasar.config.js
+
+# Temporary and cache files
+.eslintcache 

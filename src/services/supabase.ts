@@ -1,4 +1,6 @@
 import { supabase } from 'src/boot/supabase'
+import { monitoringService } from './monitoring'
+import { apiLogger } from 'src/utils/logger'
 import type { 
   Clinic, 
   UserProfile, 
@@ -21,8 +23,14 @@ export const clinicService = {
       .single()
 
     if (error) {
-      console.error('Error fetching clinic:', error)
-      return null
+      const enhancedError = new Error(`Failed to fetch clinic: ${error.message}`)
+      apiLogger.error('Failed to fetch clinic', enhancedError)
+      monitoringService.captureError(enhancedError, {
+        url: window.location.href,
+        userAgent: navigator.userAgent,
+        timestamp: new Date().toISOString()
+      })
+      throw enhancedError
     }
 
     return data
@@ -36,8 +44,7 @@ export const clinicService = {
       .single()
 
     if (error) {
-      console.error('Error creating clinic:', error)
-      return null
+      throw new Error(`Failed to create clinic: ${error.message}`)
     }
 
     return data
@@ -52,8 +59,7 @@ export const clinicService = {
       .single()
 
     if (error) {
-      console.error('Error updating clinic:', error)
-      return null
+      throw new Error(`Failed to update clinic: ${error.message}`)
     }
 
     return data
@@ -70,8 +76,7 @@ export const userProfileService = {
       .single()
 
     if (error) {
-      console.error('Error fetching user profile:', error)
-      return null
+      throw new Error(`Failed to fetch user profile: ${error.message}`)
     }
 
     return data
@@ -85,8 +90,7 @@ export const userProfileService = {
       .single()
 
     if (error) {
-      console.error('Error creating user profile:', error)
-      return null
+      throw new Error(`Failed to create user profile: ${error.message}`)
     }
 
     return data
@@ -101,8 +105,7 @@ export const userProfileService = {
       .single()
 
     if (error) {
-      console.error('Error updating user profile:', error)
-      return null
+      throw new Error(`Failed to update user profile: ${error.message}`)
     }
 
     return data
@@ -119,8 +122,7 @@ export const clinicProductService = {
       .order('product_name')
 
     if (error) {
-      console.error('Error fetching clinic products:', error)
-      return []
+      throw new Error(`Failed to fetch clinic products: ${error.message}`)
     }
 
     return data || []
@@ -134,8 +136,7 @@ export const clinicProductService = {
       .single()
 
     if (error) {
-      console.error('Error fetching clinic product:', error)
-      return null
+      throw new Error(`Failed to fetch clinic product: ${error.message}`)
     }
 
     return data
@@ -149,8 +150,7 @@ export const clinicProductService = {
       .single()
 
     if (error) {
-      console.error('Error creating clinic product:', error)
-      return null
+      throw new Error(`Failed to create clinic product: ${error.message}`)
     }
 
     return data
@@ -165,8 +165,7 @@ export const clinicProductService = {
       .single()
 
     if (error) {
-      console.error('Error updating clinic product:', error)
-      return null
+      throw new Error(`Failed to update clinic product: ${error.message}`)
     }
 
     return data
@@ -179,28 +178,29 @@ export const clinicProductService = {
       .eq('id', id)
 
     if (error) {
-      console.error('Error deleting clinic product:', error)
-      return false
+      throw new Error(`Failed to delete clinic product: ${error.message}`)
     }
 
     return true
   },
 
   async getLowStock(clinicId: string): Promise<ClinicProduct[]> {
+    // Use a custom query for comparing columns
     const { data, error } = await supabase
       .from('clinic_products')
       .select('*')
       .eq('clinic_id', clinicId)
-      .lte('current_stock', supabase.raw('minimum_stock'))
       .eq('low_stock_alert_enabled', true)
       .order('current_stock')
 
     if (error) {
-      console.error('Error fetching low stock products:', error)
-      return []
+      throw new Error(`Failed to fetch low stock products: ${error.message}`)
     }
 
-    return data || []
+    // Filter low stock products where current_stock <= minimum_stock
+    return (data || []).filter(product => 
+      product.current_stock <= product.minimum_stock
+    )
   },
 
   async getOutOfStock(clinicId: string): Promise<ClinicProduct[]> {
@@ -212,8 +212,7 @@ export const clinicProductService = {
       .order('product_name')
 
     if (error) {
-      console.error('Error fetching out of stock products:', error)
-      return []
+      throw new Error(`Failed to fetch out of stock products: ${error.message}`)
     }
 
     return data || []

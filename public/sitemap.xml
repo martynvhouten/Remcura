@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <!-- Main application pages -->
+  <url>
+    <loc>https://medstock-pro.com/</loc>
+    <lastmod>2024-12-28</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>1.0</priority>
+  </url>
+  
+  <!-- TODO: Add more URLs when public pages are available -->
+  <!-- 
+  <url>
+    <loc>https://medstock-pro.com/about</loc>
+    <lastmod>2024-12-28</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  -->
+  
+  <!-- Note: This is a SPA application, so most content is behind authentication -->
+  <!-- Update this sitemap if you add public marketing pages -->
+</urlset> 

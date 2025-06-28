@@ -1,15 +1,16 @@
 {
-  "name": "MedStock Pro",
+  "name": "MedStock Pro - Medical Supply Inventory Management",
   "short_name": "MedStock Pro",
-  "description": "Professional medical supply inventory management system",
+  "description": "Professional medical supply inventory management system for healthcare clinics and medical practices. Track stock levels, manage orders, and maintain optimal inventory.",
   "start_url": "/",
   "display": "standalone",
   "orientation": "portrait-primary",
-  "theme_color": "#9E0059",
-  "background_color": "#E6E6E6",
-  "categories": ["medical", "business", "productivity"],
-  "lang": "nl-NL",
+  "theme_color": "#4f46e5",
+  "background_color": "#ffffff",
+  "categories": ["medical", "business", "productivity", "healthcare"],
+  "lang": "en",
   "scope": "/",
+  "id": "medstock-pro-inventory",
   "icons": [
     {
       "src": "icons/icon-128x128.png",
