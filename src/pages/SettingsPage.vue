@@ -150,6 +150,32 @@
                     />
                 </div>
                 </div>
+
+              <!-- Theme Setting -->
+              <div class="setting-item glass-card">
+                <div class="setting-info">
+                  <div class="setting-label" id="theme-label">Kies kleurenschema</div>
+                  <div class="setting-description">
+                      Wijzig het kleurenschema van de applicatie
+                  </div>
+                </div>
+                <div class="setting-control">
+                    <q-select
+                      v-model="selectedTheme"
+                      :options="themeOptions"
+                      @update:model-value="changeTheme"
+                      option-value="value"
+                      option-label="label"
+                      emit-value
+                      map-options
+                      outlined
+                      dense
+                    class="select-modern"
+                      style="width: 150px"
+                      :aria-labelledby="'theme-label'"
+                    />
+                </div>
+                </div>
               </div>
             </q-card-section>
           </q-card>
@@ -366,6 +392,7 @@ import { useQuasar } from 'quasar'
 import { useI18n } from 'vue-i18n'
 import { useAuthStore } from 'src/stores/auth'
 import { useClinicStore } from 'src/stores/clinic'
+import { useThemeManager } from 'src/composables/themeManager'
 import PageLayout from 'src/components/PageLayout.vue'
 import PageTitle from 'src/components/PageTitle.vue'
 
@@ -373,11 +400,13 @@ const $q = useQuasar()
 const { t } = useI18n()
 const authStore = useAuthStore()
 const clinicStore = useClinicStore()
+const { themeOptions, currentTheme, applyTheme, getCurrentThemeName } = useThemeManager()
 
 // State
 const saving = ref(false)
 const isDarkMode = ref($q.dark.isActive)
 const selectedLanguage = ref('nl')
+const selectedTheme = ref(getCurrentThemeName())
 
 // Computed properties
 const userProfile = computed(() => authStore.userProfile)
@@ -419,6 +448,19 @@ const toggleDarkMode = (value: boolean) => {
   })
 }
 
+const changeTheme = (themeName: string) => {
+  selectedTheme.value = themeName
+  applyTheme(themeName)
+  
+  const themeLabel = themeOptions.value.find(option => option.value === themeName)?.label || themeName
+  $q.notify({
+    type: 'positive',
+    message: `Kleurenschema "${themeLabel}" toegepast`,
+    position: 'top-right',
+    timeout: 2000
+  })
+}
+
 const saveSettings = async () => {
   saving.value = true
   
@@ -449,8 +491,9 @@ onMounted(() => {
   // Load settings from store/localStorage if available
   const savedDarkMode = $q.localStorage.getItem('darkMode')
   if (savedDarkMode !== null) {
-    isDarkMode.value = savedDarkMode
-    $q.dark.set(savedDarkMode)
+    const darkModeValue = savedDarkMode === 'true'
+    isDarkMode.value = darkModeValue
+    $q.dark.set(darkModeValue)
   }
 })
 </script>

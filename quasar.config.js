@@ -27,7 +27,8 @@ export default configure(function (ctx) {
     boot: [
       'i18n',
       'supabase',
-      'pinia'
+      'pinia',
+      'theme'
     ],
 
     // https://v2.quasar.dev/quasar-cli-vite/quasar-config-js#Property%3A-css
