@@ -42,22 +42,20 @@
         <div class="error-actions" role="group" aria-label="Navigation actions">
           <q-btn
             color="primary"
-            size="lg"
             icon="home"
-            :label="$t('error.goHome') || 'Naar Dashboard'"
+            :label="$t('error.goHome')"
             @click="goHome"
-            class="btn-modern btn-primary hover-lift"
+            class="btn-modern"
             unelevated
             no-caps
-            :aria-label="($t('error.goHome') || 'Naar Dashboard') + ' - Navigeer naar het dashboard'"
+            :aria-label="$t('error.goHome') + ' - Navigeer naar het dashboard'"
           />
           <q-btn
             color="primary"
-            size="lg"
             icon="arrow_back"
             :label="$t('error.goBack') || 'Terug'"
             @click="goBack"
-            class="btn-modern btn-secondary hover-lift"
+            class="btn-modern"
             outline
             no-caps
             :aria-label="($t('error.goBack') || 'Terug') + ' - Ga naar de vorige pagina'"
@@ -68,19 +66,19 @@
         <div class="error-help">
           <div class="help-grid" role="navigation" aria-label="Quick navigation">
             <div class="help-item" @click="navigateTo('/')" role="button" tabindex="0" :aria-label="`Navigate to ${$t('nav.dashboard')}`" @keydown.enter="navigateTo('/')" @keydown.space="navigateTo('/')">
-              <q-icon name="dashboard" size="24px" aria-hidden="true" />
+              <q-icon name="space_dashboard" size="24px" aria-hidden="true" />
               <span>{{ $t('nav.dashboard') }}</span>
             </div>
             <div class="help-item" @click="navigateTo('/products')" role="button" tabindex="0" :aria-label="`Navigate to ${$t('nav.products')}`" @keydown.enter="navigateTo('/products')" @keydown.space="navigateTo('/products')">
-              <q-icon name="inventory_2" size="24px" aria-hidden="true" />
+              <q-icon name="medical_services" size="24px" aria-hidden="true" />
               <span>{{ $t('nav.products') }}</span>
             </div>
             <div class="help-item" @click="navigateTo('/orders')" role="button" tabindex="0" :aria-label="`Navigate to ${$t('nav.orders')}`" @keydown.enter="navigateTo('/orders')" @keydown.space="navigateTo('/orders')">
-              <q-icon name="shopping_cart" size="24px" aria-hidden="true" />
+              <q-icon name="assignment" size="24px" aria-hidden="true" />
               <span>{{ $t('nav.orders') }}</span>
             </div>
             <div class="help-item" @click="navigateTo('/settings')" role="button" tabindex="0" :aria-label="`Navigate to ${$t('nav.settings')}`" @keydown.enter="navigateTo('/settings')" @keydown.space="navigateTo('/settings')">
-              <q-icon name="settings" size="24px" aria-hidden="true" />
+              <q-icon name="tune" size="24px" aria-hidden="true" />
               <span>{{ $t('nav.settings') }}</span>
             </div>
           </div>

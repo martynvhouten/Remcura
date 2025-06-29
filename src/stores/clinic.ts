@@ -83,19 +83,27 @@ export const useClinicStore = defineStore('clinic', () => {
 
     loading.value = true
     try {
-      // First get the product list ID for this practice
-      const { data: productList, error: listError } = await supabase
+      // Get all product lists for this practice
+      const { data: productLists, error: listError } = await supabase
         .from('product_lists')
         .select('id')
         .eq('practice_id', practiceId)
-        .single()
 
       if (listError) {
-        console.error('Error fetching product list:', listError)
+        console.error('Error fetching product lists:', listError)
         throw listError
       }
 
-      // Now fetch products with their product list items
+      if (!productLists || productLists.length === 0) {
+        console.warn('No product lists found for practice')
+        products.value = []
+        return
+      }
+
+      // Get the product list IDs
+      const listIds = productLists.map(list => list.id)
+
+      // Now fetch products with their product list items from any of the lists
       const { data, error } = await supabase
         .from('products')
         .select(`
@@ -108,7 +116,7 @@ export const useClinicStore = defineStore('clinic', () => {
             current_stock
           )
         `)
-        .eq('product_list_items.product_list_id', productList.id)
+        .in('product_list_items.product_list_id', listIds)
         .order('name')
 
       if (error) throw error

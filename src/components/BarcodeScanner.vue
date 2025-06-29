@@ -240,10 +240,16 @@ const startCamera = async () => {
 
     // Start scanning with current camera
     const currentCamera = availableCameras.value[currentCameraIndex.value]
-    await cameraScannerService.startScanning(videoElement.value, {
-      deviceId: currentCamera?.deviceId,
+    const scannerOptions: any = {
       facingMode: 'environment'
-    })
+    }
+    
+    // Only add deviceId if it exists
+    if (currentCamera?.deviceId) {
+      scannerOptions.deviceId = currentCamera.deviceId
+    }
+    
+    await cameraScannerService.startScanning(videoElement.value, scannerOptions)
 
     // Check torch support
     const capabilities = cameraScannerService.getCameraCapabilities()
@@ -251,11 +257,11 @@ const startCamera = async () => {
 
   } catch (error) {
     console.error('Failed to start camera:', error)
-    cameraError.value = error instanceof Error ? error.message : 'Camera error'
+    cameraError.value = error instanceof Error ? error.message : t('camera.errors.cameraError')
     
     // Show notification
     notificationService.sendSystemNotification(
-      'Camera Error',
+      t('camera.errors.cameraError'),
       'Failed to start camera. Please check permissions.'
     )
   } finally {
@@ -275,7 +281,9 @@ const switchCamera = async () => {
   
   if (scanMode.value === 'camera' && videoElement.value) {
     const currentCamera = availableCameras.value[currentCameraIndex.value]
-    await cameraScannerService.switchCamera(currentCamera.deviceId)
+    if (currentCamera && currentCamera.deviceId) {
+      await cameraScannerService.switchCamera(currentCamera.deviceId)
+    }
   }
 }
 
@@ -353,7 +361,7 @@ const handleScanResult = (code: string, format?: string) => {
 
   // Show success notification
   notificationService.showInAppNotification({
-    title: 'Scan Successful',
+    title: t('camera.scanning.scanSuccessful'),
     body: `Scanned: ${code}`,
     type: 'system_notification',
     icon: '/icons/success.png'
@@ -375,7 +383,7 @@ const formatTimestamp = (timestamp: Date): string => {
   const diff = now.getTime() - timestamp.getTime()
   
   if (diff < 60000) { // Less than 1 minute
-    return 'Just now'
+    return t('camera.scanning.justNow')
   } else if (diff < 3600000) { // Less than 1 hour
     return `${Math.floor(diff / 60000)}m ago`
   } else if (diff < 86400000) { // Less than 1 day

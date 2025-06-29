@@ -2,12 +2,12 @@ export default {
   // Brand
   brand: {
     name: 'MedStock Pro',
-    edition: 'Enterprise Edition'
+    edition: 'Enterprise Editie'
   },
 
   // Clinic
   clinic: {
-    professionalPlan: 'Professional Plan',
+    professionalPlan: 'Professioneel Plan',
     defaultName: 'Kliniek'
   },
 
@@ -36,7 +36,11 @@ export default {
     refresh: 'Vernieuwen',
     comingSoon: 'Binnenkort',
     update: 'Bijwerken',
-    dismiss: 'Afwijzen'
+    dismiss: 'Afwijzen',
+    unknownProduct: 'Onbekend product',
+    closeDialog: 'Dialog sluiten',
+    actions: 'Acties',
+    open: 'Openen'
   },
 
   // Navigation
@@ -50,8 +54,8 @@ export default {
     profile: 'Profiel',
     helpSupport: 'Help & Ondersteuning',
     navigation: 'Navigatie',
-    quickStats: 'Snelle Statistieken',
-    upgradePlan: 'Plan Upgraden',
+    quickStats: 'Snelle statistieken',
+    upgradePlan: 'Plan upgraden',
     getAdvancedFeatures: 'Krijg geavanceerde functies',
     analytics: 'Analyses',
     suppliers: 'Leveranciers',
@@ -64,8 +68,11 @@ export default {
     systemAdmin: 'Systeembeheer',
     openNavigation: 'Navigatie openen',
     notifications: 'Meldingen',
+    alertsNotifications: 'Waarschuwingen & meldingen',
     darkMode: 'Donkere modus',
-    userMenu: 'Gebruikersmenu'
+    lightMode: 'Lichte modus',
+    userMenu: 'Gebruikersmenu',
+    shoppingCart: 'Winkelwagen'
   },
 
   // Authentication
@@ -76,6 +83,8 @@ export default {
     password: 'Wachtwoord',
     forgotPassword: 'Wachtwoord vergeten?',
     resetPassword: 'Wachtwoord resetten',
+    hidePassword: 'Wachtwoord verbergen',
+    showPassword: 'Wachtwoord tonen',
     loginError: 'Inloggen mislukt. Controleer je gegevens.',
     sessionExpired: 'Je sessie is verlopen. Log opnieuw in.',
     loginSuccess: 'Succesvol ingelogd',
@@ -96,7 +105,10 @@ export default {
     multilocationSupport: 'Multi-locatie ondersteuning',
     demoCredentialsFilled: 'Demo credentials ingevuld. Klik op Inloggen om door te gaan.',
     passwordResetComingSoon: 'Wachtwoord reset functionaliteit komt binnenkort beschikbaar.',
-    copyright: '© {year} {company}. Alle rechten voorbehouden.'
+    copyright: '© {year} {company}. Alle rechten voorbehouden.',
+    passwordHelp: 'Voer je wachtwoord in om veilig in te loggen',
+    demoHelp: 'Gebruik demo@medstock-pro.com met wachtwoord demo123 voor demonstratie',
+    signingIn: 'Inloggen...'
   },
 
   // Dashboard
@@ -139,7 +151,11 @@ export default {
     quickActionsList: 'Snelle acties lijst',
     optionsMenu: 'Opties menu',
     viewProductDetails: 'Product details bekijken',
-    lowStockItemsList: 'Lage voorraad items lijst'
+    lowStockItemsList: 'Lage voorraad items lijst',
+    dashboardSummary: 'Dashboard overzicht',
+    failedToLoadData: 'Laden van dashboardgegevens mislukt',
+    dataRefreshedSuccessfully: 'Data succesvol vernieuwd',
+    failedToRefreshData: 'Vernieuwen van data mislukt'
   },
 
   // Products
@@ -171,13 +187,18 @@ export default {
     lowStockWarningPreview: 'Dit product zal als \'Lage voorraad\' worden gemarkeerd',
     searchProducts: 'Zoek producten',
     advancedFilters: 'Geavanceerde filters',
-    productsTableLabel: 'Producten tabel'
+    productsTableLabel: 'Producten tabel',
+    orderSuggestionLabel: 'Bestel suggestie',
+    allProducts: 'Alle producten',
+    inStockProducts: 'Op voorraad',
+    lowStockProducts: 'Lage voorraad',
+    productsRefreshed: 'Producten succesvol vernieuwd'
   },
 
   // Stock Alerts
   alerts: {
-    lowStock: 'Lage voorraad waarschuwing',
-    outOfStock: 'Niet op voorraad',
+    lowStock: 'Lage voorraad',
+    outOfStock: 'Out of stock',
     reorderSuggestion: 'Bestel suggestie',
     stockUpdated: 'Voorraad bijgewerkt',
     productAdded: 'Product toegevoegd',
@@ -245,12 +266,12 @@ export default {
     title: 'Bestellingen',
     export: 'Exporteren',
     createOrder: 'Nieuwe Bestelling',
-    bulkExport: 'Geselecteerde Exporteren',
-    bulkEmail: 'Geselecteerde E-mailen',
-    downloadPDF: 'PDF Downloaden',
-    downloadCSV: 'CSV Downloaden',
-    sendEmail: 'E-mail Versturen',
-    submitToMagento: 'Naar Magento Versturen',
+    bulkExport: 'Geselecteerde exporteren',
+    bulkEmail: 'Geselecteerde e-mailen',
+    downloadPDF: 'PDF downloaden',
+    downloadCSV: 'CSV downloaden',
+    sendEmail: 'E-mail versturen',
+    submitToMagento: 'Naar Magento versturen',
     duplicate: 'Dupliceren',
     cancel: 'Bestelling Annuleren',
     
@@ -267,7 +288,8 @@ export default {
       status: 'Status',
       supplier: 'Leverancier',
       dateFrom: 'Van Datum',
-      dateTo: 'Tot Datum'
+      dateTo: 'Tot Datum',
+      allSuppliers: 'Alle leveranciers'
     },
     
     columns: {
@@ -280,28 +302,28 @@ export default {
     },
     
     exportFormat: {
-      csv: 'CSV Formaat',
-      pdf: 'PDF Formaat'
+      csv: 'CSV formaat',
+      pdf: 'PDF formaat'
     },
     
     exportScope: {
-      all: 'Alle Bestellingen',
-      filtered: 'Gefilterde Bestellingen',
-      selected: 'Geselecteerde Bestellingen'
+      all: 'Alle bestellingen',
+      filtered: 'Gefilterde bestellingen',
+      selected: 'Geselecteerde bestellingen'
     },
     
     email: {
-      recipient: 'Ontvanger E-mail',
+      recipient: 'Ontvanger e-mail',
       subject: 'Onderwerp',
       message: 'Bericht',
-      send: 'E-mail Versturen'
+      send: 'E-mail versturen'
     },
     
     analytics: {
-      totalOrders: 'Totaal Bestellingen',
-      totalValue: 'Totale Waarde',
-      avgOrderSize: 'Gem. Bestelgrootte',
-      orderFrequency: 'Bestellingen/Dag',
+      totalOrders: 'Totaal bestellingen',
+      totalValue: 'Totale waarde',
+      avgOrderSize: 'Gem. bestelgrootte',
+      orderFrequency: 'Bestellingen/dag',
       orderTrends: 'Besteltrends',
       chartsComingSoon: 'Grafieken en gedetailleerde analytics komen binnenkort!'
     },
@@ -325,11 +347,20 @@ export default {
       magentoFailed: 'Versturen naar Magento mislukt',
       cancelFailed: 'Annuleren bestelling mislukt',
       exportFailed: 'Exporteren bestellingen mislukt',
-      noOrdersToExport: 'Geen bestellingen om te exporteren'
+      noOrdersToExport: 'Geen bestellingen om te exporteren',
+      noPracticeSelected: 'Selecteer eerst een praktijk om bestellingen te bekijken'
     },
     
     exportFilteredNote: '{count} gefilterde bestellingen exporteren',
     exportSelectedNote: '{count} geselecteerde bestellingen exporteren'
+  },
+
+  // Order Messages
+  messages: {
+    addToCartComingSoon: 'Toevoegen aan winkelmand functionaliteit komt binnenkort',
+    addAllSuggestionsComingSoon: 'Alle suggesties toevoegen functionaliteit komt binnenkort',
+    cartCleared: 'Winkelmand geleegd',
+    cartSaved: 'Winkelmand opgeslagen'
   },
 
   bestellijsten: {
@@ -450,47 +481,52 @@ export default {
     cartCleared: 'Winkelmand geleegd',
     cartSaved: 'Winkelmand opgeslagen',
     errorUpdatingCart: 'Fout bij bijwerken winkelmand',
+    orderSubmittedSuccess: 'Bestelling succesvol ingediend!',
     errorSubmittingOrder: 'Fout bij verzenden bestelling',
+    errorCreatingCart: 'Fout bij aanmaken winkelmand',
+    errorAddingToCart: 'Fout bij toevoegen aan winkelmand',
+    addedToCart: '{quantity} x {product} toegevoegd aan winkelmand',
+    addedSuggestionsToCart: '{added} van {total} voorgestelde items toegevoegd aan winkelmand',
     autoSuggested: 'Auto',
     scanned: 'Gescand',
     manual: 'Handmatig',
     saveCart: 'Winkelmand opslaan',
     scanner: {
-      title: 'Barcode Scanner',
+      title: 'Barcode scanner',
       manualInput: 'Barcode handmatig invoeren',
-      recentScans: 'Recente Scans',
-      clearHistory: 'Geschiedenis Wissen',
+      recentScans: 'Recente scans',
+      clearHistory: 'Geschiedenis wissen',
       help: 'Richt camera op barcode of voer code handmatig in',
-      cameraMode: 'Camera Modus',
-      manualMode: 'Handmatige Modus'
+      cameraMode: 'Camera modus',
+      manualMode: 'Handmatige modus'
     },
     
     cart: {
-      export: 'Winkelwagen Exporteren',
-      email: 'Winkelwagen E-mailen',
-      print: 'Winkelwagen Printen'
+      export: 'Winkelwagen exporteren',
+      email: 'Winkelwagen e-mailen',
+      print: 'Winkelwagen printen'
     },
     
     advanced: {
-      multiLocation: 'Multi-Locatie Ondersteuning',
-      selectLocation: 'Locatie Selecteren',
-      offlineMode: 'Offline Modus',
-      analytics: 'Analytics Bekijken',
-      export: 'Data Exporteren',
+      multiLocation: 'Multi-locatie ondersteuning',
+      selectLocation: 'Locatie selecteren',
+      offlineMode: 'Offline modus',
+      analytics: 'Analytics bekijken',
+      export: 'Data exporteren',
       
       permissions: {
-        readOnly: 'Alleen Lezen Toegang',
-        limitedEdit: 'Beperkte Bewerkingstoegang',
-        fullAccess: 'Volledige Toegang',
-        adminAccess: 'Beheerder Toegang'
+        readOnly: 'Alleen lezen toegang',
+        limitedEdit: 'Beperkte bewerkingstoegang',
+        fullAccess: 'Volledige toegang',
+        adminAccess: 'Beheerder toegang'
       }
     }
   },
 
   suppliers: {
     title: 'Leveranciers',
-    add: 'Leverancier Toevoegen',
-    edit: 'Leverancier Bewerken',
+    add: 'Leverancier toevoegen',
+    edit: 'Leverancier bewerken',
     name: 'Naam',
     contact: 'Contact',
     email: 'E-mail',
@@ -653,14 +689,17 @@ export default {
     scanning: {
       lookingForBarcode: 'Zoeken naar barcode...',
       codeDetected: 'Code gedetecteerd',
-      processingCode: 'Code verwerken...'
+      processingCode: 'Code verwerken...',
+      scanSuccessful: 'Scan succesvol',
+      justNow: 'Zojuist'
     },
     
     errors: {
       cameraFailed: 'Camera starten mislukt',
       noDevices: 'Geen camera apparaten gevonden',
       permissionDenied: 'Camera toestemming geweigerd',
-      deviceNotSupported: 'Camera niet ondersteund op dit apparaat'
+      deviceNotSupported: 'Camera niet ondersteund op dit apparaat',
+      cameraError: 'Camera fout'
     }
   },
   
@@ -706,16 +745,16 @@ export default {
     audit: 'Audit Log',
     settings: 'Instellingen',
     analytics: 'Analytics',
-    quickActions: 'Snelle Acties',
+    quickActions: 'Snelle acties',
     
     stats: {
-      totalUsers: 'Totaal Gebruikers',
+      totalUsers: 'Totaal gebruikers',
       activeToday: 'actief vandaag',
-      totalLocations: 'Totaal Locaties',
+      totalLocations: 'Totaal locaties',
       active: 'actief',
-      pendingSync: 'Wachtende Sync',
-      lastSync: 'Laatste Sync',
-      todayEvents: 'Vandaag\'s Events',
+      pendingSync: 'Wachtende sync',
+      lastSync: 'Laatste sync',
+      todayEvents: 'Vandaag\'s events',
       fromYesterday: 'van gisteren'
     },
     
@@ -738,10 +777,10 @@ export default {
     
     userManagement: {
       title: 'Gebruikersbeheer',
-      invite: 'Gebruiker Uitnodigen',
+      invite: 'Gebruiker uitnodigen',
       email: 'E-mail',
       roles: 'Rollen',
-      lastActive: 'Laatst Actief',
+      lastActive: 'Laatst actief',
       permissions: 'Rechten'
     },
     
@@ -756,27 +795,176 @@ export default {
     status: 'Verbindingsstatus',
     connected: 'Verbonden',
     disconnected: 'Niet Verbonden',
-    sync: 'Producten Synchroniseren',
-    lastSync: 'Laatste Synchronisatie',
+    sync: 'Producten synchroniseren',
+    lastSync: 'Laatste synchronisatie',
     
     orders: {
-      submit: 'Naar Magento Versturen',
+      submit: 'Naar Magento versturen',
       status: 'Bestelstatus',
-      id: 'Magento Bestel ID',
-      track: 'Bestelling Volgen'
+      id: 'Magento bestel ID',
+      track: 'Bestelling volgen'
     },
     
     products: {
-      sync: 'Producten Synchroniseren',
-      import: 'Producten Importeren',
-      update: 'Prijzen Bijwerken',
-      lastUpdate: 'Laatste Update'
+      sync: 'Producten synchroniseren',
+      import: 'Producten importeren',
+      update: 'Prijzen bijwerken',
+      lastUpdate: 'Laatste update'
     },
     
     errors: {
       connectionFailed: 'Verbinding met Magento mislukt',
       syncFailed: 'Product synchronisatie mislukt',
       orderSubmitFailed: 'Bestelling versturen mislukt'
+    }
+  },
+
+  // Analytics Page
+  analyticsPage: {
+    title: 'Analytics',
+    subtitle: 'Uitgebreide analyses en inzichten voor je praktijk',
+    period: 'Tijdsperiode',
+    dateFrom: 'Van datum',
+    dateTo: 'Tot datum',
+    export: 'Gegevens exporteren',
+    totalEvents: 'Totaal gebeurtenissen',
+    activeUsers: 'Actieve gebruikers',
+    totalOrders: 'Totaal bestellingen',
+    productUpdates: 'Product updates',
+    lowStockAlerts: 'Lage voorraad waarschuwingen',
+    dailyActivity: 'Dagelijkse activiteit',
+    topEvents: 'Top gebeurtenissen',
+    userActivity: 'Gebruiker activiteit',
+    productInsights: 'Product inzichten',
+    frequentlyOrderedItems: 'Vaak bestelde items',
+    mostUpdatedProducts: 'Meest bijgewerkte producten',
+    user: 'Gebruiker',
+    activityCount: 'Aantal activiteiten',
+    lastActivity: 'Laatste activiteit',
+    product: 'Product',
+    updates: 'Updates',
+    frequency: 'Frequentie',
+    totalQuantity: 'Totaal aantal',
+    orderCount: 'Aantal bestellingen',
+    periods: {
+      '7d': 'Laatste 7 dagen',
+      '30d': 'Laatste 30 dagen',
+      '90d': 'Laatste 90 dagen',
+      '1y': 'Laatste jaar'
+    },
+    charts: {
+      dailyActivity: 'Dagelijkse activiteit'
+    },
+    loadError: 'Fout bij laden analytics gegevens',
+    exportSuccess: 'Analytics gegevens succesvol geëxporteerd',
+    exportError: 'Fout bij exporteren analytics gegevens'
+  },
+
+  // Suppliers Page
+  suppliersPage: {
+    title: 'Leveranciers',
+    subtitle: 'Beheer je leveranciersrelaties en verkopersinformatie',
+    searchSuppliers: 'Zoek leveranciers...',
+    filterByStatus: 'Filter op status',
+    importSuppliers: 'Leveranciers importeren',
+    addSupplier: 'Leverancier toevoegen',
+    editSupplier: 'Leverancier bewerken',
+    addNewSupplier: 'Nieuwe leverancier toevoegen',
+    supplierName: 'Leveranciersnaam',
+    contactEmail: 'Contact e-mail',
+    contactPhone: 'Contact telefoon',
+    website: 'Website',
+    address: 'Adres',
+    city: 'Stad',
+    postalCode: 'Postcode',
+    country: 'Land',
+    magentoVendorId: 'Magento verkoper ID',
+    notes: 'Notities',
+    activeSupplier: 'Actieve leverancier',
+    contactInformation: 'Contactinformatie',
+    location: 'Locatie',
+    magentoLink: 'Magento koppeling',
+    status: 'Status',
+    actions: 'Acties',
+    active: 'Actief',
+    inactive: 'Inactief',
+    notLinked: 'Niet gekoppeld',
+    editSupplierTooltip: 'Leverancier bewerken',
+    linkToMagentoTooltip: 'Koppel aan Magento',
+    deleteSupplierTooltip: 'Leverancier verwijderen',
+    cancel: 'Annuleren',
+    save: 'Opslaan',
+    nameRequired: 'Naam is verplicht',
+    linkToMagento: 'Koppel aan Magento',
+    linkToMagentoPrompt: 'Voer het Magento verkoper ID in om deze leverancier te koppelen:',
+    confirmDelete: 'Verwijderen bevestigen',
+    confirmDeleteMessage: 'Weet je zeker dat je "{name}" wilt verwijderen? Deze actie kan niet ongedaan worden gemaakt.',
+    supplierCreated: 'Leverancier succesvol aangemaakt',
+    supplierUpdated: 'Leverancier succesvol bijgewerkt',
+    supplierDeleted: 'Leverancier succesvol verwijderd',
+    supplierLinkedToMagento: 'Leverancier succesvol gekoppeld aan Magento',
+    loadSuppliersError: 'Fout bij laden leveranciers',
+    saveSupplierError: 'Fout bij opslaan leverancier',
+    deleteSupplierError: 'Fout bij verwijderen leverancier',
+    linkMagentoError: 'Fout bij koppelen leverancier aan Magento',
+    importFeatureComingSoon: 'Import functie komt binnenkort!'
+  },
+
+  // Notifications Page
+  notificationsPage: {
+    title: 'Meldingen',
+    subtitle: 'Beheer je meldingen en waarschuwingsvoorkeuren',
+    all: 'Alle',
+    unread: 'Ongelezen',
+    read: 'Gelezen',
+    filterByCategory: 'Filter op categorie',
+    markAllRead: 'Alle als gelezen markeren',
+    settings: 'Instellingen',
+    noNotifications: 'Geen meldingen',
+    allCaughtUp: 'Je bent helemaal bij!',
+    notificationStatistics: 'Meldingstatistieken',
+    unreadCount: 'Ongelezen',
+    total: 'Totaal',
+    byCategory: 'Per categorie',
+    quickActions: 'Snelle acties',
+    testStockAlert: 'Test voorraadwaarschuwing',
+    testOrderUpdate: 'Test bestelupdate',
+    clearAllNotifications: 'Alle meldingen wissen',
+    markAsReadTooltip: 'Markeer als gelezen',
+    deleteTooltip: 'Verwijderen',
+    clearAllConfirm: 'Alle meldingen wissen',
+    clearAllConfirmMessage: 'Weet je zeker dat je alle meldingen wilt verwijderen? Deze actie kan niet ongedaan worden gemaakt.',
+    allMarkedAsRead: 'Alle meldingen gemarkeerd als gelezen',
+    notificationDeleted: 'Melding verwijderd',
+    allNotificationsCleared: 'Alle meldingen gewist',
+    testStockAlertCreated: 'Test voorraadwaarschuwing aangemaakt',
+    testOrderUpdateCreated: 'Test bestelupdate aangemaakt',
+    settingsFeatureComingSoon: 'Meldingsinstellingen functie komt binnenkort!',
+    loadNotificationsError: 'Fout bij laden meldingen',
+    
+    categories: {
+      stockAlert: 'Voorraadwaarschuwingen',
+      orderUpdate: 'Bestel updates',
+      systemNotification: 'Systeemmeldingen',
+      reminder: 'Herinneringen'
+    },
+    
+    types: {
+      stock_alert: 'voorraadwaarschuwing',
+      order_update: 'bestelupdate',
+      system_notification: 'systeemmelding',
+      reminder: 'herinnering'
+    },
+    
+    testMessages: {
+      stockAlert: {
+        title: 'Test voorraadwaarschuwing',
+        message: 'Dit is een test lage voorraad melding'
+      },
+      orderUpdate: {
+        title: 'Test bestelupdate',
+        message: 'Dit is een test bestelupdate melding'
+      }
     }
   }
 } 

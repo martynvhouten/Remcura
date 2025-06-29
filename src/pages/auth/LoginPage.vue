@@ -48,7 +48,7 @@
               @click="showPassword = !showPassword"
               class="password-toggle"
               tabindex="-1"
-              :aria-label="showPassword ? $t('auth.hidePassword') || 'Hide password' : $t('auth.showPassword') || 'Show password'"
+              :aria-label="showPassword ? $t('auth.hidePassword') : $t('auth.showPassword')"
             />
           </template>
         </q-input>
@@ -62,8 +62,7 @@
           :loading="loading"
           type="submit"
           color="primary"
-          size="lg"
-          class="login-btn btn-modern hover-lift"
+          class="login-btn btn-modern"
           :label="$t('auth.login') || 'Inloggen'"
           unelevated
           no-caps
@@ -86,9 +85,9 @@
             flat
             dense
             color="secondary"
-            :label="$t('auth.demoAccount') || 'Demo account'"
+            :label="$t('auth.demoAccount')"
             @click="fillDemoCredentials"
-            class="demo-btn btn-modern hover-lift"
+            class="demo-btn btn-modern"
             icon="person"
             no-caps
             :aria-describedby="'demo-help'"
@@ -100,7 +99,7 @@
             color="primary"
             :label="$t('auth.forgotPassword') || 'Wachtwoord vergeten?'"
             @click="handleForgotPassword"
-            class="forgot-btn btn-modern hover-lift"
+            class="forgot-btn btn-modern"
             no-caps
           />
         </div>

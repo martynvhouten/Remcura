@@ -16,7 +16,7 @@
           <q-icon name="warning" size="16px" />
             </div>
         <div class="notification-content">
-          <div class="notification-title">Low Stock</div>
+          <div class="notification-title">{{ $t('alerts.lowStock') }}</div>
           <div class="notification-message">
             {{ lowStockMessage }}
             </div>
@@ -52,7 +52,7 @@
           <q-icon name="error" size="16px" />
             </div>
         <div class="notification-content">
-          <div class="notification-title">Out of Stock</div>
+          <div class="notification-title">{{ $t('alerts.outOfStock') }}</div>
           <div class="notification-message">
             {{ outOfStockMessage }}
             </div>
@@ -75,7 +75,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref, watch } from 'vue'
+import { computed, ref, watch, onMounted, onUnmounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 import { useClinicStore } from 'src/stores/clinic'
@@ -87,6 +87,13 @@ const clinicStore = useClinicStore()
 // Local state for dismissing alerts
 const lowStockDismissed = ref(false)
 const outOfStockDismissed = ref(false)
+
+// Auto-dismiss timers
+let lowStockTimer: number | null = null
+let outOfStockTimer: number | null = null
+
+// Auto-dismiss after 7 seconds
+const AUTO_DISMISS_DELAY = 7000
 
 // Computed properties
 const lowStockCount = computed(() => clinicStore.lowStockProducts.length)
@@ -120,23 +127,66 @@ const goToProducts = () => {
 
 const dismissLowStockAlert = () => {
   lowStockDismissed.value = true
+  if (lowStockTimer) {
+    clearTimeout(lowStockTimer)
+    lowStockTimer = null
+  }
 }
 
 const dismissOutOfStockAlert = () => {
   outOfStockDismissed.value = true
+  if (outOfStockTimer) {
+    clearTimeout(outOfStockTimer)
+    outOfStockTimer = null
+  }
+}
+
+// Auto-dismiss functions
+const startLowStockTimer = () => {
+  if (lowStockTimer) clearTimeout(lowStockTimer)
+  lowStockTimer = window.setTimeout(() => {
+    lowStockDismissed.value = true
+    lowStockTimer = null
+  }, AUTO_DISMISS_DELAY)
+}
+
+const startOutOfStockTimer = () => {
+  if (outOfStockTimer) clearTimeout(outOfStockTimer)
+  outOfStockTimer = window.setTimeout(() => {
+    outOfStockDismissed.value = true
+    outOfStockTimer = null
+  }, AUTO_DISMISS_DELAY)
 }
 
 // Reset dismissal when counts change (new alerts)
 watch(() => lowStockCount.value, (newCount: number, oldCount: number) => {
   if (newCount > oldCount) {
     lowStockDismissed.value = false
+    startLowStockTimer()
   }
 })
 
 watch(() => outOfStockCount.value, (newCount: number, oldCount: number) => {
   if (newCount > oldCount) {
     outOfStockDismissed.value = false
+    startOutOfStockTimer()
   }
+})
+
+// Start timers on mount if alerts exist
+onMounted(() => {
+  if (lowStockCount.value > 0 && !lowStockDismissed.value) {
+    startLowStockTimer()
+  }
+  if (outOfStockCount.value > 0 && !outOfStockDismissed.value) {
+    startOutOfStockTimer()
+  }
+})
+
+// Clean up timers
+onUnmounted(() => {
+  if (lowStockTimer) clearTimeout(lowStockTimer)
+  if (outOfStockTimer) clearTimeout(outOfStockTimer)
 })
 </script>
 

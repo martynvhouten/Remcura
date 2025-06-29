@@ -24,7 +24,6 @@
             dense
             icon="close"
             @click="$emit('update:modelValue', false)"
-            size="lg"
           />
         </div>
       </q-card-section>
@@ -56,8 +55,10 @@
                       color="negative"
                       flat
                       icon="clear_all"
-                      :label="$t('bestellijsten.clearCart') || 'Clear Cart'"
+                      :label="$t('bestellijsten.clearCart')"
                       @click="confirmClearCart"
+                      no-caps
+                      class="btn-modern"
                     />
                   </div>
                 </div>
@@ -79,7 +80,7 @@
 
               <q-item-section>
                 <q-item-label class="text-weight-medium">
-                  {{ item.products?.name || 'Unknown Product' }}
+                  {{ item.products?.name || $t('common.unknownProduct') }}
                 </q-item-label>
                 <q-item-label caption>
                   {{ item.products?.sku }} • {{ item.products?.unit }}
@@ -98,7 +99,6 @@
                     icon="remove"
                     @click="decreaseQuantity(item)"
                     :disable="item.quantity <= 1"
-                    size="sm"
                   />
                   <q-input
                     v-model.number="item.quantity"
@@ -116,7 +116,6 @@
                     dense
                     icon="add"
                     @click="increaseQuantity(item)"
-                    size="sm"
                   />
                 </div>
                 
@@ -140,7 +139,6 @@
                   icon="delete"
                   color="negative"
                   @click="confirmRemoveItem(item)"
-                  size="sm"
                 >
                   <q-tooltip>{{ $t('bestellijsten.removeFromCart') }}</q-tooltip>
                 </q-btn>
@@ -158,14 +156,18 @@
             flat
             :label="$t('common.cancel')"
             @click="$emit('update:modelValue', false)"
+            no-caps
+            class="btn-modern"
           />
           <q-btn
             flat
             icon="save"
-            :label="$t('bestellijsten.saveCart') || 'Save Cart'"
+            :label="$t('bestellijsten.saveCart')"
             @click="saveCart"
             :loading="saving"
             color="secondary"
+            no-caps
+            class="btn-modern"
           />
         </div>
         
@@ -177,6 +179,8 @@
           :disable="!cart?.shopping_cart_items?.length"
           :loading="submitting"
           unelevated
+          no-caps
+          class="btn-modern"
         />
       </q-card-actions>
     </q-card>
@@ -270,7 +274,7 @@ const confirmRemoveItem = (item: ShoppingCartItem) => {
 
 const confirmClearCart = () => {
   $q.dialog({
-    title: t('bestellijsten.clearCart') || 'Clear Cart',
+          title: t('bestellijsten.clearCart'),
     message: t('bestellijsten.confirmClearCart') || 'Are you sure you want to remove all items from your cart?',
     cancel: true,
     persistent: true
@@ -283,7 +287,7 @@ const confirmClearCart = () => {
 
     $q.notify({
       type: 'positive',
-      message: t('bestellijsten.cartCleared') || 'Cart cleared'
+              message: t('bestellijsten.cartCleared')
     })
   })
 }
@@ -312,7 +316,7 @@ const saveCart = async () => {
     // TODO: Implement save cart functionality
     $q.notify({
       type: 'positive',
-      message: t('bestellijsten.cartSaved') || 'Cart saved'
+              message: t('bestellijsten.cartSaved')
     })
   } finally {
     saving.value = false

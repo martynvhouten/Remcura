@@ -4,29 +4,27 @@
       <PageTitle
         :title="$t('products.title')"
         :subtitle="$t('products.manageInventorySubtitle')"
-        icon="inventory_2"
-        :meta="[
-          { icon: 'inventory_2', text: $t('products.inventoryManagement') },
-          { icon: 'analytics', text: $t('products.totalProductsCount', { count: totalProducts }) }
-        ]"
+        icon="medical_services"
       >
         <template #actions>
           <q-btn
             color="primary"
-            icon="refresh"
+            icon="sync"
             :label="$t('common.refresh')"
             @click="refreshProducts"
             :loading="loading"
-            class="btn-modern"
             outline
+            no-caps
+            class="btn-modern"
           />
           <q-btn
             color="primary"
-            icon="add"
+            icon="add_circle"
             :label="$t('products.addProduct')"
             @click="showAddProductDialog = true"
-            class="btn-modern"
             unelevated
+            no-caps
+            class="btn-modern"
           />
         </template>
       </PageTitle>
@@ -74,7 +72,8 @@
                 :label="$t('products.advancedFilters') || 'Geavanceerd'"
                 outline
                 dense
-                class="btn-modern filter-btn"
+                no-caps
+                class="btn-modern"
             />
           </div>
         </div>
@@ -139,8 +138,7 @@
                 icon="edit"
                 color="primary"
                 @click="editProduct(props.row)"
-                  :aria-label="`Bewerk ${props.row.name}`"
-                  class="action-btn btn-hover"
+                :aria-label="`Bewerk ${props.row.name}`"
                 >
                   <q-tooltip class="bg-primary">Bewerken</q-tooltip>
                 </q-btn>
@@ -151,8 +149,7 @@
                 icon="delete"
                 color="negative"
                 @click="confirmDeleteProduct(props.row)"
-                  :aria-label="`Verwijder ${props.row.name}`"
-                  class="action-btn btn-hover btn-danger"
+                :aria-label="`Verwijder ${props.row.name}`"
                 >
                   <q-tooltip class="bg-negative">Verwijderen</q-tooltip>
                 </q-btn>
@@ -248,7 +245,7 @@ const tableColumns = computed(() => [
   },
   {
     name: 'reorder_suggestion',
-    label: 'Bestel suggestie',
+            label: t('products.orderSuggestionLabel'),
     field: 'reorder_suggestion',
     align: 'center' as const
   },
@@ -261,9 +258,9 @@ const tableColumns = computed(() => [
 ])
 
 const stockFilterOptions = computed(() => [
-  { label: 'Alle producten', value: 'all' },
-  { label: 'Op voorraad', value: 'in_stock' },
-  { label: 'Lage voorraad', value: 'low_stock' },
+      { label: t('products.allProducts'), value: 'all' },
+    { label: t('products.inStockProducts'), value: 'in_stock' },
+    { label: t('products.lowStockProducts'), value: 'low_stock' },
   { label: 'Niet op voorraad', value: 'out_of_stock' }
 ])
 
@@ -301,7 +298,7 @@ const refreshProducts = async () => {
     await clinicStore.fetchProducts()
     $q.notify({
       type: 'positive',
-      message: 'Producten succesvol vernieuwd'
+      message: t('products.productsRefreshed')
     })
   } catch (error) {
     $q.notify({

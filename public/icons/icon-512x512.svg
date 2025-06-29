@@ -1,0 +1,24 @@
+<svg viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
+    <!-- Background circle -->
+    <circle cx="256" cy="256" r="240" fill="#4f46e5" stroke="#3730a3" stroke-width="12"/>
+    
+    <!-- Medical cross -->
+    <rect x="226" y="116" width="60" height="280" rx="12" fill="white"/>
+    <rect x="116" y="226" width="280" height="60" rx="12" fill="white"/>
+    
+    <!-- Medical bottle/inventory symbol -->
+    <rect x="150" y="350" width="212" height="106" rx="20" fill="#e0e7ff" stroke="#4f46e5" stroke-width="6"/>
+    <rect x="170" y="366" width="172" height="20" rx="4" fill="#4f46e5"/>
+    <rect x="170" y="400" width="86" height="12" rx="3" fill="#4f46e5"/>
+    <rect x="170" y="420" width="128" height="12" rx="3" fill="#4f46e5"/>
+    
+    <!-- Pulse/activity lines -->
+    <path d="M50 80 L86 80 L100 50 L116 110 L132 80 L168 80" stroke="#10b981" stroke-width="8" fill="none"/>
+    <path d="M344 80 L380 80 L394 50 L410 110 L426 80 L462 80" stroke="#10b981" stroke-width="8" fill="none"/>
+    
+    <!-- Additional detail elements -->
+    <circle cx="200" cy="200" r="8" fill="#fbbf24"/>
+    <circle cx="312" cy="200" r="8" fill="#fbbf24"/>
+    <circle cx="200" cy="312" r="8" fill="#fbbf24"/>
+    <circle cx="312" cy="312" r="8" fill="#fbbf24"/>
+</svg> 

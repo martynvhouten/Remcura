@@ -10,7 +10,7 @@ export class OrderProcessingService {
   async createOrderFromCart(cartId: string, notes?: string): Promise<Order> {
     const authStore = useAuthStore()
     const user = authStore.user
-    const practiceId = authStore.selectedPractice?.id
+    const practiceId = authStore.clinicId
     
     if (!user || !practiceId) {
       throw new Error('User not authenticated or no practice selected')
@@ -100,7 +100,7 @@ export class OrderProcessingService {
     date_to?: string
   }): Promise<OrderWithItems[]> {
     const authStore = useAuthStore()
-    const practiceId = authStore.selectedPractice?.id
+    const practiceId = authStore.clinicId
     
     if (!practiceId) {
       throw new Error('No practice selected')
@@ -448,7 +448,7 @@ export class OrderProcessingService {
    */
   private async logActivity(activityType: string, data: any): Promise<void> {
     const authStore = useAuthStore()
-    const practiceId = authStore.selectedPractice?.id
+    const practiceId = authStore.clinicId
     const userId = authStore.user?.id
 
     if (practiceId) {
@@ -456,7 +456,7 @@ export class OrderProcessingService {
         .from('usage_analytics')
         .insert({
           practice_id: practiceId,
-          user_id: userId,
+          user_id: userId || null,
           event_type: activityType,
           event_data: data
         })

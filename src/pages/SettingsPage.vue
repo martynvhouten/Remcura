@@ -4,7 +4,7 @@
       <PageTitle
         :title="$t('settings.title')"
         :subtitle="$t('settings.manageSettingsSubtitle')"
-        icon="settings"
+        icon="tune"
         :meta="[
           { icon: 'person', text: userProfile?.full_name || 'User' },
           { icon: 'domain', text: clinicName }
@@ -17,8 +17,9 @@
             :label="$t('settings.saveSettings')"
             @click="saveSettings"
             :loading="saving"
-            class="btn-modern"
             unelevated
+            no-caps
+            class="btn-modern"
           />
         </template>
       </PageTitle>

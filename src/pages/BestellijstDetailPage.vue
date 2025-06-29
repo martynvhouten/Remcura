@@ -4,7 +4,7 @@
       <PageTitle
         :title="currentBestellijst?.name || $t('bestellijsten.title')"
         :subtitle="$t('bestellijsten.subtitle')"
-        icon="inventory_2"
+        icon="checklist"
       >
         <template #actions>
           <q-btn
@@ -401,19 +401,71 @@ const getStatusText = (item: BestellijstItem): string => {
 }
 
 const addToCart = async (item: BestellijstItem) => {
-  // TODO: Implement add to cart functionality
-  $q.notify({
-    type: 'info',
-    message: 'Add to cart functionality coming soon'
-  })
+  // Get or create a shopping cart
+  let cart = bestellijstenStore.currentShoppingCart
+  if (!cart) {
+    const result = await bestellijstenStore.createShoppingCart()
+    if (!result.success || !result.data) {
+      $q.notify({
+        type: 'negative',
+        message: result.error || t('bestellijsten.errorCreatingCart')
+      })
+      return
+    }
+    cart = result.data
+  }
+
+  // Calculate quantity to add (use suggestion if available)
+  const quantity = getSuggestion(item) || 1
+  
+  // Add item to cart
+  const result = await bestellijstenStore.addToShoppingCart(cart!.id, item.product_id, quantity, 'manual')
+  
+  if (result.success) {
+    $q.notify({
+      type: 'positive',
+      message: t('bestellijsten.addedToCart', { quantity, product: item.product_id })
+    })
+  } else {
+    $q.notify({
+      type: 'negative',
+      message: result.error || t('bestellijsten.errorAddingToCart')
+    })
+  }
 }
 
 const addAllSuggestionsToCart = async () => {
-  // TODO: Implement add all suggestions to cart
-  $q.notify({
-    type: 'info',
-    message: 'Add all suggestions functionality coming soon'
-  })
+  // Get or create a shopping cart
+  let cart = bestellijstenStore.currentShoppingCart
+  if (!cart) {
+    const result = await bestellijstenStore.createShoppingCart()
+    if (!result.success || !result.data) {
+      $q.notify({
+        type: 'negative',
+        message: result.error || t('bestellijsten.errorCreatingCart')
+      })
+      return
+    }
+    cart = result.data
+  }
+
+  // Add all suggestions to cart
+  const result = await bestellijstenStore.addAllSuggestionsToCart(cart!.id)
+  
+  if (result.success && result.data) {
+    $q.notify({
+      type: 'positive',
+      message: t('bestellijsten.addedSuggestionsToCart', { 
+        added: result.data.added, 
+        total: result.data.total 
+      })
+    })
+  } else {
+    $q.notify({
+      type: 'negative',
+      message: result.error || t('bestellijsten.errorAddingToCart')
+    })
+  }
 }
 
 const confirmRemoveItem = (item: BestellijstItem) => {

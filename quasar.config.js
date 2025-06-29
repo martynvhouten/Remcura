@@ -100,17 +100,17 @@ export default configure(function (ctx) {
       config: {
         dark: 'auto', // or Boolean true/false or 'auto'
         brand: {
-          primary: '#4f46e5',
-          secondary: '#0891b2',
-          accent: '#f59e0b',
+          primary: '#1e3a8a',    // Deep Medical Blue
+          secondary: '#0f766e',  // Deep Teal
+          accent: '#0d9488',     // Medical Teal Accent
 
           dark: '#1c1917',
           'dark-page': '#0a0a0a',
 
-          positive: '#059669',
-          negative: '#dc2626',
-          info: '#0369a1',
-          warning: '#d97706'
+          positive: '#065f46',   // Deep Emerald
+          negative: '#b91c1c',   // Deep Red  
+          info: '#1e40af',       // Rich Blue
+          warning: '#d97706'     // Professional Orange
         }
       },
 
@@ -125,6 +125,7 @@ export default configure(function (ctx) {
         'QPage',
         'QToolbar',
         'QBtn',
+        'QBtnGroup',
         'QIcon',
         'QList',
         'QItem',
@@ -149,7 +150,12 @@ export default configure(function (ctx) {
         'QBtnDropdown',
         'QMenu',
         'QTooltip',
-        'QLinearProgress'
+        'QLinearProgress',
+        'QTabs',
+        'QTab',
+        'QTabPanels',
+        'QTabPanel',
+        'QOptionGroup'
       ],
       
       // directives: [],

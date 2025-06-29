@@ -1,0 +1,18 @@
+<svg viewBox="0 0 192 192" xmlns="http://www.w3.org/2000/svg">
+    <!-- Background circle -->
+    <circle cx="96" cy="96" r="90" fill="#4f46e5" stroke="#3730a3" stroke-width="4"/>
+    
+    <!-- Medical cross -->
+    <rect x="84" y="44" width="24" height="104" rx="4" fill="white"/>
+    <rect x="44" y="84" width="104" height="24" rx="4" fill="white"/>
+    
+    <!-- Medical bottle/inventory symbol -->
+    <rect x="56" y="130" width="80" height="40" rx="8" fill="#e0e7ff" stroke="#4f46e5" stroke-width="2"/>
+    <rect x="64" y="136" width="64" height="8" rx="2" fill="#4f46e5"/>
+    <rect x="64" y="150" width="32" height="4" rx="1" fill="#4f46e5"/>
+    <rect x="64" y="158" width="48" height="4" rx="1" fill="#4f46e5"/>
+    
+    <!-- Pulse/activity line -->
+    <path d="M20 30 L32 30 L38 20 L44 40 L50 30 L62 30" stroke="#10b981" stroke-width="3" fill="none"/>
+    <path d="M130 30 L142 30 L148 20 L154 40 L160 30 L172 30" stroke="#10b981" stroke-width="3" fill="none"/>
+</svg> 

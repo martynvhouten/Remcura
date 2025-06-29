@@ -180,29 +180,18 @@ const slots = defineSlots<{
     align-items: flex-start;
     gap: var(--space-3);
     flex-wrap: wrap;
+    padding-top: 8px; // Move buttons down slightly
     
     @media (max-width: 768px) {
       width: 100%;
       justify-content: flex-start;
+      padding-top: 12px; // More space on mobile
     }
     
     @media (max-width: 480px) {
       :deep(.q-btn) {
         flex: 1;
         min-width: 120px;
-      }
-    }
-    
-    :deep(.btn-modern) {
-      transition: all var(--transition-base);
-      
-      &:hover {
-        transform: translateY(-1px);
-        box-shadow: var(--shadow-md);
-      }
-      
-      &:active {
-        transform: translateY(0);
       }
     }
   }

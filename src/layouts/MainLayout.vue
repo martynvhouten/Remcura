@@ -37,11 +37,24 @@
             round
             dense
             icon="notifications"
-            class="action-btn"
             :aria-label="$t('nav.notifications') || 'Notifications (3 unread)'"
+            @click="goToNotifications"
           >
             <q-badge color="danger" floating>3</q-badge>
             <q-tooltip>{{ $t('nav.notifications') || 'Notifications' }}</q-tooltip>
+          </q-btn>
+
+          <!-- Shopping Cart -->
+          <q-btn
+            flat
+            round
+            dense
+            icon="shopping_cart"
+            :aria-label="$t('nav.shoppingCart') || 'Shopping Cart'"
+            @click="showCart = true"
+          >
+            <q-badge v-if="cartItemCount > 0" color="primary" floating>{{ cartItemCount }}</q-badge>
+            <q-tooltip>{{ $t('nav.shoppingCart') || 'Shopping Cart' }}</q-tooltip>
           </q-btn>
 
           <!-- Dark mode toggle -->
@@ -51,10 +64,9 @@
             dense
             :icon="$q.dark.isActive ? 'light_mode' : 'dark_mode'"
             @click="toggleDarkMode"
-            class="action-btn"
             :aria-label="$q.dark.isActive ? ($t('nav.lightMode') || 'Switch to light mode') : ($t('nav.darkMode') || 'Switch to dark mode')"
           >
-            <q-tooltip>{{ $q.dark.isActive ? ($t('nav.lightMode') || 'Light Mode') : ($t('nav.darkMode') || 'Dark Mode') }}</q-tooltip>
+            <q-tooltip>{{ $q.dark.isActive ? $t('nav.lightMode') : $t('nav.darkMode') }}</q-tooltip>
           </q-btn>
           
           <!-- User menu -->
@@ -64,7 +76,7 @@
             dense
             class="user-menu-btn"
             dropdown-icon="none"
-            :aria-label="$t('nav.userMenu') || 'User menu'"
+            :aria-label="$t('nav.userMenu')"
           >
             <template v-slot:label>
               <q-avatar size="32px" color="primary">
@@ -93,7 +105,7 @@
               
               <q-item clickable v-close-popup @click="goToSettings" class="menu-item" role="menuitem">
                 <q-item-section avatar>
-                  <q-icon name="settings" />
+                  <q-icon name="tune" />
                 </q-item-section>
                 <q-item-section>
                   <q-item-label>{{ $t('nav.settings') }}</q-item-label>
@@ -225,6 +237,13 @@
       <router-view />
       </div>
     </q-page-container>
+
+    <!-- Shopping Cart Dialog -->
+    <ShoppingCartDialog
+      v-model="showCart"
+      :cart="bestellijstenStore.currentShoppingCart"
+      @order-submitted="handleOrderSubmitted"
+    />
   </q-layout>
 </template>
 
@@ -235,17 +254,21 @@ import { useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 import { useAuthStore } from 'src/stores/auth'
 import { useClinicStore } from 'src/stores/clinic'
+import { useBestellijstenStore } from 'src/stores/bestellijsten'
 import StockAlertsBanner from 'src/components/StockAlertsBanner.vue'
+import ShoppingCartDialog from 'src/components/ShoppingCartDialog.vue'
 
 const $q = useQuasar()
 const router = useRouter()
 const { t } = useI18n()
 const authStore = useAuthStore()
 const clinicStore = useClinicStore()
+const bestellijstenStore = useBestellijstenStore()
 
 // State
 const leftDrawerOpen = ref(false)
 const isScrolled = ref(false)
+const showCart = ref(false)
 
 // Computed properties
 const userProfile = computed(() => authStore.userProfile)
@@ -255,6 +278,11 @@ const clinicName = computed(() => clinicStore.clinic?.name || t('clinic.defaultN
 // Real stats from clinic store
 const totalProducts = computed(() => clinicStore.stockSummary.total)
 const lowStockCount = computed(() => clinicStore.stockSummary.lowStock)
+
+// Cart-related computed properties
+const cartItemCount = computed(() => {
+  return bestellijstenStore.currentShoppingCart?.shopping_cart_items?.reduce((total, item) => total + item.quantity, 0) || 0
+})
 
 // Check if user has admin permissions
 const isAdmin = computed(() => {
@@ -268,14 +296,14 @@ const navigationLinks = computed(() => {
     {
       title: t('nav.dashboard'),
       caption: t('nav.overviewAnalytics'),
-      icon: 'dashboard',
+      icon: 'space_dashboard',
       to: '/',
       routeName: 'dashboard'
     },
     {
       title: t('bestellijsten.title'),
       caption: t('bestellijsten.subtitle'),
-      icon: 'shopping_cart',
+      icon: 'playlist_add_check',
       to: '/bestellijsten',
       routeName: 'bestellijsten',
       badge: lowStockCount.value > 0 ? lowStockCount.value : null,
@@ -284,30 +312,39 @@ const navigationLinks = computed(() => {
     {
       title: t('nav.products'),
       caption: t('nav.inventoryManagement'),
-      icon: 'inventory_2',
+      icon: 'medical_services',
       to: '/products',
       routeName: 'products'
     },
     {
       title: t('nav.orders'),
       caption: t('nav.purchaseOrders'),
-      icon: 'local_shipping',
+      icon: 'assignment',
       to: '/orders',
       routeName: 'orders'
     },
     {
       title: t('nav.analytics'),
       caption: t('nav.reportsInsights'),
-      icon: 'analytics',
+      icon: 'insights',
       to: '/analytics',
       routeName: 'analytics'
     },
     {
       title: t('nav.suppliers'),
       caption: t('nav.vendorManagement'),
-      icon: 'store',
+      icon: 'corporate_fare',
       to: '/suppliers',
       routeName: 'suppliers'
+    },
+    {
+      title: t('nav.notifications'),
+      caption: t('nav.alertsNotifications'),
+      icon: 'campaign',
+      to: '/notifications',
+      routeName: 'notifications',
+      badge: 3, // Mock unread count
+      badgeColor: 'red'
     }
   ]
 
@@ -316,7 +353,7 @@ const navigationLinks = computed(() => {
     links.push({
       title: t('nav.admin'),
       caption: t('nav.systemAdmin'),
-      icon: 'admin_panel_settings',
+      icon: 'supervisor_account',
       to: '/admin',
       routeName: 'admin'
     })
@@ -337,6 +374,10 @@ const toggleDarkMode = () => {
 
 const goToSettings = () => {
   router.push({ name: 'settings' })
+}
+
+const goToNotifications = () => {
+  router.push({ name: 'notifications' })
 }
 
 const getUserInitials = () => {
@@ -362,6 +403,17 @@ const handleLogout = async () => {
   }
 }
 
+const handleOrderSubmitted = (cart: any) => {
+  $q.notify({
+    type: 'positive',
+    message: t('bestellijsten.orderSubmittedSuccess') || 'Order submitted successfully!',
+    position: 'top',
+    timeout: 3000
+  })
+  // Refresh cart data
+  bestellijstenStore.fetchShoppingCarts()
+}
+
 // Scroll detection for header effects
 const handleScroll = () => {
   isScrolled.value = window.scrollY > 10
@@ -372,6 +424,8 @@ onMounted(async () => {
   // Load product data for navigation stats
   if (authStore.clinicId) {
     await clinicStore.fetchProducts()
+    // Load shopping cart data
+    await bestellijstenStore.fetchShoppingCarts()
   }
 })
 

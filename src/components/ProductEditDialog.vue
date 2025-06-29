@@ -33,7 +33,7 @@
           @click="$emit('update:modelValue', false)" 
             class="close-btn"
             size="md"
-            :aria-label="$t('common.close') || 'Close dialog'"
+            :aria-label="$t('common.closeDialog')"
         />
         </div>
       </q-card-section>
@@ -209,6 +209,7 @@
               @click="$emit('update:modelValue', false)" 
             class="cancel-btn btn-modern"
             color="neutral"
+            no-caps
             />
             <q-btn 
             :label="isEditing ? t('common.update') : t('common.save')" 
@@ -218,6 +219,7 @@
             @click="handleSubmit"
             class="save-btn btn-modern"
             unelevated
+            no-caps
             :icon="isEditing ? 'save' : 'add'"
             />
           </div>

@@ -67,13 +67,19 @@ const routes: RouteRecordRaw[] = [
       {
         path: 'analytics',
         name: 'analytics',
-        component: () => import('pages/DashboardPage.vue'),
+        component: () => import('pages/AnalyticsPage.vue'),
         meta: { requiresAuth: true }
       },
       {
         path: 'suppliers',
         name: 'suppliers',
-        component: () => import('pages/OrdersPage.vue'),
+        component: () => import('pages/SuppliersPage.vue'),
+        meta: { requiresAuth: true }
+      },
+      {
+        path: 'notifications',
+        name: 'notifications',
+        component: () => import('pages/NotificationsPage.vue'),
         meta: { requiresAuth: true }
       },
       {
@@ -84,6 +90,19 @@ const routes: RouteRecordRaw[] = [
           requiresAuth: true,
           requiresAdmin: true
         }
+      },
+      {
+        path: 'beheer',
+        name: 'beheer',
+        component: () => import('pages/AdminDashboard.vue'),
+        meta: { 
+          requiresAuth: true,
+          requiresAdmin: true
+        }
+      },
+      {
+        path: 'bestellingen',
+        redirect: '/bestellijsten'
       },
       {
         path: 'settings',

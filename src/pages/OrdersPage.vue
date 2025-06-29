@@ -1,27 +1,33 @@
 <template>
   <PageLayout>
-    <template #title>
-      <PageTitle :title="$t('orders.title')" icon="local_shipping">
+    <template #header>
+      <PageTitle :title="$t('orders.title')" icon="assignment">
         <template #actions>
           <q-btn-group>
             <q-btn
               :label="$t('orders.export')"
-              icon="download"
+              icon="file_download"
               color="secondary"
               :loading="exporting"
               @click="showExportDialog = true"
+              no-caps
+              class="btn-modern"
             />
             <q-btn
               :label="$t('orders.analytics')"
-              icon="analytics"
+              icon="insights"
               color="info"
               @click="showAnalytics = true"
+              no-caps
+              class="btn-modern"
             />
             <q-btn
               :label="$t('orders.createOrder')"
-              icon="add"
+              icon="shopping_cart_checkout"
               color="primary"
               @click="createNewOrder"
+              no-caps
+              class="btn-modern"
             />
           </q-btn-group>
         </template>
@@ -71,12 +77,16 @@
             icon="filter_list"
             color="primary"
             @click="applyFilters"
+            no-caps
+            class="btn-modern"
           />
           <q-btn
             :label="$t('common.reset')"
             icon="clear"
             flat
             @click="resetFilters"
+            no-caps
+            class="btn-modern"
           />
         </div>
       </q-card-section>
@@ -136,13 +146,13 @@
           <q-btn-group dense>
             <q-btn
               icon="visibility"
-              size="sm"
+              dense
               flat
               @click="viewOrder(props.row)"
             />
             <q-btn
               icon="edit"
-              size="sm"
+              dense
               flat
               @click="editOrder(props.row)"
             />
@@ -426,7 +436,7 @@ const statusOptions = computed(() => [
 
 const supplierOptions = computed(() => [
   // These would be loaded from the suppliers table
-  { label: 'All Suppliers', value: '' }
+      { label: t('orders.filters.allSuppliers'), value: '' }
 ])
 
 const exportFormatOptions = computed(() => [
@@ -513,12 +523,27 @@ const loadOrders = async () => {
       filters: filterOptions
     })
     
-  } catch (error) {
+  } catch (error: any) {
     console.error('Failed to load orders:', error)
-    $q.notify({
-      type: 'negative',
-      message: t('orders.errors.loadFailed')
-    })
+    
+    // Show user-friendly message for "No practice selected" error
+    if (error.message === 'No practice selected') {
+      $q.notify({
+        type: 'warning',
+        message: t('orders.errors.noPracticeSelected'),
+        position: 'top',
+        timeout: 5000,
+        actions: [{
+          label: t('common.dismiss'),
+          color: 'white'
+        }]
+      })
+    } else {
+      $q.notify({
+        type: 'negative',
+        message: t('orders.errors.loadFailed')
+      })
+    }
   } finally {
     loading.value = false
   }

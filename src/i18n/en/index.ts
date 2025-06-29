@@ -36,7 +36,11 @@ export default {
     refresh: 'Refresh',
     comingSoon: 'Coming Soon',
     update: 'Update',
-    dismiss: 'Dismiss'
+    dismiss: 'Dismiss',
+    unknownProduct: 'Unknown Product',
+    closeDialog: 'Close dialog',
+    actions: 'Actions',
+    open: 'Open'
   },
 
   // Navigation
@@ -64,8 +68,11 @@ export default {
     systemAdmin: 'System Administration',
     openNavigation: 'Open navigation',
     notifications: 'Notifications',
+    alertsNotifications: 'Alerts & notifications',
     darkMode: 'Dark mode',
-    userMenu: 'User menu'
+    lightMode: 'Light mode',
+    userMenu: 'User menu',
+    shoppingCart: 'Shopping Cart'
   },
 
   // Authentication
@@ -75,6 +82,8 @@ export default {
     password: 'Password',
     forgotPassword: 'Forgot password?',
     resetPassword: 'Reset password',
+    hidePassword: 'Hide password',
+    showPassword: 'Show password',
     loginError: 'Login failed. Please check your credentials.',
     sessionExpired: 'Your session has expired. Please log in again.',
     loginSuccess: 'Successfully logged in',
@@ -95,7 +104,10 @@ export default {
     multilocationSupport: 'Multi-location support',
     demoCredentialsFilled: 'Demo credentials filled. Click Login to continue.',
     passwordResetComingSoon: 'Password reset functionality coming soon.',
-    copyright: '© {year} {company}. All rights reserved.'
+    copyright: '© {year} {company}. All rights reserved.',
+    passwordHelp: 'Enter your account password to login securely',
+    demoHelp: 'Use demo@medstock-pro.com with password demo123 for demonstration',
+    signingIn: 'Signing in...'
   },
 
   // Dashboard
@@ -175,7 +187,7 @@ export default {
 
   // Stock Alerts
   alerts: {
-    lowStock: 'Low stock warning',
+    lowStock: 'Low stock',
     outOfStock: 'Out of stock',
     reorderSuggestion: 'Reorder suggestion',
     stockUpdated: 'Stock updated',
@@ -325,7 +337,8 @@ export default {
       magentoFailed: 'Failed to submit to Magento',
       cancelFailed: 'Failed to cancel order',
       exportFailed: 'Failed to export orders',
-      noOrdersToExport: 'No orders to export'
+      noOrdersToExport: 'No orders to export',
+      noPracticeSelected: 'Please select a practice first to view orders'
     },
     
     exportFilteredNote: 'Exporting {count} filtered orders',
@@ -450,7 +463,12 @@ export default {
     cartCleared: 'Cart cleared',
     cartSaved: 'Cart saved',
     errorUpdatingCart: 'Error updating cart',
+    orderSubmittedSuccess: 'Order submitted successfully!',
     errorSubmittingOrder: 'Error submitting order',
+    errorCreatingCart: 'Error creating cart',
+    errorAddingToCart: 'Error adding to cart',
+    addedToCart: 'Added {quantity} x {product} to cart',
+    addedSuggestionsToCart: 'Added {added} of {total} suggested items to cart',
     autoSuggested: 'Auto',
     scanned: 'Scanned',
     manual: 'Manual',
@@ -775,6 +793,152 @@ export default {
       connectionFailed: 'Failed to connect to Magento',
       syncFailed: 'Product sync failed',
       orderSubmitFailed: 'Failed to submit order'
+    }
+  },
+
+  // Analytics Page
+  analyticsPage: {
+    title: 'Analytics',
+    subtitle: 'Comprehensive analytics and insights for your practice',
+    period: 'Time Period',
+    dateFrom: 'From Date',
+    dateTo: 'To Date',
+    export: 'Export Data',
+    totalEvents: 'Total Events',
+    activeUsers: 'Active Users',
+    totalOrders: 'Total Orders',
+    productUpdates: 'Product Updates',
+    lowStockAlerts: 'Low Stock Alerts',
+    dailyActivity: 'Daily Activity',
+    topEvents: 'Top Events',
+    userActivity: 'User Activity',
+    productInsights: 'Product Insights',
+    frequentlyOrderedItems: 'Frequently Ordered Items',
+    mostUpdatedProducts: 'Most Updated Products',
+    user: 'User',
+    activityCount: 'Activity Count',
+    lastActivity: 'Last Activity',
+    product: 'Product',
+    updates: 'Updates',
+    frequency: 'Frequency',
+    totalQuantity: 'Total Quantity',
+    orderCount: 'Order Count',
+    periods: {
+      '7d': 'Last 7 Days',
+      '30d': 'Last 30 Days',
+      '90d': 'Last 90 Days',
+      '1y': 'Last Year'
+    },
+    loadError: 'Error loading analytics data',
+    exportSuccess: 'Analytics data exported successfully',
+    exportError: 'Error exporting analytics data'
+  },
+
+  // Suppliers Page
+  suppliersPage: {
+    title: 'Suppliers',
+    subtitle: 'Manage your supplier relationships and vendor information',
+    searchSuppliers: 'Search suppliers...',
+    filterByStatus: 'Filter by status',
+    importSuppliers: 'Import suppliers',
+    addSupplier: 'Add supplier',
+    editSupplier: 'Edit supplier',
+    addNewSupplier: 'Add new supplier',
+    supplierName: 'Supplier name',
+    contactEmail: 'Contact email',
+    contactPhone: 'Contact phone',
+    website: 'Website',
+    address: 'Address',
+    city: 'City',
+    postalCode: 'Postal code',
+    country: 'Country',
+    magentoVendorId: 'Magento vendor ID',
+    notes: 'Notes',
+    activeSupplier: 'Active supplier',
+    contactInformation: 'Contact information',
+    location: 'Location',
+    magentoLink: 'Magento link',
+    status: 'Status',
+    actions: 'Actions',
+    active: 'Active',
+    inactive: 'Inactive',
+    notLinked: 'Not linked',
+    editSupplierTooltip: 'Edit supplier',
+    linkToMagentoTooltip: 'Link to Magento',
+    deleteSupplierTooltip: 'Delete supplier',
+    cancel: 'Cancel',
+    save: 'Save',
+    nameRequired: 'Name is required',
+    linkToMagento: 'Link to Magento',
+    linkToMagentoPrompt: 'Enter the Magento vendor ID to link this supplier:',
+    confirmDelete: 'Confirm Delete',
+    confirmDeleteMessage: 'Are you sure you want to delete "{name}"? This action cannot be undone.',
+    supplierCreated: 'Supplier created successfully',
+    supplierUpdated: 'Supplier updated successfully',
+    supplierDeleted: 'Supplier deleted successfully',
+    supplierLinkedToMagento: 'Supplier linked to Magento successfully',
+    loadSuppliersError: 'Error loading suppliers',
+    saveSupplierError: 'Error saving supplier',
+    deleteSupplierError: 'Error deleting supplier',
+    linkMagentoError: 'Error linking supplier to Magento',
+    importFeatureComingSoon: 'Import feature coming soon!'
+  },
+
+  // Notifications Page
+  notificationsPage: {
+    title: 'Notifications',
+    subtitle: 'Manage your notifications and alert preferences',
+    all: 'All',
+    unread: 'Unread',
+    read: 'Read',
+    filterByCategory: 'Filter by category',
+    markAllRead: 'Mark all as read',
+    settings: 'Settings',
+    noNotifications: 'No notifications',
+    allCaughtUp: 'You\'re all caught up!',
+    notificationStatistics: 'Notification Statistics',
+    unreadCount: 'Unread',
+    total: 'Total',
+    byCategory: 'By category',
+    quickActions: 'Quick actions',
+    testStockAlert: 'Test stock alert',
+    testOrderUpdate: 'Test order update',
+    clearAllNotifications: 'Clear all notifications',
+    markAsReadTooltip: 'Mark as read',
+    deleteTooltip: 'Delete',
+    clearAllConfirm: 'Clear All Notifications',
+    clearAllConfirmMessage: 'Are you sure you want to delete all notifications? This action cannot be undone.',
+    allMarkedAsRead: 'All notifications marked as read',
+    notificationDeleted: 'Notification deleted',
+    allNotificationsCleared: 'All notifications cleared',
+    testStockAlertCreated: 'Test stock alert created',
+    testOrderUpdateCreated: 'Test order update created',
+    settingsFeatureComingSoon: 'Notification settings feature coming soon!',
+    loadNotificationsError: 'Error loading notifications',
+    
+    categories: {
+      stockAlert: 'Stock Alerts',
+      orderUpdate: 'Order Updates',
+      systemNotification: 'System Notifications',
+      reminder: 'Reminders'
+    },
+    
+    types: {
+      stock_alert: 'stock alert',
+      order_update: 'order update',
+      system_notification: 'system notification',
+      reminder: 'reminder'
+    },
+    
+    testMessages: {
+      stockAlert: {
+        title: 'Test Stock Alert',
+        message: 'This is a test low stock notification'
+      },
+      orderUpdate: {
+        title: 'Test Order Update',
+        message: 'This is a test order update notification'
+      }
     }
   }
 } 

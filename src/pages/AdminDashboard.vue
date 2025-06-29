@@ -1,20 +1,24 @@
 <template>
   <PageLayout>
-    <template #title>
-      <PageTitle :title="$t('admin.title')" icon="admin_panel_settings">
+    <template #header>
+      <PageTitle :title="$t('admin.title')" icon="supervisor_account">
         <template #actions>
           <q-btn-group>
             <q-btn
               :label="$t('admin.settings')"
-              icon="settings"
+              icon="tune"
               color="grey-8"
               @click="showSettings = true"
+              no-caps
+              class="btn-modern"
             />
             <q-btn
               :label="$t('admin.audit')"
-              icon="history"
+              icon="manage_search"
               color="info"
               @click="showAuditLog = true"
+              no-caps
+              class="btn-modern"
             />
           </q-btn-group>
         </template>
@@ -82,18 +86,24 @@
             icon="person_add"
             color="primary"
             @click="showInviteUser = true"
+            no-caps
+            class="btn-modern"
           />
           <q-btn
             :label="$t('locations.add')"
             icon="add_location"
             color="secondary"
             @click="showAddLocation = true"
+            no-caps
+            class="btn-modern"
           />
           <q-btn
             :label="$t('offline.data.download')"
             icon="download"
             color="info"
             @click="downloadOfflineData"
+            no-caps
+            class="btn-modern"
           />
           <q-btn
             :label="$t('offline.sync.forceSync')"
@@ -101,12 +111,16 @@
             color="warning"
             :loading="syncing"
             @click="forceSync"
+            no-caps
+            class="btn-modern"
           />
           <q-btn
             :label="$t('exports.title')"
             icon="table_chart"
             color="positive"
             @click="showExportDialog = true"
+            no-caps
+            class="btn-modern"
           />
         </div>
       </q-card-section>
@@ -164,19 +178,19 @@
               <q-btn-group dense>
                 <q-btn
                   icon="edit"
-                  size="sm"
+                  dense
                   flat
                   @click="editUser(props.row)"
                 />
                 <q-btn
                   icon="security"
-                  size="sm"
+                  dense
                   flat
                   @click="manageUserPermissions(props.row)"
                 />
                 <q-btn
                   icon="more_vert"
-                  size="sm"
+                  dense
                   flat
                 >
                   <q-menu>

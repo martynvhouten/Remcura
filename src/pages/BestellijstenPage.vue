@@ -4,25 +4,27 @@
       <PageTitle
         :title="$t('bestellijsten.title')"
         :subtitle="$t('bestellijsten.subtitle')"
-        icon="shopping_cart"
+        icon="playlist_add_check"
       >
         <template #actions>
           <q-btn
             color="primary"
-            icon="refresh"
+            icon="sync"
             :label="$t('common.refresh')"
             @click="refreshData"
             :loading="loading"
             outline
+            no-caps
             class="btn-modern"
           />
           <q-btn
             color="primary"
-            icon="add"
+            icon="playlist_add"
             :label="$t('bestellijsten.newList')"
             @click="showCreateDialog = true"
-            class="btn-modern"
             unelevated
+            no-caps
+            class="btn-modern"
           />
         </template>
       </PageTitle>
@@ -37,7 +39,7 @@
 
     <!-- Quick Stats Cards -->
     <div class="row q-mb-lg">
-      <div class="col-12 col-md-3 q-pa-sm">
+      <div class="col-6 col-sm-3 col-md-3 q-pa-sm">
         <q-card class="stat-card card-modern">
           <q-card-section class="text-center">
             <q-icon name="list" size="2em" color="primary" class="q-mb-sm" />
@@ -46,7 +48,7 @@
           </q-card-section>
         </q-card>
       </div>
-      <div class="col-12 col-md-3 q-pa-sm">
+      <div class="col-6 col-sm-3 col-md-3 q-pa-sm">
         <q-card class="stat-card card-modern">
           <q-card-section class="text-center">
             <q-icon name="inventory_2" size="2em" color="positive" class="q-mb-sm" />
@@ -55,7 +57,7 @@
           </q-card-section>
         </q-card>
       </div>
-      <div class="col-12 col-md-3 q-pa-sm">
+      <div class="col-6 col-sm-3 col-md-3 q-pa-sm">
         <q-card class="stat-card card-modern">
           <q-card-section class="text-center">
             <q-icon name="warning" size="2em" color="warning" class="q-mb-sm" />
@@ -64,7 +66,7 @@
           </q-card-section>
         </q-card>
       </div>
-      <div class="col-12 col-md-3 q-pa-sm">
+      <div class="col-6 col-sm-3 col-md-3 q-pa-sm">
         <q-card class="stat-card card-modern">
           <q-card-section class="text-center">
             <q-icon name="shopping_cart" size="2em" color="info" class="q-mb-sm" />
@@ -192,6 +194,8 @@
             :label="$t('bestellijsten.createList')"
             @click="showCreateDialog = true"
             unelevated
+            no-caps
+            class="btn-modern"
           />
         </div>
       </q-card-section>

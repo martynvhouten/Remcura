@@ -8,32 +8,32 @@
 // ===================================================================
 
 :root {
-  // Enhanced Brand Colors - Modern Medical Theme
-  --brand-primary: #4f46e5;       // Deep Indigo - Professional & trustworthy
-  --brand-primary-dark: #3730a3;  // Darker indigo for contrast
-  --brand-primary-light: #6366f1; // Lighter indigo for accents
-  --brand-secondary: #0891b2;     // Medical Teal - Clean & calming
-  --brand-accent: #f59e0b;        // Warm Amber - Attention & warmth
+  // Enhanced Brand Colors - Modern Medical Blue Theme
+  --brand-primary: #1e3a8a;       // Deep Medical Blue - Professional & trustworthy
+  --brand-primary-dark: #1e40af;  // Rich Blue for contrast
+  --brand-primary-light: #3b82f6; // Bright Blue for accents
+  --brand-secondary: #0f766e;     // Deep Teal - Clean & calming
+  --brand-accent: #0d9488;        // Medical Teal - Attention & trust
   
   // Semantic Colors - Enhanced for Medical Context
-  --brand-success: #059669;       // Forest Green - Natural & healing
-  --brand-success-light: #10b981; // Lighter green for UI elements
+  --brand-success: #065f46;       // Deep Emerald - Natural & healing
+  --brand-success-light: #059669; // Lighter emerald for UI elements
   --brand-warning: #d97706;       // Warm Orange - Professional warning
   --brand-warning-light: #f59e0b; // Lighter orange for UI
-  --brand-danger: #dc2626;        // Clean Red - Clear alerts
-  --brand-danger-light: #ef4444;  // Lighter red for UI
-  --brand-info: #0369a1;          // Deep Blue - Informative & calm
-  --brand-info-light: #0891b2;    // Lighter blue for UI
+  --brand-danger: #b91c1c;        // Deep Red - Clear alerts
+  --brand-danger-light: #dc2626;  // Lighter red for UI
+  --brand-info: #1e40af;          // Rich Blue - Informative & calm
+  --brand-info-light: #3b82f6;    // Lighter blue for UI
   
-  // Extended Brand Palette for Rich UI
-  --brand-purple: #7c3aed;        // Rich Purple - Premium feel
-  --brand-purple-light: #8b5cf6;  // Lighter purple
-  --brand-emerald: #059669;       // Emerald Green - Health & growth
-  --brand-emerald-light: #10b981; // Lighter emerald
-  --brand-rose: #e11d48;          // Rose Red - Elegant alerts
-  --brand-rose-light: #f43f5e;    // Lighter rose
-  --brand-sky: #0284c7;           // Sky Blue - Open & trustworthy
-  --brand-sky-light: #0ea5e9;     // Lighter sky
+  // Extended Brand Palette for Rich Medical UI
+  --brand-navy: #1e3a8a;          // Deep Navy - Premium medical feel
+  --brand-navy-light: #1e40af;    // Lighter navy
+  --brand-emerald: #065f46;       // Deep Emerald - Health & growth
+  --brand-emerald-light: #059669; // Lighter emerald
+  --brand-cyan: #0e7490;          // Medical Cyan - Clean technology
+  --brand-cyan-light: #0891b2;    // Lighter cyan
+  --brand-slate: #334155;         // Professional Slate - Elegant neutrals
+  --brand-slate-light: #475569;   // Lighter slate
   
   // Professional Neutral Palette - Warmer & More Sophisticated
   --neutral-50: #fafaf9;          // Warm white
@@ -117,10 +117,10 @@
   --transition-slow: 350ms cubic-bezier(0.4, 0, 0.2, 1);
   --transition-bounce: 400ms cubic-bezier(0.68, -0.55, 0.265, 1.55);
   
-  // Interactive States
-  --hover-bg: rgba(79, 70, 229, 0.08);
-  --hover-border: rgba(79, 70, 229, 0.2);
-  --focus-ring: 0 0 0 3px rgba(79, 70, 229, 0.12);
+  // Interactive States - Medical Blue Theme
+  --hover-bg: rgba(30, 58, 138, 0.08);
+  --hover-border: rgba(30, 58, 138, 0.2);
+  --focus-ring: 0 0 0 3px rgba(30, 58, 138, 0.12);
   --focus-ring-offset: 2px;
 }
 
@@ -142,10 +142,10 @@ body.body--dark {
   --glass-border: rgba(255, 255, 255, 0.08);
   --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
   
-  // Dark mode interactive states
-  --hover-bg: rgba(79, 70, 229, 0.12);
-  --hover-border: rgba(79, 70, 229, 0.25);
-  --focus-ring: 0 0 0 3px rgba(79, 70, 229, 0.15);
+  // Dark mode interactive states - Medical Blue Theme
+  --hover-bg: rgba(30, 58, 138, 0.12);
+  --hover-border: rgba(30, 58, 138, 0.25);
+  --focus-ring: 0 0 0 3px rgba(30, 58, 138, 0.15);
 }
 
 // ===================================================================
@@ -276,14 +276,451 @@ body.body--dark .card-content.q-card__section {
   }
 }
 
-.q-btn {
-  border-radius: var(--radius-lg);
-  font-weight: var(--font-weight-medium);
-  transition: all var(--transition-base);
+// ===================================================================
+// MODERN BUTTON SYSTEM - PREMIUM DESIGN 2024
+// ===================================================================
+
+// Enhanced button variables for perfect design
+:root {
+  // Button specific design tokens
+  --btn-height-sm: 32px;
+  --btn-height-base: 40px;
+  --btn-height-lg: 48px;
+  --btn-height-xl: 56px;
   
-  &:hover {
-    transform: translateY(-1px);
-    box-shadow: var(--shadow-sm);
+  --btn-padding-sm: 0 12px;
+  --btn-padding-base: 0 20px;
+  --btn-padding-lg: 0 24px;
+  --btn-padding-xl: 0 32px;
+  
+  --btn-font-sm: 0.75rem;
+  --btn-font-base: 0.875rem;
+  --btn-font-lg: 1rem;
+  --btn-font-xl: 1.125rem;
+  
+  --btn-radius: 12px;
+  --btn-radius-sm: 8px;
+  --btn-radius-lg: 16px;
+  --btn-radius-xl: 20px;
+  
+  // Modern gradients for premium look
+  --btn-gradient-primary: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%);
+  --btn-gradient-primary-hover: linear-gradient(135deg, #1e40af 0%, #2563eb 100%);
+  --btn-gradient-success: linear-gradient(135deg, #065f46 0%, #059669 100%);
+  --btn-gradient-success-hover: linear-gradient(135deg, #047857 0%, #10b981 100%);
+  --btn-gradient-warning: linear-gradient(135deg, #d97706 0%, #f59e0b 100%);
+  --btn-gradient-warning-hover: linear-gradient(135deg, #b45309 0%, #d97706 100%);
+  --btn-gradient-danger: linear-gradient(135deg, #b91c1c 0%, #dc2626 100%);
+  --btn-gradient-danger-hover: linear-gradient(135deg, #991b1b 0%, #b91c1c 100%);
+  
+  // Premium shadows
+  --btn-shadow-base: 0 2px 8px rgba(30, 58, 138, 0.12);
+  --btn-shadow-hover: 0 8px 25px rgba(30, 58, 138, 0.25);
+  --btn-shadow-active: 0 2px 4px rgba(30, 58, 138, 0.2);
+  --btn-shadow-outline: 0 2px 8px rgba(30, 58, 138, 0.08);
+}
+
+// Dark mode button variables
+body.body--dark {
+  --btn-shadow-base: 0 2px 8px rgba(0, 0, 0, 0.3);
+  --btn-shadow-hover: 0 8px 25px rgba(0, 0, 0, 0.4);
+  --btn-shadow-active: 0 2px 4px rgba(0, 0, 0, 0.25);
+  --btn-shadow-outline: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+.q-btn {
+  // ===================================================================
+  // BASE BUTTON RESET & FOUNDATION
+  // ===================================================================
+  
+  // Reset all default styles
+  min-height: var(--btn-height-base) !important;
+  height: var(--btn-height-base) !important;
+  padding: var(--btn-padding-base) !important;
+  border-radius: var(--btn-radius) !important;
+  font-weight: 600 !important;
+  font-size: var(--btn-font-base) !important;
+  line-height: 1 !important;
+  letter-spacing: 0.025em !important;
+  text-transform: none !important;
+  position: relative !important;
+  overflow: hidden !important;
+  
+  // Perfect text alignment using flexbox
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  
+  // Smooth transitions for all properties
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+  
+  // Remove default box shadow
+  box-shadow: none !important;
+  
+  // Ensure button content is properly aligned
+  .q-btn__content {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 8px !important;
+    line-height: 1 !important;
+    
+    // Perfect icon alignment
+    .q-icon {
+      line-height: 1 !important;
+      display: flex !important;
+      align-items: center !important;
+      justify-content: center !important;
+    }
+  }
+  
+  // ===================================================================
+  // SIZE VARIANTS
+  // ===================================================================
+  
+  &.q-btn--dense {
+    min-height: var(--btn-height-sm) !important;
+    height: var(--btn-height-sm) !important;
+    padding: var(--btn-padding-sm) !important;
+    font-size: var(--btn-font-sm) !important;
+    border-radius: var(--btn-radius-sm) !important;
+  }
+  
+  &.q-btn--lg {
+    min-height: var(--btn-height-lg) !important;
+    height: var(--btn-height-lg) !important;
+    padding: var(--btn-padding-lg) !important;
+    font-size: var(--btn-font-lg) !important;
+    border-radius: var(--btn-radius-lg) !important;
+  }
+  
+  &.btn-xl {
+    min-height: var(--btn-height-xl) !important;
+    height: var(--btn-height-xl) !important;
+    padding: var(--btn-padding-xl) !important;
+    font-size: var(--btn-font-xl) !important;
+    border-radius: var(--btn-radius-xl) !important;
+  }
+  
+  // ===================================================================
+  // ROUND BUTTONS
+  // ===================================================================
+  
+  &.q-btn--round {
+    min-width: var(--btn-height-base) !important;
+    width: var(--btn-height-base) !important;
+    padding: 0 !important;
+    border-radius: 50% !important;
+    
+    &.q-btn--dense {
+      min-width: var(--btn-height-sm) !important;
+      width: var(--btn-height-sm) !important;
+    }
+    
+    &.q-btn--lg {
+      min-width: var(--btn-height-lg) !important;
+      width: var(--btn-height-lg) !important;
+    }
+    
+    &.btn-xl {
+      min-width: var(--btn-height-xl) !important;
+      width: var(--btn-height-xl) !important;
+    }
+  }
+  
+  // ===================================================================
+  // PRIMARY BUTTONS (Filled/Unelevated)
+  // ===================================================================
+  
+  &.q-btn--unelevated {
+    background: var(--btn-gradient-primary) !important;
+    color: white !important;
+    box-shadow: var(--btn-shadow-base) !important;
+    border: none !important;
+    
+    // Primary color variants
+    &.text-white { 
+      background: var(--btn-gradient-primary) !important; 
+    }
+    
+    &.bg-primary { 
+      background: var(--btn-gradient-primary) !important; 
+    }
+    
+    &.bg-positive,
+    &.bg-green {
+      background: var(--btn-gradient-success) !important;
+    }
+    
+    &.bg-warning,
+    &.bg-orange {
+      background: var(--btn-gradient-warning) !important;
+    }
+    
+    &.bg-negative,
+    &.bg-red {
+      background: var(--btn-gradient-danger) !important;
+    }
+    
+    // Hover state
+    &:hover:not(.disabled):not(.q-btn--loading) {
+      transform: translateY(-3px) !important;
+      box-shadow: var(--btn-shadow-hover) !important;
+      
+      &.bg-primary,
+      &.text-white { 
+        background: var(--btn-gradient-primary-hover) !important; 
+      }
+      
+      &.bg-positive,
+      &.bg-green {
+        background: var(--btn-gradient-success-hover) !important;
+      }
+      
+      &.bg-warning,
+      &.bg-orange {
+        background: var(--btn-gradient-warning-hover) !important;
+      }
+      
+      &.bg-negative,
+      &.bg-red {
+        background: var(--btn-gradient-danger-hover) !important;
+      }
+    }
+    
+    // Active state
+    &:active:not(.disabled):not(.q-btn--loading) {
+      transform: translateY(0) !important;
+      box-shadow: var(--btn-shadow-active) !important;
+    }
+    
+    // Add subtle shine effect
+    &::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+      transition: left 0.5s;
+    }
+    
+    &:hover::before {
+      left: 100%;
+    }
+  }
+  
+  // ===================================================================
+  // OUTLINE BUTTONS
+  // ===================================================================
+  
+  &.q-btn--outline {
+    background: rgba(255, 255, 255, 0.8) !important;
+    backdrop-filter: blur(10px) !important;
+    border: 2px solid var(--brand-primary) !important;
+    color: var(--brand-primary) !important;
+    box-shadow: var(--btn-shadow-outline) !important;
+    
+    // Color variants
+    &.text-positive,
+    &.text-green {
+      border-color: var(--brand-success) !important;
+      color: var(--brand-success) !important;
+    }
+    
+    &.text-warning,
+    &.text-orange {
+      border-color: var(--brand-warning) !important;
+      color: var(--brand-warning) !important;
+    }
+    
+    &.text-negative,
+    &.text-red {
+      border-color: var(--brand-danger) !important;
+      color: var(--brand-danger) !important;
+    }
+    
+    // Hover state
+    &:hover:not(.disabled):not(.q-btn--loading) {
+      transform: translateY(-2px) !important;
+      box-shadow: var(--btn-shadow-hover) !important;
+      background: var(--brand-primary) !important;
+      color: white !important;
+      border-color: var(--brand-primary) !important;
+      
+      &.text-positive,
+      &.text-green {
+        background: var(--brand-success) !important;
+        border-color: var(--brand-success) !important;
+      }
+      
+      &.text-warning,
+      &.text-orange {
+        background: var(--brand-warning) !important;
+        border-color: var(--brand-warning) !important;
+      }
+      
+      &.text-negative,
+      &.text-red {
+        background: var(--brand-danger) !important;
+        border-color: var(--brand-danger) !important;
+      }
+    }
+    
+    // Active state
+    &:active:not(.disabled):not(.q-btn--loading) {
+      transform: translateY(0) !important;
+      box-shadow: var(--btn-shadow-active) !important;
+    }
+  }
+  
+  // ===================================================================
+  // FLAT BUTTONS
+  // ===================================================================
+  
+  &.q-btn--flat {
+    background: transparent !important;
+    color: var(--brand-primary) !important;
+    border: none !important;
+    
+    // Color variants
+    &.text-positive,
+    &.text-green {
+      color: var(--brand-success) !important;
+    }
+    
+    &.text-warning,
+    &.text-orange {
+      color: var(--brand-warning) !important;
+    }
+    
+    &.text-negative,
+    &.text-red {
+      color: var(--brand-danger) !important;
+    }
+    
+    // Hover state
+    &:hover:not(.disabled):not(.q-btn--loading) {
+      background: rgba(30, 58, 138, 0.1) !important;
+      transform: translateY(-1px) !important;
+      
+      &.text-positive,
+      &.text-green {
+        background: rgba(6, 95, 70, 0.1) !important;
+      }
+      
+      &.text-warning,
+      &.text-orange {
+        background: rgba(217, 119, 6, 0.1) !important;
+      }
+      
+      &.text-negative,
+      &.text-red {
+        background: rgba(185, 28, 28, 0.1) !important;
+      }
+    }
+    
+    // Active state
+    &:active:not(.disabled):not(.q-btn--loading) {
+      transform: translateY(0) !important;
+    }
+  }
+  
+  // ===================================================================
+  // SPECIAL STATES
+  // ===================================================================
+  
+  // Focus state for accessibility
+  &:focus-visible {
+    outline: 3px solid rgba(30, 58, 138, 0.3) !important;
+    outline-offset: 2px !important;
+  }
+  
+  // Disabled state
+  &.disabled {
+    opacity: 0.5 !important;
+    pointer-events: none !important;
+    transform: none !important;
+    box-shadow: none !important;
+    
+    &::before {
+      display: none !important;
+    }
+  }
+  
+  // Loading state
+  &.q-btn--loading {
+    pointer-events: none !important;
+    
+    .q-btn__content {
+      opacity: 0.7 !important;
+    }
+  }
+}
+
+// ===================================================================
+// MODERN BUTTON CLASS
+// ===================================================================
+
+.btn-modern {
+  &.q-btn {
+    // Enhanced modern styling
+    box-shadow: 0 4px 14px rgba(30, 58, 138, 0.15) !important;
+    
+    &:hover:not(.disabled):not(.q-btn--loading) {
+      box-shadow: 0 8px 30px rgba(30, 58, 138, 0.3) !important;
+      transform: translateY(-4px) !important;
+    }
+    
+    // Add glow effect
+    &::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      border-radius: inherit;
+      background: linear-gradient(45deg, rgba(255, 255, 255, 0.1), transparent);
+      pointer-events: none;
+    }
+  }
+}
+
+// ===================================================================
+// BUTTON GROUPS
+// ===================================================================
+
+.q-btn-group {
+  border-radius: var(--btn-radius) !important;
+  overflow: hidden !important;
+  box-shadow: var(--btn-shadow-base) !important;
+  
+  .q-btn {
+    border-radius: 0 !important;
+    margin: 0 !important;
+    
+    &:not(:last-child) {
+      border-right: 1px solid rgba(255, 255, 255, 0.2) !important;
+    }
+    
+    &:first-child {
+      border-top-left-radius: var(--btn-radius) !important;
+      border-bottom-left-radius: var(--btn-radius) !important;
+    }
+    
+    &:last-child {
+      border-top-right-radius: var(--btn-radius) !important;
+      border-bottom-right-radius: var(--btn-radius) !important;
+    }
+    
+    &:hover {
+      transform: none !important;
+      z-index: 2 !important;
+      position: relative !important;
+      box-shadow: 0 0 0 2px var(--brand-primary) !important;
+    }
   }
 }
 
@@ -830,6 +1267,262 @@ h3.card-title {
   background-size: 200% 100%;
   animation: shimmer 1.5s infinite;
   border-radius: var(--radius-base);
+}
+
+// ===================================================================
+// BEAUTIFUL BUTTON SYSTEM
+// ===================================================================
+
+/* Modern Button Design System */
+.q-btn {
+  position: relative;
+  overflow: hidden;
+  font-weight: 600;
+  font-size: 14px;
+  letter-spacing: 0.025em;
+  border-radius: 12px;
+  padding: 12px 24px;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  text-transform: none;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+  }
+  
+  &:active {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+  }
+  
+  // Subtle glow effect for all buttons
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(255, 255, 255, 0.1);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    z-index: 1;
+    border-radius: inherit;
+  }
+  
+  &:hover::before {
+    opacity: 1;
+  }
+  
+  .q-btn__content {
+    position: relative;
+    z-index: 2;
+  }
+}
+
+/* Primary Button - Deep Medical Blue */
+.q-btn--standard.q-btn--rectangle {
+  background: linear-gradient(135deg, #1e3a8a, #1e40af);
+  color: white;
+  border: none;
+  
+  &:hover {
+    background: linear-gradient(135deg, #1e40af, #2563eb);
+    box-shadow: 0 8px 25px rgba(30, 58, 138, 0.4);
+  }
+  
+  &:active {
+    background: linear-gradient(135deg, #1d4ed8, #2563eb);
+  }
+}
+
+/* Outline Primary Button */
+.q-btn--outline.q-btn--rectangle {
+  background: transparent;
+  border: 2px solid #1e3a8a;
+  color: #1e3a8a;
+  
+  &:hover {
+    background: linear-gradient(135deg, #1e3a8a, #1e40af);
+    color: white;
+    border-color: transparent;
+    box-shadow: 0 8px 25px rgba(30, 58, 138, 0.3);
+  }
+}
+
+/* Secondary Button - Teal */
+.q-btn--standard.q-btn--rectangle.bg-secondary,
+.q-btn[color="secondary"] {
+  background: linear-gradient(135deg, #0f766e, #0d9488);
+  color: white;
+  
+  &:hover {
+    background: linear-gradient(135deg, #134e4a, #0f766e);
+    box-shadow: 0 8px 25px rgba(15, 118, 110, 0.4);
+  }
+}
+
+/* Success Button - Emerald */
+.q-btn--standard.q-btn--rectangle.bg-positive,
+.q-btn[color="positive"] {
+  background: linear-gradient(135deg, #065f46, #047857);
+  color: white;
+  
+  &:hover {
+    background: linear-gradient(135deg, #064e3b, #065f46);
+    box-shadow: 0 8px 25px rgba(6, 95, 70, 0.4);
+  }
+}
+
+/* Warning Button - Amber */
+.q-btn--standard.q-btn--rectangle.bg-warning,
+.q-btn[color="warning"] {
+  background: linear-gradient(135deg, #d97706, #f59e0b);
+  color: white;
+  
+  &:hover {
+    background: linear-gradient(135deg, #b45309, #d97706);
+    box-shadow: 0 8px 25px rgba(217, 119, 6, 0.4);
+  }
+}
+
+/* Danger Button - Red */
+.q-btn--standard.q-btn--rectangle.bg-negative,
+.q-btn[color="negative"] {
+  background: linear-gradient(135deg, #b91c1c, #dc2626);
+  color: white;
+  
+  &:hover {
+    background: linear-gradient(135deg, #991b1b, #b91c1c);
+    box-shadow: 0 8px 25px rgba(185, 28, 28, 0.4);
+  }
+}
+
+/* Info Button - Blue */
+.q-btn--standard.q-btn--rectangle.bg-info,
+.q-btn[color="info"] {
+  background: linear-gradient(135deg, #1e40af, #2563eb);
+  color: white;
+  
+  &:hover {
+    background: linear-gradient(135deg, #1d4ed8, #3b82f6);
+    box-shadow: 0 8px 25px rgba(30, 64, 175, 0.4);
+  }
+}
+
+/* Button Sizes */
+.q-btn--small {
+  padding: 8px 16px;
+  font-size: 12px;
+  border-radius: 8px;
+}
+
+.q-btn--large {
+  padding: 16px 32px;
+  font-size: 16px;
+  border-radius: 16px;
+}
+
+/* Round Buttons */
+.q-btn--round {
+  border-radius: 50%;
+  padding: 12px;
+  
+  &.q-btn--small {
+    padding: 8px;
+  }
+  
+  &.q-btn--large {
+    padding: 16px;
+  }
+}
+
+/* Flat Buttons */
+.q-btn--flat {
+  background: transparent;
+  box-shadow: none;
+  
+  &:hover {
+    background: rgba(30, 58, 138, 0.1);
+    transform: none;
+    box-shadow: none;
+  }
+  
+  &::before {
+    display: none;
+  }
+}
+
+/* Dense Buttons */
+.q-btn--dense {
+  padding: 6px 12px;
+  font-size: 12px;
+  border-radius: 6px;
+}
+
+/* Special Action Buttons */
+.btn-action {
+  background: linear-gradient(135deg, #6366f1, #8b5cf6);
+  color: white;
+  border-radius: 12px;
+  font-weight: 600;
+  
+  &:hover {
+    background: linear-gradient(135deg, #4f46e5, #7c3aed);
+    box-shadow: 0 8px 25px rgba(99, 102, 241, 0.4);
+  }
+}
+
+/* Icon-only buttons */
+.q-btn .q-icon {
+  font-size: 18px;
+  transition: transform 0.2s ease;
+}
+
+.q-btn:hover .q-icon {
+  transform: scale(1.1);
+}
+
+/* Button Groups */
+.q-btn-group .q-btn {
+  border-radius: 0;
+  
+  &:first-child {
+    border-top-left-radius: 12px;
+    border-bottom-left-radius: 12px;
+  }
+  
+  &:last-child {
+    border-top-right-radius: 12px;
+    border-bottom-right-radius: 12px;
+  }
+}
+
+/* Disabled State */
+.q-btn--disable {
+  opacity: 0.6;
+  cursor: not-allowed;
+  
+  &:hover {
+    transform: none;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  }
+  
+  &::before {
+    display: none;
+  }
+}
+
+/* Loading State */
+.q-btn--loading {
+  &::before {
+    display: none;
+  }
+  
+  .q-spinner {
+    color: currentColor;
+  }
 }
 
 // ===================================================================
