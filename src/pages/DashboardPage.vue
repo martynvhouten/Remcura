@@ -365,6 +365,7 @@ import { useI18n } from 'vue-i18n'
 import { useQuasar } from 'quasar'
 import { useAuthStore } from 'src/stores/auth'
 import { useClinicStore } from 'src/stores/clinic'
+import { supabase } from 'src/boot/supabase'
 import StockSummaryCard from 'src/components/StockSummaryCard.vue'
 import PageLayout from 'src/components/PageLayout.vue'
 import PageTitle from 'src/components/PageTitle.vue'
@@ -379,35 +380,78 @@ const clinicStore = useClinicStore()
 const loading = ref(false)
 const currentTime = ref(new Date().toLocaleTimeString())
 
+// Dashboard data from Supabase
+const totalProducts = ref(0)
+const lowStockCount = ref(0)
+const outOfStockCount = ref(0)
+const reorderSuggestionsCount = ref(0)
+const lowStockItems = ref<any[]>([])
+
 // Computed properties
 const userProfile = computed(() => authStore.userProfile)
-const clinicName = computed(() => clinicStore.clinic?.name || 'Kliniek')
-
-// Mock data - these would come from your stores/API in a real application
-const totalProducts = computed(() => 247)
-const lowStockCount = computed(() => 12)
-const outOfStockCount = computed(() => 3)
-const reorderSuggestionsCount = computed(() => 8)
-
-const lowStockItems = computed(() => [
-  { id: 1, product_name: 'Paracetamol 500mg', product_sku: 'PAR-500', current_stock: 5, minimum_stock: 20 },
-  { id: 2, product_name: 'Insulin Glargine', product_sku: 'INS-GLA', current_stock: 0, minimum_stock: 10 },
-  { id: 3, product_name: 'Amoxicillin 250mg', product_sku: 'AMX-250', current_stock: 8, minimum_stock: 25 },
-  { id: 4, product_name: 'Bandages (Medium)', product_sku: 'BND-MED', current_stock: 12, minimum_stock: 30 },
-  { id: 5, product_name: 'Syringe 5ml', product_sku: 'SYR-5ML', current_stock: 15, minimum_stock: 50 },
-  { id: 6, product_name: 'Ibuprofen 200mg', product_sku: 'IBU-200', current_stock: 3, minimum_stock: 15 },
-  { id: 7, product_name: 'Thermometer Digital', product_sku: 'THM-DIG', current_stock: 2, minimum_stock: 8 },
-  { id: 8, product_name: 'Gloves Latex (Box)', product_sku: 'GLV-LAT', current_stock: 6, minimum_stock: 20 },
-  { id: 9, product_name: 'Blood Pressure Monitor', product_sku: 'BPM-001', current_stock: 1, minimum_stock: 5 },
-  { id: 10, product_name: 'Stethoscope', product_sku: 'STE-001', current_stock: 2, minimum_stock: 8 }
-])
+const clinicName = computed(() => clinicStore.clinic?.name || 'Remka Demo Kliniek')
 
 // Methods
+const fetchDashboardData = async () => {
+  const practiceId = authStore.clinicId
+  
+  if (!practiceId) {
+    console.warn('No practice ID available')
+    return
+  }
+
+  console.log('Fetching dashboard data for practice:', practiceId)
+  
+  try {
+    // Fetch practice info to store
+    await clinicStore.fetchClinic(practiceId)
+
+    // Fetch products count
+    const { data: products, error: productsError } = await supabase
+      .from('products')
+      .select('id', { count: 'exact' })
+      .eq('active', true)
+    
+    if (productsError) throw productsError
+    totalProducts.value = products?.length || 0
+
+    // Fetch order advice (low stock items)
+    console.log('Calling get_order_advice with practice_uuid:', practiceId)
+    const { data: orderAdvice, error: orderError } = await supabase
+      .rpc('get_order_advice', { practice_uuid: practiceId })
+    
+    if (orderError) {
+      console.error('Order advice error:', orderError)
+      throw orderError
+    }
+    
+    lowStockItems.value = orderAdvice || []
+    lowStockCount.value = orderAdvice?.length || 0
+    outOfStockCount.value = orderAdvice?.filter(item => item.current_stock === 0).length || 0
+
+    // Fetch order suggestions count
+    const { data: suggestions, error: suggestionsError } = await supabase
+      .from('order_suggestions')
+      .select('id', { count: 'exact' })
+      .eq('practice_id', practiceId)
+    
+    if (suggestionsError) throw suggestionsError
+    reorderSuggestionsCount.value = suggestions?.length || 0
+
+  } catch (error) {
+    console.error('Error fetching dashboard data:', error)
+    $q.notify({
+      type: 'negative',
+      message: 'Failed to load dashboard data',
+      position: 'top'
+    })
+  }
+}
+
 const refreshData = async () => {
   loading.value = true
   try {
-    // Simulate API call
-    await new Promise(resolve => setTimeout(resolve, 1000))
+    await fetchDashboardData()
     $q.notify({
       type: 'positive',
       message: 'Data refreshed successfully',
@@ -428,11 +472,14 @@ const goToProducts = () => {
   router.push({ name: 'products' })
 }
 
-// Update time every minute
-onMounted(() => {
+// Update time every minute and fetch initial data
+onMounted(async () => {
   const interval = setInterval(() => {
     currentTime.value = new Date().toLocaleTimeString()
   }, 60000)
+  
+  // Fetch dashboard data when component mounts
+  await fetchDashboardData()
   
   return () => clearInterval(interval)
 })

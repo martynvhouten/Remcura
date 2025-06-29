@@ -1,40 +1,48 @@
 import { defineStore } from 'pinia'
-import { ref, computed } from 'vue'
+import { ref, computed, readonly } from 'vue'
 import { supabase } from 'src/boot/supabase'
-import type { Clinic, ClinicProduct } from 'src/types/supabase'
+import type { Practice, ProductWithItems } from 'src/types/supabase'
 import { useAuthStore } from './auth'
 
 export const useClinicStore = defineStore('clinic', () => {
   // State
-  const clinic = ref<Clinic | null>(null)
-  const products = ref<ClinicProduct[]>([])
+  const clinic = ref<Practice | null>(null)
+  const products = ref<ProductWithItems[]>([])
   const loading = ref(false)
 
   // Getters
   const lowStockProducts = computed(() =>
-    products.value.filter(product => 
-      product.low_stock_alert_enabled && 
-      product.current_stock <= product.minimum_stock
-    )
+    products.value.filter((product: ProductWithItems) => {
+      // Check if product is in any practice's product list with low stock
+      return product.product_list_items?.some((item: any) => 
+        item.current_stock <= item.minimum_stock
+      )
+    })
   )
 
   const outOfStockProducts = computed(() =>
-    products.value.filter(product => 
-      product.current_stock === 0
-    )
+    products.value.filter((product: ProductWithItems) => {
+      // Check if product is in any practice's product list with zero stock
+      return product.product_list_items?.some((item: any) => 
+        item.current_stock === 0
+      )
+    })
   )
 
   const lowStockItems = computed(() => 
-    products.value.filter(product => 
-      product.current_stock > 0 && 
-      product.current_stock <= product.minimum_stock
-    )
+    products.value.filter((product: ProductWithItems) => {
+      return product.product_list_items?.some((item: any) => 
+        item.current_stock > 0 && item.current_stock <= item.minimum_stock
+      )
+    })
   )
 
   const outOfStockItems = computed(() => 
-    products.value.filter(product => 
-      product.current_stock === 0
-    )
+    products.value.filter((product: ProductWithItems) => {
+      return product.product_list_items?.some((item: any) => 
+        item.current_stock === 0
+      )
+    })
   )
 
   const stockSummary = computed(() => ({
@@ -48,23 +56,8 @@ export const useClinicStore = defineStore('clinic', () => {
   const fetchClinic = async (clinicId: string) => {
     loading.value = true
     try {
-      // Demo mode
-      if (clinicId === 'demo-clinic-id') {
-        clinic.value = {
-          id: 'demo-clinic-id',
-          name: 'Demo Medisch Centrum',
-          address: 'Demostraat 123, 1234 AB Amsterdam',
-          contact_email: 'info@demo-clinic.nl',
-          contact_phone: '+31 20 123 4567',
-          created_at: new Date().toISOString(),
-          updated_at: new Date().toISOString()
-        }
-        loading.value = false
-        return
-      }
-
       const { data, error } = await supabase
-        .from('clinics')
+        .from('practices')
         .select('*')
         .eq('id', clinicId)
         .single()
@@ -73,7 +66,7 @@ export const useClinicStore = defineStore('clinic', () => {
       
       clinic.value = data
     } catch (error) {
-      console.error('Error fetching clinic:', error)
+      console.error('Error fetching practice:', error)
     } finally {
       loading.value = false
     }
@@ -81,85 +74,46 @@ export const useClinicStore = defineStore('clinic', () => {
 
   const fetchProducts = async () => {
     const authStore = useAuthStore()
-    const clinicId = authStore.clinicId
+    const practiceId = authStore.clinicId
     
-    if (!clinicId) return
+    if (!practiceId) {
+      console.warn('No practice ID available')
+      return
+    }
 
     loading.value = true
     try {
-      // Demo mode
-      if (clinicId === 'demo-clinic-id') {
-        products.value = [
-          {
-            id: 'demo-product-1',
-            clinic_id: 'demo-clinic-id',
-            product_name: 'Wegwerpspuiten 5ml',
-            product_sku: 'SPR-5ML-001',
-            product_description: 'Steriele wegwerpspuiten 5ml met naald',
-            current_stock: 45,
-            minimum_stock: 50,
-            maximum_stock: 200,
-            reorder_enabled: true,
-            low_stock_alert_enabled: true,
-            created_at: new Date().toISOString(),
-            updated_at: new Date().toISOString()
-          },
-          {
-            id: 'demo-product-2',
-            clinic_id: 'demo-clinic-id',
-            product_name: 'Steriele handschoenen M',
-            product_sku: 'GLV-M-001',
-            product_description: 'Nitril handschoenen maat M, poedervrij',
-            current_stock: 120,
-            minimum_stock: 100,
-            maximum_stock: 500,
-            reorder_enabled: true,
-            low_stock_alert_enabled: true,
-            created_at: new Date().toISOString(),
-            updated_at: new Date().toISOString()
-          },
-          {
-            id: 'demo-product-3',
-            clinic_id: 'demo-clinic-id',
-            product_name: 'Bloeddrukmeter',
-            product_sku: 'BPM-DIG-001',
-            product_description: 'Digitale bloeddrukmeter met manchet',
-            current_stock: 0,
-            minimum_stock: 5,
-            maximum_stock: 10,
-            reorder_enabled: true,
-            low_stock_alert_enabled: true,
-            created_at: new Date().toISOString(),
-            updated_at: new Date().toISOString()
-          },
-          {
-            id: 'demo-product-4',
-            clinic_id: 'demo-clinic-id',
-            product_name: 'Medische thermometer',
-            product_sku: 'THM-DIG-001',
-            product_description: 'Digitale thermometer contactloos',
-            current_stock: 8,
-            minimum_stock: 10,
-            maximum_stock: 25,
-            reorder_enabled: true,
-            low_stock_alert_enabled: true,
-            created_at: new Date().toISOString(),
-            updated_at: new Date().toISOString()
-          }
-        ]
-        loading.value = false
-        return
+      // First get the product list ID for this practice
+      const { data: productList, error: listError } = await supabase
+        .from('product_lists')
+        .select('id')
+        .eq('practice_id', practiceId)
+        .single()
+
+      if (listError) {
+        console.error('Error fetching product list:', listError)
+        throw listError
       }
 
+      // Now fetch products with their product list items
       const { data, error } = await supabase
-        .from('clinic_products')
-        .select('*')
-        .eq('clinic_id', clinicId)
-        .order('product_name')
+        .from('products')
+        .select(`
+          *,
+          product_list_items!inner(
+            id,
+            product_list_id,
+            minimum_stock,
+            maximum_stock,
+            current_stock
+          )
+        `)
+        .eq('product_list_items.product_list_id', productList.id)
+        .order('name')
 
       if (error) throw error
       
-      products.value = data || []
+      products.value = (data || []) as ProductWithItems[]
     } catch (error) {
       console.error('Error fetching products:', error)
     } finally {
@@ -167,10 +121,10 @@ export const useClinicStore = defineStore('clinic', () => {
     }
   }
 
-  const addProduct = async (product: Omit<ClinicProduct, 'id' | 'created_at' | 'updated_at'>) => {
+  const addProduct = async (product: Omit<ProductWithItems, 'id' | 'created_at' | 'updated_at' | 'product_list_items'>) => {
     try {
       const { data, error } = await supabase
-        .from('clinic_products')
+        .from('products')
         .insert([product])
         .select()
         .single()
@@ -190,10 +144,10 @@ export const useClinicStore = defineStore('clinic', () => {
     }
   }
 
-  const updateProduct = async (id: string, updates: Partial<ClinicProduct>) => {
+  const updateProduct = async (id: string, updates: Partial<ProductWithItems>) => {
     try {
       const { data, error } = await supabase
-        .from('clinic_products')
+        .from('products')
         .update(updates)
         .eq('id', id)
         .select()
@@ -220,7 +174,7 @@ export const useClinicStore = defineStore('clinic', () => {
   const deleteProduct = async (id: string) => {
     try {
       const { error } = await supabase
-        .from('clinic_products')
+        .from('products')
         .delete()
         .eq('id', id)
 
@@ -237,20 +191,47 @@ export const useClinicStore = defineStore('clinic', () => {
     }
   }
 
-  const getReorderSuggestion = (product: ClinicProduct) => {
-    if (product.current_stock >= product.maximum_stock) {
-      return 0
+  const getReorderSuggestion = (product: ProductWithItems) => {
+    const item = product.product_list_items?.[0]
+    if (!item) return null
+
+    const { current_stock, minimum_stock, maximum_stock } = item
+    
+    if (current_stock <= minimum_stock) {
+      const suggestionQuantity = Math.max(
+        maximum_stock - current_stock,
+        minimum_stock * 2 - current_stock
+      )
+      
+      return {
+        product_id: product.id,
+        product_name: product.name,
+        current_stock,
+        minimum_stock,
+        maximum_stock,
+        suggested_quantity: suggestionQuantity,
+        urgency: current_stock === 0 ? 'critical' : 'medium'
+      }
     }
     
-    const suggested = product.maximum_stock - product.current_stock
-    return suggested > 0 ? suggested : 0
+    return null
+  }
+
+  const refreshData = async () => {
+    const authStore = useAuthStore()
+    if (authStore.clinicId) {
+      await Promise.all([
+        fetchClinic(authStore.clinicId),
+        fetchProducts()
+      ])
+    }
   }
 
   return {
     // State
-    clinic,
-    products,
-    loading,
+    clinic: readonly(clinic),
+    products: readonly(products),
+    loading: readonly(loading),
 
     // Getters
     lowStockProducts,
@@ -265,6 +246,7 @@ export const useClinicStore = defineStore('clinic', () => {
     addProduct,
     updateProduct,
     deleteProduct,
-    getReorderSuggestion
+    getReorderSuggestion,
+    refreshData
   }
 }) 

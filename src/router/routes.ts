@@ -41,6 +41,18 @@ const routes: RouteRecordRaw[] = [
         meta: { requiresAuth: true }
       },
       {
+        path: 'bestellijsten',
+        name: 'bestellijsten',
+        component: () => import('pages/BestellijstenPage.vue'),
+        meta: { requiresAuth: true }
+      },
+      {
+        path: 'bestellijsten/:id',
+        name: 'bestellijst-detail',
+        component: () => import('pages/BestellijstDetailPage.vue'),
+        meta: { requiresAuth: true }
+      },
+      {
         path: 'products',
         name: 'products',
         component: () => import('pages/ProductsPage.vue'),
@@ -51,6 +63,27 @@ const routes: RouteRecordRaw[] = [
         name: 'orders',
         component: () => import('pages/OrdersPage.vue'),
         meta: { requiresAuth: true }
+      },
+      {
+        path: 'analytics',
+        name: 'analytics',
+        component: () => import('pages/DashboardPage.vue'),
+        meta: { requiresAuth: true }
+      },
+      {
+        path: 'suppliers',
+        name: 'suppliers',
+        component: () => import('pages/OrdersPage.vue'),
+        meta: { requiresAuth: true }
+      },
+      {
+        path: 'admin',
+        name: 'admin',
+        component: () => import('pages/AdminDashboard.vue'),
+        meta: { 
+          requiresAuth: true,
+          requiresAdmin: true
+        }
       },
       {
         path: 'settings',

@@ -61,7 +61,7 @@ describe('Auth Store', () => {
       expect(result.success).toBe(true)
       expect(authStore.isAuthenticated).toBe(true)
       expect(authStore.userEmail).toBe('demo@medstock-pro.com')
-      expect(authStore.clinicId).toBe('demo-clinic-id')
+      expect(authStore.clinicId).toBe('550e8400-e29b-41d4-a716-446655440000')
       expect(authStore.userProfile?.full_name).toBe('Demo User')
     })
   })

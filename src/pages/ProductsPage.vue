@@ -100,7 +100,7 @@
           <!-- Custom column templates -->
           <template v-slot:body-cell-stock_status="props">
             <q-td :props="props">
-              <StockStatusChip :product="props.row" />
+              <StockStatusChip :current-stock="getStockInfo(props.row).current_stock" :minimum-stock="getStockInfo(props.row).minimum_stock" />
             </q-td>
           </template>
 
@@ -108,8 +108,8 @@
             <q-td :props="props">
               <q-badge 
                 :color="getStockColor(props.row)"
-                :label="props.value"
-                :aria-label="`Current stock: ${props.value} units`"
+                :label="getStockInfo(props.row).current_stock"
+                :aria-label="`Current stock: ${getStockInfo(props.row).current_stock} units`"
               />
             </q-td>
           </template>
@@ -139,7 +139,7 @@
                 icon="edit"
                 color="primary"
                 @click="editProduct(props.row)"
-                  :aria-label="`Bewerk ${props.row.product_name}`"
+                  :aria-label="`Bewerk ${props.row.name}`"
                   class="action-btn btn-hover"
                 >
                   <q-tooltip class="bg-primary">Bewerken</q-tooltip>
@@ -151,7 +151,7 @@
                 icon="delete"
                 color="negative"
                 @click="confirmDeleteProduct(props.row)"
-                  :aria-label="`Verwijder ${props.row.product_name}`"
+                  :aria-label="`Verwijder ${props.row.name}`"
                   class="action-btn btn-hover btn-danger"
                 >
                   <q-tooltip class="bg-negative">Verwijderen</q-tooltip>
@@ -176,7 +176,7 @@ import { ref, computed, onMounted, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useQuasar } from 'quasar'
 import { useClinicStore } from 'src/stores/clinic'
-import type { ClinicProduct } from 'src/types/supabase'
+import type { ProductWithItems } from 'src/types/supabase'
 import StockStatusChip from 'src/components/StockStatusChip.vue'
 import ProductEditDialog from 'src/components/ProductEditDialog.vue'
 import PageLayout from 'src/components/PageLayout.vue'
@@ -191,42 +191,52 @@ const loading = ref(false)
 const searchQuery = ref('')
 const stockFilter = ref('all')
 const showAddProductDialog = ref(false)
-const editingProduct = ref<ClinicProduct | null>(null)
+const editingProduct = ref<any>(null)
+
+// Helper function to get stock info from product list items
+const getStockInfo = (product: any) => {
+  const item = product.product_list_items?.[0]
+  return {
+    current_stock: item?.current_stock || 0,
+    minimum_stock: item?.minimum_stock || 0,
+    maximum_stock: item?.maximum_stock || 0
+  }
+}
 
 // Table configuration
 const tableColumns = computed(() => [
   {
-    name: 'product_name',
+    name: 'name',
     label: t('products.productName'),
-    field: 'product_name',
+    field: 'name',
     align: 'left' as const,
     sortable: true
   },
   {
-    name: 'product_sku',
+    name: 'sku',
     label: t('products.productSku'),
-    field: 'product_sku',
+    field: 'sku',
     align: 'left' as const,
     sortable: true
   },
   {
     name: 'current_stock',
     label: t('products.currentStock'),
-    field: 'current_stock',
+    field: (row: any) => getStockInfo(row).current_stock,
     align: 'center' as const,
     sortable: true
   },
   {
     name: 'minimum_stock',
     label: t('products.minimumStock'),
-    field: 'minimum_stock',
+    field: (row: any) => getStockInfo(row).minimum_stock,
     align: 'center' as const,
     sortable: true
   },
   {
     name: 'maximum_stock',
     label: t('products.maximumStock'),
-    field: 'maximum_stock',
+    field: (row: any) => getStockInfo(row).maximum_stock,
     align: 'center' as const,
     sortable: true
   },
@@ -266,13 +276,15 @@ const filteredProducts = computed(() => {
   // Apply stock filter
   if (stockFilter.value !== 'all') {
     products = products.filter(product => {
+      const stock = getStockInfo(product)
+      
       switch (stockFilter.value) {
         case 'in_stock':
-          return product.current_stock > product.minimum_stock
+          return stock.current_stock > stock.minimum_stock
         case 'low_stock':
-          return product.current_stock <= product.minimum_stock && product.current_stock > 0
+          return stock.current_stock <= stock.minimum_stock && stock.current_stock > 0
         case 'out_of_stock':
-          return product.current_stock === 0
+          return stock.current_stock === 0
         default:
           return true
       }
@@ -306,30 +318,32 @@ const filterMethod = (rows: readonly any[], terms: string) => {
   
   const lowerTerms = terms.toLowerCase()
   return rows.filter(row => 
-    row.product_name.toLowerCase().includes(lowerTerms) ||
-    (row.product_sku && row.product_sku.toLowerCase().includes(lowerTerms))
+    row.name.toLowerCase().includes(lowerTerms) ||
+    (row.sku && row.sku.toLowerCase().includes(lowerTerms))
   )
 }
 
-const getStockColor = (product: ClinicProduct) => {
-  if (product.current_stock === 0) return 'negative'
-  if (product.current_stock <= product.minimum_stock) return 'warning'
+const getStockColor = (product: any) => {
+  const stock = getStockInfo(product)
+  if (stock.current_stock === 0) return 'negative'
+  if (stock.current_stock <= stock.minimum_stock) return 'warning'
   return 'positive'
 }
 
-const getReorderSuggestion = (product: ClinicProduct) => {
-  return clinicStore.getReorderSuggestion(product)
+const getReorderSuggestion = (product: any) => {
+  const suggestion = clinicStore.getReorderSuggestion(product)
+  return suggestion?.suggested_quantity || 0
 }
 
-const editProduct = (product: ClinicProduct) => {
-  editingProduct.value = product
+const editProduct = (product: any) => {
+  editingProduct.value = product as any
   showAddProductDialog.value = true
 }
 
-const confirmDeleteProduct = (product: ClinicProduct) => {
+const confirmDeleteProduct = (product: any) => {
   $q.dialog({
     title: t('products.deleteProduct'),
-    message: `Weet je zeker dat je "${product.product_name}" wilt verwijderen?`,
+    message: `Weet je zeker dat je "${product.name}" wilt verwijderen?`,
     cancel: true,
     persistent: true
   }).onOk(async () => {

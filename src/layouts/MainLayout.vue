@@ -252,50 +252,78 @@ const userProfile = computed(() => authStore.userProfile)
 const userEmail = computed(() => authStore.userEmail)
 const clinicName = computed(() => clinicStore.clinic?.name || t('clinic.defaultName'))
 
-// Mock stats - these would come from your store in a real app
-const totalProducts = computed(() => 247)
-const lowStockCount = computed(() => 12)
+// Real stats from clinic store
+const totalProducts = computed(() => clinicStore.stockSummary.total)
+const lowStockCount = computed(() => clinicStore.stockSummary.lowStock)
+
+// Check if user has admin permissions
+const isAdmin = computed(() => {
+  const role = userProfile.value?.role || ''
+  return role === 'admin' || role === 'owner'
+})
 
 // Enhanced navigation links with more details
-const navigationLinks = computed(() => [
-  {
-    title: t('nav.dashboard'),
-    caption: t('nav.overviewAnalytics'),
-    icon: 'dashboard',
-    to: '/',
-    routeName: 'dashboard'
-  },
-  {
-    title: t('nav.products'),
-    caption: t('nav.inventoryManagement'),
-    icon: 'inventory_2',
-    to: '/products',
-    routeName: 'products',
-    badge: lowStockCount.value > 0 ? lowStockCount.value : null,
-    badgeColor: 'warning'
-  },
-  {
-    title: t('nav.orders'),
-    caption: t('nav.purchaseOrders'),
-    icon: 'shopping_cart',
-    to: '/orders',
-    routeName: 'orders'
-  },
-  {
-    title: t('nav.analytics'),
-    caption: t('nav.reportsInsights'),
-    icon: 'analytics',
-    to: '/analytics',
-    routeName: 'analytics'
-  },
-  {
-    title: t('nav.suppliers'),
-    caption: t('nav.vendorManagement'),
-    icon: 'store',
-    to: '/suppliers',
-    routeName: 'suppliers'
+const navigationLinks = computed(() => {
+  const links = [
+    {
+      title: t('nav.dashboard'),
+      caption: t('nav.overviewAnalytics'),
+      icon: 'dashboard',
+      to: '/',
+      routeName: 'dashboard'
+    },
+    {
+      title: t('bestellijsten.title'),
+      caption: t('bestellijsten.subtitle'),
+      icon: 'shopping_cart',
+      to: '/bestellijsten',
+      routeName: 'bestellijsten',
+      badge: lowStockCount.value > 0 ? lowStockCount.value : null,
+      badgeColor: 'warning'
+    },
+    {
+      title: t('nav.products'),
+      caption: t('nav.inventoryManagement'),
+      icon: 'inventory_2',
+      to: '/products',
+      routeName: 'products'
+    },
+    {
+      title: t('nav.orders'),
+      caption: t('nav.purchaseOrders'),
+      icon: 'local_shipping',
+      to: '/orders',
+      routeName: 'orders'
+    },
+    {
+      title: t('nav.analytics'),
+      caption: t('nav.reportsInsights'),
+      icon: 'analytics',
+      to: '/analytics',
+      routeName: 'analytics'
+    },
+    {
+      title: t('nav.suppliers'),
+      caption: t('nav.vendorManagement'),
+      icon: 'store',
+      to: '/suppliers',
+      routeName: 'suppliers'
+    }
+  ]
+
+  // Add admin dashboard for admin users
+  if (isAdmin.value) {
+    links.push({
+      title: t('nav.admin'),
+      caption: t('nav.systemAdmin'),
+      icon: 'admin_panel_settings',
+      to: '/admin',
+      routeName: 'admin'
+    })
   }
-])
+
+  return links
+})
 
 // Methods
 const toggleLeftDrawer = () => {
@@ -338,6 +366,14 @@ const handleLogout = async () => {
 const handleScroll = () => {
   isScrolled.value = window.scrollY > 10
 }
+
+// Lifecycle
+onMounted(async () => {
+  // Load product data for navigation stats
+  if (authStore.clinicId) {
+    await clinicStore.fetchProducts()
+  }
+})
 
 onMounted(() => {
   window.addEventListener('scroll', handleScroll)

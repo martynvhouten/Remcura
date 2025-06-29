@@ -18,7 +18,32 @@ export const useAuthStore = defineStore('auth', () => {
   // Getters
   const isAuthenticated = computed(() => !!user.value && !!session.value)
   const userEmail = computed(() => user.value?.email)
-  const clinicId = computed(() => userProfile.value?.clinic_id)
+  const clinicId = computed(() => {
+    const id = userProfile.value?.clinic_id
+    console.log('clinicId computed - userProfile:', userProfile.value)
+    console.log('clinicId computed - returning:', id)
+    return id
+  })
+
+  // Helper function to check and clear old demo data
+  const checkAndClearOldDemoData = () => {
+    const savedProfile = localStorage.getItem('medstock_auth_profile')
+    if (savedProfile) {
+      try {
+        const profile = JSON.parse(savedProfile)
+        if (profile.clinic_id === 'demo-clinic-id') {
+          authLogger.warn('Detected old demo data with clinic_id="demo-clinic-id", clearing localStorage')
+          clearAuthData()
+          return true // Indicates old data was cleared
+        }
+      } catch (e) {
+        authLogger.warn('Error parsing saved profile, clearing localStorage')
+        clearAuthData()
+        return true
+      }
+    }
+    return false
+  }
 
   // Actions
   const initialize = async () => {
@@ -28,12 +53,15 @@ export const useAuthStore = defineStore('auth', () => {
     try {
       authLogger.info('Initializing authentication store')
       
+      // Check for and clear old demo data first
+      const wasOldDataCleared = checkAndClearOldDemoData()
+      
       // First check localStorage for persisted session
       const savedSession = localStorage.getItem('medstock_auth_session')
       const savedUser = localStorage.getItem('medstock_auth_user')
       const savedProfile = localStorage.getItem('medstock_auth_profile')
       
-      if (savedSession && savedUser) {
+      if (savedSession && savedUser && !wasOldDataCleared) {
         try {
           session.value = JSON.parse(savedSession)
           user.value = JSON.parse(savedUser)
@@ -210,9 +238,13 @@ export const useAuthStore = defineStore('auth', () => {
   }
 
   const setDemoAuthData = async () => {
+    // Use the actual practice UUID from the database
+    const demoPracticeId = '550e8400-e29b-41d4-a716-446655440000'
+    const demoUserId = '550e8400-e29b-41d4-a716-446655440001'
+    
     // Create mock session for demo
     const mockUser = {
-      id: 'demo-user-id',
+      id: demoUserId,
       email: 'demo@medstock-pro.com',
       created_at: new Date().toISOString(),
       updated_at: new Date().toISOString(),
@@ -248,10 +280,10 @@ export const useAuthStore = defineStore('auth', () => {
     user.value = mockUser as any
     session.value = mockSession as any
     
-    // Set demo user profile
+    // Set demo user profile with actual database practice ID
     userProfile.value = {
-      id: 'demo-user-id',
-      clinic_id: 'demo-clinic-id',
+      id: demoUserId,
+      clinic_id: demoPracticeId,
       email: 'demo@medstock-pro.com',
       full_name: 'Demo User',
       role: 'admin',

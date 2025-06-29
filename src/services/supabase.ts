@@ -1,30 +1,35 @@
 import { supabase } from 'src/boot/supabase'
 import { monitoringService } from './monitoring'
+
+// Export supabase client for use in other services
+export { supabase }
 import { apiLogger } from 'src/utils/logger'
 import type { 
-  Clinic, 
+  Practice, 
   UserProfile, 
-  ClinicProduct,
-  ClinicInsert,
+  Product,
+  ProductListItem,
+  PracticeInsert,
   UserProfileInsert,
-  ClinicProductInsert,
-  ClinicUpdate,
+  ProductInsert,
+  PracticeUpdate,
   UserProfileUpdate,
-  ClinicProductUpdate
+  ProductUpdate,
+  ProductWithItems
 } from 'src/types/supabase'
 
-// Clinic operations
-export const clinicService = {
-  async getById(id: string): Promise<Clinic | null> {
+// Practice operations
+export const practiceService = {
+  async getById(id: string): Promise<Practice | null> {
     const { data, error } = await supabase
-      .from('clinics')
+      .from('practices')
       .select('*')
       .eq('id', id)
       .single()
 
     if (error) {
-      const enhancedError = new Error(`Failed to fetch clinic: ${error.message}`)
-      apiLogger.error('Failed to fetch clinic', enhancedError)
+      const enhancedError = new Error(`Failed to fetch practice: ${error.message}`)
+      apiLogger.error('Failed to fetch practice', enhancedError)
       monitoringService.captureError(enhancedError, {
         url: window.location.href,
         userAgent: navigator.userAgent,
@@ -36,30 +41,30 @@ export const clinicService = {
     return data
   },
 
-  async create(clinic: ClinicInsert): Promise<Clinic | null> {
+  async create(practice: PracticeInsert): Promise<Practice | null> {
     const { data, error } = await supabase
-      .from('clinics')
-      .insert([clinic])
+      .from('practices')
+      .insert([practice])
       .select()
       .single()
 
     if (error) {
-      throw new Error(`Failed to create clinic: ${error.message}`)
+      throw new Error(`Failed to create practice: ${error.message}`)
     }
 
     return data
   },
 
-  async update(id: string, updates: ClinicUpdate): Promise<Clinic | null> {
+  async update(id: string, updates: PracticeUpdate): Promise<Practice | null> {
     const { data, error } = await supabase
-      .from('clinics')
+      .from('practices')
       .update(updates)
       .eq('id', id)
       .select()
       .single()
 
     if (error) {
-      throw new Error(`Failed to update clinic: ${error.message}`)
+      throw new Error(`Failed to update practice: ${error.message}`)
     }
 
     return data
@@ -112,60 +117,76 @@ export const userProfileService = {
   }
 }
 
-// Clinic products operations
-export const clinicProductService = {
-  async getByClinicId(clinicId: string): Promise<ClinicProduct[]> {
+// Products operations
+export const productService = {
+  async getByPracticeId(practiceId: string): Promise<ProductWithItems[]> {
     const { data, error } = await supabase
-      .from('clinic_products')
-      .select('*')
-      .eq('clinic_id', clinicId)
-      .order('product_name')
+      .from('products')
+      .select(`
+        *,
+        product_list_items!inner(
+          id,
+          product_list_id,
+          minimum_stock,
+          maximum_stock,
+          current_stock,
+          reorder_point,
+          preferred_supplier,
+          notes,
+          product_lists!inner(
+            practice_id,
+            name
+          )
+        )
+      `)
+      .eq('product_list_items.product_lists.practice_id', practiceId)
+      .order('name')
 
     if (error) {
-      throw new Error(`Failed to fetch clinic products: ${error.message}`)
+      throw new Error(`Failed to fetch products: ${error.message}`)
     }
 
-    return data || []
+    return (data || []) as ProductWithItems[]
   },
 
-  async getById(id: string): Promise<ClinicProduct | null> {
+  async getById(id: string): Promise<Product | null> {
     const { data, error } = await supabase
-      .from('clinic_products')
+      .from('products')
       .select('*')
       .eq('id', id)
       .single()
 
     if (error) {
-      throw new Error(`Failed to fetch clinic product: ${error.message}`)
+      throw new Error(`Failed to fetch product: ${error.message}`)
     }
 
     return data
   },
 
-  async create(product: ClinicProductInsert): Promise<ClinicProduct | null> {
+  async create(product: ProductInsert): Promise<Product | null> {
     const { data, error } = await supabase
-      .from('clinic_products')
+      .from('products')
       .insert([product])
       .select()
       .single()
 
     if (error) {
-      throw new Error(`Failed to create clinic product: ${error.message}`)
+      throw new Error(`Failed to create product: ${error.message}`)
     }
 
     return data
   },
 
-  async update(id: string, updates: ClinicProductUpdate): Promise<ClinicProduct | null> {
+  async update(id: string, updates: ProductUpdate): Promise<Product | null> {
     const { data, error } = await supabase
-      .from('clinic_products')
+      .from('products')
       .update(updates)
       .eq('id', id)
       .select()
       .single()
 
     if (error) {
-      throw new Error(`Failed to update clinic product: ${error.message}`)
+      throw new Error(`Failed to update product: ${error.message}`)
     }
 
     return data
@@ -173,64 +194,62 @@ export const clinicProductService = {
 
   async delete(id: string): Promise<boolean> {
     const { error } = await supabase
-      .from('clinic_products')
+      .from('products')
       .delete()
       .eq('id', id)
 
     if (error) {
-      throw new Error(`Failed to delete clinic product: ${error.message}`)
+      throw new Error(`Failed to delete product: ${error.message}`)
     }
 
     return true
   },
 
-  async getLowStock(clinicId: string): Promise<ClinicProduct[]> {
-    // Use a custom query for comparing columns
+  async getLowStock(practiceId: string): Promise<any[]> {
+    // Get products with low stock using the get_order_advice function
     const { data, error } = await supabase
-      .from('clinic_products')
-      .select('*')
-      .eq('clinic_id', clinicId)
-      .eq('low_stock_alert_enabled', true)
-      .order('current_stock')
+      .rpc('get_order_advice', { practice_uuid: practiceId })
 
     if (error) {
       throw new Error(`Failed to fetch low stock products: ${error.message}`)
     }
 
-    // Filter low stock products where current_stock <= minimum_stock
-    return (data || []).filter(product => 
-      product.current_stock <= product.minimum_stock
-    )
+    return data || []
   },
 
-  async getOutOfStock(clinicId: string): Promise<ClinicProduct[]> {
+  async getOutOfStock(practiceId: string): Promise<any[]> {
+    // Get out of stock products from the order advice
     const { data, error } = await supabase
-      .from('clinic_products')
-      .select('*')
-      .eq('clinic_id', clinicId)
-      .eq('current_stock', 0)
-      .order('product_name')
+      .rpc('get_order_advice', { practice_uuid: practiceId })
 
     if (error) {
       throw new Error(`Failed to fetch out of stock products: ${error.message}`)
     }
 
-    return data || []
+    return (data || []).filter((item: any) => item.current_stock === 0)
   }
 }
 
 // Real-time subscriptions
-export const subscriptionService = {
-  subscribeToClinicProducts(clinicId: string, callback: (payload: any) => void) {
+export const realtimeService = {
+  subscribeToProducts(practiceId: string, callback: (payload: any) => void) {
     return supabase
-      .channel(`clinic_products:${clinicId}`)
+      .channel(`products:${practiceId}`)
       .on(
         'postgres_changes',
         {
           event: '*',
           schema: 'public',
-          table: 'clinic_products',
-          filter: `clinic_id=eq.${clinicId}`
+          table: 'products'
+        },
+        callback
+      )
+      .on(
+        'postgres_changes',
+        {
+          event: '*',
+          schema: 'public',
+          table: 'product_list_items'
         },
         callback
       )
@@ -239,7 +258,7 @@ export const subscriptionService = {
 
   subscribeToUserProfile(userId: string, callback: (payload: any) => void) {
     return supabase
-      .channel(`user_profiles:${userId}`)
+      .channel(`user_profile:${userId}`)
       .on(
         'postgres_changes',
         {
@@ -255,17 +274,21 @@ export const subscriptionService = {
 }
 
 // Utility functions
-export const supabaseUtils = {
+export const utils = {
   isValidUUID(uuid: string): boolean {
     const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i
     return uuidRegex.test(uuid)
   },
 
   formatTimestamp(timestamp: string): string {
-    return new Date(timestamp).toLocaleString('nl-NL')
+    return new Date(timestamp).toLocaleString()
   },
 
   generateId(): string {
     return crypto.randomUUID()
   }
-} 
+}
+
+// Legacy exports for backward compatibility
+export const clinicService = practiceService
+export const clinicProductService = productService 

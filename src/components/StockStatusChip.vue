@@ -22,44 +22,44 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
-import type { ClinicProduct } from 'src/types/supabase'
 
 interface Props {
-  product: ClinicProduct
+  currentStock: number
+  minimumStock: number
 }
 
 const props = defineProps<Props>()
 const { t } = useI18n()
 
 const chipColor = computed(() => {
-  if (props.product.current_stock === 0) return 'negative'
-  if (props.product.current_stock <= props.product.minimum_stock) return 'warning'
+  if (props.currentStock === 0) return 'negative'
+  if (props.currentStock <= props.minimumStock) return 'warning'
   return 'positive'
 })
 
 const chipVariant = computed(() => {
-  if (props.product.current_stock === 0) return 'critical'
-  if (props.product.current_stock <= props.product.minimum_stock) return 'warning'
+  if (props.currentStock === 0) return 'critical'
+  if (props.currentStock <= props.minimumStock) return 'warning'
   return 'success'
 })
 
 const chipIcon = computed(() => {
-  if (props.product.current_stock === 0) return 'error'
-  if (props.product.current_stock <= props.product.minimum_stock) return 'warning'
+  if (props.currentStock === 0) return 'error'
+  if (props.currentStock <= props.minimumStock) return 'warning'
   return 'check_circle'
 })
 
 const chipLabel = computed(() => {
-  if (props.product.current_stock === 0) return t('products.outOfStock')
-  if (props.product.current_stock <= props.product.minimum_stock) return t('products.lowStock')
+  if (props.currentStock === 0) return t('products.outOfStock')
+  if (props.currentStock <= props.minimumStock) return t('products.lowStock')
   return t('products.inStock')
 })
 
-const isCritical = computed(() => props.product.current_stock === 0)
+const isCritical = computed(() => props.currentStock === 0)
 
 const chipAriaLabel = computed(() => {
-  if (props.product.current_stock === 0) return t('products.outOfStock')
-  if (props.product.current_stock <= props.product.minimum_stock) return t('products.lowStock')
+  if (props.currentStock === 0) return t('products.outOfStock')
+  if (props.currentStock <= props.minimumStock) return t('products.lowStock')
   return t('products.inStock')
 })
 </script>

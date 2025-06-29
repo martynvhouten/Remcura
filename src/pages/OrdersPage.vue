@@ -1,571 +1,826 @@
 <template>
   <PageLayout>
-    <template #header>
-      <PageTitle
-        :title="$t('nav.orders')"
-        :subtitle="$t('orders.manageOrdersSubtitle')"
-        icon="shopping_cart"
-                  :badge="$t('common.comingSoon')"
-        badge-color="info"
-        :meta="[
-          { icon: 'shopping_cart', text: 'Bestellingen module' },
-          { icon: 'schedule', text: 'Binnenkort beschikbaar' }
-        ]"
-      >
+    <template #title>
+      <PageTitle :title="$t('orders.title')" icon="local_shipping">
         <template #actions>
-          <q-btn
-            color="primary"
-            icon="arrow_back"
-            :label="$t('orders.backToDashboard')"
-            @click="goToDashboard"
-            class="btn-modern"
-            unelevated
-          />
+          <q-btn-group>
+            <q-btn
+              :label="$t('orders.export')"
+              icon="download"
+              color="secondary"
+              :loading="exporting"
+              @click="showExportDialog = true"
+            />
+            <q-btn
+              :label="$t('orders.analytics')"
+              icon="analytics"
+              color="info"
+              @click="showAnalytics = true"
+            />
+            <q-btn
+              :label="$t('orders.createOrder')"
+              icon="add"
+              color="primary"
+              @click="createNewOrder"
+            />
+          </q-btn-group>
         </template>
       </PageTitle>
     </template>
 
-    <!-- Coming Soon Section -->
-    <div class="coming-soon-section animate-slide-up">
-      <!-- Main Coming Soon Card -->
-      <q-card class="coming-soon-card card-modern card-elevated" role="main">
-        <q-card-section class="coming-soon-content">
-          <div class="coming-soon-icon" aria-hidden="true">
-            <div class="icon-container">
-              <q-icon name="shopping_cart" size="80px" />
-            </div>
+    <!-- Filters -->
+    <q-card flat class="q-mb-md">
+      <q-card-section>
+        <div class="row q-gutter-md">
+          <q-select
+            v-model="filters.status"
+            :options="statusOptions"
+            :label="$t('orders.filters.status')"
+            clearable
+            emit-value
+            map-options
+            style="min-width: 150px"
+          />
+          <q-select
+            v-model="filters.supplier"
+            :options="supplierOptions"
+            :label="$t('orders.filters.supplier')"
+            clearable
+            emit-value
+            map-options
+            style="min-width: 200px"
+          />
+          <q-input
+            v-model="filters.dateFrom"
+            :label="$t('orders.filters.dateFrom')"
+            type="date"
+            outlined
+            dense
+            style="min-width: 150px"
+          />
+          <q-input
+            v-model="filters.dateTo"
+            :label="$t('orders.filters.dateTo')"
+            type="date"
+            outlined
+            dense
+            style="min-width: 150px"
+          />
+          <q-btn
+            :label="$t('common.filter')"
+            icon="filter_list"
+            color="primary"
+            @click="applyFilters"
+          />
+          <q-btn
+            :label="$t('common.reset')"
+            icon="clear"
+            flat
+            @click="resetFilters"
+          />
+        </div>
+      </q-card-section>
+    </q-card>
+
+    <!-- Orders Table -->
+    <q-table
+      :rows="orders"
+      :columns="columns"
+      :loading="loading"
+      :selected.sync="selected"
+      selection="multiple"
+      row-key="id"
+      :pagination="pagination"
+      @update:pagination="onPaginationChange"
+      @request="onRequest"
+    >
+      <template v-slot:top-right>
+        <div class="row q-gutter-sm">
+          <q-btn
+            v-if="selected.length > 0"
+            :label="$t('orders.bulkExport')"
+            icon="download"
+            color="secondary"
+            @click="bulkExport"
+          />
+          <q-btn
+            v-if="selected.length > 0"
+            :label="$t('orders.bulkEmail')"
+            icon="email"
+            color="info"
+            @click="bulkEmail"
+          />
+        </div>
+      </template>
+
+      <template v-slot:body-cell-status="props">
+        <q-td :props="props">
+          <q-chip
+            :color="getStatusColor(props.value)"
+            text-color="white"
+            size="sm"
+          >
+            {{ $t(`orders.status.${props.value}`) }}
+          </q-chip>
+        </q-td>
+      </template>
+
+      <template v-slot:body-cell-total="props">
+        <q-td :props="props">
+          €{{ (props.value || 0).toFixed(2) }}
+        </q-td>
+      </template>
+
+      <template v-slot:body-cell-actions="props">
+        <q-td :props="props">
+          <q-btn-group dense>
+            <q-btn
+              icon="visibility"
+              size="sm"
+              flat
+              @click="viewOrder(props.row)"
+            />
+            <q-btn
+              icon="edit"
+              size="sm"
+              flat
+              @click="editOrder(props.row)"
+            />
+            <q-btn-dropdown
+              icon="more_vert"
+              size="sm"
+              flat
+              auto-close
+            >
+              <q-list>
+                <q-item clickable @click="downloadOrderPDF(props.row)">
+                  <q-item-section avatar>
+                    <q-icon name="picture_as_pdf" />
+                  </q-item-section>
+                  <q-item-section>{{ $t('orders.downloadPDF') }}</q-item-section>
+                </q-item>
+                <q-item clickable @click="downloadOrderCSV(props.row)">
+                  <q-item-section avatar>
+                    <q-icon name="table_chart" />
+                  </q-item-section>
+                  <q-item-section>{{ $t('orders.downloadCSV') }}</q-item-section>
+                </q-item>
+                <q-item clickable @click="emailOrder(props.row)">
+                  <q-item-section avatar>
+                    <q-icon name="email" />
+                  </q-item-section>
+                  <q-item-section>{{ $t('orders.sendEmail') }}</q-item-section>
+                </q-item>
+                <q-separator />
+                <q-item clickable @click="submitToMagento(props.row)">
+                  <q-item-section avatar>
+                    <q-icon name="cloud_upload" />
+                  </q-item-section>
+                  <q-item-section>{{ $t('orders.submitToMagento') }}</q-item-section>
+                </q-item>
+                <q-separator />
+                <q-item clickable @click="duplicateOrder(props.row)">
+                  <q-item-section avatar>
+                    <q-icon name="content_copy" />
+                  </q-item-section>
+                  <q-item-section>{{ $t('orders.duplicate') }}</q-item-section>
+                </q-item>
+                <q-item clickable @click="cancelOrder(props.row)" v-if="props.row.status !== 'cancelled'">
+                  <q-item-section avatar>
+                    <q-icon name="cancel" color="negative" />
+                  </q-item-section>
+                  <q-item-section>{{ $t('orders.cancel') }}</q-item-section>
+                </q-item>
+              </q-list>
+            </q-btn-dropdown>
+          </q-btn-group>
+        </q-td>
+      </template>
+    </q-table>
+
+    <!-- Export Dialog -->
+    <q-dialog v-model="showExportDialog">
+      <q-card style="min-width: 400px">
+        <q-card-section>
+          <div class="text-h6">{{ $t('orders.export') }}</div>
+        </q-card-section>
+
+        <q-card-section>
+          <q-option-group
+            v-model="exportFormat"
+            :options="exportFormatOptions"
+            color="primary"
+          />
+          
+          <q-separator class="q-my-md" />
+          
+          <q-option-group
+            v-model="exportScope"
+            :options="exportScopeOptions"
+            color="primary"
+          />
+
+          <div v-if="exportScope === 'filtered'" class="q-mt-md text-caption">
+            {{ $t('orders.exportFilteredNote', { count: orders.length }) }}
           </div>
           
-          <div class="coming-soon-text">
-            <h2 class="coming-soon-title">Bestellingen komen binnenkort</h2>
-            <p class="coming-soon-description">
-              Deze functionaliteit wordt momenteel ontwikkeld en zal binnenkort beschikbaar zijn.
-              Je kunt dan je bestellingsgeschiedenis bekijken, facturen downloaden en nieuwe bestellingen plaatsen.
-            </p>
+          <div v-if="exportScope === 'selected'" class="q-mt-md text-caption">
+            {{ $t('orders.exportSelectedNote', { count: selected.length }) }}
+          </div>
+        </q-card-section>
+
+        <q-card-actions align="right">
+          <q-btn flat :label="$t('common.cancel')" v-close-popup />
+          <q-btn
+            color="primary"
+            :label="$t('orders.export')"
+            :loading="exporting"
+            @click="performExport"
+          />
+        </q-card-actions>
+      </q-card>
+    </q-dialog>
+
+    <!-- Analytics Dialog -->
+    <q-dialog v-model="showAnalytics" maximized>
+      <q-card>
+        <q-card-section class="row items-center q-pb-none">
+          <div class="text-h6">{{ $t('orders.analytics') }}</div>
+          <q-space />
+          <q-btn icon="close" flat round dense v-close-popup />
+        </q-card-section>
+
+        <q-card-section>
+          <div class="row q-gutter-md">
+            <!-- Analytics Summary Cards -->
+            <div class="col-12 col-md-6 col-lg-3">
+              <q-card flat bordered>
+                <q-card-section>
+                  <div class="text-h4 text-primary">{{ analyticsData.totalOrders }}</div>
+                  <div class="text-subtitle2">{{ $t('orders.analytics.totalOrders') }}</div>
+                </q-card-section>
+              </q-card>
+            </div>
+            
+            <div class="col-12 col-md-6 col-lg-3">
+              <q-card flat bordered>
+                <q-card-section>
+                  <div class="text-h4 text-positive">€{{ (analyticsData.totalValue || 0).toFixed(2) }}</div>
+                  <div class="text-subtitle2">{{ $t('orders.analytics.totalValue') }}</div>
+                </q-card-section>
+              </q-card>
+            </div>
+            
+            <div class="col-12 col-md-6 col-lg-3">
+              <q-card flat bordered>
+                <q-card-section>
+                  <div class="text-h4 text-info">{{ analyticsData.averageOrderSize }}</div>
+                  <div class="text-subtitle2">{{ $t('orders.analytics.avgOrderSize') }}</div>
+                </q-card-section>
+              </q-card>
+            </div>
+            
+            <div class="col-12 col-md-6 col-lg-3">
+              <q-card flat bordered>
+                <q-card-section>
+                  <div class="text-h4 text-warning">{{ analyticsData.orderFrequency }}</div>
+                  <div class="text-subtitle2">{{ $t('orders.analytics.orderFrequency') }}</div>
+                </q-card-section>
+              </q-card>
+            </div>
           </div>
 
-          <!-- Progress Indicator -->
-          <div class="development-progress" role="progressbar" :aria-valuenow="75" aria-valuemin="0" aria-valuemax="100" aria-label="Development progress: 75%">
-            <div class="progress-header">
-              <span class="progress-label">Ontwikkelingsvoortgang</span>
-              <span class="progress-percentage">75%</span>
-            </div>
-            <q-linear-progress 
-              :value="0.75" 
-              color="primary" 
-              size="8px" 
-              rounded 
-              class="progress-bar"
-            />
+          <!-- Charts would go here -->
+          <div class="q-mt-lg">
+            <q-card flat bordered>
+              <q-card-section>
+                <div class="text-h6">{{ $t('orders.analytics.orderTrends') }}</div>
+                <div class="q-pa-md text-center text-grey-6">
+                  {{ $t('orders.analytics.chartsComingSoon') }}
+                </div>
+              </q-card-section>
+            </q-card>
           </div>
         </q-card-section>
       </q-card>
+    </q-dialog>
 
-      <!-- Features Preview Grid -->
-      <div class="features-section">
-        <div class="features-header">
-          <h3 class="features-title">Geplande functies</h3>
-          <p class="features-subtitle">Ontdek wat er allemaal mogelijk wordt</p>
-        </div>
-        
-        <div class="features-grid" role="grid" aria-label="Planned features">
-          <div class="feature-card glass-card animate-scale-in" style="animation-delay: 0.1s" role="gridcell">
-            <div class="feature-icon" aria-hidden="true">
-              <q-icon name="history" size="32px" color="primary" />
-            </div>
-            <div class="feature-content">
-              <h4 class="feature-title">Bestellingsgeschiedenis</h4>
-              <p class="feature-description">
-                Bekijk alle vorige bestellingen met gedetailleerde informatie en statusupdates
-              </p>
-              <div class="feature-status">
-                <q-chip color="info" text-color="white" size="sm" :aria-label="'Status: In ontwikkeling'">In ontwikkeling</q-chip>
-              </div>
-            </div>
-          </div>
+    <!-- Email Dialog -->
+    <q-dialog v-model="showEmailDialog">
+      <q-card style="min-width: 400px">
+        <q-card-section>
+          <div class="text-h6">{{ $t('orders.sendEmail') }}</div>
+        </q-card-section>
 
-          <div class="feature-card glass-card animate-scale-in" style="animation-delay: 0.2s" role="gridcell">
-            <div class="feature-icon" aria-hidden="true">
-              <q-icon name="add_shopping_cart" size="32px" color="secondary" />
-            </div>
-            <div class="feature-content">
-              <h4 class="feature-title">Nieuwe bestellingen</h4>
-              <p class="feature-description">
-                Plaats bestellingen direct vanuit voorraad met automatische leverancier matching
-              </p>
-              <div class="feature-status">
-                <q-chip color="warning" text-color="dark" size="sm" :aria-label="'Status: Gepland'">Gepland</q-chip>
-              </div>
-            </div>
-          </div>
+        <q-card-section>
+          <q-input
+            v-model="emailData.recipient"
+            :label="$t('orders.email.recipient')"
+            type="email"
+            outlined
+            :rules="[val => !!val || 'Email is required']"
+          />
+          
+          <q-input
+            v-model="emailData.subject"
+            :label="$t('orders.email.subject')"
+            outlined
+            class="q-mt-md"
+          />
+          
+          <q-input
+            v-model="emailData.message"
+            :label="$t('orders.email.message')"
+            type="textarea"
+            outlined
+            rows="4"
+            class="q-mt-md"
+          />
+        </q-card-section>
 
-          <div class="feature-card glass-card animate-scale-in" style="animation-delay: 0.3s" role="gridcell">
-            <div class="feature-icon" aria-hidden="true">
-              <q-icon name="receipt" size="32px" color="accent" />
-            </div>
-            <div class="feature-content">
-              <h4 class="feature-title">Factuur beheer</h4>
-              <p class="feature-description">
-                Download en beheer facturen met automatische boekhouding integratie
-              </p>
-              <div class="feature-status">
-                <q-chip color="positive" text-color="white" size="sm" :aria-label="'Status: Bijna klaar'">Bijna klaar</q-chip>
-              </div>
-            </div>
-          </div>
-
-          <div class="feature-card glass-card animate-scale-in" style="animation-delay: 0.4s" role="gridcell">
-            <div class="feature-icon" aria-hidden="true">
-              <q-icon name="track_changes" size="32px" color="info" />
-            </div>
-            <div class="feature-content">
-              <h4 class="feature-title">Order tracking</h4>
-              <p class="feature-description">
-                Volg de status van je bestellingen in real-time met notificaties
-              </p>
-              <div class="feature-status">
-                <q-chip color="info" text-color="white" size="sm" :aria-label="'Status: In ontwikkeling'">In ontwikkeling</q-chip>
-              </div>
-            </div>
-          </div>
-
-          <div class="feature-card glass-card animate-scale-in" style="animation-delay: 0.5s" role="gridcell">
-            <div class="feature-icon" aria-hidden="true">
-              <q-icon name="auto_awesome" size="32px" color="warning" />
-            </div>
-            <div class="feature-content">
-              <h4 class="feature-title">Automatische bestellingen</h4>
-              <p class="feature-description">
-                Stel automatische bestellingen in gebaseerd op voorraadniveaus
-              </p>
-              <div class="feature-status">
-                <q-chip color="warning" text-color="dark" size="sm" :aria-label="'Status: Gepland'">Gepland</q-chip>
-              </div>
-            </div>
-          </div>
-
-          <div class="feature-card glass-card animate-scale-in" style="animation-delay: 0.6s" role="gridcell">
-            <div class="feature-icon" aria-hidden="true">
-              <q-icon name="integration_instructions" size="32px" color="positive" />
-            </div>
-            <div class="feature-content">
-              <h4 class="feature-title">Magento integratie</h4>
-              <p class="feature-description">
-                Directe koppeling met webshop voor naadloze orderverwerking
-              </p>
-              <div class="feature-status">
-                <q-chip color="positive" text-color="white" size="sm" :aria-label="'Status: Bijna klaar'">Bijna klaar</q-chip>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Technical Information -->
-      <div class="technical-section">
-        <q-expansion-item
-          class="technical-expansion"
-          icon="code"
-          :label="$t('orders.technicalInfoForDevelopers')"
-          header-class="technical-header"
-        >
-          <q-card class="technical-card card-modern">
-            <q-card-section>
-              <div class="technical-content">
-                <div class="technical-intro">
-                  <h4 class="technical-title">Magento API Integratie</h4>
-                  <p class="technical-description">
-                    Deze pagina zal worden geïntegreerd met de Magento API voor volledige orderbeheerfunctionaliteit:
-                  </p>
-                </div>
-                
-                <div class="api-endpoints">
-                  <div class="endpoint-item">
-                    <div class="endpoint-method">GET</div>
-                    <div class="endpoint-details">
-                      <div class="endpoint-path">/rest/V1/orders</div>
-                      <div class="endpoint-description">Ophalen van bestellingsgeschiedenis</div>
-                    </div>
-                  </div>
-                  
-                  <div class="endpoint-item">
-                    <div class="endpoint-method post">POST</div>
-                    <div class="endpoint-details">
-                      <div class="endpoint-path">/rest/V1/orders</div>
-                      <div class="endpoint-description">Nieuwe bestellingen plaatsen</div>
-                    </div>
-                  </div>
-                  
-                  <div class="endpoint-item">
-                    <div class="endpoint-method">GET</div>
-                    <div class="endpoint-details">
-                      <div class="endpoint-path">/rest/V1/invoices</div>
-                      <div class="endpoint-description">Factuur gegevens ophalen</div>
-                    </div>
-                  </div>
-                </div>
-
-                <div class="technical-note">
-                  <q-chip color="info" text-color="white" icon="info" size="sm">
-                    API placeholder services zijn al voorbereid in src/services/magento/
-                  </q-chip>
-                </div>
-              </div>
-            </q-card-section>
-          </q-card>
-        </q-expansion-item>
-      </div>
-    </div>
+        <q-card-actions align="right">
+          <q-btn flat :label="$t('common.cancel')" v-close-popup />
+          <q-btn
+            color="primary"
+            :label="$t('orders.email.send')"
+            :loading="emailSending"
+            @click="sendEmail"
+          />
+        </q-card-actions>
+      </q-card>
+    </q-dialog>
   </PageLayout>
 </template>
 
 <script setup lang="ts">
+import { ref, reactive, onMounted, computed } from 'vue'
 import { useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
-import PageLayout from 'src/components/PageLayout.vue'
-import PageTitle from 'src/components/PageTitle.vue'
+import { useQuasar } from 'quasar'
+import PageLayout from '@/components/PageLayout.vue'
+import PageTitle from '@/components/PageTitle.vue'
+import { orderProcessingService } from '@/services/orderProcessing'
+import { analyticsService } from '@/services/analytics'
+import { notificationService } from '@/services/notifications'
+import type { OrderWithItems, OrderStatus } from '@/types/supabase'
 
+// Composables
 const router = useRouter()
 const { t } = useI18n()
+const $q = useQuasar()
 
-const goToDashboard = () => {
-  router.push({ name: 'dashboard' })
+// State
+const orders = ref<OrderWithItems[]>([])
+const loading = ref(false)
+const exporting = ref(false)
+const emailSending = ref(false)
+const selected = ref<OrderWithItems[]>([])
+const showExportDialog = ref(false)
+const showAnalytics = ref(false)
+const showEmailDialog = ref(false)
+
+// Filters
+const filters = reactive({
+  status: '',
+  supplier: '',
+  dateFrom: '',
+  dateTo: ''
+})
+
+// Export options
+const exportFormat = ref<'csv' | 'pdf'>('csv')
+const exportScope = ref<'all' | 'filtered' | 'selected'>('filtered')
+
+// Email data
+const emailData = reactive({
+  recipient: '',
+  subject: '',
+  message: '',
+  orderId: ''
+})
+
+// Analytics data
+const analyticsData = reactive({
+  totalOrders: 0,
+  totalValue: 0,
+  averageOrderSize: 0,
+  orderFrequency: 0
+})
+
+// Pagination
+const pagination = ref({
+  page: 1,
+  rowsPerPage: 20,
+  rowsNumber: 0
+})
+
+// Options
+const statusOptions = computed(() => [
+  { label: t('orders.status.draft'), value: 'draft' },
+  { label: t('orders.status.submitted'), value: 'submitted' },
+  { label: t('orders.status.confirmed'), value: 'confirmed' },
+  { label: t('orders.status.shipped'), value: 'shipped' },
+  { label: t('orders.status.delivered'), value: 'delivered' },
+  { label: t('orders.status.cancelled'), value: 'cancelled' }
+])
+
+const supplierOptions = computed(() => [
+  // These would be loaded from the suppliers table
+  { label: 'All Suppliers', value: '' }
+])
+
+const exportFormatOptions = computed(() => [
+  { label: t('orders.exportFormat.csv'), value: 'csv' },
+  { label: t('orders.exportFormat.pdf'), value: 'pdf' }
+])
+
+const exportScopeOptions = computed(() => [
+  { label: t('orders.exportScope.all'), value: 'all' },
+  { label: t('orders.exportScope.filtered'), value: 'filtered' },
+  { label: t('orders.exportScope.selected'), value: 'selected', disable: selected.value.length === 0 }
+])
+
+// Table columns
+const columns = computed(() => [
+  {
+    name: 'order_number',
+    label: t('orders.columns.orderNumber'),
+    align: 'left',
+    field: 'order_number',
+    sortable: true
+  },
+  {
+    name: 'order_date',
+    label: t('orders.columns.orderDate'),
+    align: 'left',
+    field: 'order_date',
+    format: (val: string) => new Date(val).toLocaleDateString(),
+    sortable: true
+  },
+  {
+    name: 'status',
+    label: t('orders.columns.status'),
+    align: 'center',
+    field: 'status',
+    sortable: true
+  },
+  {
+    name: 'supplier',
+    label: t('orders.columns.supplier'),
+    align: 'left',
+    field: (row: OrderWithItems) => row.suppliers?.name || '-',
+    sortable: true
+  },
+  {
+    name: 'total_items',
+    label: t('orders.columns.totalItems'),
+    align: 'center',
+    field: 'total_items',
+    sortable: true
+  },
+  {
+    name: 'total',
+    label: t('orders.columns.totalAmount'),
+    align: 'right',
+    field: 'total_amount',
+    sortable: true
+  },
+  {
+    name: 'actions',
+    label: t('common.actions'),
+    align: 'center'
+  }
+])
+
+// Methods
+const loadOrders = async () => {
+  try {
+    loading.value = true
+    
+    const filterOptions = {
+      status: filters.status || undefined,
+      supplier_id: filters.supplier || undefined,
+      date_from: filters.dateFrom || undefined,
+      date_to: filters.dateTo || undefined
+    }
+    
+    orders.value = await orderProcessingService.getOrders(filterOptions)
+    pagination.value.rowsNumber = orders.value.length
+    
+    // Track analytics
+    analyticsService.trackEvent('orders_viewed', {
+      count: orders.value.length,
+      filters: filterOptions
+    })
+    
+  } catch (error) {
+    console.error('Failed to load orders:', error)
+    $q.notify({
+      type: 'negative',
+      message: t('orders.errors.loadFailed')
+    })
+  } finally {
+    loading.value = false
+  }
 }
+
+const loadAnalytics = async () => {
+  try {
+    const patterns = await analyticsService.getOrderPatterns()
+    
+    analyticsData.totalOrders = patterns.totalOrders
+    analyticsData.totalValue = orders.value.reduce((sum, order) => sum + (order.total_amount || 0), 0)
+    analyticsData.averageOrderSize = Math.round(patterns.averageOrderSize)
+    analyticsData.orderFrequency = Math.round(patterns.orderFrequency * 10) / 10
+    
+  } catch (error) {
+    console.error('Failed to load analytics:', error)
+  }
+}
+
+const applyFilters = () => {
+  loadOrders()
+}
+
+const resetFilters = () => {
+  Object.assign(filters, {
+    status: '',
+    supplier: '',
+    dateFrom: '',
+    dateTo: ''
+  })
+  loadOrders()
+}
+
+const onPaginationChange = (newPagination: any) => {
+  pagination.value = newPagination
+}
+
+const onRequest = (props: any) => {
+  // Handle server-side pagination if needed
+  pagination.value = props.pagination
+}
+
+const getStatusColor = (status: OrderStatus) => {
+  const colors = {
+    draft: 'grey',
+    submitted: 'blue',
+    confirmed: 'orange',
+    shipped: 'purple',
+    delivered: 'positive',
+    cancelled: 'negative'
+  }
+  return colors[status] || 'grey'
+}
+
+const createNewOrder = () => {
+  router.push('/bestellijsten')
+}
+
+const viewOrder = (order: OrderWithItems) => {
+  // Navigate to order detail view
+  $q.notify({
+    type: 'info',
+    message: `Viewing order ${order.order_number}`
+  })
+}
+
+const editOrder = (order: OrderWithItems) => {
+  // Navigate to order edit view
+  $q.notify({
+    type: 'info',
+    message: `Editing order ${order.order_number}`
+  })
+}
+
+const downloadOrderPDF = async (order: OrderWithItems) => {
+  try {
+    const blob = await orderProcessingService.generateOrderPDF(order.id)
+    orderProcessingService.downloadFile(blob, `order-${order.order_number}.html`)
+    
+    analyticsService.trackExportEvent('order_pdf', 'pdf', { order_id: order.id })
+    
+    $q.notify({
+      type: 'positive',
+      message: t('orders.notifications.pdfDownloaded')
+    })
+  } catch (error) {
+    console.error('Failed to download PDF:', error)
+    $q.notify({
+      type: 'negative',
+      message: t('orders.errors.pdfFailed')
+    })
+  }
+}
+
+const downloadOrderCSV = async (order: OrderWithItems) => {
+  try {
+    const blob = await orderProcessingService.exportOrderToCSV(order.id)
+    orderProcessingService.downloadFile(blob, `order-${order.order_number}.csv`)
+    
+    analyticsService.trackExportEvent('order_csv', 'csv', { order_id: order.id })
+    
+    $q.notify({
+      type: 'positive',
+      message: t('orders.notifications.csvDownloaded')
+    })
+  } catch (error) {
+    console.error('Failed to download CSV:', error)
+    $q.notify({
+      type: 'negative',
+      message: t('orders.errors.csvFailed')
+    })
+  }
+}
+
+const emailOrder = (order: OrderWithItems) => {
+  emailData.orderId = order.id
+  emailData.subject = `Order ${order.order_number} - MedStock Pro`
+  emailData.message = `Please find attached the details for order ${order.order_number}.`
+  showEmailDialog.value = true
+}
+
+const sendEmail = async () => {
+  if (!emailData.recipient || !emailData.orderId) return
+  
+  try {
+    emailSending.value = true
+    
+    await orderProcessingService.sendOrderByEmail(
+      emailData.orderId,
+      emailData.recipient,
+      emailData.subject
+    )
+    
+    showEmailDialog.value = false
+    
+    $q.notify({
+      type: 'positive',
+      message: t('orders.notifications.emailSent')
+    })
+    
+    // Reset email data
+    Object.assign(emailData, {
+      recipient: '',
+      subject: '',
+      message: '',
+      orderId: ''
+    })
+    
+  } catch (error) {
+    console.error('Failed to send email:', error)
+    $q.notify({
+      type: 'negative',
+      message: t('orders.errors.emailFailed')
+    })
+  } finally {
+    emailSending.value = false
+  }
+}
+
+const submitToMagento = async (order: OrderWithItems) => {
+  try {
+    const result = await orderProcessingService.submitOrderToMagento(order.id)
+    
+    $q.notify({
+      type: 'positive',
+      message: t('orders.notifications.magentoSubmitted', { 
+        orderNumber: result.increment_id 
+      })
+    })
+    
+    // Reload orders to show updated status
+    loadOrders()
+    
+  } catch (error) {
+    console.error('Failed to submit to Magento:', error)
+    $q.notify({
+      type: 'negative',
+      message: t('orders.errors.magentoFailed')
+    })
+  }
+}
+
+const duplicateOrder = (order: OrderWithItems) => {
+  $q.notify({
+    type: 'info',
+    message: `Duplicating order ${order.order_number}`
+  })
+}
+
+const cancelOrder = async (order: OrderWithItems) => {
+  try {
+    await orderProcessingService.updateOrderStatus(order.id, 'cancelled')
+    
+    $q.notify({
+      type: 'positive',
+      message: t('orders.notifications.orderCancelled')
+    })
+    
+    loadOrders()
+    
+  } catch (error) {
+    console.error('Failed to cancel order:', error)
+    $q.notify({
+      type: 'negative',
+      message: t('orders.errors.cancelFailed')
+    })
+  }
+}
+
+const performExport = async () => {
+  try {
+    exporting.value = true
+    
+    let ordersToExport: OrderWithItems[] = []
+    
+    switch (exportScope.value) {
+      case 'all':
+        ordersToExport = await orderProcessingService.getOrders()
+        break
+      case 'filtered':
+        ordersToExport = orders.value
+        break
+      case 'selected':
+        ordersToExport = selected.value
+        break
+    }
+    
+    if (ordersToExport.length === 0) {
+      $q.notify({
+        type: 'warning',
+        message: t('orders.errors.noOrdersToExport')
+      })
+      return
+    }
+    
+    const orderIds = ordersToExport.map(order => order.id)
+    
+    if (exportFormat.value === 'csv') {
+      const blob = await orderProcessingService.exportOrdersToCSV(orderIds)
+      const filename = `orders-${new Date().toISOString().split('T')[0]}.csv`
+      orderProcessingService.downloadFile(blob, filename)
+    } else {
+      // For PDF, we'd need to implement bulk PDF generation
+      $q.notify({
+        type: 'info',
+        message: t('orders.notifications.pdfBulkNotSupported')
+      })
+      return
+    }
+    
+    analyticsService.trackExportEvent('orders_bulk', exportFormat.value, {
+      count: ordersToExport.length,
+      scope: exportScope.value
+    })
+    
+    showExportDialog.value = false
+    
+    $q.notify({
+      type: 'positive',
+      message: t('orders.notifications.exportCompleted', { 
+        count: ordersToExport.length 
+      })
+    })
+    
+  } catch (error) {
+    console.error('Failed to export orders:', error)
+    $q.notify({
+      type: 'negative',
+      message: t('orders.errors.exportFailed')
+    })
+  } finally {
+    exporting.value = false
+  }
+}
+
+const bulkExport = () => {
+  exportScope.value = 'selected'
+  showExportDialog.value = true
+}
+
+const bulkEmail = () => {
+  $q.notify({
+    type: 'info',
+    message: t('orders.notifications.bulkEmailComingSoon')
+  })
+}
+
+// Lifecycle
+onMounted(() => {
+  loadOrders()
+  loadAnalytics()
+})
 </script>
 
-<style lang="scss" scoped>
-// Coming soon section
-.coming-soon-section {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-8);
+<style scoped>
+.q-table {
+  background: white;
 }
 
-.coming-soon-card {
-  text-align: center;
-  
-  .coming-soon-content {
-    padding: var(--space-12) var(--space-8);
-    
-    .coming-soon-icon {
-      margin-bottom: var(--space-6);
-      
-      .icon-container {
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        width: 120px;
-        height: 120px;
-        border-radius: var(--radius-full);
-        background: linear-gradient(135deg, var(--brand-primary), var(--brand-secondary));
-        color: white;
-        box-shadow: var(--shadow-md);
-        animation: iconFloat 3s ease-in-out infinite;
-      }
-    }
-    
-    .coming-soon-text {
-      margin-bottom: var(--space-8);
-      
-      .coming-soon-title {
-        font-size: var(--text-2xl);
-        font-weight: var(--font-weight-bold);
-        color: var(--neutral-900);
-        margin: 0 0 var(--space-4) 0;
-      }
-      
-      .coming-soon-description {
-        font-size: var(--text-lg);
-        color: var(--neutral-600);
-        line-height: var(--leading-relaxed);
-        max-width: 600px;
-        margin: 0 auto;
-      }
-    }
-    
-    .development-progress {
-      max-width: 400px;
-      margin: 0 auto;
-      
-      .progress-header {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-bottom: var(--space-3);
-        
-        .progress-label {
-          font-size: var(--text-sm);
-          font-weight: var(--font-weight-medium);
-          color: var(--neutral-700);
-        }
-        
-        .progress-percentage {
-          font-size: var(--text-sm);
-          font-weight: var(--font-weight-bold);
-          color: var(--brand-primary);
-        }
-      }
-      
-      .progress-bar {
-        border-radius: var(--radius-full);
-        overflow: hidden;
-      }
-    }
-  }
-}
-
-@keyframes iconFloat {
-  0%, 100% {
-    transform: translateY(0);
-  }
-  50% {
-    transform: translateY(-8px);
-  }
-}
-
-// Features section
-.features-section {
-  .features-header {
-    text-align: center;
-    margin-bottom: var(--space-8);
-    
-    .features-title {
-      font-size: var(--text-2xl);
-      font-weight: var(--font-weight-bold);
-      color: var(--neutral-900);
-      margin: 0 0 var(--space-2) 0;
-    }
-    
-    .features-subtitle {
-      font-size: var(--text-lg);
-      color: var(--neutral-600);
-      margin: 0;
-    }
-  }
-  
-  .features-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-    gap: var(--space-6);
-  }
-}
-
-.feature-card {
-  padding: var(--space-6);
-  border-radius: var(--radius-xl);
-  transition: all var(--transition-base);
-  
-  &:hover {
-    transform: translateY(-2px);
-    box-shadow: var(--shadow-lg);
-  }
-  
-  .feature-icon {
-    margin-bottom: var(--space-4);
-  }
-  
-  .feature-content {
-    .feature-title {
-      font-size: var(--text-lg);
-      font-weight: var(--font-weight-semibold);
-      color: var(--neutral-900);
-      margin: 0 0 var(--space-2) 0;
-    }
-    
-    .feature-description {
-      font-size: var(--text-base);
-      color: var(--neutral-600);
-      line-height: var(--leading-relaxed);
-      margin: 0 0 var(--space-4) 0;
-    }
-    
-    .feature-status {
-      display: flex;
-      align-items: center;
-      gap: var(--space-2);
-    }
-  }
-}
-
-// Technical section
-.technical-section {
-  margin-top: var(--space-12);
-  
-  .technical-expansion {
-    border-radius: var(--radius-xl);
-    overflow: hidden;
-    
-    .technical-header {
-      background: var(--neutral-50);
-      padding: var(--space-4) var(--space-6);
-      font-weight: var(--font-weight-medium);
-    }
-  }
-  
-  .technical-card {
-    border-radius: 0;
-    box-shadow: none;
-    border-top: 1px solid var(--neutral-200);
-  }
-  
-  .technical-content {
-    padding: var(--space-6);
-    
-    .technical-intro {
-      margin-bottom: var(--space-6);
-      
-      .technical-title {
-        font-size: var(--text-xl);
-        font-weight: var(--font-weight-semibold);
-        color: var(--neutral-900);
-        margin: 0 0 var(--space-2) 0;
-      }
-      
-      .technical-description {
-        font-size: var(--text-base);
-        color: var(--neutral-600);
-        margin: 0;
-      }
-    }
-    
-    .api-endpoints {
-      display: flex;
-      flex-direction: column;
-      gap: var(--space-4);
-      
-      .endpoint-item {
-        display: flex;
-        align-items: center;
-        gap: var(--space-4);
-        padding: var(--space-3);
-        border-radius: var(--radius-lg);
-        background: var(--neutral-50);
-        
-        .endpoint-method {
-          padding: var(--space-1) var(--space-3);
-          border-radius: var(--radius-base);
-          font-size: var(--text-xs);
-          font-weight: var(--font-weight-bold);
-          color: white;
-          background: var(--brand-primary);
-          
-          &.post {
-            background: var(--brand-secondary);
-          }
-          
-          &.put {
-            background: var(--brand-warning);
-          }
-          
-          &.delete {
-            background: var(--brand-danger);
-          }
-        }
-        
-        .endpoint-details {
-          flex: 1;
-          
-          .endpoint-path {
-            font-family: var(--font-family-mono);
-            font-size: var(--text-sm);
-            font-weight: var(--font-weight-medium);
-            color: var(--neutral-900);
-            margin-bottom: var(--space-1);
-          }
-          
-          .endpoint-description {
-            font-size: var(--text-sm);
-            color: var(--neutral-600);
-            margin: 0;
-          }
-        }
-      }
-    }
-  }
-}
-
-// Responsive design
-@media (max-width: 768px) {
-  .features-grid {
-    grid-template-columns: 1fr;
-    gap: var(--space-4);
-  }
-  
-  .coming-soon-card .coming-soon-content {
-    padding: var(--space-8) var(--space-4);
-  }
-  
-  .feature-card {
-    padding: var(--space-4);
-  }
-  
-  .technical-content {
-    padding: var(--space-4);
-  }
-  
-  .endpoint-item {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: var(--space-2);
-  }
-}
-
-// Dark mode adjustments
-body.body--dark {
-  .coming-soon-title {
-    color: var(--neutral-100);
-  }
-  
-  .coming-soon-description {
-    color: var(--neutral-400);
-  }
-  
-  .features-title {
-    color: var(--neutral-100);
-  }
-  
-  .features-subtitle {
-    color: var(--neutral-400);
-  }
-  
-  .feature-title {
-    color: var(--neutral-100);
-  }
-  
-  .feature-description {
-    color: var(--neutral-400);
-  }
-  
-  .technical-header {
-    background: var(--neutral-200);
-  }
-  
-  .technical-card {
-    border-top-color: var(--neutral-300);
-  }
-  
-  .technical-title {
-    color: var(--neutral-100);
-  }
-  
-  .technical-description {
-    color: var(--neutral-400);
-  }
-  
-  .endpoint-item {
-    background: var(--neutral-200);
-    
-    .endpoint-path {
-      color: var(--neutral-100);
-    }
-    
-    .endpoint-description {
-      color: var(--neutral-400);
-    }
-  }
-  
-  .progress-label {
-    color: var(--neutral-400);
-  }
+.orders-stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 16px;
 }
 </style>
