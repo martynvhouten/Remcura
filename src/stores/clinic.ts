@@ -3,6 +3,7 @@ import { ref, computed, readonly } from 'vue'
 import { supabase } from 'src/boot/supabase'
 import type { Practice, ProductWithItems } from 'src/types/supabase'
 import { useAuthStore } from './auth'
+import { useStockStatus } from 'src/composables/useStockStatus'
 
 export const useClinicStore = defineStore('clinic', () => {
   // State
@@ -10,47 +11,71 @@ export const useClinicStore = defineStore('clinic', () => {
   const products = ref<ProductWithItems[]>([])
   const loading = ref(false)
 
-  // Getters
+  // Use stock status composable
+  const { filterByStockStatus, getStockSummary, getStockStatus } = useStockStatus()
+
+  // Helper function to get stock data from product
+  const getProductStockData = (product: ProductWithItems) => {
+    const item = product.product_list_items?.[0]
+    return {
+      current_stock: item?.current_stock || 0,
+      minimum_stock: item?.minimum_stock || 0,
+      maximum_stock: item?.maximum_stock
+    }
+  }
+
+  // Enhanced getters using the composable
   const lowStockProducts = computed(() =>
     products.value.filter((product: ProductWithItems) => {
-      // Check if product is in any practice's product list with low stock
-      return product.product_list_items?.some((item: any) => 
-        item.current_stock <= item.minimum_stock
-      )
+      const stockData = getProductStockData(product)
+      const status = getStockStatus(stockData.current_stock, stockData.minimum_stock, stockData.maximum_stock)
+      return status === 'low-stock'
     })
   )
 
   const outOfStockProducts = computed(() =>
     products.value.filter((product: ProductWithItems) => {
-      // Check if product is in any practice's product list with zero stock
-      return product.product_list_items?.some((item: any) => 
-        item.current_stock === 0
-      )
+      const stockData = getProductStockData(product)
+      const status = getStockStatus(stockData.current_stock, stockData.minimum_stock, stockData.maximum_stock)
+      return status === 'out-of-stock'
     })
   )
 
-  const lowStockItems = computed(() => 
+  const highStockProducts = computed(() =>
     products.value.filter((product: ProductWithItems) => {
-      return product.product_list_items?.some((item: any) => 
-        item.current_stock > 0 && item.current_stock <= item.minimum_stock
-      )
+      const stockData = getProductStockData(product)
+      const status = getStockStatus(stockData.current_stock, stockData.minimum_stock, stockData.maximum_stock)
+      return status === 'high-stock'
     })
   )
 
-  const outOfStockItems = computed(() => 
+  const inStockProducts = computed(() =>
     products.value.filter((product: ProductWithItems) => {
-      return product.product_list_items?.some((item: any) => 
-        item.current_stock === 0
-      )
+      const stockData = getProductStockData(product)
+      const status = getStockStatus(stockData.current_stock, stockData.minimum_stock, stockData.maximum_stock)
+      return status === 'in-stock'
     })
   )
 
-  const stockSummary = computed(() => ({
-    total: products.value.length,
-    lowStock: lowStockProducts.value.length,
-    outOfStock: outOfStockProducts.value.length,
-    inStock: products.value.length - outOfStockProducts.value.length
-  }))
+  // Aliases for backwards compatibility
+  const lowStockItems = computed(() => lowStockProducts.value)
+  const outOfStockItems = computed(() => outOfStockProducts.value)
+
+  // Enhanced stock summary using composable
+  const stockSummary = computed(() => {
+    const stockData = products.value.map(getProductStockData)
+    const summary = getStockSummary(stockData)
+    
+    return {
+      total: summary.total,
+      lowStock: summary.lowStock,
+      outOfStock: summary.outOfStock,
+      inStock: summary.inStock,
+      highStock: summary.highStock,
+      needsAttention: summary.needsAttention,
+      percentageInStock: summary.percentageInStock
+    }
+  })
 
   // Actions
   const fetchClinic = async (clinicId: string) => {

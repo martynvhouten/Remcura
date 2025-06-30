@@ -1,36 +1,18 @@
 <template>
-  <q-dialog
-    :model-value="modelValue"
-    @update:model-value="$emit('update:modelValue', $event)"
-    persistent
+  <BaseDialog
+    v-model="dialogOpen"
+    :title="$t('bestellijsten.shoppingCart')"
+    :subtitle="cart?.name || $t('bestellijsten.newOrder')"
+    icon="shopping_cart"
     maximized
     transition-show="slide-left"
     transition-hide="slide-right"
+    variant="modern"
+    size="xl"
+    content-class="cart-content"
+    actions-class="cart-actions-content"
+    @close="handleClose"
   >
-    <q-card class="shopping-cart-dialog">
-      <q-card-section class="cart-header">
-        <div class="row items-center">
-          <q-icon name="shopping_cart" size="32px" color="primary" class="q-mr-md" />
-          <div>
-            <div class="text-h5">{{ $t('bestellijsten.shoppingCart') }}</div>
-            <div class="text-body2 text-grey-6">
-              {{ cart?.name || $t('bestellijsten.newOrder') }}
-            </div>
-          </div>
-          <q-space />
-          <q-btn
-            flat
-            round
-            dense
-            icon="close"
-            @click="$emit('update:modelValue', false)"
-          />
-        </div>
-      </q-card-section>
-
-      <q-separator />
-
-      <q-card-section class="cart-content">
         <!-- Empty State -->
         <div v-if="!cart?.shopping_cart_items?.length" class="empty-cart">
           <q-icon name="shopping_cart" size="4em" color="grey-4" class="q-mb-md" />
@@ -146,16 +128,15 @@
             </q-item>
           </q-list>
         </div>
-      </q-card-section>
 
-      <q-separator />
-
-      <q-card-actions class="cart-actions" align="between">
-        <div class="row items-center">
+    <!-- Dialog Actions -->
+    <template #actions>
+      <div class="cart-actions-grid">
+        <div class="left-actions">
           <q-btn
             flat
             :label="$t('common.cancel')"
-            @click="$emit('update:modelValue', false)"
+            @click="handleClose"
             no-caps
             class="btn-modern"
           />
@@ -182,9 +163,9 @@
           no-caps
           class="btn-modern"
         />
-      </q-card-actions>
-    </q-card>
-  </q-dialog>
+      </div>
+    </template>
+  </BaseDialog>
 </template>
 
 <script setup lang="ts">
@@ -192,6 +173,7 @@ import { ref, computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useQuasar } from 'quasar'
 import { useBestellijstenStore } from 'src/stores/bestellijsten'
+import BaseDialog from './base/BaseDialog.vue'
 import type { ShoppingCartWithItems, ShoppingCartItem } from 'src/types/supabase'
 
 interface Props {
@@ -220,7 +202,16 @@ const cartItemCount = computed(() => {
   return props.cart?.shopping_cart_items?.reduce((total, item) => total + item.quantity, 0) || 0
 })
 
+const dialogOpen = computed({
+  get: () => props.modelValue,
+  set: (value) => emit('update:modelValue', value)
+})
+
 // Methods
+const handleClose = () => {
+  emit('update:modelValue', false)
+}
+
 const updateQuantity = async (item: ShoppingCartItem) => {
   if (item.quantity < 1) {
     item.quantity = 1
@@ -350,20 +341,32 @@ const submitOrder = async () => {
 </script>
 
 <style scoped>
-.shopping-cart-dialog {
-  height: 100vh;
-  display: flex;
-  flex-direction: column;
-}
-
-.cart-header {
-  background: linear-gradient(135deg, var(--q-primary) 0%, var(--q-secondary) 100%);
-  color: white;
-}
-
 .cart-content {
   flex: 1;
   overflow-y: auto;
+}
+
+.cart-actions-grid {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  gap: var(--space-4);
+  
+  @media (max-width: 640px) {
+    flex-direction: column;
+    gap: var(--space-3);
+  }
+}
+
+.left-actions {
+  display: flex;
+  gap: var(--space-3);
+  
+  @media (max-width: 640px) {
+    width: 100%;
+    justify-content: center;
+  }
 }
 
 .empty-cart {

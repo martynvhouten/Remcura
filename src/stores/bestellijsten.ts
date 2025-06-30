@@ -2,6 +2,7 @@ import { defineStore } from 'pinia'
 import { ref, computed } from 'vue'
 import { supabase } from 'src/boot/supabase'
 import { useAuthStore } from './auth'
+import { useStockStatus } from 'src/composables/useStockStatus'
 import type { 
   Bestellijst, 
   BestellijstWithItems, 
@@ -27,39 +28,49 @@ export const useBestellijstenStore = defineStore('bestellijsten', () => {
   const loading = ref(false)
   const scanMode = ref(false)
 
-  // Getters
+  // Use stock status composable
+  const { getStockStatus, getReorderSuggestion, filterByStockStatus } = useStockStatus()
+
+  // Enhanced getters using the composable
   const lowStockItems = computed(() => {
     if (!currentBestellijst.value?.product_list_items) return []
-    return currentBestellijst.value.product_list_items.filter(item => 
-      item.current_stock <= item.minimum_stock && item.current_stock > 0
-    )
+    return currentBestellijst.value.product_list_items.filter(item => {
+      const status = getStockStatus(item.current_stock, item.minimum_stock, item.maximum_stock)
+      return status === 'low-stock'
+    })
   })
 
   const outOfStockItems = computed(() => {
     if (!currentBestellijst.value?.product_list_items) return []
-    return currentBestellijst.value.product_list_items.filter(item => 
-      item.current_stock === 0
-    )
+    return currentBestellijst.value.product_list_items.filter(item => {
+      const status = getStockStatus(item.current_stock, item.minimum_stock, item.maximum_stock)
+      return status === 'out-of-stock'
+    })
   })
 
   const itemsWithSuggestions = computed(() => {
     if (!currentBestellijst.value?.product_list_items) return []
     return currentBestellijst.value.product_list_items.filter(item => {
-      const suggestion = getReorderSuggestion(item)
-      return suggestion && suggestion > 0
+      const suggestion = getReorderSuggestion(item.current_stock, item.minimum_stock, item.maximum_stock)
+      return suggestion > 0
     })
   })
 
-  // Helper functions
-  const getReorderSuggestion = (item: BestellijstItem): number | null => {
-    if (item.current_stock > item.minimum_stock) return null
-    return Math.max(0, item.maximum_stock - item.current_stock)
+  // Helper functions (keeping legacy versions for backwards compatibility)
+  const getReorderSuggestionLegacy = (item: BestellijstItem): number | null => {
+    const suggestion = getReorderSuggestion(item.current_stock, item.minimum_stock, item.maximum_stock)
+    return suggestion > 0 ? suggestion : null
   }
 
-  const getStockStatus = (item: BestellijstItem): 'ok' | 'low' | 'out' => {
-    if (item.current_stock === 0) return 'out'
-    if (item.current_stock <= item.minimum_stock) return 'low'
-    return 'ok'
+  const getStockStatusLegacy = (item: BestellijstItem): 'ok' | 'low' | 'out' => {
+    const status = getStockStatus(item.current_stock, item.minimum_stock, item.maximum_stock)
+    const legacyMap = {
+      'out-of-stock': 'out' as const,
+      'low-stock': 'low' as const,
+      'in-stock': 'ok' as const,
+      'high-stock': 'ok' as const
+    }
+    return legacyMap[status]
   }
 
   // Actions
@@ -360,7 +371,7 @@ export const useBestellijstenStore = defineStore('bestellijsten', () => {
         practice_id: practiceId,
         name: name || 'Nieuwe bestelling',
         status: 'draft',
-        created_by: authStore.userId || undefined
+        created_by: authStore.user?.id || null
       }
 
       const { data, error } = await supabase
@@ -496,8 +507,8 @@ export const useBestellijstenStore = defineStore('bestellijsten', () => {
     const results = []
 
     for (const item of itemsToAdd) {
-      const suggestion = getReorderSuggestion(item)
-      if (suggestion && suggestion > 0) {
+      const suggestion = getReorderSuggestion(item.current_stock, item.minimum_stock, item.maximum_stock)
+      if (suggestion > 0) {
         const result = await addToShoppingCart(cartId, item.product_id, suggestion, 'automatic')
         results.push(result)
       }
@@ -553,6 +564,10 @@ export const useBestellijstenStore = defineStore('bestellijsten', () => {
 
       const product = products[0]
       
+      if (!product) {
+        return { success: false, error: 'Product not found' }
+      }
+      
       // Check if product is already in the bestellijst
       const existingItem = currentBestellijst.value.product_list_items?.find(item => 
         item.product_id === product.id
@@ -592,9 +607,9 @@ export const useBestellijstenStore = defineStore('bestellijsten', () => {
     outOfStockItems,
     itemsWithSuggestions,
 
-    // Helper functions
-    getReorderSuggestion,
-    getStockStatus,
+    // Helper functions (legacy compatibility)
+    getReorderSuggestion: getReorderSuggestionLegacy,
+    getStockStatus: getStockStatusLegacy,
 
     // Actions
     fetchBestellijsten,

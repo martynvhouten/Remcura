@@ -1,47 +1,14 @@
 <template>
-  <q-dialog 
-    :model-value="modelValue" 
-    @update:model-value="$emit('update:modelValue', $event)"
-    persistent
-    class="product-dialog"
-    role="dialog"
-    :aria-labelledby="isEditing ? 'edit-product-title' : 'add-product-title'"
-    aria-modal="true"
-  >
-    <q-card class="dialog-card card-modern">
-      <!-- Dialog Header -->
-      <q-card-section class="dialog-header">
-        <div class="header-content">
-          <div class="header-icon">
-            <q-avatar size="48px" color="primary" text-color="white">
-              <q-icon :name="isEditing ? 'edit' : 'add'" size="24px" />
-            </q-avatar>
-          </div>
-          <div class="header-text">
-            <h2 class="dialog-title" :id="isEditing ? 'edit-product-title' : 'add-product-title'">
-          {{ isEditing ? t('products.editProduct') : t('products.addProduct') }}
-            </h2>
-            <p class="dialog-subtitle">
-              {{ isEditing ? 'Wijzig de productgegevens' : 'Voeg een nieuw product toe aan je voorraad' }}
-            </p>
-        </div>
-        <q-btn 
-          flat 
-          round 
-          dense 
-            icon="close"
-          @click="$emit('update:modelValue', false)" 
-            class="close-btn"
+  <BaseDialog
+    v-model="dialogOpen"
+    :title="isEditing ? t('products.editProduct') : t('products.addProduct')"
+    :subtitle="isEditing ? 'Wijzig de productgegevens' : 'Voeg een nieuw product toe aan je voorraad'"
+    :icon="isEditing ? 'edit' : 'add'"
             size="md"
-            :aria-label="$t('common.closeDialog')"
-        />
-        </div>
-      </q-card-section>
-
-      <q-separator />
-
-      <!-- Dialog Content -->
-      <q-card-section class="dialog-content">
+    variant="modern"
+    @close="handleClose"
+  >
+    <!-- Form Content -->
         <q-form @submit="handleSubmit" class="product-form" novalidate>
           <!-- Product Name -->
           <div class="form-group">
@@ -196,41 +163,35 @@
             </div>
           </div>
         </q-form>
-      </q-card-section>
-
-      <q-separator />
 
       <!-- Dialog Actions -->
-      <q-card-section class="dialog-actions">
-        <div class="actions-content">
+    <template #actions>
             <q-btn 
             flat
               :label="t('common.cancel')" 
-              @click="$emit('update:modelValue', false)" 
+        @click="handleClose"
             class="cancel-btn btn-modern"
             color="neutral"
             no-caps
             />
             <q-btn 
             :label="isEditing ? t('common.update') : t('common.save')" 
-              type="submit" 
+        @click="handleSubmit"
               color="primary" 
               :loading="loading"
-            @click="handleSubmit"
             class="save-btn btn-modern"
             unelevated
             no-caps
             :icon="isEditing ? 'save' : 'add'"
             />
-          </div>
-      </q-card-section>
-    </q-card>
-  </q-dialog>
+    </template>
+  </BaseDialog>
 </template>
 
 <script setup lang="ts">
 import { ref, watch, computed } from 'vue'
 import { useI18n } from 'vue-i18n'
+import BaseDialog from './base/BaseDialog.vue'
 import type { ClinicProduct } from 'src/types/supabase'
 
 interface Props {
@@ -261,7 +222,13 @@ const defaultForm = {
 
 const form = ref({ ...defaultForm })
 
+// Computed properties
 const isEditing = computed(() => !!props.product)
+
+const dialogOpen = computed({
+  get: () => props.modelValue,
+  set: (value) => emit('update:modelValue', value)
+})
 
 // Helper functions
 const hasError = (field: string) => !!formErrors.value[field]
@@ -284,7 +251,7 @@ const getPreviewStatusText = () => {
     return t('products.inStock')
 }
 
-// Watch for product changes to populate form
+// Watchers
 watch(() => props.product, (newProduct) => {
   if (newProduct) {
     form.value = {
@@ -310,6 +277,7 @@ watch(() => props.modelValue, (isOpen) => {
   }
 })
 
+// Methods
 const validateForm = () => {
   formErrors.value = {}
   
@@ -348,323 +316,122 @@ const handleSubmit = async () => {
     loading.value = false
   }
 }
+
+const handleClose = () => {
+  emit('update:modelValue', false)
+}
 </script>
 
 <style lang="scss" scoped>
-.product-dialog {
-  :deep(.q-dialog__inner) {
-    padding: var(--space-4);
-  }
-}
-
-.dialog-card {
-  width: 100%;
-  max-width: 600px;
-  border-radius: var(--radius-2xl);
-      box-shadow: var(--shadow-lg);
-  overflow: hidden;
-}
-
-// Dialog header
-.dialog-header {
-  background: linear-gradient(135deg, var(--brand-primary), var(--brand-primary-light));
-  color: white;
-  padding: var(--space-6);
-  
-  .header-content {
-    display: flex;
-    align-items: flex-start;
-    gap: var(--space-4);
-    
-    .header-icon {
-      flex-shrink: 0;
-    }
-    
-    .header-text {
-      flex: 1;
-      
-      .dialog-title {
-        font-size: var(--text-xl);
-        font-weight: var(--font-weight-bold);
-        margin: 0 0 var(--space-1) 0;
-        color: white;
-      }
-      
-      .dialog-subtitle {
-        font-size: var(--text-sm);
-        margin: 0;
-        color: rgba(255, 255, 255, 0.9);
-        line-height: var(--leading-relaxed);
-      }
-    }
-    
-    .close-btn {
-      color: white;
-      
-      &:hover {
-        background-color: rgba(255, 255, 255, 0.1);
-      }
-    }
-  }
-}
-
-// Dialog content
-.dialog-content {
-  padding: var(--space-6);
-  max-height: 70vh;
-  overflow-y: auto;
-}
-
+// Form styling
 .product-form {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-6);
-  
   .form-group {
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-3);
+    margin-bottom: var(--space-6);
+    
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
     
     .form-label {
       font-size: var(--text-sm);
       font-weight: var(--font-weight-semibold);
-      color: var(--neutral-900);
-      margin-bottom: var(--space-2);
-    }
+    color: var(--neutral-700);
+    margin-bottom: var(--space-3);
+    display: block;
   }
   
   .stock-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
     gap: var(--space-4);
+    
+    @media (max-width: 640px) {
+      grid-template-columns: 1fr;
+    }
   }
   
-  // Enhanced input styling
   .input-modern {
     :deep(.q-field__control) {
       border-radius: var(--radius-lg);
-      min-height: 56px;
-      transition: all var(--transition-base);
-    }
-    
-    :deep(.q-field--outlined .q-field__control:before) {
-      border-color: var(--neutral-300);
-    }
-    
-    :deep(.q-field--focused .q-field__control:before) {
+      
+      &:hover {
       border-color: var(--brand-primary);
-      border-width: 2px;
-      box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
-    }
-    
-    :deep(.q-field--error .q-field__control:before) {
-      border-color: var(--brand-danger);
-      box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.1);
-    }
-    
-    :deep(.q-field__label) {
-      font-weight: var(--font-weight-medium);
-      color: var(--neutral-600);
+      }
     }
     
     :deep(.q-field__prepend) {
-      color: var(--neutral-500);
+      color: var(--brand-primary);
+    }
     }
     
     .input-unit {
-      font-size: var(--text-xs);
+    font-size: var(--text-sm);
       color: var(--neutral-500);
       font-weight: var(--font-weight-medium);
     }
   }
   
-  // Status preview
+// Status preview styling
   .status-preview {
+  background: var(--neutral-50);
+  border: 1px solid var(--neutral-200);
+  border-radius: var(--radius-lg);
     padding: var(--space-4);
-    border-radius: var(--radius-lg);
     
     .preview-item {
       display: flex;
       align-items: center;
       gap: var(--space-3);
-      margin-bottom: var(--space-2);
       
-      &:last-child {
-        margin-bottom: 0;
+    &:not(:last-child) {
+      margin-bottom: var(--space-3);
+    }
       }
       
       .preview-label {
         font-size: var(--text-sm);
         font-weight: var(--font-weight-medium);
-        color: var(--neutral-700);
+    color: var(--neutral-600);
       }
       
       .preview-warning {
         font-size: var(--text-sm);
         color: var(--brand-info);
-      }
-    }
-  }
-}
-
-// Dialog actions
-.dialog-actions {
-  padding: var(--space-6);
-  background: var(--neutral-50);
-  
-  .actions-content {
-    display: flex;
-    justify-content: flex-end;
-    gap: var(--space-3);
-    
-    .cancel-btn {
-      border: 1px solid var(--neutral-300);
-      color: var(--neutral-600);
-      
-      &:hover {
-        background-color: var(--neutral-100);
-        border-color: var(--neutral-400);
-      }
-    }
-    
-    .save-btn {
-      min-width: 120px;
-      font-weight: var(--font-weight-semibold);
-      box-shadow: var(--shadow-sm);
-      
-      &:hover {
-        box-shadow: var(--shadow-md);
-        transform: translateY(-1px);
-      }
-    }
+    font-style: italic;
   }
 }
 
 // Dark mode adjustments
 body.body--dark {
-  .dialog-header {
-    background: linear-gradient(135deg, var(--brand-primary), var(--brand-primary-dark));
-  }
-  
-  .input-modern {
-    :deep(.q-field__control) {
-      background: var(--neutral-200);
-    }
-    
-    :deep(.q-field--outlined .q-field__control:before) {
-      border-color: var(--neutral-600);
-    }
-    
-    :deep(.q-field__label) {
-      color: var(--neutral-400);
-    }
-    
-    :deep(.q-field__prepend) {
-      color: var(--neutral-400);
-    }
-    
-    .input-unit {
-      color: var(--neutral-400);
-    }
-  }
-  
   .form-label {
-    color: var(--neutral-900);
-  }
-  
-  .dialog-actions {
-    background: var(--neutral-200);
-    
-    .cancel-btn {
-      border-color: var(--neutral-600);
       color: var(--neutral-300);
-      
-      &:hover {
-        background-color: var(--neutral-300);
-      }
-    }
   }
   
   .status-preview {
+    background: var(--neutral-800);
+    border-color: var(--neutral-700);
+  }
+  
     .preview-label {
-      color: var(--neutral-300);
+    color: var(--neutral-400);
     }
     
     .preview-warning {
       color: var(--brand-info-light);
-    }
-  }
-}
-
-// Responsive design
-@media (max-width: 599px) {
-  .dialog-card {
-    margin: var(--space-2);
-    max-width: none;
-    width: calc(100vw - 32px);
-  }
-  
-  .dialog-header,
-  .dialog-content,
-  .dialog-actions {
-    padding: var(--space-4);
-  }
-  
-  .stock-grid {
-    grid-template-columns: 1fr;
-  }
-  
-  .actions-content {
-    flex-direction: column;
-    
-    .cancel-btn,
-    .save-btn {
-      width: 100%;
-    }
-  }
-}
-
-// Accessibility enhancements
-.dialog-card:focus-within {
-  outline: 2px solid var(--brand-primary);
-  outline-offset: 2px;
-}
-
-// Loading state
-.save-btn:has(.q-spinner) {
-  pointer-events: none;
-  
-  :deep(.q-btn__content) {
-    opacity: 0.7;
-  }
-}
-
-// Focus states for inputs
-.input-modern:focus-within {
-  :deep(.q-field__control) {
-    outline: 2px solid var(--brand-primary);
-    outline-offset: 2px;
   }
 }
 
 // Screen reader only content
 .sr-only {
-  position: absolute !important;
-  width: 1px !important;
-  height: 1px !important;
-  padding: 0 !important;
-  margin: -1px !important;
-  overflow: hidden !important;
-  clip: rect(0, 0, 0, 0) !important;
-  white-space: nowrap !important;
-  border: 0 !important;
-}
-
-// Button focus styles
-.close-btn:focus,
-.cancel-btn:focus,
-.save-btn:focus {
-  outline: 2px solid var(--brand-primary);
-  outline-offset: 2px;
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
 }
 </style> 

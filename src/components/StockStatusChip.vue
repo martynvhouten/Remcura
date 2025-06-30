@@ -21,46 +21,40 @@
 
 <script setup lang="ts">
 import { computed } from 'vue'
-import { useI18n } from 'vue-i18n'
+import { useStockStatus } from 'src/composables/useStockStatus'
 
 interface Props {
   currentStock: number
   minimumStock: number
+  maximumStock?: number
 }
 
 const props = defineProps<Props>()
-const { t } = useI18n()
+const { getStockInfo } = useStockStatus()
 
-const chipColor = computed(() => {
-  if (props.currentStock === 0) return 'negative'
-  if (props.currentStock <= props.minimumStock) return 'warning'
-  return 'positive'
-})
+// Get comprehensive stock information using the composable
+const stockInfo = computed(() => getStockInfo(
+  props.currentStock,
+  props.minimumStock,
+  props.maximumStock
+))
 
+// Derived computed properties for template use
+const chipColor = computed(() => stockInfo.value.color)
+const chipIcon = computed(() => stockInfo.value.icon)
+const chipLabel = computed(() => stockInfo.value.label)
+const isCritical = computed(() => stockInfo.value.isCritical)
+const chipAriaLabel = computed(() => stockInfo.value.label)
+
+// Chip variant for styling (mapped from status)
 const chipVariant = computed(() => {
-  if (props.currentStock === 0) return 'critical'
-  if (props.currentStock <= props.minimumStock) return 'warning'
-  return 'success'
-})
-
-const chipIcon = computed(() => {
-  if (props.currentStock === 0) return 'error'
-  if (props.currentStock <= props.minimumStock) return 'warning'
-  return 'check_circle'
-})
-
-const chipLabel = computed(() => {
-  if (props.currentStock === 0) return t('products.outOfStock')
-  if (props.currentStock <= props.minimumStock) return t('products.lowStock')
-  return t('products.inStock')
-})
-
-const isCritical = computed(() => props.currentStock === 0)
-
-const chipAriaLabel = computed(() => {
-  if (props.currentStock === 0) return t('products.outOfStock')
-  if (props.currentStock <= props.minimumStock) return t('products.lowStock')
-  return t('products.inStock')
+  const variantMap = {
+    'out-of-stock': 'critical',
+    'low-stock': 'warning',
+    'in-stock': 'success',
+    'high-stock': 'info'
+  }
+  return variantMap[stockInfo.value.status] || 'success'
 })
 </script>
 
