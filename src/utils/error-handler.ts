@@ -32,8 +32,10 @@ export class ErrorHandler {
   }
 
   static normalizeError(error: Error | AppError, context?: string): AppError {
-    if ('code' in error && 'message' in error) {
-      return { ...error, context: context || error.context || 'Unknown' }
+    // Check if this is already an AppError (has message and optionally code/context)
+    if ('message' in error && typeof error.message === 'string' && !('stack' in error)) {
+      const appError = error as AppError
+      return { ...appError, context: context !== undefined ? context : (appError.context || 'Unknown') }
     }
 
     return {

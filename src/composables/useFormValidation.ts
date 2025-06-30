@@ -41,7 +41,7 @@ export function useFormValidation() {
     },
 
     positive: (value: number): boolean | string => {
-      return (!value || value > 0) || t('validation.positive')
+      return (value == null || value > 0) || t('validation.positive')
     },
 
     integer: (value: any): boolean | string => {

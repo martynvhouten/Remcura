@@ -175,6 +175,16 @@ describe('Auth Store', () => {
     })
 
     it('should not reinitialize if already initialized', async () => {
+      // Setup successful initialization mock
+      vi.mocked(supabase.auth.getSession).mockResolvedValue({
+        data: { session: null },
+        error: null
+      })
+      
+      vi.mocked(supabase.auth.onAuthStateChange).mockImplementation(() => ({
+        data: { subscription: { unsubscribe: vi.fn() } }
+      }))
+      
       const authStore = useAuthStore()
       
       // First initialization
