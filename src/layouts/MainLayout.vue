@@ -449,16 +449,19 @@ onUnmounted(() => {
     box-sizing: border-box;
   }
   
-  // Modern header styling
+  // Modern header styling with CSS custom properties approach
   .header-modern {
-    background: rgba(255, 255, 255, 0.8) !important;
+    --header-bg: rgba(255, 255, 255, 0.8);
+    --header-bg-scrolled: rgba(255, 255, 255, 0.95);
+    
+    background: var(--header-bg);
     backdrop-filter: blur(20px);
     -webkit-backdrop-filter: blur(20px);
     border-bottom: 1px solid rgba(255, 255, 255, 0.2);
     transition: all var(--transition-base);
     
     &.header-scrolled {
-      background: rgba(255, 255, 255, 0.95) !important;
+      background: var(--header-bg-scrolled);
       box-shadow: var(--shadow-sm);
     }
   }
@@ -537,13 +540,16 @@ onUnmounted(() => {
   }
 }
 
-// Dark mode header
+// Dark mode header with CSS custom properties
 body.body--dark .layout-modern .header-modern {
-  background: rgba(23, 23, 23, 0.85) !important;
+  --header-bg: rgba(23, 23, 23, 0.85);
+  --header-bg-scrolled: rgba(23, 23, 23, 0.95);
+  
+  background: var(--header-bg);
   border-bottom-color: rgba(255, 255, 255, 0.1);
   
   &.header-scrolled {
-    background: rgba(23, 23, 23, 0.95) !important;
+    background: var(--header-bg-scrolled);
   }
   
   .toolbar-modern {

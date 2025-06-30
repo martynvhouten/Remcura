@@ -177,47 +177,77 @@ body {
 .text-h6 { font-size: var(--text-base); font-weight: var(--font-weight-medium); line-height: var(--leading-normal); }
 
 // ===================================================================
-// CENTRALIZED ICON SYSTEM
+// ===================================================================
+// MODERN ICON SYSTEM - NO !IMPORTANT APPROACH
 // ===================================================================
 
-// Base icon styles with consistent sizing
-.q-icon {
-  &.icon-xs { font-size: var(--icon-xs) !important; }
-  &.icon-sm { font-size: var(--icon-sm) !important; }
-  &.icon-base { font-size: var(--icon-base) !important; }
-  &.icon-lg { font-size: var(--icon-lg) !important; }
-  &.icon-xl { font-size: var(--icon-xl) !important; }
-  &.icon-2xl { font-size: var(--icon-2xl) !important; }
+// Use high specificity selectors to override Quasar defaults cleanly
+.q-layout .q-icon,
+.q-dialog .q-icon,
+.q-drawer .q-icon,
+.q-card .q-icon,
+body .q-icon {
+  // Base icon size utilities with higher specificity
+  &.icon-xs { font-size: var(--icon-xs); }
+  &.icon-sm { font-size: var(--icon-sm); }
+  &.icon-base { font-size: var(--icon-base); }
+  &.icon-lg { font-size: var(--icon-lg); }
+  &.icon-xl { font-size: var(--icon-xl); }
+  &.icon-2xl { font-size: var(--icon-2xl); }
 }
 
-// Semantic icon classes for specific contexts
-.q-icon {
+// Semantic icon classes with high specificity for consistent behavior
+.q-layout .q-icon,
+.q-dialog .q-icon,
+.q-drawer .q-icon,
+.q-card .q-icon,
+body .q-icon {
   // Title icons should be large and prominent
   &.title-icon {
-    font-size: var(--icon-lg) !important;
+    font-size: var(--icon-lg);
     flex-shrink: 0;
   }
   
   // Action icons in buttons and interactive elements
   &.action-icon {
-    font-size: var(--icon-base) !important;
+    font-size: var(--icon-base);
   }
   
   // Avatar icons in avatars and circular containers
   &.avatar-icon {
-    font-size: var(--icon-base) !important;
+    font-size: var(--icon-base);
   }
   
   // Small icons for metadata and secondary information
   &.meta-icon {
-    font-size: var(--icon-sm) !important;
+    font-size: var(--icon-sm);
   }
   
   // Decorative icons that should be subtle
   &.decoration-icon {
-    font-size: var(--icon-sm) !important;
+    font-size: var(--icon-sm);
     opacity: 0.7;
   }
+}
+
+// Alternative utility-first approach for icon sizing
+// These can be used as standalone classes without conflicting with Quasar
+.icon-size-xs { font-size: var(--icon-xs); }
+.icon-size-sm { font-size: var(--icon-sm); }
+.icon-size-base { font-size: var(--icon-base); }
+.icon-size-lg { font-size: var(--icon-lg); }
+.icon-size-xl { font-size: var(--icon-xl); }
+.icon-size-2xl { font-size: var(--icon-2xl); }
+
+// Context-aware icon sizing using CSS custom properties
+.icon-contextual {
+  font-size: var(--icon-size, var(--icon-base));
+  
+  // Pre-defined contexts
+  &.in-button { --icon-size: var(--icon-base); }
+  &.in-title { --icon-size: var(--icon-lg); }
+  &.in-meta { --icon-size: var(--icon-sm); }
+  &.in-avatar { --icon-size: var(--icon-base); }
 }
 
 // ===================================================================
@@ -328,78 +358,99 @@ body.body--dark {
   --btn-shadow-outline: 0 2px 8px rgba(0, 0, 0, 0.2);
 }
 
-.q-btn {
+// ===================================================================
+// MODERN BUTTON SYSTEM - NO !IMPORTANT APPROACH
+// ===================================================================
+
+// Use high specificity selector to override Quasar defaults cleanly
+.q-layout .q-btn,
+.q-dialog .q-btn,
+.q-drawer .q-btn,
+body .q-btn {
   // ===================================================================
   // BASE BUTTON RESET & FOUNDATION
   // ===================================================================
   
-  // Reset all default styles
-  min-height: var(--btn-height-base) !important;
-  height: var(--btn-height-base) !important;
-  padding: var(--btn-padding-base) !important;
-  border-radius: var(--btn-radius) !important;
-  font-weight: 600 !important;
-  font-size: var(--btn-font-base) !important;
-  line-height: 1 !important;
-  letter-spacing: 0.025em !important;
-  text-transform: none !important;
-  position: relative !important;
-  overflow: hidden !important;
+  // Reset all default styles with higher specificity instead of !important
+  min-height: var(--btn-height-base);
+  height: var(--btn-height-base);
+  padding: var(--btn-padding-base);
+  border-radius: var(--btn-radius);
+  font-weight: 600;
+  font-size: var(--btn-font-base);
+  line-height: 1;
+  letter-spacing: 0.025em;
+  text-transform: none;
+  position: relative;
+  overflow: hidden;
   
   // Perfect text alignment using flexbox
-  display: inline-flex !important;
-  align-items: center !important;
-  justify-content: center !important;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   
   // Smooth transitions for all properties
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   
   // Remove default box shadow
-  box-shadow: none !important;
-  
-  // Ensure button content is properly aligned
-  .q-btn__content {
-    display: flex !important;
-    align-items: center !important;
-    justify-content: center !important;
-    gap: 8px !important;
-    line-height: 1 !important;
-    
-    // Perfect icon alignment
-    .q-icon {
-      line-height: 1 !important;
-      display: flex !important;
-      align-items: center !important;
-      justify-content: center !important;
-    }
-  }
+  box-shadow: none;
+}
+
+// Button content styling with high specificity
+.q-layout .q-btn .q-btn__content,
+.q-dialog .q-btn .q-btn__content,
+.q-drawer .q-btn .q-btn__content,
+body .q-btn .q-btn__content {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  line-height: 1;
+}
+
+// Icon alignment in buttons
+.q-layout .q-btn .q-btn__content .q-icon,
+.q-dialog .q-btn .q-btn__content .q-icon,
+.q-drawer .q-btn .q-btn__content .q-icon,
+body .q-btn .q-btn__content .q-icon {
+  line-height: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+// Size variants with high specificity
+.q-layout .q-btn,
+.q-dialog .q-btn,
+.q-drawer .q-btn,
+body .q-btn {
   
   // ===================================================================
   // SIZE VARIANTS
   // ===================================================================
   
   &.q-btn--dense {
-    min-height: var(--btn-height-sm) !important;
-    height: var(--btn-height-sm) !important;
-    padding: var(--btn-padding-sm) !important;
-    font-size: var(--btn-font-sm) !important;
-    border-radius: var(--btn-radius-sm) !important;
+    min-height: var(--btn-height-sm);
+    height: var(--btn-height-sm);
+    padding: var(--btn-padding-sm);
+    font-size: var(--btn-font-sm);
+    border-radius: var(--btn-radius-sm);
   }
   
   &.q-btn--lg {
-    min-height: var(--btn-height-lg) !important;
-    height: var(--btn-height-lg) !important;
-    padding: var(--btn-padding-lg) !important;
-    font-size: var(--btn-font-lg) !important;
-    border-radius: var(--btn-radius-lg) !important;
+    min-height: var(--btn-height-lg);
+    height: var(--btn-height-lg);
+    padding: var(--btn-padding-lg);
+    font-size: var(--btn-font-lg);
+    border-radius: var(--btn-radius-lg);
   }
   
   &.btn-xl {
-    min-height: var(--btn-height-xl) !important;
-    height: var(--btn-height-xl) !important;
-    padding: var(--btn-padding-xl) !important;
-    font-size: var(--btn-font-xl) !important;
-    border-radius: var(--btn-radius-xl) !important;
+    min-height: var(--btn-height-xl);
+    height: var(--btn-height-xl);
+    padding: var(--btn-padding-xl);
+    font-size: var(--btn-font-xl);
+    border-radius: var(--btn-radius-xl);
   }
   
   // ===================================================================
@@ -407,24 +458,24 @@ body.body--dark {
   // ===================================================================
   
   &.q-btn--round {
-    min-width: var(--btn-height-base) !important;
-    width: var(--btn-height-base) !important;
-    padding: 0 !important;
-    border-radius: 50% !important;
+    min-width: var(--btn-height-base);
+    width: var(--btn-height-base);
+    padding: 0;
+    border-radius: 50%;
     
     &.q-btn--dense {
-      min-width: var(--btn-height-sm) !important;
-      width: var(--btn-height-sm) !important;
+      min-width: var(--btn-height-sm);
+      width: var(--btn-height-sm);
     }
     
     &.q-btn--lg {
-      min-width: var(--btn-height-lg) !important;
-      width: var(--btn-height-lg) !important;
+      min-width: var(--btn-height-lg);
+      width: var(--btn-height-lg);
     }
     
     &.btn-xl {
-      min-width: var(--btn-height-xl) !important;
-      width: var(--btn-height-xl) !important;
+      min-width: var(--btn-height-xl);
+      width: var(--btn-height-xl);
     }
   }
   
@@ -433,65 +484,65 @@ body.body--dark {
   // ===================================================================
   
   &.q-btn--unelevated {
-    background: var(--btn-gradient-primary) !important;
-    color: white !important;
-    box-shadow: var(--btn-shadow-base) !important;
-    border: none !important;
+    background: var(--btn-gradient-primary);
+    color: white;
+    box-shadow: var(--btn-shadow-base);
+    border: none;
     
     // Primary color variants
     &.text-white { 
-      background: var(--btn-gradient-primary) !important; 
+      background: var(--btn-gradient-primary); 
     }
     
     &.bg-primary { 
-      background: var(--btn-gradient-primary) !important; 
+      background: var(--btn-gradient-primary); 
     }
     
     &.bg-positive,
     &.bg-green {
-      background: var(--btn-gradient-success) !important;
+      background: var(--btn-gradient-success);
     }
     
     &.bg-warning,
     &.bg-orange {
-      background: var(--btn-gradient-warning) !important;
+      background: var(--btn-gradient-warning);
     }
     
     &.bg-negative,
     &.bg-red {
-      background: var(--btn-gradient-danger) !important;
+      background: var(--btn-gradient-danger);
     }
     
     // Hover state
     &:hover:not(.disabled):not(.q-btn--loading) {
-      transform: translateY(-3px) !important;
-      box-shadow: var(--btn-shadow-hover) !important;
+      transform: translateY(-3px);
+      box-shadow: var(--btn-shadow-hover);
       
       &.bg-primary,
       &.text-white { 
-        background: var(--btn-gradient-primary-hover) !important; 
+        background: var(--btn-gradient-primary-hover); 
       }
       
       &.bg-positive,
       &.bg-green {
-        background: var(--btn-gradient-success-hover) !important;
+        background: var(--btn-gradient-success-hover);
       }
       
       &.bg-warning,
       &.bg-orange {
-        background: var(--btn-gradient-warning-hover) !important;
+        background: var(--btn-gradient-warning-hover);
       }
       
       &.bg-negative,
       &.bg-red {
-        background: var(--btn-gradient-danger-hover) !important;
+        background: var(--btn-gradient-danger-hover);
       }
     }
     
     // Active state
     &:active:not(.disabled):not(.q-btn--loading) {
-      transform: translateY(0) !important;
-      box-shadow: var(--btn-shadow-active) !important;
+      transform: translateY(0);
+      box-shadow: var(--btn-shadow-active);
     }
     
     // Add subtle shine effect
@@ -516,62 +567,62 @@ body.body--dark {
   // ===================================================================
   
   &.q-btn--outline {
-    background: rgba(255, 255, 255, 0.8) !important;
-    backdrop-filter: blur(10px) !important;
-    border: 2px solid var(--brand-primary) !important;
-    color: var(--brand-primary) !important;
-    box-shadow: var(--btn-shadow-outline) !important;
+    background: rgba(255, 255, 255, 0.8);
+    backdrop-filter: blur(10px);
+    border: 2px solid var(--brand-primary);
+    color: var(--brand-primary);
+    box-shadow: var(--btn-shadow-outline);
     
     // Color variants
     &.text-positive,
     &.text-green {
-      border-color: var(--brand-success) !important;
-      color: var(--brand-success) !important;
+      border-color: var(--brand-success);
+      color: var(--brand-success);
     }
     
     &.text-warning,
     &.text-orange {
-      border-color: var(--brand-warning) !important;
-      color: var(--brand-warning) !important;
+      border-color: var(--brand-warning);
+      color: var(--brand-warning);
     }
     
     &.text-negative,
     &.text-red {
-      border-color: var(--brand-danger) !important;
-      color: var(--brand-danger) !important;
+      border-color: var(--brand-danger);
+      color: var(--brand-danger);
     }
     
     // Hover state
     &:hover:not(.disabled):not(.q-btn--loading) {
-      transform: translateY(-2px) !important;
-      box-shadow: var(--btn-shadow-hover) !important;
-      background: var(--brand-primary) !important;
-      color: white !important;
-      border-color: var(--brand-primary) !important;
+      transform: translateY(-2px);
+      box-shadow: var(--btn-shadow-hover);
+      background: var(--brand-primary);
+      color: white;
+      border-color: var(--brand-primary);
       
       &.text-positive,
       &.text-green {
-        background: var(--brand-success) !important;
-        border-color: var(--brand-success) !important;
+        background: var(--brand-success);
+        border-color: var(--brand-success);
       }
       
       &.text-warning,
       &.text-orange {
-        background: var(--brand-warning) !important;
-        border-color: var(--brand-warning) !important;
+        background: var(--brand-warning);
+        border-color: var(--brand-warning);
       }
       
       &.text-negative,
       &.text-red {
-        background: var(--brand-danger) !important;
-        border-color: var(--brand-danger) !important;
+        background: var(--brand-danger);
+        border-color: var(--brand-danger);
       }
     }
     
     // Active state
     &:active:not(.disabled):not(.q-btn--loading) {
-      transform: translateY(0) !important;
-      box-shadow: var(--btn-shadow-active) !important;
+      transform: translateY(0);
+      box-shadow: var(--btn-shadow-active);
     }
   }
   
@@ -580,50 +631,50 @@ body.body--dark {
   // ===================================================================
   
   &.q-btn--flat {
-    background: transparent !important;
-    color: var(--brand-primary) !important;
-    border: none !important;
+    background: transparent;
+    color: var(--brand-primary);
+    border: none;
     
     // Color variants
     &.text-positive,
     &.text-green {
-      color: var(--brand-success) !important;
+      color: var(--brand-success);
     }
     
     &.text-warning,
     &.text-orange {
-      color: var(--brand-warning) !important;
+      color: var(--brand-warning);
     }
     
     &.text-negative,
     &.text-red {
-      color: var(--brand-danger) !important;
+      color: var(--brand-danger);
     }
     
     // Hover state
     &:hover:not(.disabled):not(.q-btn--loading) {
-      background: rgba(30, 58, 138, 0.1) !important;
-      transform: translateY(-1px) !important;
+      background: rgba(30, 58, 138, 0.1);
+      transform: translateY(-1px);
       
       &.text-positive,
       &.text-green {
-        background: rgba(6, 95, 70, 0.1) !important;
+        background: rgba(6, 95, 70, 0.1);
       }
       
       &.text-warning,
       &.text-orange {
-        background: rgba(217, 119, 6, 0.1) !important;
+        background: rgba(217, 119, 6, 0.1);
       }
       
       &.text-negative,
       &.text-red {
-        background: rgba(185, 28, 28, 0.1) !important;
+        background: rgba(185, 28, 28, 0.1);
       }
     }
     
     // Active state
     &:active:not(.disabled):not(.q-btn--loading) {
-      transform: translateY(0) !important;
+      transform: translateY(0);
     }
   }
   
@@ -633,28 +684,28 @@ body.body--dark {
   
   // Focus state for accessibility
   &:focus-visible {
-    outline: 3px solid rgba(30, 58, 138, 0.3) !important;
-    outline-offset: 2px !important;
+    outline: 3px solid rgba(30, 58, 138, 0.3);
+    outline-offset: 2px;
   }
   
   // Disabled state
   &.disabled {
-    opacity: 0.5 !important;
-    pointer-events: none !important;
-    transform: none !important;
-    box-shadow: none !important;
+    opacity: 0.5;
+    pointer-events: none;
+    transform: none;
+    box-shadow: none;
     
     &::before {
-      display: none !important;
+      display: none;
     }
   }
   
   // Loading state
   &.q-btn--loading {
-    pointer-events: none !important;
+    pointer-events: none;
     
     .q-btn__content {
-      opacity: 0.7 !important;
+      opacity: 0.7;
     }
   }
 }
@@ -663,64 +714,72 @@ body.body--dark {
 // MODERN BUTTON CLASS
 // ===================================================================
 
-.btn-modern {
-  &.q-btn {
-    // Enhanced modern styling
-    box-shadow: 0 4px 14px rgba(30, 58, 138, 0.15) !important;
-    
-    &:hover:not(.disabled):not(.q-btn--loading) {
-      box-shadow: 0 8px 30px rgba(30, 58, 138, 0.3) !important;
-      transform: translateY(-4px) !important;
-    }
-    
-    // Add glow effect
-    &::after {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      border-radius: inherit;
-      background: linear-gradient(45deg, rgba(255, 255, 255, 0.1), transparent);
-      pointer-events: none;
-    }
+// Enhanced modern button styling with high specificity
+.q-layout .btn-modern.q-btn,
+.q-dialog .btn-modern.q-btn,
+.q-drawer .btn-modern.q-btn,
+body .btn-modern.q-btn {
+  // Enhanced modern styling
+  box-shadow: 0 4px 14px rgba(30, 58, 138, 0.15);
+  
+  &:hover:not(.disabled):not(.q-btn--loading) {
+    box-shadow: 0 8px 30px rgba(30, 58, 138, 0.3);
+    transform: translateY(-4px);
+  }
+  
+  // Add glow effect
+  &::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    border-radius: inherit;
+    background: linear-gradient(45deg, rgba(255, 255, 255, 0.1), transparent);
+    pointer-events: none;
   }
 }
 
 // ===================================================================
-// BUTTON GROUPS
+// BUTTON GROUPS - HIGH SPECIFICITY APPROACH
 // ===================================================================
 
-.q-btn-group {
-  border-radius: var(--btn-radius) !important;
-  overflow: hidden !important;
-  box-shadow: var(--btn-shadow-base) !important;
+.q-layout .q-btn-group,
+.q-dialog .q-btn-group,
+.q-drawer .q-btn-group,
+body .q-btn-group {
+  border-radius: var(--btn-radius);
+  overflow: hidden;
+  box-shadow: var(--btn-shadow-base);
+}
+
+.q-layout .q-btn-group .q-btn,
+.q-dialog .q-btn-group .q-btn,
+.q-drawer .q-btn-group .q-btn,
+body .q-btn-group .q-btn {
+  border-radius: 0;
+  margin: 0;
   
-  .q-btn {
-    border-radius: 0 !important;
-    margin: 0 !important;
-    
-    &:not(:last-child) {
-      border-right: 1px solid rgba(255, 255, 255, 0.2) !important;
-    }
-    
-    &:first-child {
-      border-top-left-radius: var(--btn-radius) !important;
-      border-bottom-left-radius: var(--btn-radius) !important;
-    }
-    
-    &:last-child {
-      border-top-right-radius: var(--btn-radius) !important;
-      border-bottom-right-radius: var(--btn-radius) !important;
-    }
-    
-    &:hover {
-      transform: none !important;
-      z-index: 2 !important;
-      position: relative !important;
-      box-shadow: 0 0 0 2px var(--brand-primary) !important;
-    }
+  &:not(:last-child) {
+    border-right: 1px solid rgba(255, 255, 255, 0.2);
+  }
+  
+  &:first-child {
+    border-top-left-radius: var(--btn-radius);
+    border-bottom-left-radius: var(--btn-radius);
+  }
+  
+  &:last-child {
+    border-top-right-radius: var(--btn-radius);
+    border-bottom-right-radius: var(--btn-radius);
+  }
+  
+  &:hover {
+    transform: none;
+    z-index: 2;
+    position: relative;
+    box-shadow: 0 0 0 2px var(--brand-primary);
   }
 }
 

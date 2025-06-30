@@ -361,7 +361,7 @@ body.body--dark .auth-footer {
       font-weight: var(--font-weight-bold);
       margin: 0 0 var(--space-4);
       line-height: var(--leading-tight);
-      color: white !important;
+      color: white;
       text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
     }
     
@@ -369,7 +369,7 @@ body.body--dark .auth-footer {
       font-size: var(--text-base);
       line-height: var(--leading-relaxed);
       margin: 0 0 var(--space-8);
-      color: rgba(255, 255, 255, 0.95) !important;
+      color: rgba(255, 255, 255, 0.95);
       font-weight: var(--font-weight-normal);
       text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
     }
@@ -384,7 +384,7 @@ body.body--dark .auth-footer {
         margin-bottom: var(--space-4);
         font-size: var(--text-sm);
         font-weight: var(--font-weight-medium);
-        color: rgba(255, 255, 255, 0.95) !important;
+        color: rgba(255, 255, 255, 0.95);
         text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
         
         &:last-child {
@@ -444,11 +444,11 @@ body.body--dark .auth-footer {
   
   .auth-header .brand-section {
     .brand-avatar {
-      width: 56px !important;
-      height: 56px !important;
+      width: 56px;
+      height: 56px;
       
       .q-icon {
-        font-size: 28px !important;
+        font-size: 28px;
       }
     }
     
