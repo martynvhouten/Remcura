@@ -63,6 +63,7 @@
 
 <script setup lang="ts">
 import { computed } from 'vue'
+import BaseCard from './base/BaseCard.vue'
 
 interface Trend {
   direction: 'up' | 'down'

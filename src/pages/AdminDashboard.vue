@@ -77,54 +77,57 @@
     </div>
 
     <!-- Quick Actions -->
-    <q-card class="q-mb-lg">
-      <q-card-section>
-        <div class="text-h6 q-mb-md">{{ $t('admin.quickActions') }}</div>
-        <div class="row q-gutter-md">
-          <q-btn
-            :label="$t('admin.userManagement.invite')"
-            icon="person_add"
-            color="primary"
-            @click="showInviteUser = true"
-            no-caps
-            class="btn-modern"
-          />
-          <q-btn
-            :label="$t('locations.add')"
-            icon="add_location"
-            color="secondary"
-            @click="showAddLocation = true"
-            no-caps
-            class="btn-modern"
-          />
-          <q-btn
-            :label="$t('offline.data.download')"
-            icon="download"
-            color="info"
-            @click="downloadOfflineData"
-            no-caps
-            class="btn-modern"
-          />
-          <q-btn
-            :label="$t('offline.sync.forceSync')"
-            icon="sync"
-            color="warning"
-            :loading="syncing"
-            @click="forceSync"
-            no-caps
-            class="btn-modern"
-          />
-          <q-btn
-            :label="$t('exports.title')"
-            icon="table_chart"
-            color="positive"
-            @click="showExportDialog = true"
-            no-caps
-            class="btn-modern"
-          />
-        </div>
-      </q-card-section>
-    </q-card>
+    <BaseCard 
+      variant="elevated"
+      :title="$t('admin.quickActions')"
+      icon="admin_panel_settings"
+      header-color="primary"
+      class="q-mb-lg"
+    >
+      <div class="row q-gutter-md">
+        <q-btn
+          :label="$t('admin.userManagement.invite')"
+          icon="person_add"
+          color="primary"
+          @click="showInviteUser = true"
+          no-caps
+          class="btn-modern"
+        />
+        <q-btn
+          :label="$t('locations.add')"
+          icon="add_location"
+          color="secondary"
+          @click="showAddLocation = true"
+          no-caps
+          class="btn-modern"
+        />
+        <q-btn
+          :label="$t('offline.data.download')"
+          icon="download"
+          color="info"
+          @click="downloadOfflineData"
+          no-caps
+          class="btn-modern"
+        />
+        <q-btn
+          :label="$t('offline.sync.forceSync')"
+          icon="sync"
+          color="warning"
+          :loading="syncing"
+          @click="forceSync"
+          no-caps
+          class="btn-modern"
+        />
+        <q-btn
+          :label="$t('exports.title')"
+          icon="table_chart"
+          color="positive"
+          @click="showExportDialog = true"
+          no-caps
+          class="btn-modern"
+        />
+      </div>
+    </BaseCard>
 
     <!-- Tabs for different admin sections -->
     <q-tabs
@@ -414,6 +417,7 @@ import { useI18n } from 'vue-i18n'
 import { useQuasar } from 'quasar'
 import PageLayout from '@/components/PageLayout.vue'
 import PageTitle from '@/components/PageTitle.vue'
+import BaseCard from '@/components/base/BaseCard.vue'
 import { adminService } from '@/services/admin'
 import { analyticsService } from '@/services/analytics'
 import { offlineService } from '@/services/offline'

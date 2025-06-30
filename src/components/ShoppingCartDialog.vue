@@ -172,6 +172,7 @@
 import { ref, computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useQuasar } from 'quasar'
+import { useButtons } from 'src/composables/useButtons'
 import { useBestellijstenStore } from 'src/stores/bestellijsten'
 import BaseDialog from './base/BaseDialog.vue'
 import type { ShoppingCartWithItems, ShoppingCartItem } from 'src/types/supabase'
@@ -191,6 +192,12 @@ const emit = defineEmits<Emits>()
 
 const { t } = useI18n()
 const $q = useQuasar()
+const { quickActions, buttonGroups } = useButtons()
+
+// Button configurations
+const clearBtn = computed(() => quickActions.clearAll())
+const addToCartBtn = computed(() => quickActions.save())
+const dialogButtons = computed(() => buttonGroups.dialogActions('Sluiten'))
 const bestellijstenStore = useBestellijstenStore()
 
 // State

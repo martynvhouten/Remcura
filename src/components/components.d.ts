@@ -39,4 +39,10 @@ declare module 'src/components/base/BaseDialog.vue' {
   import { DefineComponent } from 'vue'
   const component: DefineComponent<{}, {}, any>
   export default component
+}
+
+declare module 'src/components/base/BaseCard.vue' {
+  import { DefineComponent } from 'vue'
+  const component: DefineComponent<{}, {}, any>
+  export default component
 } 

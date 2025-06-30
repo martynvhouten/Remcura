@@ -8,14 +8,9 @@
       >
         <template #actions>
           <q-btn
-            :label="$t('analyticsPage.export')"
-            icon="file_download"
-            color="secondary"
-            outline
+            v-bind="exportBtn"
             @click="exportAnalytics"
             :loading="exporting"
-            no-caps
-            class="btn-modern"
           />
         </template>
       </PageTitle>
@@ -37,43 +32,55 @@
     <!-- Key Metrics Cards -->
     <div class="row q-gutter-md q-mb-lg">
       <div class="col-12 col-md-6 col-lg-3">
-        <q-card class="analytics-card">
-          <q-card-section class="text-center">
-            <div class="text-h6 text-primary">{{ summary.totalEvents || 0 }}</div>
-            <div class="text-body2 text-grey-7">{{ $t('analyticsPage.totalEvents') }}</div>
-            <q-icon name="event" size="md" class="text-primary q-mt-sm" />
-          </q-card-section>
-        </q-card>
+        <BaseCard 
+          variant="elevated" 
+          size="sm" 
+          padding="sm"
+          content-class="text-center"
+        >
+          <div class="text-h6 text-primary">{{ summary.totalEvents || 0 }}</div>
+          <div class="text-body2 text-grey-7">{{ $t('analyticsPage.totalEvents') }}</div>
+          <q-icon name="event" size="md" class="text-primary q-mt-sm" />
+        </BaseCard>
       </div>
 
       <div class="col-12 col-md-6 col-lg-3">
-        <q-card class="analytics-card">
-          <q-card-section class="text-center">
-            <div class="text-h6 text-green">{{ summary.activeUsers || 0 }}</div>
-            <div class="text-body2 text-grey-7">{{ $t('analyticsPage.activeUsers') }}</div>
-            <q-icon name="people" size="md" class="text-green q-mt-sm" />
-          </q-card-section>
-        </q-card>
+        <BaseCard 
+          variant="elevated" 
+          size="sm" 
+          padding="sm"
+          content-class="text-center"
+        >
+          <div class="text-h6 text-green">{{ summary.activeUsers || 0 }}</div>
+          <div class="text-body2 text-grey-7">{{ $t('analyticsPage.activeUsers') }}</div>
+          <q-icon name="people" size="md" class="text-green q-mt-sm" />
+        </BaseCard>
       </div>
 
       <div class="col-12 col-md-6 col-lg-3">
-        <q-card class="analytics-card">
-          <q-card-section class="text-center">
-            <div class="text-h6 text-orange">{{ orderMetrics.totalOrders || 0 }}</div>
-            <div class="text-body2 text-grey-7">{{ $t('analyticsPage.totalOrders') }}</div>
-            <q-icon name="shopping_cart" size="md" class="text-orange q-mt-sm" />
-          </q-card-section>
-        </q-card>
+        <BaseCard 
+          variant="elevated" 
+          size="sm" 
+          padding="sm"
+          content-class="text-center"
+        >
+          <div class="text-h6 text-orange">{{ orderMetrics.totalOrders || 0 }}</div>
+          <div class="text-body2 text-grey-7">{{ $t('analyticsPage.totalOrders') }}</div>
+          <q-icon name="shopping_cart" size="md" class="text-orange q-mt-sm" />
+        </BaseCard>
       </div>
 
       <div class="col-12 col-md-6 col-lg-3">
-        <q-card class="analytics-card">
-          <q-card-section class="text-center">
-            <div class="text-h6 text-purple">{{ productMetrics.totalUpdates || 0 }}</div>
-            <div class="text-body2 text-grey-7">{{ $t('analyticsPage.productUpdates') }}</div>
-            <q-icon name="inventory" size="md" class="text-purple q-mt-sm" />
-          </q-card-section>
-        </q-card>
+        <BaseCard 
+          variant="elevated" 
+          size="sm" 
+          padding="sm"
+          content-class="text-center"
+        >
+          <div class="text-h6 text-purple">{{ productMetrics.totalUpdates || 0 }}</div>
+          <div class="text-body2 text-grey-7">{{ $t('analyticsPage.productUpdates') }}</div>
+          <q-icon name="inventory" size="md" class="text-purple q-mt-sm" />
+        </BaseCard>
       </div>
 
       <div class="col-12 col-md-6 col-lg-3">
@@ -230,17 +237,26 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, nextTick } from 'vue'
+import { ref, onMounted, nextTick, computed } from 'vue'
 import { useQuasar } from 'quasar'
 import { useI18n } from 'vue-i18n'
+import { useButtons } from 'src/composables/useButtons'
 import PageTitle from 'src/components/PageTitle.vue'
 import PageLayout from 'src/components/PageLayout.vue'
+import BaseCard from 'src/components/base/BaseCard.vue'
 import { AnalyticsService } from 'src/services/analytics'
 import { monitoringService } from 'src/services/monitoring'
 import type { AnalyticsSummary, OrderMetrics, ProductMetrics, UserActivityMetrics } from 'src/services/analytics'
 
 const $q = useQuasar()
 const { t } = useI18n()
+const { quickActions } = useButtons()
+
+// Button configurations
+const exportBtn = computed(() => quickActions.export({
+  label: t('analyticsPage.export'),
+  variant: 'outline'
+}))
 
 // Refs
 const loading = ref(false)

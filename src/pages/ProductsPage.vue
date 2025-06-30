@@ -8,42 +8,37 @@
       >
         <template #actions>
           <q-btn
-            color="primary"
-            icon="sync"
-            :label="$t('common.refresh')"
+            v-bind="refreshBtn"
             @click="refreshProducts"
             :loading="loading"
-            outline
-            no-caps
-            class="btn-modern"
           />
           <q-btn
-            color="primary"
-            icon="add_circle"
-            :label="$t('products.addProduct')"
+            v-bind="addProductBtn"
             @click="showAddProductDialog = true"
-            unelevated
-            no-caps
-            class="btn-modern"
           />
         </template>
       </PageTitle>
     </template>
 
       <!-- Filters and Search -->
-      <q-card flat class="filters-card glass-modern" role="search" aria-label="Product filters">
-        <q-card-section class="q-pa-md">
-          <div class="filters-grid">
-            <div class="search-section">
+      <BaseCard 
+        variant="outlined"
+        :title="$t('products.filterTitle') || 'Filters'"
+        icon="search"
+        header-color="info"
+        size="sm"
+      >
+        <div class="filters-grid">
+          <div class="search-section">
             <q-input
               v-model="searchQuery"
-                :label="$t('common.search') || 'Zoeken'"
+              :label="$t('common.search') || 'Zoeken'"
               outlined
               dense
               clearable
               debounce="300"
-                class="search-input modern-input"
-                :aria-label="$t('products.searchProducts') || 'Zoek producten op naam of SKU'"
+              class="search-input modern-input"
+              :aria-label="$t('products.searchProducts') || 'Zoek producten op naam of SKU'"
             >
               <template v-slot:prepend>
                 <q-icon name="search" aria-hidden="true" />
@@ -51,34 +46,25 @@
             </q-input>
           </div>
           
-            <div class="filter-section">
+          <div class="filter-section">
             <q-select
               v-model="stockFilter"
               :options="stockFilterOptions"
-                :label="$t('products.filterByStockStatus') || 'Filter op voorraadstatus'"
+              :label="$t('products.filterByStockStatus') || 'Filter op voorraadstatus'"
               outlined
               dense
               emit-value
               map-options
-                class="filter-select modern-input"
-                :aria-label="$t('products.filterByStockStatus') || 'Filter producten op voorraadstatus'"
-              />
-            </div>
-            
-            <div class="actions-section">
-              <q-btn
-                color="primary"
-                icon="filter_alt"
-                :label="$t('products.advancedFilters') || 'Geavanceerd'"
-                outline
-                dense
-                no-caps
-                class="btn-modern"
+              class="filter-select modern-input"
+              :aria-label="$t('products.filterByStockStatus') || 'Filter producten op voorraadstatus'"
             />
           </div>
         </div>
-        </q-card-section>
-      </q-card>
+        
+        <template #actions>
+          <q-btn v-bind="advancedFiltersBtn" />
+        </template>
+      </BaseCard>
 
       <!-- Products Table -->
       <q-card class="table-card card-modern">
@@ -132,27 +118,19 @@
             <q-td :props="props">
               <div class="action-buttons">
               <q-btn
-                flat
-                round
-                dense
-                icon="edit"
-                color="primary"
+                v-bind="editBtn"
                 @click="editProduct(props.row)"
                 :aria-label="`Bewerk ${props.row.name}`"
-                >
-                  <q-tooltip class="bg-primary">Bewerken</q-tooltip>
-                </q-btn>
+              >
+                <q-tooltip class="bg-primary">Bewerken</q-tooltip>
+              </q-btn>
               <q-btn
-                flat
-                round
-                dense
-                icon="delete"
-                color="negative"
+                v-bind="deleteBtn"
                 @click="confirmDeleteProduct(props.row)"
                 :aria-label="`Verwijder ${props.row.name}`"
-                >
-                  <q-tooltip class="bg-negative">Verwijderen</q-tooltip>
-                </q-btn>
+              >
+                <q-tooltip class="bg-negative">Verwijderen</q-tooltip>
+              </q-btn>
               </div>
             </q-td>
           </template>
@@ -172,16 +150,31 @@
 import { ref, computed, onMounted, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useQuasar } from 'quasar'
+import { useButtons } from 'src/composables/useButtons'
 import { useClinicStore } from 'src/stores/clinic'
 import type { ProductWithItems } from 'src/types/supabase'
 import StockStatusChip from 'src/components/StockStatusChip.vue'
 import ProductEditDialog from 'src/components/ProductEditDialog.vue'
 import PageLayout from 'src/components/PageLayout.vue'
 import PageTitle from 'src/components/PageTitle.vue'
+import BaseCard from 'src/components/base/BaseCard.vue'
 
 const { t } = useI18n()
 const $q = useQuasar()
 const clinicStore = useClinicStore()
+const { quickActions, getThemeConfig } = useButtons()
+
+// Button configurations
+const refreshBtn = computed(() => quickActions.refresh())
+const addProductBtn = computed(() => quickActions.create())
+const advancedFiltersBtn = computed(() => getThemeConfig('primary', {
+  icon: 'filter_alt',
+  label: t('products.advancedFilters') || 'Geavanceerd',
+  variant: 'outline',
+  dense: true
+}))
+const editBtn = computed(() => quickActions.edit())
+const deleteBtn = computed(() => quickActions.delete())
 
 // State
 const loading = ref(false)

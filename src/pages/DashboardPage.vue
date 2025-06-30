@@ -12,23 +12,13 @@
       >
         <template #actions>
           <q-btn
-            color="primary"
-            icon="sync"
-            :label="$t('common.refresh')"
-            @click="refreshData"
+            v-bind="refreshBtn"
             :loading="loading"
-            unelevated
-            no-caps
-            class="btn-modern"
+            @click="refreshData"
           />
           <q-btn
-            color="secondary"
-            icon="insights"
-            :label="$t('dashboard.viewAnalytics')"
-            outline
+            v-bind="analyticsBtn"
             @click="() => $router.push('/analytics')"
-            no-caps
-            class="btn-modern"
           />
         </template>
       </PageTitle>
@@ -365,18 +355,55 @@ import { ref, computed, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 import { useQuasar } from 'quasar'
+import { useButtons } from 'src/composables/useButtons'
 import { useAuthStore } from 'src/stores/auth'
 import { useClinicStore } from 'src/stores/clinic'
 import { supabase } from 'src/boot/supabase'
 import StockSummaryCard from 'src/components/StockSummaryCard.vue'
 import PageLayout from 'src/components/PageLayout.vue'
 import PageTitle from 'src/components/PageTitle.vue'
+import BaseCard from 'src/components/base/BaseCard.vue'
 
 const router = useRouter()
 const $q = useQuasar()
 const { t: $t } = useI18n()
 const authStore = useAuthStore()
 const clinicStore = useClinicStore()
+const { quickActions, getThemeConfig } = useButtons()
+
+// Button configurations
+const refreshBtn = computed(() => quickActions.refresh())
+const analyticsBtn = computed(() => getThemeConfig('secondary', {
+  icon: 'insights',
+  label: $t('dashboard.viewAnalytics'),
+  variant: 'outline'
+}))
+
+const createOrderBtn = computed(() => getThemeConfig('primary', {
+  icon: 'add_shopping_cart',
+  label: $t('dashboard.quickActions.createOrder')
+}))
+
+const scanBarcodeBtn = computed(() => getThemeConfig('secondary', {
+  icon: 'qr_code_scanner',
+  label: $t('dashboard.quickActions.scanBarcode')
+}))
+
+const manageProductsBtn = computed(() => getThemeConfig('info', {
+  icon: 'inventory_2',
+  label: $t('dashboard.quickActions.manageProducts')
+}))
+
+const viewReportsBtn = computed(() => getThemeConfig('success', {
+  icon: 'bar_chart',
+  label: $t('dashboard.quickActions.viewReports')
+}))
+
+const viewAllBtn = computed(() => getThemeConfig('primary', {
+  icon: 'visibility',
+  label: 'Bekijk alle producten',
+  variant: 'outline'
+}))
 
 // State
 const loading = ref(false)

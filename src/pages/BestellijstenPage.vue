@@ -8,34 +8,26 @@
       >
         <template #actions>
           <q-btn
-            color="primary"
-            icon="sync"
-            :label="$t('common.refresh')"
+            v-bind="refreshBtn"
             @click="refreshData"
             :loading="loading"
-            outline
-            no-caps
-            class="btn-modern"
           />
           <q-btn
-            color="primary"
-            icon="playlist_add"
-            :label="$t('bestellijsten.newList')"
+            v-bind="newListBtn"
             @click="showCreateDialog = true"
-            unelevated
-            no-caps
-            class="btn-modern"
           />
         </template>
       </PageTitle>
     </template>
 
-    <q-card class="card-modern">
-      <q-card-section>
-        <div class="text-h6">{{ $t('bestellijsten.overview') }}</div>
-        <div class="text-body2 text-grey-6">{{ $t('bestellijsten.subtitle') }}</div>
-      </q-card-section>
-    </q-card>
+    <BaseCard 
+      variant="elevated"
+      :title="$t('bestellijsten.overview')"
+      icon="playlist_add_check"
+      header-color="primary"
+    >
+      <div class="text-body2 text-grey-6">{{ $t('bestellijsten.subtitle') }}</div>
+    </BaseCard>
 
     <!-- Quick Stats Cards -->
     <div class="row q-mb-lg">
@@ -249,16 +241,23 @@ import { ref, onMounted, computed } from 'vue'
 import { useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 import { useQuasar } from 'quasar'
+import { useButtons } from 'src/composables/useButtons'
 import { useBestellijstenStore } from 'src/stores/bestellijsten'
 import { useAuthStore } from 'src/stores/auth'
 import type { BestellijstWithItems, BestellijstInsert } from 'src/types/supabase'
 import PageLayout from 'src/components/PageLayout.vue'
 import PageTitle from 'src/components/PageTitle.vue'
+import BaseCard from 'src/components/base/BaseCard.vue'
 
 const router = useRouter()
 const { t } = useI18n()
 const $q = useQuasar()
 const bestellijstenStore = useBestellijstenStore()
+const { quickActions } = useButtons()
+
+// Button configurations
+const refreshBtn = computed(() => quickActions.refresh())
+const newListBtn = computed(() => quickActions.create())
 const authStore = useAuthStore()
 
 // State

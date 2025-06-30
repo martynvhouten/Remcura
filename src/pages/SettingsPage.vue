@@ -29,23 +29,14 @@
     <div class="settings-grid animate-slide-up">
       <!-- User Profile Settings -->
       <div class="settings-section">
-        <q-card class="card-modern card-elevated">
-          <q-card-section class="card-header">
-            <div class="card-header-content">
-              <div class="card-title-section">
-                <q-icon name="person" color="primary" size="24px" aria-hidden="true" />
-                <div>
-                  <h2 class="card-title">{{ $t('settings.profile') }}</h2>
-                  <p class="card-subtitle">Persoonlijke accountgegevens</p>
-                </div>
-              </div>
-            </div>
-          </q-card-section>
-
-          <q-separator />
-
-          <q-card-section class="card-content">
-            <div class="form-grid" role="group" aria-labelledby="profile-title">
+        <BaseCard
+          variant="elevated"
+          :title="$t('settings.profile')"
+          subtitle="Persoonlijke accountgegevens"
+          icon="person"
+          header-color="primary"
+        >
+          <div class="form-grid" role="group" aria-labelledby="profile-title">
                 <q-input
                   v-model="userSettings.fullName"
                   :label="$t('auth.fullName')"
@@ -85,28 +76,18 @@
                   </template>
                 </q-input>
               </div>
-            </q-card-section>
-          </q-card>
-        </div>
+        </BaseCard>
+      </div>
 
         <!-- Appearance Settings -->
       <div class="settings-section">
-        <q-card class="card-modern card-elevated">
-          <q-card-section class="card-header">
-            <div class="card-header-content">
-              <div class="card-title-section">
-                <q-icon name="palette" color="secondary" size="24px" aria-hidden="true" />
-                <div>
-                  <h2 class="card-title">Weergave</h2>
-                  <p class="card-subtitle">Interface en taalinstellingen</p>
-                </div>
-              </div>
-            </div>
-          </q-card-section>
-
-          <q-separator />
-
-          <q-card-section class="card-content">
+        <BaseCard
+          variant="elevated"
+          title="Weergave"
+          subtitle="Interface en taalinstellingen"
+          icon="palette"
+          header-color="secondary"
+        >
             <div class="settings-items" role="group" aria-labelledby="appearance-title">
               <!-- Dark Mode Toggle -->
               <div class="setting-item glass-card">
@@ -178,9 +159,8 @@
                 </div>
                 </div>
               </div>
-            </q-card-section>
-          </q-card>
-        </div>
+        </BaseCard>
+      </div>
 
         <!-- Clinic Information -->
       <div class="settings-section full-width">
@@ -396,6 +376,7 @@ import { useClinicStore } from 'src/stores/clinic'
 import { useThemeManager } from 'src/composables/themeManager'
 import PageLayout from 'src/components/PageLayout.vue'
 import PageTitle from 'src/components/PageTitle.vue'
+import BaseCard from 'src/components/base/BaseCard.vue'
 
 const $q = useQuasar()
 const { t } = useI18n()

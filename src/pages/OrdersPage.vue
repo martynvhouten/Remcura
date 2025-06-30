@@ -5,29 +5,17 @@
         <template #actions>
           <q-btn-group>
             <q-btn
-              :label="$t('orders.export')"
-              icon="file_download"
-              color="secondary"
+              v-bind="exportBtn"
               :loading="exporting"
               @click="showExportDialog = true"
-              no-caps
-              class="btn-modern"
             />
             <q-btn
-              :label="$t('orders.analytics')"
-              icon="insights"
-              color="info"
+              v-bind="analyticsBtn"
               @click="showAnalytics = true"
-              no-caps
-              class="btn-modern"
             />
             <q-btn
-              :label="$t('orders.createOrder')"
-              icon="shopping_cart_checkout"
-              color="primary"
+              v-bind="createOrderBtn"
               @click="createNewOrder"
-              no-caps
-              class="btn-modern"
             />
           </q-btn-group>
         </template>
@@ -35,62 +23,59 @@
     </template>
 
     <!-- Filters -->
-    <q-card flat class="q-mb-md">
-      <q-card-section>
-        <div class="row q-gutter-md">
-          <q-select
-            v-model="filters.status"
-            :options="statusOptions"
-            :label="$t('orders.filters.status')"
-            clearable
-            emit-value
-            map-options
-            style="min-width: 150px"
-          />
-          <q-select
-            v-model="filters.supplier"
-            :options="supplierOptions"
-            :label="$t('orders.filters.supplier')"
-            clearable
-            emit-value
-            map-options
-            style="min-width: 200px"
-          />
-          <q-input
-            v-model="filters.dateFrom"
-            :label="$t('orders.filters.dateFrom')"
-            type="date"
-            outlined
-            dense
-            style="min-width: 150px"
-          />
-          <q-input
-            v-model="filters.dateTo"
-            :label="$t('orders.filters.dateTo')"
-            type="date"
-            outlined
-            dense
-            style="min-width: 150px"
-          />
-          <q-btn
-            :label="$t('common.filter')"
-            icon="filter_list"
-            color="primary"
-            @click="applyFilters"
-            no-caps
-            class="btn-modern"
-          />
-          <q-btn
-            :label="$t('common.reset')"
-            icon="clear"
-            flat
-            @click="resetFilters"
-            no-caps
-            class="btn-modern"
-          />
-        </div>
-      </q-card-section>
-    </q-card>
+    <BaseCard 
+      variant="outlined"
+      :title="$t('orders.filters.title')"
+      icon="filter_list"
+      header-color="info"
+      size="sm"
+    >
+      <div class="row q-gutter-md">
+        <q-select
+          v-model="filters.status"
+          :options="statusOptions"
+          :label="$t('orders.filters.status')"
+          clearable
+          emit-value
+          map-options
+          style="min-width: 150px"
+          outlined
+          dense
+        />
+        <q-select
+          v-model="filters.supplier"
+          :options="supplierOptions"
+          :label="$t('orders.filters.supplier')"
+          clearable
+          emit-value
+          map-options
+          style="min-width: 200px"
+          outlined
+          dense
+        />
+        <q-input
+          v-model="filters.dateFrom"
+          :label="$t('orders.filters.dateFrom')"
+          type="date"
+          outlined
+          dense
+          style="min-width: 150px"
+        />
+        <q-input
+          v-model="filters.dateTo"
+          :label="$t('orders.filters.dateTo')"
+          type="date"
+          outlined
+          dense
+          style="min-width: 150px"
+        />
+      </div>
+      
+      <template #actions>
+        <q-btn v-bind="filterBtn" @click="applyFilters" />
+        <q-btn v-bind="resetBtn" @click="resetFilters" />
+      </template>
+    </BaseCard>
 
     <!-- Orders Table -->
     <q-table
@@ -367,8 +352,10 @@ import { ref, reactive, onMounted, computed } from 'vue'
 import { useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 import { useQuasar } from 'quasar'
+import { useButtons } from 'src/composables/useButtons'
 import PageLayout from '@/components/PageLayout.vue'
 import PageTitle from '@/components/PageTitle.vue'
+import BaseCard from 'src/components/base/BaseCard.vue'
 import { orderProcessingService } from '@/services/orderProcessing'
 import { analyticsService } from '@/services/analytics'
 import { notificationService } from '@/services/notifications'
@@ -378,6 +365,35 @@ import type { OrderWithItems, OrderStatus } from '@/types/supabase'
 const router = useRouter()
 const { t } = useI18n()
 const $q = useQuasar()
+const { quickActions, getThemeConfig } = useButtons()
+
+// Button configurations
+const exportBtn = computed(() => getThemeConfig('secondary', {
+  icon: 'file_download',
+  label: t('orders.export'),
+  variant: 'outline'
+}))
+
+const analyticsBtn = computed(() => getThemeConfig('info', {
+  icon: 'insights', 
+  label: t('orders.analytics')
+}))
+
+const createOrderBtn = computed(() => getThemeConfig('primary', {
+  icon: 'shopping_cart_checkout',
+  label: t('orders.createOrder')
+}))
+
+const filterBtn = computed(() => getThemeConfig('primary', {
+  icon: 'filter_list',
+  label: t('common.filter')
+}))
+
+const resetBtn = computed(() => getThemeConfig('secondary', {
+  icon: 'clear',
+  label: t('common.reset'),
+  variant: 'flat'
+}))
 
 // State
 const orders = ref<OrderWithItems[]>([])
@@ -508,10 +524,10 @@ const loadOrders = async () => {
     loading.value = true
     
     const filterOptions = {
-      status: filters.status || undefined,
-      supplier_id: filters.supplier || undefined,
-      date_from: filters.dateFrom || undefined,
-      date_to: filters.dateTo || undefined
+      status: filters.status ? filters.status : undefined,
+      supplier_id: filters.supplier ? filters.supplier : undefined,
+      date_from: filters.dateFrom ? filters.dateFrom : undefined,
+      date_to: filters.dateTo ? filters.dateTo : undefined
     }
     
     orders.value = await orderProcessingService.getOrders(filterOptions)

@@ -35,7 +35,7 @@ onMounted(async () => {
 // Global app styles
 #q-app {
   height: 100vh;
-  width: 100vw;
+  width: 100%;
 }
 
 // Custom brand colors and theme overrides will go here

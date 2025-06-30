@@ -163,6 +163,7 @@ body {
   color: var(--neutral-900);
   background-color: var(--neutral-50);
   transition: color var(--transition-base), background-color var(--transition-base);
+  overflow-x: hidden; // Prevent horizontal scrolling
 }
 
 // ===================================================================

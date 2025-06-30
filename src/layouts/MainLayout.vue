@@ -441,7 +441,7 @@ onUnmounted(() => {
 <style lang="scss" scoped>
 .layout-modern {
   width: 100%;
-  max-width: 100vw;
+  max-width: 100%;
   box-sizing: border-box;
   
   // Ensure all child elements don't overflow

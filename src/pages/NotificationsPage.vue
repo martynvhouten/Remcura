@@ -53,67 +53,56 @@
 
       <!-- Quick Actions -->
       <div class="col-12">
-        <q-card class="glass-card">
-          <q-card-section>
-            <div class="text-h6 q-mb-md">{{ $t('notificationsPage.quickActions') }}</div>
-            <div class="row q-gutter-sm">
-              <q-btn
-                color="primary"
-                icon="mark_email_read"
-                :label="$t('notificationsPage.markAllRead')"
-                @click="markAllAsRead"
-                :disable="unreadCount === 0"
-                no-caps
-                class="btn-modern"
-              />
-              <q-btn
-                color="warning"
-                icon="warning"
-                :label="$t('notificationsPage.testStockAlert')"
-                @click="createTestNotification('stock_alert')"
-                no-caps
-                class="btn-modern"
-              />
-              <q-btn
-                color="info"
-                icon="shopping_cart"
-                :label="$t('notificationsPage.testOrderUpdate')"
-                @click="createTestNotification('order_update')"
-                no-caps
-                class="btn-modern"
-              />
-              <q-btn
-                color="negative"
-                icon="clear_all"
-                :label="$t('notificationsPage.clearAllNotifications')"
-                @click="confirmClearAll"
-                no-caps
-                class="btn-modern"
-              />
-            </div>
-          </q-card-section>
-        </q-card>
+        <BaseCard 
+          variant="glass" 
+          :title="$t('notificationsPage.quickActions')"
+          icon="flash_on"
+          header-color="warning"
+        >
+          <div class="row q-gutter-sm">
+            <q-btn
+              v-bind="markAllReadBtn"
+              @click="markAllAsRead"
+              :disable="unreadCount === 0"
+            />
+            <q-btn
+              v-bind="testStockAlertBtn"
+              @click="createTestNotification('stock_alert')"
+            />
+            <q-btn
+              v-bind="testOrderUpdateBtn"
+              @click="createTestNotification('order_update')"
+            />
+            <q-btn
+              v-bind="clearAllBtn"
+              @click="confirmClearAll"
+            />
+          </div>
+        </BaseCard>
       </div>
 
       <!-- Notifications List -->
       <div class="col-12">
-        <q-card class="glass-card">
-          <q-card-section>
-            <div class="row items-center justify-between q-mb-md">
-              <div class="text-h6">
-                {{ filter === 'all' ? $t('notificationsPage.all') : $t('notificationsPage.unread') }}
-                {{ $t('notificationsPage.title') }}
-              </div>
-              <q-select
-                v-model="categoryFilter"
-                :options="categoryOptions"
-                :label="$t('notificationsPage.filterByCategory')"
-                emit-value
-                map-options
-                clearable
-                style="min-width: 200px"
-              />
-            </div>
+        <BaseCard 
+          variant="glass"
+          icon="notifications"
+          header-color="info"
+          :title="`${filter === 'all' ? $t('notificationsPage.all') : $t('notificationsPage.unread')} ${$t('notificationsPage.title')}`"
+        >
+          <template #header-actions>
+            <q-select
+              v-model="categoryFilter"
+              :options="categoryOptions"
+              :label="$t('notificationsPage.filterByCategory')"
+              emit-value
+              map-options
+              clearable
+              style="min-width: 200px"
+              dense
+              outlined
+              dark
+            />
+          </template>
 
             <div v-if="filteredNotifications.length === 0" class="text-center q-py-xl">
               <q-icon name="notifications_none" size="64px" color="grey-4" />
@@ -176,8 +165,7 @@
                 </q-item-section>
               </q-item>
             </q-list>
-          </q-card-section>
-        </q-card>
+        </BaseCard>
       </div>
     </div>
   </PageLayout>
@@ -189,17 +177,39 @@ import { useQuasar } from 'quasar'
 import { useI18n } from 'vue-i18n'
 import { useAuthStore } from 'src/stores/auth'
 import { monitoringService } from 'src/services/monitoring'
+import { useButtons } from 'src/composables/useButtons'
 import PageLayout from 'src/components/PageLayout.vue'
 import PageTitle from 'src/components/PageTitle.vue'
+import BaseCard from 'src/components/base/BaseCard.vue'
 
 const $q = useQuasar()
 const { t } = useI18n()
 const authStore = useAuthStore()
+const { quickActions, getThemeConfig } = useButtons()
 
 // State
 const loading = ref(false)
 const filter = ref<'all' | 'unread'>('all')
 const categoryFilter = ref<string | null>(null)
+
+// Button configurations
+const markAllReadBtn = computed(() => quickActions.markAllRead({ 
+  label: t('notificationsPage.markAllRead') 
+}))
+
+const testStockAlertBtn = computed(() => getThemeConfig('warning', {
+  icon: 'warning',
+  label: t('notificationsPage.testStockAlert')
+}))
+
+const testOrderUpdateBtn = computed(() => getThemeConfig('info', {
+  icon: 'shopping_cart', 
+  label: t('notificationsPage.testOrderUpdate')
+}))
+
+const clearAllBtn = computed(() => quickActions.clearAll({
+  label: t('notificationsPage.clearAllNotifications')
+}))
 
 // Mock notifications data since we don't have a notifications table
 const mockNotifications = ref([
