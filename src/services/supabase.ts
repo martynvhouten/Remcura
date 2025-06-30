@@ -1,9 +1,25 @@
-import { supabase } from 'src/boot/supabase'
+import { createClient } from '@supabase/supabase-js'
+import type { Database } from 'src/types/supabase'
 import { monitoringService } from './monitoring'
+import { apiLogger } from 'src/utils/logger'
+
+// Create and configure Supabase client centrally
+const supabaseUrl = import.meta.env.VITE_SUPABASE_URL
+const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY
+
+if (!supabaseUrl || !supabaseAnonKey) {
+  throw new Error('Missing Supabase environment variables')
+}
+
+export const supabase = createClient<Database>(supabaseUrl, supabaseAnonKey, {
+  auth: {
+    autoRefreshToken: true,
+    persistSession: true,
+    detectSessionInUrl: true
+  }
+})
 
 // Export supabase client for use in other services
-export { supabase }
-import { apiLogger } from 'src/utils/logger'
 import type { 
   Practice, 
   UserProfile, 

@@ -51,7 +51,7 @@ export default configure(function (ctx) {
         node: 'node16'
       },
 
-      vueRouterMode: 'hash', // available values: 'hash', 'history'
+              vueRouterMode: 'hash', // available values: 'hash', 'history'
       // vueRouterBase,
       // vueDevtools,
       // vueOptionsAPI: false,
@@ -70,11 +70,171 @@ export default configure(function (ctx) {
       // polyfillModulePreload: true,
       // distDir
 
-      extendViteConf (viteConf) {
-        Object.assign(viteConf.resolve.alias, {
-          '@': fileURLToPath(new URL('./src', import.meta.url)),
-        })
-      },
+              extendViteConf (viteConf) {
+          // Keep existing alias configuration
+          Object.assign(viteConf.resolve.alias, {
+            '@': fileURLToPath(new URL('./src', import.meta.url)),
+          })
+          
+          // Add bundle analysis
+          viteConf.define = viteConf.define || {}
+          
+          // Advanced optimization settings
+          viteConf.build = viteConf.build || {}
+          viteConf.build.target = 'es2018'
+          viteConf.build.cssCodeSplit = true
+          viteConf.build.chunkSizeWarningLimit = 300
+          viteConf.build.assetsInlineLimit = 8192 // Inline assets < 8KB
+          viteConf.build.reportCompressedSize = false // Faster builds
+          
+          // Asset optimization
+          viteConf.assetsInclude = ['**/*.svg', '**/*.png', '**/*.jpg', '**/*.jpeg', '**/*.gif', '**/*.webp']
+          
+          // CSS optimization
+          viteConf.css = viteConf.css || {}
+          viteConf.css.devSourcemap = false
+          
+          // Production-only CSS purging
+          if (viteConf.command === 'build') {
+            viteConf.css.postcss = {
+              plugins: [
+                require('@fullhuman/postcss-purgecss')({
+                  content: [
+                    './src/**/*.vue',
+                    './src/**/*.js',
+                    './src/**/*.ts',
+                    './src/**/*.html',
+                    './index.html'
+                  ],
+                  safelist: [
+                    // Quasar classes
+                    /^q-/,
+                    /^Q/,
+                    // Vue transition classes
+                    /-(leave|enter|appear)(|-(to|from|active))$/,
+                    /^(?!(|.*?:)cursor-move).+-move$/,
+                    /^router-link(|-exact)-active$/,
+                    // Dark mode classes
+                    /^body--dark/,
+                    // Dynamic classes
+                    /^text-/,
+                    /^bg-/,
+                    /^border-/,
+                    // Material icons
+                    /^material-icons/,
+                    // Notification classes
+                    /notification/,
+                    // Animation classes
+                    /animate/
+                  ],
+                  variables: true,
+                  keyframes: true
+                })
+              ]
+            }
+          }
+          
+          // Manual chunking for optimal loading
+          viteConf.build.rollupOptions = viteConf.build.rollupOptions || {}
+          viteConf.build.rollupOptions.output = {
+            // Asset naming for better caching
+            assetFileNames: (assetInfo) => {
+              const info = assetInfo.name.split('.')
+              const extType = info[info.length - 1]
+              
+              if (/\.(png|jpe?g|svg|gif|tiff|bmp|ico)$/i.test(assetInfo.name)) {
+                return `assets/images/[name]-[hash][extname]`
+              }
+              if (/\.(woff2?|eot|ttf|otf)$/i.test(assetInfo.name)) {
+                return `assets/fonts/[name]-[hash][extname]`
+              }
+              return `assets/[name]-[hash][extname]`
+            },
+            
+            // Manual chunking for optimal loading
+            manualChunks: (id) => {
+              // Vendor libraries
+              if (id.includes('node_modules')) {
+                if (id.includes('vue') && !id.includes('vue-router') && !id.includes('vue-i18n')) {
+                  return 'vendor-vue'
+                }
+                if (id.includes('quasar')) {
+                  return 'vendor-quasar'
+                }
+                if (id.includes('vue-router') || id.includes('pinia')) {
+                  return 'vendor-router'
+                }
+                if (id.includes('@supabase')) {
+                  return 'vendor-supabase'
+                }
+                if (id.includes('vue-i18n')) {
+                  return 'vendor-i18n'
+                }
+                if (id.includes('@sentry')) {
+                  return 'vendor-sentry'
+                }
+                // Other vendor libraries
+                return 'vendor-misc'
+              }
+              
+              // Core utilities
+              if (id.includes('src/composables/')) {
+                return 'utils-core'
+              }
+              
+              // Services
+              if (id.includes('src/services/')) {
+                return 'services'
+              }
+              
+              // Stores
+              if (id.includes('src/stores/')) {
+                return 'stores'
+              }
+              
+              // Components
+              if (id.includes('src/components/') && !id.includes('src/pages/')) {
+                return 'components'
+              }
+              
+              // No manual chunking for pages - let router chunking handle them
+              return null
+            }
+          }
+          
+          // Optimize dependencies
+          viteConf.optimizeDeps = viteConf.optimizeDeps || {}
+          viteConf.optimizeDeps.include = [
+            'vue',
+            'vue-router', 
+            'pinia',
+            'quasar',
+            '@supabase/supabase-js',
+            'vue-i18n'
+          ]
+          
+          // Tree shaking improvements
+          viteConf.build.rollupOptions.treeshake = {
+            moduleSideEffects: false,
+            propertyReadSideEffects: false,
+            tryCatchDeoptimization: false
+          }
+          
+          // Production-only optimizations
+          if (viteConf.command === 'build') {
+            viteConf.build.minify = 'terser'
+            viteConf.build.terserOptions = {
+              compress: {
+                drop_console: true,
+                drop_debugger: true,
+                pure_funcs: ['console.log', 'console.info', 'console.debug', 'console.warn']
+              },
+              mangle: {
+                safari10: true
+              }
+            }
+          }
+        },
       // viteVuePluginOptions: {},
 
       vitePlugins: [

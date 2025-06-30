@@ -6,11 +6,15 @@
   "scripts": {
     "dev": "quasar dev",
     "build": "quasar build",
+    "build:analyze": "quasar build && npx vite-bundle-analyzer dist/spa",
+    "build:stats": "quasar build && echo 'Bundle analysis complete - check dist/spa for generated files'",
     "lint": "eslint --ext .js,.ts,.vue ./",
     "format": "prettier --write \"**/*.{js,ts,vue,scss,html,md,json}\" --ignore-path .gitignore",
     "test": "echo \"No test specified\" && exit 0",
     "test:unit": "vitest",
-    "test:unit:ci": "vitest run"
+    "test:unit:ci": "vitest run",
+    "serve": "quasar serve dist/spa --port 3000 --history",
+    "performance": "npm run build && npm run serve"
   },
   "dependencies": {
     "@quasar/extras": "^1.16.4",
@@ -40,8 +44,11 @@
     "eslint-webpack-plugin": "^5.0.2",
     "postcss-import": "^16.1.1",
     "prettier": "^2.5.1",
+    "terser": "^5.43.1",
     "typescript": "^5.8.3",
-    "vitest": "^3.2.4"
+    "vite-bundle-analyzer": "^1.0.0",
+    "vitest": "^3.2.4",
+    "webpack-bundle-analyzer": "^4.10.2"
   },
   "engines": {
     "node": "^18 || ^16 || ^14.19",

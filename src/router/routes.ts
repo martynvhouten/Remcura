@@ -4,12 +4,12 @@ const routes: RouteRecordRaw[] = [
   // Auth pages - uses AuthLayout
   {
     path: '/auth',
-    component: () => import('layouts/AuthLayout.vue'),
+    component: () => import(/* webpackChunkName: "auth-layout" */ 'layouts/AuthLayout.vue'),
     children: [
       {
         path: 'login',
         name: 'login',
-        component: () => import('pages/auth/LoginPage.vue'),
+        component: () => import(/* webpackChunkName: "auth-login" */ 'pages/auth/LoginPage.vue'),
         meta: { requiresAuth: false }
       }
       // Future auth pages can be added here:
@@ -31,61 +31,61 @@ const routes: RouteRecordRaw[] = [
   // Main Layout - for authenticated users
   {
     path: '/',
-    component: () => import('layouts/MainLayout.vue'),
+    component: () => import(/* webpackChunkName: "main-layout" */ 'layouts/MainLayout.vue'),
     meta: { requiresAuth: true },
     children: [
       {
         path: '',
         name: 'dashboard',
-        component: () => import('pages/DashboardPage.vue'),
-        meta: { requiresAuth: true }
+        component: () => import(/* webpackChunkName: "dashboard" */ 'pages/DashboardPage.vue'),
+        meta: { requiresAuth: true, preload: true }
       },
       {
         path: 'bestellijsten',
         name: 'bestellijsten',
-        component: () => import('pages/BestellijstenPage.vue'),
+        component: () => import(/* webpackChunkName: "bestellijsten" */ 'pages/BestellijstenPage.vue'),
         meta: { requiresAuth: true }
       },
       {
         path: 'bestellijsten/:id',
         name: 'bestellijst-detail',
-        component: () => import('pages/BestellijstDetailPage.vue'),
+        component: () => import(/* webpackChunkName: "bestellijst-detail" */ 'pages/BestellijstDetailPage.vue'),
         meta: { requiresAuth: true }
       },
       {
         path: 'products',
         name: 'products',
-        component: () => import('pages/ProductsPage.vue'),
+        component: () => import(/* webpackChunkName: "products" */ 'pages/ProductsPage.vue'),
         meta: { requiresAuth: true }
       },
       {
         path: 'orders',
         name: 'orders',
-        component: () => import('pages/OrdersPage.vue'),
+        component: () => import(/* webpackChunkName: "orders" */ 'pages/OrdersPage.vue'),
         meta: { requiresAuth: true }
       },
       {
         path: 'analytics',
         name: 'analytics',
-        component: () => import('pages/AnalyticsPage.vue'),
+        component: () => import(/* webpackChunkName: "analytics" */ 'pages/AnalyticsPage.vue'),
         meta: { requiresAuth: true }
       },
       {
         path: 'suppliers',
         name: 'suppliers',
-        component: () => import('pages/SuppliersPage.vue'),
+        component: () => import(/* webpackChunkName: "suppliers" */ 'pages/SuppliersPage.vue'),
         meta: { requiresAuth: true }
       },
       {
         path: 'notifications',
         name: 'notifications',
-        component: () => import('pages/NotificationsPage.vue'),
+        component: () => import(/* webpackChunkName: "notifications" */ 'pages/NotificationsPage.vue'),
         meta: { requiresAuth: true }
       },
       {
         path: 'admin',
         name: 'admin',
-        component: () => import('pages/AdminDashboard.vue'),
+        component: () => import(/* webpackChunkName: "admin" */ 'pages/AdminDashboard.vue'),
         meta: { 
           requiresAuth: true,
           requiresAdmin: true
@@ -94,7 +94,7 @@ const routes: RouteRecordRaw[] = [
       {
         path: 'beheer',
         name: 'beheer',
-        component: () => import('pages/AdminDashboard.vue'),
+        component: () => import(/* webpackChunkName: "admin" */ 'pages/AdminDashboard.vue'),
         meta: { 
           requiresAuth: true,
           requiresAdmin: true
@@ -107,7 +107,7 @@ const routes: RouteRecordRaw[] = [
       {
         path: 'settings',
         name: 'settings',
-        component: () => import('pages/SettingsPage.vue'),
+        component: () => import(/* webpackChunkName: "settings" */ 'pages/SettingsPage.vue'),
         meta: { requiresAuth: true }
       }
     ]
@@ -117,7 +117,7 @@ const routes: RouteRecordRaw[] = [
   // but you can also remove it
   {
     path: '/:catchAll(.*)*',
-    component: () => import('pages/ErrorNotFound.vue')
+    component: () => import(/* webpackChunkName: "error" */ 'pages/ErrorNotFound.vue')
   }
 ]
 

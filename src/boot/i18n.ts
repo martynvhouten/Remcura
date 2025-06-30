@@ -1,16 +1,14 @@
 import { boot } from 'quasar/wrappers'
-import { createI18n } from 'vue-i18n'
+import { i18n, loadDefaultLocale, type SupportedLocale } from 'src/i18n'
 
-import messages from 'src/i18n'
+export type MessageLanguages = SupportedLocale
 
-export default boot(({ app }) => {
-  const i18n = createI18n({
-    locale: 'nl',
-    fallbackLocale: 'en',
-    globalInjection: true,
-    messages,
-  })
+export { i18n }
 
+export default boot(async ({ app }) => {
   // Set i18n instance on app
   app.use(i18n)
+  
+  // Load default locale messages asynchronously  
+  await loadDefaultLocale()
 }) 
