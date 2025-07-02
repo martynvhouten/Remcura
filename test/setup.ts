@@ -1,8 +1,72 @@
+import { vi, afterEach } from 'vitest'
+
+// Mock supabase import with complete method chains
+vi.mock('src/boot/supabase', () => {
+  const createQueryBuilder = () => ({
+    select: vi.fn(() => createQueryBuilder()),
+    insert: vi.fn(() => createQueryBuilder()),
+    update: vi.fn(() => createQueryBuilder()),
+    delete: vi.fn(() => createQueryBuilder()),
+    eq: vi.fn(() => createQueryBuilder()),
+    gte: vi.fn(() => createQueryBuilder()),
+    lte: vi.fn(() => createQueryBuilder()),
+    lt: vi.fn(() => createQueryBuilder()),
+    gt: vi.fn(() => createQueryBuilder()),
+    filter: vi.fn(() => createQueryBuilder()),
+    order: vi.fn(() => createQueryBuilder()),
+    limit: vi.fn(() => createQueryBuilder()),
+    range: vi.fn(() => createQueryBuilder()),
+    single: vi.fn(() => Promise.resolve({ data: null, error: null })),
+    then: vi.fn(() => Promise.resolve({ data: [], error: null })),
+    // Return promise-like object that resolves to data
+    [Symbol.toStringTag]: 'Promise'
+  })
+
+  return {
+    supabase: {
+      auth: {
+        signInWithPassword: vi.fn(() => Promise.resolve({ data: { user: null, session: null }, error: null })),
+        signOut: vi.fn(() => Promise.resolve({ error: null })),
+        getSession: vi.fn(() => Promise.resolve({ data: { session: null }, error: null })),
+        onAuthStateChange: vi.fn(() => ({ data: { subscription: { unsubscribe: vi.fn() } } }))
+      },
+      from: vi.fn(() => createQueryBuilder()),
+      rpc: vi.fn(() => Promise.resolve({ data: [], error: null }))
+    }
+  }
+})
+
+// Mock router
+vi.mock('vue-router', () => ({
+  useRouter: () => ({
+    push: vi.fn(),
+    replace: vi.fn(),
+    currentRoute: {
+      value: { path: '/', name: 'dashboard' }
+    }
+  }),
+  useRoute: () => ({
+    value: { path: '/', name: 'dashboard' }
+  }),
+  createRouter: vi.fn(),
+  createWebHistory: vi.fn()
+}))
+
+// Mock Quasar notify
+vi.mock('quasar', async () => {
+  const actual = await vi.importActual('quasar')
+  return {
+    ...actual,
+    Notify: {
+      create: vi.fn()
+    }
+  }
+})
+
 import { config } from '@vue/test-utils'
 import { Quasar, Notify, Dark, Dialog, Loading } from 'quasar'
 import { createI18n } from 'vue-i18n'
 import { createPinia } from 'pinia'
-import { vi, afterEach } from 'vitest'
 
 // Create comprehensive i18n instance for testing
 const i18n = createI18n({
@@ -20,14 +84,25 @@ const i18n = createI18n({
         positive: 'Waarde moet positief zijn',
         integer: 'Alleen hele getallen toegestaan'
       },
+      products: {
+        outOfStock: 'Niet op voorraad',
+        lowStock: 'Lage voorraad',
+        inStock: 'Op voorraad',
+        highStock: 'Hoge voorraad'
+      },
       auth: {
         email: 'E-mailadres',
         password: 'Wachtwoord',
+        passwordHelp: 'Voer je wachtwoord in',
         login: 'Inloggen',
         loginSuccess: 'Succesvol ingelogd',
         loginError: 'Inloggen mislukt',
         forgotPassword: 'Wachtwoord vergeten?',
-        pleaseLogin: 'Log in om verder te gaan'
+        pleaseLogin: 'Log in om verder te gaan',
+        or: 'of',
+        demoAccount: 'Demo Account',
+        demoHelp: 'Gebruik demo-inloggegevens voor testen',
+        secureConnection: 'Beveiligde verbinding'
       },
       nav: {
         dashboard: 'Dashboard',
@@ -74,14 +149,25 @@ const i18n = createI18n({
         positive: 'Value must be positive',
         integer: 'Only whole numbers allowed'
       },
+      products: {
+        outOfStock: 'Out of Stock',
+        lowStock: 'Low Stock',
+        inStock: 'In Stock',
+        highStock: 'High Stock'
+      },
       auth: {
         email: 'Email Address',
         password: 'Password',
+        passwordHelp: 'Enter your password',
         login: 'Login',
         loginSuccess: 'Successfully logged in',
         loginError: 'Login failed',
         forgotPassword: 'Forgot password?',
-        pleaseLogin: 'Please log in to continue'
+        pleaseLogin: 'Please log in to continue',
+        or: 'or',
+        demoAccount: 'Demo Account',
+        demoHelp: 'Use demo credentials for testing',
+        secureConnection: 'Secure connection'
       },
       nav: {
         dashboard: 'Dashboard',

@@ -1107,89 +1107,26 @@ export interface Database {
 // New database types
 export type Practice = Database['public']['Tables']['practices']['Row']
 export type PracticeMember = Database['public']['Tables']['practice_members']['Row']
-export type Product = Database['public']['Tables']['products']['Row']
-export type ProductList = Database['public']['Tables']['product_lists']['Row']
-export type ProductListItem = Database['public']['Tables']['product_list_items']['Row']
-export type StockEntry = Database['public']['Tables']['stock_entries']['Row']
-export type OrderSuggestion = Database['public']['Tables']['order_suggestions']['Row']
 export type ActivityLog = Database['public']['Tables']['activity_log']['Row']
 
-// Legacy types (keeping for backward compatibility)
+// Legacy types (keeping for backward compatibility with other modules)
 export type Clinic = Database['public']['Tables']['clinics']['Row']
 export type UserProfile = Database['public']['Tables']['user_profiles']['Row']
-export type ClinicProduct = Database['public']['Tables']['clinic_products']['Row']
 
 export type PracticeInsert = Database['public']['Tables']['practices']['Insert']
-export type ProductInsert = Database['public']['Tables']['products']['Insert']
-export type ProductListInsert = Database['public']['Tables']['product_lists']['Insert']
-export type ProductListItemInsert = Database['public']['Tables']['product_list_items']['Insert']
-export type StockEntryInsert = Database['public']['Tables']['stock_entries']['Insert']
-export type OrderSuggestionInsert = Database['public']['Tables']['order_suggestions']['Insert']
 
 export type ClinicInsert = Database['public']['Tables']['clinics']['Insert']
 export type UserProfileInsert = Database['public']['Tables']['user_profiles']['Insert']
-export type ClinicProductInsert = Database['public']['Tables']['clinic_products']['Insert']
 
 export type PracticeUpdate = Database['public']['Tables']['practices']['Update']
-export type ProductUpdate = Database['public']['Tables']['products']['Update']
-export type ProductListUpdate = Database['public']['Tables']['product_lists']['Update']
-export type ProductListItemUpdate = Database['public']['Tables']['product_list_items']['Update']
-export type StockEntryUpdate = Database['public']['Tables']['stock_entries']['Update']
-export type OrderSuggestionUpdate = Database['public']['Tables']['order_suggestions']['Update']
 
 export type ClinicUpdate = Database['public']['Tables']['clinics']['Update']
 export type UserProfileUpdate = Database['public']['Tables']['user_profiles']['Update']
-export type ClinicProductUpdate = Database['public']['Tables']['clinic_products']['Update']
-
-// Extended types with relationships
-export type ProductWithItems = Product & {
-  product_list_items?: (ProductListItem & {
-    product_lists?: ProductList
-  })[]
-}
-
-export type ProductListWithItems = ProductList & {
-  product_list_items?: (ProductListItem & {
-    products?: Product
-  })[]
-}
 
 export type PracticeWithMembers = Practice & {
   practice_members?: PracticeMember[]
 }
 
-// Shopping cart types
-export type ShoppingCart = Database['public']['Tables']['shopping_carts']['Row']
-export type ShoppingCartItem = Database['public']['Tables']['shopping_cart_items']['Row']
-export type ShoppingCartInsert = Database['public']['Tables']['shopping_carts']['Insert']
-export type ShoppingCartItemInsert = Database['public']['Tables']['shopping_cart_items']['Insert']
-export type ShoppingCartUpdate = Database['public']['Tables']['shopping_carts']['Update']
-export type ShoppingCartItemUpdate = Database['public']['Tables']['shopping_cart_items']['Update']
-
-// Extended shopping cart types with relations
-export type ShoppingCartWithItems = ShoppingCart & {
-  shopping_cart_items?: (ShoppingCartItem & {
-    products?: Product
-  })[]
-}
-
-// Bestellijst types (aliases for product lists in bestellijsten context)
-export type Bestellijst = ProductList
-export type BestellijstItem = ProductListItem & {
-  last_counted?: string | null
-}
-export type BestellijstInsert = ProductListInsert
-export type BestellijstItemInsert = ProductListItemInsert
-export type BestellijstUpdate = ProductListUpdate
-export type BestellijstItemUpdate = ProductListItemUpdate
-
-export type BestellijstWithItems = ProductList & {
-  product_list_items?: (BestellijstItem & {
-    products?: Product
-  })[]
-}
-
-// Advanced Features Types
 export type Supplier = Database['public']['Tables']['suppliers']['Row']
 export type Order = Database['public']['Tables']['orders']['Row']
 export type OrderItem = Database['public']['Tables']['order_items']['Row']
@@ -1217,26 +1154,11 @@ export type UsageAnalyticsUpdate = Database['public']['Tables']['usage_analytics
 export type NotificationSettingsUpdate = Database['public']['Tables']['notification_settings']['Update']
 export type PushTokenUpdate = Database['public']['Tables']['push_tokens']['Update']
 
-// Complex types with relationships
-export type OrderWithItems = Order & {
-  order_items?: (OrderItem & {
-    products?: Product
-  })[]
-  suppliers?: Supplier
-}
-
-export type LocationWithDetails = Location & {
-  practice_id?: string
-  product_lists?: ProductList[]
-  shopping_carts?: ShoppingCart[]
-}
-
 export type PracticeWithLocations = Practice & {
   locations?: Location[]
   practice_members?: PracticeMember[]
 }
 
-// Analytics and notification types
 export type AnalyticsEvent = {
   type: string
   data: any
@@ -1252,7 +1174,6 @@ export type NotificationType = 'stock_alert' | 'order_update' | 'system_notifica
 export type OrderStatus = 'draft' | 'submitted' | 'confirmed' | 'shipped' | 'delivered' | 'cancelled'
 export type UrgencyLevel = 'low' | 'medium' | 'high' | 'critical'
 
-// Export and integration types
 export type ExportFormat = 'csv' | 'pdf' | 'excel'
 export type ExportType = 'order' | 'inventory' | 'analytics' | 'full_report'
 
@@ -1271,6 +1192,5 @@ export type MagentoOrder = {
   payment?: any
 }
 
-// Permission types
 export type PermissionType = 'read' | 'write' | 'delete' | 'admin'
-export type ResourceType = 'bestellijst' | 'product' | 'order' | 'cart' | 'analytics' | 'settings' 
+export type ResourceType = 'order' | 'analytics' | 'settings' 

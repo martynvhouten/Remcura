@@ -54,7 +54,7 @@
       <!-- Quick Actions -->
       <div class="col-12">
         <BaseCard 
-          variant="glass" 
+          variant="elevated" 
           :title="$t('notificationsPage.quickActions')"
           icon="flash_on"
           header-color="warning"
@@ -84,7 +84,7 @@
       <!-- Notifications List -->
       <div class="col-12">
         <BaseCard 
-          variant="glass"
+          variant="elevated"
           icon="notifications"
           header-color="info"
           :title="`${filter === 'all' ? $t('notificationsPage.all') : $t('notificationsPage.unread')} ${$t('notificationsPage.title')}`"
@@ -215,7 +215,7 @@ const clearAllBtn = computed(() => quickActions.clearAll({
 const mockNotifications = ref([
   {
     id: '1',
-    title: 'Lage voorraad waarschuwing',
+    title: t('sampleNotifications.lowStockWarning'),
     message: 'Spuiten 10ml zijn bijna op (2 stuks resterend)',
     category: 'stock_alert',
     is_read: false,
@@ -223,7 +223,7 @@ const mockNotifications = ref([
   },
   {
     id: '2',
-    title: 'Bestelling bevestigd',
+    title: t('sampleNotifications.orderConfirmed'),
     message: 'Bestelling #ORD-2024-003 is bevestigd door leverancier',
     category: 'order_update',
     is_read: false,
@@ -231,7 +231,7 @@ const mockNotifications = ref([
   },
   {
     id: '3',
-    title: 'Voorraad bijgewerkt',
+    title: t('sampleNotifications.stockUpdated'),
     message: 'Handschoenen latex voorraad is bijgewerkt naar 150 stuks',
     category: 'stock_alert',
     is_read: true,
@@ -239,7 +239,7 @@ const mockNotifications = ref([
   },
   {
     id: '4',
-    title: 'Systeem onderhoud',
+    title: t('sampleNotifications.systemMaintenance'),
     message: 'Gepland onderhoud op zondag 3:00-5:00 AM',
     category: 'system_notification',
     is_read: true,

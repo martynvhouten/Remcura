@@ -2,12 +2,12 @@ export default {
   // Brand
   brand: {
     name: 'MedStock Pro',
-    edition: 'Enterprise Editie'
+    edition: 'Enterprise editie'
   },
 
   // Clinic
   clinic: {
-    professionalPlan: 'Professioneel Plan',
+    professionalPlan: 'Professioneel plan',
     defaultName: 'Kliniek'
   },
 
@@ -37,16 +37,44 @@ export default {
     comingSoon: 'Binnenkort',
     update: 'Bijwerken',
     dismiss: 'Afwijzen',
-    unknownProduct: 'Onbekend product',
+
     closeDialog: 'Dialog sluiten',
     actions: 'Acties',
-    open: 'Openen'
+    open: 'Openen',
+    clearFilters: 'Filters wissen',
+    all: 'Alle',
+    active: 'Actief',
+    inactive: 'Inactief',
+    unknownProduct: 'Onbekend product',
+    unknownLocation: 'Onbekende locatie',
+    noSku: 'Geen SKU',
+
+    create: 'Aanmaken',
+    confirm: 'Bevestigen',
+    ok: 'OK',
+    view: 'Bekijken',
+    print: 'Afdrukken',
+    copy: 'Kopiëren',
+    share: 'Delen',
+    status: 'Status',
+    enabled: 'Ingeschakeld',
+    disabled: 'Uitgeschakeld',
+    name: 'Naam',
+    description: 'Beschrijving',
+    date: 'Datum',
+    time: 'Tijd',
+    today: 'Vandaag',
+    yesterday: 'Gisteren',
+    import: 'Importeren',
+    download: 'Downloaden',
+    upload: 'Uploaden',
+    export: 'Exporteren'
   },
 
   // Navigation
   nav: {
     dashboard: 'Dashboard',
-    products: 'Producten',
+
     orders: 'Bestellingen',
     invoices: 'Facturen',
     settings: 'Instellingen',
@@ -56,11 +84,13 @@ export default {
     navigation: 'Navigatie',
     quickStats: 'Snelle statistieken',
     upgradePlan: 'Plan upgraden',
-    getAdvancedFeatures: 'Krijg geavanceerde functies',
-    analytics: 'Analyses',
+    getAdvancedFeatures: 'Geavanceerde functies krijgen',
+    inventory: 'Voorraad',
+    analytics: 'Analyse',
     suppliers: 'Leveranciers',
     admin: 'Beheer',
-    overviewAnalytics: 'Overzicht & analyses',
+    overviewAnalytics: 'Overzicht en analyse',
+    stockManagement: 'Voorraadniveaus en inventaris tracking',
     inventoryManagement: 'Voorraadbeheer',
     purchaseOrders: 'Inkooporders',
     reportsInsights: 'Rapporten & inzichten',
@@ -72,7 +102,9 @@ export default {
     darkMode: 'Donkere modus',
     lightMode: 'Lichte modus',
     userMenu: 'Gebruikersmenu',
-    shoppingCart: 'Winkelwagen'
+    shoppingCart: 'Winkelwagen',
+    styleGuide: 'Stijlgids',
+
   },
 
   // Authentication
@@ -120,18 +152,16 @@ export default {
     stockSummary: 'Voorraad overzicht',
     lowStockItems: 'Artikelen met lage voorraad',
     outOfStockItems: 'Uitverkocht',
-    totalProducts: 'Totaal aantal producten',
+
     reorderSuggestions: 'Bestel suggesties',
     outOfStock: 'Niet op voorraad',
     lowStock: 'Lage voorraad',
     inStock: 'Op voorraad',
     noLowStock: 'Alles op voorraad!',
-    allProductsWellStocked: 'Alle producten zijn goed voorzien van voorraad',
-    viewAllProducts: 'Alle producten bekijken',
+
     viewMore: 'Bekijk {count} meer',
     quickActions: 'Snelle acties',
-    addProduct: 'Product toevoegen',
-    addNewProduct: 'Voeg een nieuw product toe aan je voorraad',
+
     manageStock: 'Voorraad beheren',
     updateStockLevels: 'Update voorraadniveaus en instellingen',
     viewOrders: 'Bestellingen bekijken',
@@ -150,66 +180,12 @@ export default {
     moreOptions: 'Meer opties',
     quickActionsList: 'Snelle acties lijst',
     optionsMenu: 'Opties menu',
-    viewProductDetails: 'Product details bekijken',
+
     lowStockItemsList: 'Lage voorraad items lijst',
     dashboardSummary: 'Dashboard overzicht',
     failedToLoadData: 'Laden van dashboardgegevens mislukt',
     dataRefreshedSuccessfully: 'Data succesvol vernieuwd',
     failedToRefreshData: 'Vernieuwen van data mislukt'
-  },
-
-  // Products
-  products: {
-    title: 'Producten',
-    productName: 'Productnaam',
-    productSku: 'Artikelnummer',
-    currentStock: 'Huidige voorraad',
-    minimumStock: 'Minimum voorraad',
-    maximumStock: 'Maximum voorraad',
-    reorderEnabled: 'Automatisch bijbestellen',
-    lowStockAlert: 'Waarschuwing lage voorraad',
-    addProduct: 'Product toevoegen',
-    editProduct: 'Product bewerken',
-    deleteProduct: 'Product verwijderen',
-    stockLevel: 'Voorraadniveau',
-    reorderSuggestion: 'Bestel {quantity} stuks om maximum voorraad te bereiken',
-    lowStockWarning: 'Lage voorraad! Huidige voorraad: {current}, minimum: {minimum}',
-    outOfStockWarning: 'Niet op voorraad!',
-    inStock: 'Op voorraad',
-    outOfStock: 'Niet op voorraad',
-    lowStock: 'Lage voorraad',
-    description: 'Beschrijving',
-    manageInventorySubtitle: 'Beheer je medische voorraad en ontvang automatische herbestelmeldingen',
-    inventoryManagement: 'Voorraad beheer',
-    totalProductsCount: '{count} producten',
-    filterByStockStatus: 'Filter op voorraadstatus',
-    maxStockHint: 'Maximale voorraad',
-    lowStockWarningPreview: 'Dit product zal als \'Lage voorraad\' worden gemarkeerd',
-    searchProducts: 'Zoek producten',
-    advancedFilters: 'Geavanceerde filters',
-    productsTableLabel: 'Producten tabel',
-    orderSuggestionLabel: 'Bestel suggestie',
-    allProducts: 'Alle producten',
-    inStockProducts: 'Op voorraad',
-    lowStockProducts: 'Lage voorraad',
-    productsRefreshed: 'Producten succesvol vernieuwd'
-  },
-
-  // Stock Alerts
-  alerts: {
-    lowStock: 'Lage voorraad',
-    outOfStock: 'Out of stock',
-    reorderSuggestion: 'Bestel suggestie',
-    stockUpdated: 'Voorraad bijgewerkt',
-    productAdded: 'Product toegevoegd',
-    productUpdated: 'Product bijgewerkt',
-    productDeleted: 'Product verwijderd',
-    lowStockAttention: '{count} producten hebben aandacht nodig',
-    outOfStockUnavailable: '{count} producten zijn niet beschikbaar',
-    lowStockSingular: '1 product heeft aandacht nodig',
-    lowStockPlural: '{count} producten hebben aandacht nodig',
-    outOfStockSingular: '1 product is niet beschikbaar',
-    outOfStockPlural: '{count} producten zijn niet beschikbaar'
   },
 
   // Errors
@@ -243,16 +219,399 @@ export default {
     integer: 'Alleen hele getallen toegestaan'
   },
 
+  // Voorraad & Voorraadbeheer
+  inventory: {
+    title: 'Voorraad',
+    stockLevels: 'Voorraadniveaus',
+    stockMovements: 'Voorraadmutaties',
+    locations: 'Locaties',
+    
+    // Overzichtskaarten
+    overview: 'Voorraad overzicht',
+    totalProducts: 'Totaal producten',
+    totalValue: 'Totale waarde',
+    lowStockItems: 'Lage voorraad items',
+    outOfStockItems: 'Uitverkochte items',
+    stockAccuracy: 'Voorraad nauwkeurigheid',
+    lastFullCount: 'Laatste volledige telling',
+    
+    // Locatiefilters
+    allLocations: 'Alle locaties',
+    currentLocation: 'Huidige locatie',
+    switchLocation: 'Wissel locatie',
+    
+    // Acties
+    stockCounting: 'Voorraadtelling',
+    startCountingSession: 'Start telling sessie',
+    quickAdjustment: 'Snelle aanpassing',
+    adjustStock: 'Voorraad aanpassen',
+    transferStock: 'Voorraad overbrengen',
+    viewMovements: 'Bekijk mutaties',
+    exportData: 'Data exporteren',
+    
+    // Stock status
+    inStock: 'Op voorraad',
+    lowStock: 'Lage voorraad',
+    outOfStock: 'Niet op voorraad',
+    overStock: 'Overstock',
+    
+    // Recente activiteit
+    recentActivity: 'Recente activiteit',
+    recentMovements: 'Recente mutaties',
+    noRecentActivity: 'Geen recente activiteit',
+    
+    // Stock alerts
+    stockAlerts: 'Voorraad waarschuwingen',
+    criticalAlerts: 'Kritieke waarschuwingen',
+    urgentAttention: 'Vereist urgent aandacht',
+    noAlerts: 'Geen waarschuwingen',
+    
+    // Counting
+    countingStatus: 'Telling status',
+    activeSession: 'Actieve sessie',
+    noActiveSession: 'Geen actieve telling',
+    
+    // Integration status
+    syncStatus: 'Sync status',
+    lastSync: 'Laatste sync',
+    syncNow: 'Nu synchroniseren',
+    
+    // Messages
+    loadingData: 'Voorraadgegevens laden...',
+    refreshingData: 'Gegevens vernieuwen...',
+    dataRefreshed: 'Gegevens succesvol vernieuwd',
+    refreshFailed: 'Vernieuwen mislukt',
+    
+    // Supplier integration
+    manualOrder: 'Handmatige bestelling',
+    apiOrder: 'API bestelling',
+    downloadPdf: 'PDF downloaden',
+    placeOrder: 'Bestelling plaatsen',
+    
+    // Thresholds and settings
+    setMinimum: 'Minimum instellen',
+    setMaximum: 'Maximum instellen',
+    reorderPoint: 'Herbestelpunt',
+    
+    // Units and measurements  
+    pieces: 'stuks',
+    units: 'eenheden',
+    
+    // Time references
+    today: 'vandaag',
+    yesterday: 'gisteren',
+    thisWeek: 'deze week',
+    thisMonth: 'deze maand',
+    neverCounted: 'nooit geteld',
+    
+    // Dialog specific
+    sessionName: 'Sessie naam',
+    sessionNamePlaceholder: 'Voer een naam in voor de telling sessie',
+    sessionType: 'Type telling',
+    selectLocations: 'Selecteer locaties',
+    allowNegativeCounts: 'Negatieve tellingen toestaan',
+    requireApproval: 'Goedkeuring vereist',
+    autoAdjustStock: 'Voorraad automatisch aanpassen',
+    sessionNotesPlaceholder: 'Optionele notities voor deze telling sessie',
+    partialCount: 'Gedeeltelijke telling',
+    fullCount: 'Volledige telling',
+    spotCheck: 'Steekproef',
+    cycleCount: 'Cyclustelling',
+    partialCountDescription: 'Tel alleen geselecteerde producten',
+    fullCountDescription: 'Tel alle producten in geselecteerde locaties',
+    spotCheckDescription: 'Snelle controle van specifieke items',
+    cycleCountDescription: 'Systematische telling volgens planning',
+    defaultSessionName: 'Telling {date} {time}',
+    sessionCreated: 'Telling sessie aangemaakt',
+    sessionCreationFailed: 'Aanmaken van telling sessie mislukt',
+    
+    // Adjustment dialog
+    selectLocation: 'Selecteer locatie',
+    searchProduct: 'Zoek product',
+    searchProductPlaceholder: 'Type om te zoeken...',
+    quantityMustNotBeZero: 'Aantal mag niet nul zijn',
+    quantityChangeHint: 'Gebruik + voor toevoegen, - voor verwijderen',
+    adjustmentNotesPlaceholder: 'Reden voor aanpassing...',
+    stockAdjusted: 'Voorraad aangepast',
+    adjustmentFailed: 'Voorraad aanpassing mislukt',
+    
+    // Transfer dialog
+    fromLocation: 'Van locatie',
+    toLocation: 'Naar locatie',
+    locationsMustBeDifferent: 'Locaties moeten verschillend zijn',
+    enterQuantity: 'Voer aantal in',
+    transferNotesPlaceholder: 'Notities voor overdracht...',
+    stockTransferred: 'Voorraad overgedragen',
+    transferFailed: 'Voorraad overdracht mislukt',
+    
+    // Stock movements
+    movementHistory: 'Bewegingsgeschiedenis',
+    movementType: 'Bewegingstype',
+    movementDetails: 'Bewegingsdetails',
+    quantityChange: 'Aantal wijziging',
+    quantityBefore: 'Aantal voor',
+    quantityAfter: 'Aantal na',
+    reasonCode: 'Reden code',
+    loadingMovements: 'Bewegingen laden...',
+    noMovementsFound: 'Geen bewegingen gevonden',
+    
+    // Stock levels
+    stockFilter: 'Voorraadfilter',
+    searchProducts: 'Zoek producten...',
+    currentStock: 'Huidige voorraad',
+    thresholds: 'Drempelwaarden',
+    min: 'Min',
+    max: 'Max',
+    value: 'Waarde',
+    lastMovement: 'Laatste beweging',
+    noMovements: 'Geen bewegingen',
+    viewHistory: 'Bekijk geschiedenis',
+    noProductsFound: 'Geen producten gevonden',
+    products: 'producten',
+    overStockItems: 'Overvoorraad items',
+    
+    // Movement types
+    movement: {
+      receipt: 'Ontvangst',
+      usage: 'Gebruik',
+      transfer: 'Overdracht',
+      adjustment: 'Aanpassing',
+      count: 'Telling',
+      waste: 'Afval'
+    },
+    
+    // Reason codes
+    reason: {
+      normal_usage: 'Normaal gebruik',
+      expired: 'Verlopen',
+      damaged: 'Beschadigd',
+      lost: 'Verloren',
+      found: 'Gevonden',
+      transfer_in: 'Overdracht in',
+      transfer_out: 'Overdracht uit',
+      adjustment: 'Aanpassing',
+      count_correction: 'Tellingscorrectie'
+    }
+  },
+
+  // Telsysteem
+  counting: {
+    title: 'Voorraad telling',
+    overview: 'Beheer uw voorraadtelling sessies en volg inventaris nauwkeurigheid',
+    sessionStatus: 'Sessie status',
+    startSession: 'Start telling sessie',
+    activeSession: 'Actieve telling sessie',
+    progress: 'Voortgang',
+    sessionType: 'Sessie type',
+    discrepancies: 'Afwijkingen',
+    continueSession: 'Doorgaan met sessie',
+    completeSession: 'Sessie voltooien',
+    sessionsOverview: 'Telling sessies overzicht',
+    loadingSessions: 'Telling sessies laden...',
+    noSessionsFound: 'Geen telling sessies gevonden',
+    sessionName: 'Sessie naam',
+    status: 'Status',
+    sessionSummary: 'Sessie samenvatting',
+    totalProducts: 'Totaal producten',
+    countedProducts: 'Getelde producten',
+    loadingSession: 'Telling sessie laden...',
+    sessionNotFound: 'Sessie niet gevonden',
+    sessionNotFoundDescription: 'De telling sessie die u zoekt kon niet worden gevonden',
+    countingResults: 'Telling resultaten',
+    viewResults: 'Bekijk telling resultaten en afwijkingen',
+    noResultsFound: 'Geen telling resultaten gevonden',
+    product: 'Product',
+    variance: 'Afwijking',
+    approveSession: 'Sessie goedkeuren'
+  },
+
+  // Leveranciers
+  suppliers: {
+    title: 'Leveranciers',
+    addSupplier: 'Leverancier toevoegen',
+    editSupplier: 'Leverancier bewerken',
+    supplierDetails: 'Leveranciergegevens',
+    supplierCode: 'Leverancierscode',
+    contactPerson: 'Contactpersoon',
+    paymentTerms: 'Betalingsvoorwaarden',
+    minimumOrder: 'Minimum bestelbedrag',
+    shippingCost: 'Verzendkosten',
+    freeShippingThreshold: 'Gratis verzending vanaf',
+    preferredOrderDay: 'Voorkeur besteldag',
+    orderCutoffTime: 'Bestel deadline',
+    apiIntegration: 'API integratie',
+    syncEnabled: 'Sync ingeschakeld',
+    lastSync: 'Laatste sync',
+    
+    // Leverancier producten
+    supplierProducts: 'Leverancier producten',
+    supplierSKU: 'Leverancier SKU',
+    supplierName: 'Leverancier naam',
+    unitPrice: 'Eenheidsprijs',
+    minimumOrderQty: 'Minimum bestelhoeveelheid',
+    packSize: 'Verpakkingsgrootte',
+    leadTime: 'Levertijd (dagen)',
+    availability: 'Beschikbaarheid',
+    backorderAllowed: 'Nabestelling toegestaan'
+  },
+
+  // Locaties
+  locations: {
+    title: 'Locaties',
+    manage: 'Beheer opslaglocaties en magazijngebieden',
+    add: 'Locatie toevoegen',
+    edit: 'Locatie bewerken',
+    delete: 'Locatie verwijderen',
+    name: 'Locatie naam',
+    description: 'Beschrijving',
+    type: 'Locatie type',
+    capacity: 'Capaciteit',
+    noLocations: 'Geen locaties gevonden',
+    mainLocations: 'Hoofdlocaties',
+    allLocations: 'Alle locaties',
+    search: 'Zoek locaties...',
+    comingSoonDescription: 'Locatiebeheer functies komen binnenkort beschikbaar. U kunt dan verschillende opslaggebieden voor uw inventaris aanmaken en beheren.'
+  },
+
+  // Producten
+  products: {
+    title: 'Producten',
+    product: 'Product',
+    sku: 'SKU',
+    name: 'Productnaam',
+    category: 'Categorie',
+    subcategory: 'Subcategorie',
+    brand: 'Merk',
+    description: 'Beschrijving',
+    unit: 'Eenheid',
+    price: 'Prijs',
+    
+    // Voorraadinstellingen
+    minimumStock: 'Minimum voorraad',
+    maximumStock: 'Maximum voorraad',
+    reorderPoint: 'Bestelpunt',
+    preferredSupplier: 'Voorkeursleverancier',
+    
+    // Status
+    active: 'Actief',
+    inactive: 'Inactief',
+    discontinued: 'Uitgefaseerd'
+  },
+
+  // Voorraadmutaties
+  movements: {
+    title: 'Voorraadmutaties',
+    movementType: 'Mutatietype',
+    quantityChange: 'Hoeveelheidswijziging',
+    quantityBefore: 'Hoeveelheid voor',
+    quantityAfter: 'Hoeveelheid na',
+    performedBy: 'Uitgevoerd door',
+    reasonCode: 'Redencode',
+    
+    // Mutatietypes
+    count: 'Telcorrectie',
+    receipt: 'Voorraad ontvangst',
+    usage: 'Voorraadgebruik',
+    transfer: 'Voorraadverplaatsing',
+    adjustment: 'Handmatige aanpassing',
+    waste: 'Afval/vernietiging',
+    
+    // Redencodes
+    normalUsage: 'Normaal gebruik',
+    expired: 'Verlopen',
+    damaged: 'Beschadigd',
+    lost: 'Verloren',
+    found: 'Gevonden',
+    transferIn: 'Verplaatsing binnen',
+    transferOut: 'Verplaatsing uit',
+    countCorrection: 'Telcorrectie'
+  },
+
+  // Analytics
+  analytics: {
+    title: 'Analytics',
+    overview: 'Overzicht',
+    performance: 'Prestaties',
+    trends: 'Trends',
+    
+    // KPIs
+    stockTurnover: 'Voorraad omloopsnelheid',
+    stockAccuracy: 'Voorraad nauwkeurigheid',
+    avgDaysToStockout: 'Gem. dagen tot uitverkocht',
+    topMovingProducts: 'Best bewegende producten',
+    lastFullCount: 'Laatste volledige telling',
+    
+    // Rapporten
+    inventoryReport: 'Voorraadrapport',
+    movementReport: 'Mutaterapport',
+    varianceReport: 'Afwijkingsrapport',
+    supplierReport: 'Leveranciersrapport'
+  },
+
   // Settings
   settings: {
     title: 'Instellingen',
     general: 'Algemeen',
     darkMode: 'Donkere modus',
     language: 'Taal',
+    selectLanguage: 'Selecteer je voorkeurstaal',
+    languageChanged: 'Taal gewijzigd naar {language}',
     notifications: 'Meldingen',
     clinic: 'Kliniek instellingen',
     profile: 'Profiel instellingen',
+    profileSubtitle: 'Persoonlijke accountgegevens',
+    appearanceTitle: 'Weergave',
+    appearanceSubtitle: 'Interface en taalinstellingen',
+    darkModeDescription: 'Schakel tussen lichte en donkere modus',
+    colorSchemeTitle: 'Kies kleurenschema',
+    colorSchemeDescription: 'Wijzig het kleurenschema van de applicatie',
+    clinicInfoSubtitle: 'Kliniek informatie en contactgegevens',
+    contactSettingsNotice: 'Voor wijzigingen aan kliniek gegevens, neem contact op met de beheerder.',
+    notificationSettingsSubtitle: 'Meldingen en waarschuwingen',
+    stockAlertsLabel: 'Voorraad waarschuwingen',
+    stockAlertsDescription: 'Ontvang meldingen bij lage voorraad',
+    emailNotificationsLabel: 'E-mail notificaties',
+    emailNotificationsDescription: 'Ontvang belangrijke updates via e-mail',
+    browserNotificationsLabel: 'Browser notificaties',
+    browserNotificationsDescription: 'Sta browser notificaties toe',
+    systemInfoTitle: 'Systeem informatie',
+    systemInfoSubtitle: 'Versie en ondersteuning',
+    versionLabel: 'Versie',
+    lastUpdateLabel: 'Laatste update',
+    supportLabel: 'Support',
     manageSettingsSubtitle: 'Beheer je instellingen en voorkeuren voor een optimale ervaring',
+    
+    // Style Guide translations
+    styleGuideTitle: 'MedStock Pro Stijlgids',
+    styleGuideSubtitle: 'Volledige referentie van het ontwerpsysteem en component showcase',
+    colorsSection: 'Kleuren',
+    primaryColors: 'Primaire Kleuren',
+    neutralColors: 'Neutrale Kleuren',
+    typographySection: 'Typografie',
+    buttonsSection: 'Knoppen',
+    solidButtons: 'Gevulde Knoppen',
+    outlinedButtons: 'Omlijnd Knoppen',
+    flatButtons: 'Platte Knoppen',
+    iconButtons: 'Icoon Knoppen',
+    cardsSection: 'Kaarten',
+    
+    // Button labels for Style Guide
+    primaryButton: 'Primair',
+    secondaryButton: 'Secundair',
+    successButton: 'Succes',
+    warningButton: 'Waarschuwing',
+    dangerButton: 'Gevaar',
+    infoButton: 'Info',
+    addProductButton: 'Product Toevoegen',
+    editButton: 'Bewerken',
+    deleteButton: 'Verwijderen',
+    saveButton: 'Opslaan',
+    downloadButton: 'Downloaden',
+    
+    darkModeEnabled: 'Donkere modus ingeschakeld',
+    lightModeEnabled: 'Lichte modus ingeschakeld',
+    settingsSaved: 'Instellingen succesvol opgeslagen',
+    settingsSaveError: 'Er is een fout opgetreden bij het opslaan',
     saveSettings: 'Instellingen opslaan',
     role: 'Rol',
     clinicName: 'Kliniek naam',
@@ -285,6 +644,7 @@ export default {
     },
     
     filters: {
+      title: 'Filters',
       status: 'Status',
       supplier: 'Leverancier',
       dateFrom: 'Van Datum',
@@ -352,7 +712,11 @@ export default {
     },
     
     exportFilteredNote: '{count} gefilterde bestellingen exporteren',
-    exportSelectedNote: '{count} geselecteerde bestellingen exporteren'
+    exportSelectedNote: '{count} geselecteerde bestellingen exporteren',
+    
+    // Validation messages
+    emailRequired: 'E-mail is verplicht',
+    noPracticeSelected: 'Geen praktijk geselecteerd'
   },
 
   // Order Messages
@@ -363,199 +727,6 @@ export default {
     cartSaved: 'Winkelmand opgeslagen'
   },
 
-  bestellijsten: {
-    title: 'Bestellijsten',
-    subtitle: 'Beheer voorraad en bestellingen per locatie',
-    overview: 'Overzicht bestellijsten',
-    newList: 'Nieuwe bestellijst',
-    createList: 'Bestellijst aanmaken',
-    editList: 'Bestellijst bewerken',
-    deleteList: 'Bestellijst verwijderen',
-    duplicateList: 'Bestellijst dupliceren',
-    
-    // List details
-    listName: 'Naam bestellijst',
-    listDescription: 'Beschrijving',
-    itemCount: 'Aantal items',
-    lastUpdated: 'Laatst bijgewerkt',
-    noItems: 'Geen items in deze bestellijst',
-    
-    // Product management
-    addProduct: 'Product toevoegen',
-    searchProducts: 'Zoek producten...',
-    productName: 'Productnaam',
-    artikelNummer: 'Artikelnummer',
-    sku: 'SKU',
-    currentStock: 'Huidige voorraad',
-    minimumStock: 'Minimum voorraad',
-    maximumStock: 'Maximum voorraad',
-    lastCounted: 'Laatst geteld',
-    stockStatus: 'Voorraadstatus',
-    
-    // Stock statuses
-    stockOk: 'Voldoende',
-    stockLow: 'Laag',
-    stockOut: 'Uitverkocht',
-    
-    // Order suggestions
-    orderSuggestion: 'Besteladvies',
-    suggestedQuantity: 'Voorgestelde hoeveelheid',
-    noSuggestion: 'Geen advies',
-    addToCart: 'Toevoegen aan winkelmand',
-    addAllSuggestions: 'Alle suggesties toevoegen',
-    orderAll: 'Bestel alles met suggestie > 0',
-    
-    // Scan mode
-    scanMode: 'Telmodus',
-    scanModeActive: 'Telmodus actief',
-    scanBarcode: 'Scan barcode',
-    manualCount: 'Handmatig tellen',
-    enterBarcode: 'Voer barcode in',
-    scanProduct: 'Scan product',
-    countUpdated: 'Telling bijgewerkt',
-    
-    // Shopping cart
-    shoppingCart: 'Winkelmand',
-    cartEmpty: 'Winkelmand is leeg',
-    cartItems: 'items in winkelmand',
-    removeFromCart: 'Verwijderen uit winkelmand',
-    updateQuantity: 'Hoeveelheid bijwerken',
-    checkout: 'Afrekenen',
-    submitOrder: 'Bestelling verzenden',
-    orderSubmitted: 'Bestelling verzonden',
-    
-    // Actions
-    edit: 'Bewerken',
-    delete: 'Verwijderen',
-    save: 'Opslaan',
-    cancel: 'Annuleren',
-    refresh: 'Vernieuwen',
-    export: 'Exporteren',
-    import: 'Importeren',
-    
-    // Confirmations
-    confirmDelete: 'Weet je zeker dat je deze bestellijst wilt verwijderen?',
-    confirmDeleteItem: 'Weet je zeker dat je dit item wilt verwijderen?',
-    listDeleted: 'Bestellijst verwijderd',
-    itemDeleted: 'Item verwijderd',
-    listCreated: 'Bestellijst aangemaakt',
-    listUpdated: 'Bestellijst bijgewerkt',
-    itemAdded: 'Item toegevoegd',
-    itemUpdated: 'Item bijgewerkt',
-    
-    // Errors
-    errorLoadingLists: 'Fout bij laden bestellijsten',
-    errorLoadingList: 'Fout bij laden bestellijst',
-    errorCreatingList: 'Fout bij aanmaken bestellijst',
-    errorUpdatingList: 'Fout bij bijwerken bestellijst',
-    errorDeletingList: 'Fout bij verwijderen bestellijst',
-    errorAddingProduct: 'Fout bij toevoegen product',
-    errorUpdatingStock: 'Fout bij bijwerken voorraad',
-    errorScanningProduct: 'Fout bij scannen product',
-    productNotFound: 'Product niet gevonden',
-    
-    // Filters and sorting
-    filterAll: 'Alle items',
-    filterLowStock: 'Lage voorraad',
-    filterOutOfStock: 'Uitverkocht',
-    filterWithSuggestions: 'Met besteladvies',
-    sortByName: 'Sorteren op naam',
-    sortByStock: 'Sorteren op voorraad',
-    sortByLastCounted: 'Sorteren op laatste telling',
-    
-    // Mobile/responsive
-    swipeToEdit: 'Veeg om te bewerken',
-    tapToEdit: 'Tik om te bewerken',
-    pullToRefresh: 'Trek om te vernieuwen',
-    
-    // Additional translations
-    scanInstructions: 'Scan barcode van product of voer handmatig in',
-    recentScans: 'Recente scans',
-    newOrder: 'Nieuwe bestelling',
-    addItemsToCart: 'Voeg items toe uit je bestellijst om te beginnen',
-    readyToOrder: 'Klaar om te bestellen',
-    clearCart: 'Winkelmand legen',
-    confirmClearCart: 'Weet je zeker dat je alle items uit je winkelmand wilt verwijderen?',
-    confirmRemoveFromCart: 'Weet je zeker dat je dit item uit je winkelmand wilt verwijderen?',
-    itemRemoved: 'Item verwijderd uit winkelmand',
-    cartCleared: 'Winkelmand geleegd',
-    cartSaved: 'Winkelmand opgeslagen',
-    errorUpdatingCart: 'Fout bij bijwerken winkelmand',
-    orderSubmittedSuccess: 'Bestelling succesvol ingediend!',
-    errorSubmittingOrder: 'Fout bij verzenden bestelling',
-    errorCreatingCart: 'Fout bij aanmaken winkelmand',
-    errorAddingToCart: 'Fout bij toevoegen aan winkelmand',
-    addedToCart: '{quantity} x {product} toegevoegd aan winkelmand',
-    addedSuggestionsToCart: '{added} van {total} voorgestelde items toegevoegd aan winkelmand',
-    autoSuggested: 'Auto',
-    scanned: 'Gescand',
-    manual: 'Handmatig',
-    saveCart: 'Winkelmand opslaan',
-    scanner: {
-      title: 'Barcode scanner',
-      manualInput: 'Barcode handmatig invoeren',
-      recentScans: 'Recente scans',
-      clearHistory: 'Geschiedenis wissen',
-      help: 'Richt camera op barcode of voer code handmatig in',
-      cameraMode: 'Camera modus',
-      manualMode: 'Handmatige modus'
-    },
-    
-    cart: {
-      export: 'Winkelwagen exporteren',
-      email: 'Winkelwagen e-mailen',
-      print: 'Winkelwagen printen'
-    },
-    
-    advanced: {
-      multiLocation: 'Multi-locatie ondersteuning',
-      selectLocation: 'Locatie selecteren',
-      offlineMode: 'Offline modus',
-      analytics: 'Analytics bekijken',
-      export: 'Data exporteren',
-      
-      permissions: {
-        readOnly: 'Alleen lezen toegang',
-        limitedEdit: 'Beperkte bewerkingstoegang',
-        fullAccess: 'Volledige toegang',
-        adminAccess: 'Beheerder toegang'
-      }
-    }
-  },
-
-  suppliers: {
-    title: 'Leveranciers',
-    add: 'Leverancier toevoegen',
-    edit: 'Leverancier bewerken',
-    name: 'Naam',
-    contact: 'Contact',
-    email: 'E-mail',
-    phone: 'Telefoon',
-    address: 'Adres',
-    city: 'Plaats',
-    postalCode: 'Postcode',
-    country: 'Land',
-    website: 'Website',
-    notes: 'Notities',
-    active: 'Actief',
-    magentoVendorId: 'Magento Leverancier ID'
-  },
-  
-  locations: {
-    title: 'Locaties',
-    add: 'Locatie Toevoegen',
-    edit: 'Locatie Bewerken',
-    name: 'Naam',
-    description: 'Beschrijving',
-    address: 'Adres',
-    city: 'Plaats',
-    postalCode: 'Postcode',
-    isMain: 'Hoofdlocatie',
-    isActive: 'Actief',
-    setAsMain: 'Als Hoofdlocatie Instellen',
-    settings: 'Instellingen'
-  },
-  
   permissions: {
     title: 'Gebruikersrechten',
     grant: 'Recht Toekennen',
@@ -590,42 +761,19 @@ export default {
     }
   },
   
-  analytics: {
-    title: 'Analytics',
-    dashboard: 'Dashboard',
-    usage: 'Gebruiksstatistieken',
-    patterns: 'Gebruikspatronen',
-    reports: 'Rapporten',
-    
-    events: {
-      bestellijst_created: 'Bestellijst Aangemaakt',
-      bestellijst_updated: 'Bestellijst Bijgewerkt',
-      product_scanned: 'Product Gescand',
-      order_created: 'Bestelling Aangemaakt',
-      export_generated: 'Export Gegenereerd'
-    },
-    
-    metrics: {
-      totalEvents: 'Totaal Events',
-      activeUsers: 'Actieve Gebruikers',
-      peakHours: 'Piekuren',
-      averageSession: 'Gem. Sessietijd'
-    }
-  },
-  
   notifications: {
     title: 'Meldingen',
     settings: 'Meldingsinstellingen',
     channels: {
       email: 'E-mail',
-      push: 'Push Meldingen',
+      push: 'Push meldingen',
       sms: 'SMS',
-      in_app: 'In-App'
+      in_app: 'In-app'
     },
     
     types: {
       stock_alert: 'Voorraadwaarschuwingen',
-      order_update: 'Bestel Updates',
+      order_update: 'Bestel updates',
       system_notification: 'Systeemmeldingen',
       reminder: 'Herinneringen'
     },
@@ -673,10 +821,10 @@ export default {
   },
   
   camera: {
-    title: 'Camera Scanner',
-    start: 'Camera Starten',
-    stop: 'Camera Stoppen',
-    switch: 'Camera Wisselen',
+    title: 'Camera scanner',
+    start: 'Camera starten',
+    stop: 'Camera stoppen',
+    switch: 'Camera wisselen',
     focus: 'Focussen',
     torch: 'Zaklamp',
     
@@ -908,6 +1056,14 @@ export default {
     deleteSupplierError: 'Fout bij verwijderen leverancier',
     linkMagentoError: 'Fout bij koppelen leverancier aan Magento',
     importFeatureComingSoon: 'Import functie komt binnenkort!'
+  },
+
+  // Sample notifications
+  sampleNotifications: {
+    lowStockWarning: 'Lage voorraad waarschuwing',
+    orderConfirmed: 'Bestelling bevestigd',
+    stockUpdated: 'Voorraad bijgewerkt',
+    systemMaintenance: 'Systeem onderhoud'
   },
 
   // Notifications Page

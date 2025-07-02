@@ -44,18 +44,7 @@
             <q-tooltip>{{ $t('nav.notifications') || 'Notifications' }}</q-tooltip>
           </q-btn>
 
-          <!-- Shopping Cart -->
-          <q-btn
-            flat
-            round
-            dense
-            icon="shopping_cart"
-            :aria-label="$t('nav.shoppingCart') || 'Shopping Cart'"
-            @click="showCart = true"
-          >
-            <q-badge v-if="cartItemCount > 0" color="primary" floating>{{ cartItemCount }}</q-badge>
-            <q-tooltip>{{ $t('nav.shoppingCart') || 'Shopping Cart' }}</q-tooltip>
-          </q-btn>
+
 
           <!-- Dark mode toggle -->
           <q-btn
@@ -192,23 +181,7 @@
         </q-item>
       </q-list>
 
-      <!-- Quick Stats Section -->
-      <div class="quick-stats-section" role="region" aria-labelledby="quick-stats-title">
-        <q-item-label header class="navigation-header" id="quick-stats-title">
-          {{ $t('nav.quickStats') }}
-        </q-item-label>
-        
-        <div class="stats-grid">
-          <div class="stat-item" tabindex="0" role="button" :aria-label="`${totalProducts} ${$t('nav.products')}`">
-            <div class="stat-number">{{ totalProducts }}</div>
-            <div class="stat-label">{{ $t('nav.products') }}</div>
-          </div>
-          <div class="stat-item" tabindex="0" role="button" :aria-label="`${lowStockCount} ${$t('dashboard.lowStock')} items`">
-            <div class="stat-number text-warning">{{ lowStockCount }}</div>
-            <div class="stat-label">{{ $t('dashboard.lowStock') }}</div>
-          </div>
-        </div>
-      </div>
+
 
       <!-- Spacer -->
       <q-space />
@@ -229,21 +202,13 @@
 
     <!-- Page Container with Enhanced Styling -->
     <q-page-container class="page-container-modern">
-      <!-- Stock alerts banner with modern styling -->
-      <StockAlertsBanner />
-      
       <!-- Main content area -->
       <div class="page-content" role="main">
       <router-view />
       </div>
     </q-page-container>
 
-    <!-- Shopping Cart Dialog -->
-    <ShoppingCartDialog
-      v-model="showCart"
-      :cart="bestellijstenStore.currentShoppingCart"
-      @order-submitted="handleOrderSubmitted"
-    />
+
   </q-layout>
 </template>
 
@@ -254,35 +219,26 @@ import { useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 import { useAuthStore } from 'src/stores/auth'
 import { useClinicStore } from 'src/stores/clinic'
-import { useBestellijstenStore } from 'src/stores/bestellijsten'
-import StockAlertsBanner from 'src/components/StockAlertsBanner.vue'
-import ShoppingCartDialog from 'src/components/ShoppingCartDialog.vue'
+
 
 const $q = useQuasar()
 const router = useRouter()
 const { t } = useI18n()
 const authStore = useAuthStore()
 const clinicStore = useClinicStore()
-const bestellijstenStore = useBestellijstenStore()
+
 
 // State
 const leftDrawerOpen = ref(false)
 const isScrolled = ref(false)
-const showCart = ref(false)
+
 
 // Computed properties
 const userProfile = computed(() => authStore.userProfile)
 const userEmail = computed(() => authStore.userEmail)
 const clinicName = computed(() => clinicStore.clinic?.name || t('clinic.defaultName'))
 
-// Real stats from clinic store
-const totalProducts = computed(() => clinicStore.stockSummary.total)
-const lowStockCount = computed(() => clinicStore.stockSummary.lowStock)
 
-// Cart-related computed properties
-const cartItemCount = computed(() => {
-  return bestellijstenStore.currentShoppingCart?.shopping_cart_items?.reduce((total, item) => total + item.quantity, 0) || 0
-})
 
 // Check if user has admin permissions
 const isAdmin = computed(() => {
@@ -300,21 +256,13 @@ const navigationLinks = computed(() => {
       to: '/',
       routeName: 'dashboard'
     },
+
     {
-      title: t('bestellijsten.title'),
-      caption: t('bestellijsten.subtitle'),
-      icon: 'playlist_add_check',
-      to: '/bestellijsten',
-      routeName: 'bestellijsten',
-      badge: lowStockCount.value > 0 ? lowStockCount.value : null,
-      badgeColor: 'warning'
-    },
-    {
-      title: t('nav.products'),
-      caption: t('nav.inventoryManagement'),
-      icon: 'medical_services',
-      to: '/products',
-      routeName: 'products'
+      title: t('nav.inventory'),
+      caption: t('nav.stockManagement'),
+      icon: 'inventory_2',
+      to: '/inventory',
+      routeName: 'inventory'
     },
     {
       title: t('nav.orders'),
@@ -356,6 +304,15 @@ const navigationLinks = computed(() => {
       icon: 'supervisor_account',
       to: '/admin',
       routeName: 'admin'
+    })
+    
+    // Add style guide for admins/developers
+    links.push({
+              title: t('nav.styleGuide'),
+      caption: 'Design system reference',
+      icon: 'palette',
+      to: '/style-guide',
+      routeName: 'style-guide'
     })
   }
 
@@ -403,16 +360,7 @@ const handleLogout = async () => {
   }
 }
 
-const handleOrderSubmitted = (cart: any) => {
-  $q.notify({
-    type: 'positive',
-    message: t('bestellijsten.orderSubmittedSuccess') || 'Order submitted successfully!',
-    position: 'top',
-    timeout: 3000
-  })
-  // Refresh cart data
-  bestellijstenStore.fetchShoppingCarts()
-}
+
 
 // Scroll detection for header effects
 const handleScroll = () => {
@@ -420,14 +368,6 @@ const handleScroll = () => {
 }
 
 // Lifecycle
-onMounted(async () => {
-  // Load product data for navigation stats
-  if (authStore.clinicId) {
-    await clinicStore.fetchProducts()
-    // Load shopping cart data
-    await bestellijstenStore.fetchShoppingCarts()
-  }
-})
 
 onMounted(() => {
   window.addEventListener('scroll', handleScroll)

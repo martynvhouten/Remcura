@@ -40,24 +40,47 @@ const routes: RouteRecordRaw[] = [
         component: () => import(/* webpackChunkName: "dashboard" */ 'pages/DashboardPage.vue'),
         meta: { requiresAuth: true, preload: true }
       },
+
+      // Inventory Management Routes
       {
-        path: 'bestellijsten',
-        name: 'bestellijsten',
-        component: () => import(/* webpackChunkName: "bestellijsten" */ 'pages/BestellijstenPage.vue'),
+        path: 'inventory',
+        name: 'inventory',
+        component: () => import(/* webpackChunkName: "inventory" */ 'pages/InventoryPage.vue'),
         meta: { requiresAuth: true }
       },
       {
-        path: 'bestellijsten/:id',
-        name: 'bestellijst-detail',
-        component: () => import(/* webpackChunkName: "bestellijst-detail" */ 'pages/BestellijstDetailPage.vue'),
+        path: 'inventory/levels',
+        name: 'inventory-levels',
+        component: () => import(/* webpackChunkName: "inventory-levels" */ 'pages/inventory/InventoryLevelsPage.vue'),
         meta: { requiresAuth: true }
       },
       {
-        path: 'products',
-        name: 'products',
-        component: () => import(/* webpackChunkName: "products" */ 'pages/ProductsPage.vue'),
+        path: 'inventory/locations',
+        name: 'inventory-locations',
+        component: () => import(/* webpackChunkName: "inventory-locations" */ 'pages/inventory/LocationsPage.vue'),
         meta: { requiresAuth: true }
       },
+      {
+        path: 'inventory/counting',
+        name: 'inventory-counting',
+        component: () => import(/* webpackChunkName: "inventory-counting" */ 'pages/inventory/CountingPage.vue'),
+        meta: { requiresAuth: true }
+      },
+      {
+        path: 'inventory/counting/:sessionId',
+        name: 'inventory-counting-session',
+        component: () => import(/* webpackChunkName: "inventory-counting-session" */ 'pages/inventory/CountingSessionPage.vue'),
+        meta: { requiresAuth: true },
+        props: true
+      },
+      {
+        path: 'inventory/movements',
+        name: 'inventory-movements',
+        component: () => import(/* webpackChunkName: "inventory-movements" */ 'pages/inventory/MovementsPage.vue'),
+        meta: { requiresAuth: true }
+      },
+
+      // Orders & Suppliers
       {
         path: 'orders',
         name: 'orders',
@@ -100,14 +123,17 @@ const routes: RouteRecordRaw[] = [
           requiresAdmin: true
         }
       },
-      {
-        path: 'bestellingen',
-        redirect: '/bestellijsten'
-      },
+
       {
         path: 'settings',
         name: 'settings',
         component: () => import(/* webpackChunkName: "settings" */ 'pages/SettingsPage.vue'),
+        meta: { requiresAuth: true }
+      },
+      {
+        path: 'style-guide',
+        name: 'style-guide',
+        component: () => import(/* webpackChunkName: "style-guide" */ 'pages/StyleGuidePage.vue'),
         meta: { requiresAuth: true }
       }
     ]

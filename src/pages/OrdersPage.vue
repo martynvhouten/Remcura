@@ -313,7 +313,7 @@
             :label="$t('orders.email.recipient')"
             type="email"
             outlined
-            :rules="[val => !!val || 'Email is required']"
+            :rules="[val => !!val || $t('orders.emailRequired')]"
           />
           
           <q-input
@@ -469,47 +469,36 @@ const exportScopeOptions = computed(() => [
 // Table columns
 const columns = computed(() => [
   {
-    name: 'order_number',
-    label: t('orders.columns.orderNumber'),
-    align: 'left',
-    field: 'order_number',
-    sortable: true
-  },
-  {
-    name: 'order_date',
-    label: t('orders.columns.orderDate'),
-    align: 'left',
-    field: 'order_date',
-    format: (val: string) => new Date(val).toLocaleDateString(),
-    sortable: true
-  },
-  {
-    name: 'status',
-    label: t('orders.columns.status'),
-    align: 'center',
-    field: 'status',
-    sortable: true
+    name: 'id',
+    label: t('orders.table.orderNumber'),
+    field: 'id',
+    sortable: true,
+    align: 'left' as const,
+    style: 'width: 120px'
   },
   {
     name: 'supplier',
-    label: t('orders.columns.supplier'),
-    align: 'left',
-    field: (row: OrderWithItems) => row.suppliers?.name || '-',
-    sortable: true
+    label: t('orders.table.supplier'),
+    field: (row: any) => row.supplier?.name || 'Unknown',
+    align: 'left' as const,
+    sortable: true,
+    style: 'width: 200px'
   },
   {
-    name: 'total_items',
-    label: t('orders.columns.totalItems'),
-    align: 'center',
-    field: 'total_items',
-    sortable: true
+    name: 'status',
+    label: t('orders.table.status'),
+    field: 'status',
+    sortable: true,
+    align: 'left' as const,
+    style: 'width: 120px'
   },
   {
     name: 'total',
-    label: t('orders.columns.totalAmount'),
-    align: 'right',
+    label: t('orders.table.total'),
     field: 'total_amount',
-    sortable: true
+    align: 'left' as const,
+    sortable: true,
+    style: 'width: 120px'
   },
   {
     name: 'actions',
@@ -543,7 +532,7 @@ const loadOrders = async () => {
     console.error('Failed to load orders:', error)
     
     // Show user-friendly message for "No practice selected" error
-    if (error.message === 'No practice selected') {
+    if (error.message === t('orders.noPracticeSelected')) {
       $q.notify({
         type: 'warning',
         message: t('orders.errors.noPracticeSelected'),

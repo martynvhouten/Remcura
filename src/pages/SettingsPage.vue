@@ -32,7 +32,7 @@
         <BaseCard
           variant="elevated"
           :title="$t('settings.profile')"
-          subtitle="Persoonlijke accountgegevens"
+          :subtitle="$t('settings.profileSubtitle')"
           icon="person"
           header-color="primary"
         >
@@ -83,8 +83,8 @@
       <div class="settings-section">
         <BaseCard
           variant="elevated"
-          title="Weergave"
-          subtitle="Interface en taalinstellingen"
+          :title="$t('settings.appearanceTitle')"
+          :subtitle="$t('settings.appearanceSubtitle')"
           icon="palette"
           header-color="secondary"
         >
@@ -94,7 +94,7 @@
                 <div class="setting-info">
                   <div class="setting-label" id="dark-mode-label">{{ $t('settings.darkMode') }}</div>
                   <div class="setting-description">
-                      Schakel tussen lichte en donkere modus
+                      {{ $t('settings.darkModeDescription') }}
                   </div>
                 </div>
                 <div class="setting-control">
@@ -107,26 +107,30 @@
                       :aria-labelledby="'dark-mode-label'"
                       :aria-describedby="'dark-mode-description'"
                     />
-                    <div id="dark-mode-description" class="sr-only">{{ isDarkMode ? 'Dark mode is enabled' : 'Light mode is enabled' }}</div>
+                    <div id="dark-mode-description" class="sr-only">{{ isDarkMode ? $t('settings.darkModeEnabled') : $t('settings.lightModeEnabled') }}</div>
                   </div>
                 </div>
 
               <!-- Language Setting -->
               <div class="setting-item glass-card">
                 <div class="setting-info">
-                  <div class="setting-label" id="language-label">Taal</div>
+                  <div class="setting-label" id="language-label">{{ $t('settings.language') }}</div>
                   <div class="setting-description">
-                      Selecteer je voorkeurstaal (alleen Nederlands beschikbaar)
+                      {{ $t('settings.selectLanguage') }}
                   </div>
                 </div>
                 <div class="setting-control">
                     <q-select
                       v-model="selectedLanguage"
                       :options="languageOptions"
+                      @update:model-value="changeLanguage"
+                      option-value="value"
+                      option-label="label"
+                      emit-value
+                      map-options
                       outlined
                       dense
                     class="select-modern"
-                    readonly
                       style="width: 150px"
                       :aria-labelledby="'language-label'"
                     />
@@ -136,9 +140,9 @@
               <!-- Theme Setting -->
               <div class="setting-item glass-card">
                 <div class="setting-info">
-                  <div class="setting-label" id="theme-label">Kies kleurenschema</div>
+                  <div class="setting-label" id="theme-label">{{ $t('settings.colorSchemeTitle') }}</div>
                   <div class="setting-description">
-                      Wijzig het kleurenschema van de applicatie
+                      {{ $t('settings.colorSchemeDescription') }}
                   </div>
                 </div>
                 <div class="setting-control">
@@ -159,6 +163,7 @@
                 </div>
                 </div>
               </div>
+            </div>
         </BaseCard>
       </div>
 
@@ -171,7 +176,7 @@
                 <q-icon name="business" color="info" size="24px" aria-hidden="true" />
                 <div>
                   <h2 class="card-title">{{ $t('settings.clinic') }}</h2>
-                  <p class="card-subtitle">Kliniek informatie en contactgegevens</p>
+                  <p class="card-subtitle">{{ $t('settings.clinicInfoSubtitle') }}</p>
                 </div>
               </div>
             </div>
@@ -240,7 +245,7 @@
                   <q-icon name="info" color="info" />
                   </template>
                 <div class="notice-text">
-                  Voor wijzigingen aan kliniek gegevens, neem contact op met de beheerder.
+                  {{ $t('settings.contactSettingsNotice') }}
                 </div>
                 </q-banner>
               </div>
@@ -257,7 +262,7 @@
                 <q-icon name="notifications" color="warning" size="24px" />
                 <div>
                   <h3 class="card-title">{{ $t('settings.notifications') }}</h3>
-                  <p class="card-subtitle">Meldingen en waarschuwingen</p>
+                  <p class="card-subtitle">{{ $t('settings.notificationSettingsSubtitle') }}</p>
                 </div>
               </div>
             </div>
@@ -270,9 +275,9 @@
               <!-- Low Stock Alerts -->
               <div class="setting-item glass-card">
                 <div class="setting-info">
-                  <div class="setting-label">Voorraad waarschuwingen</div>
+                  <div class="setting-label">{{ $t('settings.stockAlertsLabel') }}</div>
                   <div class="setting-description">
-                      Ontvang meldingen bij lage voorraad
+                      {{ $t('settings.stockAlertsDescription') }}
                   </div>
                 </div>
                 <div class="setting-control">
@@ -287,9 +292,9 @@
               <!-- Email Notifications -->
               <div class="setting-item glass-card">
                 <div class="setting-info">
-                  <div class="setting-label">E-mail notificaties</div>
+                  <div class="setting-label">{{ $t('settings.emailNotificationsLabel') }}</div>
                   <div class="setting-description">
-                      Ontvang belangrijke updates via e-mail
+                      {{ $t('settings.emailNotificationsDescription') }}
                   </div>
                 </div>
                 <div class="setting-control">
@@ -304,9 +309,9 @@
               <!-- Browser Notifications -->
               <div class="setting-item glass-card">
                 <div class="setting-info">
-                  <div class="setting-label">Browser notificaties</div>
+                  <div class="setting-label">{{ $t('settings.browserNotificationsLabel') }}</div>
                   <div class="setting-description">
-                      Sta browser notificaties toe
+                      {{ $t('settings.browserNotificationsDescription') }}
                   </div>
                 </div>
                 <div class="setting-control">
@@ -316,11 +321,11 @@
                     class="toggle-modern"
                     />
                 </div>
-                </div>
               </div>
-            </q-card-section>
-          </q-card>
-        </div>
+            </div>
+          </q-card-section>
+        </q-card>
+      </div>
 
         <!-- System Information -->
       <div class="settings-section">
@@ -330,8 +335,8 @@
               <div class="card-title-section">
                 <q-icon name="info" color="accent" size="24px" />
                 <div>
-                  <h3 class="card-title">Systeem informatie</h3>
-                  <p class="card-subtitle">Versie en ondersteuning</p>
+                  <h3 class="card-title">{{ $t('settings.systemInfoTitle') }}</h3>
+                  <p class="card-subtitle">{{ $t('settings.systemInfoSubtitle') }}</p>
                 </div>
               </div>
             </div>
@@ -342,17 +347,17 @@
           <q-card-section class="card-content">
             <div class="system-info">
               <div class="info-item">
-                <div class="info-label">Versie</div>
+                <div class="info-label">{{ $t('settings.versionLabel') }}</div>
                 <div class="info-value">1.0.0</div>
               </div>
               
               <div class="info-item">
-                <div class="info-label">Laatste update</div>
+                <div class="info-label">{{ $t('settings.lastUpdateLabel') }}</div>
                 <div class="info-value">{{ new Date().toLocaleDateString('nl-NL') }}</div>
               </div>
               
               <div class="info-item">
-                <div class="info-label">Support</div>
+                <div class="info-label">{{ $t('settings.supportLabel') }}</div>
                 <div class="info-value">
                   <a href="mailto:support@medstock-pro.com" class="support-link">
                     support@medstock-pro.com
@@ -360,8 +365,8 @@
                 </div>
               </div>
             </div>
-            </q-card-section>
-          </q-card>
+          </q-card-section>
+        </q-card>
       </div>
     </div>
   </PageLayout>
@@ -374,6 +379,7 @@ import { useI18n } from 'vue-i18n'
 import { useAuthStore } from 'src/stores/auth'
 import { useClinicStore } from 'src/stores/clinic'
 import { useThemeManager } from 'src/composables/themeManager'
+import { setI18nLanguage, getCurrentLocale, type SupportedLocale } from 'src/i18n'
 import PageLayout from 'src/components/PageLayout.vue'
 import PageTitle from 'src/components/PageTitle.vue'
 import BaseCard from 'src/components/base/BaseCard.vue'
@@ -387,7 +393,7 @@ const { themeOptions, currentTheme, applyTheme, getCurrentThemeName } = useTheme
 // State
 const saving = ref(false)
 const isDarkMode = ref($q.dark.isActive)
-const selectedLanguage = ref('nl')
+const selectedLanguage = ref(getCurrentLocale())
 const selectedTheme = ref(getCurrentThemeName())
 
 // Computed properties
@@ -415,7 +421,9 @@ const notificationSettings = ref({
 })
 
 const languageOptions = [
-  { label: 'Nederlands', value: 'nl' }
+  { label: 'Nederlands', value: 'nl' },
+  { label: 'English', value: 'en' },
+  { label: 'Español', value: 'es' }
 ]
 
 // Methods
@@ -424,7 +432,7 @@ const toggleDarkMode = (value: boolean) => {
   
   $q.notify({
     type: 'positive',
-    message: value ? 'Donkere modus ingeschakeld' : 'Lichte modus ingeschakeld',
+    message: value ? t('settings.darkModeEnabled') : t('settings.lightModeEnabled'),
     position: 'top-right',
     timeout: 2000
   })
@@ -443,6 +451,19 @@ const changeTheme = (themeName: string) => {
   })
 }
 
+const changeLanguage = (locale: SupportedLocale) => {
+  selectedLanguage.value = locale
+  setI18nLanguage(locale)
+  
+  const languageLabel = languageOptions.find(option => option.value === locale)?.label || locale
+  $q.notify({
+    type: 'positive',
+    message: t('settings.languageChanged', { language: languageLabel }),
+    position: 'top-right',
+    timeout: 2000
+  })
+}
+
 const saveSettings = async () => {
   saving.value = true
   
@@ -452,14 +473,14 @@ const saveSettings = async () => {
     
     $q.notify({
       type: 'positive',
-      message: 'Instellingen succesvol opgeslagen',
+      message: t('settings.settingsSaved'),
       position: 'top-right',
       timeout: 3000
     })
   } catch (error) {
     $q.notify({
       type: 'negative',
-      message: 'Er is een fout opgetreden bij het opslaan',
+      message: t('settings.settingsSaveError'),
       position: 'top-right',
       timeout: 3000
     })
