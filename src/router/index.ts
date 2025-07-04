@@ -1,10 +1,14 @@
-import { route } from 'quasar/wrappers'
-import { createRouter, createWebHashHistory, createMemoryHistory } from 'vue-router'
+import { route } from "quasar/wrappers";
+import {
+  createRouter,
+  createWebHashHistory,
+  createMemoryHistory,
+} from "vue-router";
 
-import routes from './routes'
-import { useAuthStore } from 'src/stores/auth'
-import { routerLogger } from 'src/utils/logger'
-import { monitoringService } from 'src/services/monitoring'
+import routes from "./routes";
+import { useAuthStore } from "src/stores/auth";
+import { routerLogger } from "src/utils/logger";
+import { monitoringService } from "src/services/monitoring";
 
 /*
  * If not building with SSR mode, you can
@@ -18,7 +22,7 @@ import { monitoringService } from 'src/services/monitoring'
 export default route(function (/* { store, ssrContext } */) {
   const createHistory = process.env.SERVER
     ? createMemoryHistory
-    : createWebHashHistory
+    : createWebHashHistory;
 
   const Router = createRouter({
     scrollBehavior: () => ({ left: 0, top: 0 }),
@@ -28,84 +32,86 @@ export default route(function (/* { store, ssrContext } */) {
     // quasar.conf.js -> build -> vueRouterMode
     // quasar.conf.js -> build -> publicPath
     history: createHistory(process.env.VUE_ROUTER_BASE),
-  })
+  });
 
   // Global navigation guard for authentication
   Router.beforeEach(async (to, from, next) => {
-    const authStore = useAuthStore()
-    
-    routerLogger.debug('Navigation guard triggered', { 
-      to: to.path, 
-      from: from.path 
-    })
+    const authStore = useAuthStore();
+
+    routerLogger.debug("Navigation guard triggered", {
+      to: to.path,
+      from: from.path,
+    });
 
     // Wait for auth to be initialized
     if (!authStore.initialized) {
-      routerLogger.info('Initializing auth store')
-      await authStore.initialize()
+      routerLogger.info("Initializing auth store");
+      await authStore.initialize();
     }
 
     // Check if route requires authentication
-    const requiresAuth = to.matched.some(record => record.meta.requiresAuth)
-    
+    const requiresAuth = to.matched.some((record) => record.meta.requiresAuth);
+
     if (requiresAuth && !authStore.isAuthenticated) {
-      routerLogger.info('Unauthenticated user accessing protected route', { 
-        route: to.path 
-      })
-      
-      // Store intended destination in sessionStorage for clean URLs
-      if (to.fullPath !== '/') {
-        sessionStorage.setItem('medstock_intended_route', to.fullPath)
-      }
-      
-      // Track navigation event
-      monitoringService.trackEvent('navigation_blocked', {
+      routerLogger.info("Unauthenticated user accessing protected route", {
         route: to.path,
-        reason: 'unauthenticated'
-      })
-      
+      });
+
+      // Store intended destination in sessionStorage for clean URLs
+      if (to.fullPath !== "/") {
+        sessionStorage.setItem("medstock_intended_route", to.fullPath);
+      }
+
+      // Track navigation event
+      monitoringService.trackEvent("navigation_blocked", {
+        route: to.path,
+        reason: "unauthenticated",
+      });
+
       // Redirect to login without query parameters
-      next({ name: 'login' })
-    } else if (to.name === 'login' && authStore.isAuthenticated) {
-      routerLogger.info('Authenticated user accessing login page')
-      
+      next({ name: "login" });
+    } else if (to.name === "login" && authStore.isAuthenticated) {
+      routerLogger.info("Authenticated user accessing login page");
+
       // Check for intended route after login
-      const intendedRoute = sessionStorage.getItem('medstock_intended_route')
-      sessionStorage.removeItem('medstock_intended_route')
-      
-      if (intendedRoute && intendedRoute !== '/') {
-        routerLogger.info('Redirecting to intended route', { route: intendedRoute })
-        next(intendedRoute)
+      const intendedRoute = sessionStorage.getItem("medstock_intended_route");
+      sessionStorage.removeItem("medstock_intended_route");
+
+      if (intendedRoute && intendedRoute !== "/") {
+        routerLogger.info("Redirecting to intended route", {
+          route: intendedRoute,
+        });
+        next(intendedRoute);
       } else {
-        next({ name: 'dashboard' })
+        next({ name: "dashboard" });
       }
     } else {
-      routerLogger.debug('Navigation allowed', { route: to.path })
-      next()
+      routerLogger.debug("Navigation allowed", { route: to.path });
+      next();
     }
-  })
+  });
 
   // Global after navigation hook for tracking
   Router.afterEach((to, from) => {
-    routerLogger.info('Navigation completed', { 
-      to: to.path, 
-      from: from.path 
-    })
-    
+    routerLogger.info("Navigation completed", {
+      to: to.path,
+      from: from.path,
+    });
+
     // Track page views
-    monitoringService.trackEvent('page_view', {
+    monitoringService.trackEvent("page_view", {
       route: to.path,
-      routeName: to.name as string || 'unknown',
-      fromRoute: from.path
-    })
+      routeName: (to.name as string) || "unknown",
+      fromRoute: from.path,
+    });
 
     // Add breadcrumb for debugging
     monitoringService.addBreadcrumb(
       `Navigated to ${to.path}`,
-      'navigation',
-      'info'
-    )
-  })
+      "navigation",
+      "info"
+    );
+  });
 
-  return Router
-}) 
+  return Router;
+});

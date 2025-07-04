@@ -5,12 +5,14 @@ This guide covers deploying MedStock Pro to production environments.
 ## 📋 Pre-Deployment Checklist
 
 ### 1. Environment Setup
+
 - [ ] Create `.env` file with production values (see `.env.example`)
 - [ ] Ensure all environment variables are set correctly
 - [ ] Update `robots.txt` and `sitemap.xml` with your domain
 - [ ] Configure monitoring service (Sentry, LogRocket, etc.)
 
 ### 2. Build Preparation
+
 ```bash
 # Install dependencies
 npm install
@@ -26,6 +28,7 @@ npm run build
 ```
 
 ### 3. Production Build Verification
+
 ```bash
 # Test production build locally
 npx quasar serve dist/spa --port 8080 --history
@@ -37,12 +40,15 @@ npx serve dist/spa -p 8080
 ## 🚀 Deployment Platforms
 
 ### Vercel (Recommended for SPA)
+
 1. **Install Vercel CLI:**
+
    ```bash
    npm i -g vercel
    ```
 
 2. **Configure `vercel.json`:**
+
    ```json
    {
      "buildCommand": "npm run build",
@@ -54,6 +60,7 @@ npx serve dist/spa -p 8080
    ```
 
 3. **Deploy:**
+
    ```bash
    vercel --prod
    ```
@@ -63,17 +70,20 @@ npx serve dist/spa -p 8080
    - Add `VITE_SUPABASE_URL` and `VITE_SUPABASE_ANON_KEY`
 
 ### Netlify
+
 1. **Build Settings:**
+
    - Build command: `npm run build`
    - Publish directory: `dist/spa`
    - Node version: 18.x
 
 2. **Create `netlify.toml`:**
+
    ```toml
    [build]
    command = "npm run build"
    publish = "dist/spa"
-   
+
    [[redirects]]
    from = "/*"
    to = "/index.html"
@@ -84,7 +94,9 @@ npx serve dist/spa -p 8080
    - Set in Netlify Dashboard under Site Settings > Environment Variables
 
 ### Traditional Server (Apache/Nginx)
+
 1. **Build the application:**
+
    ```bash
    npm run build
    ```
@@ -94,12 +106,13 @@ npx serve dist/spa -p 8080
 3. **Configure server for SPA routing:**
 
    **Apache (`.htaccess`):**
+
    ```apache
    RewriteEngine On
    RewriteCond %{REQUEST_FILENAME} !-f
    RewriteCond %{REQUEST_FILENAME} !-d
    RewriteRule . /index.html [L]
-   
+
    # Security headers
    Header always set X-Frame-Options DENY
    Header always set X-Content-Type-Options nosniff
@@ -107,22 +120,23 @@ npx serve dist/spa -p 8080
    ```
 
    **Nginx:**
+
    ```nginx
    server {
      listen 80;
      server_name your-domain.com;
      root /var/www/medstock-pro;
      index index.html;
-     
+
      location / {
        try_files $uri $uri/ /index.html;
      }
-     
+
      # Security headers
      add_header X-Frame-Options DENY;
      add_header X-Content-Type-Options nosniff;
      add_header Referrer-Policy "strict-origin-when-cross-origin";
-     
+
      # Cache static assets
      location ~* \.(js|css|png|jpg|jpeg|gif|ico|svg|woff|woff2|ttf|eot)$ {
        expires 1y;
@@ -134,7 +148,9 @@ npx serve dist/spa -p 8080
 ## 🔧 Production Configuration
 
 ### Environment Variables
+
 Create `.env` file with these required variables:
+
 ```bash
 # Supabase Configuration
 VITE_SUPABASE_URL=https://your-project.supabase.co
@@ -148,10 +164,11 @@ VITE_GOOGLE_ANALYTICS_ID=GA-XXXXXXXXX
 ```
 
 ### SEO Configuration
+
 1. **Update `public/robots.txt`:**
    - Replace `medstock-pro.com` with your domain
-   
 2. **Update `public/sitemap.xml`:**
+
    - Replace URLs with your domain
    - Add additional pages if you have public marketing pages
 
@@ -161,12 +178,15 @@ VITE_GOOGLE_ANALYTICS_ID=GA-XXXXXXXXX
 ## 🛡️ Security Configuration
 
 ### Content Security Policy (CSP)
+
 Add to your server configuration:
+
 ```
 Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; font-src 'self' data:; connect-src 'self' https://*.supabase.co;
 ```
 
 ### Additional Security Headers
+
 ```
 X-Frame-Options: DENY
 X-Content-Type-Options: nosniff
@@ -177,17 +197,20 @@ Permissions-Policy: camera=(), microphone=(), geolocation=()
 ## 📊 Monitoring Setup
 
 ### Error Tracking (Sentry)
+
 1. **Install Sentry:**
+
    ```bash
    npm install @sentry/vue @sentry/tracing
    ```
 
 2. **Configure in `src/main.ts`:**
+
    ```typescript
-   import { initializeMonitoring } from 'src/services/monitoring'
-   
+   import { initializeMonitoring } from "src/services/monitoring";
+
    // Initialize monitoring
-   await initializeMonitoring()
+   await initializeMonitoring();
    ```
 
 3. **Add environment variable:**
@@ -196,6 +219,7 @@ Permissions-Policy: camera=(), microphone=(), geolocation=()
    ```
 
 ### Performance Monitoring
+
 - Use Lighthouse CI for performance monitoring
 - Set up Vercel Analytics or Google Analytics
 - Monitor Core Web Vitals
@@ -203,7 +227,9 @@ Permissions-Policy: camera=(), microphone=(), geolocation=()
 ## 🔄 CI/CD Pipeline
 
 ### GitHub Actions Example
+
 Create `.github/workflows/deploy.yml`:
+
 ```yaml
 name: Deploy to Production
 
@@ -214,36 +240,36 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
-    
+
     steps:
       - uses: actions/checkout@v4
-      
+
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '18'
-          cache: 'npm'
-      
+          node-version: "18"
+          cache: "npm"
+
       - name: Install dependencies
         run: npm ci
-      
+
       - name: Run linting
         run: npm run lint
-      
+
       - name: Run tests
         run: npm run test:unit:ci
-      
+
       - name: Build application
         run: npm run build
         env:
           VITE_SUPABASE_URL: ${{ secrets.VITE_SUPABASE_URL }}
           VITE_SUPABASE_ANON_KEY: ${{ secrets.VITE_SUPABASE_ANON_KEY }}
-      
+
       - name: Deploy to Vercel
         uses: amondnet/vercel-action@v25
         with:
           vercel-token: ${{ secrets.VERCEL_TOKEN }}
-          vercel-args: '--prod'
+          vercel-args: "--prod"
 ```
 
 ## 🐛 Troubleshooting
@@ -251,11 +277,13 @@ jobs:
 ### Common Issues
 
 1. **White screen after deployment:**
+
    - Check browser console for errors
    - Verify environment variables are set
    - Ensure server is configured for SPA routing
 
 2. **API calls failing:**
+
    - Verify Supabase URL and keys
    - Check CORS settings in Supabase dashboard
    - Ensure network requests aren't blocked
@@ -266,6 +294,7 @@ jobs:
    - Validate manifest.json
 
 ### Performance Optimization
+
 - Enable gzip compression on server
 - Use CDN for static assets
 - Implement proper caching headers
@@ -274,6 +303,7 @@ jobs:
 ## 📞 Support
 
 For deployment issues:
+
 1. Check the troubleshooting section above
 2. Review server logs for specific errors
 3. Ensure all environment variables are correctly set
@@ -282,4 +312,4 @@ For deployment issues:
 ---
 
 **Last Updated:** December 2024
-**Version:** 1.0.0 
+**Version:** 1.0.0

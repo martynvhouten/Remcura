@@ -1,6 +1,6 @@
 <template>
-  <q-dialog 
-    :model-value="modelValue" 
+  <q-dialog
+    :model-value="modelValue"
     @update:model-value="$emit('update:modelValue', $event)"
     :persistent="persistent"
     :maximized="maximized"
@@ -15,8 +15,8 @@
   >
     <q-card :class="cardClasses">
       <!-- Dialog Header -->
-      <q-card-section 
-        v-if="hasHeader" 
+      <q-card-section
+        v-if="hasHeader"
         class="dialog-header"
         :class="headerClass"
       >
@@ -30,13 +30,13 @@
             <h2 class="dialog-title" :id="titleId">{{ title }}</h2>
             <p v-if="subtitle" class="dialog-subtitle">{{ subtitle }}</p>
           </div>
-          <q-btn 
+          <q-btn
             v-if="closable"
-            flat 
-            round 
-            dense 
+            flat
+            round
+            dense
             icon="close"
-            @click="close" 
+            @click="close"
             class="close-btn"
             :size="closeButtonSize"
             :aria-label="$t('common.closeDialog') || 'Close dialog'"
@@ -54,7 +54,11 @@
       <q-separator v-if="hasActions" />
 
       <!-- Dialog Actions -->
-      <q-card-section v-if="hasActions" class="dialog-actions" :class="actionsClass">
+      <q-card-section
+        v-if="hasActions"
+        class="dialog-actions"
+        :class="actionsClass"
+      >
         <slot name="actions" />
       </q-card-section>
     </q-card>
@@ -62,121 +66,125 @@
 </template>
 
 <script setup lang="ts">
-import { computed, useSlots } from 'vue'
-import { useI18n } from 'vue-i18n'
+import { computed, useSlots } from "vue";
+import { useI18n } from "vue-i18n";
 
 interface Props {
-  modelValue: boolean
-  title?: string
-  subtitle?: string
-  icon?: string
-  iconColor?: string
-  iconSize?: string
-  persistent?: boolean
-  maximized?: boolean
-  position?: 'standard' | 'top' | 'right' | 'bottom' | 'left'
-  fullWidth?: boolean
-  transitionShow?: string
-  transitionHide?: string
-  closable?: boolean
-  headerClass?: string | string[]
-  contentClass?: string | string[]
-  actionsClass?: string | string[]
-  dialogClass?: string | string[]
-  variant?: 'standard' | 'modern' | 'glass'
-  size?: 'sm' | 'md' | 'lg' | 'xl'
+  modelValue: boolean;
+  title?: string;
+  subtitle?: string;
+  icon?: string;
+  iconColor?: string;
+  iconSize?: string;
+  persistent?: boolean;
+  maximized?: boolean;
+  position?: "standard" | "top" | "right" | "bottom" | "left";
+  fullWidth?: boolean;
+  transitionShow?: string;
+  transitionHide?: string;
+  closable?: boolean;
+  headerClass?: string | string[];
+  contentClass?: string | string[];
+  actionsClass?: string | string[];
+  dialogClass?: string | string[];
+  variant?: "standard" | "modern" | "glass";
+  size?: "sm" | "md" | "lg" | "xl";
 }
 
 interface Emits {
-  (e: 'update:modelValue', value: boolean): void
-  (e: 'close'): void
+  (e: "update:modelValue", value: boolean): void;
+  (e: "close"): void;
 }
 
 const props = withDefaults(defineProps<Props>(), {
   persistent: true,
   maximized: false,
-  position: 'standard',
+  position: "standard",
   fullWidth: false,
-  transitionShow: 'scale',
-  transitionHide: 'scale',
+  transitionShow: "scale",
+  transitionHide: "scale",
   closable: true,
-  iconColor: 'primary',
-  iconSize: '48px',
-  variant: 'modern',
-  size: 'md'
-})
+  iconColor: "primary",
+  iconSize: "48px",
+  variant: "modern",
+  size: "md",
+});
 
-const emit = defineEmits<Emits>()
-const slots = useSlots()
-const { t } = useI18n()
+const emit = defineEmits<Emits>();
+const slots = useSlots();
+const { t } = useI18n();
 
 // Computed properties
-const titleId = computed(() => `dialog-title-${Math.random().toString(36).substr(2, 9)}`)
+const titleId = computed(
+  () => `dialog-title-${Math.random().toString(36).substr(2, 9)}`
+);
 
-const hasHeader = computed(() => !!(props.title || props.subtitle || props.icon || slots.header))
-const hasActions = computed(() => !!slots.actions)
+const hasHeader = computed(
+  () => !!(props.title || props.subtitle || props.icon || slots.header)
+);
+const hasActions = computed(() => !!slots.actions);
 
 const iconInnerSize = computed(() => {
-  const size = parseInt(props.iconSize)
-  return `${Math.round(size * 0.5)}px`
-})
+  const size = parseInt(props.iconSize);
+  return `${Math.round(size * 0.5)}px`;
+});
 
 const closeButtonSize = computed(() => {
-  const size = parseInt(props.iconSize)
-  return size > 40 ? 'md' : 'sm'
-})
+  const size = parseInt(props.iconSize);
+  return size > 40 ? "md" : "sm";
+});
 
 const cardClasses = computed(() => {
-  const classes = ['base-dialog-card']
-  
+  const classes = ["base-dialog-card"];
+
   // Variant classes
-  classes.push(`dialog-${props.variant}`)
-  
+  classes.push(`dialog-${props.variant}`);
+
   // Size classes
-  classes.push(`dialog-${props.size}`)
-  
-  return classes
-})
+  classes.push(`dialog-${props.size}`);
+
+  return classes;
+});
 
 // Methods
 const close = () => {
-  emit('close')
-  emit('update:modelValue', false)
-}
+  emit("close");
+  emit("update:modelValue", false);
+};
 </script>
 
 <style lang="scss" scoped>
 .base-dialog-card {
   border-radius: var(--radius-2xl);
   overflow: hidden;
-  
+
   // Size variants
   &.dialog-sm {
     width: 100%;
     max-width: 400px;
   }
-  
+
   &.dialog-md {
     width: 100%;
     max-width: 600px;
   }
-  
+
   &.dialog-lg {
     width: 100%;
     max-width: 800px;
   }
-  
+
   &.dialog-xl {
     width: 100%;
     max-width: 1000px;
   }
-  
+
   // Style variants
   &.dialog-modern {
     box-shadow: var(--shadow-2xl);
     border: 1px solid rgba(255, 255, 255, 0.1);
   }
-  
+
   &.dialog-glass {
     background: rgba(255, 255, 255, 0.95);
     backdrop-filter: blur(20px);
@@ -184,7 +192,7 @@ const close = () => {
     box-shadow: var(--shadow-lg);
     border: 1px solid rgba(255, 255, 255, 0.2);
   }
-  
+
   &.dialog-standard {
     box-shadow: var(--shadow-lg);
   }
@@ -192,23 +200,27 @@ const close = () => {
 
 // Dialog header styles
 .dialog-header {
-  background: linear-gradient(135deg, var(--brand-primary), var(--brand-primary-light));
+  background: linear-gradient(
+    135deg,
+    var(--brand-primary),
+    var(--brand-primary-light)
+  );
   color: white;
   padding: var(--space-6);
-  
+
   .header-content {
     display: flex;
     align-items: flex-start;
     gap: var(--space-4);
-    
+
     .header-icon {
       flex-shrink: 0;
     }
-    
+
     .header-text {
       flex: 1;
       min-width: 0;
-      
+
       .dialog-title {
         font-size: var(--text-xl);
         font-weight: var(--font-weight-bold);
@@ -216,7 +228,7 @@ const close = () => {
         color: white;
         line-height: var(--leading-tight);
       }
-      
+
       .dialog-subtitle {
         font-size: var(--text-sm);
         margin: 0;
@@ -224,12 +236,12 @@ const close = () => {
         line-height: var(--leading-relaxed);
       }
     }
-    
+
     .close-btn {
       flex-shrink: 0;
       color: rgba(255, 255, 255, 0.9);
       margin-top: -4px;
-      
+
       &:hover {
         color: white;
         background: rgba(255, 255, 255, 0.1);
@@ -241,7 +253,7 @@ const close = () => {
 // Dialog content styles
 .dialog-content {
   padding: var(--space-6);
-  
+
   &:empty {
     display: none;
   }
@@ -251,18 +263,18 @@ const close = () => {
 .dialog-actions {
   padding: var(--space-4) var(--space-6);
   background: var(--neutral-50);
-  
+
   // Default flex layout for actions
   display: flex;
   justify-content: flex-end;
   gap: var(--space-3);
   align-items: center;
-  
+
   @media (max-width: 640px) {
     flex-direction: column-reverse;
     align-items: stretch;
     gap: var(--space-2);
-    
+
     :deep(.q-btn) {
       width: 100%;
     }
@@ -272,14 +284,18 @@ const close = () => {
 // Dark mode adjustments
 body.body--dark {
   .dialog-header {
-    background: linear-gradient(135deg, var(--brand-primary-dark), var(--brand-secondary-dark));
+    background: linear-gradient(
+      135deg,
+      var(--brand-primary-dark),
+      var(--brand-secondary-dark)
+    );
   }
-  
+
   .dialog-actions {
     background: var(--neutral-800);
     border-top: 1px solid var(--neutral-700);
   }
-  
+
   .dialog-glass {
     background: rgba(0, 0, 0, 0.8);
     border: 1px solid rgba(255, 255, 255, 0.1);
@@ -290,7 +306,7 @@ body.body--dark {
 @media (max-width: 768px) {
   .base-dialog-card {
     margin: var(--space-4);
-    
+
     &.dialog-sm,
     &.dialog-md,
     &.dialog-lg,
@@ -298,19 +314,19 @@ body.body--dark {
       max-width: calc(100vw - var(--space-8));
     }
   }
-  
+
   .dialog-header {
     padding: var(--space-4);
-    
+
     .header-content {
       gap: var(--space-3);
-      
+
       .dialog-title {
         font-size: var(--text-lg);
       }
     }
   }
-  
+
   .dialog-content {
     padding: var(--space-4);
   }
@@ -337,4 +353,4 @@ body.body--dark {
   outline: 2px solid rgba(255, 255, 255, 0.8);
   outline-offset: 2px;
 }
-</style> 
+</style>

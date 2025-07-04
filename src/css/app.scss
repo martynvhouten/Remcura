@@ -9,51 +9,62 @@
 
 :root {
   // Enhanced Brand Colors - Modern Medical Blue Theme
-  --brand-primary: #1e3a8a;       // Deep Medical Blue - Professional & trustworthy
-  --brand-primary-dark: #1e40af;  // Rich Blue for contrast
+  --brand-primary: #1e3a8a; // Deep Medical Blue - Professional & trustworthy
+  --brand-primary-dark: #1e40af; // Rich Blue for contrast
   --brand-primary-light: #3b82f6; // Bright Blue for accents
-  --brand-secondary: #0f766e;     // Deep Teal - Clean & calming
-  --brand-accent: #0d9488;        // Medical Teal - Attention & trust
-  
+  --brand-secondary: #0f766e; // Deep Teal - Clean & calming
+  --brand-accent: #0d9488; // Medical Teal - Attention & trust
+
   // Semantic Colors - Enhanced for Medical Context
-  --brand-success: #065f46;       // Deep Emerald - Natural & healing
+  --brand-success: #065f46; // Deep Emerald - Natural & healing
   --brand-success-light: #059669; // Lighter emerald for UI elements
-  --brand-warning: #d97706;       // Warm Orange - Professional warning
+  --brand-warning: #d97706; // Warm Orange - Professional warning
   --brand-warning-light: #f59e0b; // Lighter orange for UI
-  --brand-danger: #b91c1c;        // Deep Red - Clear alerts
-  --brand-danger-light: #dc2626;  // Lighter red for UI
-  --brand-info: #1e40af;          // Rich Blue - Informative & calm
-  --brand-info-light: #3b82f6;    // Lighter blue for UI
-  
+  --brand-danger: #b91c1c; // Deep Red - Clear alerts
+  --brand-danger-light: #dc2626; // Lighter red for UI
+  --brand-info: #1e40af; // Rich Blue - Informative & calm
+  --brand-info-light: #3b82f6; // Lighter blue for UI
+
   // Extended Brand Palette for Rich Medical UI
-  --brand-navy: #1e3a8a;          // Deep Navy - Premium medical feel
-  --brand-navy-light: #1e40af;    // Lighter navy
-  --brand-emerald: #065f46;       // Deep Emerald - Health & growth
+  --brand-navy: #1e3a8a; // Deep Navy - Premium medical feel
+  --brand-navy-light: #1e40af; // Lighter navy
+  --brand-emerald: #065f46; // Deep Emerald - Health & growth
   --brand-emerald-light: #059669; // Lighter emerald
-  --brand-cyan: #0e7490;          // Medical Cyan - Clean technology
-  --brand-cyan-light: #0891b2;    // Lighter cyan
-  --brand-slate: #334155;         // Professional Slate - Elegant neutrals
-  --brand-slate-light: #475569;   // Lighter slate
-  
+  --brand-cyan: #0e7490; // Medical Cyan - Clean technology
+  --brand-cyan-light: #0891b2; // Lighter cyan
+  --brand-slate: #334155; // Professional Slate - Elegant neutrals
+  --brand-slate-light: #475569; // Lighter slate
+
   // Professional Neutral Palette - Warmer & More Sophisticated
-  --neutral-50: #fafaf9;          // Warm white
-  --neutral-100: #f5f5f4;         // Very light warm gray
-  --neutral-200: #e7e5e4;         // Light warm gray
-  --neutral-300: #d6d3d1;         // Medium light warm gray
-  --neutral-400: #a8a29e;         // Medium warm gray
-  --neutral-500: #78716c;         // Medium warm gray
-  --neutral-600: #57534e;         // Dark warm gray
-  --neutral-700: #44403c;         // Darker warm gray
-  --neutral-800: #292524;         // Very dark warm gray
-  --neutral-900: #1c1917;         // Almost black warm
-  
+  --neutral-50: #fafaf9; // Warm white
+  --neutral-100: #f5f5f4; // Very light warm gray
+  --neutral-200: #e7e5e4; // Light warm gray
+  --neutral-300: #d6d3d1; // Medium light warm gray
+  --neutral-400: #a8a29e; // Medium warm gray
+  --neutral-500: #78716c; // Medium warm gray
+  --neutral-600: #57534e; // Dark warm gray
+  --neutral-700: #44403c; // Darker warm gray
+  --neutral-800: #292524; // Very dark warm gray
+  --neutral-900: #1c1917; // Almost black warm
+
+  // Semantic UI Colors - Light Mode
+  --bg-primary: #fafaf9; // Primary background
+  --bg-secondary: #f5f5f4; // Secondary background (cards, panels)
+  --bg-tertiary: #e7e5e4; // Tertiary background (hover states)
+  --text-primary: #1c1917; // Primary text
+  --text-secondary: #57534e; // Secondary text
+  --text-tertiary: #78716c; // Tertiary text (muted)
+  --border-primary: #e7e5e4; // Primary borders
+  --border-secondary: #d6d3d1; // Secondary borders
+
   // Typography - Restored sizes
-  --font-family-primary: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-family-primary: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+    sans-serif;
   --font-weight-normal: 400;
   --font-weight-medium: 500;
   --font-weight-semibold: 600;
   --font-weight-bold: 700;
-  
+
   // Font sizes - proper scale
   --text-xs: 0.75rem;
   --text-sm: 0.875rem;
@@ -63,12 +74,12 @@
   --text-2xl: 1.5rem;
   --text-3xl: 1.875rem;
   --text-4xl: 2.25rem;
-  
+
   // Line heights
   --leading-tight: 1.25;
   --leading-normal: 1.5;
   --leading-relaxed: 1.625;
-  
+
   // Spacing (8pt grid)
   --space-1: 0.25rem;
   --space-2: 0.5rem;
@@ -78,7 +89,7 @@
   --space-6: 1.5rem;
   --space-8: 2rem;
   --space-12: 3rem;
-  
+
   // Icon sizes - standardized
   --icon-xs: 12px;
   --icon-sm: 16px;
@@ -86,7 +97,7 @@
   --icon-lg: 24px;
   --icon-xl: 32px;
   --icon-2xl: 48px;
-  
+
   // Border Radius - More modern and consistent
   --radius-sm: 0.25rem;
   --radius-base: 0.5rem;
@@ -95,71 +106,85 @@
   --radius-2xl: 1.5rem;
   --radius-3xl: 2rem;
   --radius-full: 9999px;
-  
+
   // Enhanced Shadows - More sophisticated depth
   --shadow-xs: 0 1px 2px 0 rgba(0, 0, 0, 0.02);
-  --shadow-sm: 0 1px 3px 0 rgba(0, 0, 0, 0.06), 0 1px 2px -1px rgba(0, 0, 0, 0.04);
-  --shadow-base: 0 4px 6px -1px rgba(0, 0, 0, 0.08), 0 2px 4px -2px rgba(0, 0, 0, 0.05);
-  --shadow-md: 0 10px 15px -3px rgba(0, 0, 0, 0.08), 0 4px 6px -4px rgba(0, 0, 0, 0.05);
-  --shadow-lg: 0 20px 25px -5px rgba(0, 0, 0, 0.08), 0 8px 10px -6px rgba(0, 0, 0, 0.05);
+  --shadow-sm: 0 1px 3px 0 rgba(0, 0, 0, 0.06),
+    0 1px 2px -1px rgba(0, 0, 0, 0.04);
+  --shadow-base: 0 4px 6px -1px rgba(0, 0, 0, 0.08),
+    0 2px 4px -2px rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 10px 15px -3px rgba(0, 0, 0, 0.08),
+    0 4px 6px -4px rgba(0, 0, 0, 0.05);
+  --shadow-lg: 0 20px 25px -5px rgba(0, 0, 0, 0.08),
+    0 8px 10px -6px rgba(0, 0, 0, 0.05);
   --shadow-xl: 0 25px 50px -12px rgba(0, 0, 0, 0.12);
   --shadow-2xl: 0 50px 100px -20px rgba(0, 0, 0, 0.15);
-  
+
   // Glass Morphism - Enhanced
   --glass-bg: rgba(255, 255, 255, 0.08);
   --glass-border: rgba(255, 255, 255, 0.12);
   --glass-backdrop: blur(20px);
   --glass-shadow: 0 8px 32px rgba(31, 38, 135, 0.12);
-  
+
   // Transitions - Smoother and more refined
   --transition-fast: 150ms cubic-bezier(0.4, 0, 0.2, 1);
   --transition-base: 250ms cubic-bezier(0.4, 0, 0.2, 1);
   --transition-slow: 350ms cubic-bezier(0.4, 0, 0.2, 1);
   --transition-bounce: 400ms cubic-bezier(0.68, -0.55, 0.265, 1.55);
-  
+
   // Interactive States - Medical Blue Theme
   --hover-bg: rgba(30, 58, 138, 0.08);
   --hover-border: rgba(30, 58, 138, 0.2);
   --focus-ring: 0 0 0 3px rgba(30, 58, 138, 0.12);
   --focus-ring-offset: 2px;
-  
+
   // Medical-specific color system
-  --medical-critical: #dc2626;      // Emergency red
-  --medical-urgent: #ea580c;        // Urgent orange
-  --medical-caution: #f59e0b;       // Caution amber
-  --medical-stable: #059669;        // Stable green
-  --medical-optimal: #0d9488;       // Optimal teal
-  
+  --medical-critical: #dc2626; // Emergency red
+  --medical-urgent: #ea580c; // Urgent orange
+  --medical-caution: #f59e0b; // Caution amber
+  --medical-stable: #059669; // Stable green
+  --medical-optimal: #0d9488; // Optimal teal
+
   // Stock level indicators
-  --stock-critical: #dc2626;        // Out of stock - red
-  --stock-low: #f59e0b;            // Low stock - amber
-  --stock-adequate: #059669;        // Adequate - green
-  --stock-overstocked: #0891b2;     // Overstocked - blue
-  
+  --stock-critical: #dc2626; // Out of stock - red
+  --stock-low: #f59e0b; // Low stock - amber
+  --stock-adequate: #059669; // Adequate - green
+  --stock-overstocked: #0891b2; // Overstocked - blue
+
   // Medical equipment colors
-  --equipment-inactive: #6b7280;    // Gray for inactive
+  --equipment-inactive: #6b7280; // Gray for inactive
   --equipment-maintenance: #f59e0b; // Amber for maintenance
-  --equipment-active: #059669;      // Green for active
+  --equipment-active: #059669; // Green for active
 }
 
 // Dark mode variables - Enhanced warm dark theme
 body.body--dark {
-  --neutral-50: #0c0a09;          // Deep warm black
-  --neutral-100: #1c1917;         // Very dark warm gray
-  --neutral-200: #292524;         // Dark warm gray
-  --neutral-300: #44403c;         // Medium dark warm gray
-  --neutral-400: #57534e;         // Medium warm gray
-  --neutral-500: #78716c;         // Medium warm gray
-  --neutral-600: #a8a29e;         // Light warm gray
-  --neutral-700: #d6d3d1;         // Very light warm gray
-  --neutral-800: #e7e5e4;         // Near white warm
-  --neutral-900: #fafaf9;         // Warm white
-  
+  --neutral-50: #1c1917; // Dark background (equivalent to light mode's light bg)
+  --neutral-100: #292524; // Slightly lighter dark background
+  --neutral-200: #44403c; // Medium dark background
+  --neutral-300: #57534e; // Border colors
+  --neutral-400: #78716c; // Muted elements
+  --neutral-500: #a8a29e; // Secondary text
+  --neutral-600: #d6d3d1; // Primary text
+  --neutral-700: #e7e5e4; // High contrast text
+  --neutral-800: #f5f5f4; // Highest contrast text
+  --neutral-900: #fafaf9; // Pure white text
+
+  // Semantic UI Colors - Dark Mode
+  --bg-primary: #1c1917; // Primary background (dark)
+  --bg-secondary: #292524; // Secondary background (cards, panels)
+  --bg-tertiary: #44403c; // Tertiary background (hover states)
+  --text-primary: #fafaf9; // Primary text (light)
+  --text-secondary: #d6d3d1; // Secondary text
+  --text-tertiary: #a8a29e; // Tertiary text (muted)
+  --border-primary: #44403c; // Primary borders
+  --border-secondary: #57534e; // Secondary borders
+
   // Enhanced dark mode glass effects
   --glass-bg: rgba(0, 0, 0, 0.08);
   --glass-border: rgba(255, 255, 255, 0.08);
   --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
-  
+
   // Dark mode interactive states - Medical Blue Theme
   --hover-bg: rgba(30, 58, 138, 0.12);
   --hover-border: rgba(30, 58, 138, 0.25);
@@ -178,9 +203,10 @@ body {
   font-family: var(--font-family-primary);
   font-weight: var(--font-weight-normal);
   line-height: 1.5;
-  color: var(--neutral-900);
-  background-color: var(--neutral-50);
-  transition: color var(--transition-base), background-color var(--transition-base);
+  color: var(--text-primary);
+  background-color: var(--bg-primary);
+  transition: color var(--transition-base),
+    background-color var(--transition-base);
   overflow-x: hidden; // Prevent horizontal scrolling
 }
 
@@ -188,12 +214,36 @@ body {
 // TYPOGRAPHY CLASSES
 // ===================================================================
 
-.text-h1 { font-size: var(--text-4xl); font-weight: var(--font-weight-bold); line-height: var(--leading-tight); }
-.text-h2 { font-size: var(--text-3xl); font-weight: var(--font-weight-bold); line-height: var(--leading-tight); }
-.text-h3 { font-size: var(--text-2xl); font-weight: var(--font-weight-semibold); line-height: var(--leading-tight); }
-.text-h4 { font-size: var(--text-xl); font-weight: var(--font-weight-semibold); line-height: var(--leading-normal); }
-.text-h5 { font-size: var(--text-lg); font-weight: var(--font-weight-medium); line-height: var(--leading-normal); }
-.text-h6 { font-size: var(--text-base); font-weight: var(--font-weight-medium); line-height: var(--leading-normal); }
+.text-h1 {
+  font-size: var(--text-4xl);
+  font-weight: var(--font-weight-bold);
+  line-height: var(--leading-tight);
+}
+.text-h2 {
+  font-size: var(--text-3xl);
+  font-weight: var(--font-weight-bold);
+  line-height: var(--leading-tight);
+}
+.text-h3 {
+  font-size: var(--text-2xl);
+  font-weight: var(--font-weight-semibold);
+  line-height: var(--leading-tight);
+}
+.text-h4 {
+  font-size: var(--text-xl);
+  font-weight: var(--font-weight-semibold);
+  line-height: var(--leading-normal);
+}
+.text-h5 {
+  font-size: var(--text-lg);
+  font-weight: var(--font-weight-medium);
+  line-height: var(--leading-normal);
+}
+.text-h6 {
+  font-size: var(--text-base);
+  font-weight: var(--font-weight-medium);
+  line-height: var(--leading-normal);
+}
 
 // ===================================================================
 // ENHANCED TYPOGRAPHY FOR MEDICAL PROFESSIONALS
@@ -211,7 +261,7 @@ body {
 .text-data-primary {
   font-size: var(--text-lg);
   font-weight: var(--font-weight-bold);
-  color: var(--neutral-900);
+  color: var(--text-primary);
   line-height: var(--leading-tight);
   font-variant-numeric: tabular-nums; // Better for numbers/data
 }
@@ -219,7 +269,7 @@ body {
 .text-data-secondary {
   font-size: var(--text-base);
   font-weight: var(--font-weight-medium);
-  color: var(--neutral-700);
+  color: var(--text-secondary);
   line-height: var(--leading-normal);
   font-variant-numeric: tabular-nums;
 }
@@ -227,7 +277,7 @@ body {
 .text-label-emphasis {
   font-size: var(--text-sm);
   font-weight: var(--font-weight-semibold);
-  color: var(--neutral-800);
+  color: var(--text-primary);
   text-transform: uppercase;
   letter-spacing: 0.05em;
 }
@@ -235,7 +285,7 @@ body {
 .text-caption-medical {
   font-size: var(--text-xs);
   font-weight: var(--font-weight-medium);
-  color: var(--neutral-600);
+  color: var(--text-tertiary);
   line-height: var(--leading-relaxed);
 }
 
@@ -267,12 +317,24 @@ body {
 .q-card .q-icon,
 body .q-icon {
   // Base icon size utilities with higher specificity
-  &.icon-xs { font-size: var(--icon-xs); }
-  &.icon-sm { font-size: var(--icon-sm); }
-  &.icon-base { font-size: var(--icon-base); }
-  &.icon-lg { font-size: var(--icon-lg); }
-  &.icon-xl { font-size: var(--icon-xl); }
-  &.icon-2xl { font-size: var(--icon-2xl); }
+  &.icon-xs {
+    font-size: var(--icon-xs);
+  }
+  &.icon-sm {
+    font-size: var(--icon-sm);
+  }
+  &.icon-base {
+    font-size: var(--icon-base);
+  }
+  &.icon-lg {
+    font-size: var(--icon-lg);
+  }
+  &.icon-xl {
+    font-size: var(--icon-xl);
+  }
+  &.icon-2xl {
+    font-size: var(--icon-2xl);
+  }
 }
 
 // Semantic icon classes with high specificity for consistent behavior
@@ -286,22 +348,22 @@ body .q-icon {
     font-size: var(--icon-lg);
     flex-shrink: 0;
   }
-  
+
   // Action icons in buttons and interactive elements
   &.action-icon {
     font-size: var(--icon-base);
   }
-  
+
   // Avatar icons in avatars and circular containers
   &.avatar-icon {
     font-size: var(--icon-base);
   }
-  
+
   // Small icons for metadata and secondary information
   &.meta-icon {
     font-size: var(--icon-sm);
   }
-  
+
   // Decorative icons that should be subtle
   &.decoration-icon {
     font-size: var(--icon-sm);
@@ -311,22 +373,42 @@ body .q-icon {
 
 // Alternative utility-first approach for icon sizing
 // These can be used as standalone classes without conflicting with Quasar
-.icon-size-xs { font-size: var(--icon-xs); }
-.icon-size-sm { font-size: var(--icon-sm); }
-.icon-size-base { font-size: var(--icon-base); }
-.icon-size-lg { font-size: var(--icon-lg); }
-.icon-size-xl { font-size: var(--icon-xl); }
-.icon-size-2xl { font-size: var(--icon-2xl); }
+.icon-size-xs {
+  font-size: var(--icon-xs);
+}
+.icon-size-sm {
+  font-size: var(--icon-sm);
+}
+.icon-size-base {
+  font-size: var(--icon-base);
+}
+.icon-size-lg {
+  font-size: var(--icon-lg);
+}
+.icon-size-xl {
+  font-size: var(--icon-xl);
+}
+.icon-size-2xl {
+  font-size: var(--icon-2xl);
+}
 
 // Context-aware icon sizing using CSS custom properties
 .icon-contextual {
   font-size: var(--icon-size, var(--icon-base));
-  
+
   // Pre-defined contexts
-  &.in-button { --icon-size: var(--icon-base); }
-  &.in-title { --icon-size: var(--icon-lg); }
-  &.in-meta { --icon-size: var(--icon-sm); }
-  &.in-avatar { --icon-size: var(--icon-base); }
+  &.in-button {
+    --icon-size: var(--icon-base);
+  }
+  &.in-title {
+    --icon-size: var(--icon-lg);
+  }
+  &.in-meta {
+    --icon-size: var(--icon-sm);
+  }
+  &.in-avatar {
+    --icon-size: var(--icon-base);
+  }
 }
 
 // ===================================================================
@@ -337,8 +419,10 @@ body .q-icon {
   border-radius: var(--radius-xl);
   box-shadow: var(--shadow-sm);
   transition: all var(--transition-base);
-  border: 1px solid var(--neutral-200);
-  
+  border: 1px solid var(--border-primary);
+  background: var(--bg-secondary);
+  color: var(--text-primary);
+
   &:hover {
     box-shadow: var(--shadow-md);
     transform: translateY(-1px);
@@ -351,24 +435,33 @@ body .q-icon {
 }
 
 body.body--dark .q-card {
-  border-color: var(--neutral-300);
-  
+  background: var(--bg-secondary);
+  border-color: var(--border-primary);
+  color: var(--text-primary);
+
   &.stock-summary-card {
     border: 1px solid rgba(255, 255, 255, 0.05);
+  }
+
+  // Ensure all card sections have proper dark backgrounds
+  .q-card__section {
+    background: var(--bg-secondary);
+    color: var(--text-primary);
   }
 }
 
 // Enhanced card content sections
 .card-content.q-card__section {
   box-shadow: var(--shadow-base);
-  background: rgba(255, 255, 255, 0.5);
+  background: var(--bg-secondary);
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
 }
 
 body.body--dark .card-content.q-card__section {
-  background: rgba(0, 0, 0, 0.2);
+  background: var(--bg-secondary);
   box-shadow: var(--shadow-lg);
+  color: var(--text-primary);
 }
 
 // Summary section styling for beautiful cards
@@ -377,7 +470,7 @@ body.body--dark .card-content.q-card__section {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
     gap: var(--space-6);
-    
+
     @media (max-width: 768px) {
       grid-template-columns: 1fr;
       gap: var(--space-4);
@@ -396,32 +489,48 @@ body.body--dark .card-content.q-card__section {
   --btn-height-base: 40px;
   --btn-height-lg: 48px;
   --btn-height-xl: 56px;
-  
+
   --btn-padding-sm: 0 12px;
   --btn-padding-base: 0 20px;
   --btn-padding-lg: 0 24px;
   --btn-padding-xl: 0 32px;
-  
+
   --btn-font-sm: 0.75rem;
   --btn-font-base: 0.875rem;
   --btn-font-lg: 1rem;
   --btn-font-xl: 1.125rem;
-  
+
   --btn-radius: 12px;
   --btn-radius-sm: 8px;
   --btn-radius-lg: 16px;
   --btn-radius-xl: 20px;
-  
+
   // Modern gradients for premium look
   --btn-gradient-primary: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%);
-  --btn-gradient-primary-hover: linear-gradient(135deg, #1e40af 0%, #2563eb 100%);
+  --btn-gradient-primary-hover: linear-gradient(
+    135deg,
+    #1e40af 0%,
+    #2563eb 100%
+  );
   --btn-gradient-success: linear-gradient(135deg, #065f46 0%, #059669 100%);
-  --btn-gradient-success-hover: linear-gradient(135deg, #047857 0%, #10b981 100%);
+  --btn-gradient-success-hover: linear-gradient(
+    135deg,
+    #047857 0%,
+    #10b981 100%
+  );
   --btn-gradient-warning: linear-gradient(135deg, #d97706 0%, #f59e0b 100%);
-  --btn-gradient-warning-hover: linear-gradient(135deg, #b45309 0%, #d97706 100%);
+  --btn-gradient-warning-hover: linear-gradient(
+    135deg,
+    #b45309 0%,
+    #d97706 100%
+  );
   --btn-gradient-danger: linear-gradient(135deg, #b91c1c 0%, #dc2626 100%);
-  --btn-gradient-danger-hover: linear-gradient(135deg, #991b1b 0%, #b91c1c 100%);
-  
+  --btn-gradient-danger-hover: linear-gradient(
+    135deg,
+    #991b1b 0%,
+    #b91c1c 100%
+  );
+
   // Premium shadows
   --btn-shadow-base: 0 2px 8px rgba(30, 58, 138, 0.12);
   --btn-shadow-hover: 0 8px 25px rgba(30, 58, 138, 0.25);
@@ -449,7 +558,7 @@ body .q-btn {
   // ===================================================================
   // BASE BUTTON RESET & FOUNDATION
   // ===================================================================
-  
+
   // Reset all default styles with higher specificity instead of !important
   min-height: var(--btn-height-base);
   height: var(--btn-height-base);
@@ -462,15 +571,15 @@ body .q-btn {
   text-transform: none;
   position: relative;
   overflow: hidden;
-  
+
   // Perfect text alignment using flexbox
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  
+
   // Smooth transitions for all properties
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  
+
   // Remove default box shadow
   box-shadow: none;
 }
@@ -503,11 +612,10 @@ body .q-btn .q-btn__content .q-icon {
 .q-dialog .q-btn,
 .q-drawer .q-btn,
 body .q-btn {
-  
   // ===================================================================
   // SIZE VARIANTS
   // ===================================================================
-  
+
   &.q-btn--dense {
     min-height: var(--btn-height-sm);
     height: var(--btn-height-sm);
@@ -515,7 +623,7 @@ body .q-btn {
     font-size: var(--btn-font-sm);
     border-radius: var(--btn-radius-sm);
   }
-  
+
   &.q-btn--lg {
     min-height: var(--btn-height-lg);
     height: var(--btn-height-lg);
@@ -523,7 +631,7 @@ body .q-btn {
     font-size: var(--btn-font-lg);
     border-radius: var(--btn-radius-lg);
   }
-  
+
   &.btn-xl {
     min-height: var(--btn-height-xl);
     height: var(--btn-height-xl);
@@ -531,146 +639,151 @@ body .q-btn {
     font-size: var(--btn-font-xl);
     border-radius: var(--btn-radius-xl);
   }
-  
+
   // ===================================================================
   // ROUND BUTTONS
   // ===================================================================
-  
+
   &.q-btn--round {
     min-width: var(--btn-height-base);
     width: var(--btn-height-base);
     padding: 0;
     border-radius: 50%;
-    
+
     &.q-btn--dense {
       min-width: var(--btn-height-sm);
       width: var(--btn-height-sm);
     }
-    
+
     &.q-btn--lg {
       min-width: var(--btn-height-lg);
       width: var(--btn-height-lg);
     }
-    
+
     &.btn-xl {
       min-width: var(--btn-height-xl);
       width: var(--btn-height-xl);
     }
   }
-  
+
   // ===================================================================
   // PRIMARY BUTTONS (Filled/Unelevated)
   // ===================================================================
-  
+
   &.q-btn--unelevated {
     background: var(--btn-gradient-primary);
     color: white;
     box-shadow: var(--btn-shadow-base);
     border: none;
-    
+
     // Primary color variants
-    &.text-white { 
-      background: var(--btn-gradient-primary); 
+    &.text-white {
+      background: var(--btn-gradient-primary);
     }
-    
-    &.bg-primary { 
-      background: var(--btn-gradient-primary); 
+
+    &.bg-primary {
+      background: var(--btn-gradient-primary);
     }
-    
+
     &.bg-positive,
     &.bg-green {
       background: var(--btn-gradient-success);
     }
-    
+
     &.bg-warning,
     &.bg-orange {
       background: var(--btn-gradient-warning);
     }
-    
+
     &.bg-negative,
     &.bg-red {
       background: var(--btn-gradient-danger);
     }
-    
+
     // Hover state
     &:hover:not(.disabled):not(.q-btn--loading) {
       transform: translateY(-3px);
       box-shadow: var(--btn-shadow-hover);
-      
+
       &.bg-primary,
-      &.text-white { 
-        background: var(--btn-gradient-primary-hover); 
+      &.text-white {
+        background: var(--btn-gradient-primary-hover);
       }
-      
+
       &.bg-positive,
       &.bg-green {
         background: var(--btn-gradient-success-hover);
       }
-      
+
       &.bg-warning,
       &.bg-orange {
         background: var(--btn-gradient-warning-hover);
       }
-      
+
       &.bg-negative,
       &.bg-red {
         background: var(--btn-gradient-danger-hover);
       }
     }
-    
+
     // Active state
     &:active:not(.disabled):not(.q-btn--loading) {
       transform: translateY(0);
       box-shadow: var(--btn-shadow-active);
     }
-    
+
     // Add subtle shine effect
     &::before {
-      content: '';
+      content: "";
       position: absolute;
       top: 0;
       left: -100%;
       width: 100%;
       height: 100%;
-      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+      background: linear-gradient(
+        90deg,
+        transparent,
+        rgba(255, 255, 255, 0.2),
+        transparent
+      );
       transition: left 0.5s;
     }
-    
+
     &:hover::before {
       left: 100%;
     }
   }
-  
+
   // ===================================================================
   // OUTLINE BUTTONS
   // ===================================================================
-  
+
   &.q-btn--outline {
     background: rgba(255, 255, 255, 0.8);
     backdrop-filter: blur(10px);
     border: 2px solid var(--brand-primary);
     color: var(--brand-primary);
     box-shadow: var(--btn-shadow-outline);
-    
+
     // Color variants
     &.text-positive,
     &.text-green {
       border-color: var(--brand-success);
       color: var(--brand-success);
     }
-    
+
     &.text-warning,
     &.text-orange {
       border-color: var(--brand-warning);
       color: var(--brand-warning);
     }
-    
+
     &.text-negative,
     &.text-red {
       border-color: var(--brand-danger);
       color: var(--brand-danger);
     }
-    
+
     // Hover state
     &:hover:not(.disabled):not(.q-btn--loading) {
       transform: translateY(-2px);
@@ -678,111 +791,111 @@ body .q-btn {
       background: var(--brand-primary);
       color: white;
       border-color: var(--brand-primary);
-      
+
       &.text-positive,
       &.text-green {
         background: var(--brand-success);
         border-color: var(--brand-success);
       }
-      
+
       &.text-warning,
       &.text-orange {
         background: var(--brand-warning);
         border-color: var(--brand-warning);
       }
-      
+
       &.text-negative,
       &.text-red {
         background: var(--brand-danger);
         border-color: var(--brand-danger);
       }
     }
-    
+
     // Active state
     &:active:not(.disabled):not(.q-btn--loading) {
       transform: translateY(0);
       box-shadow: var(--btn-shadow-active);
     }
   }
-  
+
   // ===================================================================
   // FLAT BUTTONS
   // ===================================================================
-  
+
   &.q-btn--flat {
     background: transparent;
     color: var(--brand-primary);
     border: none;
-    
+
     // Color variants
     &.text-positive,
     &.text-green {
       color: var(--brand-success);
     }
-    
+
     &.text-warning,
     &.text-orange {
       color: var(--brand-warning);
     }
-    
+
     &.text-negative,
     &.text-red {
       color: var(--brand-danger);
     }
-    
+
     // Hover state
     &:hover:not(.disabled):not(.q-btn--loading) {
       background: rgba(30, 58, 138, 0.1);
       transform: translateY(-1px);
-      
+
       &.text-positive,
       &.text-green {
         background: rgba(6, 95, 70, 0.1);
       }
-      
+
       &.text-warning,
       &.text-orange {
         background: rgba(217, 119, 6, 0.1);
       }
-      
+
       &.text-negative,
       &.text-red {
         background: rgba(185, 28, 28, 0.1);
       }
     }
-    
+
     // Active state
     &:active:not(.disabled):not(.q-btn--loading) {
       transform: translateY(0);
     }
   }
-  
+
   // ===================================================================
   // SPECIAL STATES
   // ===================================================================
-  
+
   // Focus state for accessibility
   &:focus-visible {
     outline: 3px solid rgba(30, 58, 138, 0.3);
     outline-offset: 2px;
   }
-  
+
   // Disabled state
   &.disabled {
     opacity: 0.5;
     pointer-events: none;
     transform: none;
     box-shadow: none;
-    
+
     &::before {
       display: none;
     }
   }
-  
+
   // Loading state
   &.q-btn--loading {
     pointer-events: none;
-    
+
     .q-btn__content {
       opacity: 0.7;
     }
@@ -800,15 +913,15 @@ body .q-btn {
 body .btn-modern.q-btn {
   // Enhanced modern styling
   box-shadow: 0 4px 14px rgba(30, 58, 138, 0.15);
-  
+
   &:hover:not(.disabled):not(.q-btn--loading) {
     box-shadow: 0 8px 30px rgba(30, 58, 138, 0.3);
     transform: translateY(-4px);
   }
-  
+
   // Add glow effect
   &::after {
-    content: '';
+    content: "";
     position: absolute;
     top: 0;
     left: 0;
@@ -839,21 +952,21 @@ body .q-btn-group {
 body .q-btn-group .q-btn {
   border-radius: 0;
   margin: 0;
-  
+
   &:not(:last-child) {
     border-right: 1px solid rgba(255, 255, 255, 0.2);
   }
-  
+
   &:first-child {
     border-top-left-radius: var(--btn-radius);
     border-bottom-left-radius: var(--btn-radius);
   }
-  
+
   &:last-child {
     border-top-right-radius: var(--btn-radius);
     border-bottom-right-radius: var(--btn-radius);
   }
-  
+
   &:hover {
     transform: none;
     z-index: 2;
@@ -881,11 +994,11 @@ body .q-btn-group .q-btn {
 .q-item {
   border-radius: var(--radius-lg);
   transition: all var(--transition-base);
-  
+
   &:hover {
     background-color: var(--neutral-100);
   }
-  
+
   &.q-item--active {
     background-color: var(--brand-primary);
 
@@ -895,117 +1008,152 @@ body .q-btn-group .q-btn {
 
 // Ensure proper text colors in dark mode
 body.body--dark {
-  // General text elements
-  h1, h2, h3, h4, h5, h6 {
-    color: var(--neutral-900);
+  // General text elements - use semantic colors
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    color: var(--text-primary);
   }
-  
+
   .q-item {
-    color: var(--neutral-900);
-    
+    color: var(--text-primary);
+
     &:hover {
-      background-color: var(--neutral-200);
+      background-color: var(--bg-tertiary);
     }
   }
-  
+
   .q-field__label,
   .q-field__native,
   .q-select__dropdown-icon {
-    color: var(--neutral-900);
+    color: var(--text-primary);
   }
-  
+
   // Button and icon colors
   .q-btn .q-icon {
     color: inherit;
   }
-  
+
   // Comprehensive text color overrides for all text elements
-  p, span, div, label {
-    color: var(--neutral-900);
+  p,
+  span,
+  div,
+  label {
+    color: var(--text-primary);
   }
-  
-  // Card and content text
+
+  // Card and content text - proper contrast
   .q-card {
-    color: var(--neutral-900);
-    
-    .card-title, .q-card__section {
-      color: var(--neutral-900);
+    color: var(--text-primary);
+
+    .card-title,
+    .q-card__section {
+      color: var(--text-primary);
+    }
+
+    p,
+    span,
+    div {
+      color: var(--text-primary);
     }
   }
-  
+
   // Table text
   .q-table {
-    color: var(--neutral-900);
-    
-    .q-td, .q-th {
-      color: var(--neutral-900);
+    color: var(--text-primary);
+
+    .q-td,
+    .q-th {
+      color: var(--text-primary);
     }
   }
-  
+
   // List item text
   .q-item-label {
-    color: var(--neutral-900);
-    
+    color: var(--text-primary);
+
     &.caption {
-      color: var(--neutral-600);
+      color: var(--text-tertiary);
     }
   }
-  
+
   // Toolbar and header text
   .q-toolbar__title {
-    color: var(--neutral-900);
+    color: var(--text-primary);
   }
-  
+
   // Form input text
   .q-field__native,
   .q-field__prefix,
   .q-field__suffix {
-    color: var(--neutral-900);
+    color: var(--text-primary);
   }
-  
+
   // Chip text
   .q-chip {
     .q-chip__content {
       color: inherit;
     }
   }
-  
+
   // Ensure subtitle and secondary text are readable but distinct
-  .subtitle, .secondary-text, .caption, .description {
-    color: var(--neutral-600);
+  .subtitle,
+  .secondary-text,
+  .caption,
+  .description {
+    color: var(--text-secondary);
   }
-  
+
   // Brand text should remain branded colors - enhanced for dark mode
-  .text-primary { color: var(--brand-primary-light); }
-.text-secondary { color: var(--brand-secondary); }
-.text-success { color: var(--brand-success-light); }
-.text-warning { color: var(--brand-warning-light); }
-.text-danger { color: var(--brand-danger-light); }
-.text-info { color: var(--brand-info-light); }
-.text-positive { color: var(--brand-success-light); }
-.text-negative { color: var(--brand-danger-light); }
-  
+  .text-primary {
+    color: var(--brand-primary-light);
+  }
+  .text-secondary {
+    color: var(--brand-secondary);
+  }
+  .text-success {
+    color: var(--brand-success-light);
+  }
+  .text-warning {
+    color: var(--brand-warning-light);
+  }
+  .text-danger {
+    color: var(--brand-danger-light);
+  }
+  .text-info {
+    color: var(--brand-info-light);
+  }
+  .text-positive {
+    color: var(--brand-success-light);
+  }
+  .text-negative {
+    color: var(--brand-danger-light);
+  }
+
   // Enhanced card styling for dark mode
   .card-modern {
-    border-color: var(--neutral-700);
-    
+    border-color: var(--border-primary);
+
     &.card-elevated:hover {
       border-color: var(--hover-border);
     }
   }
-  
+
   // Dark mode button enhancements
   .q-btn--outline {
     &.q-btn--standard {
       border-color: var(--brand-primary-light);
       color: var(--brand-primary-light);
-      
+
       &:hover {
         background: var(--brand-primary-light);
         border-color: var(--brand-primary-light);
       }
     }
-    
+
     &.text-secondary {
       border-color: var(--brand-secondary);
       color: var(--brand-secondary);
@@ -1023,47 +1171,103 @@ body.body--dark {
 // ===================================================================
 
 // Color utilities - Enhanced with new palette
-.text-primary { color: var(--brand-primary); }
-.text-secondary { color: var(--brand-secondary); }
-.text-success { color: var(--brand-success); }
-.text-warning { color: var(--brand-warning); }
-.text-danger { color: var(--brand-danger); }
-.text-info { color: var(--brand-info); }
-.text-purple { color: var(--brand-purple); }
-.text-emerald { color: var(--brand-emerald); }
-.text-rose { color: var(--brand-rose); }
-.text-sky { color: var(--brand-sky); }
+.text-primary {
+  color: var(--brand-primary);
+}
+.text-secondary {
+  color: var(--brand-secondary);
+}
+.text-success {
+  color: var(--brand-success);
+}
+.text-warning {
+  color: var(--brand-warning);
+}
+.text-danger {
+  color: var(--brand-danger);
+}
+.text-info {
+  color: var(--brand-info);
+}
+.text-purple {
+  color: var(--brand-purple);
+}
+.text-emerald {
+  color: var(--brand-emerald);
+}
+.text-rose {
+  color: var(--brand-rose);
+}
+.text-sky {
+  color: var(--brand-sky);
+}
 
 // Beautiful gradient utilities
 .gradient-primary {
-  background: linear-gradient(135deg, var(--brand-primary), var(--brand-primary-light));
+  background: linear-gradient(
+    135deg,
+    var(--brand-primary),
+    var(--brand-primary-light)
+  );
 }
 
 .gradient-secondary {
-  background: linear-gradient(135deg, var(--brand-secondary), var(--brand-info));
+  background: linear-gradient(
+    135deg,
+    var(--brand-secondary),
+    var(--brand-info)
+  );
 }
 
 .gradient-success {
-  background: linear-gradient(135deg, var(--brand-success), var(--brand-emerald));
+  background: linear-gradient(
+    135deg,
+    var(--brand-success),
+    var(--brand-emerald)
+  );
 }
 
 .gradient-medical {
-  background: linear-gradient(135deg, var(--brand-primary), var(--brand-secondary));
+  background: linear-gradient(
+    135deg,
+    var(--brand-primary),
+    var(--brand-secondary)
+  );
 }
 
 .gradient-warm {
-  background: linear-gradient(135deg, var(--brand-warning), var(--brand-accent));
+  background: linear-gradient(
+    135deg,
+    var(--brand-warning),
+    var(--brand-accent)
+  );
 }
 
 // Elevation utilities
-.elevation-0 { box-shadow: none; }
-.elevation-1 { box-shadow: var(--shadow-xs); }
-.elevation-2 { box-shadow: var(--shadow-sm); }
-.elevation-3 { box-shadow: var(--shadow-base); }
-.elevation-4 { box-shadow: var(--shadow-md); }
-.elevation-5 { box-shadow: var(--shadow-lg); }
-.elevation-6 { box-shadow: var(--shadow-xl); }
-.elevation-7 { box-shadow: var(--shadow-2xl); }
+.elevation-0 {
+  box-shadow: none;
+}
+.elevation-1 {
+  box-shadow: var(--shadow-xs);
+}
+.elevation-2 {
+  box-shadow: var(--shadow-sm);
+}
+.elevation-3 {
+  box-shadow: var(--shadow-base);
+}
+.elevation-4 {
+  box-shadow: var(--shadow-md);
+}
+.elevation-5 {
+  box-shadow: var(--shadow-lg);
+}
+.elevation-6 {
+  box-shadow: var(--shadow-xl);
+}
+.elevation-7 {
+  box-shadow: var(--shadow-2xl);
+}
 
 // Glass morphism utilities - Enhanced
 .glass {
@@ -1079,7 +1283,7 @@ body.body--dark {
   border-radius: var(--radius-xl);
   padding: var(--space-6);
   transition: all var(--transition-base);
-  
+
   &:hover {
     transform: translateY(-1px);
     box-shadow: var(--shadow-lg);
@@ -1091,10 +1295,10 @@ body.body--dark {
   border-radius: var(--radius-xl);
   transition: all var(--transition-base);
   border: 1px solid var(--neutral-200);
-  
+
   &.card-elevated {
     box-shadow: var(--shadow-base);
-    
+
     &:hover {
       box-shadow: var(--shadow-lg);
       transform: translateY(-2px);
@@ -1111,23 +1315,23 @@ body.body--dark {
   letter-spacing: 0.025em;
   position: relative;
   overflow: hidden;
-  
+
   // Enhanced hover effects
   &:hover {
     transform: translateY(-1px);
     box-shadow: var(--shadow-md);
   }
-  
+
   // Focus states for accessibility
   &:focus {
     outline: none;
     box-shadow: var(--focus-ring);
     outline-offset: var(--focus-ring-offset);
   }
-  
+
   // Subtle ripple effect
   &::before {
-    content: '';
+    content: "";
     position: absolute;
     top: 50%;
     left: 50%;
@@ -1139,12 +1343,12 @@ body.body--dark {
     transform: translate(-50%, -50%);
     z-index: 0;
   }
-  
+
   &:active::before {
     width: 300px;
     height: 300px;
   }
-  
+
   // Ensure button content stays above ripple
   .q-btn__content {
     position: relative;
@@ -1158,19 +1362,19 @@ body.body--dark {
     border-width: 2px;
     border-color: var(--brand-primary);
     color: var(--brand-primary);
-    
+
     &:hover {
       background: var(--brand-primary);
       color: white;
       border-color: var(--brand-primary);
     }
   }
-  
+
   // Secondary outline
   &.text-secondary {
     border-color: var(--brand-secondary);
     color: var(--brand-secondary);
-    
+
     &:hover {
       background: var(--brand-secondary);
       color: white;
@@ -1203,23 +1407,23 @@ h3.card-title {
   border: 1px solid rgba(255, 255, 255, 0.2);
   color: white;
   text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
-  
+
   &.animate-slide-up {
     * {
       color: white;
       text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
     }
-    
+
     .info-title {
       color: white;
       font-size: var(--text-2xl);
       font-weight: var(--font-weight-bold);
     }
-    
+
     .info-description {
       color: rgba(255, 255, 255, 0.9);
     }
-    
+
     .feature-item {
       color: rgba(255, 255, 255, 0.95);
     }
@@ -1233,7 +1437,7 @@ h3.card-title {
 
 .animate-slide-up {
   animation: slideUp var(--transition-base) ease-out;
-  
+
   // Ensure text remains readable during animation
   * {
     color: inherit;
@@ -1249,27 +1453,31 @@ h3.card-title {
 // ===================================================================
 
 @keyframes fadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }
 
 @keyframes slideUp {
-  from { 
+  from {
     opacity: 0;
     transform: translateY(20px);
   }
-  to { 
+  to {
     opacity: 1;
     transform: translateY(0);
   }
 }
 
 @keyframes scaleIn {
-  from { 
+  from {
     opacity: 0;
     transform: scale(0.9);
   }
-  to { 
+  to {
     opacity: 1;
     transform: scale(1);
   }
@@ -1290,7 +1498,7 @@ h3.card-title {
 .q-table {
   width: 100%;
   max-width: 100%;
-  
+
   .q-table__container {
     overflow-x: auto; // Allow horizontal scroll on tables if needed
   }
@@ -1318,12 +1526,12 @@ h3.card-title {
 // Hover and interaction effects
 .hover-lift {
   transition: all var(--transition-base);
-  
+
   &:hover {
     transform: translateY(-2px);
     box-shadow: var(--shadow-md);
   }
-  
+
   &:active {
     transform: translateY(-1px);
     transition-duration: 100ms;
@@ -1348,7 +1556,11 @@ h3.card-title {
 }
 
 .glass-modern {
-  background: linear-gradient(145deg, rgba(255, 255, 255, 0.95), rgba(255, 255, 255, 0.85));
+  background: linear-gradient(
+    145deg,
+    rgba(255, 255, 255, 0.95),
+    rgba(255, 255, 255, 0.85)
+  );
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
   border: 1px solid rgba(255, 255, 255, 0.2);
@@ -1362,7 +1574,7 @@ h3.card-title {
   background: var(--neutral-50);
   box-shadow: var(--shadow-sm);
   transition: all var(--transition-base);
-  
+
   &:hover {
     box-shadow: var(--shadow-md);
     border-color: var(--neutral-300);
@@ -1371,7 +1583,7 @@ h3.card-title {
 
 .card-elevated {
   box-shadow: var(--shadow-lg);
-  
+
   &:hover {
     box-shadow: var(--shadow-xl);
   }
@@ -1383,25 +1595,34 @@ h3.card-title {
   font-weight: var(--font-weight-semibold);
   letter-spacing: 0.025em;
   transition: all var(--transition-base);
-  
+
   &:hover {
     transform: translateY(-1px);
     box-shadow: var(--shadow-md);
   }
-  
+
   &:active {
     transform: translateY(0);
   }
 }
 
-// Loading animations  
+// Loading animations
 @keyframes shimmer {
-  0% { background-position: -200% 0; }
-  100% { background-position: 200% 0; }
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
 }
 
 .loading-shimmer {
-  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.4),
+    transparent
+  );
   background-size: 200% 100%;
   animation: shimmer 1.5s infinite;
   border-radius: var(--radius-base);
@@ -1423,20 +1644,20 @@ h3.card-title {
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   text-transform: none;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  
+
   &:hover {
     transform: translateY(-2px);
     box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
   }
-  
+
   &:active {
     transform: translateY(-1px);
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
   }
-  
+
   // Subtle glow effect for all buttons
   &::before {
-    content: '';
+    content: "";
     position: absolute;
     top: 0;
     left: 0;
@@ -1448,11 +1669,11 @@ h3.card-title {
     z-index: 1;
     border-radius: inherit;
   }
-  
+
   &:hover::before {
     opacity: 1;
   }
-  
+
   .q-btn__content {
     position: relative;
     z-index: 2;
@@ -1464,12 +1685,12 @@ h3.card-title {
   background: linear-gradient(135deg, #1e3a8a, #1e40af);
   color: white;
   border: none;
-  
+
   &:hover {
     background: linear-gradient(135deg, #1e40af, #2563eb);
     box-shadow: 0 8px 25px rgba(30, 58, 138, 0.4);
   }
-  
+
   &:active {
     background: linear-gradient(135deg, #1d4ed8, #2563eb);
   }
@@ -1480,7 +1701,7 @@ h3.card-title {
   background: transparent;
   border: 2px solid #1e3a8a;
   color: #1e3a8a;
-  
+
   &:hover {
     background: linear-gradient(135deg, #1e3a8a, #1e40af);
     color: white;
@@ -1494,7 +1715,7 @@ h3.card-title {
 .q-btn[color="secondary"] {
   background: linear-gradient(135deg, #0f766e, #0d9488);
   color: white;
-  
+
   &:hover {
     background: linear-gradient(135deg, #134e4a, #0f766e);
     box-shadow: 0 8px 25px rgba(15, 118, 110, 0.4);
@@ -1506,7 +1727,7 @@ h3.card-title {
 .q-btn[color="positive"] {
   background: linear-gradient(135deg, #065f46, #047857);
   color: white;
-  
+
   &:hover {
     background: linear-gradient(135deg, #064e3b, #065f46);
     box-shadow: 0 8px 25px rgba(6, 95, 70, 0.4);
@@ -1518,7 +1739,7 @@ h3.card-title {
 .q-btn[color="warning"] {
   background: linear-gradient(135deg, #d97706, #f59e0b);
   color: white;
-  
+
   &:hover {
     background: linear-gradient(135deg, #b45309, #d97706);
     box-shadow: 0 8px 25px rgba(217, 119, 6, 0.4);
@@ -1530,7 +1751,7 @@ h3.card-title {
 .q-btn[color="negative"] {
   background: linear-gradient(135deg, #b91c1c, #dc2626);
   color: white;
-  
+
   &:hover {
     background: linear-gradient(135deg, #991b1b, #b91c1c);
     box-shadow: 0 8px 25px rgba(185, 28, 28, 0.4);
@@ -1542,7 +1763,7 @@ h3.card-title {
 .q-btn[color="info"] {
   background: linear-gradient(135deg, #1e40af, #2563eb);
   color: white;
-  
+
   &:hover {
     background: linear-gradient(135deg, #1d4ed8, #3b82f6);
     box-shadow: 0 8px 25px rgba(30, 64, 175, 0.4);
@@ -1566,11 +1787,11 @@ h3.card-title {
 .q-btn--round {
   border-radius: 50%;
   padding: 12px;
-  
+
   &.q-btn--small {
     padding: 8px;
   }
-  
+
   &.q-btn--large {
     padding: 16px;
   }
@@ -1580,13 +1801,13 @@ h3.card-title {
 .q-btn--flat {
   background: transparent;
   box-shadow: none;
-  
+
   &:hover {
     background: rgba(30, 58, 138, 0.1);
     transform: none;
     box-shadow: none;
   }
-  
+
   &::before {
     display: none;
   }
@@ -1605,7 +1826,7 @@ h3.card-title {
   color: white;
   border-radius: 12px;
   font-weight: 600;
-  
+
   &:hover {
     background: linear-gradient(135deg, #4f46e5, #7c3aed);
     box-shadow: 0 8px 25px rgba(99, 102, 241, 0.4);
@@ -1625,12 +1846,12 @@ h3.card-title {
 /* Button Groups */
 .q-btn-group .q-btn {
   border-radius: 0;
-  
+
   &:first-child {
     border-top-left-radius: 12px;
     border-bottom-left-radius: 12px;
   }
-  
+
   &:last-child {
     border-top-right-radius: 12px;
     border-bottom-right-radius: 12px;
@@ -1641,12 +1862,12 @@ h3.card-title {
 .q-btn--disable {
   opacity: 0.6;
   cursor: not-allowed;
-  
+
   &:hover {
     transform: none;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   }
-  
+
   &::before {
     display: none;
   }
@@ -1657,7 +1878,7 @@ h3.card-title {
   &::before {
     display: none;
   }
-  
+
   .q-spinner {
     color: currentColor;
   }
@@ -1671,7 +1892,7 @@ h3.card-title {
   .q-page {
     padding: var(--space-4);
   }
-  
+
   .brand-title {
     font-size: var(--text-xl);
   }
@@ -1682,12 +1903,14 @@ h3.card-title {
 // ===================================================================
 
 @media (prefers-reduced-motion: reduce) {
-  *, ::before, ::after {
+  *,
+  ::before,
+  ::after {
     animation-duration: 0.01ms;
     animation-iteration-count: 1;
     transition-duration: 0.01ms;
   }
-  
+
   .q-card:hover,
   .q-btn:hover,
   .q-item:hover {
@@ -1732,7 +1955,7 @@ h3.card-title {
   text-decoration: none;
   border-radius: 4px;
   z-index: 100;
-  
+
   &:focus {
     top: 6px;
     outline: 2px solid white;
@@ -1745,7 +1968,7 @@ h3.card-title {
   * {
     border-color: currentColor !important;
   }
-  
+
   .q-btn {
     border: 2px solid currentColor !important;
   }
@@ -1774,7 +1997,7 @@ h3.card-title {
     outline: 2px solid var(--brand-primary);
     outline-offset: 2px;
   }
-  
+
   &[disabled] {
     cursor: not-allowed;
     opacity: 0.6;
@@ -1789,7 +2012,7 @@ h3.card-title {
       outline-offset: 2px;
     }
   }
-  
+
   &--error {
     .q-field__control {
       border-color: var(--brand-danger) !important;
@@ -1801,13 +2024,13 @@ h3.card-title {
 .q-table {
   th[role="columnheader"] {
     cursor: pointer;
-    
+
     &:focus {
       outline: 2px solid var(--brand-primary);
       outline-offset: -2px;
     }
   }
-  
+
   tr[role="row"] {
     &:focus {
       outline: 2px solid var(--brand-primary);
@@ -1895,29 +2118,29 @@ h3.card-title {
   font-weight: var(--font-weight-semibold);
   text-transform: uppercase;
   letter-spacing: 0.05em;
-  
+
   &.stock-critical {
     color: white;
     background: var(--stock-critical);
-    
+
     &::before {
       content: "●";
       animation: pulse 2s infinite;
     }
   }
-  
+
   &.stock-low {
     color: var(--stock-low);
     background: rgba(245, 158, 11, 0.15);
     border: 1px solid var(--stock-low);
   }
-  
+
   &.stock-adequate {
     color: var(--stock-adequate);
     background: rgba(5, 150, 105, 0.15);
     border: 1px solid var(--stock-adequate);
   }
-  
+
   &.stock-overstocked {
     color: var(--stock-overstocked);
     background: rgba(8, 145, 178, 0.15);
@@ -1926,8 +2149,13 @@ h3.card-title {
 }
 
 @keyframes pulse {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.5; }
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
 }
 
 // ===================================================================
@@ -1938,65 +2166,69 @@ h3.card-title {
   .q-table {
     border-radius: var(--radius-lg);
     overflow: hidden;
-    
+
     // Enhanced header for medical data
     .q-table__top {
-      background: linear-gradient(135deg, var(--brand-primary), var(--brand-primary-dark));
+      background: linear-gradient(
+        135deg,
+        var(--brand-primary),
+        var(--brand-primary-dark)
+      );
       color: white;
       padding: var(--space-4) var(--space-6);
     }
-    
+
     // Improved row styling for quick scanning
     tbody tr {
       border-bottom: 1px solid var(--neutral-200);
       transition: all var(--transition-fast);
-      
+
       &:hover {
         background: var(--neutral-50);
         transform: translateX(2px);
         box-shadow: 4px 0 8px rgba(0, 0, 0, 0.04);
       }
-      
+
       // Critical row highlighting
       &.row-critical {
         background: rgba(220, 38, 38, 0.05);
         border-left: 4px solid var(--medical-critical);
-        
+
         &:hover {
           background: rgba(220, 38, 38, 0.08);
         }
       }
-      
+
       &.row-warning {
         background: rgba(245, 158, 11, 0.03);
         border-left: 3px solid var(--medical-caution);
       }
     }
-    
+
     // Better column typography
     .q-td {
       padding: var(--space-4) var(--space-6);
-      
+
       // Numeric columns (stock counts, prices)
       &.col-numeric {
         font-variant-numeric: tabular-nums;
         font-weight: var(--font-weight-semibold);
         text-align: right;
       }
-      
+
       // Status columns
       &.col-status {
         text-align: center;
         font-weight: var(--font-weight-medium);
       }
-      
+
       // Product names
       &.col-product {
         font-weight: var(--font-weight-medium);
         color: var(--neutral-900);
       }
     }
-    
+
     // Enhanced headers
     .q-th {
       background: var(--neutral-100);
@@ -2015,7 +2247,8 @@ h3.card-title {
 @media (max-width: 768px) {
   .medical-table {
     .q-table {
-      .q-td, .q-th {
+      .q-td,
+      .q-th {
         padding: var(--space-3) var(--space-4);
         font-size: var(--text-sm);
       }
@@ -2049,7 +2282,7 @@ h3.card-title {
       color: white;
 
       &:not(:last-child)::after {
-        content: '';
+        content: "";
         position: absolute;
         right: 0;
         top: 50%;
@@ -2096,7 +2329,7 @@ h3.card-title {
       &.col-total {
         width: 120px;
         text-align: center;
-        
+
         .header-title,
         .header-subtitle {
           text-align: center;
@@ -2169,14 +2402,14 @@ h3.card-title {
 
     .table-header-row {
       background: var(--brand-primary-dark);
-      
+
       th {
         color: white;
-        
+
         .header-title {
           color: white;
         }
-        
+
         .header-subtitle {
           color: rgba(255, 255, 255, 0.9);
         }
@@ -2200,7 +2433,7 @@ h3.card-title {
       }
     }
   }
-  
+
   // Dark mode for new bestellijst structure
   .bestellijst-content {
     .stats-actions-bar,
@@ -2209,40 +2442,44 @@ h3.card-title {
       background: var(--neutral-100);
       border-color: var(--neutral-300);
     }
-    
+
     .stat-item {
       background: var(--neutral-200);
-      
+
       .stat-number {
         color: var(--neutral-800);
       }
-      
+
       .stat-label {
         color: var(--neutral-500);
       }
     }
-    
+
     .section-header {
       background: var(--neutral-200);
       border-color: var(--neutral-300);
-      
+
       h2 {
         color: var(--neutral-800);
       }
-      
+
       .results-count {
         color: var(--neutral-500);
       }
     }
-    
+
     .selection-summary {
-      background: linear-gradient(135deg, rgba(30, 58, 138, 0.08), rgba(30, 58, 138, 0.04));
+      background: linear-gradient(
+        135deg,
+        rgba(30, 58, 138, 0.08),
+        rgba(30, 58, 138, 0.04)
+      );
       border-color: rgba(30, 58, 138, 0.3);
-      
+
       .summary-info h3 {
         color: var(--brand-primary-light);
       }
-      
+
       .summary-info p {
         color: var(--neutral-400);
       }
@@ -2281,14 +2518,14 @@ h3.card-title {
   border-radius: var(--radius-base);
   background: var(--neutral-50);
   min-width: 80px;
-  
+
   .stat-number {
     font-size: var(--text-xl);
     font-weight: var(--font-weight-bold);
     color: var(--neutral-900);
     line-height: 1;
   }
-  
+
   .stat-label {
     font-size: var(--text-xs);
     color: var(--neutral-600);
@@ -2296,20 +2533,20 @@ h3.card-title {
     letter-spacing: 0.05em;
     margin-top: var(--space-1);
   }
-  
+
   &.urgent {
     background: rgba(245, 158, 11, 0.1);
     border: 1px solid rgba(245, 158, 11, 0.3);
-    
+
     .stat-number {
       color: var(--q-warning);
     }
   }
-  
+
   &.selected {
     background: rgba(30, 58, 138, 0.1);
     border: 1px solid rgba(30, 58, 138, 0.3);
-    
+
     .stat-number {
       color: var(--brand-primary);
     }
@@ -2354,16 +2591,20 @@ h3.card-title {
 // Selection Summary
 .selection-summary {
   padding: var(--space-4) var(--space-6);
-  background: linear-gradient(135deg, rgba(30, 58, 138, 0.05), rgba(30, 58, 138, 0.02));
+  background: linear-gradient(
+    135deg,
+    rgba(30, 58, 138, 0.05),
+    rgba(30, 58, 138, 0.02)
+  );
   border: 2px solid rgba(30, 58, 138, 0.2);
   border-radius: var(--radius-lg);
-  
+
   .summary-content {
     display: flex;
     justify-content: space-between;
     align-items: center;
   }
-  
+
   .summary-info {
     h3 {
       margin: 0 0 var(--space-1) 0;
@@ -2371,19 +2612,19 @@ h3.card-title {
       font-weight: var(--font-weight-semibold);
       color: var(--brand-primary);
     }
-    
+
     p {
       margin: 0;
       font-size: var(--text-sm);
       color: var(--neutral-600);
     }
   }
-  
+
   .summary-actions {
     display: flex;
     gap: var(--space-3);
   }
-  
+
   .order-btn {
     font-weight: var(--font-weight-semibold);
     padding: var(--space-3) var(--space-5);
@@ -2406,14 +2647,14 @@ h3.card-title {
   padding: var(--space-5) var(--space-6);
   background: var(--neutral-50);
   border-bottom: 1px solid var(--neutral-200);
-  
+
   h2 {
     margin: 0;
     font-size: var(--text-xl);
     font-weight: var(--font-weight-semibold);
     color: var(--neutral-900);
   }
-  
+
   .results-count {
     font-size: var(--text-sm);
     color: var(--neutral-600);
@@ -2429,12 +2670,12 @@ h3.card-title {
   .products-table {
     .table-header-row th {
       padding: var(--space-3) var(--space-4);
-      
+
       .header-content {
         .header-title {
           font-size: var(--text-xs);
         }
-        
+
         .header-subtitle {
           font-size: 10px;
         }
@@ -2445,39 +2686,39 @@ h3.card-title {
       padding: var(--space-3) var(--space-4);
     }
   }
-  
+
   // Mobile responsiveness for new bestellijst structure
   .bestellijst-content {
     padding: var(--space-3);
     gap: var(--space-4);
   }
-  
+
   .stats-actions-bar {
     flex-direction: column;
     gap: var(--space-4);
     padding: var(--space-4);
-    
+
     .quick-stats {
       justify-content: center;
       gap: var(--space-4);
     }
-    
+
     .action-buttons {
       width: 100%;
       justify-content: center;
-      
+
       .action-btn {
         flex: 1;
         max-width: 200px;
       }
     }
   }
-  
+
   .search-filter-row {
     flex-direction: column;
     gap: var(--space-3);
     padding: var(--space-4);
-    
+
     .search-section,
     .filter-section {
       width: 100%;
@@ -2485,20 +2726,20 @@ h3.card-title {
       min-width: auto;
     }
   }
-  
+
   .selection-summary {
     padding: var(--space-4);
-    
+
     .summary-content {
       flex-direction: column;
       gap: var(--space-3);
       text-align: center;
     }
-    
+
     .summary-actions {
       width: 100%;
       justify-content: center;
-      
+
       .order-btn,
       .clear-btn {
         flex: 1;
@@ -2506,16 +2747,16 @@ h3.card-title {
       }
     }
   }
-  
+
   .section-header {
     flex-direction: column;
     gap: var(--space-2);
     text-align: center;
     padding: var(--space-4);
   }
-  
+
   .table-container {
     margin: 0 calc(-1 * var(--space-3));
     border-radius: 0;
   }
-} 
+}

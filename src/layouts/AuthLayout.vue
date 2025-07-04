@@ -23,59 +23,91 @@
                   <q-icon name="local_hospital" size="32px" color="primary" />
                 </q-avatar>
                 <div class="brand-text">
-                  <h1 class="brand-title">{{ $t('brand.name') }}</h1>
-                  <p class="brand-subtitle">{{ $t('auth.pleaseLogin') }}</p>
+                  <h1 class="brand-title">{{ $t("brand.name") }}</h1>
+                  <p class="brand-subtitle">{{ $t("auth.pleaseLogin") }}</p>
                 </div>
               </div>
-          </div>
-          
+            </div>
+
             <!-- Main Content -->
-          <div class="auth-content" role="main">
-            <router-view />
-          </div>
-          
+            <div class="auth-content" role="main">
+              <router-view />
+            </div>
+
             <!-- Footer Section -->
             <div class="auth-footer">
               <div class="footer-links">
-                <a href="#" class="footer-link" role="button" tabindex="0" :aria-label="$t('auth.privacyPolicy')">{{ $t('auth.privacyPolicy') }}</a>
+                <a
+                  href="#"
+                  class="footer-link"
+                  role="button"
+                  tabindex="0"
+                  :aria-label="$t('auth.privacyPolicy')"
+                  >{{ $t("auth.privacyPolicy") }}</a
+                >
                 <span class="separator" aria-hidden="true">•</span>
-                <a href="#" class="footer-link" role="button" tabindex="0" :aria-label="$t('auth.termsOfService')">{{ $t('auth.termsOfService') }}</a>
+                <a
+                  href="#"
+                  class="footer-link"
+                  role="button"
+                  tabindex="0"
+                  :aria-label="$t('auth.termsOfService')"
+                  >{{ $t("auth.termsOfService") }}</a
+                >
                 <span class="separator" aria-hidden="true">•</span>
-                <a href="#" class="footer-link" role="button" tabindex="0" :aria-label="$t('auth.support')">{{ $t('auth.support') }}</a>
+                <a
+                  href="#"
+                  class="footer-link"
+                  role="button"
+                  tabindex="0"
+                  :aria-label="$t('auth.support')"
+                  >{{ $t("auth.support") }}</a
+                >
               </div>
               <p class="copyright">
-                {{ $t('auth.copyright', { year: 2025, company: $t('brand.name') }) }}
+                {{
+                  $t("auth.copyright", {
+                    year: 2025,
+                    company: $t("brand.name"),
+                  })
+                }}
               </p>
             </div>
           </div>
 
           <!-- Side Information Panel -->
-          <div class="info-panel animate-slide-up" role="complementary" aria-labelledby="info-title">
+          <div
+            class="info-panel animate-slide-up"
+            role="complementary"
+            aria-labelledby="info-title"
+          >
             <div class="info-content">
               <div class="info-icon">
                 <q-icon name="medical_services" size="48px" />
               </div>
-              <h2 id="info-title" class="info-title">{{ $t('auth.professionalInventory') }}</h2>
+              <h2 id="info-title" class="info-title">
+                {{ $t("auth.professionalInventory") }}
+              </h2>
               <p class="info-description">
-                {{ $t('auth.platformDescription') }}
+                {{ $t("auth.platformDescription") }}
               </p>
-              
+
               <div class="features-list" role="list">
                 <div class="feature-item" role="listitem">
                   <q-icon name="check_circle" color="positive" />
-                  <span>{{ $t('auth.realtimeTracking') }}</span>
+                  <span>{{ $t("auth.realtimeTracking") }}</span>
                 </div>
                 <div class="feature-item" role="listitem">
                   <q-icon name="check_circle" color="positive" />
-                  <span>{{ $t('auth.automatedAlerts') }}</span>
+                  <span>{{ $t("auth.automatedAlerts") }}</span>
                 </div>
                 <div class="feature-item" role="listitem">
                   <q-icon name="check_circle" color="positive" />
-                  <span>{{ $t('auth.complianceReporting') }}</span>
+                  <span>{{ $t("auth.complianceReporting") }}</span>
                 </div>
                 <div class="feature-item" role="listitem">
                   <q-icon name="check_circle" color="positive" />
-                  <span>{{ $t('auth.multilocationSupport') }}</span>
+                  <span>{{ $t("auth.multilocationSupport") }}</span>
                 </div>
               </div>
             </div>
@@ -114,7 +146,7 @@
   right: 0;
   bottom: 0;
   z-index: -1;
-  
+
   .bg-gradient {
     position: absolute;
     top: 0;
@@ -129,7 +161,7 @@
     );
     opacity: 0.9;
   }
-  
+
   .bg-shapes {
     position: absolute;
     top: 0;
@@ -137,14 +169,14 @@
     right: 0;
     bottom: 0;
     overflow: hidden;
-    
+
     .shape {
       position: absolute;
       border-radius: 50%;
       background: rgba(255, 255, 255, 0.1);
       backdrop-filter: blur(10px);
       animation: float 6s ease-in-out infinite;
-      
+
       &.shape-1 {
         width: 300px;
         height: 300px;
@@ -152,7 +184,7 @@
         right: -100px;
         animation-delay: 0s;
       }
-      
+
       &.shape-2 {
         width: 200px;
         height: 200px;
@@ -160,7 +192,7 @@
         left: -50px;
         animation-delay: 2s;
       }
-      
+
       &.shape-3 {
         width: 150px;
         height: 150px;
@@ -174,7 +206,8 @@
 }
 
 @keyframes float {
-  0%, 100% {
+  0%,
+  100% {
     transform: translateY(0) rotate(0deg);
   }
   33% {
@@ -219,7 +252,7 @@ body.body--dark .auth-background {
   transition: all var(--transition-base);
   max-width: 480px;
   width: 100%;
-  
+
   &:hover {
     transform: translateY(-1px);
     box-shadow: var(--shadow-xl);
@@ -235,14 +268,14 @@ body.body--dark .auth-card {
 .auth-header {
   text-align: center;
   margin-bottom: var(--space-8);
-  
+
   .brand-section {
     .brand-avatar {
       background: white;
       box-shadow: var(--shadow-md);
       margin: 0 auto var(--space-6);
     }
-    
+
     .brand-text {
       .brand-title {
         font-size: var(--text-3xl);
@@ -251,7 +284,7 @@ body.body--dark .auth-card {
         margin: 0 0 var(--space-2);
         line-height: var(--leading-tight);
       }
-      
+
       .brand-subtitle {
         font-size: var(--text-base);
         color: var(--neutral-600);
@@ -266,7 +299,7 @@ body.body--dark .auth-header {
   .brand-text .brand-title {
     color: var(--neutral-900);
   }
-  
+
   .brand-text .brand-subtitle {
     color: var(--neutral-600);
   }
@@ -282,32 +315,32 @@ body.body--dark .auth-header {
   text-align: center;
   border-top: 1px solid var(--neutral-200);
   padding-top: var(--space-6);
-  
+
   .footer-links {
     display: flex;
     justify-content: center;
     align-items: center;
     gap: var(--space-3);
     margin-bottom: var(--space-4);
-    
+
     .footer-link {
       color: var(--neutral-600);
       text-decoration: none;
       font-size: var(--text-sm);
       font-weight: var(--font-weight-medium);
       transition: color var(--transition-base);
-      
+
       &:hover {
         color: var(--brand-primary);
       }
     }
-    
+
     .separator {
       color: var(--neutral-400);
       font-size: var(--text-sm);
     }
   }
-  
+
   .copyright {
     font-size: var(--text-xs);
     color: var(--neutral-500);
@@ -318,19 +351,19 @@ body.body--dark .auth-header {
 
 body.body--dark .auth-footer {
   border-top-color: var(--neutral-300);
-  
+
   .footer-links .footer-link {
     color: var(--neutral-400);
-    
+
     &:hover {
       color: var(--brand-primary-light);
     }
   }
-  
+
   .footer-links .separator {
     color: var(--neutral-500);
   }
-  
+
   .copyright {
     color: var(--neutral-600);
   }
@@ -346,16 +379,16 @@ body.body--dark .auth-footer {
   padding: var(--space-8);
   color: white;
   text-align: center;
-  
+
   .info-content {
     .info-icon {
       margin-bottom: var(--space-6);
-      
+
       .q-icon {
         color: rgba(255, 255, 255, 0.9);
       }
     }
-    
+
     .info-title {
       font-size: var(--text-2xl);
       font-weight: var(--font-weight-bold);
@@ -364,7 +397,7 @@ body.body--dark .auth-footer {
       color: white;
       text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
     }
-    
+
     .info-description {
       font-size: var(--text-base);
       line-height: var(--leading-relaxed);
@@ -373,10 +406,10 @@ body.body--dark .auth-footer {
       font-weight: var(--font-weight-normal);
       text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
     }
-    
+
     .features-list {
       text-align: left;
-      
+
       .feature-item {
         display: flex;
         align-items: center;
@@ -386,7 +419,7 @@ body.body--dark .auth-footer {
         font-weight: var(--font-weight-medium);
         color: rgba(255, 255, 255, 0.95);
         text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
-        
+
         &:last-child {
           margin-bottom: 0;
         }
@@ -402,16 +435,16 @@ body.body--dark .auth-footer {
     gap: var(--space-8);
     max-width: 480px;
   }
-  
+
   .info-panel {
     order: -1;
     padding: var(--space-6);
-    
+
     .info-content {
       .info-title {
         font-size: var(--text-xl);
       }
-      
+
       .info-description {
         font-size: var(--text-sm);
       }
@@ -423,35 +456,35 @@ body.body--dark .auth-footer {
   .auth-page {
     padding: var(--space-4);
   }
-  
+
   .auth-card {
     padding: var(--space-6);
   }
-  
+
   .info-panel {
     padding: var(--space-4);
-    
+
     .info-content {
       .info-title {
         font-size: var(--text-lg);
       }
-      
+
       .features-list .feature-item {
         font-size: var(--text-xs);
       }
     }
   }
-  
+
   .auth-header .brand-section {
     .brand-avatar {
       width: 56px;
       height: 56px;
-      
+
       .q-icon {
         font-size: 28px;
       }
     }
-    
+
     .brand-text .brand-title {
       font-size: var(--text-2xl);
     }
@@ -462,20 +495,20 @@ body.body--dark .auth-footer {
   .auth-page {
     padding: var(--space-2);
   }
-  
+
   .auth-card {
     padding: var(--space-4);
   }
-  
+
   .auth-header {
     margin-bottom: var(--space-6);
   }
-  
+
   .auth-footer {
     .footer-links {
       flex-direction: column;
       gap: var(--space-2);
-      
+
       .separator {
         display: none;
       }
@@ -488,13 +521,13 @@ body.body--dark .auth-footer {
   .bg-shapes .shape {
     animation: none;
   }
-  
+
   .auth-card {
     animation: none;
   }
-  
+
   .info-panel {
     animation: none;
   }
 }
-</style> 
+</style>

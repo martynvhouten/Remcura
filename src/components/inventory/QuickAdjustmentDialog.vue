@@ -16,7 +16,7 @@
         map-options
         outlined
         required
-        :rules="[val => !!val || $t('validation.required')]"
+        :rules="[(val) => !!val || $t('validation.required')]"
         class="form-field"
       >
         <template v-slot:prepend>
@@ -46,8 +46,9 @@
         outlined
         required
         :rules="[
-          val => val !== null && val !== undefined || $t('validation.required'),
-          val => val !== 0 || $t('inventory.quantityMustNotBeZero')
+          (val) =>
+            (val !== null && val !== undefined) || $t('validation.required'),
+          (val) => val !== 0 || $t('inventory.quantityMustNotBeZero'),
         ]"
         class="form-field"
       >
@@ -55,7 +56,7 @@
           <q-icon name="edit" />
         </template>
         <template v-slot:hint>
-          {{ $t('inventory.quantityChangeHint') }}
+          {{ $t("inventory.quantityChangeHint") }}
         </template>
       </q-input>
 
@@ -76,11 +77,7 @@
     </q-form>
 
     <template #actions>
-      <q-btn
-        flat
-        :label="$t('common.cancel')"
-        @click="onCancel"
-      />
+      <q-btn flat :label="$t('common.cancel')" @click="onCancel" />
       <q-btn
         color="primary"
         :label="$t('inventory.adjustStock')"
@@ -93,93 +90,93 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from 'vue'
-import { useI18n } from 'vue-i18n'
-import { useQuasar } from 'quasar'
-import type { PracticeLocation } from 'src/types/inventory'
-import BaseDialog from 'src/components/base/BaseDialog.vue'
+import { ref, computed } from "vue";
+import { useI18n } from "vue-i18n";
+import { useQuasar } from "quasar";
+import type { PracticeLocation } from "src/types/inventory";
+import BaseDialog from "src/components/base/BaseDialog.vue";
 
 interface Props {
-  modelValue: boolean
-  locations: PracticeLocation[]
+  modelValue: boolean;
+  locations: PracticeLocation[];
 }
 
 interface Emits {
-  (e: 'update:modelValue', value: boolean): void
-  (e: 'adjustment-made'): void
+  (e: "update:modelValue", value: boolean): void;
+  (e: "adjustment-made"): void;
 }
 
-const props = defineProps<Props>()
-const emit = defineEmits<Emits>()
+const props = defineProps<Props>();
+const emit = defineEmits<Emits>();
 
 // Composables
-const { t } = useI18n()
-const $q = useQuasar()
+const { t } = useI18n();
+const $q = useQuasar();
 
 // State
-const loading = ref(false)
-const productSearch = ref('')
+const loading = ref(false);
+const productSearch = ref("");
 const form = ref({
-  locationId: '',
+  locationId: "",
   quantityChange: null as number | null,
-  notes: ''
-})
+  notes: "",
+});
 
 // Computed
 const dialogVisible = computed({
   get: () => props.modelValue,
-  set: (value) => emit('update:modelValue', value)
-})
+  set: (value) => emit("update:modelValue", value),
+});
 
-const locationOptions = computed(() => 
-  props.locations.map(location => ({
+const locationOptions = computed(() =>
+  props.locations.map((location) => ({
     label: location.name,
-    value: location.id
+    value: location.id,
   }))
-)
+);
 
 // Methods
 const resetForm = () => {
   form.value = {
-    locationId: props.locations[0]?.id || '',
+    locationId: props.locations[0]?.id || "",
     quantityChange: null,
-    notes: ''
-  }
-  productSearch.value = ''
-}
+    notes: "",
+  };
+  productSearch.value = "";
+};
 
 const onSubmit = async () => {
-  loading.value = true
+  loading.value = true;
   try {
     // Simulate adjustment
-    await new Promise(resolve => setTimeout(resolve, 1000))
-    
-    $q.notify({
-      type: 'positive',
-      message: t('inventory.stockAdjusted'),
-      position: 'top'
-    })
+    await new Promise((resolve) => setTimeout(resolve, 1000));
 
-    emit('adjustment-made')
-    dialogVisible.value = false
+    $q.notify({
+      type: "positive",
+      message: t("inventory.stockAdjusted"),
+      position: "top",
+    });
+
+    emit("adjustment-made");
+    dialogVisible.value = false;
   } catch (error) {
     $q.notify({
-      type: 'negative',
-      message: t('inventory.adjustmentFailed'),
-      position: 'top'
-    })
+      type: "negative",
+      message: t("inventory.adjustmentFailed"),
+      position: "top",
+    });
   } finally {
-    loading.value = false
+    loading.value = false;
   }
-}
+};
 
 const onCancel = () => {
-  dialogVisible.value = false
-}
+  dialogVisible.value = false;
+};
 
 const onHide = () => {
-  resetForm()
-}
+  resetForm();
+};
 </script>
 
 <style lang="scss" scoped>
@@ -193,4 +190,4 @@ const onHide = () => {
 .form-field {
   width: 100%;
 }
-</style> 
+</style>

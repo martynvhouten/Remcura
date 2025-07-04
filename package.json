@@ -10,7 +10,6 @@
     "build:stats": "quasar build && echo 'Bundle analysis complete - check dist/spa for generated files'",
     "lint": "eslint --ext .js,.ts,.vue ./",
     "format": "prettier --write \"**/*.{js,ts,vue,scss,html,md,json}\" --ignore-path .gitignore",
-    
     "test": "npm run test:unit",
     "test:unit": "vitest",
     "test:unit:run": "vitest run",
@@ -30,20 +29,19 @@
     "test:all": "npm run test:unit:run && npm run test:integration && npm run test:performance",
     "test:debug": "vitest --no-coverage --reporter=verbose",
     "test:report": "vitest run --coverage --reporter=html",
-    
     "e2e": "playwright test",
     "e2e:ui": "playwright test --ui",
     "e2e:headed": "playwright test --headed",
     "e2e:debug": "playwright test --debug",
     "e2e:install": "playwright install",
-    
     "quality": "npm run lint && npm run test:coverage",
     "quality:fix": "npm run format && npm run lint -- --fix",
     "ci": "npm run quality && npm run test:all && npm run build",
-    
     "serve": "quasar serve dist/spa --port 3000 --history",
     "performance": "npm run build && npm run serve",
-    "dev:test": "concurrently \"npm run dev\" \"npm run test:watch\""
+    "dev:test": "concurrently \"npm run dev\" \"npm run test:watch\"",
+    "reset-demo": "node scripts/reset-demo-data.js",
+    "demo:reset": "node scripts/reset-demo-data.js"
   },
   "dependencies": {
     "@quasar/extras": "^1.16.4",

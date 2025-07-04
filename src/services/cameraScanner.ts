@@ -1,40 +1,40 @@
-import { ref, reactive } from 'vue'
-import { analyticsService } from './analytics'
+import { ref, reactive } from "vue";
+import { analyticsService } from "./analytics";
 
 export interface ScanResult {
-  code: string
-  format: string
-  timestamp: Date
-  confidence?: number
+  code: string;
+  format: string;
+  timestamp: Date;
+  confidence?: number;
 }
 
 export interface CameraDevice {
-  deviceId: string
-  label: string
-  kind: MediaDeviceKind
+  deviceId: string;
+  label: string;
+  kind: MediaDeviceKind;
 }
 
 export interface ScannerOptions {
-  facingMode?: 'user' | 'environment'
-  deviceId?: string
-  width?: number
-  height?: number
-  focusMode?: 'auto' | 'manual'
-  torch?: boolean
+  facingMode?: "user" | "environment";
+  deviceId?: string;
+  width?: number;
+  height?: number;
+  focusMode?: "auto" | "manual";
+  torch?: boolean;
 }
 
 export class CameraScannerService {
-  private videoElement: HTMLVideoElement | null = null
-  private stream: MediaStream | null = null
-  private isScanning = ref(false)
-  private lastScanTime = 0
-  private scanCooldown = 1000 // 1 second between scans
-  private availableDevices = ref<CameraDevice[]>([])
-  private currentDevice = ref<CameraDevice | null>(null)
-  private scanHistory = ref<ScanResult[]>([])
+  private videoElement: HTMLVideoElement | null = null;
+  private stream: MediaStream | null = null;
+  private isScanning = ref(false);
+  private lastScanTime = 0;
+  private scanCooldown = 1000; // 1 second between scans
+  private availableDevices = ref<CameraDevice[]>([]);
+  private currentDevice = ref<CameraDevice | null>(null);
+  private scanHistory = ref<ScanResult[]>([]);
 
   constructor() {
-    this.loadScanHistory()
+    this.loadScanHistory();
   }
 
   /**
@@ -42,19 +42,19 @@ export class CameraScannerService {
    */
   async getAvailableDevices(): Promise<CameraDevice[]> {
     try {
-      const devices = await navigator.mediaDevices.enumerateDevices()
-      const cameras = devices.filter(device => device.kind === 'videoinput')
-      
-      this.availableDevices.value = cameras.map(device => ({
+      const devices = await navigator.mediaDevices.enumerateDevices();
+      const cameras = devices.filter((device) => device.kind === "videoinput");
+
+      this.availableDevices.value = cameras.map((device) => ({
         deviceId: device.deviceId,
         label: device.label || `Camera ${device.deviceId.substr(0, 8)}`,
-        kind: device.kind
-      }))
+        kind: device.kind,
+      }));
 
-      return this.availableDevices.value
+      return this.availableDevices.value;
     } catch (error) {
-      console.error('Failed to get camera devices:', error)
-      throw new Error('Unable to access camera devices')
+      console.error("Failed to get camera devices:", error);
+      throw new Error("Unable to access camera devices");
     }
   }
 
@@ -65,32 +65,32 @@ export class CameraScannerService {
     videoElement: HTMLVideoElement,
     options: ScannerOptions = {}
   ): Promise<void> {
-    this.videoElement = videoElement
+    this.videoElement = videoElement;
 
     try {
       // Request camera permission
       const constraints: MediaStreamConstraints = {
         video: {
-          facingMode: options.facingMode || 'environment',
+          facingMode: options.facingMode || "environment",
           width: options.width || { ideal: 1280 },
           height: options.height || { ideal: 720 },
-          deviceId: options.deviceId ? { exact: options.deviceId } : undefined
-        }
-      }
+          deviceId: options.deviceId ? { exact: options.deviceId } : undefined,
+        },
+      };
 
-      this.stream = await navigator.mediaDevices.getUserMedia(constraints)
-      this.videoElement.srcObject = this.stream
-      
-      await this.videoElement.play()
-      this.isScanning.value = true
+      this.stream = await navigator.mediaDevices.getUserMedia(constraints);
+      this.videoElement.srcObject = this.stream;
+
+      await this.videoElement.play();
+      this.isScanning.value = true;
 
       // Start the scanning loop
-      this.scanLoop()
+      this.scanLoop();
 
-      console.log('Camera scanning started')
+      console.log("Camera scanning started");
     } catch (error) {
-      console.error('Failed to start camera:', error)
-      throw new Error('Unable to start camera scanning')
+      console.error("Failed to start camera:", error);
+      throw new Error("Unable to start camera scanning");
     }
   }
 
@@ -98,34 +98,36 @@ export class CameraScannerService {
    * Stop camera scanning
    */
   stopScanning(): void {
-    this.isScanning.value = false
+    this.isScanning.value = false;
 
     if (this.stream) {
-      this.stream.getTracks().forEach(track => track.stop())
-      this.stream = null
+      this.stream.getTracks().forEach((track) => track.stop());
+      this.stream = null;
     }
 
     if (this.videoElement) {
-      this.videoElement.srcObject = null
+      this.videoElement.srcObject = null;
     }
 
-    console.log('Camera scanning stopped')
+    console.log("Camera scanning stopped");
   }
 
   /**
    * Switch camera device
    */
   async switchCamera(deviceId: string): Promise<void> {
-    const device = this.availableDevices.value.find(d => d.deviceId === deviceId)
+    const device = this.availableDevices.value.find(
+      (d) => d.deviceId === deviceId
+    );
     if (!device) {
-      throw new Error('Camera device not found')
+      throw new Error("Camera device not found");
     }
 
-    this.currentDevice.value = device
+    this.currentDevice.value = device;
 
     if (this.isScanning.value && this.videoElement) {
-      await this.stopScanning()
-      await this.startScanning(this.videoElement, { deviceId })
+      await this.stopScanning();
+      await this.startScanning(this.videoElement, { deviceId });
     }
   }
 
@@ -134,28 +136,28 @@ export class CameraScannerService {
    */
   async toggleTorch(): Promise<boolean> {
     if (!this.stream) {
-      throw new Error('Camera not started')
+      throw new Error("Camera not started");
     }
 
     try {
-      const videoTrack = this.stream.getVideoTracks()[0]
-      const capabilities = videoTrack.getCapabilities()
+      const videoTrack = this.stream.getVideoTracks()[0];
+      const capabilities = videoTrack.getCapabilities();
 
-      if ('torch' in capabilities) {
-        const settings = videoTrack.getSettings()
-        const newTorchState = !settings.torch
+      if ("torch" in capabilities) {
+        const settings = videoTrack.getSettings();
+        const newTorchState = !settings.torch;
 
         await videoTrack.applyConstraints({
-          advanced: [{ torch: newTorchState } as any]
-        })
+          advanced: [{ torch: newTorchState } as any],
+        });
 
-        return newTorchState
+        return newTorchState;
       } else {
-        throw new Error('Torch not supported on this device')
+        throw new Error("Torch not supported on this device");
       }
     } catch (error) {
-      console.error('Failed to toggle torch:', error)
-      throw error
+      console.error("Failed to toggle torch:", error);
+      throw error;
     }
   }
 
@@ -164,57 +166,61 @@ export class CameraScannerService {
    */
   private scanLoop(): void {
     if (!this.isScanning.value || !this.videoElement) {
-      return
+      return;
     }
 
     // Check if enough time has passed since last scan
-    const now = Date.now()
+    const now = Date.now();
     if (now - this.lastScanTime < this.scanCooldown) {
-      requestAnimationFrame(() => this.scanLoop())
-      return
+      requestAnimationFrame(() => this.scanLoop());
+      return;
     }
 
     try {
       // Capture frame from video
-      const canvas = document.createElement('canvas')
-      const context = canvas.getContext('2d')
-      
+      const canvas = document.createElement("canvas");
+      const context = canvas.getContext("2d");
+
       if (context) {
-        canvas.width = this.videoElement.videoWidth
-        canvas.height = this.videoElement.videoHeight
-        context.drawImage(this.videoElement, 0, 0)
+        canvas.width = this.videoElement.videoWidth;
+        canvas.height = this.videoElement.videoHeight;
+        context.drawImage(this.videoElement, 0, 0);
 
         // In a real implementation, you would use a barcode detection library here
         // For now, we'll simulate barcode detection
-        this.simulateBarcodeDetection(canvas, context)
+        this.simulateBarcodeDetection(canvas, context);
       }
     } catch (error) {
-      console.error('Scanning error:', error)
+      console.error("Scanning error:", error);
     }
 
     // Continue scanning
-    requestAnimationFrame(() => this.scanLoop())
+    requestAnimationFrame(() => this.scanLoop());
   }
 
   /**
    * Simulate barcode detection (replace with real library)
    */
-  private simulateBarcodeDetection(canvas: HTMLCanvasElement, context: CanvasRenderingContext2D): void {
+  private simulateBarcodeDetection(
+    canvas: HTMLCanvasElement,
+    context: CanvasRenderingContext2D
+  ): void {
     // This is a simulation - in reality you'd use:
     // - ZXing-js (https://github.com/zxing-js/library)
     // - QuaggaJS (https://github.com/serratus/quaggaJS)
     // - @capacitor-community/barcode-scanner for mobile
-    
+
     // Simulate detecting a barcode every 10 seconds (for demo purposes)
-    if (Math.random() < 0.001) { // Very low probability to simulate rare detection
+    if (Math.random() < 0.001) {
+      // Very low probability to simulate rare detection
       const simulatedResult: ScanResult = {
         code: this.generateSimulatedBarcode(),
-        format: 'EAN-13',
+        format: "EAN-13",
         timestamp: new Date(),
-        confidence: 0.95
-      }
+        confidence: 0.95,
+      };
 
-      this.handleScanResult(simulatedResult)
+      this.handleScanResult(simulatedResult);
     }
   }
 
@@ -222,30 +228,30 @@ export class CameraScannerService {
    * Handle successful scan result
    */
   private handleScanResult(result: ScanResult): void {
-    this.lastScanTime = Date.now()
-    
+    this.lastScanTime = Date.now();
+
     // Add to scan history
-    this.scanHistory.value.unshift(result)
-    
+    this.scanHistory.value.unshift(result);
+
     // Keep only last 100 scans
     if (this.scanHistory.value.length > 100) {
-      this.scanHistory.value = this.scanHistory.value.slice(0, 100)
+      this.scanHistory.value = this.scanHistory.value.slice(0, 100);
     }
 
     // Save to localStorage
-    this.saveScanHistory()
+    this.saveScanHistory();
 
     // Track analytics
-    analyticsService.trackScanEvent('unknown', 'barcode', {
+    analyticsService.trackScanEvent("unknown", "barcode", {
       code: result.code,
       format: result.format,
-      confidence: result.confidence
-    })
+      confidence: result.confidence,
+    });
 
     // Emit scan event (you can use an event emitter or Vue's emit)
-    this.onScanResult?.(result)
+    this.onScanResult?.(result);
 
-    console.log('Barcode detected:', result)
+    console.log("Barcode detected:", result);
   }
 
   /**
@@ -253,12 +259,16 @@ export class CameraScannerService {
    */
   private generateSimulatedBarcode(): string {
     // Generate a realistic EAN-13 barcode
-    const countryCode = '871' // Netherlands
-    const companyCode = Math.floor(Math.random() * 100000).toString().padStart(5, '0')
-    const productCode = Math.floor(Math.random() * 10000).toString().padStart(4, '0')
-    const checkDigit = Math.floor(Math.random() * 10)
-    
-    return countryCode + companyCode + productCode + checkDigit
+    const countryCode = "871"; // Netherlands
+    const companyCode = Math.floor(Math.random() * 100000)
+      .toString()
+      .padStart(5, "0");
+    const productCode = Math.floor(Math.random() * 10000)
+      .toString()
+      .padStart(4, "0");
+    const checkDigit = Math.floor(Math.random() * 10);
+
+    return countryCode + companyCode + productCode + checkDigit;
   }
 
   /**
@@ -266,9 +276,12 @@ export class CameraScannerService {
    */
   private saveScanHistory(): void {
     try {
-      localStorage.setItem('barcode_scan_history', JSON.stringify(this.scanHistory.value))
+      localStorage.setItem(
+        "barcode_scan_history",
+        JSON.stringify(this.scanHistory.value)
+      );
     } catch (error) {
-      console.error('Failed to save scan history:', error)
+      console.error("Failed to save scan history:", error);
     }
   }
 
@@ -277,16 +290,16 @@ export class CameraScannerService {
    */
   private loadScanHistory(): void {
     try {
-      const saved = localStorage.getItem('barcode_scan_history')
+      const saved = localStorage.getItem("barcode_scan_history");
       if (saved) {
-        const history = JSON.parse(saved)
+        const history = JSON.parse(saved);
         this.scanHistory.value = history.map((item: any) => ({
           ...item,
-          timestamp: new Date(item.timestamp)
-        }))
+          timestamp: new Date(item.timestamp),
+        }));
       }
     } catch (error) {
-      console.error('Failed to load scan history:', error)
+      console.error("Failed to load scan history:", error);
     }
   }
 
@@ -294,48 +307,48 @@ export class CameraScannerService {
    * Get scan history
    */
   getScanHistory(): ScanResult[] {
-    return this.scanHistory.value
+    return this.scanHistory.value;
   }
 
   /**
    * Clear scan history
    */
   clearScanHistory(): void {
-    this.scanHistory.value = []
-    this.saveScanHistory()
+    this.scanHistory.value = [];
+    this.saveScanHistory();
   }
 
   /**
    * Check if camera is supported
    */
   isCameraSupported(): boolean {
-    return !!(navigator.mediaDevices && navigator.mediaDevices.getUserMedia)
+    return !!(navigator.mediaDevices && navigator.mediaDevices.getUserMedia);
   }
 
   /**
    * Check if scanning is active
    */
   isActivelyScanninng(): boolean {
-    return this.isScanning.value
+    return this.isScanning.value;
   }
 
   /**
    * Get current device
    */
   getCurrentDevice(): CameraDevice | null {
-    return this.currentDevice.value
+    return this.currentDevice.value;
   }
 
   /**
    * Callback for scan results (to be set by components)
    */
-  onScanResult?: (result: ScanResult) => void
+  onScanResult?: (result: ScanResult) => void;
 
   /**
    * Set scan result callback
    */
   setOnScanResult(callback: (result: ScanResult) => void): void {
-    this.onScanResult = callback
+    this.onScanResult = callback;
   }
 
   /**
@@ -343,20 +356,20 @@ export class CameraScannerService {
    */
   async focusCamera(): Promise<void> {
     if (!this.stream) {
-      throw new Error('Camera not started')
+      throw new Error("Camera not started");
     }
 
     try {
-      const videoTrack = this.stream.getVideoTracks()[0]
-      const capabilities = videoTrack.getCapabilities()
+      const videoTrack = this.stream.getVideoTracks()[0];
+      const capabilities = videoTrack.getCapabilities();
 
-      if ('focusMode' in capabilities) {
+      if ("focusMode" in capabilities) {
         await videoTrack.applyConstraints({
-          advanced: [{ focusMode: 'single-shot' } as any]
-        })
+          advanced: [{ focusMode: "single-shot" } as any],
+        });
       }
     } catch (error) {
-      console.error('Failed to focus camera:', error)
+      console.error("Failed to focus camera:", error);
     }
   }
 
@@ -364,21 +377,21 @@ export class CameraScannerService {
    * Get camera capabilities
    */
   getCameraCapabilities(): MediaTrackCapabilities | null {
-    if (!this.stream) return null
+    if (!this.stream) return null;
 
-    const videoTrack = this.stream.getVideoTracks()[0]
-    return videoTrack.getCapabilities()
+    const videoTrack = this.stream.getVideoTracks()[0];
+    return videoTrack.getCapabilities();
   }
 
   /**
    * Get camera settings
    */
   getCameraSettings(): MediaTrackSettings | null {
-    if (!this.stream) return null
+    if (!this.stream) return null;
 
-    const videoTrack = this.stream.getVideoTracks()[0]
-    return videoTrack.getSettings()
+    const videoTrack = this.stream.getVideoTracks()[0];
+    return videoTrack.getSettings();
   }
 }
 
-export const cameraScannerService = new CameraScannerService() 
+export const cameraScannerService = new CameraScannerService();

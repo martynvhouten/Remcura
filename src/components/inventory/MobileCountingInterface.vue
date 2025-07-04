@@ -10,11 +10,12 @@
           class="progress-bar"
         />
         <div class="progress-text">
-          {{ countingStats.counted_products }} / {{ countingStats.total_products }}
-          {{ $t('counting.productsCompleted') }}
+          {{ countingStats.counted_products }} /
+          {{ countingStats.total_products }}
+          {{ $t("counting.productsCompleted") }}
         </div>
       </div>
-      
+
       <div class="stats-row">
         <div class="stat-item">
           <q-icon name="checklist" color="positive" />
@@ -36,12 +37,14 @@
       <div class="product-header">
         <div class="product-info">
           <h3 class="product-name">{{ currentProduct.name }}</h3>
-          <p class="product-sku">{{ $t('products.sku') }}: {{ currentProduct.sku }}</p>
+          <p class="product-sku">
+            {{ $t("products.sku") }}: {{ currentProduct.sku }}
+          </p>
           <p v-if="currentProduct.category" class="product-category">
             {{ currentProduct.category }}
           </p>
         </div>
-        
+
         <div class="product-image">
           <q-img
             v-if="currentProduct.image_url"
@@ -64,16 +67,19 @@
       </div>
 
       <div class="system-quantity">
-        {{ $t('counting.systemQuantity') }}: 
-        <strong>{{ currentProduct.current_system_quantity }} {{ currentProduct.unit || '' }}</strong>
+        {{ $t("counting.systemQuantity") }}:
+        <strong
+          >{{ currentProduct.current_system_quantity }}
+          {{ currentProduct.unit || "" }}</strong
+        >
       </div>
     </div>
 
     <!-- Counting Input Section -->
     <div v-if="currentProduct" class="counting-input-section">
       <div class="quantity-input-container">
-        <label class="input-label">{{ $t('counting.countedQuantity') }}</label>
-        
+        <label class="input-label">{{ $t("counting.countedQuantity") }}</label>
+
         <!-- Large touch-friendly number input -->
         <div class="quantity-input-wrapper">
           <q-btn
@@ -85,7 +91,7 @@
             :disable="countedQuantity <= 0"
             class="quantity-btn"
           />
-          
+
           <q-input
             v-model.number="countedQuantity"
             type="number"
@@ -97,7 +103,7 @@
             input-class="text-center text-h5"
             @focus="onQuantityFocus"
           />
-          
+
           <q-btn
             round
             color="positive"
@@ -131,7 +137,11 @@
       </div>
 
       <!-- Variance Indicator -->
-      <div v-if="showVariance" class="variance-indicator" :class="varianceClass">
+      <div
+        v-if="showVariance"
+        class="variance-indicator"
+        :class="varianceClass"
+      >
         <q-icon :name="varianceIcon" />
         <span class="variance-text">
           {{ varianceText }}
@@ -154,14 +164,14 @@
               rows="2"
               class="notes-input"
             />
-            
+
             <q-input
               v-model="batchNumber"
               :label="$t('counting.batchNumber')"
               outlined
               class="batch-input"
             />
-            
+
             <q-input
               v-model="expiryDate"
               type="date"
@@ -192,7 +202,7 @@
           @click="skipProduct"
           class="action-btn skip-btn"
         />
-        
+
         <q-btn
           :label="$t('counting.confirmCount')"
           color="primary"
@@ -208,9 +218,9 @@
     <!-- No More Products -->
     <div v-else-if="!loading" class="no-products">
       <q-icon name="check_circle" color="positive" size="80px" />
-      <h3>{{ $t('counting.allProductsCounted') }}</h3>
-      <p>{{ $t('counting.readyToComplete') }}</p>
-      
+      <h3>{{ $t("counting.allProductsCounted") }}</h3>
+      <p>{{ $t("counting.readyToComplete") }}</p>
+
       <q-btn
         :label="$t('counting.completeSession')"
         color="positive"
@@ -223,7 +233,7 @@
     <!-- Loading State -->
     <div v-if="loading" class="loading-state">
       <q-spinner size="40px" color="primary" />
-      <p>{{ $t('common.loading') }}</p>
+      <p>{{ $t("common.loading") }}</p>
     </div>
 
     <!-- Floating Action Buttons -->
@@ -240,195 +250,204 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted, watch } from 'vue'
-import { useI18n } from 'vue-i18n'
-import { useCountingStore } from 'src/stores/counting'
-import type { CountingProduct } from 'src/types/inventory'
+import { ref, computed, onMounted, watch } from "vue";
+import { useI18n } from "vue-i18n";
+import { useCountingStore } from "src/stores/counting";
+import type { CountingProduct } from "src/types/inventory";
 
 // Props
 interface Props {
-  productId?: string
+  productId?: string;
 }
 
 const props = withDefaults(defineProps<Props>(), {
-  productId: undefined
-})
+  productId: undefined,
+});
 
 // Composables
-const { t } = useI18n()
-const countingStore = useCountingStore()
+const { t } = useI18n();
+const countingStore = useCountingStore();
 
 // State
-const countedQuantity = ref(0)
-const notes = ref('')
-const batchNumber = ref('')
-const expiryDate = ref('')
-const confidenceLevel = ref<'high' | 'medium' | 'low'>('high')
-const submitting = ref(false)
-const sessionStartTime = ref<Date>(new Date())
+const countedQuantity = ref(0);
+const notes = ref("");
+const batchNumber = ref("");
+const expiryDate = ref("");
+const confidenceLevel = ref<"high" | "medium" | "low">("high");
+const submitting = ref(false);
+const sessionStartTime = ref<Date>(new Date());
 
 // Computed
 const currentProduct = computed((): CountingProduct | null => {
   if (props.productId) {
-    return countingStore.availableProducts.find(p => p.id === props.productId) || null
+    return (
+      countingStore.availableProducts.find((p) => p.id === props.productId) ||
+      null
+    );
   }
-  return countingStore.nextProductToCount
-})
+  return countingStore.nextProductToCount;
+});
 
-const countingStats = computed(() => countingStore.countingStats)
-const loading = computed(() => countingStore.loading)
+const countingStats = computed(() => countingStore.countingStats);
+const loading = computed(() => countingStore.loading);
 
 const quickQuantities = computed(() => {
-  const systemQty = currentProduct.value?.current_system_quantity || 0
-  const baseQuantities = [0, 1, 5, 10, 25, 50]
-  
+  const systemQty = currentProduct.value?.current_system_quantity || 0;
+  const baseQuantities = [0, 1, 5, 10, 25, 50];
+
   // Add system quantity if it's not already in the list
   if (systemQty > 0 && !baseQuantities.includes(systemQty)) {
-    baseQuantities.push(systemQty)
+    baseQuantities.push(systemQty);
   }
-  
-  return baseQuantities.sort((a, b) => a - b).slice(0, 6)
-})
+
+  return baseQuantities.sort((a, b) => a - b).slice(0, 6);
+});
 
 const showVariance = computed(() => {
-  return currentProduct.value && countedQuantity.value !== currentProduct.value.current_system_quantity
-})
+  return (
+    currentProduct.value &&
+    countedQuantity.value !== currentProduct.value.current_system_quantity
+  );
+});
 
 const variance = computed(() => {
-  if (!currentProduct.value) return 0
-  return countedQuantity.value - currentProduct.value.current_system_quantity
-})
+  if (!currentProduct.value) return 0;
+  return countedQuantity.value - currentProduct.value.current_system_quantity;
+});
 
 const varianceClass = computed(() => {
-  const v = variance.value
-  if (v > 0) return 'variance-positive'
-  if (v < 0) return 'variance-negative'
-  return 'variance-neutral'
-})
+  const v = variance.value;
+  if (v > 0) return "variance-positive";
+  if (v < 0) return "variance-negative";
+  return "variance-neutral";
+});
 
 const varianceIcon = computed(() => {
-  const v = variance.value
-  if (v > 0) return 'trending_up'
-  if (v < 0) return 'trending_down'
-  return 'check'
-})
+  const v = variance.value;
+  if (v > 0) return "trending_up";
+  if (v < 0) return "trending_down";
+  return "check";
+});
 
 const varianceText = computed(() => {
-  const v = variance.value
-  const absV = Math.abs(v)
+  const v = variance.value;
+  const absV = Math.abs(v);
   if (v > 0) {
-    return t('counting.variancePositive', { amount: absV })
+    return t("counting.variancePositive", { amount: absV });
   } else if (v < 0) {
-    return t('counting.varianceNegative', { amount: absV })
+    return t("counting.varianceNegative", { amount: absV });
   }
-  return t('counting.varianceMatch')
-})
+  return t("counting.varianceMatch");
+});
 
 const isValidCount = computed(() => {
-  return countedQuantity.value >= 0 && currentProduct.value
-})
+  return countedQuantity.value >= 0 && currentProduct.value;
+});
 
 const formatSessionTime = computed(() => {
-  const elapsed = Date.now() - sessionStartTime.value.getTime()
-  const minutes = Math.floor(elapsed / 60000)
-  const seconds = Math.floor((elapsed % 60000) / 1000)
-  return `${minutes}:${seconds.toString().padStart(2, '0')}`
-})
+  const elapsed = Date.now() - sessionStartTime.value.getTime();
+  const minutes = Math.floor(elapsed / 60000);
+  const seconds = Math.floor((elapsed % 60000) / 1000);
+  return `${minutes}:${seconds.toString().padStart(2, "0")}`;
+});
 
 const confidenceLevelOptions = computed(() => [
-  { label: t('counting.confidence.high'), value: 'high' },
-  { label: t('counting.confidence.medium'), value: 'medium' },
-  { label: t('counting.confidence.low'), value: 'low' }
-])
+  { label: t("counting.confidence.high"), value: "high" },
+  { label: t("counting.confidence.medium"), value: "medium" },
+  { label: t("counting.confidence.low"), value: "low" },
+]);
 
 // Methods
 const incrementQuantity = () => {
-  countedQuantity.value += 1
-}
+  countedQuantity.value += 1;
+};
 
 const decrementQuantity = () => {
   if (countedQuantity.value > 0) {
-    countedQuantity.value -= 1
+    countedQuantity.value -= 1;
   }
-}
+};
 
 const setQuantity = (qty: number) => {
-  countedQuantity.value = qty
-}
+  countedQuantity.value = qty;
+};
 
 const onQuantityFocus = (event: Event) => {
-  const input = event.target as HTMLInputElement
-  input.select()
-}
+  const input = event.target as HTMLInputElement;
+  input.select();
+};
 
 const confirmCount = async () => {
-  if (!currentProduct.value || !isValidCount.value) return
+  if (!currentProduct.value || !isValidCount.value) return;
 
   try {
-    submitting.value = true
+    submitting.value = true;
 
     await countingStore.countProduct(
       currentProduct.value.id,
       currentProduct.value.location_id,
       countedQuantity.value,
       {
-        countMethod: 'manual',
+        countMethod: "manual",
         confidenceLevel: confidenceLevel.value,
         batchNumber: batchNumber.value || undefined,
         expiryDate: expiryDate.value || undefined,
-        notes: notes.value || undefined
+        notes: notes.value || undefined,
       }
-    )
+    );
 
     // Reset form for next product
-    resetForm()
-
+    resetForm();
   } catch (error) {
-    console.error('Error confirming count:', error)
+    console.error("Error confirming count:", error);
     // Handle error (show notification, etc.)
   } finally {
-    submitting.value = false
+    submitting.value = false;
   }
-}
+};
 
 const skipProduct = () => {
-  resetForm()
+  resetForm();
   // Could implement skip logic here
-}
+};
 
 const resetForm = () => {
-  countedQuantity.value = 0
-  notes.value = ''
-  batchNumber.value = ''
-  expiryDate.value = ''
-  confidenceLevel.value = 'high'
-}
+  countedQuantity.value = 0;
+  notes.value = "";
+  batchNumber.value = "";
+  expiryDate.value = "";
+  confidenceLevel.value = "high";
+};
 
 const completeSession = async () => {
   try {
-    await countingStore.completeCountingSession()
+    await countingStore.completeCountingSession();
     // Navigate away or show completion message
   } catch (error) {
-    console.error('Error completing session:', error)
+    console.error("Error completing session:", error);
   }
-}
+};
 
 const openBarcodeScanner = () => {
   // Implement barcode scanning functionality
-  console.log('Opening barcode scanner...')
-}
+  console.log("Opening barcode scanner...");
+};
 
 // Initialize
-watch(currentProduct, (newProduct) => {
-  if (newProduct) {
-    // Set initial quantity to system quantity for easier counting
-    countedQuantity.value = newProduct.current_system_quantity
-  }
-}, { immediate: true })
+watch(
+  currentProduct,
+  (newProduct) => {
+    if (newProduct) {
+      // Set initial quantity to system quantity for easier counting
+      countedQuantity.value = newProduct.current_system_quantity;
+    }
+  },
+  { immediate: true }
+);
 
 onMounted(() => {
-  sessionStartTime.value = new Date()
-})
+  sessionStartTime.value = new Date();
+});
 </script>
 
 <style lang="scss" scoped>
@@ -565,7 +584,7 @@ onMounted(() => {
 
     .quantity-input {
       flex: 1;
-      
+
       :deep(.q-field__control) {
         min-height: 60px;
       }
@@ -580,7 +599,7 @@ onMounted(() => {
 
     .quick-btn {
       min-height: 44px;
-      
+
       &.system-qty-btn {
         grid-column: span 3;
       }
@@ -714,7 +733,7 @@ body.body--dark {
 
   .quick-buttons {
     grid-template-columns: repeat(2, 1fr);
-    
+
     .system-qty-btn {
       grid-column: span 2;
     }
@@ -722,14 +741,14 @@ body.body--dark {
 
   .action-buttons {
     grid-template-columns: 1fr;
-    
+
     .skip-btn {
       order: 2;
     }
-    
+
     .confirm-btn {
       order: 1;
     }
   }
 }
-</style> 
+</style>

@@ -52,7 +52,7 @@
       "label": "Dashboard Desktop View"
     },
     {
-      "src": "screenshots/mobile-dashboard.png", 
+      "src": "screenshots/mobile-dashboard.png",
       "sizes": "390x844",
       "type": "image/png",
       "form_factor": "narrow",
@@ -75,7 +75,7 @@
     },
     {
       "name": "Products",
-      "short_name": "Products", 
+      "short_name": "Products",
       "description": "Manage products and inventory",
       "url": "/products",
       "icons": [
@@ -87,4 +87,4 @@
       ]
     }
   ]
-} 
+}

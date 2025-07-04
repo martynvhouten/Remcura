@@ -3,7 +3,9 @@
     <template #header>
       <PageTitle
         :title="$t('nav.dashboard')"
-        :subtitle="`${$t('dashboard.welcome')}, ${userProfile?.full_name || $t('dashboard.user')}`"
+        :subtitle="`${$t('dashboard.welcome')}, ${
+          userProfile?.full_name || $t('dashboard.user')
+        }`"
         icon="space_dashboard"
       />
     </template>
@@ -11,21 +13,23 @@
     <!-- Dashboard Content -->
     <div class="dashboard-content">
       <!-- Welcome Card -->
-      <BaseCard 
+      <BaseCard
         variant="elevated"
-        title="Welcome to MedStock Pro"
-        subtitle="Your medical inventory management system"
+        :title="$t('dashboard.welcomeTitle')"
+        :subtitle="$t('dashboard.welcomeSubtitle')"
         icon="local_hospital"
         header-color="primary"
       >
         <div class="welcome-content">
-          <p>Welcome to your medical inventory management dashboard. This system will help you track and manage your medical supplies efficiently.</p>
-          
+          <p>
+            {{ $t('dashboard.welcomeDescription') }}
+          </p>
+
           <div class="quick-actions-grid">
             <q-btn
               color="primary"
               icon="settings"
-              label="Settings"
+              :label="$t('nav.settings')"
               @click="$router.push('/settings')"
               unelevated
               class="action-btn"
@@ -33,7 +37,7 @@
             <q-btn
               color="positive"
               icon="assignment"
-              label="Orders"
+              :label="$t('nav.orders')"
               @click="$router.push('/orders')"
               unelevated
               class="action-btn"
@@ -41,7 +45,7 @@
             <q-btn
               color="info"
               icon="insights"
-              label="Analytics"
+              :label="$t('nav.analytics')"
               @click="$router.push('/analytics')"
               unelevated
               class="action-btn"
@@ -51,25 +55,25 @@
       </BaseCard>
 
       <!-- System Status Card -->
-      <BaseCard 
+      <BaseCard
         variant="outlined"
-        title="System Status"
-        subtitle="Current system information"
+        :title="$t('dashboard.systemStatus')"
+        :subtitle="$t('dashboard.systemStatusSubtitle')"
         icon="info"
         header-color="info"
       >
         <div class="status-grid">
           <div class="status-item">
             <q-icon name="check_circle" color="positive" size="sm" />
-            <span class="status-label">System Online</span>
+            <span class="status-label">{{ $t('dashboard.systemOnline') }}</span>
           </div>
           <div class="status-item">
             <q-icon name="sync" color="primary" size="sm" />
-            <span class="status-label">Data Synced</span>
+            <span class="status-label">{{ $t('dashboard.dataSynced') }}</span>
           </div>
           <div class="status-item">
             <q-icon name="security" color="positive" size="sm" />
-            <span class="status-label">Secure Connection</span>
+            <span class="status-label">{{ $t('dashboard.secureConnection') }}</span>
           </div>
         </div>
       </BaseCard>
@@ -78,18 +82,18 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue'
-import { useI18n } from 'vue-i18n'
-import { useAuthStore } from 'src/stores/auth'
-import PageLayout from 'src/components/PageLayout.vue'
-import PageTitle from 'src/components/PageTitle.vue'
-import BaseCard from 'src/components/base/BaseCard.vue'
+import { computed } from "vue";
+import { useI18n } from "vue-i18n";
+import { useAuthStore } from "src/stores/auth";
+import PageLayout from "src/components/PageLayout.vue";
+import PageTitle from "src/components/PageTitle.vue";
+import BaseCard from "src/components/base/BaseCard.vue";
 
-const { t } = useI18n()
-const authStore = useAuthStore()
+const { t } = useI18n();
+const authStore = useAuthStore();
 
 // Computed properties
-const userProfile = computed(() => authStore.userProfile)
+const userProfile = computed(() => authStore.userProfile);
 </script>
 
 <style lang="scss" scoped>
@@ -101,7 +105,7 @@ const userProfile = computed(() => authStore.userProfile)
 
 .welcome-content {
   padding: var(--space-4);
-  
+
   p {
     margin-bottom: var(--space-6);
     color: var(--text-muted);
@@ -113,7 +117,7 @@ const userProfile = computed(() => authStore.userProfile)
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
   gap: var(--space-4);
-  
+
   .action-btn {
     min-height: 60px;
     display: flex;
@@ -136,7 +140,7 @@ const userProfile = computed(() => authStore.userProfile)
   padding: var(--space-3);
   background: var(--neutral-50);
   border-radius: var(--radius-lg);
-  
+
   .status-label {
     font-weight: var(--font-weight-medium);
     color: var(--text-primary);
@@ -154,9 +158,9 @@ body.body--dark {
   .quick-actions-grid {
     grid-template-columns: 1fr;
   }
-  
+
   .status-grid {
     grid-template-columns: 1fr;
   }
 }
-</style> 
+</style>

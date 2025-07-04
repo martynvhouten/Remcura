@@ -1,8 +1,8 @@
 <template>
   <q-layout view="lHh Lpr lFf" class="layout-modern">
     <!-- Modern Header with Glass Morphism Effect -->
-    <q-header 
-      elevated 
+    <q-header
+      elevated
       class="header-modern glass"
       :class="{ 'header-scrolled': isScrolled }"
       role="banner"
@@ -15,113 +15,108 @@
           icon="menu"
           :aria-label="$t('nav.openNavigation') || 'Open navigation menu'"
           @click="toggleLeftDrawer"
-          class="menu-toggle-btn"
         />
 
         <div class="brand-section">
-          <q-avatar size="32px" color="white" text-color="primary" class="brand-avatar">
+          <q-avatar
+            size="32px"
+            color="white"
+            text-color="primary"
+            class="brand-avatar"
+          >
             <q-icon name="local_hospital" size="18px" />
           </q-avatar>
           <div class="brand-text">
-            <div class="brand-title">{{ $t('brand.name') }}</div>
-            <div class="brand-subtitle">{{ $t('brand.edition') }}</div>
+            <div class="brand-title">{{ $t("brand.name") }}</div>
+            <div class="brand-subtitle">{{ $t("brand.edition") }}</div>
           </div>
         </div>
 
         <q-space />
 
-        <div class="header-actions" role="navigation" aria-label="User actions">
+        <!-- Header Actions -->
+        <div class="header-actions">
           <!-- Notifications -->
           <q-btn
             flat
             round
-            dense
             icon="notifications"
-            :aria-label="$t('nav.notifications') || 'Notifications (3 unread)'"
             @click="goToNotifications"
+            :aria-label="$t('nav.notifications')"
           >
-            <q-badge color="danger" floating>3</q-badge>
-            <q-tooltip>{{ $t('nav.notifications') || 'Notifications' }}</q-tooltip>
+            <q-badge color="red" floating>3</q-badge>
+            <q-tooltip>{{ $t("nav.notifications") }}</q-tooltip>
           </q-btn>
 
-
-
-          <!-- Dark mode toggle -->
+          <!-- Theme Toggle -->
           <q-btn
             flat
             round
-            dense
             :icon="$q.dark.isActive ? 'light_mode' : 'dark_mode'"
             @click="toggleDarkMode"
-            :aria-label="$q.dark.isActive ? ($t('nav.lightMode') || 'Switch to light mode') : ($t('nav.darkMode') || 'Switch to dark mode')"
+            :aria-label="
+              $q.dark.isActive ? $t('nav.lightMode') : $t('nav.darkMode')
+            "
           >
-            <q-tooltip>{{ $q.dark.isActive ? $t('nav.lightMode') : $t('nav.darkMode') }}</q-tooltip>
+            <q-tooltip>{{
+              $q.dark.isActive ? $t("nav.lightMode") : $t("nav.darkMode")
+            }}</q-tooltip>
           </q-btn>
-          
-          <!-- User menu -->
-          <q-btn-dropdown
-            flat
-            round
-            dense
-            class="user-menu-btn"
-            dropdown-icon="none"
-            :aria-label="$t('nav.userMenu')"
-          >
-            <template v-slot:label>
-              <q-avatar size="32px" color="primary">
-                <img v-if="userProfile?.avatar_url" :src="userProfile.avatar_url" :alt="`${userProfile?.full_name || 'User'} avatar`" />
-                <span v-else>{{ getUserInitials() }}</span>
-              </q-avatar>
-            </template>
 
-            <q-list class="user-menu-list" role="menu">
-              <q-item class="user-info-item" role="none">
-                <q-item-section avatar>
-                  <q-avatar size="40px" color="primary">
-                    <img v-if="userProfile?.avatar_url" :src="userProfile.avatar_url" :alt="`${userProfile?.full_name || 'User'} avatar`" />
-                    <span v-else>{{ getUserInitials() }}</span>
-                  </q-avatar>
-                </q-item-section>
-                <q-item-section>
-                  <q-item-label class="text-weight-medium">
-                    {{ userProfile?.full_name || 'User' }}
-                  </q-item-label>
-                  <q-item-label caption>{{ userEmail }}</q-item-label>
-                </q-item-section>
-              </q-item>
-              
-              <q-separator class="q-my-sm" />
-              
-              <q-item clickable v-close-popup @click="goToSettings" class="menu-item" role="menuitem">
-                <q-item-section avatar>
-                  <q-icon name="tune" />
-                </q-item-section>
-                <q-item-section>
-                  <q-item-label>{{ $t('nav.settings') }}</q-item-label>
-                </q-item-section>
-              </q-item>
-              
-              <q-item clickable v-close-popup class="menu-item" role="menuitem">
-                <q-item-section avatar>
-                  <q-icon name="help_outline" />
-                </q-item-section>
-                <q-item-section>
-                  <q-item-label>{{ $t('nav.helpSupport') }}</q-item-label>
-                </q-item-section>
-              </q-item>
-              
-              <q-separator class="q-my-sm" />
-              
-              <q-item clickable v-close-popup @click="handleLogout" class="menu-item logout-item" role="menuitem">
-                <q-item-section avatar>
-                  <q-icon name="logout" />
-                </q-item-section>
-                <q-item-section>
-                  <q-item-label>{{ $t('nav.logout') }}</q-item-label>
-                </q-item-section>
-              </q-item>
-            </q-list>
-          </q-btn-dropdown>
+          <!-- User Menu -->
+          <q-btn flat round icon="person" :aria-label="$t('nav.userMenu')">
+            <q-menu>
+              <q-list>
+                <q-item class="user-info">
+                  <q-item-section avatar>
+                    <q-avatar color="primary">
+                      <img
+                        v-if="userProfile?.avatar_url"
+                        :src="userProfile.avatar_url"
+                      />
+                      <span v-else>{{ getUserInitials() }}</span>
+                    </q-avatar>
+                  </q-item-section>
+                  <q-item-section>
+                    <q-item-label>{{
+                      userProfile?.full_name || "User"
+                    }}</q-item-label>
+                    <q-item-label caption>{{ userEmail }}</q-item-label>
+                  </q-item-section>
+                </q-item>
+
+                <q-separator />
+
+                <q-item clickable v-close-popup @click="goToSettings">
+                  <q-item-section avatar>
+                    <q-icon name="settings" />
+                  </q-item-section>
+                  <q-item-section>{{ $t("nav.settings") }}</q-item-section>
+                </q-item>
+
+                <q-item clickable v-close-popup>
+                  <q-item-section avatar>
+                    <q-icon name="help" />
+                  </q-item-section>
+                  <q-item-section>{{ $t("nav.helpSupport") }}</q-item-section>
+                </q-item>
+
+                <q-separator />
+
+                <q-item
+                  clickable
+                  v-close-popup
+                  @click="handleLogout"
+                  class="text-negative"
+                >
+                  <q-item-section avatar>
+                    <q-icon name="logout" />
+                  </q-item-section>
+                  <q-item-section>{{ $t("nav.logout") }}</q-item-section>
+                </q-item>
+              </q-list>
+            </q-menu>
+          </q-btn>
         </div>
       </q-toolbar>
     </q-header>
@@ -145,14 +140,14 @@
         </div>
         <div class="clinic-details">
           <div class="clinic-name">{{ clinicName }}</div>
-          <div class="clinic-plan">{{ $t('clinic.professionalPlan') }}</div>
+          <div class="clinic-plan">{{ $t("clinic.professionalPlan") }}</div>
         </div>
       </div>
 
       <!-- Main Navigation -->
       <q-list class="navigation-list">
         <q-item-label header class="navigation-header">
-          {{ $t('nav.navigation') }}
+          {{ $t("nav.navigation") }}
         </q-item-label>
 
         <q-item
@@ -164,7 +159,9 @@
           :active="$route.name === link.routeName"
           active-class="nav-item-active"
           class="nav-item"
-          :aria-label="`${link.title} - ${link.caption}${link.badge ? ' (' + link.badge + ' items)' : ''}`"
+          :aria-label="`${link.title} - ${link.caption}${
+            link.badge ? ' (' + link.badge + ' items)' : ''
+          }`"
         >
           <q-item-section avatar>
             <q-icon :name="link.icon" size="20px" />
@@ -172,29 +169,43 @@
 
           <q-item-section>
             <q-item-label class="nav-item-label">{{ link.title }}</q-item-label>
-            <q-item-label caption class="nav-item-caption">{{ link.caption }}</q-item-label>
+            <q-item-label caption class="nav-item-caption">{{
+              link.caption
+            }}</q-item-label>
           </q-item-section>
 
           <q-item-section side v-if="link.badge">
-            <q-badge :color="link.badgeColor || 'primary'" :label="link.badge" :aria-label="`${link.badge} items requiring attention`" />
+            <q-badge
+              :color="link.badgeColor || 'primary'"
+              :label="link.badge"
+              :aria-label="`${link.badge} items requiring attention`"
+            />
           </q-item-section>
         </q-item>
       </q-list>
-
-
 
       <!-- Spacer -->
       <q-space />
 
       <!-- Footer Section -->
       <div class="drawer-footer">
-        <q-item class="upgrade-item glass-card" clickable tabindex="0" role="button" :aria-label="$t('nav.upgradePlan')">
+        <q-item
+          class="upgrade-item glass-card"
+          clickable
+          tabindex="0"
+          role="button"
+          :aria-label="$t('nav.upgradePlan')"
+        >
           <q-item-section avatar>
             <q-icon name="upgrade" color="accent" />
           </q-item-section>
           <q-item-section>
-            <q-item-label class="text-weight-medium">{{ $t('nav.upgradePlan') }}</q-item-label>
-            <q-item-label caption>{{ $t('nav.getAdvancedFeatures') }}</q-item-label>
+            <q-item-label class="text-weight-medium">{{
+              $t("nav.upgradePlan")
+            }}</q-item-label>
+            <q-item-label caption>{{
+              $t("nav.getAdvancedFeatures")
+            }}</q-item-label>
           </q-item-section>
         </q-item>
       </div>
@@ -202,180 +213,203 @@
 
     <!-- Page Container with Enhanced Styling -->
     <q-page-container class="page-container-modern">
+      <!-- Demo Banner (only for demo users) -->
+      <DemoBanner />
+
       <!-- Main content area -->
       <div class="page-content" role="main">
-      <router-view />
+        <router-view />
       </div>
     </q-page-container>
-
-
   </q-layout>
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted, onUnmounted } from 'vue'
-import { useQuasar } from 'quasar'
-import { useRouter } from 'vue-router'
-import { useI18n } from 'vue-i18n'
-import { useAuthStore } from 'src/stores/auth'
-import { useClinicStore } from 'src/stores/clinic'
+import { ref, computed, onMounted, onUnmounted } from "vue";
+import { useQuasar } from "quasar";
+import { useRouter } from "vue-router";
+import { useI18n } from "vue-i18n";
+import DemoBanner from "@/components/layout/DemoBanner.vue";
+import { useAuthStore } from "src/stores/auth";
+import { useClinicStore } from "src/stores/clinic";
 
-
-const $q = useQuasar()
-const router = useRouter()
-const { t } = useI18n()
-const authStore = useAuthStore()
-const clinicStore = useClinicStore()
-
+const $q = useQuasar();
+const router = useRouter();
+const { t } = useI18n();
+const authStore = useAuthStore();
+const clinicStore = useClinicStore();
 
 // State
-const leftDrawerOpen = ref(false)
-const isScrolled = ref(false)
-
+const leftDrawerOpen = ref(false);
+const isScrolled = ref(false);
 
 // Computed properties
-const userProfile = computed(() => authStore.userProfile)
-const userEmail = computed(() => authStore.userEmail)
-const clinicName = computed(() => clinicStore.clinic?.name || t('clinic.defaultName'))
-
-
+const userProfile = computed(() => authStore.userProfile);
+const userEmail = computed(() => authStore.userEmail);
+const clinicName = computed(
+  () => clinicStore.clinic?.name || t("clinic.defaultName")
+);
 
 // Check if user has admin permissions
 const isAdmin = computed(() => {
-  const role = userProfile.value?.role || ''
-  return role === 'admin' || role === 'owner'
-})
+  const role = userProfile.value?.role || "";
+  return role === "admin" || role === "owner";
+});
 
 // Enhanced navigation links with more details
 const navigationLinks = computed(() => {
   const links = [
     {
-      title: t('nav.dashboard'),
-      caption: t('nav.overviewAnalytics'),
-      icon: 'space_dashboard',
-      to: '/',
-      routeName: 'dashboard'
+      title: t("nav.dashboard"),
+      caption: t("nav.overviewAnalytics"),
+      icon: "space_dashboard",
+      to: "/",
+      routeName: "dashboard",
     },
 
     {
-      title: t('nav.inventory'),
-      caption: t('nav.stockManagement'),
-      icon: 'inventory_2',
-      to: '/inventory',
-      routeName: 'inventory'
+      title: t("nav.inventory"),
+      caption: t("nav.stockManagement"),
+      icon: "inventory_2",
+      to: "/inventory",
+      routeName: "inventory",
     },
     {
-      title: t('nav.orders'),
-      caption: t('nav.purchaseOrders'),
-      icon: 'assignment',
-      to: '/orders',
-      routeName: 'orders'
+      title: t("batch.batchManagement"),
+      caption: t("batch.trackBatchesExpiry"),
+      icon: "qr_code_scanner",
+      to: "/inventory/batches",
+      routeName: "inventory-batches",
     },
     {
-      title: t('nav.analytics'),
-      caption: t('nav.reportsInsights'),
-      icon: 'insights',
-      to: '/analytics',
-      routeName: 'analytics'
+      title: t("nav.products"),
+      caption: t("nav.productManagement"),
+      icon: "inventory",
+      to: "/products",
+      routeName: "products",
     },
     {
-      title: t('nav.suppliers'),
-      caption: t('nav.vendorManagement'),
-      icon: 'corporate_fare',
-      to: '/suppliers',
-      routeName: 'suppliers'
+      title: t("orderLists.title"),
+      caption: t("orderLists.subtitle"),
+      icon: "list_alt",
+      to: "/order-lists",
+      routeName: "order-lists",
     },
     {
-      title: t('nav.notifications'),
-      caption: t('nav.alertsNotifications'),
-      icon: 'campaign',
-      to: '/notifications',
-      routeName: 'notifications',
+      title: t("nav.orders"),
+      caption: t("nav.purchaseOrders"),
+      icon: "assignment",
+      to: "/orders",
+      routeName: "orders",
+    },
+    {
+      title: t("nav.analytics"),
+      caption: t("nav.reportsInsights"),
+      icon: "insights",
+      to: "/analytics",
+      routeName: "analytics",
+    },
+    {
+      title: t("nav.suppliers"),
+      caption: t("nav.vendorManagement"),
+      icon: "corporate_fare",
+      to: "/suppliers",
+      routeName: "suppliers",
+    },
+    {
+      title: t("nav.notifications"),
+      caption: t("nav.alertsNotifications"),
+      icon: "campaign",
+      to: "/notifications",
+      routeName: "notifications",
       badge: 3, // Mock unread count
-      badgeColor: 'red'
-    }
-  ]
+      badgeColor: "red",
+    },
+  ];
 
   // Add admin dashboard for admin users
   if (isAdmin.value) {
     links.push({
-      title: t('nav.admin'),
-      caption: t('nav.systemAdmin'),
-      icon: 'supervisor_account',
-      to: '/admin',
-      routeName: 'admin'
-    })
-    
+      title: t("nav.admin"),
+      caption: t("nav.systemAdmin"),
+      icon: "supervisor_account",
+      to: "/admin",
+      routeName: "admin",
+    });
+
     // Add style guide for admins/developers
     links.push({
-              title: t('nav.styleGuide'),
-      caption: 'Design system reference',
-      icon: 'palette',
-      to: '/style-guide',
-      routeName: 'style-guide'
-    })
+      title: t("nav.styleGuide"),
+      caption: "Design system reference",
+      icon: "palette",
+      to: "/style-guide",
+      routeName: "style-guide",
+    });
   }
 
-  return links
-})
+  return links;
+});
 
 // Methods
 const toggleLeftDrawer = () => {
-  leftDrawerOpen.value = !leftDrawerOpen.value
-}
+  leftDrawerOpen.value = !leftDrawerOpen.value;
+};
 
 const toggleDarkMode = () => {
-  $q.dark.toggle()
-  $q.localStorage.set('darkMode', $q.dark.isActive.toString())
-}
+  $q.dark.toggle();
+  $q.localStorage.set("darkMode", $q.dark.isActive.toString());
+};
 
 const goToSettings = () => {
-  router.push({ name: 'settings' })
-}
+  router.push({ name: "settings" });
+};
 
 const goToNotifications = () => {
-  router.push({ name: 'notifications' })
-}
+  router.push({ name: "notifications" });
+};
 
 const getUserInitials = () => {
-  const name = userProfile.value?.full_name || userEmail.value || 'U'
-  return name.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2)
-}
+  const name = userProfile.value?.full_name || userEmail.value || "U";
+  return name
+    .split(" ")
+    .map((n) => n[0])
+    .join("")
+    .toUpperCase()
+    .slice(0, 2);
+};
 
 const handleLogout = async () => {
-  const result = await authStore.logout()
+  const result = await authStore.logout();
   if (result.success) {
     $q.notify({
-      type: 'positive',
-      message: t('auth.logoutSuccess'),
-      position: 'top'
-    })
-    router.push({ name: 'login' })
+      type: "positive",
+      message: t("auth.logoutSuccess"),
+      position: "top",
+    });
+    router.push({ name: "login" });
   } else {
     $q.notify({
-      type: 'negative',
-      message: result.error || t('errors.generic'),
-      position: 'top'
-    })
+      type: "negative",
+      message: result.error || t("errors.generic"),
+      position: "top",
+    });
   }
-}
-
-
+};
 
 // Scroll detection for header effects
 const handleScroll = () => {
-  isScrolled.value = window.scrollY > 10
-}
+  isScrolled.value = window.scrollY > 10;
+};
 
 // Lifecycle
 
 onMounted(() => {
-  window.addEventListener('scroll', handleScroll)
-})
+  window.addEventListener("scroll", handleScroll);
+});
 
 onUnmounted(() => {
-  window.removeEventListener('scroll', handleScroll)
-})
+  window.removeEventListener("scroll", handleScroll);
+});
 </script>
 
 <style lang="scss" scoped>
@@ -383,56 +417,56 @@ onUnmounted(() => {
   width: 100%;
   max-width: 100%;
   box-sizing: border-box;
-  
+
   // Ensure all child elements don't overflow
   * {
     box-sizing: border-box;
   }
-  
+
   // Modern header styling with CSS custom properties approach
   .header-modern {
     --header-bg: rgba(255, 255, 255, 0.8);
     --header-bg-scrolled: rgba(255, 255, 255, 0.95);
-    
+
     background: var(--header-bg);
     backdrop-filter: blur(20px);
     -webkit-backdrop-filter: blur(20px);
     border-bottom: 1px solid rgba(255, 255, 255, 0.2);
     transition: all var(--transition-base);
-    
+
     &.header-scrolled {
       background: var(--header-bg-scrolled);
       box-shadow: var(--shadow-sm);
     }
   }
-  
+
   .toolbar-modern {
     padding: var(--space-4) var(--space-6);
     min-height: 72px;
     width: 100%;
     max-width: 100%;
-    
+
     .menu-toggle-btn {
       color: var(--neutral-700);
       border-radius: var(--radius-lg);
       transition: all var(--transition-base);
-      
+
       &:hover {
         background-color: rgba(var(--q-primary-rgb), 0.1);
         color: var(--brand-primary);
       }
     }
-    
+
     .brand-section {
       display: flex;
       align-items: center;
       gap: var(--space-3);
       margin-left: var(--space-4);
-      
+
       .brand-avatar {
         box-shadow: var(--shadow-sm);
       }
-      
+
       .brand-text {
         .brand-title {
           font-weight: var(--font-weight-bold);
@@ -440,7 +474,7 @@ onUnmounted(() => {
           color: var(--neutral-900);
           line-height: var(--leading-tight);
         }
-        
+
         .brand-subtitle {
           font-size: 0.75rem;
           color: var(--neutral-500);
@@ -448,29 +482,29 @@ onUnmounted(() => {
         }
       }
     }
-    
+
     .header-actions {
       display: flex;
       align-items: center;
       gap: var(--space-2);
-      
+
       .action-btn {
         color: var(--neutral-700);
         border-radius: var(--radius-lg);
         transition: all var(--transition-base);
-        
+
         &:hover {
           background-color: rgba(var(--q-primary-rgb), 0.1);
           color: var(--brand-primary);
           transform: scale(1.05);
         }
       }
-      
+
       .user-menu-btn {
         border-radius: var(--radius-full);
         padding: var(--space-1);
         transition: all var(--transition-base);
-        
+
         &:hover {
           transform: scale(1.05);
           box-shadow: var(--shadow-sm);
@@ -484,38 +518,38 @@ onUnmounted(() => {
 body.body--dark .layout-modern .header-modern {
   --header-bg: rgba(23, 23, 23, 0.85);
   --header-bg-scrolled: rgba(23, 23, 23, 0.95);
-  
+
   background: var(--header-bg);
   border-bottom-color: rgba(255, 255, 255, 0.1);
-  
+
   &.header-scrolled {
     background: var(--header-bg-scrolled);
   }
-  
+
   .toolbar-modern {
     .brand-text {
       .brand-title {
         color: var(--neutral-900);
       }
-      
+
       .brand-subtitle {
         color: var(--neutral-600);
       }
     }
-    
+
     .menu-toggle-btn {
       color: var(--neutral-800);
-      
+
       &:hover {
         background-color: rgba(var(--q-primary-rgb), 0.15);
         color: var(--brand-primary-light);
       }
     }
-    
+
     .header-actions {
       .action-btn {
         color: var(--neutral-800);
-        
+
         &:hover {
           background-color: rgba(var(--q-primary-rgb), 0.15);
           color: var(--brand-primary-light);
@@ -529,14 +563,14 @@ body.body--dark .layout-modern .header-modern {
 .navigation-drawer {
   background: var(--neutral-50);
   border-right: 1px solid var(--neutral-200);
-  
+
   .clinic-info-section {
     padding: var(--space-6);
     border-bottom: 1px solid var(--neutral-200);
     display: flex;
     align-items: center;
     gap: var(--space-4);
-    
+
     .clinic-details {
       .clinic-name {
         font-weight: var(--font-weight-semibold);
@@ -544,7 +578,7 @@ body.body--dark .layout-modern .header-modern {
         color: var(--neutral-900);
         margin-bottom: var(--space-1);
       }
-      
+
       .clinic-plan {
         font-size: 0.875rem;
         color: var(--neutral-500);
@@ -555,10 +589,10 @@ body.body--dark .layout-modern .header-modern {
       }
     }
   }
-  
+
   .navigation-list {
     padding: var(--space-4);
-    
+
     .navigation-header {
       font-weight: var(--font-weight-semibold);
       color: var(--neutral-600);
@@ -567,60 +601,64 @@ body.body--dark .layout-modern .header-modern {
       letter-spacing: 0.05em;
       margin-bottom: var(--space-3);
     }
-    
+
     .nav-item {
       border-radius: var(--radius-lg);
       margin-bottom: var(--space-1);
       transition: all var(--transition-base);
-      
+
       &:hover {
         background-color: var(--neutral-100);
         transform: translateX(4px);
       }
-      
+
       &:focus {
         outline: 2px solid var(--brand-primary);
         outline-offset: 2px;
         background-color: var(--neutral-100);
       }
-      
+
       &.nav-item-active {
-        background: linear-gradient(135deg, var(--brand-primary), var(--brand-primary-light));
+        background: linear-gradient(
+          135deg,
+          var(--brand-primary),
+          var(--brand-primary-light)
+        );
         color: white;
         transform: translateX(6px);
         box-shadow: var(--shadow-sm);
-        
+
         .q-icon {
-    color: white;
+          color: white;
         }
-        
+
         .nav-item-caption {
           color: rgba(255, 255, 255, 0.8);
         }
       }
-      
+
       .nav-item-label {
         font-weight: var(--font-weight-medium);
         font-size: 0.925rem;
       }
-      
+
       .nav-item-caption {
         font-size: 0.75rem;
         opacity: 0.8;
       }
     }
   }
-  
+
   .quick-stats-section {
     padding: var(--space-4);
     border-top: 1px solid var(--neutral-200);
-    
+
     .stats-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
       gap: var(--space-3);
       margin-top: var(--space-3);
-      
+
       .stat-item {
         text-align: center;
         padding: var(--space-3);
@@ -628,24 +666,24 @@ body.body--dark .layout-modern .header-modern {
         border-radius: var(--radius-lg);
         transition: all var(--transition-base);
         cursor: pointer;
-        
+
         &:hover {
           transform: translateY(-2px);
           box-shadow: var(--shadow-sm);
         }
-        
+
         &:focus {
           outline: 2px solid var(--brand-primary);
           outline-offset: 2px;
           background-color: var(--neutral-200);
         }
-        
+
         .stat-number {
           font-size: 1.25rem;
           font-weight: var(--font-weight-bold);
           color: var(--neutral-900);
         }
-        
+
         .stat-label {
           font-size: 0.75rem;
           color: var(--neutral-500);
@@ -654,22 +692,22 @@ body.body--dark .layout-modern .header-modern {
       }
     }
   }
-  
+
   .drawer-footer {
     padding: var(--space-4);
     border-top: 1px solid var(--neutral-200);
-    
+
     .upgrade-item {
       border-radius: var(--radius-lg);
       cursor: pointer;
       transition: all var(--transition-base);
       box-shadow: var(--shadow-base);
-      
+
       &:hover {
         transform: translateY(-2px);
         box-shadow: var(--shadow-lg);
       }
-      
+
       &:focus {
         outline: 2px solid var(--brand-primary);
         outline-offset: 2px;
@@ -683,86 +721,159 @@ body.body--dark .layout-modern .header-modern {
 body.body--dark .navigation-drawer {
   background: var(--neutral-100);
   border-right-color: var(--neutral-300);
-  
+
   .clinic-info-section {
     border-bottom-color: var(--neutral-300);
-    
+
     .clinic-details .clinic-name {
       color: var(--neutral-900);
     }
-    
+
     .clinic-details .clinic-plan {
       background: var(--neutral-200);
     }
   }
-  
+
   .navigation-list {
     .nav-item:hover {
       background-color: var(--neutral-200);
     }
   }
-  
+
   .quick-stats-section {
     border-top-color: var(--neutral-300);
-    
+
     .stat-item {
       background: var(--neutral-200);
-      
+
       .stat-number {
         color: var(--neutral-900);
       }
     }
   }
-  
+
   .drawer-footer {
     border-top-color: var(--neutral-300);
   }
 }
 
-// User menu styling
-.user-menu-list {
-  min-width: 280px;
-  border-radius: var(--radius-xl);
-  padding: var(--space-2);
-  
-  .user-info-item {
-    padding: var(--space-4);
-    border-radius: var(--radius-lg);
-    background: var(--neutral-50);
-    margin-bottom: var(--space-2);
+// Header Actions
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.header-actions .q-btn {
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  color: var(--neutral-600);
+  background: rgba(255, 255, 255, 0.8);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(8px);
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+
+  .q-icon {
+    font-size: 22px;
   }
-  
-  .menu-item {
-    border-radius: var(--radius-lg);
-    margin: var(--space-1) 0;
-    transition: all var(--transition-base);
-    
-    &:hover {
-      background-color: var(--neutral-100);
-      transform: translateX(4px);
+
+  &:hover {
+    color: var(--brand-primary);
+    background: rgba(255, 255, 255, 0.95);
+    border-color: rgba(var(--brand-primary-rgb), 0.3);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+  }
+
+  &:focus {
+    outline: 2px solid var(--brand-primary);
+    outline-offset: 2px;
+  }
+
+  &:active {
+    transform: translateY(0);
+  }
+}
+
+// Notification badge styling
+.header-actions .q-btn .q-badge {
+  font-size: 11px;
+  font-weight: 600;
+  min-width: 18px;
+  height: 18px;
+  border: 2px solid white;
+  box-shadow: 0 2px 6px rgba(239, 68, 68, 0.3);
+}
+
+// User menu
+.header-actions .q-menu .q-list {
+  min-width: 280px;
+  border-radius: 12px;
+  padding: 8px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(16px);
+
+  .user-info {
+    padding: 16px;
+    background: rgba(var(--brand-primary-rgb), 0.05);
+    border-radius: 8px;
+    margin-bottom: 8px;
+    border: 1px solid rgba(var(--brand-primary-rgb), 0.1);
+  }
+
+  .q-item {
+    border-radius: 6px;
+    margin: 2px 4px;
+    transition: all 0.2s ease;
+
+    &:hover:not(.user-info) {
+      background: rgba(var(--brand-primary-rgb), 0.08);
+      transform: translateX(2px);
     }
-    
-    &.logout-item:hover {
-      background-color: rgba(var(--brand-danger), 0.1);
-      color: var(--brand-danger);
+
+    &.text-negative:hover {
+      background: rgba(239, 68, 68, 0.1);
+      color: #ef4444;
     }
   }
 }
 
-body.body--dark .user-menu-list {
-  .user-info-item {
-    background: var(--neutral-200);
+// Dark mode
+body.body--dark {
+  .header-actions .q-btn {
+    color: var(--neutral-300);
+    background: rgba(0, 0, 0, 0.6);
+    border-color: rgba(255, 255, 255, 0.1);
+
+    &:hover {
+      color: var(--brand-primary);
+      background: rgba(0, 0, 0, 0.8);
+      border-color: rgba(var(--brand-primary-rgb), 0.4);
+    }
   }
-  
-  .menu-item:hover {
-    background-color: var(--neutral-200);
+
+  .header-actions .q-menu .q-list {
+    background: rgba(30, 30, 30, 0.95);
+    border-color: rgba(255, 255, 255, 0.15);
+
+    .user-info {
+      background: rgba(var(--brand-primary-rgb), 0.1);
+      border-color: rgba(var(--brand-primary-rgb), 0.2);
+    }
+
+    .q-item:hover:not(.user-info) {
+      background: rgba(255, 255, 255, 0.1);
+    }
   }
 }
 
 // Page container
 .page-container-modern {
   background: var(--neutral-50);
-  
+
   .page-content {
     min-height: 100vh;
     transition: background-color var(--transition-base);
@@ -778,17 +889,17 @@ body.body--dark .page-container-modern {
   .layout-modern .toolbar-modern {
     padding: var(--space-3) var(--space-4);
     min-height: 64px;
-    
+
     .brand-text .brand-subtitle {
       display: none;
     }
   }
-  
+
   .navigation-drawer {
     .clinic-info-section {
       padding: var(--space-4);
     }
-    
+
     .quick-stats-section .stats-grid {
       grid-template-columns: 1fr;
     }
@@ -799,15 +910,24 @@ body.body--dark .page-container-modern {
   .layout-modern .toolbar-modern {
     .brand-section {
       margin-left: var(--space-2);
-      
+
       .brand-text .brand-title {
         font-size: var(--text-xl);
       }
     }
-    
-    .header-actions {
-      gap: var(--space-1);
+  }
+
+  .header-actions {
+    gap: 8px;
+
+    .q-btn {
+      width: 42px;
+      height: 42px;
+
+      .q-icon {
+        font-size: 20px;
+      }
     }
   }
 }
-</style> 
+</style>

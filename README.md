@@ -5,6 +5,7 @@ Een moderne, professionele voorraadbeheersysteem voor medische klinieken en zorg
 ## Features
 
 ### Current Features
+
 - 🔐 **Authentication** - Secure email-based login with Supabase Auth
 - 🏥 **Multi-tenant Architecture** - Each user is linked to a clinic with data isolation
 - 📦 **Inventory Management** - Track current, minimum, and maximum stock levels
@@ -15,6 +16,7 @@ Een moderne, professionele voorraadbeheersysteem voor medische klinieken en zorg
 - 🎨 **White-label Ready** - Easy to customize branding and appearance
 
 ### Future Features (Roadmap)
+
 - 📊 **Order History** - Integration with e-commerce platforms
 - 📄 **Invoice Overview** - Financial tracking and reporting
 - 👑 **Admin Panel** - Advanced management features
@@ -48,35 +50,41 @@ src/
 ## Getting Started
 
 ### Prerequisites
-- Node.js 16+ 
+
+- Node.js 16+
 - npm or yarn
 - Supabase account
 
 ### Installation
 
 1. Clone the repository
+
 ```bash
 git clone <repository-url>
 cd medstock-pro
 ```
 
 2. Install dependencies
+
 ```bash
 npm install
 ```
 
 3. Set up environment variables
+
 ```bash
 cp .env.example .env
 ```
 
 4. Configure your Supabase credentials in `.env`:
+
 ```env
 SUPABASE_URL=your_supabase_project_url_here
 SUPABASE_ANON_KEY=your_supabase_anon_key_here
 ```
 
 5. Start the development server
+
 ```bash
 npm run dev
 ```
@@ -86,6 +94,7 @@ npm run dev
 ### Tables
 
 #### clinics
+
 - `id` (uuid, primary key)
 - `name` (text)
 - `address` (text)
@@ -95,6 +104,7 @@ npm run dev
 - `updated_at` (timestamp)
 
 #### user_profiles
+
 - `id` (uuid, primary key, references auth.users)
 - `clinic_id` (uuid, references clinics)
 - `email` (text)
@@ -104,6 +114,7 @@ npm run dev
 - `updated_at` (timestamp)
 
 #### clinic_products
+
 - `id` (uuid, primary key)
 - `clinic_id` (uuid, references clinics)
 - `product_name` (text)
@@ -118,6 +129,7 @@ npm run dev
 - `updated_at` (timestamp)
 
 ### Row Level Security (RLS)
+
 All tables implement RLS policies to ensure data isolation between clinics.
 
 ## Available Scripts
@@ -140,6 +152,7 @@ MedStock Pro is designed to be easily white-labeled for different clients:
 ## Development Guidelines
 
 ### Code Style
+
 - Use TypeScript for all new code
 - Follow Vue 3 Composition API patterns
 - Use Quasar components when possible
@@ -147,7 +160,9 @@ MedStock Pro is designed to be easily white-labeled for different clients:
 - Write unit tests for business logic
 
 ### Commit Convention
+
 Follow conventional commits:
+
 - `feat:` new features
 - `fix:` bug fixes
 - `docs:` documentation changes
@@ -178,6 +193,7 @@ For questions or support, contact the development team.
 Het project gebruikt een gestandaardiseerd layout systeem met:
 
 #### `PageLayout.vue`
+
 - **Centraal layout wrapper** voor alle pagina's
 - **Consistent max-width** (1400px standaard, aanpasbaar)
 - **Responsive padding en spacing**
@@ -185,16 +201,17 @@ Het project gebruikt een gestandaardiseerd layout systeem met:
 - **Dark/light mode ondersteuning**
 
 **Gebruik:**
+
 ```vue
 <template>
   <PageLayout max-width="1400px" padding="md">
     <template #header>
       <!-- Page header content -->
     </template>
-    
+
     <!-- Main page content -->
     <div>Your content here</div>
-    
+
     <template #footer>
       <!-- Optional footer content -->
     </template>
@@ -203,6 +220,7 @@ Het project gebruikt een gestandaardiseerd layout systeem met:
 ```
 
 #### `PageTitle.vue`
+
 - **Gestandaardiseerde page titles** gebaseerd op Products page design
 - **Consistent typography en spacing**
 - **Flexibele meta informatie** (iconen + tekst)
@@ -211,6 +229,7 @@ Het project gebruikt een gestandaardiseerd layout systeem met:
 - **Dark/light mode compatibiliteit**
 
 **Gebruik:**
+
 ```vue
 <template>
   <PageTitle
@@ -221,7 +240,7 @@ Het project gebruikt een gestandaardiseerd layout systeem met:
     badge-color="primary"
     :meta="[
       { icon: 'info', text: 'Meta info' },
-      { icon: 'schedule', text: 'Time info' }
+      { icon: 'schedule', text: 'Time info' },
     ]"
   >
     <template #actions>
@@ -261,4 +280,4 @@ Het project gebruikt een uitgebreid design token systeem in `src/css/app.scss`:
 
 ## 🚀 Quick Start
 
-// ... existing code ... 
+// ... existing code ...

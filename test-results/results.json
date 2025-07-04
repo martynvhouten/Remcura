@@ -1,1 +1,552 @@
-{"numTotalTestSuites":26,"numPassedTestSuites":26,"numFailedTestSuites":0,"numPendingTestSuites":0,"numTotalTests":47,"numPassedTests":47,"numFailedTests":0,"numPendingTests":0,"numTodoTests":0,"snapshot":{"added":0,"failure":false,"filesAdded":0,"filesRemoved":0,"filesRemovedList":[],"filesUnmatched":0,"filesUpdated":0,"matched":0,"total":0,"unchecked":0,"uncheckedKeysByFile":[],"unmatched":0,"updated":0,"didUpdate":false},"startTime":1751472704282,"success":true,"testResults":[{"assertionResults":[{"ancestorTitles":["useFormValidation","validation rules"],"fullName":"useFormValidation validation rules should validate required fields","status":"passed","title":"should validate required fields","duration":185.9333999999999,"failureMessages":[],"location":{"line":42,"column":5},"meta":{}},{"ancestorTitles":["useFormValidation","validation rules"],"fullName":"useFormValidation validation rules should validate email format","status":"passed","title":"should validate email format","duration":19.013199999999415,"failureMessages":[],"location":{"line":53,"column":5},"meta":{}},{"ancestorTitles":["useFormValidation","validation rules"],"fullName":"useFormValidation validation rules should validate minimum length","status":"passed","title":"should validate minimum length","duration":48.213700000000244,"failureMessages":[],"location":{"line":64,"column":5},"meta":{}},{"ancestorTitles":["useFormValidation","validation rules"],"fullName":"useFormValidation validation rules should validate maximum length","status":"passed","title":"should validate maximum length","duration":17.212100000000646,"failureMessages":[],"location":{"line":74,"column":5},"meta":{}},{"ancestorTitles":["useFormValidation","validation rules"],"fullName":"useFormValidation validation rules should validate numeric values","status":"passed","title":"should validate numeric values","duration":28.49829999999929,"failureMessages":[],"location":{"line":84,"column":5},"meta":{}},{"ancestorTitles":["useFormValidation","validation rules"],"fullName":"useFormValidation validation rules should validate positive numbers","status":"passed","title":"should validate positive numbers","duration":5.218199999999342,"failureMessages":[],"location":{"line":95,"column":5},"meta":{}},{"ancestorTitles":["useFormValidation","validation rules"],"fullName":"useFormValidation validation rules should validate integers","status":"passed","title":"should validate integers","duration":8.727300000000469,"failureMessages":[],"location":{"line":105,"column":5},"meta":{}},{"ancestorTitles":["useFormValidation","createField"],"fullName":"useFormValidation createField should create a field with initial value","status":"passed","title":"should create a field with initial value","duration":10.0020999999997,"failureMessages":[],"location":{"line":118,"column":5},"meta":{}},{"ancestorTitles":["useFormValidation","createField"],"fullName":"useFormValidation createField should validate field and set error","status":"passed","title":"should validate field and set error","duration":13.413499999998749,"failureMessages":[],"location":{"line":127,"column":5},"meta":{}},{"ancestorTitles":["useFormValidation","createField"],"fullName":"useFormValidation createField should clear error on successful validation","status":"passed","title":"should clear error on successful validation","duration":14.124299999999494,"failureMessages":[],"location":{"line":138,"column":5},"meta":{}},{"ancestorTitles":["useFormValidation","createField"],"fullName":"useFormValidation createField should clear error when clear() is called","status":"passed","title":"should clear error when clear() is called","duration":13.392600000001039,"failureMessages":[],"location":{"line":155,"column":5},"meta":{}},{"ancestorTitles":["useFormValidation","validateForm"],"fullName":"useFormValidation validateForm should validate all fields and return overall validity","status":"passed","title":"should validate all fields and return overall validity","duration":5.320999999999913,"failureMessages":[],"location":{"line":168,"column":5},"meta":{}},{"ancestorTitles":["useFormValidation","validateForm"],"fullName":"useFormValidation validateForm should return true for valid form","status":"passed","title":"should return true for valid form","duration":7.919799999999668,"failureMessages":[],"location":{"line":183,"column":5},"meta":{}}],"startTime":1751472721466,"endTime":1751472721846.92,"status":"passed","message":"","name":"C:/Users/MartijnvanHoutenRemk/OneDrive - Remka B.V/Documenten/MedStock Pro/test/composables/useFormValidation.test.ts"},{"assertionResults":[{"ancestorTitles":["Authentication Flow Integration","Login Flow"],"fullName":"Authentication Flow Integration Login Flow should allow demo login and redirect to dashboard","status":"passed","title":"should allow demo login and redirect to dashboard","duration":383.8882999999987,"failureMessages":[],"location":{"line":49,"column":5},"meta":{}},{"ancestorTitles":["Authentication Flow Integration","Login Flow"],"fullName":"Authentication Flow Integration Login Flow should show error message for invalid credentials","status":"passed","title":"should show error message for invalid credentials","duration":144.63739999999962,"failureMessages":[],"location":{"line":94,"column":5},"meta":{}},{"ancestorTitles":["Authentication Flow Integration","Login Flow"],"fullName":"Authentication Flow Integration Login Flow should validate form fields before submission","status":"passed","title":"should validate form fields before submission","duration":178.94540000000052,"failureMessages":[],"location":{"line":122,"column":5},"meta":{}},{"ancestorTitles":["Authentication Flow Integration","Dashboard Access Control"],"fullName":"Authentication Flow Integration Dashboard Access Control should redirect unauthenticated users to login","status":"passed","title":"should redirect unauthenticated users to login","duration":3.9939999999987776,"failureMessages":[],"location":{"line":141,"column":5},"meta":{}},{"ancestorTitles":["Authentication Flow Integration","Dashboard Access Control"],"fullName":"Authentication Flow Integration Dashboard Access Control should allow authenticated users to access dashboard","status":"passed","title":"should allow authenticated users to access dashboard","duration":14.806899999999587,"failureMessages":[],"location":{"line":163,"column":5},"meta":{}},{"ancestorTitles":["Authentication Flow Integration","Logout Flow"],"fullName":"Authentication Flow Integration Logout Flow should clear auth state and redirect on logout","status":"passed","title":"should clear auth state and redirect on logout","duration":8.850200000000768,"failureMessages":[],"location":{"line":209,"column":5},"meta":{}},{"ancestorTitles":["Authentication Flow Integration","Session Persistence"],"fullName":"Authentication Flow Integration Session Persistence should restore session from localStorage","status":"passed","title":"should restore session from localStorage","duration":15.203600000000733,"failureMessages":[],"location":{"line":258,"column":5},"meta":{}},{"ancestorTitles":["Authentication Flow Integration","Session Persistence"],"fullName":"Authentication Flow Integration Session Persistence should handle corrupted localStorage gracefully","status":"passed","title":"should handle corrupted localStorage gracefully","duration":2.9870999999984633,"failureMessages":[],"location":{"line":280,"column":5},"meta":{}},{"ancestorTitles":["Authentication Flow Integration","Error Scenarios"],"fullName":"Authentication Flow Integration Error Scenarios should handle network errors during login","status":"passed","title":"should handle network errors during login","duration":145.72469999999885,"failureMessages":[],"location":{"line":292,"column":5},"meta":{}},{"ancestorTitles":["Authentication Flow Integration","Performance"],"fullName":"Authentication Flow Integration Performance should complete login flow within reasonable time","status":"passed","title":"should complete login flow within reasonable time","duration":3.084999999999127,"failureMessages":[],"location":{"line":316,"column":5},"meta":{}}],"startTime":1751472725548,"endTime":1751472726456.085,"status":"passed","message":"","name":"C:/Users/MartijnvanHoutenRemk/OneDrive - Remka B.V/Documenten/MedStock Pro/test/integration/auth-flow.test.ts"},{"assertionResults":[{"ancestorTitles":["Auth Store","initial state"],"fullName":"Auth Store initial state should have correct initial state","status":"passed","title":"should have correct initial state","duration":26.22190000000046,"failureMessages":[],"location":{"line":41,"column":5},"meta":{}},{"ancestorTitles":["Auth Store","demo login"],"fullName":"Auth Store demo login should login successfully with demo credentials","status":"passed","title":"should login successfully with demo credentials","duration":22.933100000002014,"failureMessages":[],"location":{"line":56,"column":5},"meta":{}},{"ancestorTitles":["Auth Store","regular login"],"fullName":"Auth Store regular login should login successfully with valid credentials","status":"passed","title":"should login successfully with valid credentials","duration":22.34019999999873,"failureMessages":[],"location":{"line":70,"column":5},"meta":{}},{"ancestorTitles":["Auth Store","regular login"],"fullName":"Auth Store regular login should handle login failure","status":"passed","title":"should handle login failure","duration":18.796399999999267,"failureMessages":[],"location":{"line":93,"column":5},"meta":{}},{"ancestorTitles":["Auth Store","logout"],"fullName":"Auth Store logout should logout successfully","status":"passed","title":"should logout successfully","duration":15.914699999997538,"failureMessages":[],"location":{"line":111,"column":5},"meta":{}},{"ancestorTitles":["Auth Store","logout"],"fullName":"Auth Store logout should handle logout failure","status":"passed","title":"should handle logout failure","duration":4.110300000000279,"failureMessages":[],"location":{"line":132,"column":5},"meta":{}},{"ancestorTitles":["Auth Store","initialization"],"fullName":"Auth Store initialization should initialize without existing session","status":"passed","title":"should initialize without existing session","duration":7.048399999999674,"failureMessages":[],"location":{"line":149,"column":5},"meta":{}},{"ancestorTitles":["Auth Store","initialization"],"fullName":"Auth Store initialization should handle initialization error","status":"passed","title":"should handle initialization error","duration":4.26669999999649,"failureMessages":[],"location":{"line":166,"column":5},"meta":{}},{"ancestorTitles":["Auth Store","initialization"],"fullName":"Auth Store initialization should not reinitialize if already initialized","status":"passed","title":"should not reinitialize if already initialized","duration":9.66530000000057,"failureMessages":[],"location":{"line":177,"column":5},"meta":{}},{"ancestorTitles":["Auth Store","loading states"],"fullName":"Auth Store loading states should set loading state during login","status":"passed","title":"should set loading state during login","duration":6.199799999998504,"failureMessages":[],"location":{"line":204,"column":5},"meta":{}},{"ancestorTitles":["Auth Store","loading states"],"fullName":"Auth Store loading states should set loading state during logout","status":"passed","title":"should set loading state during logout","duration":2.059900000000198,"failureMessages":[],"location":{"line":220,"column":5},"meta":{}}],"startTime":1751472724059,"endTime":1751472724203.0598,"status":"passed","message":"","name":"C:/Users/MartijnvanHoutenRemk/OneDrive - Remka B.V/Documenten/MedStock Pro/test/stores/auth.test.ts"},{"assertionResults":[{"ancestorTitles":["ErrorHandler","getErrorMessage"],"fullName":"ErrorHandler getErrorMessage should handle JWT errors","status":"passed","title":"should handle JWT errors","duration":44.53690000000097,"failureMessages":[],"location":{"line":20,"column":5},"meta":{}},{"ancestorTitles":["ErrorHandler","getErrorMessage"],"fullName":"ErrorHandler getErrorMessage should handle duplicate key errors","status":"passed","title":"should handle duplicate key errors","duration":4.255099999998492,"failureMessages":[],"location":{"line":26,"column":5},"meta":{}},{"ancestorTitles":["ErrorHandler","getErrorMessage"],"fullName":"ErrorHandler getErrorMessage should handle foreign key errors","status":"passed","title":"should handle foreign key errors","duration":18.351199999999153,"failureMessages":[],"location":{"line":32,"column":5},"meta":{}},{"ancestorTitles":["ErrorHandler","getErrorMessage"],"fullName":"ErrorHandler getErrorMessage should handle not found errors","status":"passed","title":"should handle not found errors","duration":1.4052999999985332,"failureMessages":[],"location":{"line":38,"column":5},"meta":{}},{"ancestorTitles":["ErrorHandler","getErrorMessage"],"fullName":"ErrorHandler getErrorMessage should return original message for unknown errors","status":"passed","title":"should return original message for unknown errors","duration":2.6749999999992724,"failureMessages":[],"location":{"line":44,"column":5},"meta":{}},{"ancestorTitles":["ErrorHandler","getErrorMessage"],"fullName":"ErrorHandler getErrorMessage should handle errors without message","status":"passed","title":"should handle errors without message","duration":4.028299999999945,"failureMessages":[],"location":{"line":50,"column":5},"meta":{}},{"ancestorTitles":["ErrorHandler","normalizeError"],"fullName":"ErrorHandler normalizeError should normalize regular Error to AppError","status":"passed","title":"should normalize regular Error to AppError","duration":5.677700000000186,"failureMessages":[],"location":{"line":58,"column":5},"meta":{}},{"ancestorTitles":["ErrorHandler","normalizeError"],"fullName":"ErrorHandler normalizeError should handle AppError with existing context","status":"passed","title":"should handle AppError with existing context","duration":1.9462000000003172,"failureMessages":[],"location":{"line":69,"column":5},"meta":{}},{"ancestorTitles":["ErrorHandler","normalizeError"],"fullName":"ErrorHandler normalizeError should use default context when none provided","status":"passed","title":"should use default context when none provided","duration":6.78440000000046,"failureMessages":[],"location":{"line":85,"column":5},"meta":{}},{"ancestorTitles":["ErrorHandler","normalizeError"],"fullName":"ErrorHandler normalizeError should preserve existing context in AppError when no new context provided","status":"passed","title":"should preserve existing context in AppError when no new context provided","duration":7.739900000000489,"failureMessages":[],"location":{"line":92,"column":5},"meta":{}},{"ancestorTitles":["ErrorHandler","handle"],"fullName":"ErrorHandler handle should log error and show notification","status":"passed","title":"should log error and show notification","duration":18.481900000000678,"failureMessages":[],"location":{"line":105,"column":5},"meta":{}},{"ancestorTitles":["ErrorHandler","handle"],"fullName":"ErrorHandler handle should handle AppError","status":"passed","title":"should handle AppError","duration":9.649699999999939,"failureMessages":[],"location":{"line":134,"column":5},"meta":{}},{"ancestorTitles":["ErrorHandler","handle"],"fullName":"ErrorHandler handle should use translated error messages","status":"passed","title":"should use translated error messages","duration":31.74619999999959,"failureMessages":[],"location":{"line":159,"column":5},"meta":{}}],"startTime":1751472721616,"endTime":1751472721778.746,"status":"passed","message":"","name":"C:/Users/MartijnvanHoutenRemk/OneDrive - Remka B.V/Documenten/MedStock Pro/test/utils/error-handler.test.ts"}]}
+{
+  "numTotalTestSuites": 26,
+  "numPassedTestSuites": 26,
+  "numFailedTestSuites": 0,
+  "numPendingTestSuites": 0,
+  "numTotalTests": 47,
+  "numPassedTests": 47,
+  "numFailedTests": 0,
+  "numPendingTests": 0,
+  "numTodoTests": 0,
+  "snapshot": {
+    "added": 0,
+    "failure": false,
+    "filesAdded": 0,
+    "filesRemoved": 0,
+    "filesRemovedList": [],
+    "filesUnmatched": 0,
+    "filesUpdated": 0,
+    "matched": 0,
+    "total": 0,
+    "unchecked": 0,
+    "uncheckedKeysByFile": [],
+    "unmatched": 0,
+    "updated": 0,
+    "didUpdate": false
+  },
+  "startTime": 1751472704282,
+  "success": true,
+  "testResults": [
+    {
+      "assertionResults": [
+        {
+          "ancestorTitles": ["useFormValidation", "validation rules"],
+          "fullName": "useFormValidation validation rules should validate required fields",
+          "status": "passed",
+          "title": "should validate required fields",
+          "duration": 185.9333999999999,
+          "failureMessages": [],
+          "location": { "line": 42, "column": 5 },
+          "meta": {}
+        },
+        {
+          "ancestorTitles": ["useFormValidation", "validation rules"],
+          "fullName": "useFormValidation validation rules should validate email format",
+          "status": "passed",
+          "title": "should validate email format",
+          "duration": 19.013199999999415,
+          "failureMessages": [],
+          "location": { "line": 53, "column": 5 },
+          "meta": {}
+        },
+        {
+          "ancestorTitles": ["useFormValidation", "validation rules"],
+          "fullName": "useFormValidation validation rules should validate minimum length",
+          "status": "passed",
+          "title": "should validate minimum length",
+          "duration": 48.213700000000244,
+          "failureMessages": [],
+          "location": { "line": 64, "column": 5 },
+          "meta": {}
+        },
+        {
+          "ancestorTitles": ["useFormValidation", "validation rules"],
+          "fullName": "useFormValidation validation rules should validate maximum length",
+          "status": "passed",
+          "title": "should validate maximum length",
+          "duration": 17.212100000000646,
+          "failureMessages": [],
+          "location": { "line": 74, "column": 5 },
+          "meta": {}
+        },
+        {
+          "ancestorTitles": ["useFormValidation", "validation rules"],
+          "fullName": "useFormValidation validation rules should validate numeric values",
+          "status": "passed",
+          "title": "should validate numeric values",
+          "duration": 28.49829999999929,
+          "failureMessages": [],
+          "location": { "line": 84, "column": 5 },
+          "meta": {}
+        },
+        {
+          "ancestorTitles": ["useFormValidation", "validation rules"],
+          "fullName": "useFormValidation validation rules should validate positive numbers",
+          "status": "passed",
+          "title": "should validate positive numbers",
+          "duration": 5.218199999999342,
+          "failureMessages": [],
+          "location": { "line": 95, "column": 5 },
+          "meta": {}
+        },
+        {
+          "ancestorTitles": ["useFormValidation", "validation rules"],
+          "fullName": "useFormValidation validation rules should validate integers",
+          "status": "passed",
+          "title": "should validate integers",
+          "duration": 8.727300000000469,
+          "failureMessages": [],
+          "location": { "line": 105, "column": 5 },
+          "meta": {}
+        },
+        {
+          "ancestorTitles": ["useFormValidation", "createField"],
+          "fullName": "useFormValidation createField should create a field with initial value",
+          "status": "passed",
+          "title": "should create a field with initial value",
+          "duration": 10.0020999999997,
+          "failureMessages": [],
+          "location": { "line": 118, "column": 5 },
+          "meta": {}
+        },
+        {
+          "ancestorTitles": ["useFormValidation", "createField"],
+          "fullName": "useFormValidation createField should validate field and set error",
+          "status": "passed",
+          "title": "should validate field and set error",
+          "duration": 13.413499999998749,
+          "failureMessages": [],
+          "location": { "line": 127, "column": 5 },
+          "meta": {}
+        },
+        {
+          "ancestorTitles": ["useFormValidation", "createField"],
+          "fullName": "useFormValidation createField should clear error on successful validation",
+          "status": "passed",
+          "title": "should clear error on successful validation",
+          "duration": 14.124299999999494,
+          "failureMessages": [],
+          "location": { "line": 138, "column": 5 },
+          "meta": {}
+        },
+        {
+          "ancestorTitles": ["useFormValidation", "createField"],
+          "fullName": "useFormValidation createField should clear error when clear() is called",
+          "status": "passed",
+          "title": "should clear error when clear() is called",
+          "duration": 13.392600000001039,
+          "failureMessages": [],
+          "location": { "line": 155, "column": 5 },
+          "meta": {}
+        },
+        {
+          "ancestorTitles": ["useFormValidation", "validateForm"],
+          "fullName": "useFormValidation validateForm should validate all fields and return overall validity",
+          "status": "passed",
+          "title": "should validate all fields and return overall validity",
+          "duration": 5.320999999999913,
+          "failureMessages": [],
+          "location": { "line": 168, "column": 5 },
+          "meta": {}
+        },
+        {
+          "ancestorTitles": ["useFormValidation", "validateForm"],
+          "fullName": "useFormValidation validateForm should return true for valid form",
+          "status": "passed",
+          "title": "should return true for valid form",
+          "duration": 7.919799999999668,
+          "failureMessages": [],
+          "location": { "line": 183, "column": 5 },
+          "meta": {}
+        }
+      ],
+      "startTime": 1751472721466,
+      "endTime": 1751472721846.92,
+      "status": "passed",
+      "message": "",
+      "name": "C:/Users/MartijnvanHoutenRemk/OneDrive - Remka B.V/Documenten/MedStock Pro/test/composables/useFormValidation.test.ts"
+    },
+    {
+      "assertionResults": [
+        {
+          "ancestorTitles": ["Authentication Flow Integration", "Login Flow"],
+          "fullName": "Authentication Flow Integration Login Flow should allow demo login and redirect to dashboard",
+          "status": "passed",
+          "title": "should allow demo login and redirect to dashboard",
+          "duration": 383.8882999999987,
+          "failureMessages": [],
+          "location": { "line": 49, "column": 5 },
+          "meta": {}
+        },
+        {
+          "ancestorTitles": ["Authentication Flow Integration", "Login Flow"],
+          "fullName": "Authentication Flow Integration Login Flow should show error message for invalid credentials",
+          "status": "passed",
+          "title": "should show error message for invalid credentials",
+          "duration": 144.63739999999962,
+          "failureMessages": [],
+          "location": { "line": 94, "column": 5 },
+          "meta": {}
+        },
+        {
+          "ancestorTitles": ["Authentication Flow Integration", "Login Flow"],
+          "fullName": "Authentication Flow Integration Login Flow should validate form fields before submission",
+          "status": "passed",
+          "title": "should validate form fields before submission",
+          "duration": 178.94540000000052,
+          "failureMessages": [],
+          "location": { "line": 122, "column": 5 },
+          "meta": {}
+        },
+        {
+          "ancestorTitles": [
+            "Authentication Flow Integration",
+            "Dashboard Access Control"
+          ],
+          "fullName": "Authentication Flow Integration Dashboard Access Control should redirect unauthenticated users to login",
+          "status": "passed",
+          "title": "should redirect unauthenticated users to login",
+          "duration": 3.9939999999987776,
+          "failureMessages": [],
+          "location": { "line": 141, "column": 5 },
+          "meta": {}
+        },
+        {
+          "ancestorTitles": [
+            "Authentication Flow Integration",
+            "Dashboard Access Control"
+          ],
+          "fullName": "Authentication Flow Integration Dashboard Access Control should allow authenticated users to access dashboard",
+          "status": "passed",
+          "title": "should allow authenticated users to access dashboard",
+          "duration": 14.806899999999587,
+          "failureMessages": [],
+          "location": { "line": 163, "column": 5 },
+          "meta": {}
+        },
+        {
+          "ancestorTitles": ["Authentication Flow Integration", "Logout Flow"],
+          "fullName": "Authentication Flow Integration Logout Flow should clear auth state and redirect on logout",
+          "status": "passed",
+          "title": "should clear auth state and redirect on logout",
+          "duration": 8.850200000000768,
+          "failureMessages": [],
+          "location": { "line": 209, "column": 5 },
+          "meta": {}
+        },
+        {
+          "ancestorTitles": [
+            "Authentication Flow Integration",
+            "Session Persistence"
+          ],
+          "fullName": "Authentication Flow Integration Session Persistence should restore session from localStorage",
+          "status": "passed",
+          "title": "should restore session from localStorage",
+          "duration": 15.203600000000733,
+          "failureMessages": [],
+          "location": { "line": 258, "column": 5 },
+          "meta": {}
+        },
+        {
+          "ancestorTitles": [
+            "Authentication Flow Integration",
+            "Session Persistence"
+          ],
+          "fullName": "Authentication Flow Integration Session Persistence should handle corrupted localStorage gracefully",
+          "status": "passed",
+          "title": "should handle corrupted localStorage gracefully",
+          "duration": 2.9870999999984633,
+          "failureMessages": [],
+          "location": { "line": 280, "column": 5 },
+          "meta": {}
+        },
+        {
+          "ancestorTitles": [
+            "Authentication Flow Integration",
+            "Error Scenarios"
+          ],
+          "fullName": "Authentication Flow Integration Error Scenarios should handle network errors during login",
+          "status": "passed",
+          "title": "should handle network errors during login",
+          "duration": 145.72469999999885,
+          "failureMessages": [],
+          "location": { "line": 292, "column": 5 },
+          "meta": {}
+        },
+        {
+          "ancestorTitles": ["Authentication Flow Integration", "Performance"],
+          "fullName": "Authentication Flow Integration Performance should complete login flow within reasonable time",
+          "status": "passed",
+          "title": "should complete login flow within reasonable time",
+          "duration": 3.084999999999127,
+          "failureMessages": [],
+          "location": { "line": 316, "column": 5 },
+          "meta": {}
+        }
+      ],
+      "startTime": 1751472725548,
+      "endTime": 1751472726456.085,
+      "status": "passed",
+      "message": "",
+      "name": "C:/Users/MartijnvanHoutenRemk/OneDrive - Remka B.V/Documenten/MedStock Pro/test/integration/auth-flow.test.ts"
+    },
+    {
+      "assertionResults": [
+        {
+          "ancestorTitles": ["Auth Store", "initial state"],
+          "fullName": "Auth Store initial state should have correct initial state",
+          "status": "passed",
+          "title": "should have correct initial state",
+          "duration": 26.22190000000046,
+          "failureMessages": [],
+          "location": { "line": 41, "column": 5 },
+          "meta": {}
+        },
+        {
+          "ancestorTitles": ["Auth Store", "demo login"],
+          "fullName": "Auth Store demo login should login successfully with demo credentials",
+          "status": "passed",
+          "title": "should login successfully with demo credentials",
+          "duration": 22.933100000002014,
+          "failureMessages": [],
+          "location": { "line": 56, "column": 5 },
+          "meta": {}
+        },
+        {
+          "ancestorTitles": ["Auth Store", "regular login"],
+          "fullName": "Auth Store regular login should login successfully with valid credentials",
+          "status": "passed",
+          "title": "should login successfully with valid credentials",
+          "duration": 22.34019999999873,
+          "failureMessages": [],
+          "location": { "line": 70, "column": 5 },
+          "meta": {}
+        },
+        {
+          "ancestorTitles": ["Auth Store", "regular login"],
+          "fullName": "Auth Store regular login should handle login failure",
+          "status": "passed",
+          "title": "should handle login failure",
+          "duration": 18.796399999999267,
+          "failureMessages": [],
+          "location": { "line": 93, "column": 5 },
+          "meta": {}
+        },
+        {
+          "ancestorTitles": ["Auth Store", "logout"],
+          "fullName": "Auth Store logout should logout successfully",
+          "status": "passed",
+          "title": "should logout successfully",
+          "duration": 15.914699999997538,
+          "failureMessages": [],
+          "location": { "line": 111, "column": 5 },
+          "meta": {}
+        },
+        {
+          "ancestorTitles": ["Auth Store", "logout"],
+          "fullName": "Auth Store logout should handle logout failure",
+          "status": "passed",
+          "title": "should handle logout failure",
+          "duration": 4.110300000000279,
+          "failureMessages": [],
+          "location": { "line": 132, "column": 5 },
+          "meta": {}
+        },
+        {
+          "ancestorTitles": ["Auth Store", "initialization"],
+          "fullName": "Auth Store initialization should initialize without existing session",
+          "status": "passed",
+          "title": "should initialize without existing session",
+          "duration": 7.048399999999674,
+          "failureMessages": [],
+          "location": { "line": 149, "column": 5 },
+          "meta": {}
+        },
+        {
+          "ancestorTitles": ["Auth Store", "initialization"],
+          "fullName": "Auth Store initialization should handle initialization error",
+          "status": "passed",
+          "title": "should handle initialization error",
+          "duration": 4.26669999999649,
+          "failureMessages": [],
+          "location": { "line": 166, "column": 5 },
+          "meta": {}
+        },
+        {
+          "ancestorTitles": ["Auth Store", "initialization"],
+          "fullName": "Auth Store initialization should not reinitialize if already initialized",
+          "status": "passed",
+          "title": "should not reinitialize if already initialized",
+          "duration": 9.66530000000057,
+          "failureMessages": [],
+          "location": { "line": 177, "column": 5 },
+          "meta": {}
+        },
+        {
+          "ancestorTitles": ["Auth Store", "loading states"],
+          "fullName": "Auth Store loading states should set loading state during login",
+          "status": "passed",
+          "title": "should set loading state during login",
+          "duration": 6.199799999998504,
+          "failureMessages": [],
+          "location": { "line": 204, "column": 5 },
+          "meta": {}
+        },
+        {
+          "ancestorTitles": ["Auth Store", "loading states"],
+          "fullName": "Auth Store loading states should set loading state during logout",
+          "status": "passed",
+          "title": "should set loading state during logout",
+          "duration": 2.059900000000198,
+          "failureMessages": [],
+          "location": { "line": 220, "column": 5 },
+          "meta": {}
+        }
+      ],
+      "startTime": 1751472724059,
+      "endTime": 1751472724203.0598,
+      "status": "passed",
+      "message": "",
+      "name": "C:/Users/MartijnvanHoutenRemk/OneDrive - Remka B.V/Documenten/MedStock Pro/test/stores/auth.test.ts"
+    },
+    {
+      "assertionResults": [
+        {
+          "ancestorTitles": ["ErrorHandler", "getErrorMessage"],
+          "fullName": "ErrorHandler getErrorMessage should handle JWT errors",
+          "status": "passed",
+          "title": "should handle JWT errors",
+          "duration": 44.53690000000097,
+          "failureMessages": [],
+          "location": { "line": 20, "column": 5 },
+          "meta": {}
+        },
+        {
+          "ancestorTitles": ["ErrorHandler", "getErrorMessage"],
+          "fullName": "ErrorHandler getErrorMessage should handle duplicate key errors",
+          "status": "passed",
+          "title": "should handle duplicate key errors",
+          "duration": 4.255099999998492,
+          "failureMessages": [],
+          "location": { "line": 26, "column": 5 },
+          "meta": {}
+        },
+        {
+          "ancestorTitles": ["ErrorHandler", "getErrorMessage"],
+          "fullName": "ErrorHandler getErrorMessage should handle foreign key errors",
+          "status": "passed",
+          "title": "should handle foreign key errors",
+          "duration": 18.351199999999153,
+          "failureMessages": [],
+          "location": { "line": 32, "column": 5 },
+          "meta": {}
+        },
+        {
+          "ancestorTitles": ["ErrorHandler", "getErrorMessage"],
+          "fullName": "ErrorHandler getErrorMessage should handle not found errors",
+          "status": "passed",
+          "title": "should handle not found errors",
+          "duration": 1.4052999999985332,
+          "failureMessages": [],
+          "location": { "line": 38, "column": 5 },
+          "meta": {}
+        },
+        {
+          "ancestorTitles": ["ErrorHandler", "getErrorMessage"],
+          "fullName": "ErrorHandler getErrorMessage should return original message for unknown errors",
+          "status": "passed",
+          "title": "should return original message for unknown errors",
+          "duration": 2.6749999999992724,
+          "failureMessages": [],
+          "location": { "line": 44, "column": 5 },
+          "meta": {}
+        },
+        {
+          "ancestorTitles": ["ErrorHandler", "getErrorMessage"],
+          "fullName": "ErrorHandler getErrorMessage should handle errors without message",
+          "status": "passed",
+          "title": "should handle errors without message",
+          "duration": 4.028299999999945,
+          "failureMessages": [],
+          "location": { "line": 50, "column": 5 },
+          "meta": {}
+        },
+        {
+          "ancestorTitles": ["ErrorHandler", "normalizeError"],
+          "fullName": "ErrorHandler normalizeError should normalize regular Error to AppError",
+          "status": "passed",
+          "title": "should normalize regular Error to AppError",
+          "duration": 5.677700000000186,
+          "failureMessages": [],
+          "location": { "line": 58, "column": 5 },
+          "meta": {}
+        },
+        {
+          "ancestorTitles": ["ErrorHandler", "normalizeError"],
+          "fullName": "ErrorHandler normalizeError should handle AppError with existing context",
+          "status": "passed",
+          "title": "should handle AppError with existing context",
+          "duration": 1.9462000000003172,
+          "failureMessages": [],
+          "location": { "line": 69, "column": 5 },
+          "meta": {}
+        },
+        {
+          "ancestorTitles": ["ErrorHandler", "normalizeError"],
+          "fullName": "ErrorHandler normalizeError should use default context when none provided",
+          "status": "passed",
+          "title": "should use default context when none provided",
+          "duration": 6.78440000000046,
+          "failureMessages": [],
+          "location": { "line": 85, "column": 5 },
+          "meta": {}
+        },
+        {
+          "ancestorTitles": ["ErrorHandler", "normalizeError"],
+          "fullName": "ErrorHandler normalizeError should preserve existing context in AppError when no new context provided",
+          "status": "passed",
+          "title": "should preserve existing context in AppError when no new context provided",
+          "duration": 7.739900000000489,
+          "failureMessages": [],
+          "location": { "line": 92, "column": 5 },
+          "meta": {}
+        },
+        {
+          "ancestorTitles": ["ErrorHandler", "handle"],
+          "fullName": "ErrorHandler handle should log error and show notification",
+          "status": "passed",
+          "title": "should log error and show notification",
+          "duration": 18.481900000000678,
+          "failureMessages": [],
+          "location": { "line": 105, "column": 5 },
+          "meta": {}
+        },
+        {
+          "ancestorTitles": ["ErrorHandler", "handle"],
+          "fullName": "ErrorHandler handle should handle AppError",
+          "status": "passed",
+          "title": "should handle AppError",
+          "duration": 9.649699999999939,
+          "failureMessages": [],
+          "location": { "line": 134, "column": 5 },
+          "meta": {}
+        },
+        {
+          "ancestorTitles": ["ErrorHandler", "handle"],
+          "fullName": "ErrorHandler handle should use translated error messages",
+          "status": "passed",
+          "title": "should use translated error messages",
+          "duration": 31.74619999999959,
+          "failureMessages": [],
+          "location": { "line": 159, "column": 5 },
+          "meta": {}
+        }
+      ],
+      "startTime": 1751472721616,
+      "endTime": 1751472721778.746,
+      "status": "passed",
+      "message": "",
+      "name": "C:/Users/MartijnvanHoutenRemk/OneDrive - Remka B.V/Documenten/MedStock Pro/test/utils/error-handler.test.ts"
+    }
+  ]
+}

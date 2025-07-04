@@ -9,11 +9,13 @@ MedStock Pro is een professioneel voorraadbeheersysteem voor medische klinieken,
 ## Vereisten
 
 ### Development
+
 - **Node.js**: versie 16 of hoger
 - **npm** of **yarn**: voor package management
 - **Git**: voor version control
 
 ### Production
+
 - **Supabase account**: voor backend services
 - **Web hosting**: voor frontend deployment
 - **Custom domain**: (optioneel) voor white-label deployment
@@ -146,7 +148,7 @@ VALUES (
 -- Note: User profiles worden automatisch aangemaakt na registratie
 -- Insert test products
 INSERT INTO public.clinic_products (clinic_id, product_name, product_sku, current_stock, minimum_stock, maximum_stock)
-VALUES 
+VALUES
     ('123e4567-e89b-12d3-a456-426614174000', 'Wegwerpspuiten 5ml', 'SPR-5ML-001', 45, 50, 200),
     ('123e4567-e89b-12d3-a456-426614174000', 'Steriele handschoenen M', 'GLV-M-001', 120, 100, 500),
     ('123e4567-e89b-12d3-a456-426614174000', 'Bloeddrukmeter', 'BPM-DIG-001', 2, 5, 10);
@@ -155,28 +157,33 @@ VALUES
 ## Development Setup
 
 ### 1. Project Clonen
+
 ```bash
 git clone <repository-url>
 cd medstock-pro
 ```
 
 ### 2. Dependencies Installeren
+
 ```bash
 npm install
 ```
 
 ### 3. Environment Configureren
+
 ```bash
 cp .env.example .env
 ```
 
 Vul `.env` in met je Supabase credentials:
+
 ```env
 SUPABASE_URL=https://your-project.supabase.co
 SUPABASE_ANON_KEY=your-anon-key-here
 ```
 
 ### 4. Development Server Starten
+
 ```bash
 npm run dev
 ```
@@ -190,6 +197,7 @@ npm run dev
 ## Production Deployment
 
 ### 1. Build voor Productie
+
 ```bash
 npm run build
 ```
@@ -197,6 +205,7 @@ npm run build
 ### 2. Deploy naar Hosting Platform
 
 #### Netlify
+
 ```bash
 # Connect to git and auto-deploy
 npm run build
@@ -204,6 +213,7 @@ npm run build
 ```
 
 #### Vercel
+
 ```bash
 npm i -g vercel
 vercel --prod
@@ -212,6 +222,7 @@ vercel --prod
 ### 3. Environment Variables Instellen
 
 Zorg ervoor dat je production environment variables hebt ingesteld:
+
 - `SUPABASE_URL`
 - `SUPABASE_ANON_KEY`
 
@@ -220,17 +231,20 @@ Zorg ervoor dat je production environment variables hebt ingesteld:
 Voor white-label deployment:
 
 ### 1. Branding Aanpassen
+
 - Update `src/layouts/MainLayout.vue` - app titel
-- Update `src/layouts/AuthLayout.vue` - login scherm branding  
+- Update `src/layouts/AuthLayout.vue` - login scherm branding
 - Vervang logo's in `public/icons/`
 - Pas kleuren aan in `src/css/app.scss`
 
 ### 2. Domain & DNS
+
 - Stel custom domain in bij je hosting provider
 - Configureer DNS records
 - Zet SSL certificaat op
 
 ### 3. Client Specifieke Features
+
 - Pas features aan in store/router configuratie
 - Voeg client-specifieke styling toe
 - Configureer integraties (indien nodig)
@@ -240,14 +254,17 @@ Voor white-label deployment:
 ### Veelvoorkomende Problemen
 
 1. **Database connectie issues**
+
    - Controleer SUPABASE_URL en SUPABASE_ANON_KEY
    - Zorg dat RLS policies correct zijn ingesteld
 
 2. **Authenticatie problemen**
+
    - Verificeer email confirmatie instellingen in Supabase
    - Check redirect URLs in Supabase Auth settings
 
 3. **Build errors**
+
    - Run `npm run lint` voor code issues
    - Controleer TypeScript errors
 
@@ -268,4 +285,4 @@ Voor production deployment:
 - [ ] HTTPS geconfigureerd
 - [ ] Database backups ingesteld
 - [ ] Error monitoring geïmplementeerd (optioneel)
-- [ ] Rate limiting ingesteld (optioneel) 
+- [ ] Rate limiting ingesteld (optioneel)

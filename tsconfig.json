@@ -49,9 +49,5 @@
     "test/**/*",
     ".quasar/**/*"
   ],
-  "exclude": [
-    "dist",
-    ".quasar/dist",
-    "node_modules"
-  ]
-} 
+  "exclude": ["dist", ".quasar/dist", "node_modules"]
+}

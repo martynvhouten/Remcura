@@ -313,6 +313,62 @@ CREATE TABLE order_list_items (
 );
 
 -- ============================================================================
+-- 8. PRODUCT BATCHES (Batch Management)
+-- ============================================================================
+
+CREATE TABLE product_batches (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  practice_id UUID NOT NULL REFERENCES practices(id) ON DELETE CASCADE,
+  product_id UUID NOT NULL REFERENCES products(id) ON DELETE CASCADE,
+  location_id UUID NOT NULL REFERENCES locations(id) ON DELETE CASCADE,
+  
+  -- Batch details
+  batch_number VARCHAR(100) NOT NULL,
+  supplier_batch_number VARCHAR(100), -- Original supplier batch number if different
+  expiry_date DATE NOT NULL,
+  received_date DATE NOT NULL DEFAULT CURRENT_DATE,
+  
+  -- Quantity tracking
+  initial_quantity DECIMAL(10,3) NOT NULL,
+  current_quantity DECIMAL(10,3) NOT NULL,
+  reserved_quantity DECIMAL(10,3) DEFAULT 0,
+  available_quantity DECIMAL(10,3) GENERATED ALWAYS AS (current_quantity - reserved_quantity) STORED,
+  
+  -- Cost tracking
+  unit_cost DECIMAL(10,2),
+  total_cost DECIMAL(10,2) GENERATED ALWAYS AS (initial_quantity * unit_cost) STORED,
+  currency VARCHAR(3) DEFAULT 'EUR',
+  
+  -- Supplier information
+  supplier_id UUID REFERENCES suppliers(id),
+  purchase_order_number VARCHAR(100),
+  invoice_number VARCHAR(100),
+  
+  -- Status tracking
+  status VARCHAR(20) DEFAULT 'active', -- 'active', 'depleted', 'expired', 'recalled'
+  
+  -- Quality control
+  quality_check_passed BOOLEAN DEFAULT true,
+  quality_notes TEXT,
+  quarantine_until DATE,
+  
+  -- Metadata
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT now(),
+  updated_at TIMESTAMP WITH TIME ZONE DEFAULT now(),
+  created_by UUID REFERENCES auth.users(id),
+  
+  -- Constraints
+  UNIQUE(practice_id, product_id, location_id, batch_number),
+  CHECK (current_quantity >= 0),
+  CHECK (reserved_quantity >= 0),
+  CHECK (initial_quantity > 0),
+  CHECK (current_quantity <= initial_quantity),
+  CHECK (unit_cost >= 0),
+  CHECK (expiry_date > received_date),
+  CHECK (status IN ('active', 'depleted', 'expired', 'recalled'))
+);
+
+-- ============================================================================
 -- INDEXES FOR PERFORMANCE
 -- ============================================================================
 
@@ -359,6 +415,17 @@ CREATE INDEX idx_order_list_items_list ON order_list_items(order_list_id);
 CREATE INDEX idx_order_list_items_product ON order_list_items(product_id);
 CREATE INDEX idx_order_list_items_supplier_product ON order_list_items(supplier_product_id);
 
+-- Product batches indexes
+CREATE INDEX idx_product_batches_practice ON product_batches(practice_id);
+CREATE INDEX idx_product_batches_product ON product_batches(product_id);
+CREATE INDEX idx_product_batches_location ON product_batches(location_id);
+CREATE INDEX idx_product_batches_expiry ON product_batches(expiry_date);
+CREATE INDEX idx_product_batches_batch_number ON product_batches(batch_number);
+CREATE INDEX idx_product_batches_status ON product_batches(status);
+CREATE INDEX idx_product_batches_supplier ON product_batches(supplier_id);
+CREATE INDEX idx_product_batches_fifo ON product_batches(practice_id, product_id, location_id, expiry_date, status) 
+  WHERE status = 'active' AND current_quantity > 0;
+
 -- ============================================================================
 -- ROW LEVEL SECURITY (RLS)
 -- ============================================================================
@@ -372,6 +439,7 @@ ALTER TABLE counting_sessions ENABLE ROW LEVEL SECURITY;
 ALTER TABLE counting_entries ENABLE ROW LEVEL SECURITY;
 ALTER TABLE order_lists ENABLE ROW LEVEL SECURITY;
 ALTER TABLE order_list_items ENABLE ROW LEVEL SECURITY;
+ALTER TABLE product_batches ENABLE ROW LEVEL SECURITY;
 
 -- RLS Policies - Practice-based security
 
@@ -456,6 +524,15 @@ CREATE POLICY "Practice members can manage order list items" ON order_list_items
     )
   );
 
+-- Product batches
+CREATE POLICY "Practice members can manage product batches" ON product_batches
+  FOR ALL USING (
+    practice_id IN (
+      SELECT practice_id FROM practice_members 
+      WHERE user_id = auth.uid()
+    )
+  );
+
 -- ============================================================================
 -- USEFUL FUNCTIONS
 -- ============================================================================
@@ -482,6 +559,37 @@ CREATE TRIGGER trigger_update_stock_level
   AFTER INSERT ON stock_movements
   FOR EACH ROW
   EXECUTE FUNCTION update_stock_level_after_movement();
+
+-- Function to update batch quantities after movement
+CREATE OR REPLACE FUNCTION update_batch_quantity_after_movement()
+RETURNS TRIGGER AS $$
+BEGIN
+  -- Only update if batch_number is provided
+  IF NEW.batch_number IS NOT NULL THEN
+    UPDATE product_batches
+    SET 
+      current_quantity = GREATEST(0, current_quantity + NEW.quantity_change),
+      updated_at = NEW.created_at,
+      status = CASE 
+        WHEN GREATEST(0, current_quantity + NEW.quantity_change) = 0 THEN 'depleted'
+        ELSE status
+      END
+    WHERE 
+      practice_id = NEW.practice_id 
+      AND location_id = NEW.location_id 
+      AND product_id = NEW.product_id
+      AND batch_number = NEW.batch_number;
+  END IF;
+  
+  RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+-- Trigger to auto-update batch quantities
+CREATE TRIGGER trigger_update_batch_quantity
+  AFTER INSERT ON stock_movements
+  FOR EACH ROW
+  EXECUTE FUNCTION update_batch_quantity_after_movement();
 
 -- Function to calculate suggested order quantities
 CREATE OR REPLACE FUNCTION calculate_order_suggestions(
@@ -531,6 +639,225 @@ BEGIN
       ELSE 1
     END DESC,
     sl.current_quantity ASC;
+END;
+$$ LANGUAGE plpgsql SECURITY DEFINER;
+
+-- Function to get FIFO batch for product usage
+CREATE OR REPLACE FUNCTION get_fifo_batches(
+  p_practice_id UUID,
+  p_location_id UUID,
+  p_product_id UUID,
+  p_requested_quantity DECIMAL(10,3)
+)
+RETURNS TABLE (
+  batch_id UUID,
+  batch_number VARCHAR,
+  available_quantity DECIMAL,
+  expiry_date DATE,
+  use_quantity DECIMAL
+) AS $$
+DECLARE
+  remaining_quantity DECIMAL(10,3) := p_requested_quantity;
+  batch_record RECORD;
+BEGIN
+  -- Get batches ordered by expiry date (FIFO)
+  FOR batch_record IN
+    SELECT id, batch_number, available_quantity, expiry_date
+    FROM product_batches
+    WHERE 
+      practice_id = p_practice_id
+      AND location_id = p_location_id
+      AND product_id = p_product_id
+      AND status = 'active'
+      AND available_quantity > 0
+    ORDER BY expiry_date ASC, created_at ASC
+  LOOP
+    IF remaining_quantity <= 0 THEN
+      EXIT;
+    END IF;
+    
+    DECLARE
+      use_from_batch DECIMAL(10,3);
+    BEGIN
+      use_from_batch := LEAST(batch_record.available_quantity, remaining_quantity);
+      
+      RETURN QUERY SELECT 
+        batch_record.id,
+        batch_record.batch_number,
+        batch_record.available_quantity,
+        batch_record.expiry_date,
+        use_from_batch;
+      
+      remaining_quantity := remaining_quantity - use_from_batch;
+    END;
+  END LOOP;
+END;
+$$ LANGUAGE plpgsql SECURITY DEFINER;
+
+-- Function to get expiring batches
+CREATE OR REPLACE FUNCTION get_expiring_batches(
+  p_practice_id UUID,
+  p_days_ahead INTEGER DEFAULT 30
+)
+RETURNS TABLE (
+  batch_id UUID,
+  product_id UUID,
+  product_name VARCHAR,
+  product_sku VARCHAR,
+  location_id UUID,
+  location_name VARCHAR,
+  batch_number VARCHAR,
+  expiry_date DATE,
+  current_quantity DECIMAL,
+  days_until_expiry INTEGER,
+  urgency_level TEXT
+) AS $$
+BEGIN
+  RETURN QUERY
+  SELECT 
+    pb.id as batch_id,
+    pb.product_id,
+    p.name as product_name,
+    p.sku as product_sku,
+    pb.location_id,
+    pl.name as location_name,
+    pb.batch_number,
+    pb.expiry_date,
+    pb.current_quantity,
+    (pb.expiry_date - CURRENT_DATE)::INTEGER as days_until_expiry,
+    CASE 
+      WHEN pb.expiry_date <= CURRENT_DATE THEN 'expired'
+      WHEN pb.expiry_date <= CURRENT_DATE + INTERVAL '7 days' THEN 'critical'
+      WHEN pb.expiry_date <= CURRENT_DATE + INTERVAL '30 days' THEN 'warning'
+      ELSE 'normal'
+    END as urgency_level
+  FROM product_batches pb
+  JOIN products p ON p.id = pb.product_id
+  JOIN practice_locations pl ON pl.id = pb.location_id
+  WHERE 
+    pb.practice_id = p_practice_id
+    AND pb.status = 'active'
+    AND pb.current_quantity > 0
+    AND pb.expiry_date <= CURRENT_DATE + INTERVAL '{days_ahead} days'
+  ORDER BY 
+    pb.expiry_date ASC,
+    CASE 
+      WHEN pb.expiry_date <= CURRENT_DATE THEN 4
+      WHEN pb.expiry_date <= CURRENT_DATE + INTERVAL '7 days' THEN 3
+      WHEN pb.expiry_date <= CURRENT_DATE + INTERVAL '30 days' THEN 2
+      ELSE 1
+    END DESC;
+END;
+$$ LANGUAGE plpgsql SECURITY DEFINER;
+
+-- Function to get products with stock information
+CREATE OR REPLACE FUNCTION get_products_with_stock(
+  p_practice_id UUID
+)
+RETURNS TABLE (
+  product_id UUID,
+  product_sku VARCHAR,
+  product_name VARCHAR,
+  product_description TEXT,
+  product_category VARCHAR,
+  product_brand VARCHAR,
+  product_unit VARCHAR,
+  product_image_url TEXT,
+  product_barcode VARCHAR,
+  product_price DECIMAL,
+  product_currency VARCHAR,
+  product_is_active BOOLEAN,
+  product_created_at TIMESTAMP WITH TIME ZONE,
+  product_updated_at TIMESTAMP WITH TIME ZONE,
+  total_stock DECIMAL,
+  available_stock DECIMAL,
+  reserved_stock DECIMAL,
+  minimum_stock DECIMAL,
+  lowest_supplier_price DECIMAL,
+  cheapest_supplier JSONB,
+  supplier_products JSONB,
+  stock_levels JSONB
+) AS $$
+BEGIN
+  RETURN QUERY
+  SELECT 
+    p.id AS product_id,
+    p.sku AS product_sku,
+    p.name AS product_name,
+    p.description AS product_description,
+    p.category AS product_category,
+    p.brand AS product_brand,
+    p.unit AS product_unit,
+    p.image_url AS product_image_url,
+    p.barcode AS product_barcode,
+    p.price AS product_price,
+    p.currency AS product_currency,
+    p.is_active AS product_is_active,
+    p.created_at AS product_created_at,
+    p.updated_at AS product_updated_at,
+    
+    -- Aggregate stock information
+    COALESCE(SUM(sl.current_quantity), 0) AS total_stock,
+    COALESCE(SUM(sl.available_quantity), 0) AS available_stock,
+    COALESCE(SUM(sl.reserved_quantity), 0) AS reserved_stock,
+    COALESCE(MIN(sl.minimum_quantity), 0) AS minimum_stock,
+    
+    -- Supplier pricing information
+    (SELECT MIN(sp.cost_price) 
+     FROM supplier_products sp 
+     WHERE sp.product_id = p.id AND sp.is_available = true) AS lowest_supplier_price,
+    
+    -- Cheapest supplier as JSON
+    (SELECT to_jsonb(row_to_json(s.*))
+     FROM suppliers s
+     JOIN supplier_products sp ON s.id = sp.supplier_id
+     WHERE sp.product_id = p.id AND sp.is_available = true
+     ORDER BY sp.cost_price ASC
+     LIMIT 1) AS cheapest_supplier,
+    
+    -- All supplier products as JSON array
+    (SELECT COALESCE(jsonb_agg(
+      jsonb_build_object(
+        'id', sp.id,
+        'supplier_id', sp.supplier_id,
+        'supplier_sku', sp.supplier_sku,
+        'supplier_name', sp.supplier_name,
+        'unit_price', sp.cost_price,
+        'currency', sp.currency,
+        'minimum_order_quantity', sp.minimum_order_quantity,
+        'lead_time_days', sp.lead_time_days,
+        'is_available', sp.is_available,
+        'is_preferred', sp.is_preferred
+      )
+    ), '[]'::jsonb)
+    FROM supplier_products sp
+    WHERE sp.product_id = p.id) AS supplier_products,
+    
+    -- Stock levels by location as JSON array
+    (SELECT COALESCE(jsonb_agg(
+      jsonb_build_object(
+        'id', sl.id,
+        'location_id', sl.location_id,
+        'current_quantity', sl.current_quantity,
+        'available_quantity', sl.available_quantity,
+        'reserved_quantity', sl.reserved_quantity,
+        'minimum_quantity', sl.minimum_quantity,
+        'maximum_quantity', sl.maximum_quantity,
+        'reorder_point', sl.reorder_point,
+        'last_counted_at', sl.last_counted_at,
+        'last_movement_at', sl.last_movement_at
+      )
+    ), '[]'::jsonb)
+    FROM stock_levels sl
+    WHERE sl.product_id = p.id AND sl.practice_id = p_practice_id) AS stock_levels
+    
+  FROM products p
+  LEFT JOIN stock_levels sl ON p.id = sl.product_id AND sl.practice_id = p_practice_id
+  WHERE p.is_active = true
+  GROUP BY p.id, p.sku, p.name, p.description, p.category, p.brand, p.unit, 
+           p.image_url, p.barcode, p.price, p.currency, p.is_active, 
+           p.created_at, p.updated_at
+  ORDER BY p.name ASC;
 END;
 $$ LANGUAGE plpgsql SECURITY DEFINER;
 

@@ -7,7 +7,7 @@
         icon="tune"
         :meta="[
           { icon: 'person', text: userProfile?.full_name || 'User' },
-          { icon: 'domain', text: clinicName }
+          { icon: 'domain', text: clinicName },
         ]"
       >
         <template #actions>
@@ -88,14 +88,20 @@
           icon="palette"
           header-color="secondary"
         >
-            <div class="settings-items" role="group" aria-labelledby="appearance-title">
+          <div
+            class="settings-items"
+            role="group"
+            aria-labelledby="appearance-title"
+          >
               <!-- Dark Mode Toggle -->
               <div class="setting-item glass-card">
                 <div class="setting-info">
-                  <div class="setting-label" id="dark-mode-label">{{ $t('settings.darkMode') }}</div>
+                <div class="setting-label" id="dark-mode-label">
+                  {{ $t("settings.darkMode") }}
+                </div>
                   <div class="setting-description">
-                      {{ $t('settings.darkModeDescription') }}
-                  </div>
+                  {{ $t("settings.darkModeDescription") }}
+                </div>
                 </div>
                 <div class="setting-control">
                     <q-toggle
@@ -103,21 +109,29 @@
                       @update:model-value="toggleDarkMode"
                       color="primary"
                       size="lg"
-                    class="toggle-modern"
+                      class="toggle-modern"
                       :aria-labelledby="'dark-mode-label'"
                       :aria-describedby="'dark-mode-description'"
                     />
-                    <div id="dark-mode-description" class="sr-only">{{ isDarkMode ? $t('settings.darkModeEnabled') : $t('settings.lightModeEnabled') }}</div>
-                  </div>
+                <div id="dark-mode-description" class="sr-only">
+                  {{
+                    isDarkMode
+                      ? $t("settings.darkModeEnabled")
+                      : $t("settings.lightModeEnabled")
+                  }}
+                </div>
+              </div>
                 </div>
 
               <!-- Language Setting -->
               <div class="setting-item glass-card">
                 <div class="setting-info">
-                  <div class="setting-label" id="language-label">{{ $t('settings.language') }}</div>
+                <div class="setting-label" id="language-label">
+                  {{ $t("settings.language") }}
+                </div>
                   <div class="setting-description">
-                      {{ $t('settings.selectLanguage') }}
-                  </div>
+                  {{ $t("settings.selectLanguage") }}
+                </div>
                 </div>
                 <div class="setting-control">
                     <q-select
@@ -130,7 +144,7 @@
                       map-options
                       outlined
                       dense
-                    class="select-modern"
+                      class="select-modern"
                       style="width: 150px"
                       :aria-labelledby="'language-label'"
                     />
@@ -140,10 +154,12 @@
               <!-- Theme Setting -->
               <div class="setting-item glass-card">
                 <div class="setting-info">
-                  <div class="setting-label" id="theme-label">{{ $t('settings.colorSchemeTitle') }}</div>
+                <div class="setting-label" id="theme-label">
+                  {{ $t("settings.colorSchemeTitle") }}
+                </div>
                   <div class="setting-description">
-                      {{ $t('settings.colorSchemeDescription') }}
-                  </div>
+                  {{ $t("settings.colorSchemeDescription") }}
+                </div>
                 </div>
                 <div class="setting-control">
                     <q-select
@@ -161,7 +177,6 @@
                       :aria-labelledby="'theme-label'"
                     />
                 </div>
-                </div>
               </div>
             </div>
         </BaseCard>
@@ -173,10 +188,17 @@
           <q-card-section class="card-header">
             <div class="card-header-content">
               <div class="card-title-section">
-                <q-icon name="business" color="info" size="24px" aria-hidden="true" />
+                <q-icon
+                  name="business"
+                  color="info"
+                  size="24px"
+                  aria-hidden="true"
+                />
                 <div>
-                  <h2 class="card-title">{{ $t('settings.clinic') }}</h2>
-                  <p class="card-subtitle">{{ $t('settings.clinicInfoSubtitle') }}</p>
+                  <h2 class="card-title">{{ $t("settings.clinic") }}</h2>
+                  <p class="card-subtitle">
+                    {{ $t("settings.clinicInfoSubtitle") }}
+                  </p>
                 </div>
               </div>
             </div>
@@ -185,14 +207,20 @@
           <q-separator />
 
           <q-card-section class="card-content">
-            <div class="clinic-form-grid" role="group" aria-labelledby="clinic-title">
+            <div
+              class="clinic-form-grid"
+              role="group"
+              aria-labelledby="clinic-title"
+            >
                   <q-input
                     v-model="clinicSettings.name"
                     :label="$t('settings.clinicName')"
                     outlined
                     readonly
                 class="input-modern"
-                    :aria-label="`${$t('settings.clinicName')}: ${clinicSettings.name}`"
+                :aria-label="`${$t('settings.clinicName')}: ${
+                  clinicSettings.name
+                }`"
                   >
                 <template v-slot:prepend>
                       <q-icon name="business" aria-hidden="true" />
@@ -205,7 +233,9 @@
                     outlined
                     readonly
                 class="input-modern"
-                    :aria-label="`${$t('settings.contactEmail')}: ${clinicSettings.contactEmail}`"
+                :aria-label="`${$t('settings.contactEmail')}: ${
+                  clinicSettings.contactEmail
+                }`"
                   >
                 <template v-slot:prepend>
                       <q-icon name="email" aria-hidden="true" />
@@ -218,7 +248,9 @@
                     outlined
                     readonly
                 class="input-modern"
-                    :aria-label="`${$t('settings.phoneNumber')}: ${clinicSettings.contactPhone}`"
+                :aria-label="`${$t('settings.phoneNumber')}: ${
+                  clinicSettings.contactPhone
+                }`"
                   >
                 <template v-slot:prepend>
                       <q-icon name="phone" aria-hidden="true" />
@@ -231,7 +263,9 @@
                     outlined
                     readonly
                 class="input-modern"
-                    :aria-label="`${$t('settings.address')}: ${clinicSettings.address}`"
+                :aria-label="`${$t('settings.address')}: ${
+                  clinicSettings.address
+                }`"
                   >
                 <template v-slot:prepend>
                       <q-icon name="location_on" aria-hidden="true" />
@@ -245,7 +279,7 @@
                   <q-icon name="info" color="info" />
                   </template>
                 <div class="notice-text">
-                  {{ $t('settings.contactSettingsNotice') }}
+                  {{ $t("settings.contactSettingsNotice") }}
                 </div>
                 </q-banner>
               </div>
@@ -261,8 +295,10 @@
               <div class="card-title-section">
                 <q-icon name="notifications" color="warning" size="24px" />
                 <div>
-                  <h3 class="card-title">{{ $t('settings.notifications') }}</h3>
-                  <p class="card-subtitle">{{ $t('settings.notificationSettingsSubtitle') }}</p>
+                  <h3 class="card-title">{{ $t("settings.notifications") }}</h3>
+                  <p class="card-subtitle">
+                    {{ $t("settings.notificationSettingsSubtitle") }}
+                  </p>
                 </div>
               </div>
             </div>
@@ -275,9 +311,11 @@
               <!-- Low Stock Alerts -->
               <div class="setting-item glass-card">
                 <div class="setting-info">
-                  <div class="setting-label">{{ $t('settings.stockAlertsLabel') }}</div>
+                  <div class="setting-label">
+                    {{ $t("settings.stockAlertsLabel") }}
+                  </div>
                   <div class="setting-description">
-                      {{ $t('settings.stockAlertsDescription') }}
+                    {{ $t("settings.stockAlertsDescription") }}
                   </div>
                 </div>
                 <div class="setting-control">
@@ -292,9 +330,11 @@
               <!-- Email Notifications -->
               <div class="setting-item glass-card">
                 <div class="setting-info">
-                  <div class="setting-label">{{ $t('settings.emailNotificationsLabel') }}</div>
+                  <div class="setting-label">
+                    {{ $t("settings.emailNotificationsLabel") }}
+                  </div>
                   <div class="setting-description">
-                      {{ $t('settings.emailNotificationsDescription') }}
+                    {{ $t("settings.emailNotificationsDescription") }}
                   </div>
                 </div>
                 <div class="setting-control">
@@ -309,9 +349,11 @@
               <!-- Browser Notifications -->
               <div class="setting-item glass-card">
                 <div class="setting-info">
-                  <div class="setting-label">{{ $t('settings.browserNotificationsLabel') }}</div>
+                  <div class="setting-label">
+                    {{ $t("settings.browserNotificationsLabel") }}
+                  </div>
                   <div class="setting-description">
-                      {{ $t('settings.browserNotificationsDescription') }}
+                    {{ $t("settings.browserNotificationsDescription") }}
                   </div>
                 </div>
                 <div class="setting-control">
@@ -335,8 +377,12 @@
               <div class="card-title-section">
                 <q-icon name="info" color="accent" size="24px" />
                 <div>
-                  <h3 class="card-title">{{ $t('settings.systemInfoTitle') }}</h3>
-                  <p class="card-subtitle">{{ $t('settings.systemInfoSubtitle') }}</p>
+                  <h3 class="card-title">
+                    {{ $t("settings.systemInfoTitle") }}
+                  </h3>
+                  <p class="card-subtitle">
+                    {{ $t("settings.systemInfoSubtitle") }}
+                  </p>
                 </div>
               </div>
             </div>
@@ -347,19 +393,26 @@
           <q-card-section class="card-content">
             <div class="system-info">
               <div class="info-item">
-                <div class="info-label">{{ $t('settings.versionLabel') }}</div>
+                <div class="info-label">{{ $t("settings.versionLabel") }}</div>
                 <div class="info-value">1.0.0</div>
               </div>
               
               <div class="info-item">
-                <div class="info-label">{{ $t('settings.lastUpdateLabel') }}</div>
-                <div class="info-value">{{ new Date().toLocaleDateString('nl-NL') }}</div>
+                <div class="info-label">
+                  {{ $t("settings.lastUpdateLabel") }}
+                </div>
+                <div class="info-value">
+                  {{ new Date().toLocaleDateString("nl-NL") }}
+                </div>
               </div>
               
               <div class="info-item">
-                <div class="info-label">{{ $t('settings.supportLabel') }}</div>
+                <div class="info-label">{{ $t("settings.supportLabel") }}</div>
                 <div class="info-value">
-                  <a href="mailto:support@medstock-pro.com" class="support-link">
+                  <a
+                    href="mailto:support@medstock-pro.com"
+                    class="support-link"
+                  >
                     support@medstock-pro.com
                   </a>
                 </div>
@@ -373,132 +426,142 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted } from 'vue'
-import { useQuasar } from 'quasar'
-import { useI18n } from 'vue-i18n'
-import { useAuthStore } from 'src/stores/auth'
-import { useClinicStore } from 'src/stores/clinic'
-import { useThemeManager } from 'src/composables/themeManager'
-import { setI18nLanguage, getCurrentLocale, type SupportedLocale } from 'src/i18n'
-import PageLayout from 'src/components/PageLayout.vue'
-import PageTitle from 'src/components/PageTitle.vue'
-import BaseCard from 'src/components/base/BaseCard.vue'
+import { ref, computed, onMounted } from "vue";
+import { useQuasar } from "quasar";
+import { useI18n } from "vue-i18n";
+import { useAuthStore } from "src/stores/auth";
+import { useClinicStore } from "src/stores/clinic";
+import { useThemeManager } from "src/composables/themeManager";
+import {
+  setI18nLanguage,
+  getCurrentLocale,
+  type SupportedLocale,
+} from "src/i18n";
+import PageLayout from "src/components/PageLayout.vue";
+import PageTitle from "src/components/PageTitle.vue";
+import BaseCard from "src/components/base/BaseCard.vue";
 
-const $q = useQuasar()
-const { t } = useI18n()
-const authStore = useAuthStore()
-const clinicStore = useClinicStore()
-const { themeOptions, currentTheme, applyTheme, getCurrentThemeName } = useThemeManager()
+const $q = useQuasar();
+const { t } = useI18n();
+const authStore = useAuthStore();
+const clinicStore = useClinicStore();
+const { themeOptions, currentTheme, applyTheme, getCurrentThemeName } =
+  useThemeManager();
 
 // State
-const saving = ref(false)
-const isDarkMode = ref($q.dark.isActive)
-const selectedLanguage = ref(getCurrentLocale())
-const selectedTheme = ref(getCurrentThemeName())
+const saving = ref(false);
+const isDarkMode = ref($q.dark.isActive);
+const selectedLanguage = ref(getCurrentLocale());
+const selectedTheme = ref(getCurrentThemeName());
 
 // Computed properties
-const userProfile = computed(() => authStore.userProfile)
-const clinicName = computed(() => clinicStore.clinic?.name || 'Kliniek')
+const userProfile = computed(() => authStore.userProfile);
+const clinicName = computed(() => clinicStore.clinic?.name || "Kliniek");
 
 // Form data
 const userSettings = ref({
-  fullName: userProfile.value?.full_name || '',
-  email: authStore.userEmail || '',
-  role: 'Administrator' // This would come from your role system
-})
+  fullName: userProfile.value?.full_name || "",
+  email: authStore.userEmail || "",
+  role: "Administrator", // This would come from your role system
+});
 
 const clinicSettings = ref({
   name: clinicName.value,
-  contactEmail: 'contact@example.com',
-  contactPhone: '+31 20 123 4567',
-  address: 'Voorbeeldstraat 123, Amsterdam'
-})
+  contactEmail: "contact@example.com",
+  contactPhone: "+31 20 123 4567",
+  address: "Voorbeeldstraat 123, Amsterdam",
+});
 
 const notificationSettings = ref({
   lowStockAlerts: true,
   emailNotifications: true,
-  browserNotifications: false
-})
+  browserNotifications: false,
+});
 
 const languageOptions = [
-  { label: 'Nederlands', value: 'nl' },
-  { label: 'English', value: 'en' },
-  { label: 'Español', value: 'es' }
-]
+  { label: "Nederlands", value: "nl" },
+  { label: "English", value: "en" },
+  { label: "Español", value: "es" },
+];
 
 // Methods
 const toggleDarkMode = (value: boolean) => {
-  $q.dark.set(value)
+  $q.dark.set(value);
   
   $q.notify({
-    type: 'positive',
-    message: value ? t('settings.darkModeEnabled') : t('settings.lightModeEnabled'),
-    position: 'top-right',
-    timeout: 2000
-  })
-}
+    type: "positive",
+    message: value
+      ? t("settings.darkModeEnabled")
+      : t("settings.lightModeEnabled"),
+    position: "top-right",
+    timeout: 2000,
+  });
+};
 
 const changeTheme = (themeName: string) => {
-  selectedTheme.value = themeName
-  applyTheme(themeName)
+  selectedTheme.value = themeName;
+  applyTheme(themeName);
   
-  const themeLabel = themeOptions.value.find(option => option.value === themeName)?.label || themeName
+  const themeLabel =
+    themeOptions.value.find((option) => option.value === themeName)?.label ||
+    themeName;
   $q.notify({
-    type: 'positive',
+    type: "positive",
     message: `Kleurenschema "${themeLabel}" toegepast`,
-    position: 'top-right',
-    timeout: 2000
-  })
-}
+    position: "top-right",
+    timeout: 2000,
+  });
+};
 
 const changeLanguage = (locale: SupportedLocale) => {
-  selectedLanguage.value = locale
-  setI18nLanguage(locale)
+  selectedLanguage.value = locale;
+  setI18nLanguage(locale);
   
-  const languageLabel = languageOptions.find(option => option.value === locale)?.label || locale
+  const languageLabel =
+    languageOptions.find((option) => option.value === locale)?.label || locale;
   $q.notify({
-    type: 'positive',
-    message: t('settings.languageChanged', { language: languageLabel }),
-    position: 'top-right',
-    timeout: 2000
-  })
-}
+    type: "positive",
+    message: t("settings.languageChanged", { language: languageLabel }),
+    position: "top-right",
+    timeout: 2000,
+  });
+};
 
 const saveSettings = async () => {
-  saving.value = true
+  saving.value = true;
   
   try {
     // Here you would save the settings to your backend/store
-    await new Promise(resolve => setTimeout(resolve, 1000)) // Simulate API call
+    await new Promise((resolve) => setTimeout(resolve, 1000)); // Simulate API call
     
     $q.notify({
-      type: 'positive',
-      message: t('settings.settingsSaved'),
-      position: 'top-right',
-      timeout: 3000
-    })
+      type: "positive",
+      message: t("settings.settingsSaved"),
+      position: "top-right",
+      timeout: 3000,
+    });
   } catch (error) {
     $q.notify({
-      type: 'negative',
-      message: t('settings.settingsSaveError'),
-      position: 'top-right',
-      timeout: 3000
-    })
+      type: "negative",
+      message: t("settings.settingsSaveError"),
+      position: "top-right",
+      timeout: 3000,
+    });
   } finally {
-    saving.value = false
+    saving.value = false;
   }
-}
+};
 
 // Initialize data
 onMounted(() => {
   // Load settings from store/localStorage if available
-  const savedDarkMode = $q.localStorage.getItem('darkMode')
+  const savedDarkMode = $q.localStorage.getItem("darkMode");
   if (savedDarkMode !== null) {
-    const darkModeValue = savedDarkMode === 'true'
-    isDarkMode.value = darkModeValue
-    $q.dark.set(darkModeValue)
+    const darkModeValue = savedDarkMode === "true";
+    isDarkMode.value = darkModeValue;
+    $q.dark.set(darkModeValue);
   }
-})
+});
 </script>
 
 <style lang="scss" scoped>

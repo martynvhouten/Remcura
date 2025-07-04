@@ -3,26 +3,30 @@
  * Replaces console.log statements with environment-aware logging
  */
 
-export type LogLevel = 'debug' | 'info' | 'warn' | 'error'
+export type LogLevel = "debug" | "info" | "warn" | "error";
 
 export interface LogEntry {
-  level: LogLevel
-  message: string
-  context?: string
-  data?: any
-  timestamp: string
+  level: LogLevel;
+  message: string;
+  context?: string;
+  data?: any;
+  timestamp: string;
 }
 
 class Logger {
-  private isDevelopment = import.meta.env.DEV
-  private isProduction = import.meta.env.PROD
+  private isDevelopment = import.meta.env.DEV;
+  private isProduction = import.meta.env.PROD;
 
   /**
    * Log debug information (only in development)
    */
   debug(message: string, context?: string, data?: any): void {
     if (this.isDevelopment) {
-      console.debug(`[DEBUG${context ? ` ${context}` : ''}]`, message, data || '')
+      console.debug(
+        `[DEBUG${context ? ` ${context}` : ""}]`,
+        message,
+        data || ""
+      );
     }
   }
 
@@ -31,34 +35,47 @@ class Logger {
    */
   info(message: string, context?: string, data?: any): void {
     if (this.isDevelopment) {
-      console.info(`[INFO${context ? ` ${context}` : ''}]`, message, data || '')
+      console.info(
+        `[INFO${context ? ` ${context}` : ""}]`,
+        message,
+        data || ""
+      );
     }
-    
+
     // In production, could send to monitoring service
-    this.sendToMonitoring('info', message, context, data)
+    this.sendToMonitoring("info", message, context, data);
   }
 
   /**
    * Log warnings (always logged)
    */
   warn(message: string, context?: string, data?: any): void {
-    console.warn(`[WARN${context ? ` ${context}` : ''}]`, message, data || '')
-    this.sendToMonitoring('warn', message, context, data)
+    console.warn(`[WARN${context ? ` ${context}` : ""}]`, message, data || "");
+    this.sendToMonitoring("warn", message, context, data);
   }
 
   /**
    * Log errors (always logged)
    */
   error(message: string, context?: string, error?: Error | any): void {
-    console.error(`[ERROR${context ? ` ${context}` : ''}]`, message, error || '')
-    this.sendToMonitoring('error', message, context, error)
+    console.error(
+      `[ERROR${context ? ` ${context}` : ""}]`,
+      message,
+      error || ""
+    );
+    this.sendToMonitoring("error", message, context, error);
   }
 
   /**
    * Send logs to external monitoring service (placeholder)
    */
-  private sendToMonitoring(level: LogLevel, message: string, context?: string, data?: any): void {
-    if (!this.isProduction) return
+  private sendToMonitoring(
+    level: LogLevel,
+    message: string,
+    context?: string,
+    data?: any
+  ): void {
+    if (!this.isProduction) return;
 
     // TODO: Integrate with monitoring service (Sentry, LogRocket, etc.)
     // Example:
@@ -77,19 +94,21 @@ class Logger {
    */
   createContext(context: string) {
     return {
-      debug: (message: string, data?: any) => this.debug(message, context, data),
+      debug: (message: string, data?: any) =>
+        this.debug(message, context, data),
       info: (message: string, data?: any) => this.info(message, context, data),
       warn: (message: string, data?: any) => this.warn(message, context, data),
-      error: (message: string, error?: Error | any) => this.error(message, context, error)
-    }
+      error: (message: string, error?: Error | any) =>
+        this.error(message, context, error),
+    };
   }
 }
 
 // Export singleton instance
-export const logger = new Logger()
+export const logger = new Logger();
 
 // Export contextual loggers for common modules
-export const authLogger = logger.createContext('AUTH')
-export const apiLogger = logger.createContext('API')
-export const routerLogger = logger.createContext('ROUTER')
-export const serviceWorkerLogger = logger.createContext('SW') 
+export const authLogger = logger.createContext("AUTH");
+export const apiLogger = logger.createContext("API");
+export const routerLogger = logger.createContext("ROUTER");
+export const serviceWorkerLogger = logger.createContext("SW");

@@ -54,7 +54,7 @@
       <!-- Loading State -->
       <div v-if="inventoryStore.loading" class="loading-container">
         <q-spinner-dots size="xl" color="primary" />
-        <p class="loading-text">{{ $t('inventory.loadingData') }}</p>
+        <p class="loading-text">{{ $t("inventory.loadingData") }}</p>
       </div>
 
       <!-- Content -->
@@ -70,8 +70,10 @@
             header-color="primary"
           >
             <div class="kpi-content">
-              <div class="kpi-value">{{ formatNumber(inventoryKPIs.total_sku_count) }}</div>
-              <div class="kpi-subtitle">{{ $t('inventory.units') }}</div>
+              <div class="kpi-value">
+                {{ formatNumber(inventoryKPIs.total_sku_count) }}
+              </div>
+              <div class="kpi-subtitle">{{ $t("inventory.units") }}</div>
             </div>
           </BaseCard>
 
@@ -84,7 +86,9 @@
             header-color="positive"
           >
             <div class="kpi-content">
-              <div class="kpi-value">{{ formatCurrency(inventoryStore.totalStockValue) }}</div>
+              <div class="kpi-value">
+                {{ formatCurrency(inventoryStore.totalStockValue) }}
+              </div>
               <div class="kpi-subtitle">{{ selectedLocationName }}</div>
             </div>
           </BaseCard>
@@ -98,8 +102,10 @@
             header-color="warning"
           >
             <div class="kpi-content">
-              <div class="kpi-value">{{ inventoryStore.lowStockItems.length }}</div>
-              <div class="kpi-subtitle">{{ $t('inventory.units') }}</div>
+              <div class="kpi-value">
+                {{ inventoryStore.lowStockItems.length }}
+              </div>
+              <div class="kpi-subtitle">{{ $t("inventory.units") }}</div>
             </div>
             <template #actions>
               <q-btn
@@ -121,8 +127,10 @@
             header-color="negative"
           >
             <div class="kpi-content">
-              <div class="kpi-value">{{ inventoryStore.outOfStockItems.length }}</div>
-              <div class="kpi-subtitle">{{ $t('inventory.units') }}</div>
+              <div class="kpi-value">
+                {{ inventoryStore.outOfStockItems.length }}
+              </div>
+              <div class="kpi-subtitle">{{ $t("inventory.units") }}</div>
             </div>
             <template #actions>
               <q-btn
@@ -144,9 +152,15 @@
             header-color="info"
           >
             <div class="kpi-content">
-              <div class="kpi-value">{{ formatPercentage(inventoryKPIs.stock_accuracy_percentage) }}</div>
+              <div class="kpi-value">
+                {{ formatPercentage(inventoryKPIs.stock_accuracy_percentage) }}
+              </div>
               <div class="kpi-subtitle">
-                {{ inventoryKPIs.last_full_count_date ? formatDate(inventoryKPIs.last_full_count_date) : $t('inventory.neverCounted') }}
+                {{
+                  inventoryKPIs.last_full_count_date
+                    ? formatDate(inventoryKPIs.last_full_count_date)
+                    : $t("inventory.neverCounted")
+                }}
               </div>
             </div>
           </BaseCard>
@@ -155,7 +169,11 @@
           <BaseCard
             variant="modern"
             :title="$t('inventory.countingStatus')"
-            :subtitle="activeCountingSession ? $t('inventory.activeSession') : $t('inventory.noActiveSession')"
+            :subtitle="
+              activeCountingSession
+                ? $t('inventory.activeSession')
+                : $t('inventory.noActiveSession')
+            "
             icon="checklist"
             header-color="secondary"
           >
@@ -163,12 +181,14 @@
               <div v-if="activeCountingSession" class="counting-active">
                 <div class="session-name">{{ activeCountingSession.name }}</div>
                 <div class="session-progress">
-                  {{ activeCountingSession.products_counted }}/{{ activeCountingSession.total_products_to_count }}
+                  {{ activeCountingSession.products_counted }}/{{
+                    activeCountingSession.total_products_to_count
+                  }}
                 </div>
               </div>
               <div v-else class="no-session">
                 <q-icon name="check_circle" size="md" color="positive" />
-                <span>{{ $t('inventory.noActiveSession') }}</span>
+                <span>{{ $t("inventory.noActiveSession") }}</span>
               </div>
             </div>
             <template #actions>
@@ -238,7 +258,9 @@
           v-if="inventoryStore.criticalAlerts.length > 0"
           variant="modern"
           :title="$t('inventory.stockAlerts')"
-          :subtitle="`${inventoryStore.criticalAlerts.length} ${$t('inventory.criticalAlerts')}`"
+          :subtitle="`${inventoryStore.criticalAlerts.length} ${$t(
+            'inventory.criticalAlerts'
+          )}`"
           icon="notification_important"
           header-color="warning"
         >
@@ -276,7 +298,12 @@
               v-if="inventoryStore.criticalAlerts.length > displayedAlertsCount"
               flat
               color="warning"
-              :label="$t('common.viewMore', { count: inventoryStore.criticalAlerts.length - displayedAlertsCount })"
+              :label="
+                $t('common.viewMore', {
+                  count:
+                    inventoryStore.criticalAlerts.length - displayedAlertsCount,
+                })
+              "
               @click="showAllAlerts"
             />
           </template>
@@ -301,9 +328,14 @@
             />
           </template>
 
-          <div v-if="inventoryStore.stockMovements.length === 0" class="no-activity">
+          <div
+            v-if="inventoryStore.stockMovements.length === 0"
+            class="no-activity"
+          >
             <q-icon name="history_toggle_off" size="xl" color="grey-4" />
-            <p class="no-activity-text">{{ $t('inventory.noRecentActivity') }}</p>
+            <p class="no-activity-text">
+              {{ $t("inventory.noRecentActivity") }}
+            </p>
           </div>
 
           <div v-else class="movements-list">
@@ -321,11 +353,11 @@
               </div>
               <div class="movement-content">
                 <div class="movement-title">
-                  {{ movement.product?.name || $t('common.unknownProduct') }}
+                  {{ movement.product?.name || $t("common.unknownProduct") }}
                 </div>
                 <div class="movement-details">
-                  {{ movement.location?.name || $t('common.unknownLocation') }} •
-                  {{ formatMovementType(movement.movement_type) }} •
+                  {{ movement.location?.name || $t("common.unknownLocation") }}
+                  • {{ formatMovementType(movement.movement_type) }} •
                   {{ formatQuantityChange(movement.quantity_change) }}
                 </div>
                 <div class="movement-time">
@@ -333,8 +365,15 @@
                 </div>
               </div>
               <div class="movement-quantity">
-                <span :class="movement.quantity_change > 0 ? 'quantity-positive' : 'quantity-negative'">
-                  {{ movement.quantity_change > 0 ? '+' : '' }}{{ movement.quantity_change }}
+                <span
+                  :class="
+                    movement.quantity_change > 0
+                      ? 'quantity-positive'
+                      : 'quantity-negative'
+                  "
+                >
+                  {{ movement.quantity_change > 0 ? "+" : ""
+                  }}{{ movement.quantity_change }}
                 </span>
               </div>
             </div>
@@ -374,302 +413,346 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted, watch, defineAsyncComponent } from 'vue'
-import { useI18n } from 'vue-i18n'
-import { useQuasar } from 'quasar'
-import { useRouter } from 'vue-router'
-import { useAuthStore } from 'src/stores/auth'
-import { useInventoryStore } from 'src/stores/inventory'
-import { useClinicStore } from 'src/stores/clinic'
-import { useCountingStore } from 'src/stores/counting'
-import type { CountingSession, StockAlert, MovementWithRelations, PracticeLocation } from 'src/types/inventory'
-import PageLayout from 'src/components/PageLayout.vue'
-import PageTitle from 'src/components/PageTitle.vue'
-import BaseCard from 'src/components/base/BaseCard.vue'
+import { ref, computed, onMounted, watch, defineAsyncComponent } from "vue";
+import { useI18n } from "vue-i18n";
+import { useQuasar } from "quasar";
+import { useRouter } from "vue-router";
+import { useAuthStore } from "src/stores/auth";
+import { useInventoryStore } from "src/stores/inventory";
+import { useClinicStore } from "src/stores/clinic";
+import { useCountingStore } from "src/stores/counting";
+import type {
+  CountingSession,
+  StockAlert,
+  MovementWithRelations,
+  PracticeLocation,
+} from "src/types/inventory";
+import PageLayout from "src/components/PageLayout.vue";
+import PageTitle from "src/components/PageTitle.vue";
+import BaseCard from "src/components/base/BaseCard.vue";
 
 // Lazy loaded dialogs
-const CountingSessionDialog = defineAsyncComponent(() => import('src/components/inventory/CountingSessionDialog.vue'))
-const QuickAdjustmentDialog = defineAsyncComponent(() => import('src/components/inventory/QuickAdjustmentDialog.vue'))
-const StockTransferDialog = defineAsyncComponent(() => import('src/components/inventory/StockTransferDialog.vue'))
+const CountingSessionDialog = defineAsyncComponent(
+  () => import("src/components/inventory/CountingSessionDialog.vue")
+);
+const QuickAdjustmentDialog = defineAsyncComponent(
+  () => import("src/components/inventory/QuickAdjustmentDialog.vue")
+);
+const StockTransferDialog = defineAsyncComponent(
+  () => import("src/components/inventory/StockTransferDialog.vue")
+);
 
 // Composables
-const { t } = useI18n()
-const $q = useQuasar()
-const router = useRouter()
-const authStore = useAuthStore()
-const inventoryStore = useInventoryStore()
-const clinicStore = useClinicStore()
-const countingStore = useCountingStore()
+const { t } = useI18n();
+const $q = useQuasar();
+const router = useRouter();
+const authStore = useAuthStore();
+const inventoryStore = useInventoryStore();
+const clinicStore = useClinicStore();
+const countingStore = useCountingStore();
 
 // Reactive state
-const selectedLocationId = ref<string>('all')
-const refreshing = ref(false)
-const syncing = ref(false)
-const showCountingDialogFlag = ref(false)
-const showQuickAdjustmentFlag = ref(false)
-const showTransferFlag = ref(false)
-const displayedAlertsCount = ref(5)
-const displayedMovementsCount = ref(10)
+const selectedLocationId = ref<string>("all");
+const refreshing = ref(false);
+const syncing = ref(false);
+const showCountingDialogFlag = ref(false);
+const showQuickAdjustmentFlag = ref(false);
+const showTransferFlag = ref(false);
+const displayedAlertsCount = ref(5);
+const displayedMovementsCount = ref(10);
 
 // Computed properties
-const practiceId = computed(() => authStore.userProfile?.clinic_id || '')
+const practiceId = computed(() => authStore.userProfile?.clinic_id || "");
 
 const availableLocations = computed<PracticeLocation[]>(() => {
-  return clinicStore.activeLocations
-})
+  return clinicStore.activeLocations;
+});
 
 const locationOptions = computed(() => [
-  { label: t('inventory.allLocations'), value: 'all' },
-  ...availableLocations.value.map(location => ({
+  { label: t("inventory.allLocations"), value: "all" },
+  ...availableLocations.value.map((location) => ({
     label: location.name,
-    value: location.id
-  }))
-])
+    value: location.id,
+  })),
+]);
 
 const selectedLocationName = computed(() => {
-  if (selectedLocationId.value === 'all') {
-    return t('inventory.allLocations')
+  if (selectedLocationId.value === "all") {
+    return t("inventory.allLocations");
   }
-  const location = availableLocations.value.find(l => l.id === selectedLocationId.value)
-  return location?.name || t('inventory.allLocations')
-})
+  const location = availableLocations.value.find(
+    (l) => l.id === selectedLocationId.value
+  );
+  return location?.name || t("inventory.allLocations");
+});
 
-const inventoryKPIs = computed(() => inventoryStore.stockLevels.length > 0 ? {
-  total_sku_count: inventoryStore.stockLevels.length,
-  total_stock_value: inventoryStore.totalStockValue,
-  low_stock_items: inventoryStore.lowStockItems.length,
-  out_of_stock_items: inventoryStore.outOfStockItems.length,
-  stock_accuracy_percentage: 98.5, // Would come from actual calculation
-  last_full_count_date: null
-} : {
-  total_sku_count: 0,
-  total_stock_value: 0,
-  low_stock_items: 0,
-  out_of_stock_items: 0,
-  stock_accuracy_percentage: 0,
-  last_full_count_date: null
-})
+const inventoryKPIs = computed(() =>
+  inventoryStore.stockLevels.length > 0
+    ? {
+        total_sku_count: inventoryStore.stockLevels.length,
+        total_stock_value: inventoryStore.totalStockValue,
+        low_stock_items: inventoryStore.lowStockItems.length,
+        out_of_stock_items: inventoryStore.outOfStockItems.length,
+        stock_accuracy_percentage: 98.5, // Would come from actual calculation
+        last_full_count_date: null,
+      }
+    : {
+        total_sku_count: 0,
+        total_stock_value: 0,
+        low_stock_items: 0,
+        out_of_stock_items: 0,
+        stock_accuracy_percentage: 0,
+        last_full_count_date: null,
+      }
+);
 
 const activeCountingSession = computed(() => {
   // This would come from counting store
-  return null as CountingSession | null
-})
+  return null as CountingSession | null;
+});
 
-const displayedAlerts = computed(() => 
+const displayedAlerts = computed(() =>
   inventoryStore.criticalAlerts.slice(0, displayedAlertsCount.value)
-)
+);
 
-const displayedMovements = computed(() => 
+const displayedMovements = computed(() =>
   inventoryStore.stockMovements.slice(0, displayedMovementsCount.value)
-)
+);
 
 // Methods
 const refreshData = async () => {
-  if (!practiceId.value) return
-  
-  refreshing.value = true
+  if (!practiceId.value) return;
+
+  refreshing.value = true;
   try {
     await Promise.all([
       inventoryStore.fetchStockLevels(practiceId.value),
       inventoryStore.fetchStockMovements(practiceId.value),
-      inventoryStore.refreshData(practiceId.value)
-    ])
-    inventoryStore.generateStockAlerts()
-    
+      inventoryStore.refreshData(practiceId.value),
+    ]);
+    inventoryStore.generateStockAlerts();
+
     $q.notify({
-      type: 'positive',
-      message: t('inventory.dataRefreshed'),
-      position: 'top'
-    })
+      type: "positive",
+      message: t("inventory.dataRefreshed"),
+      position: "top",
+    });
   } catch (error) {
-    console.error('Error refreshing data:', error)
+    console.error("Error refreshing data:", error);
     $q.notify({
-      type: 'negative',
-      message: t('inventory.refreshFailed'),
-      position: 'top'
-    })
+      type: "negative",
+      message: t("inventory.refreshFailed"),
+      position: "top",
+    });
   } finally {
-    refreshing.value = false
+    refreshing.value = false;
   }
-}
+};
 
 const syncRecentData = async () => {
-  syncing.value = true
+  syncing.value = true;
   try {
-    await inventoryStore.fetchStockMovements(practiceId.value, 20)
+    await inventoryStore.fetchStockMovements(practiceId.value, 20);
   } finally {
-    syncing.value = false
+    syncing.value = false;
   }
-}
+};
 
 const exportInventoryData = () => {
   // Implementation for exporting inventory data
   $q.notify({
-    type: 'info',
-    message: t('common.comingSoon'),
-    position: 'top'
-  })
-}
+    type: "info",
+    message: t("common.comingSoon"),
+    position: "top",
+  });
+};
 
 const showCountingDialog = () => {
-  showCountingDialogFlag.value = true
-}
+  showCountingDialogFlag.value = true;
+};
 
 const showQuickAdjustmentDialog = () => {
-  showQuickAdjustmentFlag.value = true
-}
+  showQuickAdjustmentFlag.value = true;
+};
 
 const showTransferDialog = () => {
-  showTransferFlag.value = true
-}
+  showTransferFlag.value = true;
+};
 
 const showLowStockDetails = () => {
   // Navigate to filtered inventory view
-  router.push('/inventory/levels?filter=low-stock')
-}
+  router.push("/inventory/levels?filter=low-stock");
+};
 
 const showOutOfStockDetails = () => {
   // Navigate to filtered inventory view
-  router.push('/inventory/levels?filter=out-of-stock')
-}
+  router.push("/inventory/levels?filter=out-of-stock");
+};
 
 const showAllAlerts = () => {
-  displayedAlertsCount.value = inventoryStore.criticalAlerts.length
-}
+  displayedAlertsCount.value = inventoryStore.criticalAlerts.length;
+};
 
 const goToCountingSession = () => {
   if (activeCountingSession.value) {
-    router.push(`/inventory/counting/${activeCountingSession.value.id}`)
+    router.push(`/inventory/counting/${activeCountingSession.value.id}`);
   }
-}
+};
 
 // Event handlers
 const onSessionCreated = (sessionId: string) => {
-  router.push(`/inventory/counting/${sessionId}`)
-}
+  router.push(`/inventory/counting/${sessionId}`);
+};
 
 const onAdjustmentMade = () => {
-  refreshData()
-}
+  refreshData();
+};
 
 const onTransferCompleted = () => {
-  refreshData()
-}
+  refreshData();
+};
 
 // Formatting helpers
 const formatNumber = (value: number): string => {
-  return new Intl.NumberFormat('nl-NL').format(value)
-}
+  return new Intl.NumberFormat("nl-NL").format(value);
+};
 
 const formatCurrency = (value: number): string => {
-  return new Intl.NumberFormat('nl-NL', {
-    style: 'currency',
-    currency: 'EUR'
-  }).format(value)
-}
+  return new Intl.NumberFormat("nl-NL", {
+    style: "currency",
+    currency: "EUR",
+  }).format(value);
+};
 
 const formatPercentage = (value: number): string => {
-  return `${Math.round(value)}%`
-}
+  return `${Math.round(value)}%`;
+};
 
 const formatDate = (dateString: string): string => {
-  return new Intl.DateTimeFormat('nl-NL', {
-    year: 'numeric',
-    month: 'short',
-    day: 'numeric'
-  }).format(new Date(dateString))
-}
+  return new Intl.DateTimeFormat("nl-NL", {
+    year: "numeric",
+    month: "short",
+    day: "numeric",
+  }).format(new Date(dateString));
+};
 
 const formatRelativeTime = (dateString: string): string => {
-  const now = new Date()
-  const date = new Date(dateString)
-  const diffInHours = (now.getTime() - date.getTime()) / (1000 * 60 * 60)
-  
+  const now = new Date();
+  const date = new Date(dateString);
+  const diffInHours = (now.getTime() - date.getTime()) / (1000 * 60 * 60);
+
   if (diffInHours < 1) {
-    return t('inventory.today')
+    return t("inventory.today");
   } else if (diffInHours < 24) {
-    return t('inventory.today')
+    return t("inventory.today");
   } else if (diffInHours < 48) {
-    return t('inventory.yesterday')
+    return t("inventory.yesterday");
   } else {
-    return formatDate(dateString)
+    return formatDate(dateString);
   }
-}
+};
 
 const formatMovementType = (type: string): string => {
-  return t(`inventory.movement.${type}`, type)
-}
+  return t(`inventory.movement.${type}`, type);
+};
 
 const formatQuantityChange = (change: number): string => {
-  return `${change > 0 ? '+' : ''}${change} ${t('inventory.units')}`
-}
+  return `${change > 0 ? "+" : ""}${change} ${t("inventory.units")}`;
+};
 
 // UI helper methods
 const alertVariantClass = (urgency: string): string => {
   switch (urgency) {
-    case 'critical': return 'alert-critical'
-    case 'high': return 'alert-high'
-    case 'medium': return 'alert-medium'
-    default: return 'alert-low'
+    case "critical":
+      return "alert-critical";
+    case "high":
+      return "alert-high";
+    case "medium":
+      return "alert-medium";
+    default:
+      return "alert-low";
   }
-}
+};
 
 const alertIcon = (type: string): string => {
   switch (type) {
-    case 'out_of_stock': return 'error'
-    case 'low_stock': return 'warning'
-    case 'overstock': return 'info'
-    default: return 'notification_important'
+    case "out_of_stock":
+      return "error";
+    case "low_stock":
+      return "warning";
+    case "overstock":
+      return "info";
+    default:
+      return "notification_important";
   }
-}
+};
 
 const alertColor = (urgency: string): string => {
   switch (urgency) {
-    case 'critical': return 'negative'
-    case 'high': return 'orange'
-    case 'medium': return 'warning'
-    default: return 'info'
+    case "critical":
+      return "negative";
+    case "high":
+      return "orange";
+    case "medium":
+      return "warning";
+    default:
+      return "info";
   }
-}
+};
 
 const movementIcon = (type: string): string => {
   switch (type) {
-    case 'receipt': return 'add_circle'
-    case 'usage': return 'remove_circle'
-    case 'transfer': return 'swap_horiz'
-    case 'adjustment': return 'edit'
-    case 'count': return 'checklist'
-    default: return 'timeline'
+    case "receipt":
+      return "add_circle";
+    case "usage":
+      return "remove_circle";
+    case "transfer":
+      return "swap_horiz";
+    case "adjustment":
+      return "edit";
+    case "count":
+      return "checklist";
+    default:
+      return "timeline";
   }
-}
+};
 
 const movementColor = (type: string): string => {
   switch (type) {
-    case 'receipt': return 'positive'
-    case 'usage': return 'negative'
-    case 'transfer': return 'info'
-    case 'adjustment': return 'warning'
-    case 'count': return 'secondary'
-    default: return 'primary'
+    case "receipt":
+      return "positive";
+    case "usage":
+      return "negative";
+    case "transfer":
+      return "info";
+    case "adjustment":
+      return "warning";
+    case "count":
+      return "secondary";
+    default:
+      return "primary";
   }
-}
+};
 
 // Watchers
-watch(() => selectedLocationId.value, (newLocationId) => {
-  if (newLocationId && practiceId.value) {
-    // Filter data by location if needed
-    // This would be implemented based on the actual location filtering requirements
+watch(
+  () => selectedLocationId.value,
+  (newLocationId) => {
+    if (newLocationId && practiceId.value) {
+      // Filter data by location if needed
+      // This would be implemented based on the actual location filtering requirements
+    }
   }
-})
+);
 
 // Lifecycle
 onMounted(async () => {
   if (practiceId.value) {
     // Fetch locations first, then inventory data
-    await clinicStore.fetchLocations(practiceId.value)
-    await refreshData()
+    await clinicStore.fetchLocations(practiceId.value);
+    await refreshData();
   }
-})
+});
 </script>
 
 <style lang="scss" scoped>
@@ -683,15 +766,15 @@ onMounted(async () => {
   display: flex;
   align-items: center;
   gap: var(--space-4);
-  
+
   .location-selector {
     min-width: 200px;
   }
-  
+
   @media (max-width: 768px) {
     flex-direction: column;
     gap: var(--space-3);
-    
+
     .location-selector {
       min-width: 100%;
     }
@@ -705,7 +788,7 @@ onMounted(async () => {
   justify-content: center;
   padding: var(--space-12);
   gap: var(--space-4);
-  
+
   .loading-text {
     color: var(--text-muted);
     font-size: var(--text-base);
@@ -717,7 +800,7 @@ onMounted(async () => {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
   gap: var(--space-6);
-  
+
   @media (max-width: 768px) {
     grid-template-columns: 1fr;
     gap: var(--space-4);
@@ -727,14 +810,14 @@ onMounted(async () => {
 .kpi-content {
   padding: var(--space-6);
   text-align: center;
-  
+
   .kpi-value {
     font-size: var(--text-4xl);
     font-weight: var(--font-weight-bold);
     color: var(--text-primary);
     line-height: 1.2;
   }
-  
+
   .kpi-subtitle {
     font-size: var(--text-sm);
     color: var(--text-muted);
@@ -744,13 +827,13 @@ onMounted(async () => {
 
 .counting-active {
   text-align: center;
-  
+
   .session-name {
     font-weight: var(--font-weight-medium);
     color: var(--text-primary);
     margin-bottom: var(--space-2);
   }
-  
+
   .session-progress {
     color: var(--text-muted);
     font-size: var(--text-sm);
@@ -770,13 +853,13 @@ onMounted(async () => {
   grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
   gap: var(--space-4);
   padding: var(--space-6);
-  
+
   .action-btn {
     min-height: 64px;
     flex-direction: column;
     gap: var(--space-2);
   }
-  
+
   @media (max-width: 768px) {
     grid-template-columns: 1fr;
   }
@@ -797,41 +880,41 @@ onMounted(async () => {
   border-radius: var(--radius-lg);
   border-left: 4px solid;
   background: var(--neutral-50);
-  
+
   &.alert-critical {
     border-left-color: var(--negative);
     background: rgba(var(--negative-rgb), 0.05);
   }
-  
+
   &.alert-high {
     border-left-color: var(--orange);
     background: rgba(var(--orange-rgb), 0.05);
   }
-  
+
   &.alert-medium {
     border-left-color: var(--warning);
     background: rgba(var(--warning-rgb), 0.05);
   }
-  
+
   &.alert-low {
     border-left-color: var(--info);
     background: rgba(var(--info-rgb), 0.05);
   }
-  
+
   .alert-content {
     flex: 1;
-    
+
     .alert-title {
       font-weight: var(--font-weight-medium);
       color: var(--text-primary);
     }
-    
+
     .alert-subtitle {
       font-size: var(--text-sm);
       color: var(--text-muted);
       margin-top: var(--space-1);
     }
-    
+
     .alert-action {
       font-size: var(--text-sm);
       color: var(--text-secondary);
@@ -856,40 +939,40 @@ onMounted(async () => {
   border-radius: var(--radius-lg);
   background: var(--neutral-50);
   transition: background-color var(--transition-base);
-  
+
   &:hover {
     background: var(--neutral-100);
   }
-  
+
   .movement-content {
     flex: 1;
-    
+
     .movement-title {
       font-weight: var(--font-weight-medium);
       color: var(--text-primary);
     }
-    
+
     .movement-details {
       font-size: var(--text-sm);
       color: var(--text-muted);
       margin-top: var(--space-1);
     }
-    
+
     .movement-time {
       font-size: var(--text-xs);
       color: var(--text-secondary);
       margin-top: var(--space-1);
     }
   }
-  
+
   .movement-quantity {
     font-weight: var(--font-weight-medium);
     font-size: var(--text-sm);
-    
+
     .quantity-positive {
       color: var(--positive);
     }
-    
+
     .quantity-negative {
       color: var(--negative);
     }
@@ -903,7 +986,7 @@ onMounted(async () => {
   justify-content: center;
   padding: var(--space-12);
   gap: var(--space-4);
-  
+
   .no-activity-text {
     color: var(--text-muted);
     font-size: var(--text-base);
@@ -915,30 +998,30 @@ onMounted(async () => {
 body.body--dark {
   .alert-item {
     background: var(--neutral-200);
-    
+
     &.alert-critical {
       background: rgba(var(--negative-rgb), 0.1);
     }
-    
+
     &.alert-high {
       background: rgba(var(--orange-rgb), 0.1);
     }
-    
+
     &.alert-medium {
       background: rgba(var(--warning-rgb), 0.1);
     }
-    
+
     &.alert-low {
       background: rgba(var(--info-rgb), 0.1);
     }
   }
-  
+
   .movement-item {
     background: var(--neutral-200);
-    
+
     &:hover {
       background: var(--neutral-300);
     }
   }
 }
-</style> 
+</style>

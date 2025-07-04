@@ -22,10 +22,14 @@
             <!-- Progress Info -->
             <div v-if="session" class="progress-info">
               <span class="progress-text">
-                {{ session.products_counted }}/{{ session.total_products_to_count }}
+                {{ session.products_counted }}/{{
+                  session.total_products_to_count
+                }}
               </span>
               <q-linear-progress
-                :value="session.products_counted / session.total_products_to_count"
+                :value="
+                  session.products_counted / session.total_products_to_count
+                "
                 color="primary"
                 size="4px"
                 class="progress-bar"
@@ -61,15 +65,19 @@
       <!-- Loading State -->
       <div v-if="countingStore.loading" class="loading-container">
         <q-spinner-dots size="xl" color="primary" />
-        <p class="loading-text">{{ $t('counting.loadingSession') }}</p>
+        <p class="loading-text">{{ $t("counting.loadingSession") }}</p>
       </div>
 
       <!-- Session Not Found -->
       <BaseCard v-else-if="!session" variant="modern" header-color="negative">
         <q-card-section class="text-center">
           <q-icon name="error_outline" size="xl" color="negative" />
-          <div class="text-h6 q-mt-md">{{ $t('counting.sessionNotFound') }}</div>
-          <div class="text-subtitle2 q-mt-sm">{{ $t('counting.sessionNotFoundDescription') }}</div>
+          <div class="text-h6 q-mt-md">
+            {{ $t("counting.sessionNotFound") }}
+          </div>
+          <div class="text-subtitle2 q-mt-sm">
+            {{ $t("counting.sessionNotFoundDescription") }}
+          </div>
         </q-card-section>
         <q-card-actions align="center">
           <q-btn
@@ -86,42 +94,63 @@
         <BaseCard variant="modern" class="session-summary">
           <template #header>
             <q-card-section class="session-header">
-              <div class="text-h6">{{ $t('counting.sessionSummary') }}</div>
+              <div class="text-h6">{{ $t("counting.sessionSummary") }}</div>
             </q-card-section>
           </template>
 
           <q-card-section class="summary-content">
             <div class="summary-grid">
               <div class="summary-item">
-                <div class="summary-label">{{ $t('counting.sessionType') }}</div>
-                <div class="summary-value">{{ formatSessionType(session.session_type) }}</div>
+                <div class="summary-label">
+                  {{ $t("counting.sessionType") }}
+                </div>
+                <div class="summary-value">
+                  {{ formatSessionType(session.session_type) }}
+                </div>
               </div>
 
               <div class="summary-item">
-                <div class="summary-label">{{ $t('counting.totalProducts') }}</div>
-                <div class="summary-value">{{ session.total_products_to_count }}</div>
+                <div class="summary-label">
+                  {{ $t("counting.totalProducts") }}
+                </div>
+                <div class="summary-value">
+                  {{ session.total_products_to_count }}
+                </div>
               </div>
 
               <div class="summary-item">
-                <div class="summary-label">{{ $t('counting.countedProducts') }}</div>
+                <div class="summary-label">
+                  {{ $t("counting.countedProducts") }}
+                </div>
                 <div class="summary-value">{{ session.products_counted }}</div>
               </div>
 
               <div class="summary-item">
-                <div class="summary-label">{{ $t('counting.discrepancies') }}</div>
-                <div class="summary-value" :class="{ 'has-discrepancies': session.discrepancies_found > 0 }">
+                <div class="summary-label">
+                  {{ $t("counting.discrepancies") }}
+                </div>
+                <div
+                  class="summary-value"
+                  :class="{
+                    'has-discrepancies': session.discrepancies_found > 0,
+                  }"
+                >
                   {{ session.discrepancies_found }}
                 </div>
               </div>
 
               <div class="summary-item">
-                <div class="summary-label">{{ $t('common.startedAt') }}</div>
-                <div class="summary-value">{{ formatDateTime(session.started_at) }}</div>
+                <div class="summary-label">{{ $t("common.startedAt") }}</div>
+                <div class="summary-value">
+                  {{ formatDateTime(session.started_at) }}
+                </div>
               </div>
 
               <div v-if="session.completed_at" class="summary-item">
-                <div class="summary-label">{{ $t('common.completedAt') }}</div>
-                <div class="summary-value">{{ formatDateTime(session.completed_at) }}</div>
+                <div class="summary-label">{{ $t("common.completedAt") }}</div>
+                <div class="summary-value">
+                  {{ formatDateTime(session.completed_at) }}
+                </div>
               </div>
             </div>
           </q-card-section>
@@ -137,15 +166,11 @@
         />
 
         <!-- Counting Results Table (for completed sessions) -->
-        <BaseCard
-          v-else
-          variant="modern"
-          class="counting-results"
-        >
+        <BaseCard v-else variant="modern" class="counting-results">
           <template #header>
             <q-card-section class="results-header">
-              <div class="text-h6">{{ $t('counting.countingResults') }}</div>
-              <div class="text-subtitle2">{{ $t('counting.viewResults') }}</div>
+              <div class="text-h6">{{ $t("counting.countingResults") }}</div>
+              <div class="text-subtitle2">{{ $t("counting.viewResults") }}</div>
             </q-card-section>
           </template>
 
@@ -163,8 +188,12 @@
             <template v-slot:body-cell-product="props">
               <q-td :props="props">
                 <div class="product-info">
-                  <div class="product-name">{{ props.row.product?.name || 'Unknown Product' }}</div>
-                  <div class="product-sku">{{ props.row.product?.sku || '-' }}</div>
+                  <div class="product-name">
+                    {{ props.row.product?.name || t('common.unknownProduct') }}
+                  </div>
+                  <div class="product-sku">
+                    {{ props.row.product?.sku || "-" }}
+                  </div>
                 </div>
               </q-td>
             </template>
@@ -200,278 +229,303 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted, defineAsyncComponent } from 'vue'
-import { useI18n } from 'vue-i18n'
-import { useQuasar } from 'quasar'
-import { useRouter, useRoute } from 'vue-router'
-import { useAuthStore } from 'src/stores/auth'
-import { useCountingStore } from 'src/stores/counting'
-import type { CountingSession, CountingEntry, CountingProduct } from 'src/types/inventory'
-import PageLayout from 'src/components/PageLayout.vue'
-import PageTitle from 'src/components/PageTitle.vue'
-import BaseCard from 'src/components/base/BaseCard.vue'
+import { ref, computed, onMounted, defineAsyncComponent } from "vue";
+import { useI18n } from "vue-i18n";
+import { useQuasar } from "quasar";
+import { useRouter, useRoute } from "vue-router";
+import { useAuthStore } from "src/stores/auth";
+import { useCountingStore } from "src/stores/counting";
+import type {
+  CountingSession,
+  CountingEntry,
+  CountingProduct,
+} from "src/types/inventory";
+import PageLayout from "src/components/PageLayout.vue";
+import PageTitle from "src/components/PageTitle.vue";
+import BaseCard from "src/components/base/BaseCard.vue";
 
 // Lazy loaded components
-const MobileCountingInterface = defineAsyncComponent(() => import('src/components/inventory/MobileCountingInterface.vue'))
+const MobileCountingInterface = defineAsyncComponent(
+  () => import("src/components/inventory/MobileCountingInterface.vue")
+);
 
 // Props
 const props = defineProps<{
-  sessionId: string
-}>()
+  sessionId: string;
+}>();
 
 // Composables
-const { t } = useI18n()
-const $q = useQuasar()
-const router = useRouter()
-const route = useRoute()
-const authStore = useAuthStore()
-const countingStore = useCountingStore()
+const { t } = useI18n();
+const $q = useQuasar();
+const router = useRouter();
+const route = useRoute();
+const authStore = useAuthStore();
+const countingStore = useCountingStore();
 
 // Reactive state
-const countingProducts = ref<CountingProduct[]>([])
-const countingEntries = ref<CountingEntry[]>([])
-const entriesLoading = ref(false)
+const countingProducts = ref<CountingProduct[]>([]);
+const countingEntries = ref<CountingEntry[]>([]);
+const entriesLoading = ref(false);
 
 // Pagination
 const pagination = ref({
-  sortBy: 'created_at',
+  sortBy: "created_at",
   descending: false,
   page: 1,
-  rowsPerPage: 25
-})
+  rowsPerPage: 25,
+});
 
 // Computed properties
-const session = computed(() => countingStore.currentSession)
+const session = computed(() => countingStore.currentSession);
 
-const sessionName = computed(() => session.value?.name || t('counting.unknownSession'))
+const sessionName = computed(
+  () => session.value?.name || t("counting.unknownSession")
+);
 
-const sessionType = computed(() => 
-  session.value ? formatSessionType(session.value.session_type) : ''
-)
+const sessionType = computed(() =>
+  session.value ? formatSessionType(session.value.session_type) : ""
+);
 
 const statusColor = computed(() => {
-  if (!session.value) return 'grey'
+  if (!session.value) return "grey";
   switch (session.value.status) {
-    case 'active': return 'primary'
-    case 'completed': return 'positive'
-    case 'cancelled': return 'negative'
-    case 'approved': return 'info'
-    default: return 'grey'
+    case "active":
+      return "primary";
+    case "completed":
+      return "positive";
+    case "cancelled":
+      return "negative";
+    case "approved":
+      return "info";
+    default:
+      return "grey";
   }
-})
+});
 
 const statusIcon = computed(() => {
-  if (!session.value) return 'help'
+  if (!session.value) return "help";
   switch (session.value.status) {
-    case 'active': return 'play_circle'
-    case 'completed': return 'check_circle'
-    case 'cancelled': return 'cancel'
-    case 'approved': return 'verified'
-    default: return 'help'
+    case "active":
+      return "play_circle";
+    case "completed":
+      return "check_circle";
+    case "cancelled":
+      return "cancel";
+    case "approved":
+      return "verified";
+    default:
+      return "help";
   }
-})
+});
 
 const canComplete = computed(() => {
-  return session.value && session.value.products_counted > 0
-})
+  return session.value && session.value.products_counted > 0;
+});
 
 const resultsColumns = computed(() => [
   {
-    name: 'product',
-    label: t('counting.product'),
-    field: 'product_id',
+    name: "product",
+    label: t("counting.product"),
+    field: "product_id",
     sortable: true,
-    align: 'left' as const,
-    style: 'width: 200px'
+    align: "left" as const,
+    style: "width: 200px",
   },
   {
-    name: 'system_quantity',
-    label: t('counting.systemQuantity'),
-    field: 'system_quantity',
-    align: 'center' as const,
-    sortable: true
+    name: "system_quantity",
+    label: t("counting.systemQuantity"),
+    field: "system_quantity",
+    align: "center" as const,
+    sortable: true,
   },
   {
-    name: 'counted_quantity',
-    label: t('counting.countedQuantity'),
-    field: 'counted_quantity',
-    align: 'center' as const,
-    sortable: true
+    name: "counted_quantity",
+    label: t("counting.countedQuantity"),
+    field: "counted_quantity",
+    align: "center" as const,
+    sortable: true,
   },
   {
-    name: 'variance',
-    label: t('counting.variance'),
-    field: 'variance',
-    align: 'center' as const,
-    sortable: true
+    name: "variance",
+    label: t("counting.variance"),
+    field: "variance",
+    align: "center" as const,
+    sortable: true,
   },
   {
-    name: 'status',
-    label: t('common.status'),
-    field: 'status',
-    align: 'center' as const,
-    sortable: true
-  }
-])
+    name: "status",
+    label: t("common.status"),
+    field: "status",
+    align: "center" as const,
+    sortable: true,
+  },
+]);
 
 // Methods
 const loadSession = async () => {
   try {
-    await countingStore.fetchSessions(authStore.userProfile?.clinic_id || '')
-    if (session.value?.status === 'completed' || session.value?.status === 'approved') {
-      await loadCountingEntries()
+    await countingStore.fetchSessions(authStore.userProfile?.clinic_id || "");
+    if (
+      session.value?.status === "completed" ||
+      session.value?.status === "approved"
+    ) {
+      await loadCountingEntries();
     }
   } catch (error) {
-    console.error('Error loading session:', error)
+    console.error("Error loading session:", error);
     $q.notify({
-      type: 'negative',
-      message: t('counting.sessionLoadFailed'),
-      position: 'top'
-    })
+      type: "negative",
+      message: t("counting.sessionLoadFailed"),
+      position: "top",
+    });
   }
-}
+};
 
 const loadCountingEntries = async () => {
-  entriesLoading.value = true
+  entriesLoading.value = true;
   try {
-    await countingStore.fetchCountingEntries(props.sessionId)
-    countingEntries.value = countingStore.countingEntries
+    await countingStore.fetchCountingEntries(props.sessionId);
+    countingEntries.value = countingStore.countingEntries;
   } catch (error) {
-    console.error('Error loading counting entries:', error)
+    console.error("Error loading counting entries:", error);
   } finally {
-    entriesLoading.value = false
+    entriesLoading.value = false;
   }
-}
+};
 
 const completeSession = () => {
   $q.dialog({
-    title: t('counting.completeSession'),
-    message: t('counting.confirmComplete'),
+    title: t("counting.completeSession"),
+    message: t("counting.confirmComplete"),
     cancel: true,
-    persistent: true
+    persistent: true,
   }).onOk(async () => {
     try {
       await countingStore.updateSession(props.sessionId, {
-        status: 'completed',
+        status: "completed",
         completed_at: new Date().toISOString(),
-        completed_by: authStore.user?.id || ''
-      })
-      
+        completed_by: authStore.user?.id || "",
+      });
+
       $q.notify({
-        type: 'positive',
-        message: t('counting.sessionCompleted'),
-        position: 'top'
-      })
-      
-      await loadSession()
+        type: "positive",
+        message: t("counting.sessionCompleted"),
+        position: "top",
+      });
+
+      await loadSession();
     } catch (error) {
-      console.error('Error completing session:', error)
+      console.error("Error completing session:", error);
       $q.notify({
-        type: 'negative',
-        message: t('counting.completeFailed'),
-        position: 'top'
-      })
+        type: "negative",
+        message: t("counting.completeFailed"),
+        position: "top",
+      });
     }
-  })
-}
+  });
+};
 
 const approveSession = () => {
   $q.dialog({
-    title: t('counting.approveSession'),
-    message: t('counting.confirmApprove'),
+    title: t("counting.approveSession"),
+    message: t("counting.confirmApprove"),
     cancel: true,
-    persistent: true
+    persistent: true,
   }).onOk(async () => {
     try {
       await countingStore.updateSession(props.sessionId, {
-        status: 'approved',
+        status: "approved",
         approved_at: new Date().toISOString(),
-        approved_by: authStore.user?.id || ''
-      })
-      
+        approved_by: authStore.user?.id || "",
+      });
+
       $q.notify({
-        type: 'positive',
-        message: t('counting.sessionApproved'),
-        position: 'top'
-      })
-      
-      await loadSession()
+        type: "positive",
+        message: t("counting.sessionApproved"),
+        position: "top",
+      });
+
+      await loadSession();
     } catch (error) {
-      console.error('Error approving session:', error)
+      console.error("Error approving session:", error);
       $q.notify({
-        type: 'negative',
-        message: t('counting.approveFailed'),
-        position: 'top'
-      })
+        type: "negative",
+        message: t("counting.approveFailed"),
+        position: "top",
+      });
     }
-  })
-}
+  });
+};
 
 const handleBack = () => {
-  router.push('/inventory/counting')
-}
+  router.push("/inventory/counting");
+};
 
 const onProductCounted = () => {
   // Refresh session data to update progress
-  loadSession()
-}
+  loadSession();
+};
 
 const onSessionComplete = () => {
-  completeSession()
-}
+  completeSession();
+};
 
 // Formatting helpers
 const formatSessionType = (type: string): string => {
-  return t(`counting.${type}`, type)
-}
+  return t(`counting.${type}`, type);
+};
 
 const formatStatus = (status?: string): string => {
-  if (!status) return ''
-  return t(`counting.status.${status}`, status)
-}
+  if (!status) return "";
+  return t(`counting.status.${status}`, status);
+};
 
 const formatEntryStatus = (status: string): string => {
-  return t(`counting.entryStatus.${status}`, status)
-}
+  return t(`counting.entryStatus.${status}`, status);
+};
 
 const formatDateTime = (dateString: string): string => {
-  return new Intl.DateTimeFormat('nl-NL', {
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric',
-    hour: '2-digit',
-    minute: '2-digit'
-  }).format(new Date(dateString))
-}
+  return new Intl.DateTimeFormat("nl-NL", {
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
+  }).format(new Date(dateString));
+};
 
 const formatVariance = (variance: number): string => {
-  if (variance === 0) return '0'
-  return variance > 0 ? `+${variance}` : `${variance}`
-}
+  if (variance === 0) return "0";
+  return variance > 0 ? `+${variance}` : `${variance}`;
+};
 
 const varianceColor = (variance: number): string => {
-  if (variance === 0) return 'positive'
-  return variance > 0 ? 'warning' : 'negative'
-}
+  if (variance === 0) return "positive";
+  return variance > 0 ? "warning" : "negative";
+};
 
 const varianceIcon = (variance: number): string => {
-  if (variance === 0) return 'check'
-  return variance > 0 ? 'arrow_upward' : 'arrow_downward'
-}
+  if (variance === 0) return "check";
+  return variance > 0 ? "arrow_upward" : "arrow_downward";
+};
 
 const entryStatusColor = (status: string): string => {
   switch (status) {
-    case 'verified': return 'positive'
-    case 'discrepancy': return 'warning'
-    case 'pending': return 'info'
-    default: return 'grey'
+    case "verified":
+      return "positive";
+    case "discrepancy":
+      return "warning";
+    case "pending":
+      return "info";
+    default:
+      return "grey";
   }
-}
+};
 
 // Lifecycle
 onMounted(() => {
-  loadSession()
-})
+  loadSession();
+});
 </script>
 
 <style lang="scss" scoped>
@@ -485,23 +539,23 @@ onMounted(() => {
   display: flex;
   align-items: center;
   gap: var(--space-4);
-  
+
   .progress-info {
     display: flex;
     flex-direction: column;
     align-items: center;
     gap: var(--space-1);
-    
+
     .progress-text {
       font-size: var(--text-sm);
       color: var(--text-muted);
     }
-    
+
     .progress-bar {
       width: 100px;
     }
   }
-  
+
   @media (max-width: 768px) {
     flex-direction: column;
     gap: var(--space-3);
@@ -515,7 +569,7 @@ onMounted(() => {
   justify-content: center;
   padding: var(--space-12);
   gap: var(--space-4);
-  
+
   .loading-text {
     color: var(--text-muted);
     font-size: var(--text-base);
@@ -528,25 +582,25 @@ onMounted(() => {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
     gap: var(--space-6);
-    
+
     .summary-item {
       .summary-label {
         font-size: var(--text-sm);
         color: var(--text-muted);
         margin-bottom: var(--space-1);
       }
-      
+
       .summary-value {
         font-size: var(--text-lg);
         font-weight: var(--font-weight-medium);
         color: var(--text-primary);
-        
+
         &.has-discrepancies {
           color: var(--warning);
         }
       }
     }
-    
+
     @media (max-width: 768px) {
       grid-template-columns: repeat(2, 1fr);
       gap: var(--space-4);
@@ -559,10 +613,10 @@ onMounted(() => {
     font-weight: var(--font-weight-medium);
     color: var(--text-primary);
   }
-  
+
   .product-sku {
     font-size: var(--text-sm);
     color: var(--text-muted);
   }
 }
-</style> 
+</style>
