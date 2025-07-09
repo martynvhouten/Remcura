@@ -3,9 +3,7 @@ import { ref, computed } from 'vue';
 import { supabase } from 'src/boot/supabase';
 import { useAuthStore } from './auth';
 import type {
-  StockLevel,
   StockLevelWithDetails,
-  StockMovement,
   MovementWithRelations,
   StockUpdateRequest,
   OrderSuggestion,
@@ -180,7 +178,7 @@ export const useInventoryStore = defineStore('inventory', () => {
     }
   };
 
-  const fetchOrderSuggestions = async (practiceId: string) => {
+  const fetchOrderSuggestions = async (_practiceId: string) => {
     try {
       // Generate order suggestions based on low stock items from unified view
       const suggestions = unifiedStock.value
@@ -292,7 +290,7 @@ export const useInventoryStore = defineStore('inventory', () => {
   };
 
   const getInventoryKPIs = async (
-    practiceId: string
+    _practiceId: string
   ): Promise<InventoryKPI> => {
     try {
       const totalProducts = unifiedStock.value.length;
