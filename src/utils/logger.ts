@@ -3,7 +3,7 @@
  * Replaces console.log statements with environment-aware logging
  */
 
-export type LogLevel = "debug" | "info" | "warn" | "error";
+export type LogLevel = 'debug' | 'info' | 'warn' | 'error';
 
 export interface LogEntry {
   level: LogLevel;
@@ -23,9 +23,9 @@ class Logger {
   debug(message: string, context?: string, data?: any): void {
     if (this.isDevelopment) {
       console.debug(
-        `[DEBUG${context ? ` ${context}` : ""}]`,
+        `[DEBUG${context ? ` ${context}` : ''}]`,
         message,
-        data || ""
+        data || ''
       );
     }
   }
@@ -36,22 +36,22 @@ class Logger {
   info(message: string, context?: string, data?: any): void {
     if (this.isDevelopment) {
       console.info(
-        `[INFO${context ? ` ${context}` : ""}]`,
+        `[INFO${context ? ` ${context}` : ''}]`,
         message,
-        data || ""
+        data || ''
       );
     }
 
     // In production, could send to monitoring service
-    this.sendToMonitoring("info", message, context, data);
+    this.sendToMonitoring('info', message, context, data);
   }
 
   /**
    * Log warnings (always logged)
    */
   warn(message: string, context?: string, data?: any): void {
-    console.warn(`[WARN${context ? ` ${context}` : ""}]`, message, data || "");
-    this.sendToMonitoring("warn", message, context, data);
+    console.warn(`[WARN${context ? ` ${context}` : ''}]`, message, data || '');
+    this.sendToMonitoring('warn', message, context, data);
   }
 
   /**
@@ -59,21 +59,21 @@ class Logger {
    */
   error(message: string, context?: string, error?: Error | any): void {
     console.error(
-      `[ERROR${context ? ` ${context}` : ""}]`,
+      `[ERROR${context ? ` ${context}` : ''}]`,
       message,
-      error || ""
+      error || ''
     );
-    this.sendToMonitoring("error", message, context, error);
+    this.sendToMonitoring('error', message, context, error);
   }
 
   /**
    * Send logs to external monitoring service (placeholder)
    */
   private sendToMonitoring(
-    level: LogLevel,
-    message: string,
-    context?: string,
-    data?: any
+    _level: LogLevel,
+    _message: string,
+    _context?: string,
+    _data?: any
   ): void {
     if (!this.isProduction) return;
 
@@ -108,7 +108,7 @@ class Logger {
 export const logger = new Logger();
 
 // Export contextual loggers for common modules
-export const authLogger = logger.createContext("AUTH");
-export const apiLogger = logger.createContext("API");
-export const routerLogger = logger.createContext("ROUTER");
-export const serviceWorkerLogger = logger.createContext("SW");
+export const authLogger = logger.createContext('AUTH');
+export const apiLogger = logger.createContext('API');
+export const routerLogger = logger.createContext('ROUTER');
+export const serviceWorkerLogger = logger.createContext('SW');
