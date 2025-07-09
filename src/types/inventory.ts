@@ -65,13 +65,13 @@ export interface PracticeLocation {
   code: string;
   description?: string;
   location_type:
-    | "storage"
-    | "treatment"
-    | "emergency"
-    | "mobile"
-    | "warehouse"
-    | "clinic"
-    | "drop_point";
+    | 'storage'
+    | 'treatment'
+    | 'emergency'
+    | 'mobile'
+    | 'warehouse'
+    | 'clinic'
+    | 'drop_point';
   address?: string;
   floor_level?: string;
   room_number?: string;
@@ -139,7 +139,7 @@ export interface ProductBatchWithDetails extends ProductBatch {
     code: string;
   };
   days_until_expiry: number;
-  urgency_level: "normal" | "warning" | "critical" | "expired";
+  urgency_level: 'normal' | 'warning' | 'critical' | 'expired';
 }
 
 export interface BatchMovement {
@@ -168,7 +168,7 @@ export interface ExpiringBatch {
   expiry_date: string;
   current_quantity: number;
   days_until_expiry: number;
-  urgency_level: "normal" | "warning" | "critical" | "expired";
+  urgency_level: 'normal' | 'warning' | 'critical' | 'expired';
 }
 
 export interface StockLevel {
@@ -216,8 +216,8 @@ export interface CountingSession {
   id: string;
   practice_id: string;
   name: string;
-  session_type: "full" | "partial" | "spot_check" | "cycle";
-  status: "active" | "completed" | "cancelled" | "approved";
+  session_type: 'full' | 'partial' | 'spot_check' | 'cycle';
+  status: 'active' | 'completed' | 'cancelled' | 'approved';
   location_ids: string[];
   product_ids?: string[];
   category_filter?: string;
@@ -247,8 +247,8 @@ export interface CountingEntry {
   system_quantity: number;
   counted_quantity: number;
   variance: number;
-  count_method: "manual" | "barcode" | "rfid";
-  confidence_level: "low" | "medium" | "high";
+  count_method: 'manual' | 'barcode' | 'rfid';
+  confidence_level: 'low' | 'medium' | 'high';
   recount_required: boolean;
   recount_reason?: string;
   batch_number?: string;
@@ -259,7 +259,7 @@ export interface CountingEntry {
   verified_at?: string;
   notes?: string;
   photos?: string[];
-  status: "pending" | "verified" | "discrepancy" | "approved";
+  status: 'pending' | 'verified' | 'discrepancy' | 'approved';
   created_at: string;
   updated_at: string;
 }
@@ -305,9 +305,9 @@ export interface OrderListItem {
   unit_price: number;
   total_price: number;
   currency: string;
-  suggestion_source: "manual" | "auto_reorder" | "low_stock" | "usage_pattern";
+  suggestion_source: 'manual' | 'auto_reorder' | 'low_stock' | 'usage_pattern';
   source_location_id?: string;
-  status: "pending" | "confirmed" | "backordered" | "delivered";
+  status: 'pending' | 'confirmed' | 'backordered' | 'delivered';
   notes?: string;
   created_at: string;
   updated_at: string;
@@ -315,37 +315,37 @@ export interface OrderListItem {
 
 // Type unions
 export type MovementType =
-  | "count"
-  | "receipt"
-  | "usage"
-  | "transfer"
-  | "adjustment"
-  | "waste";
+  | 'count'
+  | 'receipt'
+  | 'usage'
+  | 'transfer'
+  | 'adjustment'
+  | 'waste';
 
 export type ReasonCode =
-  | "normal_usage"
-  | "expired"
-  | "damaged"
-  | "lost"
-  | "found"
-  | "transfer_in"
-  | "transfer_out"
-  | "adjustment"
-  | "count_correction";
+  | 'normal_usage'
+  | 'expired'
+  | 'damaged'
+  | 'lost'
+  | 'found'
+  | 'transfer_in'
+  | 'transfer_out'
+  | 'adjustment'
+  | 'count_correction';
 
 export type OrderListStatus =
-  | "draft"
-  | "ready"
-  | "submitted"
-  | "confirmed"
-  | "delivered"
-  | "cancelled";
+  | 'draft'
+  | 'ready'
+  | 'submitted'
+  | 'confirmed'
+  | 'delivered'
+  | 'cancelled';
 
-export type UrgencyLevel = "low" | "medium" | "high" | "critical";
+export type UrgencyLevel = 'low' | 'medium' | 'high' | 'critical';
 
-export type BatchStatus = "active" | "depleted" | "expired" | "recalled";
+export type BatchStatus = 'active' | 'depleted' | 'expired' | 'recalled';
 
-export type ExpiryUrgencyLevel = "normal" | "warning" | "critical" | "expired";
+export type ExpiryUrgencyLevel = 'normal' | 'warning' | 'critical' | 'expired';
 
 // Enhanced types with relationships
 export interface StockLevelWithDetails extends StockLevel {
@@ -397,7 +397,7 @@ export interface OrderSuggestion {
   current_stock: number;
   minimum_stock: number;
   suggested_quantity: number;
-  preferred_supplier_id?: string;
+  preferred_supplier_id: string | null;
   supplier_name?: string;
   urgency_level: UrgencyLevel;
   days_until_stockout: number;
@@ -405,11 +405,11 @@ export interface OrderSuggestion {
 
 export interface StockAlert {
   type:
-    | "out_of_stock"
-    | "low_stock"
-    | "overstock"
-    | "expired"
-    | "expiring_soon";
+    | 'out_of_stock'
+    | 'low_stock'
+    | 'overstock'
+    | 'expired'
+    | 'expiring_soon';
   urgency: UrgencyLevel;
   product_id: string;
   product_name: string;
@@ -450,13 +450,13 @@ export interface CreateLocationRequest {
   code: string;
   description?: string;
   location_type:
-    | "storage"
-    | "treatment"
-    | "emergency"
-    | "mobile"
-    | "warehouse"
-    | "clinic"
-    | "drop_point";
+    | 'storage'
+    | 'treatment'
+    | 'emergency'
+    | 'mobile'
+    | 'warehouse'
+    | 'clinic'
+    | 'drop_point';
   address?: string;
   floor_level?: string;
   room_number?: string;
@@ -474,13 +474,13 @@ export interface UpdateLocationRequest {
   code?: string;
   description?: string;
   location_type?:
-    | "storage"
-    | "treatment"
-    | "emergency"
-    | "mobile"
-    | "warehouse"
-    | "clinic"
-    | "drop_point";
+    | 'storage'
+    | 'treatment'
+    | 'emergency'
+    | 'mobile'
+    | 'warehouse'
+    | 'clinic'
+    | 'drop_point';
   address?: string;
   floor_level?: string;
   room_number?: string;
@@ -553,7 +553,7 @@ export interface BatchStockMovementRequest {
 export interface StartCountingSessionRequest {
   practice_id: string;
   name: string;
-  session_type: "full" | "partial" | "spot_check" | "cycle";
+  session_type: 'full' | 'partial' | 'spot_check' | 'cycle';
   location_ids: string[];
   product_ids?: string[];
   category_filter?: string;
@@ -601,7 +601,7 @@ export interface InventoryKPI {
     total_quantity_moved: number;
   }>;
   stock_accuracy_percentage: number;
-  last_full_count_date?: string;
+  last_full_count_date: string | null;
 }
 
 export interface LocationPerformance {
@@ -628,6 +628,7 @@ export interface Product {
   price?: number;
   currency?: string;
   is_active: boolean;
+  requires_batch_tracking: boolean;
   supplier_products?: SupplierProduct[];
   stock_levels?: StockLevel[];
   created_at: string;
@@ -638,7 +639,7 @@ export interface ProductWithStock extends Product {
   total_stock: number;
   available_stock: number;
   reserved_stock: number;
-  stock_status: "in_stock" | "low_stock" | "out_of_stock";
+  stock_status: 'in_stock' | 'low_stock' | 'out_of_stock';
   lowest_price?: number;
   cheapest_supplier?: Supplier;
   batches?: ProductBatchSummary[];
@@ -664,10 +665,10 @@ export interface ProductCategory {
 export interface ProductFilter {
   category?: string;
   supplier?: string;
-  stock_status?: "all" | "in_stock" | "low_stock" | "out_of_stock";
+  stock_status?: 'all' | 'in_stock' | 'low_stock' | 'out_of_stock';
   search?: string;
-  sort_by?: "name" | "price" | "stock" | "category";
-  sort_order?: "asc" | "desc";
+  sort_by?: 'name' | 'price' | 'stock' | 'category';
+  sort_order?: 'asc' | 'desc';
 }
 
 export interface CartItem {
@@ -687,4 +688,43 @@ export interface OrderListCart {
   total_items: number;
   estimated_total?: number;
   notes?: string;
+}
+
+// Unified stock view interface for consolidated stock information
+export interface UnifiedStockView {
+  practice_id: string;
+  location_id: string;
+  product_id: string;
+  
+  // Product details
+  product_name: string;
+  product_sku: string;
+  product_category: string | null;
+  product_brand: string | null;
+  product_unit: string | null;
+  product_price: number | null;
+  requires_batch_tracking: boolean;
+  
+  // Location details
+  location_name: string;
+  location_code: string;
+  location_type: string;
+  
+  // Stock quantities
+  current_quantity: number;
+  reserved_quantity: number;
+  available_quantity: number;
+  
+  // Stock status
+  stock_status: 'in_stock' | 'low_stock' | 'out_of_stock';
+  minimum_quantity: number;
+  maximum_quantity: number | null;
+  reorder_point: number | null;
+  preferred_supplier_id: string | null;
+  last_counted_at: string | null;
+  
+  // Tracking
+  last_movement_at: string;
+  stock_source: 'batch' | 'manual';
+  calculated_at: string;
 }
