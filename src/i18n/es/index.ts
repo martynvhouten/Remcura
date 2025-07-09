@@ -23,6 +23,9 @@ export default {
     edit: "Editar",
     add: "Agregar",
     remove: "Remover",
+    moreActions: "Más acciones",
+    allLocations: "Todas las ubicaciones",
+    allStatuses: "Todos los estados",
     search: "Buscar",
     filter: "Filtrar",
     clear: "Limpiar",
@@ -291,6 +294,14 @@ export default {
     failedToLoadData: "Error al cargar datos del panel",
     dataRefreshedSuccessfully: "Datos actualizados exitosamente",
     failedToRefreshData: "Error al actualizar datos",
+    welcomeTitle: "Bienvenido a MedStock Pro",
+    welcomeSubtitle: "Su sistema profesional de gestión de inventario médico",
+    welcomeDescription: "Gestione su inventario de manera eficiente con nuestras herramientas avanzadas y seguimiento en tiempo real.",
+    systemStatus: "Estado del sistema",
+    systemStatusSubtitle: "Estado actual de su sistema",
+    systemOnline: "Sistema en línea",
+    dataSynced: "Datos sincronizados",
+    secureConnection: "Conexión segura",
   },
 
   // Errors
@@ -301,6 +312,10 @@ export default {
     notFound: "El recurso solicitado no fue encontrado.",
     validation: "Error de validación. Verifique los datos ingresados.",
     serverError: "Error del servidor. Inténtelo más tarde.",
+    failed: "Acción falló",
+    failedToLoadData: "Error al cargar datos",
+    failedToGenerateReport: "Error al generar reporte",
+    failedToRegisterBatch: "Error al registrar lote",
   },
 
   // Error pages
@@ -489,132 +504,7 @@ export default {
       count_correction: "Corrección de conteo",
     },
 
-    // Gestión de lotes
-    batch: {
-      batchManagement: "Gestión de lotes",
-      manageBatchesSubtitle: "Gestiona tus lotes de productos y fechas de vencimiento de manera efectiva",
-      title: "Gestión de lotes",
-      batchNumber: "Número de lote",
-      lotNumber: "Número de lote",
-      supplierBatchNumber: "Número de lote del proveedor",
-      expiryDate: "Fecha de caducidad",
-      houdbaarheidstot: "Fecha de vencimiento",
-      receivedDate: "Fecha de recepción",
-      initialQuantity: "Cantidad inicial",
-      currentQuantity: "Cantidad actual",
-      availableQuantity: "Cantidad disponible",
-      reservedQuantity: "Cantidad reservada",
-      batchStatus: "Estado del lote",
-      unitCost: "Costo unitario",
-      totalCost: "Costo total",
-      qualityCheck: "Control de calidad",
-      qualityPassed: "Calidad aprobada",
-      qualityFailed: "Calidad rechazada",
-      qualityNotes: "Notas de calidad",
-      quarantineUntil: "En cuarentena hasta",
 
-      // Dashboard items
-      addBatch: "Agregar lote",
-      totalBatches: "Total de lotes",
-      expiringSoon: "Por vencer",
-      activeBatches: "Lotes activos",
-      totalValue: "Valor total",
-      quickActions: "Acciones rápidas",
-      scanBatch: "Escanear lote",
-      viewExpiring: "Ver por vencer",
-      exportBatches: "Exportar lotes",
-      criticalAlert: "Alerta crítica",
-      criticalBatchesFound: "{count} lote(s) requieren atención inmediata",
-      viewCritical: "Ver críticos",
-
-      // Tabs
-      overview: "Resumen",
-      expiring: "Por vencer",
-      fifoManagement: "Gestión FIFO",
-      reports: "Informes",
-      expiringBatches: "Lotes por vencer",
-      batchReports: "Informes de lotes",
-
-      // Operaciones de lote
-      registerBatch: "Registrar lote",
-      editBatch: "Editar lote",
-      viewBatch: "Ver lote",
-      deleteBatch: "Eliminar lote",
-      mergeBatches: "Fusionar lotes",
-      splitBatch: "Dividir lote",
-
-      // Estado del lote
-      status: {
-        active: "Activo",
-        depleted: "Agotado",
-        expired: "Caducado",
-        recalled: "Retirado",
-      },
-
-      // FIFO
-      fifo: "FIFO (Primero en entrar, primero en salir)",
-      fifoExplanation: "Los lotes más antiguos se usan automáticamente primero",
-      useBatch: "Usar lote",
-      autoSelectBatch: "Seleccionar lote automáticamente",
-
-      // Gestión de caducidad
-      expiryManagement: "Gestión de caducidad",
-      daysUntilExpiry: "Días hasta caducidad",
-      expiryAlert: "Alerta de caducidad",
-      expiryUrgency: {
-        normal: "Normal",
-        warning: "Advertencia",
-        critical: "Crítico",
-        expired: "Caducado",
-      },
-
-      // Alertas y notificaciones
-      expiringIn: "Caduca en {days} días",
-      expiredOn: "Caducó el {date}",
-      nearExpiryWarning: "El lote caduca pronto",
-      expiredWarning: "El lote ha caducado",
-      lowBatchStock: "Poco stock en el lote",
-      batchDepleted: "El lote está agotado",
-
-      // Trazabilidad
-      traceability: "Trazabilidad",
-      batchHistory: "Historial del lote",
-      usageHistory: "Historial de uso",
-      trackBatch: "Rastrear lote",
-      batchReport: "Informe de lote",
-      whereUsed: "Dónde se usó",
-
-      // Mensajes de validación
-      batchNumberRequired: "El número de lote es obligatorio",
-      expiryDateRequired: "La fecha de caducidad es obligatoria",
-      invalidExpiryDate: "Fecha de caducidad inválida",
-      expiryInPast: "La fecha de caducidad no puede estar en el pasado",
-      batchAlreadyExists: "El lote ya existe",
-      insufficientBatchStock: "Stock insuficiente en el lote",
-
-      // Mensajes de éxito
-      batchRegistered: "Lote registrado exitosamente",
-      batchUpdated: "Lote actualizado exitosamente",
-      batchDeleted: "Lote eliminado exitosamente",
-      stockUsedFromBatch: "Stock usado del lote {batchNumber}",
-      exportSuccess: "Lotes exportados exitosamente",
-
-      // Resumen de lotes
-      batchesPerProduct: "Lotes por producto",
-
-      // Filtros
-      filterByStatus: "Filtrar por estado",
-      filterByExpiry: "Filtrar por caducidad",
-      showExpiring: "Mostrar lotes por vencer",
-      showExpired: "Mostrar lotes caducados",
-      showActive: "Mostrar lotes activos",
-
-      // Soporte de código de barras
-      barcodeSupport: "Soporte de código de barras",
-      gs1Support: "Soporte de código de barras GS1",
-      scanForBatch: "Escanear para número de lote",
-      scanForExpiry: "Escanear para fecha de caducidad",
-    },
   },
 
   // Counting System
@@ -697,6 +587,210 @@ export default {
     search: "Buscar ubicaciones...",
     comingSoonDescription:
       "Las funciones de gestión de ubicaciones estarán disponibles pronto. Podrá crear y gestionar diferentes áreas de almacenamiento para su inventario.",
+    sampleData: {
+      mainWarehouse: {
+        name: "Almacén principal",
+        type: "Almacén",
+        description: "Almacén central de almacenamiento",
+      },
+      pharmacy: {
+        name: "Almacenamiento de farmacia",
+        type: "Farmacia",
+        description: "Almacenamiento de medicamentos",
+      },
+      treatmentRoom: {
+        name: "Sala de tratamiento A",
+        type: "Sala de tratamiento",
+        description: "Inventario para sala de tratamiento A",
+      },
+    },
+    capacityItems: "{count} artículos",
+  },
+
+  // Gestión de lotes
+  batch: {
+    batchManagement: "Gestión de lotes",
+    manageBatchesSubtitle: "Gestiona tus lotes de productos y fechas de vencimiento de manera efectiva",
+    title: "Gestión de lotes",
+    batchNumber: "Número de lote",
+    lotNumber: "Número de lote",
+    supplierBatchNumber: "Número de lote del proveedor",
+    expiryDate: "Fecha de caducidad",
+    houdbaarheidstot: "Fecha de vencimiento",
+    receivedDate: "Fecha de recepción",
+    initialQuantity: "Cantidad inicial",
+    currentQuantity: "Cantidad actual",
+    availableQuantity: "Cantidad disponible",
+    reservedQuantity: "Cantidad reservada",
+    batchStatus: "Estado del lote",
+    unitCost: "Costo unitario",
+    totalCost: "Costo total",
+    qualityCheck: "Control de calidad",
+    qualityPassed: "Calidad aprobada",
+    qualityFailed: "Calidad rechazada",
+    qualityNotes: "Notas de calidad",
+    quarantineUntil: "En cuarentena hasta",
+
+    // Dashboard items
+    addBatch: "Agregar lote",
+    totalBatches: "Total de lotes",
+    expiringSoon: "Por vencer",
+    activeBatches: "Lotes activos",
+    totalValue: "Valor total",
+    quickActions: "Acciones rápidas",
+    scanBatch: "Escanear lote",
+    viewExpiring: "Ver por vencer",
+    exportBatches: "Exportar lotes",
+    criticalAlert: "Alerta crítica",
+    criticalBatchesFound: "{count} lote(s) requieren atención inmediata",
+    viewCritical: "Ver críticos",
+
+    // Tabs
+    overview: "Resumen",
+    expiring: "Por vencer",
+    fifoManagement: "Gestión FIFO",
+    reports: "Informes",
+    expiringBatches: "Lotes por vencer",
+    batchReports: "Informes de lotes",
+
+    // Operaciones de lote
+    registerBatch: "Registrar lote",
+    editBatch: "Editar lote",
+    viewBatch: "Ver lote",
+    deleteBatch: "Eliminar lote",
+    mergeBatches: "Fusionar lotes",
+    splitBatch: "Dividir lote",
+
+    // FIFO
+    fifo: "FIFO (Primero en entrar, primero en salir)",
+    fifoExplanation: "Los lotes más antiguos se usan automáticamente primero",
+    useBatch: "Usar lote",
+    autoSelectBatch: "Seleccionar lote automáticamente",
+
+    // Gestión de caducidad
+    expiryManagement: "Gestión de caducidad",
+    daysUntilExpiry: "Días hasta caducidad",
+    expiryAlert: "Alerta de caducidad",
+
+    // Mensajes de validación
+    batchNumberRequired: "El número de lote es obligatorio",
+    expiryDateRequired: "La fecha de caducidad es obligatoria",
+    invalidExpiryDate: "Fecha de caducidad inválida",
+    expiryInPast: "La fecha de caducidad no puede estar en el pasado",
+    batchAlreadyExists: "El lote ya existe",
+    insufficientBatchStock: "Stock insuficiente en el lote",
+
+    // Mensajes de éxito
+    batchRegistered: "Lote registrado exitosamente",
+    batchUpdated: "Lote actualizado exitosamente",
+    batchDeleted: "Lote eliminado exitosamente",
+    stockUsedFromBatch: "Stock usado del lote {batchNumber}",
+    exportSuccess: "Lotes exportados exitosamente",
+    quarantine: "Cuarentena",
+    quarantineSuccess: "Lote puesto en cuarentena exitosamente",
+    expiredDaysAgo: "Caducó hace {days} días",
+    expiresToday: "Caduca hoy",
+    expiresTomorrow: "Caduca mañana",
+    expiresInDays: "Caduca en {days} días",
+    batchNotFound: "Lote {batchNumber} no encontrado",
+
+    // Reportes
+    selectReport: "Seleccionar reporte",
+    generateReport: "Generar reporte",
+    exportReport: "Exportar reporte",
+    reportResults: "Resultados del reporte",
+    reportConfiguration: "Configuración del reporte",
+    reportGenerated: "Reporte generado exitosamente",
+    reportExported: "Reporte exportado exitosamente",
+    expiredBatches: "Lotes caducados",
+    expiryAnalysis: "Análisis de caducidad",
+    expiryAnalysisDesc: "Analizar fechas de caducidad y urgencia de lotes",
+    batchUsage: "Uso de lotes",
+    batchUsageDesc: "Ver cómo se están usando los lotes",
+    fifoCompliance: "Cumplimiento FIFO",
+    fifoComplianceDesc: "Verificar cumplimiento FIFO",
+    batchCosts: "Costos de lotes",
+    batchCostsDesc: "Analizar costos por lote",
+
+    // Registro y validación de lotes
+    registerNewBatch: "Registrar nuevo lote",
+    batchRegisteredSuccessfully: "Lote registrado exitosamente",
+    batchOverview: "Resumen de Lotes",
+    urgencyLevel: "Nivel de Urgencia",
+    batchesExpiringSoon: "{count} lotes expiran pronto",
+    noBatchesFound: "No se encontraron lotes",
+    noExpiringBatches: "No hay lotes expirando",
+    available: "Disponible",
+    supplierBatch: "Lote del proveedor",
+
+    // Filtros
+    filterByStatus: "Filtrar por estado",
+    filterByExpiry: "Filtrar por caducidad",
+    showExpiring: "Mostrar lotes por vencer",
+    showExpired: "Mostrar lotes caducados",
+    showActive: "Mostrar lotes activos",
+
+    // Funcionalidad FIFO
+    fifoSuggestion: "Sugerencia FIFO",
+    requestedQuantity: "Cantidad Solicitada",
+    generateFifoSuggestion: "Generar Sugerencia FIFO",
+    fifoResults: "Resultados FIFO",
+    noFifoResults: "No hay resultados FIFO disponibles",
+    useQuantity: "Cantidad a Usar",
+    applyFifoSuggestion: "Aplicar Sugerencia FIFO",
+    fifoSuggestionGenerated: "Sugerencia FIFO generada",
+    confirmFifoApplication: "Confirmar Aplicación FIFO",
+    confirmFifoMessage: "¿Estás seguro de que quieres aplicar esta sugerencia FIFO?",
+    fifoAppliedSuccessfully: "FIFO aplicado exitosamente",
+
+    // Detalles y uso de lotes
+    batchDetails: "Detalles del Lote",
+    batchInformation: "Información del Lote",
+    quantityStatus: "Estado de Cantidad",
+    expiryInformation: "Información de Vencimiento",
+    statusInformation: "Información de Estado",
+    costInformation: "Información de Costos",
+    currentValue: "Valor Actual",
+    quantityToUse: "Cantidad a Usar",
+    usageReason: "Razón de Uso",
+    usageNotes: "Notas de Uso",
+    usageNotesHint: "Notas opcionales sobre este uso",
+    useAll: "Usar Todo",
+    usageSummary: "Resumen de Uso",
+    quantityUsed: "Cantidad Usada",
+    remainingQuantity: "Cantidad Restante",
+    costImpact: "Impacto de Costos",
+    newStatus: "Nuevo Estado",
+    confirmUsage: "Confirmar Uso",
+    purchaseInformation: "Información de Compra",
+    purchaseOrderNumber: "Número de Orden de Compra",
+    invoiceNumber: "Número de Factura",
+    currency: "Moneda",
+
+    // Niveles de urgencia
+    urgency: {
+      expired: "Vencido",
+      critical: "Crítico",
+      warning: "Advertencia",
+      normal: "Normal",
+    },
+
+    status: {
+      available: "Disponible",
+      reserved: "Reservado",
+      expired: "Caducado",
+      quarantine: "Cuarentena",
+      used: "Usado",
+      active: "Activo",
+      inactive: "Inactivo",
+    },
+
+    // Validación adicional
+    validation: {
+      expiryDateInPast: "La fecha de vencimiento no puede estar en el pasado",
+      exceededAvailable: "Excede la cantidad disponible",
+      mustBePositive: "Debe ser positivo",
+    },
   },
 
   // Products
@@ -1547,179 +1641,65 @@ export default {
   // Products Page
   productsPage: {
     title: "Productos",
-    subtitle:
-      "Resumen de todos los productos disponibles de Remka y proveedores externos",
-
-    // Table headers
-    table: {
-      name: "Nombre",
-      sku: "SKU",
-      description: "Descripción",
-      stockStatus: "Estado de Existencias",
-      supplier: "Proveedor",
-      price: "Precio",
-      actions: "Acciones",
-      category: "Categoría",
-      currentStock: "Existencias Actuales",
-      lastUpdated: "Última Actualización",
-    },
-
-    // Search and filters
-    searchProducts: "Buscar productos...",
-    searchPlaceholder: "Buscar por nombre o SKU...",
-    viewCart: "Ver carrito",
-    filterByCategory: "Filtrar por categoría",
-    filterBySupplier: "Filtrar por proveedor",
-    filterByStockStatus: "Filtrar por estado de existencias",
-    sortBy: "Ordenar por",
-    clearFilters: "Limpiar filtros",
-
-    // Filter options
+    subtitle: "Gestiona tu resumen de productos y pedidos",
+    searchPlaceholder: "Buscar productos...",
+    viewCart: "Ver carrito de compras",
     filters: {
       title: "Filtros",
       category: "Categoría",
-      stockStatus: "Estado de Existencias",
+      stockStatus: "Estado de inventario",
       supplier: "Proveedor",
-      priceRange: "Rango de Precios",
+      priceRange: "Rango de precios",
       selectCategory: "Seleccionar categoría",
-      selectStockStatus: "Seleccionar estado de existencias",
+      selectStockStatus: "Seleccionar estado",
       selectSupplier: "Seleccionar proveedor",
-      minPrice: "Precio mín",
-      maxPrice: "Precio máx",
-      all: "Todos",
-      allCategories: "Todas las categorías",
-      allSuppliers: "Todos los proveedores",
+      minPrice: "Precio mín.",
+      maxPrice: "Precio máx.",
       remka: "Remka",
-      external: "Proveedores externos",
+      external: "Externo",
     },
-
-    // Batch status
+    clearFilters: "Limpiar filtros",
+    noProductsFound: "No se encontraron productos",
+    table: {
+      name: "Nombre",
+      sku: "SKU",
+      stockStatus: "Estado de inventario",
+      price: "Precio",
+      batchStatus: "Estado del lote",
+      actions: "Acciones",
+    },
+    stockStatus: {
+      in_stock: "En inventario",
+      low_stock: "Inventario bajo",
+      out_of_stock: "Sin inventario",
+    },
     batchStatus: {
       good: "Bueno",
       expiring: "Por vencer",
       expired: "Vencido",
     },
-
-    // Product details
-    productDetails: "Detalles del producto",
-    description: "Descripción",
-    category: "Categoría",
-    unit: "Unidad",
-    suppliers: "Proveedores", 
-    stockLevels: "Niveles de existencias",
+    bestPrice: "Mejor precio",
     batches: "lotes",
     noBatches: "Sin lotes",
-    bestPrice: "Mejor precio",
-
-    // Actions
     viewDetails: "Ver detalles",
     addToCart: "Agregar al carrito",
     addToOrderList: "Agregar a lista de pedidos",
     expandDetails: "Expandir detalles",
-
-    // Messages
-    addedToCart: "{productName} agregado al carrito",
-    cartAddError: "Error al agregar al carrito",
-    dataRefreshed: "Datos actualizados exitosamente",
-    productLoadError: "Error al cargar productos",
-    noProductsFound: "No se encontraron productos",
-
-    // Bulk actions
-    bulkActions: {
-      title: "Acciones Masivas",
-      selectAll: "Seleccionar todo",
-      selected: "{count} seleccionado | {count} seleccionados",
-      addToOrderList: "Agregar a lista de pedidos",
-      updateStock: "Actualizar existencias",
-      assignSupplier: "Asignar proveedor",
-      exportSelected: "Exportar seleccionados",
-      noItemsSelected: "No hay elementos seleccionados",
-    },
-
-    // Product actions
-    viewDetails: "Ver detalles",
-    addToCart: "Agregar al carrito",
-    addToOrderList: "Agregar a lista de pedidos",
-    quickOrder: "Pedido rápido",
-    editProduct: "Editar producto",
-
-    // Stock status
-    stockStatus: {
-      in_stock: "En Existencia",
-      low_stock: "Existencias Bajas",
-      out_of_stock: "Sin Existencias",
-      unavailable: "No Disponible",
-    },
-
-    // Filters
-    filters: {
-      all: "Todos",
-      allCategories: "Todas las categorías",
-      allSuppliers: "Todos los proveedores",
-      remka: "Remka",
-      external: "Proveedores externos",
-    },
-
-    // Product details dialog
-    details: {
-      title: "Detalles del Producto",
-      basicInfo: "Información Básica",
-      stockInfo: "Información de Existencias",
-      supplierInfo: "Información del Proveedor",
-      orderHistory: "Historial de Pedidos",
-      sku: "SKU",
-      name: "Nombre",
-      description: "Descripción",
-      category: "Categoría",
-      brand: "Marca",
-      unit: "Unidad",
-      price: "Precio",
-      currentStock: "Existencias Actuales",
-      minimumStock: "Existencias Mínimas",
-      locations: "Ubicaciones de Existencias",
-      suppliers: "Proveedores",
-      lastOrderDate: "Fecha de Último Pedido",
-      averageOrderQuantity: "Cantidad Promedio de Pedido",
-      totalOrdered: "Total Pedido",
-      image: "Imagen del Producto",
-      noImage: "No hay imagen disponible",
-      noDescription: "No hay descripción disponible",
-      priceNotAvailable: "Precio no disponible",
-    },
-
-    // Messages
-    noProductsFound: "No se encontraron productos",
-    noProductsForFilter:
-      "No se encontraron productos para los filtros actuales",
-    loadingProducts: "Cargando productos...",
-    productLoadError: "Error al cargar productos",
-    dataRefreshed: "Datos de productos actualizados",
-
-    // Cart messages
-    addedToCart: "{productName} agregado al carrito",
-    cartAddError: "Error al agregar al carrito",
-
-    // Order list messages
-    addedToOrderList: "{productName} agregado a la lista de pedidos",
-    orderListAddError: "Error al agregar a la lista de pedidos",
-
-    // Statistics
+    productDetails: "Detalles del producto",
+    description: "Descripción",
+    category: "Categoría",
+    unit: "Unidad",
+    suppliers: "Proveedores",
+    stockLevels: "Niveles de inventario",
     stats: {
-      totalProducts: "Total de Productos",
-      inStockProducts: "En Existencia",
-      lowStockProducts: "Existencias Bajas",
-      outOfStockProducts: "Sin Existencias",
-      suppliersCount: "Proveedores",
-      categoriesCount: "Categorías",
+      totalProducts: "Productos totales",
+      inStockProducts: "En inventario",
+      lowStockProducts: "Inventario bajo",
+      outOfStockProducts: "Sin inventario",
     },
-
-    // Mobile
-    mobile: {
-      showFilters: "Mostrar filtros",
-      hideFilters: "Ocultar filtros",
-      productInfo: "Info del Producto",
-      stockInfo: "Info de Existencias",
-      priceInfo: "Info de Precio",
-    },
+    addedToCart: "'{productName}' agregado al carrito",
+    cartAddError: "Error al agregar al carrito",
+    dataRefreshed: "Datos de productos actualizados",
+    productLoadError: "Error al cargar productos",
   },
 };

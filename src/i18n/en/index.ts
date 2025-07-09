@@ -23,6 +23,9 @@ export default {
     edit: "Edit",
     add: "Add",
     remove: "Remove",
+    moreActions: "More actions",
+    allLocations: "All locations",
+    allStatuses: "All statuses",
     search: "Search",
     filter: "Filter",
     clear: "Clear",
@@ -204,6 +207,14 @@ export default {
     failedToLoadData: "Failed to load dashboard data",
     dataRefreshedSuccessfully: "Data refreshed successfully",
     failedToRefreshData: "Failed to refresh data",
+    welcomeTitle: "Welcome to MedStock Pro",
+    welcomeSubtitle: "Your professional medical inventory management system",
+    welcomeDescription: "Manage your inventory efficiently with our advanced tools and real-time tracking.",
+    systemStatus: "System status",
+    systemStatusSubtitle: "Current status of your system",
+    systemOnline: "System online",
+    dataSynced: "Data synchronized",
+    secureConnection: "Secure connection",
   },
 
   // Errors
@@ -214,6 +225,10 @@ export default {
     notFound: "The requested resource was not found.",
     validation: "Validation error. Please check the entered data.",
     serverError: "Server error. Please try again later.",
+    failed: "Action failed",
+    failedToLoadData: "Failed to load data",
+    failedToGenerateReport: "Failed to generate report",
+    failedToRegisterBatch: "Failed to register batch",
   },
 
   // Error pages
@@ -412,132 +427,7 @@ export default {
       count_correction: "Count correction",
     },
 
-    // Batch Management
-    batch: {
-      batchManagement: "Batch Management",
-      manageBatchesSubtitle: "Manage your product batches and expiry dates effectively",
-      title: "Batch Management",
-      batchNumber: "Batch number",
-      lotNumber: "Lot number",
-      supplierBatchNumber: "Supplier batch number",
-      expiryDate: "Expiry date",
-      houdbaarheidstot: "Best before date",
-      receivedDate: "Received date",
-      initialQuantity: "Initial quantity",
-      currentQuantity: "Current quantity",
-      availableQuantity: "Available quantity",
-      reservedQuantity: "Reserved quantity",
-      batchStatus: "Batch status",
-      unitCost: "Unit cost",
-      totalCost: "Total cost",
-      qualityCheck: "Quality check",
-      qualityPassed: "Quality passed",
-      qualityFailed: "Quality failed",
-      qualityNotes: "Quality notes",
-      quarantineUntil: "Quarantine until",
 
-      // Dashboard items
-      addBatch: "Add Batch",
-      totalBatches: "Total Batches",
-      expiringSoon: "Expiring Soon",
-      activeBatches: "Active Batches",
-      totalValue: "Total Value",
-      quickActions: "Quick Actions",
-      scanBatch: "Scan Batch",
-      viewExpiring: "View Expiring",
-      exportBatches: "Export Batches",
-      criticalAlert: "Critical Alert",
-      criticalBatchesFound: "{count} batch(es) require immediate attention",
-      viewCritical: "View Critical",
-
-      // Tabs
-      overview: "Overview",
-      expiring: "Expiring", 
-      fifoManagement: "FIFO Management",
-      reports: "Reports",
-      expiringBatches: "Expiring Batches",
-      batchReports: "Batch Reports",
-
-      // Batch operations
-      registerBatch: "Register batch",
-      editBatch: "Edit batch",
-      viewBatch: "View batch",
-      deleteBatch: "Delete batch",
-      mergeBatches: "Merge batches",
-      splitBatch: "Split batch",
-
-      // Batch status
-      status: {
-        active: "Active",
-        depleted: "Depleted",
-        expired: "Expired",
-        recalled: "Recalled",
-      },
-
-      // FIFO
-      fifo: "FIFO (First In, First Out)",
-      fifoExplanation: "Oldest batches are automatically used first",
-      useBatch: "Use batch",
-      autoSelectBatch: "Auto-select batch",
-
-      // Expiry management
-      expiryManagement: "Expiry management",
-      daysUntilExpiry: "Days until expiry",
-      expiryAlert: "Expiry alert",
-      expiryUrgency: {
-        normal: "Normal",
-        warning: "Warning",
-        critical: "Critical",
-        expired: "Expired",
-      },
-
-      // Alerts and notifications
-      expiringIn: "Expires in {days} days",
-      expiredOn: "Expired on {date}",
-      nearExpiryWarning: "Batch expires soon",
-      expiredWarning: "Batch has expired",
-      lowBatchStock: "Low stock in batch",
-      batchDepleted: "Batch is depleted",
-
-      // Traceability
-      traceability: "Traceability",
-      batchHistory: "Batch history",
-      usageHistory: "Usage history",
-      trackBatch: "Track batch",
-      batchReport: "Batch report",
-      whereUsed: "Where used",
-
-      // Validation messages
-      batchNumberRequired: "Batch number is required",
-      expiryDateRequired: "Expiry date is required",
-      invalidExpiryDate: "Invalid expiry date",
-      expiryInPast: "Expiry date cannot be in the past",
-      batchAlreadyExists: "Batch already exists",
-      insufficientBatchStock: "Insufficient stock in batch",
-
-      // Success messages
-      batchRegistered: "Batch registered successfully",
-      batchUpdated: "Batch updated successfully",
-      batchDeleted: "Batch deleted successfully",
-      stockUsedFromBatch: "Stock used from batch {batchNumber}",
-      exportSuccess: "Batches exported successfully",
-
-      // Batch overview
-      batchesPerProduct: "Batches per product",
-
-      // Filters
-      filterByStatus: "Filter by status",
-      filterByExpiry: "Filter by expiry",
-      showExpiring: "Show expiring batches",
-      showExpired: "Show expired batches",
-      showActive: "Show active batches",
-
-      // Barcode support
-      barcodeSupport: "Barcode support",
-      gs1Support: "GS1 barcode support",
-      scanForBatch: "Scan for batch number",
-      scanForExpiry: "Scan for expiry date",
-    },
   },
 
   // Counting System
@@ -620,6 +510,24 @@ export default {
     search: "Search locations...",
     comingSoonDescription:
       "Location management features will be available soon. You will be able to create and manage different storage areas for your inventory.",
+    sampleData: {
+      mainWarehouse: {
+        name: "Main warehouse",
+        type: "Warehouse",
+        description: "Central storage warehouse",
+      },
+      pharmacy: {
+        name: "Pharmacy storage",
+        type: "Pharmacy",
+        description: "Medication storage",
+      },
+      treatmentRoom: {
+        name: "Treatment room A",
+        type: "Treatment room",
+        description: "Inventory for treatment room A",
+      },
+    },
+    capacityItems: "{count} items",
   },
 
   // Orders
@@ -797,6 +705,185 @@ export default {
     deleteError: "Error deleting order list",
     cartError: "Error adding to cart",
     autoFillError: "Error auto-filling order list",
+  },
+
+  // Batch Management
+  batch: {
+    batchManagement: "Batch Management",
+    manageBatchesSubtitle: "Manage your product batches and expiry dates effectively",
+    title: "Batch Management",
+    batchNumber: "Batch number",
+    lotNumber: "Lot number",
+    supplierBatchNumber: "Supplier batch number",
+    expiryDate: "Expiry date",
+    houdbaarheidstot: "Best before date",
+    receivedDate: "Received date",
+    initialQuantity: "Initial quantity",
+    currentQuantity: "Current quantity",
+    availableQuantity: "Available quantity",
+    reservedQuantity: "Reserved quantity",
+    batchStatus: "Batch status",
+    unitCost: "Unit cost",
+    totalCost: "Total cost",
+    qualityCheck: "Quality check",
+    qualityPassed: "Quality passed",
+    qualityFailed: "Quality failed",
+    qualityNotes: "Quality notes",
+    quarantineUntil: "Quarantine until",
+
+    // Dashboard items
+    addBatch: "Add Batch",
+    totalBatches: "Total Batches",
+    expiringSoon: "Expiring Soon",
+    activeBatches: "Active Batches",
+    totalValue: "Total Value",
+    quickActions: "Quick Actions",
+    scanBatch: "Scan Batch",
+    viewExpiring: "View Expiring",
+    exportBatches: "Export Batches",
+    criticalAlert: "Critical Alert",
+    criticalBatchesFound: "{count} batch(es) require immediate attention",
+    viewCritical: "View Critical",
+
+    // Tabs
+    overview: "Overview",
+    expiring: "Expiring",
+    fifoManagement: "FIFO Management",
+    reports: "Reports",
+    expiringBatches: "Expiring Batches",
+    batchReports: "Batch Reports",
+
+    // Batch operations
+    registerBatch: "Register batch",
+    editBatch: "Edit batch",
+    viewBatch: "View batch",
+    deleteBatch: "Delete batch",
+    mergeBatches: "Merge batches",
+    splitBatch: "Split batch",
+
+    // FIFO
+    fifo: "FIFO (First In, First Out)",
+    fifoExplanation: "Oldest batches are automatically used first",
+    useBatch: "Use batch",
+    autoSelectBatch: "Auto-select batch",
+
+    // Expiry management
+    expiryManagement: "Expiry management",
+    daysUntilExpiry: "Days until expiry",
+    expiryAlert: "Expiry alert",
+
+    // Validation messages
+    batchNumberRequired: "Batch number is required",
+    expiryDateRequired: "Expiry date is required",
+    invalidExpiryDate: "Invalid expiry date",
+    expiryInPast: "Expiry date cannot be in the past",
+    batchAlreadyExists: "Batch already exists",
+    insufficientBatchStock: "Insufficient stock in batch",
+
+    // Success messages
+    batchRegistered: "Batch registered successfully",
+    batchUpdated: "Batch updated successfully",
+    batchDeleted: "Batch deleted successfully",
+    stockUsedFromBatch: "Stock used from batch {batchNumber}",
+    exportSuccess: "Batches exported successfully",
+    quarantine: "Quarantine",
+    quarantineSuccess: "Batch successfully quarantined",
+    expiredDaysAgo: "Expired {days} days ago",
+    expiresToday: "Expires today",
+    expiresTomorrow: "Expires tomorrow",
+    expiresInDays: "Expires in {days} days",
+    batchNotFound: "Batch {batchNumber} not found",
+
+    // Reports
+    selectReport: "Select report",
+    generateReport: "Generate report",
+    exportReport: "Export report",
+    reportResults: "Report results",
+    reportConfiguration: "Report configuration",
+    reportGenerated: "Report generated successfully",
+    reportExported: "Report exported successfully",
+    expiredBatches: "Expired batches",
+    expiryAnalysis: "Expiry analysis",
+    expiryAnalysisDesc: "Analyze batch expiry dates and urgency",
+    batchUsage: "Batch usage",
+    batchUsageDesc: "View how batches are being used",
+    fifoCompliance: "FIFO compliance",
+    fifoComplianceDesc: "Check FIFO compliance",
+    batchCosts: "Batch costs",
+    batchCostsDesc: "Analyze costs per batch",
+
+    // Batch registration and validation
+    registerNewBatch: "Register new batch",
+    batchRegisteredSuccessfully: "Batch registered successfully",
+    batchOverview: "Batch Overview",
+    urgencyLevel: "Urgency Level",
+    batchesExpiringSoon: "{count} batches expiring soon",
+    noBatchesFound: "No batches found",
+    noExpiringBatches: "No expiring batches",
+    available: "Available",
+    supplierBatch: "Supplier batch",
+
+    // Filters
+    filterByStatus: "Filter by status",
+    filterByExpiry: "Filter by expiry",
+    showExpiring: "Show expiring batches",
+    showExpired: "Show expired batches",
+    showActive: "Show active batches",
+
+    // FIFO functionality
+    fifoSuggestion: "FIFO Suggestion",
+    requestedQuantity: "Requested Quantity",
+    generateFifoSuggestion: "Generate FIFO Suggestion",
+    fifoResults: "FIFO Results",
+    noFifoResults: "No FIFO results available",
+    useQuantity: "Use Quantity",
+    applyFifoSuggestion: "Apply FIFO Suggestion",
+    fifoSuggestionGenerated: "FIFO suggestion generated",
+    confirmFifoApplication: "Confirm FIFO Application",
+    confirmFifoMessage: "Are you sure you want to apply this FIFO suggestion?",
+    fifoAppliedSuccessfully: "FIFO applied successfully",
+
+    // Batch details and usage
+    batchDetails: "Batch Details",
+    batchInformation: "Batch Information",
+    quantityStatus: "Quantity Status",
+    expiryInformation: "Expiry Information",
+    statusInformation: "Status Information",
+    costInformation: "Cost Information",
+    currentValue: "Current Value",
+    quantityToUse: "Quantity to Use",
+    usageReason: "Usage Reason",
+    usageNotes: "Usage Notes",
+    usageNotesHint: "Optional notes about this usage",
+    useAll: "Use All",
+    usageSummary: "Usage Summary",
+    quantityUsed: "Quantity Used",
+    remainingQuantity: "Remaining Quantity",
+    costImpact: "Cost Impact",
+    newStatus: "New Status",
+    confirmUsage: "Confirm Usage",
+    purchaseInformation: "Purchase Information",
+    purchaseOrderNumber: "Purchase Order Number",
+    invoiceNumber: "Invoice Number",
+    currency: "Currency",
+
+    // Urgency levels
+    urgency: {
+      expired: "Expired",
+      critical: "Critical",
+      warning: "Warning",
+      normal: "Normal",
+    },
+
+    status: {
+      available: "Available",
+      reserved: "Reserved",
+      expired: "Expired",
+      quarantine: "Quarantine",
+      used: "Used",
+      active: "Active",
+      inactive: "Inactive",
+    },
   },
 
   // Products
@@ -1109,194 +1196,65 @@ export default {
   // Products Page
   productsPage: {
     title: "Products",
-    subtitle:
-      "Overview of all available products from Remka and external suppliers",
-
-    // Table headers
-    table: {
-      name: "Name",
-      sku: "SKU",
-      description: "Description",
-      stockStatus: "Stock Status",
-      supplier: "Supplier",
-      price: "Price",
-      actions: "Actions",
-      category: "Category",
-      currentStock: "Current Stock",
-      lastUpdated: "Last Updated",
-      batchStatus: "Batch Status",
-    },
-
-    // Search and filters
-    searchProducts: "Search products...",
-    searchPlaceholder: "Search by name or SKU...",
-    viewCart: "View Cart",
-    filterByCategory: "Filter by category",
-    filterBySupplier: "Filter by supplier",
-    filterByStockStatus: "Filter by stock status",
-    sortBy: "Sort by",
-    clearFilters: "Clear filters",
-
-    // Filter options
+    subtitle: "Manage your product overview and orders",
+    searchPlaceholder: "Search products...",
+    viewCart: "View shopping cart",
     filters: {
       title: "Filters",
       category: "Category",
-      stockStatus: "Stock Status",
+      stockStatus: "Stock status",
       supplier: "Supplier",
-      priceRange: "Price Range",
+      priceRange: "Price range",
       selectCategory: "Select category",
-      selectStockStatus: "Select stock status",
+      selectStockStatus: "Select status",
       selectSupplier: "Select supplier",
-      minPrice: "Min price",
-      maxPrice: "Max price",
-      all: "All",
-      allCategories: "All categories",
-      allSuppliers: "All suppliers",
+      minPrice: "Min. price",
+      maxPrice: "Max. price",
       remka: "Remka",
-      external: "External suppliers",
+      external: "External",
     },
-
-    // Statistics
-    stats: {
-      totalProducts: "Total Products",
-      inStockProducts: "In Stock",
-      lowStockProducts: "Low Stock",
-      outOfStockProducts: "Out of Stock",
+    clearFilters: "Clear filters",
+    noProductsFound: "No products found",
+    table: {
+      name: "Name",
+      sku: "SKU",
+      stockStatus: "Stock status",
+      price: "Price",
+      batchStatus: "Batch status",
+      actions: "Actions",
     },
-
-    // Stock status
     stockStatus: {
-      in_stock: "In Stock",
-      low_stock: "Low Stock",
-      out_of_stock: "Out of Stock",
+      in_stock: "In stock",
+      low_stock: "Low stock",
+      out_of_stock: "Out of stock",
     },
-
-    // Batch status
     batchStatus: {
       good: "Good",
-      expiring: "Expiring Soon",
+      expiring: "Expiring",
       expired: "Expired",
     },
-
-    // Product details
-    productDetails: "Product Details",
+    bestPrice: "Best price",
+    batches: "batches",
+    noBatches: "No batches",
+    viewDetails: "View details",
+    addToCart: "Add to cart",
+    addToOrderList: "Add to order list",
+    expandDetails: "Expand details",
+    productDetails: "Product details",
     description: "Description",
     category: "Category",
     unit: "Unit",
     suppliers: "Suppliers",
-    stockLevels: "Stock Levels",
-    batches: "batches",
-    noBatches: "No batches",
-    bestPrice: "Best price",
-
-    // Actions
-    viewDetails: "View Details",
-    addToCart: "Add to Cart",
-    addToOrderList: "Add to Order List",
-    expandDetails: "Expand Details",
-
-    // Messages
-    addedToCart: "{productName} added to cart",
-    cartAddError: "Error adding product to cart",
-    dataRefreshed: "Data refreshed successfully",
-    productLoadError: "Error loading products",
-    noProductsFound: "No products found",
-
-    // Bulk actions
-    bulkActions: {
-      title: "Bulk Actions",
-      selectAll: "Select all",
-      selected: "{count} selected",
-      addToOrderList: "Add to order list",
-      updateStock: "Update stock",
-      assignSupplier: "Assign supplier",
-      exportSelected: "Export selected",
-      noItemsSelected: "No items selected",
-    },
-
-    // Product actions
-    viewDetails: "View details",
-    addToCart: "Add to cart",
-    addToOrderList: "Add to order list",
-    quickOrder: "Quick order",
-    editProduct: "Edit product",
-
-    // Stock status
-    stockStatus: {
-      in_stock: "In Stock",
-      low_stock: "Low Stock",
-      out_of_stock: "Out of Stock",
-      unavailable: "Unavailable",
-    },
-
-    // Filters
-    filters: {
-      all: "All",
-      allCategories: "All categories",
-      allSuppliers: "All suppliers",
-      remka: "Remka",
-      external: "External suppliers",
-    },
-
-    // Product details dialog
-    details: {
-      title: "Product Details",
-      basicInfo: "Basic Information",
-      stockInfo: "Stock Information",
-      supplierInfo: "Supplier Information",
-      orderHistory: "Order History",
-      sku: "SKU",
-      name: "Name",
-      description: "Description",
-      category: "Category",
-      brand: "Brand",
-      unit: "Unit",
-      price: "Price",
-      currentStock: "Current Stock",
-      minimumStock: "Minimum Stock",
-      locations: "Stock Locations",
-      suppliers: "Suppliers",
-      lastOrderDate: "Last Order Date",
-      averageOrderQuantity: "Average Order Quantity",
-      totalOrdered: "Total Ordered",
-      image: "Product Image",
-      noImage: "No image available",
-      noDescription: "No description available",
-      priceNotAvailable: "Price not available",
-    },
-
-    // Messages
-    noProductsFound: "No products found",
-    noProductsForFilter: "No products found for current filters",
-    loadingProducts: "Loading products...",
-    productLoadError: "Error loading products",
-    dataRefreshed: "Product data refreshed",
-
-    // Cart messages
-    addedToCart: "{productName} added to cart",
-    cartAddError: "Error adding to cart",
-
-    // Order list messages
-    addedToOrderList: "{productName} added to order list",
-    orderListAddError: "Error adding to order list",
-
-    // Statistics
+    stockLevels: "Stock levels",
     stats: {
-      totalProducts: "Total Products",
-      inStockProducts: "In Stock",
-      lowStockProducts: "Low Stock",
-      outOfStockProducts: "Out of Stock",
-      suppliersCount: "Suppliers",
-      categoriesCount: "Categories",
+      totalProducts: "Total products",
+      inStockProducts: "In stock",
+      lowStockProducts: "Low stock",
+      outOfStockProducts: "Out of stock",
     },
-
-    // Mobile
-    mobile: {
-      showFilters: "Show filters",
-      hideFilters: "Hide filters",
-      productInfo: "Product Info",
-      stockInfo: "Stock Info",
-      priceInfo: "Price Info",
-    },
+    addedToCart: "'{productName}' added to cart",
+    cartAddError: "Error adding to cart",
+    dataRefreshed: "Product data refreshed",
+    productLoadError: "Error loading products",
   },
 };

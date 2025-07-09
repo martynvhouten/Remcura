@@ -23,11 +23,12 @@ const getSavedLocale = (): SupportedLocale => {
 };
 
 // Create i18n instance with all translations loaded
+// Use legacy mode for better Quasar compatibility
 export const i18n = createI18n({
   locale: getSavedLocale(),
   fallbackLocale: "en",
   messages,
-  legacy: false,
+  legacy: true, // Changed to true for better compatibility
   globalInjection: true,
   missingWarn: false,
   fallbackWarn: false,
@@ -35,7 +36,13 @@ export const i18n = createI18n({
 
 // Locale setter with persistence
 export const setI18nLanguage = (locale: SupportedLocale) => {
-  i18n.global.locale.value = locale;
+  // In legacy mode, locale is a string property
+  // In composition mode, locale is a ref with .value
+  if (i18n.mode === 'legacy') {
+    (i18n.global.locale as any) = locale;
+  } else {
+    (i18n.global.locale as any).value = locale;
+  }
   document.querySelector("html")?.setAttribute("lang", locale);
   localStorage.setItem("medstock_locale", locale);
   return locale;
@@ -43,7 +50,13 @@ export const setI18nLanguage = (locale: SupportedLocale) => {
 
 // Get current locale
 export const getCurrentLocale = (): SupportedLocale => {
-  return i18n.global.locale.value as SupportedLocale;
+  // In legacy mode, locale is a string property
+  // In composition mode, locale is a ref with .value
+  if (i18n.mode === 'legacy') {
+    return i18n.global.locale as SupportedLocale;
+  } else {
+    return (i18n.global.locale as any).value as SupportedLocale;
+  }
 };
 
 export default i18n;
