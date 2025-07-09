@@ -65,6 +65,10 @@
 
           <!-- User Menu -->
           <q-btn flat round icon="person" :aria-label="$t('nav.userMenu')">
+            <!-- Demo indicator badge -->
+            <q-badge v-if="isDemoUser" color="amber" floating class="demo-badge">
+              <q-icon name="science" size="10px" />
+            </q-badge>
             <q-menu>
               <q-list>
                 <q-item class="user-info">
@@ -82,6 +86,11 @@
                       userProfile?.full_name || "User"
                     }}</q-item-label>
                     <q-item-label caption>{{ userEmail }}</q-item-label>
+                    <!-- Demo account indicator -->
+                    <q-item-label v-if="isDemoUser" caption class="demo-status">
+                      <q-icon name="science" size="12px" class="q-mr-xs" color="amber" />
+                      {{ $t("demo.title") }}
+                    </q-item-label>
                   </q-item-section>
                 </q-item>
 
@@ -213,9 +222,6 @@
 
     <!-- Page Container with Enhanced Styling -->
     <q-page-container class="page-container-modern">
-      <!-- Demo Banner (only for demo users) -->
-      <DemoBanner />
-
       <!-- Main content area -->
       <div class="page-content" role="main">
         <router-view />
@@ -229,7 +235,6 @@ import { ref, computed, onMounted, onUnmounted } from "vue";
 import { useQuasar } from "quasar";
 import { useRouter } from "vue-router";
 import { useI18n } from "vue-i18n";
-import DemoBanner from "@/components/layout/DemoBanner.vue";
 import { useAuthStore } from "src/stores/auth";
 import { useClinicStore } from "src/stores/clinic";
 
@@ -249,6 +254,7 @@ const userEmail = computed(() => authStore.userEmail);
 const clinicName = computed(
   () => clinicStore.clinic?.name || t("clinic.defaultName")
 );
+const isDemoUser = computed(() => authStore.userEmail === "demo@medstock-pro.com");
 
 // Check if user has admin permissions
 const isAdmin = computed(() => {
@@ -929,5 +935,20 @@ body.body--dark .page-container-modern {
       }
     }
   }
+}
+
+// Demo styling
+.demo-badge {
+  :deep(.q-badge__content) {
+    padding: 2px 4px;
+  }
+}
+
+.demo-status {
+  color: var(--q-amber-6) !important;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  margin-top: 2px;
 }
 </style>

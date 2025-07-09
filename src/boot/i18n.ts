@@ -10,7 +10,7 @@ export default boot(({ app }) => {
   console.log("🌐 i18n boot file executing...");
   console.log("🌐 i18n instance:", i18n);
   console.log("🌐 i18n mode:", i18n.mode);
-  console.log("🌐 Current locale:", i18n.mode === 'legacy' ? i18n.global.locale : i18n.global.locale.value);
+  console.log("🌐 Current locale:", i18n.mode === 'legacy' ? i18n.global.locale : (i18n.global.locale as any).value);
   console.log("🌐 Available messages:", Object.keys(i18n.global.messages));
   console.log("🌐 Sample batch message:", i18n.global.messages.en?.batch?.batchManagement);
   
