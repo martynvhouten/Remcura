@@ -258,6 +258,15 @@ const batchStore = useBatchStore();
 const inventoryStore = useInventoryStore();
 const authStore = useAuthStore();
 
+// Debug i18n
+console.log("🔧 BatchManagementPage - i18n debug:");
+console.log("🔧 t function:", t);
+console.log("🔧 Test translation:", t('batch.batchManagement'));
+console.log("🔧 Test with $t:", t.te && t.te('batch.batchManagement') ? 'key exists' : 'key missing');
+
+// Also test global $t in mounted
+import { getCurrentInstance } from 'vue';
+
 // State
 const activeTab = ref("overview");
 const showAddBatchDialog = ref(false);
@@ -322,7 +331,7 @@ const refreshData = async () => {
       timeout: 1000,
     });
   } catch (error) {
-    console.error("Failed to refresh data:", error);
+    console.error(t("errors.failedToRefreshData"), error);
     $q.notify({
       type: "negative",
       message: t("errors.failedToRefreshData"),
@@ -350,7 +359,7 @@ const exportBatches = () => {
   // Export batch data as CSV
   const csvData = batchStore.batches.map((batch) => ({
     [t('batch.batchNumber')]: batch.batch_number,
-    [t('products.product')]: batch.product.name,
+    [t('product.product')]: batch.product.name,
     [t('location.location')]: batch.location.name,
     [t('batch.currentQuantity')]: batch.current_quantity,
     [t('batch.expiryDate')]: batch.expiry_date,

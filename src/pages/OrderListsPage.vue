@@ -398,7 +398,7 @@ const duplicateOrderList = async (orderList: OrderListWithItems) => {
       message: t("orderLists.duplicated"),
     });
   } catch (error) {
-    console.error("Error duplicating order list:", error);
+    console.error(t("orderLists.saveError"), error);
     $q.notify({
       type: "negative",
       message: t("orderLists.saveError"),
@@ -423,7 +423,7 @@ const confirmDelete = async () => {
       message: t("orderLists.deleted"),
     });
   } catch (error) {
-    console.error("Error deleting order list:", error);
+    console.error(t("orderLists.deleteError"), error);
     $q.notify({
       type: "negative",
       message: t("orderLists.deleteError"),
@@ -439,7 +439,7 @@ const addListToCart = async (orderList: OrderListWithItems) => {
       message: t("orderLists.addedToCart"),
     });
   } catch (error) {
-    console.error("Error adding to cart:", error);
+    console.error(t("orderLists.cartError"), error);
     $q.notify({
       type: "negative",
       message: t("orderLists.cartError"),
@@ -455,7 +455,7 @@ const autoFillOrderList = async (orderList: OrderListWithItems) => {
       message: t("orderLists.autoFilled"),
     });
   } catch (error) {
-    console.error("Error auto-filling order list:", error);
+    console.error(t("orderLists.autoFillError"), error);
     $q.notify({
       type: "negative",
       message: t("orderLists.autoFillError"),
@@ -480,7 +480,7 @@ onMounted(async () => {
       ]);
     }
   } catch (error) {
-    console.error("Error loading data:", error);
+    console.error(t("orderLists.loadError"), error);
     $q.notify({
       type: "negative",
       message: t("orderLists.loadError"),
@@ -496,7 +496,7 @@ watch(
       try {
         await orderListsStore.fetchOrderLists(newPracticeId);
       } catch (error) {
-        console.error("Error loading order lists:", error);
+        console.error(t("orderLists.loadError"), error);
         $q.notify({
           type: "negative",
           message: t("orderLists.loadError"),

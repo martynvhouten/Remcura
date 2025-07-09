@@ -250,9 +250,9 @@ const form = ref<CreateBatchRequest>({
 
 // Computed
 const locationOptions = computed(() => [
-  { id: "1", name: "Hoofdvoorraad" },
-  { id: "2", name: "Spoedkast" },
-  { id: "3", name: "Behandelkamer 1" },
+  { id: "1", name: t("location.sampleData.mainWarehouse.name") },
+  { id: "2", name: t("location.samples.emergencyStock") },
+  { id: "3", name: t("location.sampleData.treatmentRoom.name") },
 ]);
 
 const currencyOptions = computed(() => [
@@ -325,7 +325,7 @@ const onSubmit = async () => {
       resetForm();
     }
   } catch (error) {
-    console.error("Failed to register batch:", error);
+    console.error(t("errors.failedToRegisterBatch"), error);
     $q.notify({
       type: "negative",
       message: t("errors.failedToRegisterBatch"),

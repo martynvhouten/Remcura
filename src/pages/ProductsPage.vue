@@ -987,8 +987,6 @@ onMounted(async () => {
 }
 
 @media (max-width: 480px) {
-  .products-page {
-    // Additional mobile styles if needed
-  }
+  // Additional mobile styles can be added here when needed
 }
 </style>

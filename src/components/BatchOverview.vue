@@ -275,6 +275,7 @@ import { useI18n } from "vue-i18n";
 import { useQuasar, date } from "quasar";
 import { useBatchStore } from "src/stores/batch";
 import { useLocationStore } from "src/stores/location";
+import { useAuthStore } from "src/stores/auth";
 import BatchRegistrationForm from "./BatchRegistrationForm.vue";
 import BatchDetailCard from "./BatchDetailCard.vue";
 import UseBatchDialog from "./UseBatchDialog.vue";
@@ -285,6 +286,7 @@ const { t } = useI18n();
 const $q = useQuasar();
 const batchStore = useBatchStore();
 const locationStore = useLocationStore();
+const authStore = useAuthStore();
 
 // State
 const loading = ref(false);
@@ -508,7 +510,15 @@ const useBatch = (batch: ProductBatchWithDetails) => {
 
 const quarantineBatch = async (batch: ProductBatchWithDetails) => {
   try {
-    await batchStore.updateBatch(batch.id, { status: "quarantine" });
+    const clinicId = authStore.clinicId;
+    if (!clinicId) {
+      throw new Error("No clinic ID available");
+    }
+    await batchStore.updateBatch({
+      id: batch.id,
+      practice_id: clinicId,
+      status: "quarantine"
+    });
     $q.notify({
       type: "positive",
       message: t("batch.quarantineSuccess"),
@@ -544,12 +554,16 @@ const onBatchUsed = () => {
 const loadBatches = async () => {
   try {
     loading.value = true;
+    const clinicId = authStore.clinicId;
+    if (!clinicId) {
+      throw new Error("No clinic ID available");
+    }
     await Promise.all([
-      batchStore.fetchBatches(),
-      batchStore.fetchExpiringBatches(),
+      batchStore.fetchBatches(clinicId),
+      batchStore.fetchExpiringBatches(clinicId),
     ]);
   } catch (error) {
-    console.error("Failed to load batches:", error);
+    console.error(t("errors.failedToLoadData"), error);
     $q.notify({
       type: "negative",
       message: t("errors.failedToLoadData"),

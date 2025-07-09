@@ -130,7 +130,7 @@ const locations = ref([
     name: t('locations.sampleData.mainWarehouse.name'),
     type: t('locations.sampleData.mainWarehouse.type'),
     description: t('locations.sampleData.mainWarehouse.description'),
-    capacity: "1000 items",
+    capacity: t('locations.capacityItems', { count: 1000 }),
     isMain: true,
   },
   {
@@ -138,7 +138,7 @@ const locations = ref([
     name: t('locations.sampleData.pharmacy.name'),
     type: t('locations.sampleData.pharmacy.type'),
     description: t('locations.sampleData.pharmacy.description'),
-    capacity: "500 items",
+    capacity: t('locations.capacityItems', { count: 500 }),
     isMain: false,
   },
   {
@@ -146,7 +146,7 @@ const locations = ref([
     name: t('locations.sampleData.treatmentRoom.name'),
     type: t('locations.sampleData.treatmentRoom.type'),
     description: t('locations.sampleData.treatmentRoom.description'),
-    capacity: "50 items",
+    capacity: t('locations.capacityItems', { count: 50 }),
     isMain: false,
   },
 ]);

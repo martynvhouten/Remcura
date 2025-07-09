@@ -142,13 +142,13 @@ const form = ref({
 
 // Mock options for now
 const productOptions = ref([
-  { id: "1", name: "BD Discardit II Spuit 5ml" },
-  { id: "2", name: "BD Microlance Naald 21G" },
+  { id: "1", name: t("product.samples.syringeBD") },
+  { id: "2", name: t("product.samples.needleBD") },
 ]);
 
 const locationOptions = ref([
-  { id: "1", name: "Hoofdvoorraad" },
-  { id: "2", name: "Spoedkast" },
+  { id: "1", name: t("location.sampleData.mainWarehouse.name") },
+  { id: "2", name: t("location.samples.emergencyStock") },
 ]);
 
 // Methods
@@ -189,7 +189,7 @@ const generateSuggestion = async () => {
       message: t("batch.fifoSuggestionGenerated"),
     });
   } catch (error) {
-    console.error("Failed to generate FIFO suggestion:", error);
+    console.error(t("errors.failedToGenerateSuggestion"), error);
     $q.notify({
       type: "negative",
       message: t("errors.failedToGenerateSuggestion"),

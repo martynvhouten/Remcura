@@ -198,7 +198,7 @@ const handleLogin = async () => {
       });
     }
   } catch (error) {
-    handleError(error as Error, "Login");
+    handleError(error as Error, t("auth.login"));
   } finally {
     loading.value = false;
   }

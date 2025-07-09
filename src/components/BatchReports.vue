@@ -229,8 +229,8 @@ const reportTypes = computed(() => [
 
 const locationOptions = computed(() => [
   { label: t("common.allLocations"), value: null },
-  { label: "Hoofdvoorraad", value: "storage" },
-  { label: "Spoedkast", value: "emergency" },
+  { label: t("location.sampleData.mainWarehouse.name"), value: "storage" },
+  { label: t("location.samples.emergencyStock"), value: "emergency" },
 ]);
 
 const statusOptions = computed(() => [
@@ -330,7 +330,7 @@ const generateReport = async () => {
       id: i + 1,
       batchNumber: `BATCH-${String(i + 1).padStart(3, "0")}`,
       productName: `Product ${i + 1}`,
-      locationName: i % 2 === 0 ? "Hoofdvoorraad" : "Spoedkast",
+      locationName: i % 2 === 0 ? t("location.sampleData.mainWarehouse.name") : t("location.samples.emergencyStock"),
       expiryDate: new Date(Date.now() + (i - 5) * 24 * 60 * 60 * 1000)
         .toISOString()
         .split("T")[0],
@@ -346,7 +346,7 @@ const generateReport = async () => {
       message: t("batch.reportGenerated"),
     });
   } catch (error) {
-    console.error("Failed to generate report:", error);
+    console.error(t("errors.failedToGenerateReport"), error);
     $q.notify({
       type: "negative",
       message: t("errors.failedToGenerateReport"),
@@ -360,7 +360,7 @@ const exportReport = () => {
   // Export report as CSV
   const csvData = reportData.value.map((row) => ({
     [t('batch.batchNumber')]: row.batchNumber,
-    [t('products.product')]: row.productName,
+    [t('product.product')]: row.productName,
     [t('location.location')]: row.locationName,
     [t('batch.expiryDate')]: row.expiryDate,
     [t('batch.daysUntilExpiry')]: row.daysUntilExpiry,
