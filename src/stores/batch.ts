@@ -12,7 +12,7 @@ import {
 } from 'src/types/inventory';
 import { ServiceErrorHandler } from 'src/utils/service-error-handler';
 
-const errorHandler = new ServiceErrorHandler('BatchStore');
+// Using ServiceErrorHandler static methods
 
 export const useBatchStore = defineStore('batch', () => {
   // State
@@ -117,7 +117,10 @@ export const useBatchStore = defineStore('batch', () => {
 
       batches.value = mockBatches;
     } catch (err) {
-      const handledError = errorHandler.handleError(err, 'fetchBatches');
+      const handledError = ServiceErrorHandler.handle(err, {
+        service: 'BatchStore',
+        operation: 'fetchBatches'
+      });
       error.value = handledError.message;
       throw handledError;
     } finally {
@@ -150,7 +153,10 @@ export const useBatchStore = defineStore('batch', () => {
       expiringBatches.value = mockExpiringBatches;
       return mockExpiringBatches;
     } catch (err) {
-      const handledError = errorHandler.handleError(err, 'fetchExpiringBatches');
+      const handledError = ServiceErrorHandler.handle(err, {
+        service: 'BatchStore',
+        operation: 'fetchExpiringBatches'
+      });
       error.value = handledError.message;
       throw handledError;
     } finally {
@@ -177,7 +183,10 @@ export const useBatchStore = defineStore('batch', () => {
       fifoBatches.value = mockFifoBatches;
       return mockFifoBatches;
     } catch (err) {
-      const handledError = errorHandler.handleError(err, 'fetchFifoBatches');
+      const handledError = ServiceErrorHandler.handle(err, {
+        service: 'BatchStore',
+        operation: 'fetchFifoBatches'
+      });
       error.value = handledError.message;
       throw handledError;
     } finally {
@@ -197,9 +206,9 @@ export const useBatchStore = defineStore('batch', () => {
         product_id: request.product_id,
         location_id: request.location_id,
         batch_number: request.batch_number,
-        supplier_batch_number: request.supplier_batch_number,
+        supplier_batch_number: request.supplier_batch_number || undefined,
         expiry_date: request.expiry_date,
-        received_date: request.received_date || new Date().toISOString(),
+        received_date: request.received_date ? request.received_date : new Date().toISOString().split('T')[0],
         initial_quantity: request.initial_quantity,
         current_quantity: request.initial_quantity,
         reserved_quantity: 0,
@@ -220,7 +229,10 @@ export const useBatchStore = defineStore('batch', () => {
 
       return mockBatch;
     } catch (err) {
-      const handledError = errorHandler.handleError(err, 'createBatch');
+      const handledError = ServiceErrorHandler.handle(err, {
+        service: 'BatchStore',
+        operation: 'createBatch'
+      });
       error.value = handledError.message;
       throw handledError;
     } finally {
@@ -252,7 +264,10 @@ export const useBatchStore = defineStore('batch', () => {
 
       return updatedBatch;
     } catch (err) {
-      const handledError = errorHandler.handleError(err, 'updateBatch');
+      const handledError = ServiceErrorHandler.handle(err, {
+        service: 'BatchStore',
+        operation: 'updateBatch'
+      });
       error.value = handledError.message;
       throw handledError;
     } finally {
@@ -277,7 +292,10 @@ export const useBatchStore = defineStore('batch', () => {
 
       return { success: true };
     } catch (err) {
-      const handledError = errorHandler.handleError(err, 'useBatch');
+      const handledError = ServiceErrorHandler.handle(err, {
+        service: 'BatchStore',
+        operation: 'useBatch'
+      });
       error.value = handledError.message;
       throw handledError;
     } finally {
@@ -298,7 +316,10 @@ export const useBatchStore = defineStore('batch', () => {
 
       return { success: true };
     } catch (err) {
-      const handledError = errorHandler.handleError(err, 'deleteBatch');
+      const handledError = ServiceErrorHandler.handle(err, {
+        service: 'BatchStore',
+        operation: 'deleteBatch'
+      });
       error.value = handledError.message;
       throw handledError;
     } finally {
@@ -319,7 +340,10 @@ export const useBatchStore = defineStore('batch', () => {
 
       return batch;
     } catch (err) {
-      const handledError = errorHandler.handleError(err, 'getBatch');
+      const handledError = ServiceErrorHandler.handle(err, {
+        service: 'BatchStore',
+        operation: 'getBatch'
+      });
       error.value = handledError.message;
       throw handledError;
     } finally {

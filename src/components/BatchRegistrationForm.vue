@@ -234,11 +234,28 @@
   const loadingProducts = ref(false);
   const productOptions = ref<any[]>([]);
 
-  // Form data
-  const form = ref<CreateBatchRequest>({
+  // Form data - using a form type that's compatible with CreateBatchRequest
+  interface BatchFormData {
+    practice_id: string;
+    product_id: string;
+    location_id: string;
+    batch_number: string;
+    supplier_batch_number: string;
+    expiry_date: string;
+    received_date: string;
+    initial_quantity: number;
+    unit_cost: number;
+    currency: string;
+    purchase_order_number: string;
+    invoice_number: string;
+    quality_check_passed: boolean;
+    quality_notes: string;
+  }
+
+  const form = ref<BatchFormData>({
     practice_id: 'demo-practice',
-    product_id: props.prefilledProductId || '',
-    location_id: props.prefilledLocationId || '',
+    product_id: (props.prefilledProductId ?? '') as string,
+    location_id: (props.prefilledLocationId ?? '') as string,
     batch_number: '',
     supplier_batch_number: '',
     expiry_date: '',
@@ -286,10 +303,11 @@
     });
   };
 
-  const resetForm = () => {
+    const resetForm = () => {
     form.value = {
-      product_id: props.prefilledProductId || '',
-      location_id: props.prefilledLocationId || '',
+      practice_id: 'demo-practice',
+      product_id: (props.prefilledProductId ?? '') as string,
+      location_id: (props.prefilledLocationId ?? '') as string,
       batch_number: '',
       supplier_batch_number: '',
       expiry_date: '',
@@ -299,8 +317,8 @@
       currency: 'EUR',
       purchase_order_number: '',
       invoice_number: '',
-             quality_check_passed: true,
-       quality_notes: '',
+      quality_check_passed: true,
+      quality_notes: '',
     };
   };
 
@@ -309,8 +327,20 @@
       loading.value = true;
 
       const batchData: CreateBatchRequest = {
-        ...form.value,
-        practice_id: 'current-practice-id', // Should come from auth store
+        practice_id: form.value.practice_id,
+        product_id: form.value.product_id,
+        location_id: form.value.location_id,
+        batch_number: form.value.batch_number,
+        expiry_date: form.value.expiry_date,
+        initial_quantity: form.value.initial_quantity,
+        ...(form.value.supplier_batch_number && { supplier_batch_number: form.value.supplier_batch_number }),
+        ...(form.value.received_date && { received_date: form.value.received_date }),
+        ...(form.value.unit_cost !== undefined && { unit_cost: form.value.unit_cost }),
+        ...(form.value.currency && { currency: form.value.currency }),
+        ...(form.value.purchase_order_number && { purchase_order_number: form.value.purchase_order_number }),
+        ...(form.value.invoice_number && { invoice_number: form.value.invoice_number }),
+        ...(form.value.quality_check_passed !== undefined && { quality_check_passed: form.value.quality_check_passed }),
+        ...(form.value.quality_notes && { quality_notes: form.value.quality_notes }),
       };
 
       const newBatch = await batchStore.createBatch(batchData);
