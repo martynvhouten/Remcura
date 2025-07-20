@@ -25,6 +25,14 @@ export const useAuthStore = defineStore('auth', () => {
     return id;
   });
 
+  const selectedPractice = computed(() => {
+    if (!userProfile.value?.clinic_id) return null;
+    return {
+      id: userProfile.value.clinic_id,
+      name: userProfile.value.full_name || 'Practice',
+    };
+  });
+
   // Helper function to check and clear old demo data
   const checkAndClearOldDemoData = () => {
     const savedProfile = localStorage.getItem('medstock_auth_profile');
@@ -400,6 +408,7 @@ export const useAuthStore = defineStore('auth', () => {
     isAuthenticated,
     userEmail,
     clinicId,
+    selectedPractice,
 
     // Actions
     initialize,

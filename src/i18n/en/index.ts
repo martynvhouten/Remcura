@@ -227,7 +227,8 @@ export default {
     failedToRefreshData: 'Failed to refresh data',
     welcomeTitle: 'Welcome to MedStock Pro',
     welcomeSubtitle: 'Your professional medical inventory management system',
-    welcomeDescription: 'Manage your inventory efficiently with our advanced tools and real-time tracking.',
+    welcomeDescription:
+      'Manage your inventory efficiently with our advanced tools and real-time tracking.',
     systemStatus: 'System status',
     systemStatusSubtitle: 'Current status of your system',
     systemOnline: 'System online',
@@ -444,8 +445,6 @@ export default {
       adjustment: 'Adjustment',
       count_correction: 'Count correction',
     },
-
-
   },
 
   // Counting System
@@ -728,7 +727,8 @@ export default {
   // Batch Management
   batch: {
     batchManagement: 'Batch Management',
-    manageBatchesSubtitle: 'Manage your product batches and expiry dates effectively',
+    manageBatchesSubtitle:
+      'Manage your product batches and expiry dates effectively',
     title: 'Batch Management',
     batchNumber: 'Batch number',
     lotNumber: 'Lot number',

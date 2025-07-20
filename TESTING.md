@@ -2,7 +2,8 @@
 
 ## **🎯 Overview**
 
-MedStock Pro features a **comprehensive, enterprise-level testing suite** built with modern tools and best practices. Our testing infrastructure provides:
+MedStock Pro features a **comprehensive, enterprise-level testing suite** built with modern tools
+and best practices. Our testing infrastructure provides:
 
 - **Component Testing** with Vue Test Utils
 - **Unit Testing** for business logic
@@ -172,15 +173,15 @@ test/
 
 ```typescript
 // ✅ Good: Comprehensive component testing
-describe("StockStatusChip Component", () => {
-  describe("Visual States", () => {
-    it("should render in-stock state with correct styling", () => {
+describe('StockStatusChip Component', () => {
+  describe('Visual States', () => {
+    it('should render in-stock state with correct styling', () => {
       const wrapper = mount(StockStatusChip, {
         props: { stockLevel: 25, minStock: 5, maxStock: 50 },
       });
 
-      expect(wrapper.find(".q-chip").classes()).toContain("bg-positive");
-      expect(wrapper.text()).toContain("25");
+      expect(wrapper.find('.q-chip').classes()).toContain('bg-positive');
+      expect(wrapper.text()).toContain('25');
     });
   });
 });
@@ -190,18 +191,18 @@ describe("StockStatusChip Component", () => {
 
 ```typescript
 // ✅ Good: Business logic testing with mocks
-describe("Analytics Service", () => {
+describe('Analytics Service', () => {
   beforeEach(() => {
     vi.clearAllMocks();
   });
 
-  it("should fetch low stock items correctly", async () => {
+  it('should fetch low stock items correctly', async () => {
     vi.mocked(supabase.from).mockReturnValue(mockQueryBuilder);
 
-    const result = await analyticsService.getLowStockItems("clinic-id");
+    const result = await analyticsService.getLowStockItems('clinic-id');
 
     expect(result).toEqual(expectedData);
-    expect(supabase.from).toHaveBeenCalledWith("products");
+    expect(supabase.from).toHaveBeenCalledWith('products');
   });
 });
 ```
@@ -210,12 +211,12 @@ describe("Analytics Service", () => {
 
 ```typescript
 // ✅ Good: End-to-end user flow testing
-describe("Authentication Flow Integration", () => {
-  it("should allow demo login and redirect to dashboard", async () => {
+describe('Authentication Flow Integration', () => {
+  it('should allow demo login and redirect to dashboard', async () => {
     const wrapper = mount(LoginPage, { global: { plugins: [router, pinia] } });
 
-    await wrapper.find('input[type="email"]').setValue("demo@medstock-pro.com");
-    await wrapper.find('button[type="submit"]').trigger("click");
+    await wrapper.find('input[type="email"]').setValue('demo@medstock-pro.com');
+    await wrapper.find('button[type="submit"]').trigger('click');
 
     expect(useAuthStore().isAuthenticated).toBe(true);
   });
@@ -257,12 +258,12 @@ coverage: {
 
 ```typescript
 // Performance benchmarking for critical functions
-bench("should validate email quickly", () => {
+bench('should validate email quickly', () => {
   const { rules } = useFormValidation();
-  emails.forEach((email) => rules.email(email));
+  emails.forEach(email => rules.email(email));
 });
 
-bench("should handle bulk stock calculations", () => {
+bench('should handle bulk stock calculations', () => {
   for (let i = 0; i < 1000; i++) {
     getStockStatus(randomStock(), randomMin(), randomMax());
   }
@@ -284,9 +285,9 @@ bench("should handle bulk stock calculations", () => {
 
 ```typescript
 // Comprehensive mocking for isolated testing
-vi.mock("src/services/supabase");
-vi.stubGlobal("localStorage", localStorageMock);
-vi.stubGlobal("fetch", fetchMock);
+vi.mock('src/services/supabase');
+vi.stubGlobal('localStorage', localStorageMock);
+vi.stubGlobal('fetch', fetchMock);
 
 // DOM API mocks
 global.ResizeObserver = vi.fn().mockImplementation(() => ({
@@ -343,9 +344,9 @@ global.ResizeObserver = vi.fn().mockImplementation(() => ({
 ### **Test Naming Convention**
 
 ```typescript
-describe("ComponentName", () => {
-  describe("Feature/Behavior", () => {
-    it("should do something when condition", () => {
+describe('ComponentName', () => {
+  describe('Feature/Behavior', () => {
+    it('should do something when condition', () => {
       // Test implementation
     });
   });

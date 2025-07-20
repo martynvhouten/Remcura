@@ -1,4 +1,4 @@
-import { supabase } from "@/services/supabase";
+import { supabase } from '@/services/supabase';
 import type {
   NotificationSettings,
   NotificationSettingsInsert,
@@ -6,9 +6,9 @@ import type {
   PushTokenInsert,
   NotificationChannel,
   NotificationType,
-} from "@/types/supabase";
-import { useAuthStore } from "@/stores/auth";
-import { ref, reactive } from "vue";
+} from '@/types/supabase';
+import { useAuthStore } from '@/stores/auth';
+import { ref, reactive } from 'vue';
 
 export interface NotificationMessage {
   id?: string;
@@ -41,12 +41,12 @@ export class NotificationService {
    * Initialize service worker for push notifications
    */
   private async initializeServiceWorker() {
-    if ("serviceWorker" in navigator && "PushManager" in window) {
+    if ('serviceWorker' in navigator && 'PushManager' in window) {
       try {
-        this.registration = await navigator.serviceWorker.register("/sw.js");
-        console.log("Service Worker registered:", this.registration);
+        this.registration = await navigator.serviceWorker.register('/sw.js');
+        console.log('Service Worker registered:', this.registration);
       } catch (error) {
-        console.error("Service Worker registration failed:", error);
+        console.error('Service Worker registration failed:', error);
       }
     }
   }
@@ -55,13 +55,13 @@ export class NotificationService {
    * Request push notification permission
    */
   async requestNotificationPermission(): Promise<NotificationPermission> {
-    if (!("Notification" in window)) {
-      throw new Error("This browser does not support notifications");
+    if (!('Notification' in window)) {
+      throw new Error('This browser does not support notifications');
     }
 
     const permission = await Notification.requestPermission();
 
-    if (permission === "granted") {
+    if (permission === 'granted') {
       await this.subscribeToPushNotifications();
     }
 
@@ -73,12 +73,12 @@ export class NotificationService {
    */
   async subscribeToPushNotifications(): Promise<PushSubscription | null> {
     if (!this.registration) {
-      throw new Error("Service Worker not registered");
+      throw new Error('Service Worker not registered');
     }
 
     try {
       // You would need to replace this with your actual VAPID public key
-      const vapidPublicKey = "your-vapid-public-key";
+      const vapidPublicKey = 'your-vapid-public-key';
 
       const subscription = await this.registration.pushManager.subscribe({
         userVisibleOnly: true,
@@ -90,7 +90,7 @@ export class NotificationService {
 
       return subscription;
     } catch (error) {
-      console.error("Failed to subscribe to push notifications:", error);
+      console.error('Failed to subscribe to push notifications:', error);
       return null;
     }
   }
@@ -109,25 +109,25 @@ export class NotificationService {
     const endpoint = subscription.endpoint;
     const keys = subscription.getKey
       ? {
-          p256dh: this.arrayBufferToBase64(subscription.getKey("p256dh")),
-          auth: this.arrayBufferToBase64(subscription.getKey("auth")),
+          p256dh: this.arrayBufferToBase64(subscription.getKey('p256dh')),
+          auth: this.arrayBufferToBase64(subscription.getKey('auth')),
         }
       : null;
 
     const tokenData: PushTokenInsert = {
       user_id: user.id,
       token: JSON.stringify({ endpoint, keys }),
-      platform: "web",
+      platform: 'web',
       is_active: true,
     };
 
-    const { error } = await supabase.from("push_tokens").upsert(tokenData, {
-      onConflict: "user_id,platform",
+    const { error } = await supabase.from('push_tokens').upsert(tokenData, {
+      onConflict: 'user_id,platform',
       ignoreDuplicates: false,
     });
 
     if (error) {
-      console.error("Failed to store push subscription:", error);
+      console.error('Failed to store push subscription:', error);
     }
   }
 
@@ -152,7 +152,7 @@ export class NotificationService {
    * Remove in-app notification
    */
   removeInAppNotification(id: string): void {
-    const index = this.inAppNotifications.value.findIndex((n) => n.id === id);
+    const index = this.inAppNotifications.value.findIndex(n => n.id === id);
     if (index !== -1) {
       this.inAppNotifications.value.splice(index, 1);
     }
@@ -178,14 +178,14 @@ export class NotificationService {
   async showBrowserNotification(
     notification: NotificationMessage
   ): Promise<void> {
-    if (Notification.permission !== "granted") {
+    if (Notification.permission !== 'granted') {
       return;
     }
 
     const options: NotificationOptions = {
       body: notification.body,
-      icon: notification.icon || "/icons/icon-192x192.png",
-      badge: notification.badge || "/icons/icon-192x192.png",
+      icon: notification.icon || '/icons/icon-192x192.png',
+      badge: notification.badge || '/icons/icon-192x192.png',
       tag: notification.tag,
       requireInteraction: notification.requireInteraction,
       data: notification.data,
@@ -221,17 +221,17 @@ export class NotificationService {
     if (!user || !practiceId) return;
 
     const { data, error } = await supabase
-      .from("notification_settings")
-      .select("*")
-      .eq("user_id", user.id)
-      .eq("practice_id", practiceId);
+      .from('notification_settings')
+      .select('*')
+      .eq('user_id', user.id)
+      .eq('practice_id', practiceId);
 
     if (error) {
-      console.error("Failed to load notification settings:", error);
+      console.error('Failed to load notification settings:', error);
       return;
     }
 
-    data?.forEach((setting) => {
+    data?.forEach(setting => {
       const key = `${setting.notification_type}_${setting.channel}`;
       this.settings[key] = setting;
     });
@@ -262,14 +262,14 @@ export class NotificationService {
     };
 
     const { error } = await supabase
-      .from("notification_settings")
+      .from('notification_settings')
       .upsert(settingData, {
-        onConflict: "user_id,practice_id,notification_type,channel",
+        onConflict: 'user_id,practice_id,notification_type,channel',
         ignoreDuplicates: false,
       });
 
     if (error) {
-      console.error("Failed to update notification setting:", error);
+      console.error('Failed to update notification setting:', error);
       return;
     }
 
@@ -303,20 +303,20 @@ export class NotificationService {
     minimumStock: number
   ): Promise<void> {
     const notification: NotificationMessage = {
-      title: "Voorraad Waarschuwing",
+      title: 'Voorraad Waarschuwing',
       body: `${productName} heeft lage voorraad (${currentStock}/${minimumStock})`,
-      type: "stock_alert",
-      icon: "/icons/warning.png",
-      tag: "stock-alert",
+      type: 'stock_alert',
+      icon: '/icons/warning.png',
+      tag: 'stock-alert',
       requireInteraction: true,
       data: { productName, currentStock, minimumStock },
     };
 
-    if (this.isNotificationEnabled("stock_alert", "in_app")) {
+    if (this.isNotificationEnabled('stock_alert', 'in_app')) {
       this.showInAppNotification(notification);
     }
 
-    if (this.isNotificationEnabled("stock_alert", "push")) {
+    if (this.isNotificationEnabled('stock_alert', 'push')) {
       await this.showBrowserNotification(notification);
     }
   }
@@ -330,19 +330,19 @@ export class NotificationService {
     message?: string
   ): Promise<void> {
     const notification: NotificationMessage = {
-      title: "Bestelling Update",
+      title: 'Bestelling Update',
       body: message || `Bestelling ${orderNumber} is ${status}`,
-      type: "order_update",
-      icon: "/icons/order.png",
+      type: 'order_update',
+      icon: '/icons/order.png',
       tag: `order-${orderNumber}`,
       data: { orderNumber, status },
     };
 
-    if (this.isNotificationEnabled("order_update", "in_app")) {
+    if (this.isNotificationEnabled('order_update', 'in_app')) {
       this.showInAppNotification(notification);
     }
 
-    if (this.isNotificationEnabled("order_update", "push")) {
+    if (this.isNotificationEnabled('order_update', 'push')) {
       await this.showBrowserNotification(notification);
     }
   }
@@ -358,16 +358,16 @@ export class NotificationService {
     const notification: NotificationMessage = {
       title,
       body: message,
-      type: "system_notification",
-      icon: "/icons/system.png",
+      type: 'system_notification',
+      icon: '/icons/system.png',
       data,
     };
 
-    if (this.isNotificationEnabled("system_notification", "in_app")) {
+    if (this.isNotificationEnabled('system_notification', 'in_app')) {
       this.showInAppNotification(notification);
     }
 
-    if (this.isNotificationEnabled("system_notification", "push")) {
+    if (this.isNotificationEnabled('system_notification', 'push')) {
       await this.showBrowserNotification(notification);
     }
   }
@@ -383,17 +383,17 @@ export class NotificationService {
     const notification: NotificationMessage = {
       title,
       body: message,
-      type: "reminder",
-      icon: "/icons/reminder.png",
+      type: 'reminder',
+      icon: '/icons/reminder.png',
       requireInteraction: true,
       data,
     };
 
-    if (this.isNotificationEnabled("reminder", "in_app")) {
+    if (this.isNotificationEnabled('reminder', 'in_app')) {
       this.showInAppNotification(notification);
     }
 
-    if (this.isNotificationEnabled("reminder", "push")) {
+    if (this.isNotificationEnabled('reminder', 'push')) {
       await this.showBrowserNotification(notification);
     }
   }
@@ -422,7 +422,7 @@ export class NotificationService {
 
     try {
       const { data: lowStockItems, error } = await supabase
-        .from("product_list_items")
+        .from('product_list_items')
         .select(
           `
           *,
@@ -430,32 +430,32 @@ export class NotificationService {
           product_lists!inner (practice_id)
         `
         )
-        .eq("product_lists.practice_id", practiceId)
-        .filter("current_stock", "lt", supabase.raw("minimum_stock"));
+        .eq('product_lists.practice_id', practiceId)
+        .filter('current_stock', 'lt', supabase.raw('minimum_stock'));
 
       if (error) {
-        console.error("Failed to check stock levels:", error);
+        console.error('Failed to check stock levels:', error);
         return;
       }
 
       for (const item of lowStockItems || []) {
         await this.sendStockAlert(
-          item.products?.name || "Unknown Product",
+          item.products?.name || 'Unknown Product',
           item.current_stock,
           item.minimum_stock
         );
       }
     } catch (error) {
-      console.error("Stock monitoring error:", error);
+      console.error('Stock monitoring error:', error);
     }
   }
 
   // Utility methods
   private urlBase64ToUint8Array(base64String: string): Uint8Array {
-    const padding = "=".repeat((4 - (base64String.length % 4)) % 4);
+    const padding = '='.repeat((4 - (base64String.length % 4)) % 4);
     const base64 = (base64String + padding)
-      .replace(/-/g, "+")
-      .replace(/_/g, "/");
+      .replace(/-/g, '+')
+      .replace(/_/g, '/');
 
     const rawData = window.atob(base64);
     const outputArray = new Uint8Array(rawData.length);
@@ -467,9 +467,9 @@ export class NotificationService {
   }
 
   private arrayBufferToBase64(buffer: ArrayBuffer | null): string {
-    if (!buffer) return "";
+    if (!buffer) return '';
     const bytes = new Uint8Array(buffer);
-    let binary = "";
+    let binary = '';
     for (let i = 0; i < bytes.byteLength; i++) {
       binary += String.fromCharCode(bytes[i]);
     }

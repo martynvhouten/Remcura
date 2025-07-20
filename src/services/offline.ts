@@ -127,7 +127,7 @@ export class OfflineService {
 
       // Download products (only those in use)
       const productIds = [
-        ...new Set(items?.map((item) => item.product_id) || []),
+        ...new Set(items?.map(item => item.product_id) || []),
       ];
       let products: Product[] = [];
 
@@ -150,7 +150,7 @@ export class OfflineService {
       if (cartsError) throw cartsError;
 
       // Download shopping cart items
-      const cartIds = carts?.map((cart) => cart.id) || [];
+      const cartIds = carts?.map(cart => cart.id) || [];
       let cartItems: ShoppingCartItem[] = [];
 
       if (cartIds.length > 0) {
@@ -166,7 +166,7 @@ export class OfflineService {
       // Update offline data
       this.offlineData.bestellijsten = bestellijsten || [];
       this.offlineData.bestellijst_items =
-        items?.map((item) => ({
+        items?.map(item => ({
           ...item,
           last_counted: item.last_counted,
         })) || [];
@@ -283,13 +283,13 @@ export class OfflineService {
 
       // Remove synced actions
       this.offlineActions.value = this.offlineActions.value.filter(
-        (action) => !syncedActions.includes(action.id)
+        action => !syncedActions.includes(action.id)
       );
 
       // Update failed actions with new retry counts
-      failedActions.forEach((failedAction) => {
+      failedActions.forEach(failedAction => {
         const index = this.offlineActions.value.findIndex(
-          (a) => a.id === failedAction.id
+          a => a.id === failedAction.id
         );
         if (index !== -1) {
           this.offlineActions.value[index] = failedAction;
@@ -384,7 +384,7 @@ export class OfflineService {
   ): void {
     // Update local data
     const index = this.offlineData.bestellijst_items.findIndex(
-      (item) => item.id === itemId
+      item => item.id === itemId
     );
     if (index !== -1) {
       this.offlineData.bestellijst_items[index] = {
@@ -409,7 +409,7 @@ export class OfflineService {
   addToCartOffline(cartId: string, productId: string, quantity: number): void {
     // Update local data
     const existingItem = this.offlineData.shopping_cart_items.find(
-      (item) => item.cart_id === cartId && item.product_id === productId
+      item => item.cart_id === cartId && item.product_id === productId
     );
 
     if (existingItem) {
@@ -483,7 +483,7 @@ export class OfflineService {
       localStorage.setItem(
         'medstock_offline_actions',
         JSON.stringify(
-          this.offlineActions.value.map((action) => ({
+          this.offlineActions.value.map(action => ({
             ...action,
             timestamp: action.timestamp.toISOString(),
           }))

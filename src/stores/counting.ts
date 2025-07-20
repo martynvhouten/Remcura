@@ -49,12 +49,12 @@ export const useCountingStore = defineStore('counting', () => {
   });
 
   const entriesWithVariance = computed(() =>
-    countingEntries.value.filter((entry) => Math.abs(entry.variance) > 0)
+    countingEntries.value.filter(entry => Math.abs(entry.variance) > 0)
   );
 
   const entriesPendingVerification = computed(() =>
     countingEntries.value.filter(
-      (entry) => entry.status === 'pending' || entry.status === 'discrepancy'
+      entry => entry.status === 'pending' || entry.status === 'discrepancy'
     )
   );
 
@@ -62,11 +62,11 @@ export const useCountingStore = defineStore('counting', () => {
     if (!availableProducts.value.length) return null;
 
     const countedProductIds = countingEntries.value.map(
-      (entry) => entry.product_id
+      entry => entry.product_id
     );
     return (
       availableProducts.value.find(
-        (product) => !countedProductIds.includes(product.id)
+        product => !countedProductIds.includes(product.id)
       ) || null
     );
   });
@@ -107,7 +107,7 @@ export const useCountingStore = defineStore('counting', () => {
   const fetchProductsForSession = async (sessionId: string) => {
     try {
       const session =
-        currentSession.value || sessions.value.find((s) => s.id === sessionId);
+        currentSession.value || sessions.value.find(s => s.id === sessionId);
       if (!session) throw new Error('Session not found');
 
       // Build query to get products for counting
@@ -252,7 +252,7 @@ export const useCountingStore = defineStore('counting', () => {
       if (error) throw error;
 
       const index = countingEntries.value.findIndex(
-        (entry) => entry.id === entryId
+        entry => entry.id === entryId
       );
       if (index >= 0) {
         countingEntries.value[index] = data;
@@ -292,7 +292,7 @@ export const useCountingStore = defineStore('counting', () => {
       });
 
       // If auto_adjust_stock is enabled, apply all count adjustments
-      const session = sessions.value.find((s) => s.id === sessionId);
+      const session = sessions.value.find(s => s.id === sessionId);
       if (session?.auto_adjust_stock) {
         await applyCountAdjustments(sessionId);
       }
@@ -306,7 +306,7 @@ export const useCountingStore = defineStore('counting', () => {
 
   const applyCountAdjustments = async (sessionId: string) => {
     try {
-      const session = sessions.value.find((s) => s.id === sessionId);
+      const session = sessions.value.find(s => s.id === sessionId);
       if (!session) throw new Error('Session not found');
 
       // Get all entries with variances
@@ -359,7 +359,7 @@ export const useCountingStore = defineStore('counting', () => {
         currentSession.value = data;
       }
 
-      const index = sessions.value.findIndex((s) => s.id === sessionId);
+      const index = sessions.value.findIndex(s => s.id === sessionId);
       if (index >= 0) {
         sessions.value[index] = data;
       }

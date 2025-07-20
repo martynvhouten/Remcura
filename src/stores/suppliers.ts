@@ -16,25 +16,25 @@ export const useSuppliersStore = defineStore('suppliers', () => {
 
   // Getters
   const activeSuppliers = computed(() =>
-    suppliers.value.filter((supplier) => supplier.is_active)
+    suppliers.value.filter(supplier => supplier.is_active)
   );
 
   const suppliersWithSyncEnabled = computed(() =>
-    suppliers.value.filter((supplier) => supplier.sync_enabled)
+    suppliers.value.filter(supplier => supplier.sync_enabled)
   );
 
   const getSupplierById = computed(
-    () => (id: string) => suppliers.value.find((supplier) => supplier.id === id)
+    () => (id: string) => suppliers.value.find(supplier => supplier.id === id)
   );
 
   const getSupplierProductsBySupplier = computed(
     () => (supplierId: string) =>
-      supplierProducts.value.filter((sp) => sp.supplier_id === supplierId)
+      supplierProducts.value.filter(sp => sp.supplier_id === supplierId)
   );
 
   const getSupplierProductsForProduct = computed(
     () => (productId: string) =>
-      supplierProducts.value.filter((sp) => sp.product_id === productId)
+      supplierProducts.value.filter(sp => sp.product_id === productId)
   );
 
   // Actions
@@ -97,7 +97,7 @@ export const useSuppliersStore = defineStore('suppliers', () => {
 
       if (error) throw error;
 
-      const index = suppliers.value.findIndex((s) => s.id === id);
+      const index = suppliers.value.findIndex(s => s.id === id);
       if (index >= 0) {
         suppliers.value[index] = data;
       }
@@ -115,7 +115,7 @@ export const useSuppliersStore = defineStore('suppliers', () => {
 
       if (error) throw error;
 
-      suppliers.value = suppliers.value.filter((s) => s.id !== id);
+      suppliers.value = suppliers.value.filter(s => s.id !== id);
     } catch (error) {
       console.error('Error deleting supplier:', error);
       throw error;
@@ -206,7 +206,7 @@ export const useSuppliersStore = defineStore('suppliers', () => {
 
       if (error) throw error;
 
-      const index = supplierProducts.value.findIndex((sp) => sp.id === id);
+      const index = supplierProducts.value.findIndex(sp => sp.id === id);
       if (index >= 0) {
         supplierProducts.value[index] = data;
       }
@@ -228,7 +228,7 @@ export const useSuppliersStore = defineStore('suppliers', () => {
       if (error) throw error;
 
       supplierProducts.value = supplierProducts.value.filter(
-        (sp) => sp.id !== id
+        sp => sp.id !== id
       );
     } catch (error) {
       console.error('Error deleting supplier product:', error);
@@ -238,7 +238,7 @@ export const useSuppliersStore = defineStore('suppliers', () => {
 
   const findBestSupplierForProduct = (productId: string) => {
     const productSuppliers = supplierProducts.value.filter(
-      (sp) => sp.product_id === productId && sp.is_available
+      sp => sp.product_id === productId && sp.is_available
     );
 
     if (productSuppliers.length === 0) return null;
@@ -254,7 +254,7 @@ export const useSuppliersStore = defineStore('suppliers', () => {
 
   const syncSupplierData = async (supplierId: string) => {
     try {
-      const supplier = suppliers.value.find((s) => s.id === supplierId);
+      const supplier = suppliers.value.find(s => s.id === supplierId);
       if (!supplier || !supplier.sync_enabled) {
         throw new Error('Supplier sync not enabled');
       }

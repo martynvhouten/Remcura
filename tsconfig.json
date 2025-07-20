@@ -41,13 +41,6 @@
     "allowUnreachableCode": false,
     "types": ["vite/client", "quasar", "node", "vue"]
   },
-  "include": [
-    "src/**/*",
-    "src-pwa/**/*",
-    "src-capacitor/**/*",
-    "src-electron/**/*",
-    "test/**/*",
-    ".quasar/**/*"
-  ],
+  "include": ["src/**/*", "src-pwa/**/*", "src-capacitor/**/*", "src-electron/**/*", "test/**/*", ".quasar/**/*"],
   "exclude": ["dist", ".quasar/dist", "node_modules"]
 }

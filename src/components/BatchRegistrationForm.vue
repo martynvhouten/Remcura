@@ -1,7 +1,7 @@
 <template>
   <q-card class="batch-registration-card">
     <q-card-section class="row items-center q-pb-none">
-      <div class="text-h6">{{ $t("batch.registerNewBatch") }}</div>
+      <div class="text-h6">{{ $t('batch.registerNewBatch') }}</div>
       <q-space />
       <q-btn
         v-if="!embedded"
@@ -19,7 +19,7 @@
         <div class="row q-gutter-md">
           <div class="col-12 col-md-6">
             <q-select
-              v-model="form.productId"
+              v-model="form.product_id"
               :options="productOptions"
               option-value="id"
               option-label="name"
@@ -30,7 +30,7 @@
               input-debounce="0"
               :loading="loadingProducts"
               @filter="filterProducts"
-              :rules="[(val) => !!val || $t('validation.required')]"
+              :rules="[rules.required]"
               emit-value
               map-options
             >
@@ -48,12 +48,12 @@
           <!-- Location Selection -->
           <div class="col-12 col-md-6">
             <q-select
-              v-model="form.locationId"
+              v-model="form.location_id"
               :options="locationOptions"
               option-value="id"
               option-label="name"
               :label="$t('location.location')"
-              :rules="[(val) => !!val || $t('validation.required')]"
+              :rules="[rules.required]"
               emit-value
               map-options
             />
@@ -64,11 +64,11 @@
         <div class="row q-gutter-md">
           <div class="col-12 col-md-6">
             <q-input
-              v-model="form.batchNumber"
+              v-model="form.batch_number"
               :label="$t('batch.batchNumber')"
               :rules="[
-                (val) => !!val || $t('validation.required'),
-                (val) =>
+                val => !!val || $t('validation.required'),
+                val =>
                   val.length >= 3 || $t('validation.minLength', { min: 3 }),
               ]"
               counter
@@ -82,7 +82,7 @@
 
           <div class="col-12 col-md-6">
             <q-input
-              v-model="form.supplierBatchNumber"
+              v-model="form.supplier_batch_number"
               :label="$t('batch.supplierBatchNumber')"
               counter
               maxlength="100"
@@ -98,12 +98,12 @@
         <div class="row q-gutter-md">
           <div class="col-12 col-md-6">
             <q-input
-              v-model="form.expiryDate"
+              v-model="form.expiry_date"
               :label="$t('batch.expiryDate')"
               type="date"
               :rules="[
-                (val) => !!val || $t('validation.required'),
-                (val) => validateExpiryDate(val),
+                val => !!val || $t('validation.required'),
+                val => validateExpiryDate(val),
               ]"
             >
               <template v-slot:prepend>
@@ -114,10 +114,10 @@
 
           <div class="col-12 col-md-6">
             <q-input
-              v-model="form.receivedDate"
+              v-model="form.received_date"
               :label="$t('batch.receivedDate')"
               type="date"
-              :rules="[(val) => !!val || $t('validation.required')]"
+              :rules="[rules.required]"
             >
               <template v-slot:prepend>
                 <q-icon name="inbox" />
@@ -130,16 +130,16 @@
         <div class="row q-gutter-md">
           <div class="col-12 col-md-4">
             <q-input
-              v-model.number="form.initialQuantity"
+              v-model.number="form.initial_quantity"
               :label="$t('batch.initialQuantity')"
               type="number"
               step="0.001"
               min="0"
               :rules="[
-                (val) =>
+                val =>
                   (val !== null && val !== undefined) ||
                   $t('validation.required'),
-                (val) => val > 0 || $t('validation.mustBePositive'),
+                rules.positive,
               ]"
             >
               <template v-slot:prepend>
@@ -150,7 +150,7 @@
 
           <div class="col-12 col-md-4">
             <q-input
-              v-model.number="form.unitCost"
+              v-model.number="form.unit_cost"
               :label="$t('batch.unitCost')"
               type="number"
               step="0.01"
@@ -198,158 +198,161 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted } from 'vue';
-import { useI18n } from 'vue-i18n';
-import { useQuasar } from 'quasar';
-import { useBatchStore } from 'src/stores/batch';
-import type { CreateBatchRequest } from 'src/types/inventory';
+  import { ref, computed, onMounted } from 'vue';
+  import { useI18n } from 'vue-i18n';
+  import { useQuasar } from 'quasar';
+  import { useBatchStore } from 'src/stores/batch';
+  import { useAuthStore } from 'src/stores/auth';
+  import { useFormValidation } from 'src/composables/useFormValidation';
+  import type { CreateBatchRequest } from 'src/types/inventory';
 
-// Props & Emits
-interface Props {
-  embedded?: boolean;
-  prefilledProductId?: string;
-  prefilledLocationId?: string;
-}
-
-const props = withDefaults(defineProps<Props>(), {
-  embedded: false,
-});
-
-const emit = defineEmits<{
-  close: [];
-  success: [batch: any];
-}>();
-
-// Composables
-const { t } = useI18n();
-const $q = useQuasar();
-const batchStore = useBatchStore();
-
-// State
-const loading = ref(false);
-const loadingProducts = ref(false);
-const productOptions = ref<any[]>([]);
-
-// Form data
-const form = ref<CreateBatchRequest>({
-  productId: props.prefilledProductId || '',
-  locationId: props.prefilledLocationId || '',
-  batchNumber: '',
-  supplierBatchNumber: '',
-  expiryDate: '',
-  receivedDate: new Date().toISOString().split('T')[0],
-  initialQuantity: 0,
-  unitCost: 0,
-  currency: 'EUR',
-  purchaseOrderNumber: '',
-  invoiceNumber: '',
-  qualityCheckPassed: true,
-  qualityNotes: '',
-  quarantineUntil: '',
-});
-
-// Computed
-const locationOptions = computed(() => [
-  { id: '1', name: t('location.sampleData.mainWarehouse.name') },
-  { id: '2', name: t('location.samples.emergencyStock') },
-  { id: '3', name: t('location.sampleData.treatmentRoom.name') },
-]);
-
-const currencyOptions = computed(() => [
-  { label: 'EUR (€)', value: 'EUR' },
-  { label: 'USD ($)', value: 'USD' },
-  { label: 'GBP (£)', value: 'GBP' },
-]);
-
-// Methods
-const validateExpiryDate = (value: string) => {
-  if (!value) return t('validation.required');
-
-  const expiryDate = new Date(value);
-  const today = new Date();
-
-  if (expiryDate < today) {
-    return t('batch.validation.expiryDateInPast');
+  // Props & Emits
+  interface Props {
+    embedded?: boolean;
+    prefilledProductId?: string;
+    prefilledLocationId?: string;
   }
 
-  return true;
-};
-
-const filterProducts = (val: string, update: Function) => {
-  // Product filtering logic
-  update(() => {
-    productOptions.value = [];
+  const props = withDefaults(defineProps<Props>(), {
+    embedded: false,
   });
-};
 
-const resetForm = () => {
-  form.value = {
-    productId: props.prefilledProductId || '',
-    locationId: props.prefilledLocationId || '',
-    batchNumber: '',
-    supplierBatchNumber: '',
-    expiryDate: '',
-    receivedDate: new Date().toISOString().split('T')[0],
-    initialQuantity: 0,
-    unitCost: 0,
+  const emit = defineEmits<{
+    close: [];
+    success: [batch: any];
+  }>();
+
+  // Composables
+  const { t } = useI18n();
+  const $q = useQuasar();
+  const batchStore = useBatchStore();
+  const authStore = useAuthStore();
+  const { rules, patterns } = useFormValidation();
+
+  // State
+  const loading = ref(false);
+  const loadingProducts = ref(false);
+  const productOptions = ref<any[]>([]);
+
+  // Form data
+  const form = ref<CreateBatchRequest>({
+    practice_id: 'demo-practice',
+    product_id: props.prefilledProductId || '',
+    location_id: props.prefilledLocationId || '',
+    batch_number: '',
+    supplier_batch_number: '',
+    expiry_date: '',
+    received_date: new Date().toISOString().split('T')[0],
+    initial_quantity: 0,
+    unit_cost: 0,
     currency: 'EUR',
-    purchaseOrderNumber: '',
-    invoiceNumber: '',
-    qualityCheckPassed: true,
-    qualityNotes: '',
-    quarantineUntil: '',
-  };
-};
+    purchase_order_number: '',
+    invoice_number: '',
+    quality_check_passed: true,
+    quality_notes: '',
+  });
 
-const onSubmit = async () => {
-  try {
-    loading.value = true;
+  // Computed
+  const locationOptions = computed(() => [
+    { id: '1', name: t('location.sampleData.mainWarehouse.name') },
+    { id: '2', name: t('location.samples.emergencyStock') },
+    { id: '3', name: t('location.sampleData.treatmentRoom.name') },
+  ]);
 
-    const batchData: CreateBatchRequest = {
-      ...form.value,
-      currentQuantity: form.value.initialQuantity,
-    };
+  const currencyOptions = computed(() => [
+    { label: 'EUR (€)', value: 'EUR' },
+    { label: 'USD ($)', value: 'USD' },
+    { label: 'GBP (£)', value: 'GBP' },
+  ]);
 
-    const newBatch = await batchStore.createBatch(batchData);
+  // Methods
+  const validateExpiryDate = (value: string) => {
+    if (!value) return t('validation.required');
 
-    $q.notify({
-      type: 'positive',
-      message: t('batch.batchRegisteredSuccessfully'),
-    });
+    const expiryDate = new Date(value);
+    const today = new Date();
 
-    emit('success', newBatch);
-
-    if (!props.embedded) {
-      emit('close');
-    } else {
-      resetForm();
+    if (expiryDate < today) {
+      return t('batch.validation.expiryDateInPast');
     }
-  } catch (error) {
-    console.error(t('errors.failedToRegisterBatch'), error);
-    $q.notify({
-      type: 'negative',
-      message: t('errors.failedToRegisterBatch'),
-    });
-  } finally {
-    loading.value = false;
-  }
-};
 
-// Lifecycle
-onMounted(async () => {
-  // Load initial data
-});
+    return true;
+  };
+
+  const filterProducts = (val: string, update: Function) => {
+    // Product filtering logic
+    update(() => {
+      productOptions.value = [];
+    });
+  };
+
+  const resetForm = () => {
+    form.value = {
+      product_id: props.prefilledProductId || '',
+      location_id: props.prefilledLocationId || '',
+      batch_number: '',
+      supplier_batch_number: '',
+      expiry_date: '',
+      received_date: new Date().toISOString().split('T')[0],
+      initial_quantity: 0,
+      unit_cost: 0,
+      currency: 'EUR',
+      purchase_order_number: '',
+      invoice_number: '',
+             quality_check_passed: true,
+       quality_notes: '',
+    };
+  };
+
+  const onSubmit = async () => {
+    try {
+      loading.value = true;
+
+      const batchData: CreateBatchRequest = {
+        ...form.value,
+        practice_id: 'current-practice-id', // Should come from auth store
+      };
+
+      const newBatch = await batchStore.createBatch(batchData);
+
+      $q.notify({
+        type: 'positive',
+        message: t('batch.batchRegisteredSuccessfully'),
+      });
+
+      emit('success', newBatch);
+
+      if (!props.embedded) {
+        emit('close');
+      } else {
+        resetForm();
+      }
+    } catch (error) {
+      console.error(t('errors.failedToRegisterBatch'), error);
+      $q.notify({
+        type: 'negative',
+        message: t('errors.failedToRegisterBatch'),
+      });
+    } finally {
+      loading.value = false;
+    }
+  };
+
+  // Lifecycle
+  onMounted(async () => {
+    // Load initial data
+  });
 </script>
 
 <style scoped>
-.batch-registration-card {
-  min-width: 600px;
-  max-width: 900px;
-}
-
-@media (max-width: 768px) {
   .batch-registration-card {
-    min-width: 100%;
+    min-width: 600px;
+    max-width: 900px;
   }
-}
+
+  @media (max-width: 768px) {
+    .batch-registration-card {
+      min-width: 100%;
+    }
+  }
 </style>

@@ -62,7 +62,7 @@
             <div class="flex items-center gap-3">
               <q-icon name="play_circle" size="md" color="info" />
               <div>
-                <div class="text-h6">{{ $t("counting.activeSession") }}</div>
+                <div class="text-h6">{{ $t('counting.activeSession') }}</div>
                 <div class="text-subtitle2">{{ activeSession.name }}</div>
               </div>
             </div>
@@ -72,7 +72,7 @@
         <q-card-section class="active-session-content">
           <div class="session-stats">
             <div class="stat-item">
-              <div class="stat-label">{{ $t("counting.progress") }}</div>
+              <div class="stat-label">{{ $t('counting.progress') }}</div>
               <div class="stat-value">
                 {{ activeSession.products_counted }}/{{
                   activeSession.total_products_to_count
@@ -90,21 +90,21 @@
             </div>
 
             <div class="stat-item">
-              <div class="stat-label">{{ $t("counting.sessionType") }}</div>
+              <div class="stat-label">{{ $t('counting.sessionType') }}</div>
               <div class="stat-value">
                 {{ formatSessionType(activeSession.session_type) }}
               </div>
             </div>
 
             <div class="stat-item">
-              <div class="stat-label">{{ $t("common.startedAt") }}</div>
+              <div class="stat-label">{{ $t('common.startedAt') }}</div>
               <div class="stat-value">
                 {{ formatDateTime(activeSession.started_at) }}
               </div>
             </div>
 
             <div v-if="activeSession.discrepancies_found > 0" class="stat-item">
-              <div class="stat-label">{{ $t("counting.discrepancies") }}</div>
+              <div class="stat-label">{{ $t('counting.discrepancies') }}</div>
               <div class="stat-value discrepancies">
                 {{ activeSession.discrepancies_found }}
               </div>
@@ -133,14 +133,14 @@
       <BaseCard variant="modern" class="sessions-overview">
         <template #header>
           <q-card-section class="sessions-header">
-            <div class="text-h6">{{ $t("counting.sessionsOverview") }}</div>
+            <div class="text-h6">{{ $t('counting.sessionsOverview') }}</div>
           </q-card-section>
         </template>
 
         <!-- Loading State -->
         <div v-if="countingStore.loading" class="loading-container">
           <q-spinner-dots size="xl" color="primary" />
-          <p class="loading-text">{{ $t("counting.loadingSessions") }}</p>
+          <p class="loading-text">{{ $t('counting.loadingSessions') }}</p>
         </div>
 
         <!-- Sessions Table -->
@@ -261,387 +261,387 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted, defineAsyncComponent } from 'vue';
-import { useI18n } from 'vue-i18n';
-import { useQuasar } from 'quasar';
-import { useRouter } from 'vue-router';
-import { useAuthStore } from 'src/stores/auth';
-import { useCountingStore } from 'src/stores/counting';
-import { useClinicStore } from 'src/stores/clinic';
-import type { CountingSession, PracticeLocation } from 'src/types/inventory';
-import PageLayout from 'src/components/PageLayout.vue';
-import PageTitle from 'src/components/PageTitle.vue';
-import BaseCard from 'src/components/base/BaseCard.vue';
+  import { ref, computed, onMounted, defineAsyncComponent } from 'vue';
+  import { useI18n } from 'vue-i18n';
+  import { useQuasar } from 'quasar';
+  import { useRouter } from 'vue-router';
+  import { useAuthStore } from 'src/stores/auth';
+  import { useCountingStore } from 'src/stores/counting';
+  import { useClinicStore } from 'src/stores/clinic';
+  import type { CountingSession, PracticeLocation } from 'src/types/inventory';
+  import PageLayout from 'src/components/PageLayout.vue';
+  import PageTitle from 'src/components/PageTitle.vue';
+  import BaseCard from 'src/components/base/BaseCard.vue';
 
-// Lazy loaded dialogs
-const CountingSessionDialog = defineAsyncComponent(
-  () => import('src/components/inventory/CountingSessionDialog.vue')
-);
-
-// Composables
-const { t } = useI18n();
-const $q = useQuasar();
-const router = useRouter();
-const authStore = useAuthStore();
-const countingStore = useCountingStore();
-const clinicStore = useClinicStore();
-
-// Reactive state
-const selectedStatus = ref<string | null>(null);
-const showStartDialog = ref(false);
-
-// Pagination
-const pagination = ref({
-  sortBy: 'started_at',
-  descending: true,
-  page: 1,
-  rowsPerPage: 25,
-});
-
-// Computed properties
-const practiceId = computed(() => authStore.userProfile?.clinic_id || '');
-
-const statusOptions = computed(() => [
-  { label: t('counting.status.active'), value: 'active' },
-  { label: t('counting.status.completed'), value: 'completed' },
-  { label: t('counting.status.cancelled'), value: 'cancelled' },
-  { label: t('counting.status.approved'), value: 'approved' },
-]);
-
-const availableLocations = computed<PracticeLocation[]>(() => {
-  return clinicStore.activeLocations;
-});
-
-const activeSession = computed(() => {
-  return (
-    countingStore.sessions.find((session) => session.status === 'active') ||
-    null
+  // Lazy loaded dialogs
+  const CountingSessionDialog = defineAsyncComponent(
+    () => import('src/components/inventory/CountingSessionDialog.vue')
   );
-});
 
-const filteredSessions = computed(() => {
-  let sessions = [...countingStore.sessions];
+  // Composables
+  const { t } = useI18n();
+  const $q = useQuasar();
+  const router = useRouter();
+  const authStore = useAuthStore();
+  const countingStore = useCountingStore();
+  const clinicStore = useClinicStore();
 
-  if (selectedStatus.value) {
-    sessions = sessions.filter(
-      (session) => session.status === selectedStatus.value
+  // Reactive state
+  const selectedStatus = ref<string | null>(null);
+  const showStartDialog = ref(false);
+
+  // Pagination
+  const pagination = ref({
+    sortBy: 'started_at',
+    descending: true,
+    page: 1,
+    rowsPerPage: 25,
+  });
+
+  // Computed properties
+  const practiceId = computed(() => authStore.userProfile?.clinic_id || '');
+
+  const statusOptions = computed(() => [
+    { label: t('counting.status.active'), value: 'active' },
+    { label: t('counting.status.completed'), value: 'completed' },
+    { label: t('counting.status.cancelled'), value: 'cancelled' },
+    { label: t('counting.status.approved'), value: 'approved' },
+  ]);
+
+  const availableLocations = computed<PracticeLocation[]>(() => {
+    return clinicStore.activeLocations;
+  });
+
+  const activeSession = computed(() => {
+    return (
+      countingStore.sessions.find(session => session.status === 'active') ||
+      null
     );
-  }
+  });
 
-  return sessions;
-});
+  const filteredSessions = computed(() => {
+    let sessions = [...countingStore.sessions];
 
-const columns = computed(() => [
-  {
-    name: 'name',
-    label: t('counting.sessionName'),
-    field: 'name',
-    sortable: true,
-    align: 'left' as const,
-    style: 'width: 200px',
-  },
-  {
-    name: 'status',
-    label: t('counting.status'),
-    field: 'status',
-    sortable: true,
-    align: 'left' as const,
-    style: 'width: 120px',
-  },
-  {
-    name: 'progress',
-    label: t('counting.progress'),
-    field: 'progress',
-    align: 'center' as const,
-    sortable: false,
-  },
-  {
-    name: 'started_at',
-    label: t('common.startedAt'),
-    field: 'started_at',
-    align: 'left' as const,
-    sortable: true,
-  },
-  {
-    name: 'actions',
-    label: t('common.actions'),
-    field: 'actions',
-    align: 'center' as const,
-    sortable: false,
-  },
-]);
+    if (selectedStatus.value) {
+      sessions = sessions.filter(
+        session => session.status === selectedStatus.value
+      );
+    }
 
-// Methods
-const refreshData = async () => {
-  if (!practiceId.value) return;
+    return sessions;
+  });
 
-  try {
-    await countingStore.fetchSessions(practiceId.value);
-    $q.notify({
-      type: 'positive',
-      message: t('common.dataRefreshed'),
-      position: 'top',
-    });
-  } catch (error) {
-    console.error('Error refreshing sessions:', error);
-    $q.notify({
-      type: 'negative',
-      message: t('common.refreshFailed'),
-      position: 'top',
-    });
-  }
-};
+  const columns = computed(() => [
+    {
+      name: 'name',
+      label: t('counting.sessionName'),
+      field: 'name',
+      sortable: true,
+      align: 'left' as const,
+      style: 'width: 200px',
+    },
+    {
+      name: 'status',
+      label: t('counting.status'),
+      field: 'status',
+      sortable: true,
+      align: 'left' as const,
+      style: 'width: 120px',
+    },
+    {
+      name: 'progress',
+      label: t('counting.progress'),
+      field: 'progress',
+      align: 'center' as const,
+      sortable: false,
+    },
+    {
+      name: 'started_at',
+      label: t('common.startedAt'),
+      field: 'started_at',
+      align: 'left' as const,
+      sortable: true,
+    },
+    {
+      name: 'actions',
+      label: t('common.actions'),
+      field: 'actions',
+      align: 'center' as const,
+      sortable: false,
+    },
+  ]);
 
-const showStartSessionDialog = () => {
-  showStartDialog.value = true;
-};
+  // Methods
+  const refreshData = async () => {
+    if (!practiceId.value) return;
 
-const continueSession = (session: CountingSession) => {
-  router.push(`/inventory/counting/${session.id}`);
-};
-
-const viewSession = (session: CountingSession) => {
-  router.push(`/inventory/counting/${session.id}`);
-};
-
-const completeSession = async (session: CountingSession) => {
-  $q.dialog({
-    title: t('counting.completeSession'),
-    message: t('counting.confirmComplete'),
-    cancel: true,
-    persistent: true,
-  }).onOk(async () => {
     try {
-      await countingStore.updateSession(session.id, {
-        status: 'completed',
-        completed_at: new Date().toISOString(),
-        completed_by: authStore.user?.id || '',
-      });
-
+      await countingStore.fetchSessions(practiceId.value);
       $q.notify({
         type: 'positive',
-        message: t('counting.sessionCompleted'),
+        message: t('common.dataRefreshed'),
         position: 'top',
       });
-
-      await refreshData();
     } catch (error) {
-      console.error('Error completing session:', error);
+      console.error('Error refreshing sessions:', error);
       $q.notify({
         type: 'negative',
-        message: t('counting.completeFailed'),
+        message: t('common.refreshFailed'),
         position: 'top',
       });
     }
+  };
+
+  const showStartSessionDialog = () => {
+    showStartDialog.value = true;
+  };
+
+  const continueSession = (session: CountingSession) => {
+    router.push(`/inventory/counting/${session.id}`);
+  };
+
+  const viewSession = (session: CountingSession) => {
+    router.push(`/inventory/counting/${session.id}`);
+  };
+
+  const completeSession = async (session: CountingSession) => {
+    $q.dialog({
+      title: t('counting.completeSession'),
+      message: t('counting.confirmComplete'),
+      cancel: true,
+      persistent: true,
+    }).onOk(async () => {
+      try {
+        await countingStore.updateSession(session.id, {
+          status: 'completed',
+          completed_at: new Date().toISOString(),
+          completed_by: authStore.user?.id || '',
+        });
+
+        $q.notify({
+          type: 'positive',
+          message: t('counting.sessionCompleted'),
+          position: 'top',
+        });
+
+        await refreshData();
+      } catch (error) {
+        console.error('Error completing session:', error);
+        $q.notify({
+          type: 'negative',
+          message: t('counting.completeFailed'),
+          position: 'top',
+        });
+      }
+    });
+  };
+
+  const onSessionCreated = (sessionId: string) => {
+    router.push(`/inventory/counting/${sessionId}`);
+  };
+
+  // Formatting helpers
+  const formatSessionType = (type: string): string => {
+    return t(`counting.${type}`, type);
+  };
+
+  const formatStatus = (status: string): string => {
+    return t(`counting.status.${status}`, status);
+  };
+
+  const statusColor = (status: string): string => {
+    switch (status) {
+      case 'active':
+        return 'primary';
+      case 'completed':
+        return 'positive';
+      case 'cancelled':
+        return 'negative';
+      case 'approved':
+        return 'info';
+      default:
+        return 'grey';
+    }
+  };
+
+  const statusIcon = (status: string): string => {
+    switch (status) {
+      case 'active':
+        return 'play_circle';
+      case 'completed':
+        return 'check_circle';
+      case 'cancelled':
+        return 'cancel';
+      case 'approved':
+        return 'verified';
+      default:
+        return 'help';
+    }
+  };
+
+  const progressColor = (status: string): string => {
+    switch (status) {
+      case 'active':
+        return 'primary';
+      case 'completed':
+        return 'positive';
+      default:
+        return 'grey';
+    }
+  };
+
+  const formatDate = (dateString: string): string => {
+    return new Intl.DateTimeFormat('nl-NL', {
+      year: 'numeric',
+      month: 'short',
+      day: 'numeric',
+    }).format(new Date(dateString));
+  };
+
+  const formatTime = (dateString: string): string => {
+    return new Intl.DateTimeFormat('nl-NL', {
+      hour: '2-digit',
+      minute: '2-digit',
+    }).format(new Date(dateString));
+  };
+
+  const formatDateTime = (dateString: string): string => {
+    return new Intl.DateTimeFormat('nl-NL', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit',
+    }).format(new Date(dateString));
+  };
+
+  // Lifecycle
+  onMounted(async () => {
+    if (practiceId.value) {
+      await clinicStore.fetchLocations(practiceId.value);
+      await refreshData();
+    }
   });
-};
-
-const onSessionCreated = (sessionId: string) => {
-  router.push(`/inventory/counting/${sessionId}`);
-};
-
-// Formatting helpers
-const formatSessionType = (type: string): string => {
-  return t(`counting.${type}`, type);
-};
-
-const formatStatus = (status: string): string => {
-  return t(`counting.status.${status}`, status);
-};
-
-const statusColor = (status: string): string => {
-  switch (status) {
-    case 'active':
-      return 'primary';
-    case 'completed':
-      return 'positive';
-    case 'cancelled':
-      return 'negative';
-    case 'approved':
-      return 'info';
-    default:
-      return 'grey';
-  }
-};
-
-const statusIcon = (status: string): string => {
-  switch (status) {
-    case 'active':
-      return 'play_circle';
-    case 'completed':
-      return 'check_circle';
-    case 'cancelled':
-      return 'cancel';
-    case 'approved':
-      return 'verified';
-    default:
-      return 'help';
-  }
-};
-
-const progressColor = (status: string): string => {
-  switch (status) {
-    case 'active':
-      return 'primary';
-    case 'completed':
-      return 'positive';
-    default:
-      return 'grey';
-  }
-};
-
-const formatDate = (dateString: string): string => {
-  return new Intl.DateTimeFormat('nl-NL', {
-    year: 'numeric',
-    month: 'short',
-    day: 'numeric',
-  }).format(new Date(dateString));
-};
-
-const formatTime = (dateString: string): string => {
-  return new Intl.DateTimeFormat('nl-NL', {
-    hour: '2-digit',
-    minute: '2-digit',
-  }).format(new Date(dateString));
-};
-
-const formatDateTime = (dateString: string): string => {
-  return new Intl.DateTimeFormat('nl-NL', {
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric',
-    hour: '2-digit',
-    minute: '2-digit',
-  }).format(new Date(dateString));
-};
-
-// Lifecycle
-onMounted(async () => {
-  if (practiceId.value) {
-    await clinicStore.fetchLocations(practiceId.value);
-    await refreshData();
-  }
-});
 </script>
 
 <style lang="scss" scoped>
-.counting-content {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-6);
-}
-
-.header-actions {
-  display: flex;
-  align-items: center;
-  gap: var(--space-4);
-
-  .status-filter {
-    min-width: 150px;
+  .counting-content {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-6);
   }
 
-  @media (max-width: 768px) {
-    flex-direction: column;
-    gap: var(--space-3);
+  .header-actions {
+    display: flex;
+    align-items: center;
+    gap: var(--space-4);
 
     .status-filter {
-      min-width: 100%;
-    }
-  }
-}
-
-.active-session-card {
-  border-left: 4px solid var(--info);
-}
-
-.active-session-content {
-  .session-stats {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: var(--space-6);
-
-    .stat-item {
-      .stat-label {
-        font-size: var(--text-sm);
-        color: var(--text-muted);
-        margin-bottom: var(--space-1);
-      }
-
-      .stat-value {
-        font-size: var(--text-lg);
-        font-weight: var(--font-weight-medium);
-        color: var(--text-primary);
-
-        &.discrepancies {
-          color: var(--warning);
-        }
-      }
-
-      .progress-bar {
-        margin-top: var(--space-2);
-      }
+      min-width: 150px;
     }
 
     @media (max-width: 768px) {
-      grid-template-columns: 1fr;
-      gap: var(--space-4);
+      flex-direction: column;
+      gap: var(--space-3);
+
+      .status-filter {
+        min-width: 100%;
+      }
     }
   }
-}
 
-.loading-container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  padding: var(--space-12);
-  gap: var(--space-4);
-
-  .loading-text {
-    color: var(--text-muted);
-    font-size: var(--text-base);
-    margin: 0;
-  }
-}
-
-.session-info {
-  .session-name {
-    font-weight: var(--font-weight-medium);
-    color: var(--text-primary);
+  .active-session-card {
+    border-left: 4px solid var(--info);
   }
 
-  .session-type {
-    font-size: var(--text-sm);
-    color: var(--text-muted);
-  }
-}
+  .active-session-content {
+    .session-stats {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: var(--space-6);
 
-.progress-info {
-  .progress-text {
-    font-size: var(--text-sm);
-    color: var(--text-primary);
-    margin-bottom: var(--space-1);
+      .stat-item {
+        .stat-label {
+          font-size: var(--text-sm);
+          color: var(--text-muted);
+          margin-bottom: var(--space-1);
+        }
+
+        .stat-value {
+          font-size: var(--text-lg);
+          font-weight: var(--font-weight-medium);
+          color: var(--text-primary);
+
+          &.discrepancies {
+            color: var(--warning);
+          }
+        }
+
+        .progress-bar {
+          margin-top: var(--space-2);
+        }
+      }
+
+      @media (max-width: 768px) {
+        grid-template-columns: 1fr;
+        gap: var(--space-4);
+      }
+    }
   }
 
-  .mini-progress {
-    width: 100px;
-  }
-}
+  .loading-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: var(--space-12);
+    gap: var(--space-4);
 
-.date-info {
-  .date {
-    font-weight: var(--font-weight-medium);
-    color: var(--text-primary);
+    .loading-text {
+      color: var(--text-muted);
+      font-size: var(--text-base);
+      margin: 0;
+    }
   }
 
-  .time {
-    font-size: var(--text-sm);
-    color: var(--text-muted);
-  }
-}
+  .session-info {
+    .session-name {
+      font-weight: var(--font-weight-medium);
+      color: var(--text-primary);
+    }
 
-.action-buttons {
-  display: flex;
-  gap: var(--space-1);
-}
+    .session-type {
+      font-size: var(--text-sm);
+      color: var(--text-muted);
+    }
+  }
+
+  .progress-info {
+    .progress-text {
+      font-size: var(--text-sm);
+      color: var(--text-primary);
+      margin-bottom: var(--space-1);
+    }
+
+    .mini-progress {
+      width: 100px;
+    }
+  }
+
+  .date-info {
+    .date {
+      font-weight: var(--font-weight-medium);
+      color: var(--text-primary);
+    }
+
+    .time {
+      font-size: var(--text-sm);
+      color: var(--text-muted);
+    }
+  }
+
+  .action-buttons {
+    display: flex;
+    gap: var(--space-1);
+  }
 </style>

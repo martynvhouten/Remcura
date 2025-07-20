@@ -99,37 +99,36 @@
 1. **`src/pages/InventoryPage.vue`** - Main inventory dashboard
 
    ```vue
-   - Stock overview cards (total value, low stock, out of stock) - Recent stock
-   movements - Critical alerts banner - Quick actions (start counting, adjust
-   stock, view movements) - Location-based stock filtering
+   - Stock overview cards (total value, low stock, out of stock) - Recent stock movements - Critical
+   alerts banner - Quick actions (start counting, adjust stock, view movements) - Location-based
+   stock filtering
    ```
 
 2. **`src/pages/inventory/LocationsPage.vue`** - Location management
 
    ```vue
-   - Location list with status indicators - Add/edit location forms -
-   Location-specific stock summaries - Access control settings
+   - Location list with status indicators - Add/edit location forms - Location-specific stock
+   summaries - Access control settings
    ```
 
 3. **`src/pages/inventory/CountingPage.vue`** - Counting sessions
 
    ```vue
-   - Active session dashboard - Start new session wizard - Session history with
-   approval workflow - Progress tracking and variance reports
+   - Active session dashboard - Start new session wizard - Session history with approval workflow -
+   Progress tracking and variance reports
    ```
 
 4. **`src/pages/inventory/CountingSessionPage.vue`** - Active counting
 
    ```vue
-   - Integration with MobileCountingInterface component - Session controls
-   (pause, complete, cancel) - Real-time progress updates - Discrepancy review
-   workflow
+   - Integration with MobileCountingInterface component - Session controls (pause, complete, cancel)
+   - Real-time progress updates - Discrepancy review workflow
    ```
 
 5. **`src/pages/inventory/MovementsPage.vue`** - Stock movement history
    ```vue
-   - Filterable movement list - Movement detail views - Export functionality -
-   Audit trail visualization
+   - Filterable movement list - Movement detail views - Export functionality - Audit trail
+   visualization
    ```
 
 #### **Components to Create:**
@@ -137,28 +136,26 @@
 1. **`src/components/inventory/StockLevelCard.vue`**
 
    ```vue
-   - Product stock display with status indicators - Quick adjust buttons -
-   Min/max threshold visualization - Last counted information
+   - Product stock display with status indicators - Quick adjust buttons - Min/max threshold
+   visualization - Last counted information
    ```
 
 2. **`src/components/inventory/LocationSelector.vue`**
 
    ```vue
-   - Multi-location dropdown/picker - Location status indicators - Quick
-   location switching
+   - Multi-location dropdown/picker - Location status indicators - Quick location switching
    ```
 
 3. **`src/components/inventory/StockMovementList.vue`**
 
    ```vue
-   - Paginated movement history - Movement type icons and colors - User and
-   timestamp information
+   - Paginated movement history - Movement type icons and colors - User and timestamp information
    ```
 
 4. **`src/components/inventory/OrderSuggestionCard.vue`**
    ```vue
-   - Reorder recommendation display - Urgency level indicators - One-click add
-   to order functionality
+   - Reorder recommendation display - Urgency level indicators - One-click add to order
+   functionality
    ```
 
 ### **Phase 3: Supplier & Order Management (Week 2-3)**
@@ -170,14 +167,14 @@
 1. **`src/pages/SuppliersPage.vue`** - Enhanced supplier management
 
    ```vue
-   - Supplier list with sync status - Supplier-specific product catalogs - API
-   integration status - Order history per supplier
+   - Supplier list with sync status - Supplier-specific product catalogs - API integration status -
+   Order history per supplier
    ```
 
 2. **`src/components/suppliers/SupplierProductCatalog.vue`**
    ```vue
-   - Searchable product catalog - Price comparison across suppliers -
-   Availability indicators - Bulk import functionality
+   - Searchable product catalog - Price comparison across suppliers - Availability indicators - Bulk
+   import functionality
    ```
 
 #### **Order Management:**
@@ -185,14 +182,14 @@
 1. **`src/pages/OrdersPage.vue`** - Enhanced order management
 
    ```vue
-   - Supplier-specific order lists - Order status tracking - Automatic reorder
-   suggestions - Order approval workflow
+   - Supplier-specific order lists - Order status tracking - Automatic reorder suggestions - Order
+   approval workflow
    ```
 
 2. **`src/components/orders/OrderListBuilder.vue`**
    ```vue
-   - Drag-and-drop order building - Smart quantity suggestions - Real-time price
-   calculation - Multi-location delivery specification
+   - Drag-and-drop order building - Smart quantity suggestions - Real-time price calculation -
+   Multi-location delivery specification
    ```
 
 ### **Phase 4: Advanced Features (Week 3-4)**
@@ -222,16 +219,15 @@
 
 1. **`src/components/inventory/StockTransferDialog.vue`**
    ```vue
-   - Source/destination location selection - Quantity validation - Transfer
-   reason codes - Batch transfer support
+   - Source/destination location selection - Quantity validation - Transfer reason codes - Batch
+   transfer support
    ```
 
 #### **Advanced Analytics:**
 
 1. **`src/components/analytics/InventoryKPIDashboard.vue`**
    ```vue
-   - Stock turnover rates - Accuracy percentages - Cost analysis - Trend
-   visualizations
+   - Stock turnover rates - Accuracy percentages - Cost analysis - Trend visualizations
    ```
 
 ### **Phase 5: Mobile Optimization (Week 4-5)**
@@ -252,8 +248,8 @@
 2. **Mobile Navigation**
 
    ```vue
-   - Bottom tab navigation for counting mode - Gesture-based interactions -
-   Voice input for quantity entry - Haptic feedback
+   - Bottom tab navigation for counting mode - Gesture-based interactions - Voice input for quantity
+   entry - Haptic feedback
    ```
 
 3. **Camera Integration**
@@ -427,6 +423,8 @@ src/composables/
 4. **Mobile Testing:** Test MobileCountingInterface on actual devices
 5. **Iterative Development:** Build one component at a time, test thoroughly
 
-This roadmap provides a comprehensive path from the solid foundation we've built to a production-ready, mobile-first inventory management system. Each phase builds upon the previous one, ensuring a stable and scalable implementation.
+This roadmap provides a comprehensive path from the solid foundation we've built to a
+production-ready, mobile-first inventory management system. Each phase builds upon the previous one,
+ensuring a stable and scalable implementation.
 
 **The database and core architecture are complete - now it's time to build the user experience!** 🎯

@@ -1,7 +1,7 @@
 <template>
   <q-card class="batch-detail-card">
     <q-card-section class="row items-center q-pb-none">
-      <div class="text-h6">{{ $t("batch.batchDetails") }}</div>
+      <div class="text-h6">{{ $t('batch.batchDetails') }}</div>
       <q-space />
       <q-btn icon="close" flat round dense @click="$emit('close')" />
     </q-card-section>
@@ -12,7 +12,7 @@
         <div class="col-12 col-md-6">
           <q-card flat bordered class="q-pa-md">
             <div class="text-subtitle2 text-grey q-mb-sm">
-              {{ $t("batch.batchInformation") }}
+              {{ $t('batch.batchInformation') }}
             </div>
             <div class="row q-gutter-sm">
               <div class="col-12">
@@ -56,12 +56,12 @@
         <div class="col-12 col-md-6">
           <q-card flat bordered class="q-pa-md">
             <div class="text-subtitle2 text-grey q-mb-sm">
-              {{ $t("batch.quantityStatus") }}
+              {{ $t('batch.quantityStatus') }}
             </div>
             <div class="row q-gutter-sm">
               <div class="col-6">
                 <div class="text-caption text-grey">
-                  {{ $t("batch.initialQuantity") }}
+                  {{ $t('batch.initialQuantity') }}
                 </div>
                 <div class="text-h6">
                   {{ formatQuantity(batch.initialQuantity) }}
@@ -69,7 +69,7 @@
               </div>
               <div class="col-6">
                 <div class="text-caption text-grey">
-                  {{ $t("batch.currentQuantity") }}
+                  {{ $t('batch.currentQuantity') }}
                 </div>
                 <div class="text-h6">
                   {{ formatQuantity(batch.currentQuantity) }}
@@ -77,7 +77,7 @@
               </div>
               <div class="col-6">
                 <div class="text-caption text-grey">
-                  {{ $t("batch.availableQuantity") }}
+                  {{ $t('batch.availableQuantity') }}
                 </div>
                 <div class="text-h6 text-green">
                   {{ formatQuantity(batch.availableQuantity) }}
@@ -85,7 +85,7 @@
               </div>
               <div class="col-6">
                 <div class="text-caption text-grey">
-                  {{ $t("batch.reservedQuantity") }}
+                  {{ $t('batch.reservedQuantity') }}
                 </div>
                 <div class="text-h6 text-orange">
                   {{ formatQuantity(batch.reservedQuantity || 0) }}
@@ -113,7 +113,7 @@
         <div class="col-12 col-md-6">
           <q-card flat bordered class="q-pa-md">
             <div class="text-subtitle2 text-grey q-mb-sm">
-              {{ $t("batch.expiryInformation") }}
+              {{ $t('batch.expiryInformation') }}
             </div>
             <div class="row items-center q-gutter-sm">
               <q-icon
@@ -135,7 +135,7 @@
             </div>
             <div class="q-mt-sm">
               <div class="text-caption text-grey">
-                {{ $t("batch.receivedDate") }}
+                {{ $t('batch.receivedDate') }}
               </div>
               <div>{{ formatDate(batch.receivedDate) }}</div>
             </div>
@@ -145,7 +145,7 @@
         <div class="col-12 col-md-6">
           <q-card flat bordered class="q-pa-md">
             <div class="text-subtitle2 text-grey q-mb-sm">
-              {{ $t("batch.statusInformation") }}
+              {{ $t('batch.statusInformation') }}
             </div>
             <div class="row items-center q-gutter-sm q-mb-sm">
               <q-chip
@@ -162,12 +162,12 @@
                 icon="verified"
                 size="sm"
               >
-                {{ $t("batch.qualityApproved") }}
+                {{ $t('batch.qualityApproved') }}
               </q-chip>
             </div>
             <div v-if="batch.quarantineUntil" class="q-mt-sm">
               <div class="text-caption text-grey">
-                {{ $t("batch.quarantineUntil") }}
+                {{ $t('batch.quarantineUntil') }}
               </div>
               <div class="text-orange">
                 {{ formatDate(batch.quarantineUntil) }}
@@ -182,12 +182,12 @@
         <div class="col-12">
           <q-card flat bordered class="q-pa-md">
             <div class="text-subtitle2 text-grey q-mb-sm">
-              {{ $t("batch.costInformation") }}
+              {{ $t('batch.costInformation') }}
             </div>
             <div class="row q-gutter-md">
               <div class="col-4">
                 <div class="text-caption text-grey">
-                  {{ $t("batch.unitCost") }}
+                  {{ $t('batch.unitCost') }}
                 </div>
                 <div class="text-h6">
                   {{ formatCurrency(batch.unitCost, batch.currency) }}
@@ -195,7 +195,7 @@
               </div>
               <div class="col-4">
                 <div class="text-caption text-grey">
-                  {{ $t("batch.totalCost") }}
+                  {{ $t('batch.totalCost') }}
                 </div>
                 <div class="text-h6">
                   {{ formatCurrency(batch.totalCost, batch.currency) }}
@@ -203,7 +203,7 @@
               </div>
               <div class="col-4">
                 <div class="text-caption text-grey">
-                  {{ $t("batch.currentValue") }}
+                  {{ $t('batch.currentValue') }}
                 </div>
                 <div class="text-h6">
                   {{
@@ -227,18 +227,18 @@
         <div class="col-12">
           <q-card flat bordered class="q-pa-md">
             <div class="text-subtitle2 text-grey q-mb-sm">
-              {{ $t("batch.purchaseInformation") }}
+              {{ $t('batch.purchaseInformation') }}
             </div>
             <div class="row q-gutter-md">
               <div class="col-6" v-if="batch.purchaseOrderNumber">
                 <div class="text-caption text-grey">
-                  {{ $t("batch.purchaseOrderNumber") }}
+                  {{ $t('batch.purchaseOrderNumber') }}
                 </div>
                 <div>{{ batch.purchaseOrderNumber }}</div>
               </div>
               <div class="col-6" v-if="batch.invoiceNumber">
                 <div class="text-caption text-grey">
-                  {{ $t("batch.invoiceNumber") }}
+                  {{ $t('batch.invoiceNumber') }}
                 </div>
                 <div>{{ batch.invoiceNumber }}</div>
               </div>
@@ -252,7 +252,7 @@
         <div class="col-12">
           <q-card flat bordered class="q-pa-md">
             <div class="text-subtitle2 text-grey q-mb-sm">
-              {{ $t("batch.qualityNotes") }}
+              {{ $t('batch.qualityNotes') }}
             </div>
             <div class="text-body2">{{ batch.qualityNotes }}</div>
           </q-card>
@@ -298,147 +298,131 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue';
-import { useI18n } from 'vue-i18n';
-import { useQuasar, date } from 'quasar';
-import { useBatchStore } from 'src/stores/batch';
-import type { ProductBatchWithDetails } from 'src/types/inventory';
+  import { ref } from 'vue';
+  import { useI18n } from 'vue-i18n';
+  import { useQuasar, date } from 'quasar';
+  import { useBatchStore } from 'src/stores/batch';
+  import { useFormatting } from 'src/composables/useFormatting';
+  import type { ProductBatchWithDetails } from 'src/types/inventory';
 
-// Props & Emits
-interface Props {
-  batch: ProductBatchWithDetails;
-}
-
-const props = defineProps<Props>();
-
-const emit = defineEmits<{
-  close: [];
-  updated: [];
-  'use-batch': [batch: ProductBatchWithDetails];
-}>();
-
-// Composables
-const { t } = useI18n();
-const $q = useQuasar();
-const batchStore = useBatchStore();
-
-// State
-const editMode = ref(false);
-
-// Methods
-const formatDate = (dateStr: string) => {
-  return date.formatDate(dateStr, 'DD/MM/YYYY');
-};
-
-const formatQuantity = (quantity: number) => {
-  return quantity.toLocaleString(undefined, {
-    minimumFractionDigits: 0,
-    maximumFractionDigits: 3,
-  });
-};
-
-const formatCurrency = (amount: number, currency: string) => {
-  return new Intl.NumberFormat('nl-NL', {
-    style: 'currency',
-    currency: currency || 'EUR',
-  }).format(amount);
-};
-
-const getLocationColor = (type: string) => {
-  const colors = {
-    storage: 'blue',
-    emergency: 'red',
-    treatment: 'green',
-    default: 'grey',
-  };
-  return colors[type] || colors.default;
-};
-
-const getQuantityColor = (ratio: number) => {
-  if (ratio > 0.5) return 'green';
-  if (ratio > 0.2) return 'orange';
-  return 'red';
-};
-
-const getExpiryIcon = (urgency: string) => {
-  const icons = {
-    expired: 'error',
-    critical: 'warning',
-    warning: 'schedule',
-    normal: 'check_circle',
-  };
-  return icons[urgency] || 'check_circle';
-};
-
-const getExpiryColor = (urgency: string) => {
-  const colors = {
-    expired: 'red',
-    critical: 'deep-orange',
-    warning: 'amber',
-    normal: 'green',
-  };
-  return colors[urgency] || 'green';
-};
-
-const getExpiryTextClass = (urgency: string) => {
-  const classes = {
-    expired: 'text-red',
-    critical: 'text-deep-orange',
-    warning: 'text-amber-8',
-    normal: 'text-green',
-  };
-  return classes[urgency] || 'text-green';
-};
-
-const getExpiryText = (days: number, urgency: string) => {
-  if (urgency === 'expired') {
-    return t('batch.expiredDaysAgo', { days: Math.abs(days) });
-  } else if (days === 0) {
-    return t('batch.expiresToday');
-  } else if (days === 1) {
-    return t('batch.expiresTomorrow');
-  } else {
-    return t('batch.expiresInDays', { days });
+  // Props & Emits
+  interface Props {
+    batch: ProductBatchWithDetails;
   }
-};
 
-const getStatusColor = (status: string) => {
-  const colors = {
-    active: 'green',
-    expired: 'red',
-    depleted: 'grey',
-    recalled: 'deep-orange',
-    quarantine: 'amber',
+  const props = defineProps<Props>();
+
+  const emit = defineEmits<{
+    close: [];
+    updated: [];
+    'use-batch': [batch: ProductBatchWithDetails];
+  }>();
+
+  // Composables
+  const { t } = useI18n();
+  const $q = useQuasar();
+  const batchStore = useBatchStore();
+  const { formatDate, formatCurrency, formatQuantity } = useFormatting();
+
+  // State
+  const editMode = ref(false);
+
+  // Methods
+  const getLocationColor = (type: string) => {
+    const colors = {
+      storage: 'blue',
+      emergency: 'red',
+      treatment: 'green',
+      default: 'grey',
+    };
+    return colors[type] || colors.default;
   };
-  return colors[status] || 'grey';
-};
 
-const quarantineBatch = async () => {
-  try {
-    await batchStore.updateBatch(props.batch.id, { status: 'quarantine' });
-    $q.notify({
-      type: 'positive',
-      message: t('batch.quarantineSuccess'),
-    });
-    emit('updated');
-  } catch (error) {
-    $q.notify({
-      type: 'negative',
-      message: t('errors.failed'),
-    });
-  }
-};
+  const getQuantityColor = (ratio: number) => {
+    if (ratio > 0.5) return 'green';
+    if (ratio > 0.2) return 'orange';
+    return 'red';
+  };
+
+  const getExpiryIcon = (urgency: string) => {
+    const icons = {
+      expired: 'error',
+      critical: 'warning',
+      warning: 'schedule',
+      normal: 'check_circle',
+    };
+    return icons[urgency] || 'check_circle';
+  };
+
+  const getExpiryColor = (urgency: string) => {
+    const colors = {
+      expired: 'red',
+      critical: 'deep-orange',
+      warning: 'amber',
+      normal: 'green',
+    };
+    return colors[urgency] || 'green';
+  };
+
+  const getExpiryTextClass = (urgency: string) => {
+    const classes = {
+      expired: 'text-red',
+      critical: 'text-deep-orange',
+      warning: 'text-amber-8',
+      normal: 'text-green',
+    };
+    return classes[urgency] || 'text-green';
+  };
+
+  const getExpiryText = (days: number, urgency: string) => {
+    if (urgency === 'expired') {
+      return t('batch.expiredDaysAgo', { days: Math.abs(days) });
+    } else if (days === 0) {
+      return t('batch.expiresToday');
+    } else if (days === 1) {
+      return t('batch.expiresTomorrow');
+    } else {
+      return t('batch.expiresInDays', { days });
+    }
+  };
+
+  const getStatusColor = (status: string) => {
+    const colors = {
+      active: 'green',
+      expired: 'red',
+      depleted: 'grey',
+      recalled: 'deep-orange',
+      quarantine: 'amber',
+    };
+    return colors[status] || 'grey';
+  };
+
+  const quarantineBatch = async () => {
+    try {
+      await batchStore.updateBatch(props.batch.id, { status: 'quarantine' });
+      $q.notify({
+        type: 'positive',
+        message: t('batch.quarantineSuccess'),
+      });
+      emit('updated');
+    } catch (error) {
+      $q.notify({
+        type: 'negative',
+        message: t('errors.failed'),
+      });
+    }
+  };
 </script>
 
 <style scoped>
-.batch-detail-card {
-  min-width: 600px;
-  max-width: 800px;
-}
-
-@media (max-width: 768px) {
   .batch-detail-card {
-    min-width: 100%;
+    min-width: 600px;
+    max-width: 800px;
   }
-}
+
+  @media (max-width: 768px) {
+    .batch-detail-card {
+      min-width: 100%;
+    }
+  }
 </style>

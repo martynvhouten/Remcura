@@ -37,9 +37,9 @@
 
     <!-- Statistics Cards -->
     <div class="row q-mb-lg stats-cards-container">
-      <div 
-        v-for="(stat, key) in statsCards" 
-        :key="key" 
+      <div
+        v-for="(stat, key) in statsCards"
+        :key="key"
         class="col-12 col-sm-6 col-md-3 stats-card-col"
       >
         <BaseCard
@@ -154,7 +154,7 @@
                 props.row.current_quantity
               }}</span>
               <span class="stock-unit text-caption text-grey-6">{{
-                props.row.unit || "st"
+                props.row.unit || 'st'
               }}</span>
             </div>
           </q-td>
@@ -207,176 +207,176 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted } from 'vue';
-import { useI18n } from 'vue-i18n';
-import { useQuasar } from 'quasar';
-import { useAuthStore } from 'src/stores/auth';
-import { useClinicStore } from 'src/stores/clinic';
-import { supabase } from 'src/boot/supabase';
-import PageLayout from 'src/components/PageLayout.vue';
-import PageTitle from 'src/components/PageTitle.vue';
-import BaseCard from 'src/components/base/BaseCard.vue';
+  import { ref, computed, onMounted } from 'vue';
+  import { useI18n } from 'vue-i18n';
+  import { useQuasar } from 'quasar';
+  import { useAuthStore } from 'src/stores/auth';
+  import { useClinicStore } from 'src/stores/clinic';
+  import { supabase } from 'src/boot/supabase';
+  import PageLayout from 'src/components/PageLayout.vue';
+  import PageTitle from 'src/components/PageTitle.vue';
+  import BaseCard from 'src/components/base/BaseCard.vue';
 
-// Composables
-const { t } = useI18n();
-const $q = useQuasar();
-const authStore = useAuthStore();
-const clinicStore = useClinicStore();
+  // Composables
+  const { t } = useI18n();
+  const $q = useQuasar();
+  const authStore = useAuthStore();
+  const clinicStore = useClinicStore();
 
-// State
-const loading = ref(false);
-const stockLevels = ref([]);
-const selectedLocation = ref('all');
-const filters = ref({
-  search: '',
-  stockStatus: '',
-  category: '',
-});
-
-// Computed
-const locationOptions = computed(() => [
-  { label: t('inventory.allLocations'), value: 'all' },
-  ...clinicStore.locations.map((loc) => ({
-    label: loc.name,
-    value: loc.id,
-  })),
-]);
-
-const categoryOptions = computed(() => {
-  const categories = new Set();
-  stockLevels.value.forEach((item) => {
-    if (item.product_category) {
-      categories.add(item.product_category);
-    }
+  // State
+  const loading = ref(false);
+  const stockLevels = ref([]);
+  const selectedLocation = ref('all');
+  const filters = ref({
+    search: '',
+    stockStatus: '',
+    category: '',
   });
-  return Array.from(categories).map((cat) => ({
-    label: cat,
-    value: cat,
-  }));
-});
 
-const stockStatusOptions = computed(() => [
-  { label: t('inventory.inStock'), value: 'in_stock' },
-  { label: t('inventory.lowStock'), value: 'low_stock' },
-  { label: t('inventory.outOfStock'), value: 'out_of_stock' },
-]);
+  // Computed
+  const locationOptions = computed(() => [
+    { label: t('inventory.allLocations'), value: 'all' },
+    ...clinicStore.locations.map(loc => ({
+      label: loc.name,
+      value: loc.id,
+    })),
+  ]);
 
-const filteredStockLevels = computed(() => {
-  let result = [...stockLevels.value];
+  const categoryOptions = computed(() => {
+    const categories = new Set();
+    stockLevels.value.forEach(item => {
+      if (item.product_category) {
+        categories.add(item.product_category);
+      }
+    });
+    return Array.from(categories).map(cat => ({
+      label: cat,
+      value: cat,
+    }));
+  });
 
-  // Apply search filter
-  if (filters.value.search) {
-    const searchTerm = filters.value.search.toLowerCase();
-    result = result.filter(
-      (item) =>
-        item.product_name.toLowerCase().includes(searchTerm) ||
-        item.product_sku.toLowerCase().includes(searchTerm)
-    );
-  }
+  const stockStatusOptions = computed(() => [
+    { label: t('inventory.inStock'), value: 'in_stock' },
+    { label: t('inventory.lowStock'), value: 'low_stock' },
+    { label: t('inventory.outOfStock'), value: 'out_of_stock' },
+  ]);
 
-  // Apply stock status filter
-  if (filters.value.stockStatus) {
-    result = result.filter(
-      (item) => item.stock_status === filters.value.stockStatus
-    );
-  }
+  const filteredStockLevels = computed(() => {
+    let result = [...stockLevels.value];
 
-  // Apply category filter
-  if (filters.value.category) {
-    result = result.filter(
-      (item) => item.product_category === filters.value.category
-    );
-  }
+    // Apply search filter
+    if (filters.value.search) {
+      const searchTerm = filters.value.search.toLowerCase();
+      result = result.filter(
+        item =>
+          item.product_name.toLowerCase().includes(searchTerm) ||
+          item.product_sku.toLowerCase().includes(searchTerm)
+      );
+    }
 
-  return result;
-});
+    // Apply stock status filter
+    if (filters.value.stockStatus) {
+      result = result.filter(
+        item => item.stock_status === filters.value.stockStatus
+      );
+    }
 
-const statsCards = computed(() => {
-  const stats = {
-    total: stockLevels.value.length,
-    inStock: stockLevels.value.filter(
-      (item) => item.stock_status === 'in_stock'
-    ).length,
-    lowStock: stockLevels.value.filter(
-      (item) => item.stock_status === 'low_stock'
-    ).length,
-    outOfStock: stockLevels.value.filter(
-      (item) => item.stock_status === 'out_of_stock'
-    ).length,
-  };
+    // Apply category filter
+    if (filters.value.category) {
+      result = result.filter(
+        item => item.product_category === filters.value.category
+      );
+    }
 
-  return [
+    return result;
+  });
+
+  const statsCards = computed(() => {
+    const stats = {
+      total: stockLevels.value.length,
+      inStock: stockLevels.value.filter(
+        item => item.stock_status === 'in_stock'
+      ).length,
+      lowStock: stockLevels.value.filter(
+        item => item.stock_status === 'low_stock'
+      ).length,
+      outOfStock: stockLevels.value.filter(
+        item => item.stock_status === 'out_of_stock'
+      ).length,
+    };
+
+    return [
+      {
+        label: t('inventory.totalProducts'),
+        value: stats.total,
+        icon: 'inventory_2',
+        iconColor: 'primary',
+      },
+      {
+        label: t('inventory.inStock'),
+        value: stats.inStock,
+        icon: 'check_circle',
+        iconColor: 'positive',
+      },
+      {
+        label: t('inventory.lowStock'),
+        value: stats.lowStock,
+        icon: 'warning',
+        iconColor: 'warning',
+      },
+      {
+        label: t('inventory.outOfStock'),
+        value: stats.outOfStock,
+        icon: 'cancel',
+        iconColor: 'negative',
+      },
+    ];
+  });
+
+  const columns = computed(() => [
     {
-      label: t('inventory.totalProducts'),
-      value: stats.total,
-      icon: 'inventory_2',
-      iconColor: 'primary',
+      name: 'product',
+      label: t('inventory.product'),
+      align: 'left',
+      field: 'product_name',
+      sortable: true,
     },
     {
-      label: t('inventory.inStock'),
-      value: stats.inStock,
-      icon: 'check_circle',
-      iconColor: 'positive',
+      name: 'current_quantity',
+      label: t('inventory.currentStock'),
+      align: 'center',
+      field: 'current_quantity',
+      sortable: true,
     },
     {
-      label: t('inventory.lowStock'),
-      value: stats.lowStock,
-      icon: 'warning',
-      iconColor: 'warning',
+      name: 'stock_status',
+      label: t('inventory.status'),
+      align: 'center',
+      field: 'stock_status',
+      sortable: true,
     },
     {
-      label: t('inventory.outOfStock'),
-      value: stats.outOfStock,
-      icon: 'cancel',
-      iconColor: 'negative',
+      name: 'levels',
+      label: t('inventory.stockLevels'),
+      align: 'center',
     },
-  ];
-});
+    {
+      name: 'actions',
+      label: t('common.actions'),
+      align: 'center',
+    },
+  ]);
 
-const columns = computed(() => [
-  {
-    name: 'product',
-    label: t('inventory.product'),
-    align: 'left',
-    field: 'product_name',
-    sortable: true,
-  },
-  {
-    name: 'current_quantity',
-    label: t('inventory.currentStock'),
-    align: 'center',
-    field: 'current_quantity',
-    sortable: true,
-  },
-  {
-    name: 'stock_status',
-    label: t('inventory.status'),
-    align: 'center',
-    field: 'stock_status',
-    sortable: true,
-  },
-  {
-    name: 'levels',
-    label: t('inventory.stockLevels'),
-    align: 'center',
-  },
-  {
-    name: 'actions',
-    label: t('common.actions'),
-    align: 'center',
-  },
-]);
+  // Methods
+  const loadStockLevels = async () => {
+    if (!authStore.clinicId) return;
 
-// Methods
-const loadStockLevels = async () => {
-  if (!authStore.clinicId) return;
-
-  loading.value = true;
-  try {
-    let query = supabase
-      .from('stock_levels')
-      .select(
-        `
+    loading.value = true;
+    try {
+      let query = supabase
+        .from('stock_levels')
+        .select(
+          `
         *,
         products (
           name,
@@ -388,169 +388,169 @@ const loadStockLevels = async () => {
           name
         )
       `
-      )
-      .eq('practice_id', authStore.clinicId);
+        )
+        .eq('practice_id', authStore.clinicId);
 
-    if (selectedLocation.value !== 'all') {
-      query = query.eq('location_id', selectedLocation.value);
+      if (selectedLocation.value !== 'all') {
+        query = query.eq('location_id', selectedLocation.value);
+      }
+
+      const { data, error } = await query.order('products(name)');
+
+      if (error) throw error;
+
+      stockLevels.value = data.map(item => ({
+        ...item,
+        product_name: item.products?.name || t('common.unknownProduct'),
+        product_sku: item.products?.sku || t('common.noSku'),
+        product_category: item.products?.category || t('common.uncategorized'),
+        unit: item.products?.unit || t('common.defaultUnit'),
+        location_name: item.locations?.name || t('common.unknownLocation'),
+        stock_status: determineStockStatus(
+          item.current_quantity,
+          item.minimum_stock
+        ),
+      }));
+    } catch (error) {
+      console.error('Error loading stock levels:', error);
+      $q.notify({
+        type: 'negative',
+        message: t('inventory.loadingError'),
+      });
+    } finally {
+      loading.value = false;
     }
-
-    const { data, error } = await query.order('products(name)');
-
-    if (error) throw error;
-
-    stockLevels.value = data.map((item) => ({
-      ...item,
-      product_name: item.products?.name || t('common.unknownProduct'),
-      product_sku: item.products?.sku || t('common.noSku'),
-      product_category: item.products?.category || t('common.uncategorized'),
-      unit: item.products?.unit || t('common.defaultUnit'),
-      location_name: item.locations?.name || t('common.unknownLocation'),
-      stock_status: determineStockStatus(
-        item.current_quantity,
-        item.minimum_stock
-      ),
-    }));
-  } catch (error) {
-    console.error('Error loading stock levels:', error);
-    $q.notify({
-      type: 'negative',
-      message: t('inventory.loadingError'),
-    });
-  } finally {
-    loading.value = false;
-  }
-};
-
-const determineStockStatus = (current, minimum) => {
-  if (current <= 0) return 'out_of_stock';
-  if (current <= minimum) return 'low_stock';
-  return 'in_stock';
-};
-
-const getStockStatusColor = (status) => {
-  switch (status) {
-    case 'in_stock':
-      return 'positive';
-    case 'low_stock':
-      return 'warning';
-    case 'out_of_stock':
-      return 'negative';
-    default:
-      return 'grey';
-  }
-};
-
-const getStockStatusIcon = (status) => {
-  switch (status) {
-    case 'in_stock':
-      return 'check_circle';
-    case 'low_stock':
-      return 'warning';
-    case 'out_of_stock':
-      return 'error';
-    default:
-      return 'help';
-  }
-};
-
-const refreshData = async () => {
-  await Promise.all([
-    clinicStore.fetchLocations(authStore.clinicId),
-    loadStockLevels(),
-  ]);
-  $q.notify({
-    type: 'positive',
-    message: t('inventory.dataRefreshed'),
-  });
-};
-
-const clearFilters = () => {
-  filters.value = {
-    search: '',
-    stockStatus: '',
-    category: '',
   };
-};
 
-const editStockLevel = (_stockLevel) => {
-  $q.notify({
-    type: 'info',
-    message: t('common.comingSoon'),
-  });
-};
+  const determineStockStatus = (current, minimum) => {
+    if (current <= 0) return 'out_of_stock';
+    if (current <= minimum) return 'low_stock';
+    return 'in_stock';
+  };
 
-const viewMovements = (_stockLevel) => {
-  $q.notify({
-    type: 'info',
-    message: t('common.comingSoon'),
-  });
-};
+  const getStockStatusColor = status => {
+    switch (status) {
+      case 'in_stock':
+        return 'positive';
+      case 'low_stock':
+        return 'warning';
+      case 'out_of_stock':
+        return 'negative';
+      default:
+        return 'grey';
+    }
+  };
 
-// Lifecycle
-onMounted(async () => {
-  if (authStore.clinicId) {
+  const getStockStatusIcon = status => {
+    switch (status) {
+      case 'in_stock':
+        return 'check_circle';
+      case 'low_stock':
+        return 'warning';
+      case 'out_of_stock':
+        return 'error';
+      default:
+        return 'help';
+    }
+  };
+
+  const refreshData = async () => {
     await Promise.all([
       clinicStore.fetchLocations(authStore.clinicId),
       loadStockLevels(),
     ]);
-  }
-});
+    $q.notify({
+      type: 'positive',
+      message: t('inventory.dataRefreshed'),
+    });
+  };
+
+  const clearFilters = () => {
+    filters.value = {
+      search: '',
+      stockStatus: '',
+      category: '',
+    };
+  };
+
+  const editStockLevel = _stockLevel => {
+    $q.notify({
+      type: 'info',
+      message: t('common.comingSoon'),
+    });
+  };
+
+  const viewMovements = _stockLevel => {
+    $q.notify({
+      type: 'info',
+      message: t('common.comingSoon'),
+    });
+  };
+
+  // Lifecycle
+  onMounted(async () => {
+    if (authStore.clinicId) {
+      await Promise.all([
+        clinicStore.fetchLocations(authStore.clinicId),
+        loadStockLevels(),
+      ]);
+    }
+  });
 </script>
 
 <style lang="scss" scoped>
-.stock-levels-table {
-  .product-info {
-    .product-name {
-      font-weight: 500;
-      margin-bottom: 2px;
-    }
-  }
-
-  .stock-quantity {
-    display: flex;
-    align-items: center;
-    gap: 4px;
-
-    .current-stock {
-      font-weight: 600;
-      font-size: 1.1em;
-    }
-  }
-
-  .stock-levels {
-    display: flex;
-    flex-direction: column;
-    gap: 2px;
-
-    .level-item {
-      display: flex;
-      justify-content: space-between;
-      min-width: 80px;
-
-      .level-label {
-        font-size: 0.75rem;
-        color: var(--q-grey-6);
-      }
-
-      .level-value {
+  .stock-levels-table {
+    .product-info {
+      .product-name {
         font-weight: 500;
-        font-size: 0.8rem;
+        margin-bottom: 2px;
+      }
+    }
+
+    .stock-quantity {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+
+      .current-stock {
+        font-weight: 600;
+        font-size: 1.1em;
+      }
+    }
+
+    .stock-levels {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+
+      .level-item {
+        display: flex;
+        justify-content: space-between;
+        min-width: 80px;
+
+        .level-label {
+          font-size: 0.75rem;
+          color: var(--q-grey-6);
+        }
+
+        .level-value {
+          font-weight: 500;
+          font-size: 0.8rem;
+        }
       }
     }
   }
-}
 
-// Stats cards styling
-.stats-cards-container {
-  gap: 0;
-  
-  .stats-card-col {
-    padding: 8px;
-    
-    @media (max-width: 640px) {
-      padding: 6px;
+  // Stats cards styling
+  .stats-cards-container {
+    gap: 0;
+
+    .stats-card-col {
+      padding: 8px;
+
+      @media (max-width: 640px) {
+        padding: 6px;
+      }
     }
   }
-}
 </style>

@@ -2,7 +2,9 @@
 
 ## 🎯 Overzicht
 
-Het demo account systeem stelt gebruikers in staat om MedStock Pro te testen met realistische data zonder impact op productiegegevens. Het demo account (`demo@medstock-pro.com`) heeft volledige toegang tot een vooraf geconfigureerde praktijk met realistische medische voorraadgegevens.
+Het demo account systeem stelt gebruikers in staat om MedStock Pro te testen met realistische data
+zonder impact op productiegegevens. Het demo account (`demo@medstock-pro.com`) heeft volledige
+toegang tot een vooraf geconfigureerde praktijk met realistische medische voorraadgegevens.
 
 ## ✨ Kenmerken
 
@@ -195,6 +197,5 @@ WHERE practice_id = '550e8400-e29b-41d4-a716-446655440000';
 
 ---
 
-**Laatste update**: ${new Date().toLocaleDateString('nl-NL')}
-**Versie**: 1.0.0
-**Status**: ✅ Production Ready
+**Laatste update**: ${new Date().toLocaleDateString('nl-NL')} **Versie**: 1.0.0 **Status**: ✅
+Production Ready

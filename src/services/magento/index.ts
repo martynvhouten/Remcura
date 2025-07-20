@@ -1,5 +1,12 @@
-// Placeholder Magento API service
-// This will be implemented when Magento integration is ready
+// Enhanced Magento API service with full implementation
+import { handleApiError, ServiceErrorHandler, validateRequired } from 'src/utils/service-error-handler';
+
+export interface MagentoConfig {
+  baseUrl: string;
+  token: string;
+  storeCode?: string;
+  timeout?: number;
+}
 
 export interface MagentoOrder {
   id: number;
@@ -9,6 +16,9 @@ export interface MagentoOrder {
   updated_at: string;
   grand_total: number;
   items: MagentoOrderItem[];
+  billing_address?: MagentoAddress;
+  shipping_address?: MagentoAddress;
+  payment?: MagentoPayment;
 }
 
 export interface MagentoOrderItem {
@@ -18,6 +28,28 @@ export interface MagentoOrderItem {
   sku: string;
   qty_ordered: number;
   price: number;
+  product_type: string;
+}
+
+export interface MagentoAddress {
+  firstname: string;
+  lastname: string;
+  company?: string;
+  street: string[];
+  city: string;
+  region: string;
+  postcode: string;
+  country_id: string;
+  telephone?: string;
+  email?: string;
+}
+
+export interface MagentoPayment {
+  method: string;
+  amount_ordered: number;
+  currency_code: string;
+  transaction_id?: string;
+  additional_information?: string[];
 }
 
 export interface MagentoInvoice {
@@ -26,6 +58,16 @@ export interface MagentoInvoice {
   increment_id: string;
   created_at: string;
   grand_total: number;
+  state: number;
+  items: MagentoInvoiceItem[];
+}
+
+export interface MagentoInvoiceItem {
+  id: number;
+  name: string;
+  sku: string;
+  qty: number;
+  price: number;
 }
 
 export interface MagentoProduct {
@@ -35,115 +77,304 @@ export interface MagentoProduct {
   price: number;
   status: number;
   type_id: string;
+  weight?: number;
+  attribute_set_id: number;
+  custom_attributes?: MagentoCustomAttribute[];
+}
+
+export interface MagentoCustomAttribute {
+  attribute_code: string;
+  value: any;
+}
+
+export interface MagentoSearchCriteria {
+  filterGroups?: MagentoFilterGroup[];
+  sortOrders?: MagentoSortOrder[];
+  pageSize?: number;
+  currentPage?: number;
+}
+
+export interface MagentoFilterGroup {
+  filters: MagentoFilter[];
+}
+
+export interface MagentoFilter {
+  field: string;
+  value: string | number;
+  condition_type?: string;
+}
+
+export interface MagentoSortOrder {
+  field: string;
+  direction: 'ASC' | 'DESC';
 }
 
 class MagentoApiService {
-  private baseUrl: string;
-  private token: string;
+  private config: MagentoConfig | null = null;
+  private readonly DEFAULT_TIMEOUT = 30000;
 
-  constructor() {
-    // These will be set from environment variables
-    this.baseUrl = process.env.MAGENTO_API_URL || '';
-    this.token = process.env.MAGENTO_API_TOKEN || '';
+  /**
+   * Configure the Magento API service
+   */
+  configure(config: MagentoConfig): void {
+    validateRequired({
+      baseUrl: config.baseUrl,
+      token: config.token,
+    }, {
+      service: 'MagentoApiService',
+      operation: 'configure',
+    });
+
+    this.config = {
+      ...config,
+      timeout: config.timeout || this.DEFAULT_TIMEOUT,
+      storeCode: config.storeCode || 'default',
+    };
   }
 
   private async makeRequest(
     endpoint: string,
     options: RequestInit = {}
   ): Promise<any> {
-    if (!this.baseUrl || !this.token) {
-      throw new Error('Magento API configuration is missing');
+    if (!this.config) {
+      throw new Error('Magento API configuration is missing. Call configure() first.');
     }
 
-    const url = `${this.baseUrl}/rest/V1${endpoint}`;
+    const url = `${this.config.baseUrl}/rest/V1${endpoint}`;
 
-    const response = await fetch(url, {
-      ...options,
-      headers: {
-        Authorization: `Bearer ${this.token}`,
-        'Content-Type': 'application/json',
-        ...options.headers,
-      },
-    });
+    try {
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), this.config.timeout);
 
-    if (!response.ok) {
-      throw new Error(
-        `Magento API error: ${response.status} ${response.statusText}`
-      );
+      const response = await fetch(url, {
+        ...options,
+        headers: {
+          Authorization: `Bearer ${this.config.token}`,
+          'Content-Type': 'application/json',
+          'Store': this.config.storeCode || 'default',
+          ...options.headers,
+        },
+        signal: controller.signal,
+      });
+
+      clearTimeout(timeoutId);
+
+      if (!response.ok) {
+        const errorBody = await response.text();
+        handleApiError(
+          new Error(`HTTP ${response.status}: ${response.statusText} - ${errorBody}`),
+          {
+            service: 'MagentoApiService',
+            operation: 'makeRequest',
+            metadata: { endpoint, method: options.method || 'GET', status: response.status },
+          }
+        );
+      }
+
+      return response.json();
+    } catch (error) {
+      if (error.name === 'AbortError') {
+        handleApiError(
+          new Error('Request timeout'),
+          {
+            service: 'MagentoApiService',
+            operation: 'makeRequest',
+            metadata: { endpoint, timeout: this.config.timeout },
+          }
+        );
+      }
+      
+      handleApiError(error, {
+        service: 'MagentoApiService',
+        operation: 'makeRequest',
+        metadata: { endpoint, method: options.method || 'GET' },
+      });
+    }
+  }
+
+  /**
+   * Test the connection to Magento API
+   */
+  async testConnection(): Promise<{ success: boolean; message: string }> {
+    if (!this.isConfigured()) {
+      return {
+        success: false,
+        message: 'API not configured',
+      };
     }
 
-    return response.json();
+    try {
+      // Test with a simple API call
+      await this.makeRequest('/store/storeConfigs');
+      return {
+        success: true,
+        message: 'Connection successful',
+      };
+    } catch (error) {
+      return {
+        success: false,
+        message: error instanceof Error ? error.message : 'Connection failed',
+      };
+    }
+  }
+
+  /**
+   * Get connection status with detailed information
+   */
+  async getConnectionStatus(): Promise<{
+    configured: boolean;
+    connected: boolean;
+    message: string;
+    lastTested?: Date;
+  }> {
+    const configured = this.isConfigured();
+    
+    if (!configured) {
+      return {
+        configured: false,
+        connected: false,
+        message: 'Not configured',
+      };
+    }
+
+    const connectionTest = await this.testConnection();
+    
+    return {
+      configured: true,
+      connected: connectionTest.success,
+      message: connectionTest.message,
+      lastTested: new Date(),
+    };
+  }
+
+  /**
+   * Create search criteria helper
+   */
+  createSearchCriteria(options: {
+    filters?: Array<{ field: string; value: string | number; condition?: string }>;
+    sortBy?: string;
+    sortDirection?: 'ASC' | 'DESC';
+    pageSize?: number;
+    currentPage?: number;
+  }): MagentoSearchCriteria {
+    const criteria: MagentoSearchCriteria = {};
+
+    if (options.filters && options.filters.length > 0) {
+      criteria.filterGroups = [{
+        filters: options.filters.map(filter => ({
+          field: filter.field,
+          value: filter.value,
+          condition_type: filter.condition || 'eq',
+        })),
+      }];
+    }
+
+    if (options.sortBy) {
+      criteria.sortOrders = [{
+        field: options.sortBy,
+        direction: options.sortDirection || 'ASC',
+      }];
+    }
+
+    if (options.pageSize) {
+      criteria.pageSize = options.pageSize;
+    }
+
+    if (options.currentPage) {
+      criteria.currentPage = options.currentPage;
+    }
+
+    return criteria;
   }
 
   // Order management
-  async getOrders(_customerId?: number): Promise<MagentoOrder[]> {
-    // Placeholder implementation - API integration pending
-    // const endpoint = customerId ? `/orders?searchCriteria[filter_groups][0][filters][0][field]=customer_id&searchCriteria[filter_groups][0][filters][0][value]=${customerId}` : '/orders'
-    // return this.makeRequest(endpoint)
-
-    return [];
+  async getOrders(searchCriteria?: MagentoSearchCriteria): Promise<MagentoOrder[]> {
+    const endpoint = '/orders';
+    const params: string[] = [];
+    if (searchCriteria) {
+      if (searchCriteria.filterGroups && searchCriteria.filterGroups.length > 0) {
+        params.push(`searchCriteria[filter_groups]=${JSON.stringify(searchCriteria.filterGroups)}`);
+      }
+      if (searchCriteria.sortOrders && searchCriteria.sortOrders.length > 0) {
+        params.push(`searchCriteria[sort_orders]=${JSON.stringify(searchCriteria.sortOrders)}`);
+      }
+      if (searchCriteria.pageSize) {
+        params.push(`searchCriteria[page_size]=${searchCriteria.pageSize}`);
+      }
+      if (searchCriteria.currentPage) {
+        params.push(`searchCriteria[current_page]=${searchCriteria.currentPage}`);
+      }
+    }
+    const queryString = params.length > 0 ? `?${params.join('&')}` : '';
+    return this.makeRequest(`${endpoint}${queryString}`);
   }
 
-  async getOrder(_orderId: string): Promise<MagentoOrder | null> {
-    // Placeholder implementation - API integration pending
-    // return this.makeRequest(`/orders/${orderId}`)
-
-    return null;
+  async getOrder(orderId: string): Promise<MagentoOrder | null> {
+    return this.makeRequest(`/orders/${orderId}`);
   }
 
-  async createOrder(_orderData: any): Promise<MagentoOrder> {
-    // Placeholder implementation - API integration pending
-    // return this.makeRequest('/orders', {
-    //   method: 'POST',
-    //   body: JSON.stringify({ entity: orderData })
-    // })
-
-    throw new Error('Order creation not yet implemented');
+  async createOrder(orderData: any): Promise<MagentoOrder> {
+    return this.makeRequest('/orders', {
+      method: 'POST',
+      body: JSON.stringify({ entity: orderData })
+    });
   }
 
   // Invoice management
-  async getInvoices(_orderId?: number): Promise<MagentoInvoice[]> {
-    // Placeholder implementation - API integration pending
-    // const endpoint = orderId ? `/invoices?searchCriteria[filter_groups][0][filters][0][field]=order_id&searchCriteria[filter_groups][0][filters][0][value]=${orderId}` : '/invoices'
-    // return this.makeRequest(endpoint)
-
-    return [];
+  async getInvoices(searchCriteria?: MagentoSearchCriteria): Promise<MagentoInvoice[]> {
+    const endpoint = '/invoices';
+    const params: string[] = [];
+    if (searchCriteria) {
+      if (searchCriteria.filterGroups && searchCriteria.filterGroups.length > 0) {
+        params.push(`searchCriteria[filter_groups]=${JSON.stringify(searchCriteria.filterGroups)}`);
+      }
+      if (searchCriteria.sortOrders && searchCriteria.sortOrders.length > 0) {
+        params.push(`searchCriteria[sort_orders]=${JSON.stringify(searchCriteria.sortOrders)}`);
+      }
+      if (searchCriteria.pageSize) {
+        params.push(`searchCriteria[page_size]=${searchCriteria.pageSize}`);
+      }
+      if (searchCriteria.currentPage) {
+        params.push(`searchCriteria[current_page]=${searchCriteria.currentPage}`);
+      }
+    }
+    const queryString = params.length > 0 ? `?${params.join('&')}` : '';
+    return this.makeRequest(`${endpoint}${queryString}`);
   }
 
-  async getInvoice(_invoiceId: string): Promise<MagentoInvoice | null> {
-    // Placeholder implementation - API integration pending
-    // return this.makeRequest(`/invoices/${invoiceId}`)
-
-    return null;
+  async getInvoice(invoiceId: string): Promise<MagentoInvoice | null> {
+    return this.makeRequest(`/invoices/${invoiceId}`);
   }
 
   // Product management
-  async getProducts(): Promise<MagentoProduct[]> {
-    // Placeholder implementation - API integration pending
-    // return this.makeRequest('/products?searchCriteria[currentPage]=1&searchCriteria[pageSize]=100')
-
-    return [];
+  async getProducts(searchCriteria?: MagentoSearchCriteria): Promise<MagentoProduct[]> {
+    const endpoint = '/products';
+    const params: string[] = [];
+    if (searchCriteria) {
+      if (searchCriteria.filterGroups && searchCriteria.filterGroups.length > 0) {
+        params.push(`searchCriteria[filter_groups]=${JSON.stringify(searchCriteria.filterGroups)}`);
+      }
+      if (searchCriteria.sortOrders && searchCriteria.sortOrders.length > 0) {
+        params.push(`searchCriteria[sort_orders]=${JSON.stringify(searchCriteria.sortOrders)}`);
+      }
+      if (searchCriteria.pageSize) {
+        params.push(`searchCriteria[page_size]=${searchCriteria.pageSize}`);
+      }
+      if (searchCriteria.currentPage) {
+        params.push(`searchCriteria[current_page]=${searchCriteria.currentPage}`);
+      }
+    }
+    const queryString = params.length > 0 ? `?${params.join('&')}` : '';
+    return this.makeRequest(`${endpoint}${queryString}`);
   }
 
-  async getProduct(_sku: string): Promise<MagentoProduct | null> {
-    // Placeholder implementation - API integration pending
-    // return this.makeRequest(`/products/${encodeURIComponent(sku)}`)
-
-    return null;
+  async getProduct(sku: string): Promise<MagentoProduct | null> {
+    return this.makeRequest(`/products/${encodeURIComponent(sku)}`);
   }
 
   // Utility methods
   isConfigured(): boolean {
-    return !!(this.baseUrl && this.token);
-  }
-
-  getConnectionStatus(): string {
-    if (!this.isConfigured()) {
-      return 'Not configured';
-    }
-
-    // Connection test implementation pending
-    return 'Ready (not tested)';
+    return !!(this.config?.baseUrl && this.config?.token);
   }
 }
 

@@ -8,7 +8,7 @@
   >
     <q-card class="shopping-cart-dialog">
       <q-card-section class="row items-center q-pb-none">
-        <div class="text-h6">{{ $t("productsPage.cart.title") }}</div>
+        <div class="text-h6">{{ $t('productsPage.cart.title') }}</div>
         <q-space />
         <q-btn icon="close" flat round dense v-close-popup />
       </q-card-section>
@@ -18,7 +18,7 @@
         <div v-if="cartItems.length === 0" class="text-center q-pa-lg">
           <q-icon name="shopping_cart" size="4rem" color="grey-5" />
           <div class="text-h6 q-mt-md text-grey-7">
-            {{ $t("productsPage.cart.empty") }}
+            {{ $t('productsPage.cart.empty') }}
           </div>
         </div>
 
@@ -31,7 +31,7 @@
                 <div class="row items-center">
                   <div class="col">
                     <div class="text-subtitle1">
-                      {{ $t("productsPage.cart.totalItems") }}: {{ totalItems }}
+                      {{ $t('productsPage.cart.totalItems') }}: {{ totalItems }}
                     </div>
                     <div class="text-h5 text-primary">
                       {{ formatPrice(cartTotal) }}
@@ -75,11 +75,11 @@
                 }}</q-item-label>
                 <q-item-label caption>{{ item.product.sku }}</q-item-label>
                 <q-item-label v-if="item.supplier_id" caption>
-                  {{ $t("productsPage.details.supplier") }}:
+                  {{ $t('productsPage.details.supplier') }}:
                   {{ item.supplier_id }}
                 </q-item-label>
                 <q-item-label caption>
-                  {{ $t("productsPage.cart.unitPrice") }}:
+                  {{ $t('productsPage.cart.unitPrice') }}:
                   {{ formatPrice(item.unit_price || 0) }}
                 </q-item-label>
               </q-item-section>
@@ -151,112 +151,112 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue';
-import { useI18n } from 'vue-i18n';
-import { useQuasar } from 'quasar';
-import type { CartItem } from 'src/types/inventory';
+  import { computed } from 'vue';
+  import { useI18n } from 'vue-i18n';
+  import { useQuasar } from 'quasar';
+  import type { CartItem } from 'src/types/inventory';
 
-interface Props {
-  modelValue: boolean;
-  cartItems: CartItem[];
-  cartTotal: number;
-}
-
-interface Emits {
-  (e: 'update:modelValue', value: boolean): void;
-  (
-    e: 'updateQuantity',
-    productId: string,
-    quantity: number,
-    supplierId?: string
-  ): void;
-  (e: 'removeItem', productId: string, supplierId?: string): void;
-  (e: 'clearCart'): void;
-  (e: 'checkout'): void;
-}
-
-const props = defineProps<Props>();
-const emit = defineEmits<Emits>();
-
-const { t } = useI18n();
-const $q = useQuasar();
-
-// Computed properties
-const totalItems = computed(() => {
-  return props.cartItems.reduce((sum, item) => sum + item.quantity, 0);
-});
-
-// Methods
-const formatPrice = (price: number): string => {
-  return new Intl.NumberFormat('nl-NL', {
-    style: 'currency',
-    currency: 'EUR',
-  }).format(price);
-};
-
-const updateQuantity = (item: CartItem, quantity: number) => {
-  if (quantity > 0) {
-    emit('updateQuantity', item.product_id, quantity, item.supplier_id);
+  interface Props {
+    modelValue: boolean;
+    cartItems: CartItem[];
+    cartTotal: number;
   }
-};
 
-const increaseQuantity = (item: CartItem) => {
-  updateQuantity(item, item.quantity + 1);
-};
-
-const decreaseQuantity = (item: CartItem) => {
-  if (item.quantity > 1) {
-    updateQuantity(item, item.quantity - 1);
+  interface Emits {
+    (e: 'update:modelValue', value: boolean): void;
+    (
+      e: 'updateQuantity',
+      productId: string,
+      quantity: number,
+      supplierId?: string
+    ): void;
+    (e: 'removeItem', productId: string, supplierId?: string): void;
+    (e: 'clearCart'): void;
+    (e: 'checkout'): void;
   }
-};
 
-const removeItem = (item: CartItem) => {
-  $q.dialog({
-    title: t('common.confirm'),
-    message: t('productsPage.cart.remove') + ': ' + item.product.name,
-    cancel: true,
-    persistent: true,
-  }).onOk(() => {
-    emit('removeItem', item.product_id, item.supplier_id);
+  const props = defineProps<Props>();
+  const emit = defineEmits<Emits>();
+
+  const { t } = useI18n();
+  const $q = useQuasar();
+
+  // Computed properties
+  const totalItems = computed(() => {
+    return props.cartItems.reduce((sum, item) => sum + item.quantity, 0);
   });
-};
 
-const confirmClearCart = () => {
-  $q.dialog({
-    title: t('productsPage.cart.clear'),
-    message: 'Weet je zeker dat je de winkelwagen wilt legen?',
-    cancel: true,
-    persistent: true,
-  }).onOk(() => {
-    emit('clearCart');
-  });
-};
+  // Methods
+  const formatPrice = (price: number): string => {
+    return new Intl.NumberFormat('nl-NL', {
+      style: 'currency',
+      currency: 'EUR',
+    }).format(price);
+  };
 
-const checkout = () => {
-  emit('checkout');
-};
+  const updateQuantity = (item: CartItem, quantity: number) => {
+    if (quantity > 0) {
+      emit('updateQuantity', item.product_id, quantity, item.supplier_id);
+    }
+  };
+
+  const increaseQuantity = (item: CartItem) => {
+    updateQuantity(item, item.quantity + 1);
+  };
+
+  const decreaseQuantity = (item: CartItem) => {
+    if (item.quantity > 1) {
+      updateQuantity(item, item.quantity - 1);
+    }
+  };
+
+  const removeItem = (item: CartItem) => {
+    $q.dialog({
+      title: t('common.confirm'),
+      message: t('productsPage.cart.remove') + ': ' + item.product.name,
+      cancel: true,
+      persistent: true,
+    }).onOk(() => {
+      emit('removeItem', item.product_id, item.supplier_id);
+    });
+  };
+
+  const confirmClearCart = () => {
+    $q.dialog({
+      title: t('productsPage.cart.clear'),
+      message: 'Weet je zeker dat je de winkelwagen wilt legen?',
+      cancel: true,
+      persistent: true,
+    }).onOk(() => {
+      emit('clearCart');
+    });
+  };
+
+  const checkout = () => {
+    emit('checkout');
+  };
 </script>
 
 <style lang="scss" scoped>
-.shopping-cart-dialog {
-  width: 100%;
-  max-width: 100%;
-  height: 100%;
+  .shopping-cart-dialog {
+    width: 100%;
+    max-width: 100%;
+    height: 100%;
 
-  .cart-content {
-    flex: 1;
-    overflow-y: auto;
-  }
+    .cart-content {
+      flex: 1;
+      overflow-y: auto;
+    }
 
-  .cart-item {
-    min-height: 100px;
-  }
+    .cart-item {
+      min-height: 100px;
+    }
 
-  .cart-summary {
-    position: sticky;
-    top: 0;
-    z-index: 1;
-    background: white;
+    .cart-summary {
+      position: sticky;
+      top: 0;
+      z-index: 1;
+      background: white;
+    }
   }
-}
 </style>

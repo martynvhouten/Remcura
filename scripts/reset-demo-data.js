@@ -9,29 +9,29 @@
  * Usage: node scripts/reset-demo-data.js
  */
 
-import { exec } from "child_process";
-import { promisify } from "util";
+import { exec } from 'child_process';
+import { promisify } from 'util';
 
 const execAsync = promisify(exec);
 
-const DEMO_PRACTICE_ID = "550e8400-e29b-41d4-a716-446655440000";
-const SUPABASE_PROJECT_ID = "qdvatwfakrtoggjjofuy";
+const DEMO_PRACTICE_ID = '550e8400-e29b-41d4-a716-446655440000';
+const SUPABASE_PROJECT_ID = 'qdvatwfakrtoggjjofuy';
 
 async function resetDemoData() {
-  console.log("🔄 Starting demo data reset...");
+  console.log('🔄 Starting demo data reset...');
 
   try {
     // Step 1: Clear existing demo data
-    console.log("1️⃣ Clearing existing demo data...");
+    console.log('1️⃣ Clearing existing demo data...');
     const clearResult = await execAsync(`
       mcp execute --tool mcp_supabase_execute_sql \\
         --project-id ${SUPABASE_PROJECT_ID} \\
         --query "SELECT reset_demo_data();"
     `);
-    console.log("✅ Demo data cleared:", clearResult.stdout);
+    console.log('✅ Demo data cleared:', clearResult.stdout);
 
     // Step 2: Recreate suppliers
-    console.log("2️⃣ Recreating suppliers...");
+    console.log('2️⃣ Recreating suppliers...');
     const suppliersResult = await execAsync(`
       mcp execute --tool mcp_supabase_execute_sql \\
         --project-id ${SUPABASE_PROJECT_ID} \\
@@ -45,10 +45,10 @@ async function resetDemoData() {
           updated_at = NOW();
         "
     `);
-    console.log("✅ Suppliers recreated");
+    console.log('✅ Suppliers recreated');
 
     // Step 3: Recreate practice locations
-    console.log("3️⃣ Recreating practice locations...");
+    console.log('3️⃣ Recreating practice locations...');
     const locationsResult = await execAsync(`
       mcp execute --tool mcp_supabase_execute_sql \\
         --project-id ${SUPABASE_PROJECT_ID} \\
@@ -81,10 +81,10 @@ async function resetDemoData() {
         ON CONFLICT (practice_id, location_id) DO NOTHING;
         "
     `);
-    console.log("✅ Practice locations recreated");
+    console.log('✅ Practice locations recreated');
 
     // Step 4: Recreate stock levels with realistic data
-    console.log("4️⃣ Recreating stock levels...");
+    console.log('4️⃣ Recreating stock levels...');
     const stockResult = await execAsync(`
       mcp execute --tool mcp_supabase_execute_sql \\
         --project-id ${SUPABASE_PROJECT_ID} \\
@@ -125,10 +125,10 @@ async function resetDemoData() {
           last_counted_at = EXCLUDED.last_counted_at;
         "
     `);
-    console.log("✅ Stock levels recreated");
+    console.log('✅ Stock levels recreated');
 
     // Step 5: Recreate sample orders
-    console.log("5️⃣ Recreating sample orders...");
+    console.log('5️⃣ Recreating sample orders...');
     const ordersResult = await execAsync(`
       mcp execute --tool mcp_supabase_execute_sql \\
         --project-id ${SUPABASE_PROJECT_ID} \\
@@ -180,20 +180,20 @@ async function resetDemoData() {
         ) p;
         "
     `);
-    console.log("✅ Sample orders recreated");
+    console.log('✅ Sample orders recreated');
 
-    console.log("✅ Demo data reset completed successfully!");
-    console.log("📊 New demo data includes:");
-    console.log("   • 2 suppliers (Remka B.V. & Medishop Direct)");
-    console.log("   • 3 practice locations with stock settings");
-    console.log("   • 39 stock level entries across all locations");
-    console.log("   • Sample orders with realistic data");
-    console.log("");
+    console.log('✅ Demo data reset completed successfully!');
+    console.log('📊 New demo data includes:');
+    console.log('   • 2 suppliers (Remka B.V. & Medishop Direct)');
+    console.log('   • 3 practice locations with stock settings');
+    console.log('   • 39 stock level entries across all locations');
+    console.log('   • Sample orders with realistic data');
+    console.log('');
     console.log(
-      "🎯 You can now test the demo account at: demo@medstock-pro.com"
+      '🎯 You can now test the demo account at: demo@medstock-pro.com'
     );
   } catch (error) {
-    console.error("❌ Error resetting demo data:", error);
+    console.error('❌ Error resetting demo data:', error);
     process.exit(1);
   }
 }

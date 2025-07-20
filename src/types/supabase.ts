@@ -6,6 +6,83 @@ export type Json =
   | { [key: string]: Json | undefined }
   | Json[];
 
+// Properly typed interfaces for database fields
+export interface PracticeSettings {
+  timezone?: string;
+  currency?: string;
+  language?: string;
+  notifications?: {
+    email?: boolean;
+    push?: boolean;
+    sms?: boolean;
+  };
+  features?: {
+    batchTracking?: boolean;
+    multiLocation?: boolean;
+    analytics?: boolean;
+  };
+  theme?: {
+    primaryColor?: string;
+    logoUrl?: string;
+  };
+}
+
+export interface AuditLogData {
+  action?: string;
+  table?: string;
+  record_id?: string;
+  field_changes?: Record<string, { from: any; to: any }>;
+  user_agent?: string;
+  ip_address?: string;
+  timestamp?: string;
+}
+
+export interface AnalyticsEventData {
+  action?: string;
+  page?: string;
+  component?: string;
+  duration?: number;
+  metadata?: Record<string, string | number | boolean>;
+  performance?: {
+    loadTime?: number;
+    responseTime?: number;
+  };
+}
+
+export interface UserSettings {
+  language?: string;
+  timezone?: string;
+  notifications?: {
+    email?: boolean;
+    push?: boolean;
+  };
+  preferences?: {
+    defaultView?: string;
+    itemsPerPage?: number;
+  };
+}
+
+export interface MagentoAddress {
+  firstname?: string;
+  lastname?: string;
+  company?: string;
+  street?: string[];
+  city?: string;
+  region?: string;
+  postcode?: string;
+  country_id?: string;
+  telephone?: string;
+  email?: string;
+}
+
+export interface MagentoPayment {
+  method?: string;
+  amount_ordered?: number;
+  currency_code?: string;
+  transaction_id?: string;
+  additional_information?: string[];
+}
+
 export interface Database {
   public: {
     Tables: {
@@ -19,7 +96,7 @@ export interface Database {
           city: string | null;
           postal_code: string | null;
           country: string | null;
-          settings: any | null;
+          settings: PracticeSettings | null;
           created_at: string;
           updated_at: string;
           created_by: string | null;
@@ -34,7 +111,7 @@ export interface Database {
           city?: string | null;
           postal_code?: string | null;
           country?: string | null;
-          settings?: any | null;
+          settings?: PracticeSettings | null;
           created_at?: string;
           updated_at?: string;
           created_by?: string | null;
@@ -49,7 +126,7 @@ export interface Database {
           city?: string | null;
           postal_code?: string | null;
           country?: string | null;
-          settings?: any | null;
+          settings?: PracticeSettings | null;
           created_at?: string;
           updated_at?: string;
           created_by?: string | null;
@@ -90,11 +167,11 @@ export interface Database {
         };
         Relationships: [
           {
-            foreignKeyName: "practice_members_practice_id_fkey";
-            columns: ["practice_id"];
+            foreignKeyName: 'practice_members_practice_id_fkey';
+            columns: ['practice_id'];
             isOneToOne: false;
-            referencedRelation: "practices";
-            referencedColumns: ["id"];
+            referencedRelation: 'practices';
+            referencedColumns: ['id'];
           }
         ];
       };
@@ -188,11 +265,11 @@ export interface Database {
         };
         Relationships: [
           {
-            foreignKeyName: "product_lists_practice_id_fkey";
-            columns: ["practice_id"];
+            foreignKeyName: 'product_lists_practice_id_fkey';
+            columns: ['practice_id'];
             isOneToOne: false;
-            referencedRelation: "practices";
-            referencedColumns: ["id"];
+            referencedRelation: 'practices';
+            referencedColumns: ['id'];
           }
         ];
       };
@@ -247,18 +324,18 @@ export interface Database {
         };
         Relationships: [
           {
-            foreignKeyName: "product_list_items_product_list_id_fkey";
-            columns: ["product_list_id"];
+            foreignKeyName: 'product_list_items_product_list_id_fkey';
+            columns: ['product_list_id'];
             isOneToOne: false;
-            referencedRelation: "product_lists";
-            referencedColumns: ["id"];
+            referencedRelation: 'product_lists';
+            referencedColumns: ['id'];
           },
           {
-            foreignKeyName: "product_list_items_product_id_fkey";
-            columns: ["product_id"];
+            foreignKeyName: 'product_list_items_product_id_fkey';
+            columns: ['product_id'];
             isOneToOne: false;
-            referencedRelation: "products";
-            referencedColumns: ["id"];
+            referencedRelation: 'products';
+            referencedColumns: ['id'];
           }
         ];
       };
@@ -298,18 +375,18 @@ export interface Database {
         };
         Relationships: [
           {
-            foreignKeyName: "stock_entries_practice_id_fkey";
-            columns: ["practice_id"];
+            foreignKeyName: 'stock_entries_practice_id_fkey';
+            columns: ['practice_id'];
             isOneToOne: false;
-            referencedRelation: "practices";
-            referencedColumns: ["id"];
+            referencedRelation: 'practices';
+            referencedColumns: ['id'];
           },
           {
-            foreignKeyName: "stock_entries_product_id_fkey";
-            columns: ["product_id"];
+            foreignKeyName: 'stock_entries_product_id_fkey';
+            columns: ['product_id'];
             isOneToOne: false;
-            referencedRelation: "products";
-            referencedColumns: ["id"];
+            referencedRelation: 'products';
+            referencedColumns: ['id'];
           }
         ];
       };
@@ -352,18 +429,18 @@ export interface Database {
         };
         Relationships: [
           {
-            foreignKeyName: "order_suggestions_practice_id_fkey";
-            columns: ["practice_id"];
+            foreignKeyName: 'order_suggestions_practice_id_fkey';
+            columns: ['practice_id'];
             isOneToOne: false;
-            referencedRelation: "practices";
-            referencedColumns: ["id"];
+            referencedRelation: 'practices';
+            referencedColumns: ['id'];
           },
           {
-            foreignKeyName: "order_suggestions_product_id_fkey";
-            columns: ["product_id"];
+            foreignKeyName: 'order_suggestions_product_id_fkey';
+            columns: ['product_id'];
             isOneToOne: false;
-            referencedRelation: "products";
-            referencedColumns: ["id"];
+            referencedRelation: 'products';
+            referencedColumns: ['id'];
           }
         ];
       };
@@ -375,8 +452,8 @@ export interface Database {
           activity_type: string;
           table_name: string | null;
           record_id: string | null;
-          old_values: any | null;
-          new_values: any | null;
+          old_values: AuditLogData | null;
+          new_values: AuditLogData | null;
           description: string | null;
           created_at: string;
         };
@@ -387,8 +464,8 @@ export interface Database {
           activity_type: string;
           table_name?: string | null;
           record_id?: string | null;
-          old_values?: any | null;
-          new_values?: any | null;
+          old_values?: AuditLogData | null;
+          new_values?: AuditLogData | null;
           description?: string | null;
           created_at?: string;
         };
@@ -399,18 +476,18 @@ export interface Database {
           activity_type?: string;
           table_name?: string | null;
           record_id?: string | null;
-          old_values?: any | null;
-          new_values?: any | null;
+          old_values?: AuditLogData | null;
+          new_values?: AuditLogData | null;
           description?: string | null;
           created_at?: string;
         };
         Relationships: [
           {
-            foreignKeyName: "activity_log_practice_id_fkey";
-            columns: ["practice_id"];
+            foreignKeyName: 'activity_log_practice_id_fkey';
+            columns: ['practice_id'];
             isOneToOne: false;
-            referencedRelation: "practices";
-            referencedColumns: ["id"];
+            referencedRelation: 'practices';
+            referencedColumns: ['id'];
           }
         ];
       };
@@ -450,18 +527,18 @@ export interface Database {
         };
         Relationships: [
           {
-            foreignKeyName: "shopping_carts_practice_id_fkey";
-            columns: ["practice_id"];
+            foreignKeyName: 'shopping_carts_practice_id_fkey';
+            columns: ['practice_id'];
             isOneToOne: false;
-            referencedRelation: "practices";
-            referencedColumns: ["id"];
+            referencedRelation: 'practices';
+            referencedColumns: ['id'];
           },
           {
-            foreignKeyName: "shopping_carts_created_by_fkey";
-            columns: ["created_by"];
+            foreignKeyName: 'shopping_carts_created_by_fkey';
+            columns: ['created_by'];
             isOneToOne: false;
-            referencedRelation: "users";
-            referencedColumns: ["id"];
+            referencedRelation: 'users';
+            referencedColumns: ['id'];
           }
         ];
       };
@@ -498,18 +575,18 @@ export interface Database {
         };
         Relationships: [
           {
-            foreignKeyName: "shopping_cart_items_cart_id_fkey";
-            columns: ["cart_id"];
+            foreignKeyName: 'shopping_cart_items_cart_id_fkey';
+            columns: ['cart_id'];
             isOneToOne: false;
-            referencedRelation: "shopping_carts";
-            referencedColumns: ["id"];
+            referencedRelation: 'shopping_carts';
+            referencedColumns: ['id'];
           },
           {
-            foreignKeyName: "shopping_cart_items_product_id_fkey";
-            columns: ["product_id"];
+            foreignKeyName: 'shopping_cart_items_product_id_fkey';
+            columns: ['product_id'];
             isOneToOne: false;
-            referencedRelation: "products";
-            referencedColumns: ["id"];
+            referencedRelation: 'products';
+            referencedColumns: ['id'];
           }
         ];
       };
@@ -630,18 +707,18 @@ export interface Database {
         };
         Relationships: [
           {
-            foreignKeyName: "orders_practice_id_fkey";
-            columns: ["practice_id"];
+            foreignKeyName: 'orders_practice_id_fkey';
+            columns: ['practice_id'];
             isOneToOne: false;
-            referencedRelation: "practices";
-            referencedColumns: ["id"];
+            referencedRelation: 'practices';
+            referencedColumns: ['id'];
           },
           {
-            foreignKeyName: "orders_supplier_id_fkey";
-            columns: ["supplier_id"];
+            foreignKeyName: 'orders_supplier_id_fkey';
+            columns: ['supplier_id'];
             isOneToOne: false;
-            referencedRelation: "suppliers";
-            referencedColumns: ["id"];
+            referencedRelation: 'suppliers';
+            referencedColumns: ['id'];
           }
         ];
       };
@@ -678,18 +755,18 @@ export interface Database {
         };
         Relationships: [
           {
-            foreignKeyName: "order_items_order_id_fkey";
-            columns: ["order_id"];
+            foreignKeyName: 'order_items_order_id_fkey';
+            columns: ['order_id'];
             isOneToOne: false;
-            referencedRelation: "orders";
-            referencedColumns: ["id"];
+            referencedRelation: 'orders';
+            referencedColumns: ['id'];
           },
           {
-            foreignKeyName: "order_items_product_id_fkey";
-            columns: ["product_id"];
+            foreignKeyName: 'order_items_product_id_fkey';
+            columns: ['product_id'];
             isOneToOne: false;
-            referencedRelation: "products";
-            referencedColumns: ["id"];
+            referencedRelation: 'products';
+            referencedColumns: ['id'];
           }
         ];
       };
@@ -738,11 +815,11 @@ export interface Database {
         };
         Relationships: [
           {
-            foreignKeyName: "locations_practice_id_fkey";
-            columns: ["practice_id"];
+            foreignKeyName: 'locations_practice_id_fkey';
+            columns: ['practice_id'];
             isOneToOne: false;
-            referencedRelation: "practices";
-            referencedColumns: ["id"];
+            referencedRelation: 'practices';
+            referencedColumns: ['id'];
           }
         ];
       };
@@ -785,18 +862,18 @@ export interface Database {
         };
         Relationships: [
           {
-            foreignKeyName: "user_permissions_user_id_fkey";
-            columns: ["user_id"];
+            foreignKeyName: 'user_permissions_user_id_fkey';
+            columns: ['user_id'];
             isOneToOne: false;
-            referencedRelation: "users";
-            referencedColumns: ["id"];
+            referencedRelation: 'users';
+            referencedColumns: ['id'];
           },
           {
-            foreignKeyName: "user_permissions_practice_id_fkey";
-            columns: ["practice_id"];
+            foreignKeyName: 'user_permissions_practice_id_fkey';
+            columns: ['practice_id'];
             isOneToOne: false;
-            referencedRelation: "practices";
-            referencedColumns: ["id"];
+            referencedRelation: 'practices';
+            referencedColumns: ['id'];
           }
         ];
       };
@@ -807,7 +884,7 @@ export interface Database {
           user_id: string | null;
           location_id: string | null;
           event_type: string;
-          event_data: any | null;
+          event_data: AnalyticsEventData | null;
           session_id: string | null;
           ip_address: string | null;
           user_agent: string | null;
@@ -819,7 +896,7 @@ export interface Database {
           user_id?: string | null;
           location_id?: string | null;
           event_type: string;
-          event_data?: any | null;
+          event_data?: AnalyticsEventData | null;
           session_id?: string | null;
           ip_address?: string | null;
           user_agent?: string | null;
@@ -831,7 +908,7 @@ export interface Database {
           user_id?: string | null;
           location_id?: string | null;
           event_type?: string;
-          event_data?: any | null;
+          event_data?: AnalyticsEventData | null;
           session_id?: string | null;
           ip_address?: string | null;
           user_agent?: string | null;
@@ -839,11 +916,11 @@ export interface Database {
         };
         Relationships: [
           {
-            foreignKeyName: "usage_analytics_practice_id_fkey";
-            columns: ["practice_id"];
+            foreignKeyName: 'usage_analytics_practice_id_fkey';
+            columns: ['practice_id'];
             isOneToOne: false;
-            referencedRelation: "practices";
-            referencedColumns: ["id"];
+            referencedRelation: 'practices';
+            referencedColumns: ['id'];
           }
         ];
       };
@@ -855,7 +932,7 @@ export interface Database {
           notification_type: string;
           channel: string;
           is_enabled: boolean;
-          settings: any | null;
+          settings: UserSettings | null;
           created_at: string;
           updated_at: string;
         };
@@ -866,7 +943,7 @@ export interface Database {
           notification_type: string;
           channel: string;
           is_enabled?: boolean;
-          settings?: any | null;
+          settings?: UserSettings | null;
           created_at?: string;
           updated_at?: string;
         };
@@ -877,17 +954,17 @@ export interface Database {
           notification_type?: string;
           channel?: string;
           is_enabled?: boolean;
-          settings?: any | null;
+          settings?: UserSettings | null;
           created_at?: string;
           updated_at?: string;
         };
         Relationships: [
           {
-            foreignKeyName: "notification_settings_user_id_fkey";
-            columns: ["user_id"];
+            foreignKeyName: 'notification_settings_user_id_fkey';
+            columns: ['user_id'];
             isOneToOne: false;
-            referencedRelation: "users";
-            referencedColumns: ["id"];
+            referencedRelation: 'users';
+            referencedColumns: ['id'];
           }
         ];
       };
@@ -921,11 +998,11 @@ export interface Database {
         };
         Relationships: [
           {
-            foreignKeyName: "push_tokens_user_id_fkey";
-            columns: ["user_id"];
+            foreignKeyName: 'push_tokens_user_id_fkey';
+            columns: ['user_id'];
             isOneToOne: false;
-            referencedRelation: "users";
-            referencedColumns: ["id"];
+            referencedRelation: 'users';
+            referencedColumns: ['id'];
           }
         ];
       };
@@ -993,11 +1070,11 @@ export interface Database {
         };
         Relationships: [
           {
-            foreignKeyName: "user_profiles_clinic_id_fkey";
-            columns: ["clinic_id"];
+            foreignKeyName: 'user_profiles_clinic_id_fkey';
+            columns: ['clinic_id'];
             isOneToOne: false;
-            referencedRelation: "clinics";
-            referencedColumns: ["id"];
+            referencedRelation: 'clinics';
+            referencedColumns: ['id'];
           }
         ];
       };
@@ -1046,11 +1123,11 @@ export interface Database {
         };
         Relationships: [
           {
-            foreignKeyName: "clinic_products_clinic_id_fkey";
-            columns: ["clinic_id"];
+            foreignKeyName: 'clinic_products_clinic_id_fkey';
+            columns: ['clinic_id'];
             isOneToOne: false;
-            referencedRelation: "clinics";
-            referencedColumns: ["id"];
+            referencedRelation: 'clinics';
+            referencedColumns: ['id'];
           }
         ];
       };
@@ -1105,76 +1182,76 @@ export interface Database {
 
 // Type helpers for easier usage
 // New database types
-export type Practice = Database["public"]["Tables"]["practices"]["Row"];
+export type Practice = Database['public']['Tables']['practices']['Row'];
 export type PracticeMember =
-  Database["public"]["Tables"]["practice_members"]["Row"];
-export type ActivityLog = Database["public"]["Tables"]["activity_log"]["Row"];
+  Database['public']['Tables']['practice_members']['Row'];
+export type ActivityLog = Database['public']['Tables']['activity_log']['Row'];
 
 // Legacy types (keeping for backward compatibility with other modules)
-export type Clinic = Database["public"]["Tables"]["clinics"]["Row"];
-export type UserProfile = Database["public"]["Tables"]["user_profiles"]["Row"];
+export type Clinic = Database['public']['Tables']['clinics']['Row'];
+export type UserProfile = Database['public']['Tables']['user_profiles']['Row'];
 
 export type PracticeInsert =
-  Database["public"]["Tables"]["practices"]["Insert"];
+  Database['public']['Tables']['practices']['Insert'];
 
-export type ClinicInsert = Database["public"]["Tables"]["clinics"]["Insert"];
+export type ClinicInsert = Database['public']['Tables']['clinics']['Insert'];
 export type UserProfileInsert =
-  Database["public"]["Tables"]["user_profiles"]["Insert"];
+  Database['public']['Tables']['user_profiles']['Insert'];
 
 export type PracticeUpdate =
-  Database["public"]["Tables"]["practices"]["Update"];
+  Database['public']['Tables']['practices']['Update'];
 
-export type ClinicUpdate = Database["public"]["Tables"]["clinics"]["Update"];
+export type ClinicUpdate = Database['public']['Tables']['clinics']['Update'];
 export type UserProfileUpdate =
-  Database["public"]["Tables"]["user_profiles"]["Update"];
+  Database['public']['Tables']['user_profiles']['Update'];
 
 export type PracticeWithMembers = Practice & {
   practice_members?: PracticeMember[];
 };
 
-export type Supplier = Database["public"]["Tables"]["suppliers"]["Row"];
-export type Order = Database["public"]["Tables"]["orders"]["Row"];
-export type OrderItem = Database["public"]["Tables"]["order_items"]["Row"];
-export type Location = Database["public"]["Tables"]["locations"]["Row"];
+export type Supplier = Database['public']['Tables']['suppliers']['Row'];
+export type Order = Database['public']['Tables']['orders']['Row'];
+export type OrderItem = Database['public']['Tables']['order_items']['Row'];
+export type Location = Database['public']['Tables']['locations']['Row'];
 export type UserPermission =
-  Database["public"]["Tables"]["user_permissions"]["Row"];
+  Database['public']['Tables']['user_permissions']['Row'];
 export type UsageAnalytics =
-  Database["public"]["Tables"]["usage_analytics"]["Row"];
+  Database['public']['Tables']['usage_analytics']['Row'];
 export type NotificationSettings =
-  Database["public"]["Tables"]["notification_settings"]["Row"];
-export type PushToken = Database["public"]["Tables"]["push_tokens"]["Row"];
+  Database['public']['Tables']['notification_settings']['Row'];
+export type PushToken = Database['public']['Tables']['push_tokens']['Row'];
 
 export type SupplierInsert =
-  Database["public"]["Tables"]["suppliers"]["Insert"];
-export type OrderInsert = Database["public"]["Tables"]["orders"]["Insert"];
+  Database['public']['Tables']['suppliers']['Insert'];
+export type OrderInsert = Database['public']['Tables']['orders']['Insert'];
 export type OrderItemInsert =
-  Database["public"]["Tables"]["order_items"]["Insert"];
+  Database['public']['Tables']['order_items']['Insert'];
 export type LocationInsert =
-  Database["public"]["Tables"]["locations"]["Insert"];
+  Database['public']['Tables']['locations']['Insert'];
 export type UserPermissionInsert =
-  Database["public"]["Tables"]["user_permissions"]["Insert"];
+  Database['public']['Tables']['user_permissions']['Insert'];
 export type UsageAnalyticsInsert =
-  Database["public"]["Tables"]["usage_analytics"]["Insert"];
+  Database['public']['Tables']['usage_analytics']['Insert'];
 export type NotificationSettingsInsert =
-  Database["public"]["Tables"]["notification_settings"]["Insert"];
+  Database['public']['Tables']['notification_settings']['Insert'];
 export type PushTokenInsert =
-  Database["public"]["Tables"]["push_tokens"]["Insert"];
+  Database['public']['Tables']['push_tokens']['Insert'];
 
 export type SupplierUpdate =
-  Database["public"]["Tables"]["suppliers"]["Update"];
-export type OrderUpdate = Database["public"]["Tables"]["orders"]["Update"];
+  Database['public']['Tables']['suppliers']['Update'];
+export type OrderUpdate = Database['public']['Tables']['orders']['Update'];
 export type OrderItemUpdate =
-  Database["public"]["Tables"]["order_items"]["Update"];
+  Database['public']['Tables']['order_items']['Update'];
 export type LocationUpdate =
-  Database["public"]["Tables"]["locations"]["Update"];
+  Database['public']['Tables']['locations']['Update'];
 export type UserPermissionUpdate =
-  Database["public"]["Tables"]["user_permissions"]["Update"];
+  Database['public']['Tables']['user_permissions']['Update'];
 export type UsageAnalyticsUpdate =
-  Database["public"]["Tables"]["usage_analytics"]["Update"];
+  Database['public']['Tables']['usage_analytics']['Update'];
 export type NotificationSettingsUpdate =
-  Database["public"]["Tables"]["notification_settings"]["Update"];
+  Database['public']['Tables']['notification_settings']['Update'];
 export type PushTokenUpdate =
-  Database["public"]["Tables"]["push_tokens"]["Update"];
+  Database['public']['Tables']['push_tokens']['Update'];
 
 export type PracticeWithLocations = Practice & {
   locations?: Location[];
@@ -1183,31 +1260,31 @@ export type PracticeWithLocations = Practice & {
 
 export type AnalyticsEvent = {
   type: string;
-  data: any;
+  data: AnalyticsEventData;
   timestamp: string;
   user_id?: string;
   practice_id: string;
   location_id?: string;
 };
 
-export type NotificationChannel = "email" | "push" | "sms" | "in_app";
+export type NotificationChannel = 'email' | 'push' | 'sms' | 'in_app';
 export type NotificationType =
-  | "stock_alert"
-  | "order_update"
-  | "system_notification"
-  | "reminder";
+  | 'stock_alert'
+  | 'order_update'
+  | 'system_notification'
+  | 'reminder';
 
 export type OrderStatus =
-  | "draft"
-  | "submitted"
-  | "confirmed"
-  | "shipped"
-  | "delivered"
-  | "cancelled";
-export type UrgencyLevel = "low" | "medium" | "high" | "critical";
+  | 'draft'
+  | 'submitted'
+  | 'confirmed'
+  | 'shipped'
+  | 'delivered'
+  | 'cancelled';
+export type UrgencyLevel = 'low' | 'medium' | 'high' | 'critical';
 
-export type ExportFormat = "csv" | "pdf" | "excel";
-export type ExportType = "order" | "inventory" | "analytics" | "full_report";
+export type ExportFormat = 'csv' | 'pdf' | 'excel';
+export type ExportType = 'order' | 'inventory' | 'analytics' | 'full_report';
 
 export type MagentoOrder = {
   id?: number;
@@ -1219,10 +1296,20 @@ export type MagentoOrder = {
     price: number;
     product_type: string;
   }[];
-  billing_address?: any;
-  shipping_address?: any;
-  payment?: any;
+  billing_address?: MagentoAddress;
+  shipping_address?: MagentoAddress;
+  payment?: MagentoPayment;
 };
 
-export type PermissionType = "read" | "write" | "delete" | "admin";
-export type ResourceType = "order" | "analytics" | "settings";
+export type PermissionType = 'read' | 'write' | 'delete' | 'admin';
+export type ResourceType =
+  | 'order'
+  | 'analytics'
+  | 'settings'
+  | 'practice'
+  | 'bestellijst'
+  | 'product'
+  | 'cart'
+  | 'user'
+  | 'location'
+  | 'user_permission';

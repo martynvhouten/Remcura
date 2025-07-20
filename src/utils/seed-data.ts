@@ -189,7 +189,7 @@ export const seedDataUtils = {
   // Get products with low stock
   getLowStockProducts() {
     return sampleProducts.filter(
-      (product) =>
+      product =>
         product.current_stock <= product.minimum_stock &&
         product.low_stock_alert_enabled
     );
@@ -197,12 +197,12 @@ export const seedDataUtils = {
 
   // Get out of stock products
   getOutOfStockProducts() {
-    return sampleProducts.filter((product) => product.current_stock === 0);
+    return sampleProducts.filter(product => product.current_stock === 0);
   },
 
   // Get products by clinic
   getProductsByClinic(clinicId: string) {
-    return sampleProducts.filter((product) => product.clinic_id === clinicId);
+    return sampleProducts.filter(product => product.clinic_id === clinicId);
   },
 
   // Calculate reorder suggestion
@@ -225,10 +225,10 @@ export const seedDataUtils = {
   generateMockOrderData(clinicId: string) {
     const clinicProducts = this.getProductsByClinic(clinicId);
     const lowStockProducts = clinicProducts.filter(
-      (p) => p.current_stock <= p.minimum_stock && p.reorder_enabled
+      p => p.current_stock <= p.minimum_stock && p.reorder_enabled
     );
 
-    return lowStockProducts.map((product) => {
+    return lowStockProducts.map(product => {
       const suggestion = this.getReorderSuggestion(product);
       return {
         product_sku: product.product_sku,

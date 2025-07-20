@@ -10,10 +10,12 @@
 
 ### 2. **Cleaned Up Obsolete CSS/SCSS**
 
-- **Removed old page header styles** from `src/css/app.scss` (approximately 120 lines of redundant code)
+- **Removed old page header styles** from `src/css/app.scss` (approximately 120 lines of redundant
+  code)
 - **Eliminated duplicate container styles** from individual pages
 - **Removed hardcoded padding/margin** from page components
-- **Cleaned up old layout classes**: `.page-header`, `.products-container`, `.dashboard-container`, `.settings-page`, `.orders-page`
+- **Cleaned up old layout classes**: `.page-header`, `.products-container`, `.dashboard-container`,
+  `.settings-page`, `.orders-page`
 
 ### 3. **Consolidated Layout System**
 

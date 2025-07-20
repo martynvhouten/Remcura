@@ -50,7 +50,7 @@ export default route(function (/* { store, ssrContext } */) {
     }
 
     // Check if route requires authentication
-    const requiresAuth = to.matched.some((record) => record.meta.requiresAuth);
+    const requiresAuth = to.matched.some(record => record.meta.requiresAuth);
 
     if (requiresAuth && !authStore.isAuthenticated) {
       routerLogger.info('Unauthenticated user accessing protected route', {

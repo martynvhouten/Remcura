@@ -10,15 +10,15 @@ export const useLocationStore = defineStore('location', () => {
 
   // Getters
   const getLocationById = computed(() => {
-    return (id: string) => locations.value.find((location) => location.id === id);
+    return (id: string) => locations.value.find(location => location.id === id);
   });
 
   const activeLocations = computed(() => {
-    return locations.value.filter((location) => location.is_active);
+    return locations.value.filter(location => location.is_active);
   });
 
   const mainLocation = computed(() => {
-    return locations.value.find((location) => location.is_main_location);
+    return locations.value.find(location => location.is_main_location);
   });
 
   // Actions
@@ -128,4 +128,4 @@ export const useLocationStore = defineStore('location', () => {
     setCurrentLocation,
     createLocation,
   };
-}); 
+});

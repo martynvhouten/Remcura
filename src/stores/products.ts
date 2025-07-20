@@ -41,7 +41,7 @@ export const useProductsStore = defineStore('products', () => {
     if (filters.value.search) {
       const searchTerm = filters.value.search.toLowerCase();
       result = result.filter(
-        (product) =>
+        product =>
           product.name.toLowerCase().includes(searchTerm) ||
           product.sku.toLowerCase().includes(searchTerm) ||
           (product.description &&
@@ -55,7 +55,7 @@ export const useProductsStore = defineStore('products', () => {
     // Apply category filter
     if (filters.value.category && filters.value.category !== 'all') {
       result = result.filter(
-        (product) => product.category === filters.value.category
+        product => product.category === filters.value.category
       );
     }
 
@@ -63,24 +63,24 @@ export const useProductsStore = defineStore('products', () => {
     if (filters.value.supplier && filters.value.supplier !== 'all') {
       if (filters.value.supplier === 'remka') {
         result = result.filter(
-          (product) =>
+          product =>
             !product.supplier_products ||
             product.supplier_products.length === 0 ||
-            product.supplier_products.some((sp) => sp.supplier_id === 'remka')
+            product.supplier_products.some(sp => sp.supplier_id === 'remka')
         );
       } else if (filters.value.supplier === 'external') {
         result = result.filter(
-          (product) =>
+          product =>
             product.supplier_products &&
             product.supplier_products.length > 0 &&
-            product.supplier_products.some((sp) => sp.supplier_id !== 'remka')
+            product.supplier_products.some(sp => sp.supplier_id !== 'remka')
         );
       } else {
         result = result.filter(
-          (product) =>
+          product =>
             product.supplier_products &&
             product.supplier_products.some(
-              (sp) => sp.supplier_id === filters.value.supplier
+              sp => sp.supplier_id === filters.value.supplier
             )
         );
       }
@@ -89,7 +89,7 @@ export const useProductsStore = defineStore('products', () => {
     // Apply stock status filter
     if (filters.value.stock_status && filters.value.stock_status !== 'all') {
       result = result.filter(
-        (product) => product.stock_status === filters.value.stock_status
+        product => product.stock_status === filters.value.stock_status
       );
     }
 
@@ -143,7 +143,7 @@ export const useProductsStore = defineStore('products', () => {
 
   const availableCategories = computed(() => {
     const productCategories = new Set(
-      products.value.map((p) => p.category).filter(Boolean) as string[]
+      products.value.map(p => p.category).filter(Boolean) as string[]
     );
     return Array.from(productCategories).sort();
   });
@@ -151,9 +151,9 @@ export const useProductsStore = defineStore('products', () => {
   const availableSuppliers = computed(() => {
     const suppliers = new Set<string>();
 
-    products.value.forEach((product) => {
+    products.value.forEach(product => {
       if (product.supplier_products && product.supplier_products.length > 0) {
-        product.supplier_products.forEach((sp) => {
+        product.supplier_products.forEach(sp => {
           suppliers.add(sp.supplier_id);
         });
       } else {
@@ -167,16 +167,72 @@ export const useProductsStore = defineStore('products', () => {
   const productStats = computed(() => {
     return {
       total: products.value.length,
-      inStock: products.value.filter((p) => p.stock_status === 'in_stock')
+      inStock: products.value.filter(p => p.stock_status === 'in_stock').length,
+      lowStock: products.value.filter(p => p.stock_status === 'low_stock')
         .length,
-      lowStock: products.value.filter((p) => p.stock_status === 'low_stock')
+      outOfStock: products.value.filter(p => p.stock_status === 'out_of_stock')
         .length,
-      outOfStock: products.value.filter(
-        (p) => p.stock_status === 'out_of_stock'
-      ).length,
       categories: availableCategories.value.length,
       suppliers: availableSuppliers.value.length,
     };
+  });
+
+  // Inventory-related getters (consolidated from inventory store)
+  const totalStockValue = computed(() => {
+    return products.value.reduce((total, product) => {
+      return total + (product.total_stock || 0) * (product.price || 0);
+    }, 0);
+  });
+
+  const lowStockProducts = computed(() => {
+    return products.value.filter(p => p.stock_status === 'low_stock');
+  });
+
+  const outOfStockProducts = computed(() => {
+    return products.value.filter(p => p.stock_status === 'out_of_stock');
+  });
+
+  const stockStatusSummary = computed(() => {
+    return {
+      in_stock: products.value.filter(p => p.stock_status === 'in_stock').length,
+      low_stock: products.value.filter(p => p.stock_status === 'low_stock').length,
+      out_of_stock: products.value.filter(p => p.stock_status === 'out_of_stock').length,
+      total: products.value.length,
+    };
+  });
+
+  const criticalStockAlerts = computed(() => {
+    const alerts = [];
+    
+    // Out of stock alerts
+    outOfStockProducts.value.forEach(product => {
+      alerts.push({
+        type: 'out_of_stock',
+        urgency: 'critical',
+        product_id: product.id,
+        product_name: product.name,
+        product_sku: product.sku,
+        current_quantity: product.total_stock || 0,
+        message: `${product.name} is out of stock`,
+        suggested_action: 'Reorder immediately',
+      });
+    });
+
+    // Low stock alerts
+    lowStockProducts.value.forEach(product => {
+      alerts.push({
+        type: 'low_stock',
+        urgency: 'high',
+        product_id: product.id,
+        product_name: product.name,
+        product_sku: product.sku,
+        current_quantity: product.total_stock || 0,
+        message: `${product.name} is running low`,
+        suggested_action: 'Consider reordering',
+      });
+    });
+
+    return alerts;
   });
 
   // Actions
@@ -261,7 +317,7 @@ export const useProductsStore = defineStore('products', () => {
     const magentoProducts = await magentoApi.getProducts();
 
     return magentoProducts.map(
-      (mp) =>
+      mp =>
         ({
           id: `magento_${mp.id}`,
           sku: mp.sku,
@@ -296,8 +352,8 @@ export const useProductsStore = defineStore('products', () => {
     const merged = [...supabaseProducts];
 
     // Add Magento products that don't exist in Supabase
-    magentoProducts.forEach((magentoProduct) => {
-      const existingProduct = merged.find((p) => p.sku === magentoProduct.sku);
+    magentoProducts.forEach(magentoProduct => {
+      const existingProduct = merged.find(p => p.sku === magentoProduct.sku);
       if (!existingProduct) {
         merged.push(magentoProduct);
       }
@@ -323,9 +379,7 @@ export const useProductsStore = defineStore('products', () => {
 
       // Fallback to categories from products
       const productCategories = Array.from(
-        new Set(
-          products.value.map((p) => p.category).filter(Boolean) as string[]
-        )
+        new Set(products.value.map(p => p.category).filter(Boolean) as string[])
       ).map((name, index) => ({
         id: `cat_${index}`,
         name,
@@ -348,15 +402,14 @@ export const useProductsStore = defineStore('products', () => {
     supplierId?: string
   ) => {
     const existingItem = cart.value.find(
-      (item) =>
-        item.product_id === product.id && item.supplier_id === supplierId
+      item => item.product_id === product.id && item.supplier_id === supplierId
     );
 
     if (existingItem) {
       existingItem.quantity += quantity;
     } else {
       const supplierProduct = product.supplier_products?.find(
-        (sp) => sp.supplier_id === supplierId
+        sp => sp.supplier_id === supplierId
       );
       const item: CartItem = {
         product_id: product.id,
@@ -380,7 +433,7 @@ export const useProductsStore = defineStore('products', () => {
 
   const removeFromCart = (productId: string, supplierId?: string) => {
     const index = cart.value.findIndex(
-      (item) => item.product_id === productId && item.supplier_id === supplierId
+      item => item.product_id === productId && item.supplier_id === supplierId
     );
     if (index > -1) {
       cart.value.splice(index, 1);
@@ -393,7 +446,7 @@ export const useProductsStore = defineStore('products', () => {
     supplierId?: string
   ) => {
     const item = cart.value.find(
-      (item) => item.product_id === productId && item.supplier_id === supplierId
+      item => item.product_id === productId && item.supplier_id === supplierId
     );
     if (item) {
       if (quantity <= 0) {
@@ -418,14 +471,12 @@ export const useProductsStore = defineStore('products', () => {
     let targetOrderList: OrderListCart;
 
     if (orderListId) {
-      const existing = orderLists.value.find((ol) => ol.id === orderListId);
+      const existing = orderLists.value.find(ol => ol.id === orderListId);
       if (!existing) throw new Error('Order list not found');
       targetOrderList = existing;
     } else {
       // Create new order list
-      const supplier = suppliersStore.suppliers.find(
-        (s) => s.id === supplierId
-      );
+      const supplier = suppliersStore.suppliers.find(s => s.id === supplierId);
       targetOrderList = {
         name: `Bestellijst ${new Date().toLocaleDateString('nl-NL')}`,
         items: [],
@@ -441,15 +492,14 @@ export const useProductsStore = defineStore('products', () => {
     }
 
     const existingItem = targetOrderList.items.find(
-      (item) =>
-        item.product_id === product.id && item.supplier_id === supplierId
+      item => item.product_id === product.id && item.supplier_id === supplierId
     );
 
     if (existingItem) {
       existingItem.quantity += quantity;
     } else {
       const supplierProduct = product.supplier_products?.find(
-        (sp) => sp.supplier_id === supplierId
+        sp => sp.supplier_id === supplierId
       );
       const item: CartItem = {
         product_id: product.id,
@@ -501,11 +551,11 @@ export const useProductsStore = defineStore('products', () => {
 
   // Utility functions
   const getProductById = (id: string): ProductWithStock | undefined => {
-    return products.value.find((p) => p.id === id);
+    return products.value.find(p => p.id === id);
   };
 
   const getProductBySku = (sku: string): ProductWithStock | undefined => {
-    return products.value.find((p) => p.sku === sku);
+    return products.value.find(p => p.sku === sku);
   };
 
   // Helper function to check if a product requires batch tracking
@@ -547,6 +597,11 @@ export const useProductsStore = defineStore('products', () => {
     productStats,
     batchTrackedProducts,
     manualStockProducts,
+    totalStockValue,
+    lowStockProducts,
+    outOfStockProducts,
+    stockStatusSummary,
+    criticalStockAlerts,
 
     // Actions
     fetchProducts,

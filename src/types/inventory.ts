@@ -695,7 +695,7 @@ export interface UnifiedStockView {
   practice_id: string;
   location_id: string;
   product_id: string;
-  
+
   // Product details
   product_name: string;
   product_sku: string;
@@ -704,17 +704,17 @@ export interface UnifiedStockView {
   product_unit: string | null;
   product_price: number | null;
   requires_batch_tracking: boolean;
-  
+
   // Location details
   location_name: string;
   location_code: string;
   location_type: string;
-  
+
   // Stock quantities
   current_quantity: number;
   reserved_quantity: number;
   available_quantity: number;
-  
+
   // Stock status
   stock_status: 'in_stock' | 'low_stock' | 'out_of_stock';
   minimum_quantity: number;
@@ -722,7 +722,7 @@ export interface UnifiedStockView {
   reorder_point: number | null;
   preferred_supplier_id: string | null;
   last_counted_at: string | null;
-  
+
   // Tracking
   last_movement_at: string;
   stock_source: 'batch' | 'manual';

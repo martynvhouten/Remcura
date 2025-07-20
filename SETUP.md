@@ -4,7 +4,8 @@ Deze handleiding helpt je bij het opzetten van MedStock Pro in je ontwikkelomgev
 
 ## Overzicht
 
-MedStock Pro is een professioneel voorraadbeheersysteem voor medische klinieken, gebouwd met Vue 3, Quasar Framework, en Supabase. Het systeem is ontworpen als white-label SaaS oplossing.
+MedStock Pro is een professioneel voorraadbeheersysteem voor medische klinieken, gebouwd met Vue 3,
+Quasar Framework, en Supabase. Het systeem is ontworpen als white-label SaaS oplossing.
 
 ## Vereisten
 
@@ -274,7 +275,8 @@ Voor white-label deployment:
 
 ## Support
 
-Voor technische ondersteuning of vragen over de implementatie, neem contact op met het development team.
+Voor technische ondersteuning of vragen over de implementatie, neem contact op met het development
+team.
 
 ## Security Checklist
 

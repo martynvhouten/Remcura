@@ -314,7 +314,8 @@ export default {
     failedToRefreshData: 'Error al actualizar datos',
     welcomeTitle: 'Bienvenido a MedStock Pro',
     welcomeSubtitle: 'Su sistema profesional de gestión de inventario médico',
-    welcomeDescription: 'Gestione su inventario de manera eficiente con nuestras herramientas avanzadas y seguimiento en tiempo real.',
+    welcomeDescription:
+      'Gestione su inventario de manera eficiente con nuestras herramientas avanzadas y seguimiento en tiempo real.',
     systemStatus: 'Estado del sistema',
     systemStatusSubtitle: 'Estado actual de su sistema',
     systemOnline: 'Sistema en línea',
@@ -521,8 +522,6 @@ export default {
       adjustment: 'Ajuste',
       count_correction: 'Corrección de conteo',
     },
-
-
   },
 
   // Counting System
@@ -628,7 +627,8 @@ export default {
   // Gestión de lotes
   batch: {
     batchManagement: 'Gestión de lotes',
-    manageBatchesSubtitle: 'Gestiona tus lotes de productos y fechas de vencimiento de manera efectiva',
+    manageBatchesSubtitle:
+      'Gestiona tus lotes de productos y fechas de vencimiento de manera efectiva',
     title: 'Gestión de lotes',
     batchNumber: 'Número de lote',
     lotNumber: 'Número de lote',
@@ -758,7 +758,8 @@ export default {
     applyFifoSuggestion: 'Aplicar Sugerencia FIFO',
     fifoSuggestionGenerated: 'Sugerencia FIFO generada',
     confirmFifoApplication: 'Confirmar Aplicación FIFO',
-    confirmFifoMessage: '¿Estás seguro de que quieres aplicar esta sugerencia FIFO?',
+    confirmFifoMessage:
+      '¿Estás seguro de que quieres aplicar esta sugerencia FIFO?',
     fifoAppliedSuccessfully: 'FIFO aplicado exitosamente',
 
     // Detalles y uso de lotes

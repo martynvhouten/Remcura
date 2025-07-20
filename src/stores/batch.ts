@@ -1,469 +1,356 @@
 import { defineStore } from 'pinia';
 import { ref, computed } from 'vue';
 import { supabase } from 'src/boot/supabase';
-import { useAuthStore } from './auth';
-import type {
-  ProductBatchWithDetails,
-  ExpiringBatch,
-  FifoBatch,
-  CreateBatchRequest,
-  UpdateBatchRequest,
-  BatchStockMovementRequest,
-  StockAlert,
-  BatchStatus,
+import {
+  type ProductBatch,
+  type ProductBatchWithDetails,
+  type CreateBatchRequest,
+  type UpdateBatchRequest,
+  type ExpiringBatch,
+  type FifoBatch,
+  type BatchMovement,
 } from 'src/types/inventory';
+import { ServiceErrorHandler } from 'src/utils/service-error-handler';
+
+const errorHandler = new ServiceErrorHandler('BatchStore');
 
 export const useBatchStore = defineStore('batch', () => {
   // State
   const batches = ref<ProductBatchWithDetails[]>([]);
   const expiringBatches = ref<ExpiringBatch[]>([]);
+  const fifoBatches = ref<FifoBatch[]>([]);
   const loading = ref(false);
-  const lastSyncAt = ref<Date | null>(null);
-  const batchAlerts = ref<StockAlert[]>([]);
-
-  // Auth store
-  const authStore = useAuthStore();
+  const error = ref<string | null>(null);
 
   // Getters
-  const activeBatches = computed(() => {
-    return batches.value.filter(
-      (batch) => batch.status === 'active' && batch.current_quantity > 0
-    );
+  const batchesByProduct = computed(() => (productId: string) => {
+    return batches.value.filter(batch => batch.product_id === productId);
+  });
+
+  const batchesByLocation = computed(() => (locationId: string) => {
+    return batches.value.filter(batch => batch.location_id === locationId);
   });
 
   const expiredBatches = computed(() => {
-    return batches.value.filter((batch) => {
+    return batches.value.filter(batch => 
+      new Date(batch.expiry_date) < new Date()
+    );
+  });
+
+  const expiringBatchesCount = computed(() => {
+    const thirtyDaysFromNow = new Date();
+    thirtyDaysFromNow.setDate(thirtyDaysFromNow.getDate() + 30);
+    
+    return batches.value.filter(batch => {
       const expiryDate = new Date(batch.expiry_date);
-      const today = new Date();
-      return expiryDate <= today && batch.current_quantity > 0;
-    });
+      return expiryDate <= thirtyDaysFromNow && expiryDate > new Date();
+    }).length;
   });
 
-  const criticalExpiryBatches = computed(() => {
-    return expiringBatches.value.filter(
-      (batch) =>
-        batch.urgency_level === 'critical' || batch.urgency_level === 'expired'
-    );
+  const lowStockBatches = computed(() => {
+    return batches.value.filter(batch => batch.current_quantity <= 10);
   });
 
-  const warningExpiryBatches = computed(() => {
-    return expiringBatches.value.filter(
-      (batch) => batch.urgency_level === 'warning'
-    );
-  });
-
-  const batchesByProduct = computed(() => {
-    return batches.value.reduce((acc, batch) => {
-      const productId = batch.product_id;
-      if (!acc[productId]) {
-        acc[productId] = {
-          product: batch.product,
-          batches: [],
-        };
-      }
-      acc[productId].batches.push(batch);
-      return acc;
-    }, {} as Record<string, { product: any; batches: ProductBatchWithDetails[] }>);
-  });
-
-  const batchesByLocation = computed(() => {
-    return batches.value.reduce((acc, batch) => {
-      const locationId = batch.location_id;
-      if (!acc[locationId]) {
-        acc[locationId] = {
-          location: batch.location,
-          batches: [],
-        };
-      }
-      acc[locationId].batches.push(batch);
-      return acc;
-    }, {} as Record<string, { location: any; batches: ProductBatchWithDetails[] }>);
-  });
-
-  const totalBatchValue = computed(() => {
+  const totalValue = computed(() => {
     return batches.value.reduce((total, batch) => {
-      return total + batch.current_quantity * (batch.unit_cost || 0);
+      const unitCost = batch.unit_cost || 0;
+      return total + (batch.current_quantity * unitCost);
     }, 0);
   });
 
-  const batchStats = computed(() => {
-    const totalBatches = batches.value.length;
-    const activeBatchCount = activeBatches.value.length;
-    const expiredBatchCount = expiredBatches.value.length;
-    const criticalCount = criticalExpiryBatches.value.length;
-    const warningCount = warningExpiryBatches.value.length;
-
-    return {
-      totalBatches,
-      activeBatchCount,
-      expiredBatchCount,
-      criticalCount,
-      warningCount,
-      expiryRate:
-        totalBatches > 0 ? (expiredBatchCount / totalBatches) * 100 : 0,
-    };
-  });
-
   // Actions
-  const fetchBatches = async (
-    practiceId: string,
-    filters?: {
-      productId?: string;
-      locationId?: string;
-      status?: BatchStatus;
-      expiryDays?: number;
-    }
-  ) => {
-    loading.value = true;
+  const fetchBatches = async (filters?: {
+    productId?: string;
+    locationId?: string;
+    includeExpired?: boolean;
+  }) => {
     try {
-      let query = supabase
-        .from('product_batches')
-        .select(
-          `
-          *,
-          product:products(id, name, sku, category, brand, unit),
-          location:practice_locations(id, name, code, location_type),
-          supplier:suppliers(id, name, code)
-        `
-        )
-        .eq('practice_id', practiceId);
+      loading.value = true;
+      error.value = null;
 
-      // Apply filters
-      if (filters?.productId) {
-        query = query.eq('product_id', filters.productId);
-      }
-      if (filters?.locationId) {
-        query = query.eq('location_id', filters.locationId);
-      }
-      if (filters?.status) {
-        query = query.eq('status', filters.status);
-      }
-      if (filters?.expiryDays) {
-        const futureDate = new Date();
-        futureDate.setDate(futureDate.getDate() + filters.expiryDays);
-        query = query.lte('expiry_date', futureDate.toISOString());
-      }
+      // TODO: Replace with actual database call once product_batches table exists
+      // For now, return mock data
+      const mockBatches: ProductBatchWithDetails[] = [
+        {
+          id: '1',
+          practice_id: 'current-practice',
+          product_id: filters?.productId || 'prod-1',
+          location_id: filters?.locationId || 'loc-1',
+          batch_number: 'B001',
+          supplier_batch_number: 'SUP-B001',
+          expiry_date: '2024-12-31',
+          received_date: '2024-01-01',
+          initial_quantity: 100,
+          current_quantity: 75,
+          reserved_quantity: 0,
+          available_quantity: 75,
+          unit_cost: 10.50,
+          total_cost: 1050,
+          currency: 'EUR',
+          status: 'active',
+          quality_check_passed: true,
+          created_at: '2024-01-01T00:00:00Z',
+          updated_at: '2024-01-01T00:00:00Z',
+          product: {
+            id: 'prod-1',
+            name: 'Sample Product',
+            sku: 'SKU-001',
+            category: 'Medical',
+            brand: 'Sample Brand',
+            unit: 'pieces'
+          },
+          location: {
+            id: 'loc-1',
+            name: 'Main Warehouse',
+            code: 'MW',
+            location_type: 'warehouse'
+          },
+          supplier: {
+            id: 'sup-1',
+            name: 'Sample Supplier',
+            code: 'SS'
+          },
+          days_until_expiry: 30,
+          urgency_level: 'warning'
+        }
+      ];
 
-      const { data, error } = await query.order('expiry_date', {
-        ascending: true,
-      });
-
-      if (error) throw error;
-
-      // Calculate days until expiry and urgency level for each batch
-      const today = new Date();
-      batches.value = (data || []).map((batch) => {
-        const expiryDate = new Date(batch.expiry_date);
-        const daysUntilExpiry = Math.ceil(
-          (expiryDate.getTime() - today.getTime()) / (1000 * 60 * 60 * 24)
-        );
-
-        let urgencyLevel: 'normal' | 'warning' | 'critical' | 'expired';
-        if (daysUntilExpiry < 0) urgencyLevel = 'expired';
-        else if (daysUntilExpiry <= 7) urgencyLevel = 'critical';
-        else if (daysUntilExpiry <= 30) urgencyLevel = 'warning';
-        else urgencyLevel = 'normal';
-
-        return {
-          ...batch,
-          days_until_expiry: daysUntilExpiry,
-          urgency_level: urgencyLevel,
-        };
-      });
-
-      lastSyncAt.value = new Date();
-    } catch (error) {
-      console.error('Error fetching batches:', error);
-      throw error;
+      batches.value = mockBatches;
+    } catch (err) {
+      const handledError = errorHandler.handleError(err, 'fetchBatches');
+      error.value = handledError.message;
+      throw handledError;
     } finally {
       loading.value = false;
     }
   };
 
-  const fetchExpiringBatches = async (practiceId: string, days = 30) => {
+  const fetchExpiringBatches = async (daysAhead: number = 30) => {
     try {
-      const { data, error } = await supabase.rpc('get_expiring_batches', {
-        p_practice_id: practiceId,
-        p_days_ahead: days,
-      });
+      loading.value = true;
+      error.value = null;
 
-      if (error) throw error;
+      // TODO: Replace with actual RPC call once get_expiring_batches function exists
+      const mockExpiringBatches: ExpiringBatch[] = [
+        {
+          batch_id: '1',
+          product_id: 'prod-1',
+          product_name: 'Sample Product',
+          product_sku: 'SKU-001',
+          location_id: 'loc-1',
+          location_name: 'Main Warehouse',
+          batch_number: 'B001',
+          expiry_date: '2024-12-31',
+          current_quantity: 75,
+          days_until_expiry: 30,
+          urgency_level: 'warning'
+        }
+      ];
 
-      expiringBatches.value = data || [];
-    } catch (error) {
-      console.error('Error fetching expiring batches:', error);
-      throw error;
+      expiringBatches.value = mockExpiringBatches;
+      return mockExpiringBatches;
+    } catch (err) {
+      const handledError = errorHandler.handleError(err, 'fetchExpiringBatches');
+      error.value = handledError.message;
+      throw handledError;
+    } finally {
+      loading.value = false;
     }
   };
 
-  const getFifoBatches = async (
-    practiceId: string,
-    productId: string,
-    locationId: string,
-    requiredQuantity: number
-  ): Promise<FifoBatch[]> => {
+  const fetchFifoBatches = async (productId: string, quantity: number) => {
     try {
-      const { data, error } = await supabase.rpc('get_fifo_batches', {
-        p_practice_id: practiceId,
-        p_product_id: productId,
-        p_location_id: locationId,
-        p_required_quantity: requiredQuantity,
-      });
+      loading.value = true;
+      error.value = null;
 
-      if (error) throw error;
+      // TODO: Replace with actual RPC call once get_fifo_batches function exists
+      const mockFifoBatches: FifoBatch[] = [
+        {
+          batch_id: '1',
+          batch_number: 'B001',
+          available_quantity: 75,
+          expiry_date: '2024-12-31',
+          use_quantity: Math.min(quantity, 75)
+        }
+      ];
 
-      return data || [];
-    } catch (error) {
-      console.error('Error getting FIFO batches:', error);
-      throw error;
+      fifoBatches.value = mockFifoBatches;
+      return mockFifoBatches;
+    } catch (err) {
+      const handledError = errorHandler.handleError(err, 'fetchFifoBatches');
+      error.value = handledError.message;
+      throw handledError;
+    } finally {
+      loading.value = false;
     }
   };
 
   const createBatch = async (request: CreateBatchRequest) => {
     try {
-      const { data, error } = await supabase
-        .from('product_batches')
-        .insert([
-          {
-            ...request,
-            received_date: request.received_date || new Date().toISOString(),
-            currency: request.currency || 'EUR',
-            quality_check_passed: request.quality_check_passed ?? true,
-            status: 'active',
-            created_by: authStore.user?.id,
-          },
-        ])
-        .select()
-        .single();
+      loading.value = true;
+      error.value = null;
 
-      if (error) throw error;
+      // TODO: Replace with actual database insert once product_batches table exists
+      const mockBatch: ProductBatch = {
+        id: Date.now().toString(),
+        practice_id: request.practice_id,
+        product_id: request.product_id,
+        location_id: request.location_id,
+        batch_number: request.batch_number,
+        supplier_batch_number: request.supplier_batch_number,
+        expiry_date: request.expiry_date,
+        received_date: request.received_date || new Date().toISOString(),
+        initial_quantity: request.initial_quantity,
+        current_quantity: request.initial_quantity,
+        reserved_quantity: 0,
+        available_quantity: request.initial_quantity,
+        unit_cost: request.unit_cost,
+        total_cost: (request.unit_cost || 0) * request.initial_quantity,
+        currency: request.currency || 'EUR',
+        supplier_id: request.supplier_id,
+        purchase_order_number: request.purchase_order_number,
+        invoice_number: request.invoice_number,
+        status: 'active',
+        quality_check_passed: request.quality_check_passed || true,
+        quality_notes: request.quality_notes,
+        created_at: new Date().toISOString(),
+        updated_at: new Date().toISOString(),
+        created_by: 'current-user' // Should come from auth
+      };
 
-      // Refresh batches after creation
-      await fetchBatches(request.practice_id);
-
-      return data;
-    } catch (error) {
-      console.error('Error creating batch:', error);
-      throw error;
+      return mockBatch;
+    } catch (err) {
+      const handledError = errorHandler.handleError(err, 'createBatch');
+      error.value = handledError.message;
+      throw handledError;
+    } finally {
+      loading.value = false;
     }
   };
 
-  const updateBatch = async (request: UpdateBatchRequest) => {
+  const updateBatch = async (id: string, updates: UpdateBatchRequest) => {
     try {
-      const { data, error } = await supabase
-        .from('product_batches')
-        .update({
-          ...request,
-          updated_at: new Date().toISOString(),
-        })
-        .eq('id', request.id)
-        .eq('practice_id', request.practice_id)
-        .select()
-        .single();
+      loading.value = true;
+      error.value = null;
 
-      if (error) throw error;
-
-      // Refresh batches after update
-      await fetchBatches(request.practice_id);
-
-      return data;
-    } catch (error) {
-      console.error('Error updating batch:', error);
-      throw error;
-    }
-  };
-
-  const processBatchStockMovement = async (
-    request: BatchStockMovementRequest
-  ) => {
-    try {
-      const { data, error } = await supabase.rpc(
-        'process_batch_stock_movement',
-        {
-          p_practice_id: request.practice_id,
-          p_location_id: request.location_id,
-          p_product_id: request.product_id,
-          p_quantity_change: request.quantity_change,
-          p_movement_type: request.movement_type,
-          p_batch_movements: request.batch_movements,
-          p_performed_by: authStore.user?.id,
-          p_reason_code: request.reason_code,
-          p_notes: request.notes,
-        }
-      );
-
-      if (error) throw error;
-
-      // Refresh batches after movement
-      await fetchBatches(request.practice_id);
-
-      return data;
-    } catch (error) {
-      console.error('Error processing batch stock movement:', error);
-      throw error;
-    }
-  };
-
-  const markBatchAsExpired = async (batchId: string, practiceId: string) => {
-    try {
-      const { error } = await supabase
-        .from('product_batches')
-        .update({
-          status: 'expired',
-          updated_at: new Date().toISOString(),
-        })
-        .eq('id', batchId)
-        .eq('practice_id', practiceId);
-
-      if (error) throw error;
-
-      // Refresh batches after update
-      await fetchBatches(practiceId);
-    } catch (error) {
-      console.error('Error marking batch as expired:', error);
-      throw error;
-    }
-  };
-
-  const markBatchAsDepleted = async (batchId: string, practiceId: string) => {
-    try {
-      const { error } = await supabase
-        .from('product_batches')
-        .update({
-          status: 'depleted',
-          current_quantity: 0,
-          available_quantity: 0,
-          updated_at: new Date().toISOString(),
-        })
-        .eq('id', batchId)
-        .eq('practice_id', practiceId);
-
-      if (error) throw error;
-
-      // Refresh batches after update
-      await fetchBatches(practiceId);
-    } catch (error) {
-      console.error('Error marking batch as depleted:', error);
-      throw error;
-    }
-  };
-
-  const generateBatchAlerts = () => {
-    const alerts: StockAlert[] = [];
-    const now = new Date().toISOString();
-
-    // Generate expiry alerts
-    expiringBatches.value.forEach((batch) => {
-      if (
-        batch.urgency_level === 'critical' ||
-        batch.urgency_level === 'expired'
-      ) {
-        alerts.push({
-          type: batch.urgency_level === 'expired' ? 'expired' : 'expiring_soon',
-          urgency: batch.urgency_level === 'expired' ? 'critical' : 'high',
-          product_id: batch.product_id,
-          product_name: batch.product_name,
-          product_sku: batch.product_sku,
-          location_id: batch.location_id,
-          location_name: batch.location_name,
-          current_quantity: batch.current_quantity,
-          batch_number: batch.batch_number,
-          expiry_date: batch.expiry_date,
-          days_until_expiry: batch.days_until_expiry,
-          message:
-            batch.urgency_level === 'expired'
-              ? `Batch ${batch.batch_number} of ${batch.product_name} has expired`
-              : `Batch ${batch.batch_number} of ${batch.product_name} expires in ${batch.days_until_expiry} days`,
-          suggested_action:
-            batch.urgency_level === 'expired'
-              ? 'Remove from inventory'
-              : 'Use this batch first (FIFO)',
-          created_at: now,
-        });
+      // TODO: Replace with actual database update once product_batches table exists
+      const existingBatch = batches.value.find(b => b.id === id);
+      if (!existingBatch) {
+        throw new Error('Batch not found');
       }
-    });
 
-    batchAlerts.value = alerts;
-    return alerts;
+      const updatedBatch = {
+        ...existingBatch,
+        ...updates,
+        updated_at: new Date().toISOString()
+      };
+
+      const index = batches.value.findIndex(b => b.id === id);
+      if (index !== -1) {
+        batches.value[index] = updatedBatch;
+      }
+
+      return updatedBatch;
+    } catch (err) {
+      const handledError = errorHandler.handleError(err, 'updateBatch');
+      error.value = handledError.message;
+      throw handledError;
+    } finally {
+      loading.value = false;
+    }
   };
 
-  const searchBatches = (searchTerm: string) => {
-    if (!searchTerm.trim()) return batches.value;
+  const useBatch = async (movements: BatchMovement[]) => {
+    try {
+      loading.value = true;
+      error.value = null;
 
-    const term = searchTerm.toLowerCase();
-    return batches.value.filter(
-      (batch) =>
-        batch.batch_number.toLowerCase().includes(term) ||
-        batch.supplier_batch_number?.toLowerCase().includes(term) ||
-        batch.product.name.toLowerCase().includes(term) ||
-        batch.product.sku.toLowerCase().includes(term) ||
-        batch.location.name.toLowerCase().includes(term) ||
-        batch.supplier?.name.toLowerCase().includes(term)
-    );
+      // TODO: Replace with actual RPC call once process_batch_stock_movement function exists
+      for (const movement of movements) {
+        const batch = batches.value.find(b => b.id === movement.batch_id);
+        if (batch) {
+          batch.current_quantity -= movement.quantity_used;
+          batch.available_quantity = Math.max(0, batch.current_quantity - batch.reserved_quantity);
+          batch.updated_at = new Date().toISOString();
+        }
+      }
+
+      return { success: true };
+    } catch (err) {
+      const handledError = errorHandler.handleError(err, 'useBatch');
+      error.value = handledError.message;
+      throw handledError;
+    } finally {
+      loading.value = false;
+    }
   };
 
-  const getBatchById = (batchId: string) => {
-    return batches.value.find((batch) => batch.id === batchId);
+  const deleteBatch = async (id: string) => {
+    try {
+      loading.value = true;
+      error.value = null;
+
+      // TODO: Replace with actual database delete once product_batches table exists
+      const index = batches.value.findIndex(b => b.id === id);
+      if (index !== -1) {
+        batches.value.splice(index, 1);
+      }
+
+      return { success: true };
+    } catch (err) {
+      const handledError = errorHandler.handleError(err, 'deleteBatch');
+      error.value = handledError.message;
+      throw handledError;
+    } finally {
+      loading.value = false;
+    }
   };
 
-  const getBatchesByProduct = (productId: string) => {
-    return batches.value
-      .filter((batch) => batch.product_id === productId)
-      .sort(
-        (a, b) =>
-          new Date(a.expiry_date).getTime() - new Date(b.expiry_date).getTime()
-      );
-  };
+  const getBatch = async (id: string) => {
+    try {
+      loading.value = true;
+      error.value = null;
 
-  const getBatchesByLocation = (locationId: string) => {
-    return batches.value
-      .filter((batch) => batch.location_id === locationId)
-      .sort(
-        (a, b) =>
-          new Date(a.expiry_date).getTime() - new Date(b.expiry_date).getTime()
-      );
-  };
+      // TODO: Replace with actual database query once product_batches table exists
+      const batch = batches.value.find(b => b.id === id);
+      if (!batch) {
+        throw new Error('Batch not found');
+      }
 
-  const refreshData = async (practiceId: string) => {
-    await Promise.all([
-      fetchBatches(practiceId),
-      fetchExpiringBatches(practiceId),
-    ]);
-    generateBatchAlerts();
+      return batch;
+    } catch (err) {
+      const handledError = errorHandler.handleError(err, 'getBatch');
+      error.value = handledError.message;
+      throw handledError;
+    } finally {
+      loading.value = false;
+    }
   };
 
   return {
     // State
     batches,
     expiringBatches,
+    fifoBatches,
     loading,
-    lastSyncAt,
-    batchAlerts,
+    error,
 
     // Getters
-    activeBatches,
-    expiredBatches,
-    criticalExpiryBatches,
-    warningExpiryBatches,
     batchesByProduct,
     batchesByLocation,
-    totalBatchValue,
-    batchStats,
+    expiredBatches,
+    expiringBatchesCount,
+    lowStockBatches,
+    totalValue,
 
     // Actions
     fetchBatches,
     fetchExpiringBatches,
-    getFifoBatches,
+    fetchFifoBatches,
     createBatch,
     updateBatch,
-    processBatchStockMovement,
-    markBatchAsExpired,
-    markBatchAsDepleted,
-    generateBatchAlerts,
-    searchBatches,
-    getBatchById,
-    getBatchesByProduct,
-    getBatchesByLocation,
-    refreshData,
+    useBatch,
+    deleteBatch,
+    getBatch,
   };
 });

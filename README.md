@@ -1,6 +1,8 @@
 # MedStock Pro
 
-Een moderne, professionele voorraadbeheersysteem voor medische klinieken en zorginstellingen. Beheer eenvoudig je medische voorraad, ontvang automatische herbestelmeldingen en optimaliseer je inventarisprocessen.
+Een moderne, professionele voorraadbeheersysteem voor medische klinieken en zorginstellingen. Beheer
+eenvoudig je medische voorraad, ontvang automatische herbestelmeldingen en optimaliseer je
+inventarisprocessen.
 
 ## Features
 

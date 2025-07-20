@@ -22,7 +22,7 @@
       <div class="row q-mb-lg stats-cards-container">
         <!-- Total Batches Card -->
         <div class="col-12 col-sm-6 col-md-3 stats-card-col">
-          <BaseCard 
+          <BaseCard
             variant="stats"
             :value="totalBatches"
             :label="$t('batch.totalBatches')"
@@ -33,7 +33,7 @@
 
         <!-- Expiring Soon Card -->
         <div class="col-12 col-sm-6 col-md-3 stats-card-col">
-          <BaseCard 
+          <BaseCard
             variant="stats"
             :value="expiringBatches"
             :label="$t('batch.expiringSoon')"
@@ -44,7 +44,7 @@
 
         <!-- Active Batches Card -->
         <div class="col-12 col-sm-6 col-md-3 stats-card-col">
-          <BaseCard 
+          <BaseCard
             variant="stats"
             :value="activeBatches"
             :label="$t('batch.activeBatches')"
@@ -55,7 +55,7 @@
 
         <!-- Total Value Card -->
         <div class="col-12 col-sm-6 col-md-3 stats-card-col">
-          <BaseCard 
+          <BaseCard
             variant="stats"
             :value="formatCurrency(totalValue, 'EUR')"
             :label="$t('batch.totalValue')"
@@ -66,14 +66,11 @@
       </div>
 
       <!-- Quick Actions Bar -->
-      <BaseCard 
-        variant="outlined"
-        class="q-mb-lg"
-      >
+      <BaseCard variant="outlined" class="q-mb-lg">
         <template #header-content>
-          <div class="text-subtitle2">{{ $t("batch.quickActions") }}</div>
+          <div class="text-subtitle2">{{ $t('batch.quickActions') }}</div>
         </template>
-        
+
         <template #header-actions>
           <div class="row q-gutter-sm">
             <q-btn
@@ -119,10 +116,10 @@
           <template v-slot:avatar>
             <q-icon name="error" size="sm" />
           </template>
-          <div class="text-subtitle2">{{ $t("batch.criticalAlert") }}</div>
+          <div class="text-subtitle2">{{ $t('batch.criticalAlert') }}</div>
           <div class="text-body2">
             {{
-              $t("batch.criticalBatchesFound", {
+              $t('batch.criticalBatchesFound', {
                 count: criticalBatches.length,
               })
             }}
@@ -178,7 +175,7 @@
 
           <!-- Expiring Tab -->
           <q-tab-panel name="expiring" class="q-pa-md">
-            <div class="text-h6 q-mb-md">{{ $t("batch.expiringBatches") }}</div>
+            <div class="text-h6 q-mb-md">{{ $t('batch.expiringBatches') }}</div>
             <ExpiringBatchesList
               :batches="batchStore.expiringBatches"
               @batch-selected="onBatchSelected"
@@ -187,13 +184,13 @@
 
           <!-- FIFO Management Tab -->
           <q-tab-panel name="fifo" class="q-pa-md">
-            <div class="text-h6 q-mb-md">{{ $t("batch.fifoManagement") }}</div>
+            <div class="text-h6 q-mb-md">{{ $t('batch.fifoManagement') }}</div>
             <FifoBatchManager @suggestion-generated="onFifoSuggestion" />
           </q-tab-panel>
 
           <!-- Reports Tab -->
           <q-tab-panel name="reports" class="q-pa-md">
-            <div class="text-h6 q-mb-md">{{ $t("batch.batchReports") }}</div>
+            <div class="text-h6 q-mb-md">{{ $t('batch.batchReports') }}</div>
             <BatchReports />
           </q-tab-panel>
         </q-tab-panels>
@@ -221,277 +218,279 @@
 
     <!-- Barcode Scanner Dialog -->
     <q-dialog v-model="showScannerDialog" max-width="500px">
-      <BarcodeScanner
-        v-model="showScannerDialog"
-        @scan="onBarcodeScanned"
-      />
+      <BarcodeScanner v-model="showScannerDialog" @scan="onBarcodeScanned" />
     </q-dialog>
   </PageLayout>
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted } from 'vue';
-import { useI18n } from 'vue-i18n';
-import { useQuasar } from 'quasar';
-import { useBatchStore } from 'src/stores/batch';
-import { useInventoryStore } from 'src/stores/inventory';
-import { useAuthStore } from 'src/stores/auth';
-import PageLayout from 'src/components/PageLayout.vue';
-import PageTitle from 'src/components/PageTitle.vue';
-import BaseCard from 'src/components/base/BaseCard.vue';
-import BatchOverview from 'src/components/BatchOverview.vue';
-import BatchRegistrationForm from 'src/components/BatchRegistrationForm.vue';
-import BatchDetailCard from 'src/components/BatchDetailCard.vue';
-import BarcodeScanner from 'src/components/BarcodeScanner.vue';
-import ExpiringBatchesList from 'src/components/ExpiringBatchesList.vue';
-import FifoBatchManager from 'src/components/FifoBatchManager.vue';
-import BatchReports from 'src/components/BatchReports.vue';
-import type { ProductBatchWithDetails } from 'src/types/inventory';
+  import { ref, computed, onMounted } from 'vue';
+  import { useI18n } from 'vue-i18n';
+  import { useQuasar } from 'quasar';
+  import { useBatchStore } from 'src/stores/batch';
+  import { useInventoryStore } from 'src/stores/inventory';
+  import { useAuthStore } from 'src/stores/auth';
+  import PageLayout from 'src/components/PageLayout.vue';
+  import PageTitle from 'src/components/PageTitle.vue';
+  import BaseCard from 'src/components/base/BaseCard.vue';
+  import BatchOverview from 'src/components/BatchOverview.vue';
+  import BatchRegistrationForm from 'src/components/BatchRegistrationForm.vue';
+  import BatchDetailCard from 'src/components/BatchDetailCard.vue';
+  import BarcodeScanner from 'src/components/BarcodeScanner.vue';
+  import ExpiringBatchesList from 'src/components/ExpiringBatchesList.vue';
+  import FifoBatchManager from 'src/components/FifoBatchManager.vue';
+  import BatchReports from 'src/components/BatchReports.vue';
+  import type { ProductBatchWithDetails } from 'src/types/inventory';
 
-// Composables
-const { t } = useI18n();
-const $q = useQuasar();
-const batchStore = useBatchStore();
-const inventoryStore = useInventoryStore();
-const authStore = useAuthStore();
+  // Composables
+  const { t } = useI18n();
+  const $q = useQuasar();
+  const batchStore = useBatchStore();
+  const inventoryStore = useInventoryStore();
+  const authStore = useAuthStore();
 
-// Debug i18n
-console.log('🔧 BatchManagementPage - i18n debug:');
-console.log('🔧 t function:', t);
-console.log('🔧 Test translation:', t('batch.batchManagement'));
-console.log('🔧 Test with $t:', t.te && t.te('batch.batchManagement') ? 'key exists' : 'key missing');
+  // Debug i18n
+  console.log('🔧 BatchManagementPage - i18n debug:');
+  console.log('🔧 t function:', t);
+  console.log('🔧 Test translation:', t('batch.batchManagement'));
+  console.log(
+    '🔧 Test with $t:',
+    t.te && t.te('batch.batchManagement') ? 'key exists' : 'key missing'
+  );
 
-// Also test global $t in mounted
-import { getCurrentInstance } from 'vue';
+  // Also test global $t in mounted
+  import { getCurrentInstance } from 'vue';
 
-// State
-const activeTab = ref('overview');
-const showAddBatchDialog = ref(false);
-const showBatchDetailDialog = ref(false);
-const showScannerDialog = ref(false);
-const showExpiringOnly = ref(false);
-const selectedBatch = ref<ProductBatchWithDetails | null>(null);
-const refreshing = ref(false);
-const batchOverviewRef = ref();
+  // State
+  const activeTab = ref('overview');
+  const showAddBatchDialog = ref(false);
+  const showBatchDetailDialog = ref(false);
+  const showScannerDialog = ref(false);
+  const showExpiringOnly = ref(false);
+  const selectedBatch = ref<ProductBatchWithDetails | null>(null);
+  const refreshing = ref(false);
+  const batchOverviewRef = ref();
 
-// Computed
-const totalBatches = computed(() => batchStore.batches.length);
+  // Computed
+  const totalBatches = computed(() => batchStore.batches.length);
 
-const activeBatches = computed(
-  () => batchStore.batches.filter((batch) => batch.status === 'active').length
-);
+  const activeBatches = computed(
+    () => batchStore.batches.filter(batch => batch.status === 'active').length
+  );
 
-const expiringBatches = computed(
-  () =>
+  const expiringBatches = computed(
+    () =>
+      batchStore.expiringBatches.filter(
+        batch =>
+          batch.urgency_level === 'critical' ||
+          batch.urgency_level === 'warning'
+      ).length
+  );
+
+  const criticalBatches = computed(() =>
     batchStore.expiringBatches.filter(
-      (batch) =>
-        batch.urgency_level === 'critical' || batch.urgency_level === 'warning'
-    ).length
-);
+      batch =>
+        batch.urgency_level === 'expired' || batch.urgency_level === 'critical'
+    )
+  );
 
-const criticalBatches = computed(() =>
-  batchStore.expiringBatches.filter(
-    (batch) =>
-      batch.urgency_level === 'expired' || batch.urgency_level === 'critical'
-  )
-);
+  const totalValue = computed(() =>
+    batchStore.batches.reduce(
+      (sum, batch) =>
+        sum + (batch.current_quantity || 0) * (batch.unit_cost || 0),
+      0
+    )
+  );
 
-const totalValue = computed(() =>
-  batchStore.batches.reduce(
-    (sum, batch) => sum + (batch.current_quantity || 0) * (batch.unit_cost || 0),
-    0
-  )
-);
+  // Methods
+  const formatCurrency = (amount: number, currency: string) => {
+    return new Intl.NumberFormat('nl-NL', {
+      style: 'currency',
+      currency: currency || 'EUR',
+    }).format(amount);
+  };
 
-// Methods
-const formatCurrency = (amount: number, currency: string) => {
-  return new Intl.NumberFormat('nl-NL', {
-    style: 'currency',
-    currency: currency || 'EUR',
-  }).format(amount);
-};
+  const refreshData = async () => {
+    try {
+      refreshing.value = true;
+      const practiceId = authStore.clinicId;
+      if (!practiceId) return;
 
-const refreshData = async () => {
-  try {
-    refreshing.value = true;
-    const practiceId = authStore.clinicId;
-    if (!practiceId) return;
-    
-    await Promise.all([
-      batchStore.fetchBatches(practiceId),
-      batchStore.fetchExpiringBatches(practiceId),
-    ]);
+      await Promise.all([
+        batchStore.fetchBatches(practiceId),
+        batchStore.fetchExpiringBatches(practiceId),
+      ]);
+
+      $q.notify({
+        type: 'positive',
+        message: t('common.dataRefreshed'),
+        timeout: 1000,
+      });
+    } catch (error) {
+      console.error(t('errors.failedToRefreshData'), error);
+      $q.notify({
+        type: 'negative',
+        message: t('errors.failedToRefreshData'),
+      });
+    } finally {
+      refreshing.value = false;
+    }
+  };
+
+  const openBarcodeScanner = () => {
+    showScannerDialog.value = true;
+  };
+
+  const filterExpiring = () => {
+    showExpiringOnly.value = !showExpiringOnly.value;
+    activeTab.value = 'expiring';
+  };
+
+  const filterCritical = () => {
+    activeTab.value = 'expiring';
+    // Apply critical filter in the expiring tab
+  };
+
+  const exportBatches = () => {
+    // Export batch data as CSV
+    const csvData = batchStore.batches.map(batch => ({
+      [t('batch.batchNumber')]: batch.batch_number,
+      [t('product.product')]: batch.product.name,
+      [t('location.location')]: batch.location.name,
+      [t('batch.currentQuantity')]: batch.current_quantity,
+      [t('batch.expiryDate')]: batch.expiry_date,
+      [t('common.status')]: batch.status,
+    }));
+
+    const csv = convertToCSV(csvData);
+    downloadCSV(csv, 'batch-overview.csv');
 
     $q.notify({
       type: 'positive',
-      message: t('common.dataRefreshed'),
-      timeout: 1000,
+      message: t('batch.exportSuccess'),
     });
-  } catch (error) {
-    console.error(t('errors.failedToRefreshData'), error);
-    $q.notify({
-      type: 'negative',
-      message: t('errors.failedToRefreshData'),
-    });
-  } finally {
-    refreshing.value = false;
-  }
-};
+  };
 
-const openBarcodeScanner = () => {
-  showScannerDialog.value = true;
-};
+  const convertToCSV = (data: any[]) => {
+    if (!data.length) return '';
 
-const filterExpiring = () => {
-  showExpiringOnly.value = !showExpiringOnly.value;
-  activeTab.value = 'expiring';
-};
+    const headers = Object.keys(data[0]);
+    const csvHeaders = headers.join(',');
+    const csvRows = data.map(row =>
+      headers.map(header => `"${row[header] || ''}"`).join(',')
+    );
 
-const filterCritical = () => {
-  activeTab.value = 'expiring';
-  // Apply critical filter in the expiring tab
-};
+    return [csvHeaders, ...csvRows].join('\n');
+  };
 
-const exportBatches = () => {
-  // Export batch data as CSV
-  const csvData = batchStore.batches.map((batch) => ({
-    [t('batch.batchNumber')]: batch.batch_number,
-    [t('product.product')]: batch.product.name,
-    [t('location.location')]: batch.location.name,
-    [t('batch.currentQuantity')]: batch.current_quantity,
-    [t('batch.expiryDate')]: batch.expiry_date,
-    [t('common.status')]: batch.status,
-  }));
+  const downloadCSV = (csv: string, filename: string) => {
+    const blob = new Blob([csv], { type: 'text/csv' });
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = filename;
+    a.click();
+    window.URL.revokeObjectURL(url);
+  };
 
-  const csv = convertToCSV(csvData);
-  downloadCSV(csv, 'batch-overview.csv');
-
-  $q.notify({
-    type: 'positive',
-    message: t('batch.exportSuccess'),
-  });
-};
-
-const convertToCSV = (data: any[]) => {
-  if (!data.length) return '';
-
-  const headers = Object.keys(data[0]);
-  const csvHeaders = headers.join(',');
-  const csvRows = data.map((row) =>
-    headers.map((header) => `"${row[header] || ''}"`).join(',')
-  );
-
-  return [csvHeaders, ...csvRows].join('\n');
-};
-
-const downloadCSV = (csv: string, filename: string) => {
-  const blob = new Blob([csv], { type: 'text/csv' });
-  const url = window.URL.createObjectURL(blob);
-  const a = document.createElement('a');
-  a.href = url;
-  a.download = filename;
-  a.click();
-  window.URL.revokeObjectURL(url);
-};
-
-const onBatchSelected = (batch: ProductBatchWithDetails) => {
-  selectedBatch.value = batch;
-  showBatchDetailDialog.value = true;
-};
-
-const onBatchAdded = () => {
-  showAddBatchDialog.value = false;
-  refreshData();
-};
-
-const onBatchUpdated = () => {
-  showBatchDetailDialog.value = false;
-  refreshData();
-};
-
-const onBatchUsed = () => {
-  refreshData();
-};
-
-const onUseBatch = (batch: ProductBatchWithDetails) => {
-  // Handle batch usage
-  showBatchDetailDialog.value = false;
-  // Open usage dialog or process directly
-};
-
-const onBarcodeScanned = (barcodeData: string) => {
-  showScannerDialog.value = false;
-
-  // Try to find batch by batch number
-  const foundBatch = batchStore.batches.find(
-    (batch) =>
-      batch.batch_number === barcodeData ||
-      batch.supplier_batch_number === barcodeData
-  );
-
-  if (foundBatch) {
-    selectedBatch.value = foundBatch;
+  const onBatchSelected = (batch: ProductBatchWithDetails) => {
+    selectedBatch.value = batch;
     showBatchDetailDialog.value = true;
-  } else {
-    $q.notify({
-      type: 'warning',
-      message: t('batch.batchNotFound', { batchNumber: barcodeData }),
-    });
-  }
-};
+  };
 
-const onFifoSuggestion = (suggestion: any) => {
-  // Handle FIFO batch suggestion
-  console.log('FIFO suggestion:', suggestion);
-};
-
-// Lifecycle
-onMounted(() => {
-  const practiceId = authStore.clinicId;
-  if (practiceId) {
+  const onBatchAdded = () => {
+    showAddBatchDialog.value = false;
     refreshData();
-  }
-});
+  };
+
+  const onBatchUpdated = () => {
+    showBatchDetailDialog.value = false;
+    refreshData();
+  };
+
+  const onBatchUsed = () => {
+    refreshData();
+  };
+
+  const onUseBatch = (batch: ProductBatchWithDetails) => {
+    // Handle batch usage
+    showBatchDetailDialog.value = false;
+    // Open usage dialog or process directly
+  };
+
+  const onBarcodeScanned = (barcodeData: string) => {
+    showScannerDialog.value = false;
+
+    // Try to find batch by batch number
+    const foundBatch = batchStore.batches.find(
+      batch =>
+        batch.batch_number === barcodeData ||
+        batch.supplier_batch_number === barcodeData
+    );
+
+    if (foundBatch) {
+      selectedBatch.value = foundBatch;
+      showBatchDetailDialog.value = true;
+    } else {
+      $q.notify({
+        type: 'warning',
+        message: t('batch.batchNotFound', { batchNumber: barcodeData }),
+      });
+    }
+  };
+
+  const onFifoSuggestion = (suggestion: any) => {
+    // Handle FIFO batch suggestion
+    console.log('FIFO suggestion:', suggestion);
+  };
+
+  // Lifecycle
+  onMounted(() => {
+    const practiceId = authStore.clinicId;
+    if (practiceId) {
+      refreshData();
+    }
+  });
 </script>
 
 <style scoped>
-.batch-management-page {
-  padding: 16px;
-}
-
-.dashboard-card {
-  height: 100px;
-  transition: all 0.3s ease;
-}
-
-.dashboard-card:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-}
-
-.dashboard-card .q-card-section {
-  height: 100%;
-}
-
-@media (max-width: 768px) {
   .batch-management-page {
-    padding: 8px;
+    padding: 16px;
   }
 
   .dashboard-card {
-    height: 80px;
+    height: 100px;
+    transition: all 0.3s ease;
   }
-}
 
-.stats-cards-container {
-  gap: 0;
-  
-  .stats-card-col {
-    padding: 8px;
-    
-    @media (max-width: 640px) {
-      padding: 6px;
+  .dashboard-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  }
+
+  .dashboard-card .q-card-section {
+    height: 100%;
+  }
+
+  @media (max-width: 768px) {
+    .batch-management-page {
+      padding: 8px;
+    }
+
+    .dashboard-card {
+      height: 80px;
     }
   }
-}
+
+  .stats-cards-container {
+    gap: 0;
+
+    .stats-card-col {
+      padding: 8px;
+
+      @media (max-width: 640px) {
+        padding: 6px;
+      }
+    }
+  }
 </style>

@@ -207,7 +207,7 @@ Permissions-Policy: camera=(), microphone=(), geolocation=()
 2. **Configure in `src/main.ts`:**
 
    ```typescript
-   import { initializeMonitoring } from "src/services/monitoring";
+   import { initializeMonitoring } from 'src/services/monitoring';
 
    // Initialize monitoring
    await initializeMonitoring();
@@ -247,8 +247,8 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: "18"
-          cache: "npm"
+          node-version: '18'
+          cache: 'npm'
 
       - name: Install dependencies
         run: npm ci
@@ -269,7 +269,7 @@ jobs:
         uses: amondnet/vercel-action@v25
         with:
           vercel-token: ${{ secrets.VERCEL_TOKEN }}
-          vercel-args: "--prod"
+          vercel-args: '--prod'
 ```
 
 ## 🐛 Troubleshooting
@@ -311,5 +311,4 @@ For deployment issues:
 
 ---
 
-**Last Updated:** December 2024
-**Version:** 1.0.0
+**Last Updated:** December 2024 **Version:** 1.0.0

@@ -1,4 +1,4 @@
-import { supabase } from "@/services/supabase";
+import { supabase } from '@/services/supabase';
 import type {
   Location,
   LocationInsert,
@@ -9,9 +9,9 @@ import type {
   PracticeMember,
   PermissionType,
   ResourceType,
-} from "@/types/supabase";
-import { useAuthStore } from "@/stores/auth";
-import { analyticsService } from "./analytics";
+} from '@/types/supabase';
+import { useAuthStore } from '@/stores/auth';
+import { analyticsService } from './analytics';
 
 export interface AuditLogEntry {
   id: string;
@@ -39,19 +39,19 @@ export class AdminService {
    * Create a new location
    */
   async createLocation(
-    locationData: Omit<LocationInsert, "practice_id">
+    locationData: Omit<LocationInsert, 'practice_id'>
   ): Promise<Location> {
     const authStore = useAuthStore();
     const practiceId = authStore.selectedPractice?.id;
     const user = authStore.user;
 
     if (!practiceId || !user) {
-      throw new Error("Practice or user not found");
+      throw new Error('Practice or user not found');
     }
 
     // Check admin permissions
-    if (!(await this.hasPermission("admin", "practice", practiceId))) {
-      throw new Error("Insufficient permissions to create locations");
+    if (!(await this.hasPermission('admin', 'practice', practiceId))) {
+      throw new Error('Insufficient permissions to create locations');
     }
 
     const newLocation: LocationInsert = {
@@ -60,7 +60,7 @@ export class AdminService {
     };
 
     const { data, error } = await supabase
-      .from("locations")
+      .from('locations')
       .insert(newLocation)
       .select()
       .single();
@@ -70,7 +70,7 @@ export class AdminService {
     }
 
     // Log activity
-    await this.logActivity("location_created", "location", data.id, null, data);
+    await this.logActivity('location_created', 'location', data.id, null, data);
 
     return data;
   }
@@ -83,15 +83,15 @@ export class AdminService {
     const practiceId = authStore.selectedPractice?.id;
 
     if (!practiceId) {
-      throw new Error("No practice selected");
+      throw new Error('No practice selected');
     }
 
     const { data, error } = await supabase
-      .from("locations")
-      .select("*")
-      .eq("practice_id", practiceId)
-      .order("is_main", { ascending: false })
-      .order("name");
+      .from('locations')
+      .select('*')
+      .eq('practice_id', practiceId)
+      .order('is_main', { ascending: false })
+      .order('name');
 
     if (error) {
       throw new Error(`Failed to get locations: ${error.message}`);
@@ -108,24 +108,24 @@ export class AdminService {
     updates: LocationUpdate
   ): Promise<Location> {
     // Check permissions
-    if (!(await this.hasPermission("write", "practice"))) {
-      throw new Error("Insufficient permissions to update locations");
+    if (!(await this.hasPermission('write', 'practice'))) {
+      throw new Error('Insufficient permissions to update locations');
     }
 
     // Get current data for audit log
     const { data: currentData } = await supabase
-      .from("locations")
-      .select("*")
-      .eq("id", locationId)
+      .from('locations')
+      .select('*')
+      .eq('id', locationId)
       .single();
 
     const { data, error } = await supabase
-      .from("locations")
+      .from('locations')
       .update({
         ...updates,
         updated_at: new Date().toISOString(),
       })
-      .eq("id", locationId)
+      .eq('id', locationId)
       .select()
       .single();
 
@@ -135,8 +135,8 @@ export class AdminService {
 
     // Log activity
     await this.logActivity(
-      "location_updated",
-      "location",
+      'location_updated',
+      'location',
       locationId,
       currentData,
       data
@@ -150,26 +150,26 @@ export class AdminService {
    */
   async deleteLocation(locationId: string): Promise<void> {
     // Check permissions
-    if (!(await this.hasPermission("admin", "practice"))) {
-      throw new Error("Insufficient permissions to delete locations");
+    if (!(await this.hasPermission('admin', 'practice'))) {
+      throw new Error('Insufficient permissions to delete locations');
     }
 
     // Get current data for audit log
     const { data: currentData } = await supabase
-      .from("locations")
-      .select("*")
-      .eq("id", locationId)
+      .from('locations')
+      .select('*')
+      .eq('id', locationId)
       .single();
 
     // Check if it's the main location
     if (currentData?.is_main) {
-      throw new Error("Cannot delete the main location");
+      throw new Error('Cannot delete the main location');
     }
 
     const { error } = await supabase
-      .from("locations")
+      .from('locations')
       .delete()
-      .eq("id", locationId);
+      .eq('id', locationId);
 
     if (error) {
       throw new Error(`Failed to delete location: ${error.message}`);
@@ -177,8 +177,8 @@ export class AdminService {
 
     // Log activity
     await this.logActivity(
-      "location_deleted",
-      "location",
+      'location_deleted',
+      'location',
       locationId,
       currentData,
       null
@@ -201,18 +201,18 @@ export class AdminService {
     const grantedBy = authStore.user?.id;
 
     if (!practiceId || !grantedBy) {
-      throw new Error("Practice or user not found");
+      throw new Error('Practice or user not found');
     }
 
     // Check admin permissions
-    if (!(await this.hasPermission("admin", "practice"))) {
-      throw new Error("Insufficient permissions to grant permissions");
+    if (!(await this.hasPermission('admin', 'practice'))) {
+      throw new Error('Insufficient permissions to grant permissions');
     }
 
     const permissionData: UserPermissionInsert = {
       user_id: userId,
       practice_id: practiceId,
-      location_id: locationId,
+      location_id: locationId || null,
       permission_type: permissionType,
       resource_type: resourceType,
       resource_id: resourceId,
@@ -221,7 +221,7 @@ export class AdminService {
     };
 
     const { data, error } = await supabase
-      .from("user_permissions")
+      .from('user_permissions')
       .insert(permissionData)
       .select()
       .single();
@@ -232,8 +232,8 @@ export class AdminService {
 
     // Log activity
     await this.logActivity(
-      "permission_granted",
-      "user_permission",
+      'permission_granted',
+      'user_permission',
       data.id,
       null,
       data
@@ -247,21 +247,21 @@ export class AdminService {
    */
   async revokePermission(permissionId: string): Promise<void> {
     // Check admin permissions
-    if (!(await this.hasPermission("admin", "practice"))) {
-      throw new Error("Insufficient permissions to revoke permissions");
+    if (!(await this.hasPermission('admin', 'practice'))) {
+      throw new Error('Insufficient permissions to revoke permissions');
     }
 
     // Get current data for audit log
     const { data: currentData } = await supabase
-      .from("user_permissions")
-      .select("*")
-      .eq("id", permissionId)
+      .from('user_permissions')
+      .select('*')
+      .eq('id', permissionId)
       .single();
 
     const { error } = await supabase
-      .from("user_permissions")
+      .from('user_permissions')
       .delete()
-      .eq("id", permissionId);
+      .eq('id', permissionId);
 
     if (error) {
       throw new Error(`Failed to revoke permission: ${error.message}`);
@@ -269,8 +269,8 @@ export class AdminService {
 
     // Log activity
     await this.logActivity(
-      "permission_revoked",
-      "user_permission",
+      'permission_revoked',
+      'user_permission',
       permissionId,
       currentData,
       null
@@ -296,27 +296,27 @@ export class AdminService {
 
     // Check if user is practice owner (has all permissions)
     const { data: membership } = await supabase
-      .from("practice_members")
-      .select("role")
-      .eq("practice_id", practiceId)
-      .eq("user_id", checkUserId)
+      .from('practice_members')
+      .select('role')
+      .eq('practice_id', practiceId)
+      .eq('user_id', checkUserId)
       .single();
 
-    if (membership?.role === "owner") {
+    if (membership?.role === 'owner') {
       return true;
     }
 
     // Check specific permissions
     let query = supabase
-      .from("user_permissions")
-      .select("*")
-      .eq("user_id", checkUserId)
-      .eq("practice_id", practiceId)
-      .eq("permission_type", permissionType)
-      .eq("resource_type", resourceType);
+      .from('user_permissions')
+      .select('*')
+      .eq('user_id', checkUserId)
+      .eq('practice_id', practiceId)
+      .eq('permission_type', permissionType)
+      .eq('resource_type', resourceType);
 
     if (resourceId) {
-      query = query.eq("resource_id", resourceId);
+      query = query.eq('resource_id', resourceId);
     }
 
     const { data: permissions } = await query;
@@ -328,7 +328,7 @@ export class AdminService {
     // Check if any permission is valid (not expired)
     const now = new Date();
     return permissions.some(
-      (permission) =>
+      permission =>
         !permission.expires_at || new Date(permission.expires_at) > now
     );
   }
@@ -347,44 +347,44 @@ export class AdminService {
     const practiceId = authStore.selectedPractice?.id;
 
     if (!checkUserId || !practiceId) {
-      return { hasPermission: false, reason: "User or practice not found" };
+      return { hasPermission: false, reason: 'User or practice not found' };
     }
 
     // Check if user is practice owner
     const { data: membership } = await supabase
-      .from("practice_members")
-      .select("role")
-      .eq("practice_id", practiceId)
-      .eq("user_id", checkUserId)
+      .from('practice_members')
+      .select('role')
+      .eq('practice_id', practiceId)
+      .eq('user_id', checkUserId)
       .single();
 
-    if (membership?.role === "owner") {
-      return { hasPermission: true, reason: "Practice owner" };
+    if (membership?.role === 'owner') {
+      return { hasPermission: true, reason: 'Practice owner' };
     }
 
     // Check specific permissions
     let query = supabase
-      .from("user_permissions")
-      .select("*")
-      .eq("user_id", checkUserId)
-      .eq("practice_id", practiceId)
-      .eq("permission_type", permissionType)
-      .eq("resource_type", resourceType);
+      .from('user_permissions')
+      .select('*')
+      .eq('user_id', checkUserId)
+      .eq('practice_id', practiceId)
+      .eq('permission_type', permissionType)
+      .eq('resource_type', resourceType);
 
     if (resourceId) {
-      query = query.eq("resource_id", resourceId);
+      query = query.eq('resource_id', resourceId);
     }
 
     const { data: permissions } = await query;
 
     if (!permissions || permissions.length === 0) {
-      return { hasPermission: false, reason: "No matching permissions found" };
+      return { hasPermission: false, reason: 'No matching permissions found' };
     }
 
     // Check if any permission is valid
     const now = new Date();
     const validPermission = permissions.find(
-      (permission) =>
+      permission =>
         !permission.expires_at || new Date(permission.expires_at) > now
     );
 
@@ -397,7 +397,7 @@ export class AdminService {
       };
     }
 
-    return { hasPermission: false, reason: "All permissions have expired" };
+    return { hasPermission: false, reason: 'All permissions have expired' };
   }
 
   /**
@@ -409,15 +409,15 @@ export class AdminService {
     const practiceId = authStore.selectedPractice?.id;
 
     if (!checkUserId || !practiceId) {
-      throw new Error("User or practice not found");
+      throw new Error('User or practice not found');
     }
 
     const { data, error } = await supabase
-      .from("user_permissions")
-      .select("*")
-      .eq("user_id", checkUserId)
-      .eq("practice_id", practiceId)
-      .order("created_at", { ascending: false });
+      .from('user_permissions')
+      .select('*')
+      .eq('user_id', checkUserId)
+      .eq('practice_id', practiceId)
+      .order('created_at', { ascending: false });
 
     if (error) {
       throw new Error(`Failed to get user permissions: ${error.message}`);
@@ -436,18 +436,18 @@ export class AdminService {
     const practiceId = authStore.selectedPractice?.id;
 
     if (!practiceId) {
-      throw new Error("No practice selected");
+      throw new Error('No practice selected');
     }
 
     // Check admin permissions
-    if (!(await this.hasPermission("read", "practice"))) {
-      throw new Error("Insufficient permissions to view practice members");
+    if (!(await this.hasPermission('read', 'practice'))) {
+      throw new Error('Insufficient permissions to view practice members');
     }
 
     const { data: members, error } = await supabase
-      .from("practice_members")
-      .select("*")
-      .eq("practice_id", practiceId);
+      .from('practice_members')
+      .select('*')
+      .eq('practice_id', practiceId);
 
     if (error) {
       throw new Error(`Failed to get practice members: ${error.message}`);
@@ -455,7 +455,7 @@ export class AdminService {
 
     // Get permissions for each member
     const membersWithPermissions = await Promise.all(
-      (members || []).map(async (member) => {
+      (members || []).map(async member => {
         const permissions = await this.getUserPermissions(member.user_id);
         return { ...member, permissions };
       })
@@ -482,7 +482,7 @@ export class AdminService {
     if (!practiceId) return;
 
     try {
-      await analyticsService.trackEvent("admin_activity", {
+      await analyticsService.trackEvent('admin_activity', {
         action,
         resource_type: resourceType,
         resource_id: resourceId,
@@ -491,7 +491,7 @@ export class AdminService {
         metadata,
       });
     } catch (error) {
-      console.error("Failed to log admin activity:", error);
+      console.error('Failed to log admin activity:', error);
     }
   }
 
@@ -510,23 +510,23 @@ export class AdminService {
     const practiceId = authStore.selectedPractice?.id;
 
     if (!practiceId) {
-      throw new Error("No practice selected");
+      throw new Error('No practice selected');
     }
 
     // Check admin permissions
-    if (!(await this.hasPermission("admin", "practice"))) {
-      throw new Error("Insufficient permissions to view audit log");
+    if (!(await this.hasPermission('admin', 'practice'))) {
+      throw new Error('Insufficient permissions to view audit log');
     }
 
     const events = await analyticsService.getUsageStats({
-      event_type: "admin_activity",
+      event_type: 'admin_activity',
       date_from: filters?.dateFrom,
       date_to: filters?.dateTo,
       user_id: filters?.userId,
     });
 
     const auditEntries: AuditLogEntry[] = events
-      .filter((event) => {
+      .filter(event => {
         if (filters?.action && event.event_data?.action !== filters.action)
           return false;
         if (
@@ -536,12 +536,12 @@ export class AdminService {
           return false;
         return true;
       })
-      .map((event) => ({
+      .map(event => ({
         id: event.id,
         practice_id: event.practice_id,
         user_id: event.user_id,
-        action: event.event_data?.action || "unknown",
-        resource_type: event.event_data?.resource_type || "unknown",
+        action: event.event_data?.action || 'unknown',
+        resource_type: event.event_data?.resource_type || 'unknown',
         resource_id: event.event_data?.resource_id,
         old_values: event.event_data?.old_values,
         new_values: event.event_data?.new_values,
@@ -563,26 +563,26 @@ export class AdminService {
     const practiceId = authStore.selectedPractice?.id;
 
     if (!practiceId) {
-      throw new Error("No practice selected");
+      throw new Error('No practice selected');
     }
 
     // Check admin permissions
-    if (!(await this.hasPermission("admin", "practice"))) {
-      throw new Error("Insufficient permissions to set main location");
+    if (!(await this.hasPermission('admin', 'practice'))) {
+      throw new Error('Insufficient permissions to set main location');
     }
 
     // Remove main flag from all locations
     await supabase
-      .from("locations")
+      .from('locations')
       .update({ is_main: false })
-      .eq("practice_id", practiceId);
+      .eq('practice_id', practiceId);
 
     // Set new main location
     const { error } = await supabase
-      .from("locations")
+      .from('locations')
       .update({ is_main: true })
-      .eq("id", locationId)
-      .eq("practice_id", practiceId);
+      .eq('id', locationId)
+      .eq('practice_id', practiceId);
 
     if (error) {
       throw new Error(`Failed to set main location: ${error.message}`);
@@ -590,8 +590,8 @@ export class AdminService {
 
     // Log activity
     await this.logActivity(
-      "main_location_changed",
-      "location",
+      'main_location_changed',
+      'location',
       locationId,
       null,
       { is_main: true }
@@ -604,24 +604,24 @@ export class AdminService {
   getPermissionTemplates() {
     return {
       assistant: [
-        { permission_type: "read", resource_type: "bestellijst" },
-        { permission_type: "write", resource_type: "bestellijst" },
-        { permission_type: "read", resource_type: "product" },
-        { permission_type: "write", resource_type: "product" },
-        { permission_type: "read", resource_type: "cart" },
-        { permission_type: "write", resource_type: "cart" },
+        { permission_type: 'read', resource_type: 'bestellijst' },
+        { permission_type: 'write', resource_type: 'bestellijst' },
+        { permission_type: 'read', resource_type: 'product' },
+        { permission_type: 'write', resource_type: 'product' },
+        { permission_type: 'read', resource_type: 'cart' },
+        { permission_type: 'write', resource_type: 'cart' },
       ],
       manager: [
-        { permission_type: "read", resource_type: "bestellijst" },
-        { permission_type: "write", resource_type: "bestellijst" },
-        { permission_type: "delete", resource_type: "bestellijst" },
-        { permission_type: "read", resource_type: "product" },
-        { permission_type: "write", resource_type: "product" },
-        { permission_type: "read", resource_type: "order" },
-        { permission_type: "write", resource_type: "order" },
-        { permission_type: "read", resource_type: "analytics" },
+        { permission_type: 'read', resource_type: 'bestellijst' },
+        { permission_type: 'write', resource_type: 'bestellijst' },
+        { permission_type: 'delete', resource_type: 'bestellijst' },
+        { permission_type: 'read', resource_type: 'product' },
+        { permission_type: 'write', resource_type: 'product' },
+        { permission_type: 'read', resource_type: 'order' },
+        { permission_type: 'write', resource_type: 'order' },
+        { permission_type: 'read', resource_type: 'analytics' },
       ],
-      admin: [{ permission_type: "admin", resource_type: "practice" }],
+      admin: [{ permission_type: 'admin', resource_type: 'practice' }],
     };
   }
 
@@ -630,7 +630,7 @@ export class AdminService {
    */
   async applyPermissionTemplate(
     userId: string,
-    template: "assistant" | "manager" | "admin",
+    template: 'assistant' | 'manager' | 'admin',
     locationId?: string
   ): Promise<void> {
     const templates = this.getPermissionTemplates();
@@ -648,8 +648,8 @@ export class AdminService {
 
     // Log activity
     await this.logActivity(
-      "permission_template_applied",
-      "user_permission",
+      'permission_template_applied',
+      'user_permission',
       null,
       null,
       {
@@ -657,6 +657,131 @@ export class AdminService {
         template,
         location_id: locationId,
       }
+    );
+  }
+
+  /**
+   * Reset user password
+   */
+  async resetUserPassword(userId: string): Promise<void> {
+    const authStore = useAuthStore();
+    const practiceId = authStore.selectedPractice?.id;
+
+    if (!practiceId) {
+      throw new Error('No practice selected');
+    }
+
+    // Check admin permissions
+    if (!(await this.hasPermission('admin', 'practice'))) {
+      throw new Error('Insufficient permissions to reset user passwords');
+    }
+
+    // Get user email from practice members
+    const { data: member, error: memberError } = await supabase
+      .from('practice_members')
+      .select('user_id')
+      .eq('practice_id', practiceId)
+      .eq('user_id', userId)
+      .single();
+
+    if (memberError || !member) {
+      throw new Error('User not found in practice');
+    }
+
+    // Get user email from profiles
+    const { data: profile, error: profileError } = await supabase
+      .from('profiles')
+      .select('email')
+      .eq('id', userId)
+      .single();
+
+    if (profileError || !profile?.email) {
+      throw new Error('User email not found');
+    }
+
+    // Use Supabase Auth API to reset password
+    const { error } = await supabase.auth.resetPasswordForEmail(profile.email, {
+      redirectTo: `${window.location.origin}/auth/reset-password`,
+    });
+
+    if (error) {
+      throw new Error(`Failed to send password reset email: ${error.message}`);
+    }
+
+    // Log activity
+    await this.logActivity('password_reset_initiated', 'user', userId, null, {
+      email: profile.email,
+    });
+  }
+
+  /**
+   * Toggle user status (activate/deactivate)
+   */
+  async toggleUserStatus(userId: string, activate: boolean): Promise<void> {
+    const authStore = useAuthStore();
+    const practiceId = authStore.selectedPractice?.id;
+
+    if (!practiceId) {
+      throw new Error('No practice selected');
+    }
+
+    // Check admin permissions
+    if (!(await this.hasPermission('admin', 'practice'))) {
+      throw new Error('Insufficient permissions to toggle user status');
+    }
+
+    // Get current member data
+    const { data: currentMember, error: getCurrentError } = await supabase
+      .from('practice_members')
+      .select('*')
+      .eq('practice_id', practiceId)
+      .eq('user_id', userId)
+      .single();
+
+    if (getCurrentError || !currentMember) {
+      throw new Error('User not found in practice');
+    }
+
+    // Don't allow deactivating practice owner
+    if (!activate && currentMember.role === 'owner') {
+      throw new Error('Cannot deactivate practice owner');
+    }
+
+    // Update user status
+    const newRole = activate
+      ? currentMember.role === 'inactive'
+        ? 'assistant'
+        : currentMember.role
+      : 'inactive';
+
+    const { error } = await supabase
+      .from('practice_members')
+      .update({
+        role: newRole,
+        updated_at: new Date().toISOString(),
+      })
+      .eq('practice_id', practiceId)
+      .eq('user_id', userId);
+
+    if (error) {
+      throw new Error(`Failed to update user status: ${error.message}`);
+    }
+
+    // If deactivating, revoke all active permissions
+    if (!activate) {
+      const permissions = await this.getUserPermissions(userId);
+      for (const permission of permissions) {
+        await this.revokePermission(permission.id);
+      }
+    }
+
+    // Log activity
+    await this.logActivity(
+      activate ? 'user_activated' : 'user_deactivated',
+      'user',
+      userId,
+      { role: currentMember.role },
+      { role: newRole }
     );
   }
 
@@ -672,9 +797,9 @@ export class AdminService {
     }>
   ): Promise<void> {
     // Check admin permissions
-    if (!(await this.hasPermission("admin", "practice"))) {
+    if (!(await this.hasPermission('admin', 'practice'))) {
       throw new Error(
-        "Insufficient permissions to bulk update location access"
+        'Insufficient permissions to bulk update location access'
       );
     }
 
@@ -683,7 +808,7 @@ export class AdminService {
         await this.grantPermission(
           update.userId,
           update.permissionType,
-          "bestellijst",
+          'bestellijst',
           undefined,
           locationId
         );
@@ -691,10 +816,10 @@ export class AdminService {
         // Find and revoke permission
         const permissions = await this.getUserPermissions(update.userId);
         const permission = permissions.find(
-          (p) =>
+          p =>
             p.location_id === locationId &&
             p.permission_type === update.permissionType &&
-            p.resource_type === "bestellijst"
+            p.resource_type === 'bestellijst'
         );
 
         if (permission) {
@@ -705,8 +830,8 @@ export class AdminService {
 
     // Log activity
     await this.logActivity(
-      "bulk_location_access_updated",
-      "location",
+      'bulk_location_access_updated',
+      'location',
       locationId,
       null,
       {

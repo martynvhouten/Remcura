@@ -117,7 +117,7 @@ export function useButtons() {
       props?: Partial<ButtonConfig>;
     }>
   ) => {
-    return actions.map((action) => getThemeConfig(action.theme, action.props));
+    return actions.map(action => getThemeConfig(action.theme, action.props));
   };
 
   // Quick action buttons for common use cases

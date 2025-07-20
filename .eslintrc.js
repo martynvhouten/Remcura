@@ -6,8 +6,8 @@ module.exports = {
     'vitest.config.ts'
   ],
   parserOptions: {
-    ecmaVersion: "latest", // Allows for the parsing of modern ECMAScript features
-    sourceType: "module", // Allows for the use of imports
+    ecmaVersion: "latest",
+    sourceType: "module",
   },
   env: {
     node: true,
@@ -18,17 +18,16 @@ module.exports = {
     // Base ESLint recommended rules
     "eslint:recommended",
 
-    // Uncomment any of the lines below to choose desired strictness,
-    // but leave only one uncommented!
-    // See https://eslint.vuejs.org/rules/#available-rules
-    "plugin:vue/vue3-essential", // Priority A: Essential (Error Prevention)
-    // 'plugin:vue/vue3-strongly-recommended', // Priority B: Strongly Recommended (Improving Readability)
-    // 'plugin:vue/vue3-recommended', // Priority C: Recommended (Minimizing Arbitrary Choices and Cognitive Overhead)
-
+    // Vue 3 essential rules
+    "plugin:vue/vue3-essential",
+    
+    // TypeScript recommended rules
     "@vue/eslint-config-typescript",
+    
+    // Prettier for code formatting
+    "eslint-config-prettier",
   ],
   plugins: [
-    // https://eslint.vuejs.org/user-guide/#why-doesn-t-it-work-on-vue-files
     "vue",
   ],
   globals: {
@@ -43,23 +42,59 @@ module.exports = {
     Capacitor: "readonly",
     chrome: "readonly",
   },
-  // add your custom rules here
   rules: {
+    // General ESLint rules
     "prefer-promise-reject-errors": "off",
-
-    quotes: 'off', // Disabled to reduce noise in linting output
-
-    // this rule, if on, would require explicit return type on the `render` function
+    "quotes": "off", // Let Prettier handle this
+    "no-debugger": process.env.NODE_ENV === "production" ? "error" : "warn",
+    "no-console": process.env.NODE_ENV === "production" ? "warn" : "off",
+    
+    // TypeScript specific rules
     "@typescript-eslint/explicit-function-return-type": "off",
-
-    // in plain CommonJS modules, you can't use `import foo = require('foo')` to pass this rule, so it has to be disabled
     "@typescript-eslint/no-var-requires": "off",
-
-    // The core 'no-unused-vars' rules (in the eslint:recommended ruleset)
-    // does not work with type definitions
+    "@typescript-eslint/no-unused-vars": ["warn", { 
+      "argsIgnorePattern": "^_",
+      "varsIgnorePattern": "^_",
+      "ignoreRestSiblings": true 
+    }],
+    "@typescript-eslint/no-explicit-any": "warn",
+    "@typescript-eslint/no-non-null-assertion": "warn",
+    
+    // Vue specific rules
+    "vue/multi-word-component-names": "off",
+    "vue/no-unused-vars": "warn",
+    "vue/component-definition-name-casing": ["error", "PascalCase"],
+    "vue/require-default-prop": "warn",
+    "vue/require-prop-types": "warn",
+    "vue/no-unused-components": "warn",
+    
+    // Import/Export rules
+    "no-duplicate-imports": "error",
+    
+    // Best practices
+    "eqeqeq": ["error", "always"],
+    "curly": ["error", "all"],
+    "no-var": "error",
+    "prefer-const": "error",
+    "prefer-arrow-callback": "error",
+    
+    // Disable base no-unused-vars in favor of TypeScript version
     "no-unused-vars": "off",
-
-    // allow debugger during development only
-    "no-debugger": process.env.NODE_ENV === "production" ? "error" : "off",
   },
+  overrides: [
+    {
+      files: ["*.vue"],
+      rules: {
+        "@typescript-eslint/no-unused-vars": "off", // Vue SFCs handle this differently
+      }
+    },
+    {
+      files: ["test/**/*", "tests/**/*", "**/*.test.ts", "**/*.spec.ts"],
+      rules: {
+        "@typescript-eslint/no-explicit-any": "off",
+        "@typescript-eslint/no-unused-vars": "off",
+        "no-console": "off",
+      }
+    }
+  ]
 };

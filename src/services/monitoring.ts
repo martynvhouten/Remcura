@@ -79,7 +79,7 @@ class MonitoringService {
     try {
       const Sentry = await import('@sentry/vue');
 
-      Sentry.withScope((scope) => {
+      Sentry.withScope(scope => {
         if (context?.userId) {
           scope.setUser({ id: context.userId });
         }

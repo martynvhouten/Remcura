@@ -28,7 +28,7 @@
     <!-- Overview Cards -->
     <div class="row q-mb-lg stats-cards-container">
       <div class="col-12 col-sm-6 col-md-3 stats-card-col">
-        <BaseCard 
+        <BaseCard
           variant="stats"
           :value="stats.totalUsers"
           :label="$t('admin.stats.totalUsers')"
@@ -40,7 +40,7 @@
       </div>
 
       <div class="col-12 col-sm-6 col-md-3 stats-card-col">
-        <BaseCard 
+        <BaseCard
           variant="stats"
           :value="stats.totalLocations"
           :label="$t('admin.stats.totalLocations')"
@@ -52,19 +52,21 @@
       </div>
 
       <div class="col-12 col-sm-6 col-md-3 stats-card-col">
-        <BaseCard 
+        <BaseCard
           variant="stats"
           :value="stats.pendingSync"
           :label="$t('admin.stats.pendingSync')"
           icon="sync_problem"
           icon-color="warning"
-          :trend="`${$t('admin.stats.lastSync')}: ${formatDate(stats.lastSync)}`"
+          :trend="`${$t('admin.stats.lastSync')}: ${formatDate(
+            stats.lastSync
+          )}`"
           trend-direction="neutral"
         />
       </div>
 
       <div class="col-12 col-sm-6 col-md-3 stats-card-col">
-        <BaseCard 
+        <BaseCard
           variant="stats"
           :value="stats.todayEvents"
           :label="$t('admin.stats.todayEvents')"
@@ -159,7 +161,7 @@
       <!-- Users Tab -->
       <q-tab-panel name="users">
         <div class="text-h6 q-mb-md">
-          {{ $t("admin.userManagement.title") }}
+          {{ $t('admin.userManagement.title') }}
         </div>
 
         <q-table
@@ -183,7 +185,7 @@
 
           <template v-slot:body-cell-lastActive="props">
             <q-td :props="props">
-              {{ props.value ? formatDate(props.value) : "-" }}
+              {{ props.value ? formatDate(props.value) : '-' }}
             </q-td>
           </template>
 
@@ -213,7 +215,7 @@
                           />
                         </q-item-section>
                         <q-item-section>
-                          {{ props.row.active ? "Deactivate" : "Activate" }}
+                          {{ props.row.active ? 'Deactivate' : 'Activate' }}
                         </q-item-section>
                       </q-item>
                     </q-list>
@@ -235,7 +237,7 @@
 
       <!-- Locations Tab -->
       <q-tab-panel name="locations">
-        <div class="text-h6 q-mb-md">{{ $t("locations.title") }}</div>
+        <div class="text-h6 q-mb-md">{{ $t('locations.title') }}</div>
 
         <q-table
           :rows="locations"
@@ -253,7 +255,7 @@
                 size="sm"
                 icon="star"
               >
-                {{ $t("locations.isMain") }}
+                {{ $t('locations.isMain') }}
               </q-chip>
             </q-td>
           </template>
@@ -265,7 +267,7 @@
                 text-color="white"
                 size="sm"
               >
-                {{ props.value ? $t("common.active") : $t("common.inactive") }}
+                {{ props.value ? $t('common.active') : $t('common.inactive') }}
               </q-chip>
             </q-td>
           </template>
@@ -300,7 +302,7 @@
 
       <!-- Permissions Tab -->
       <q-tab-panel name="permissions">
-        <div class="text-h6 q-mb-md">{{ $t("permissions.title") }}</div>
+        <div class="text-h6 q-mb-md">{{ $t('permissions.title') }}</div>
 
         <BaseCard :title="$t('permissions.templates.title')" variant="outlined">
           <div class="row q-gutter-md">
@@ -369,7 +371,7 @@
 
       <!-- Analytics Tab -->
       <q-tab-panel name="analytics">
-        <div class="text-h6 q-mb-md">{{ $t("analytics.dashboard") }}</div>
+        <div class="text-h6 q-mb-md">{{ $t('analytics.dashboard') }}</div>
 
         <div class="row q-gutter-md">
           <div class="col-12 col-md-6">
@@ -404,13 +406,13 @@
                   {{ analyticsData.averageSessionTime }}min
                 </div>
                 <div class="text-caption">
-                  {{ $t("analytics.metrics.averageSession") }}
+                  {{ $t('analytics.metrics.averageSession') }}
                 </div>
 
                 <div class="q-mt-md">
                   <div class="text-h6">{{ analyticsData.peakHour }}:00</div>
                   <div class="text-caption">
-                    {{ $t("analytics.metrics.peakHours") }}
+                    {{ $t('analytics.metrics.peakHours') }}
                   </div>
                 </div>
               </div>
@@ -426,398 +428,494 @@
 </template>
 
 <script setup lang="ts">
-import { ref, reactive, onMounted, computed } from 'vue';
-import { useI18n } from 'vue-i18n';
-import { useQuasar } from 'quasar';
-import { useAuthStore } from '@/stores/auth';
-import PageLayout from '@/components/PageLayout.vue';
-import PageTitle from '@/components/PageTitle.vue';
-import BaseCard from '@/components/base/BaseCard.vue';
-import DemoResetCard from '@/components/admin/DemoResetCard.vue';
-import { adminService } from '@/services/admin';
-import { analyticsService } from '@/services/analytics';
-import { offlineService } from '@/services/offline';
-import type {
-  Location,
-  PracticeMember,
-  UserPermission,
-} from '@/types/supabase';
+  import { ref, reactive, onMounted, computed } from 'vue';
+  import { useI18n } from 'vue-i18n';
+  import { useQuasar } from 'quasar';
+  import { useAuthStore } from '@/stores/auth';
+  import PageLayout from '@/components/PageLayout.vue';
+  import PageTitle from '@/components/PageTitle.vue';
+  import BaseCard from '@/components/base/BaseCard.vue';
+  import DemoResetCard from '@/components/admin/DemoResetCard.vue';
+  import { adminService } from '@/services/admin';
+  import { analyticsService } from '@/services/analytics';
+  import { offlineService } from '@/services/offline';
+  import type {
+    Location,
+    PracticeMember,
+    UserPermission,
+  } from '@/types/supabase';
 
-// Composables
-const { t } = useI18n();
-const $q = useQuasar();
-const authStore = useAuthStore();
+  // Composables
+  const { t } = useI18n();
+  const $q = useQuasar();
+  const authStore = useAuthStore();
 
-// State
-const activeTab = ref('users');
-const loadingUsers = ref(false);
-const loadingLocations = ref(false);
-const loadingPermissions = ref(false);
-const syncing = ref(false);
-const showSettings = ref(false);
-const showAuditLog = ref(false);
-const showInviteUser = ref(false);
-const showAddLocation = ref(false);
-const showExportDialog = ref(false);
+  // State
+  const activeTab = ref('users');
+  const loadingUsers = ref(false);
+  const loadingLocations = ref(false);
+  const loadingPermissions = ref(false);
+  const syncing = ref(false);
+  const showSettings = ref(false);
+  const showAuditLog = ref(false);
+  const showInviteUser = ref(false);
+  const showAddLocation = ref(false);
+  const showExportDialog = ref(false);
 
-// Data
-const users = ref<PracticeMember[]>([]);
-const locations = ref<Location[]>([]);
-const permissions = ref<UserPermission[]>([]);
-const topEvents = ref<Array<{ type: string; count: number }>>([]);
+  // Data
+  const users = ref<PracticeMember[]>([]);
+  const locations = ref<Location[]>([]);
+  const permissions = ref<UserPermission[]>([]);
+  const topEvents = ref<Array<{ type: string; count: number }>>([]);
 
-// Stats
-const stats = reactive({
-  totalUsers: 0,
-  activeUsers: 0,
-  totalLocations: 0,
-  activeLocations: 0,
-  pendingSync: 0,
-  lastSync: null as Date | null,
-  todayEvents: 0,
-  eventsGrowth: 0,
-});
-
-// Analytics data
-const analyticsData = reactive({
-  averageSessionTime: 0,
-  peakHour: 0,
-});
-
-// Table columns
-const userColumns = computed(() => [
-  {
-    name: 'email',
-    label: t('admin.userManagement.email'),
-    align: 'left',
-    field: 'email',
-    sortable: true,
-  },
-  {
-    name: 'role',
-    label: t('admin.userManagement.roles'),
-    align: 'center',
-    field: 'role',
-    sortable: true,
-  },
-  {
-    name: 'lastActive',
-    label: t('admin.userManagement.lastActive'),
-    align: 'left',
-    field: 'last_active',
-    sortable: true,
-  },
-  {
-    name: 'actions',
-    label: t('common.actions'),
-    align: 'center',
-  },
-]);
-
-const locationColumns = computed(() => [
-  {
-    name: 'name',
-    label: t('locations.name'),
-    align: 'left',
-    field: 'name',
-    sortable: true,
-  },
-  {
-    name: 'city',
-    label: t('locations.city'),
-    align: 'left',
-    field: 'city',
-    sortable: true,
-  },
-  {
-    name: 'isMain',
-    label: t('locations.isMain'),
-    align: 'center',
-    field: 'is_main',
-  },
-  {
-    name: 'isActive',
-    label: t('common.status'),
-    align: 'center',
-    field: 'is_active',
-  },
-  {
-    name: 'actions',
-    label: t('common.actions'),
-    align: 'center',
-  },
-]);
-
-const permissionColumns = computed(() => [
-  {
-    name: 'user',
-    label: t('permissions.user'),
-    align: 'left',
-    field: 'user_id', // Would need to join with user data
-  },
-  {
-    name: 'permissionType',
-    label: t('permissions.permissionType'),
-    align: 'center',
-    field: 'permission_type',
-  },
-  {
-    name: 'resourceType',
-    label: t('permissions.resourceType'),
-    align: 'left',
-    field: 'resource_type',
-  },
-  {
-    name: 'expiresAt',
-    label: t('permissions.expiresAt'),
-    align: 'left',
-    field: 'expires_at',
-  },
-  {
-    name: 'actions',
-    label: t('common.actions'),
-    align: 'center',
-  },
-]);
-
-// Permission templates
-const permissionTemplates = [
-  { key: 'assistant', icon: 'support_agent', color: 'blue' },
-  { key: 'manager', icon: 'supervisor_account', color: 'orange' },
-  { key: 'admin', icon: 'admin_panel_settings', color: 'red' },
-];
-
-// Methods
-const loadData = async () => {
-  await Promise.all([
-    loadUsers(),
-    loadLocations(),
-    loadPermissions(),
-    loadStats(),
-    loadAnalytics(),
-  ]);
-};
-
-const loadUsers = async () => {
-  try {
-    loadingUsers.value = true;
-    users.value = await adminService.getPracticeMembers();
-    stats.totalUsers = users.value.length;
-    // Calculate active users (simplified)
-    stats.activeUsers = users.value.filter((u) => u.role !== 'inactive').length;
-  } catch (error) {
-    console.error('Failed to load users:', error);
-    $q.notify({
-      type: 'negative',
-      message: t('admin.errors.loadUsersFailed'),
-    });
-  } finally {
-    loadingUsers.value = false;
-  }
-};
-
-const loadLocations = async () => {
-  try {
-    loadingLocations.value = true;
-    locations.value = await adminService.getLocations();
-    stats.totalLocations = locations.value.length;
-    stats.activeLocations = locations.value.filter((l) => l.is_active).length;
-  } catch (error) {
-    console.error('Failed to load locations:', error);
-    $q.notify({
-      type: 'negative',
-      message: t('admin.errors.loadLocationsFailed'),
-    });
-  } finally {
-    loadingLocations.value = false;
-  }
-};
-
-const loadPermissions = async () => {
-  try {
-    loadingPermissions.value = true;
-    permissions.value = await adminService.getUserPermissions();
-  } catch (error) {
-    console.error('Failed to load permissions:', error);
-  } finally {
-    loadingPermissions.value = false;
-  }
-};
-
-const loadStats = async () => {
-  try {
-    const syncStatus = offlineService.getSyncStatus();
-    stats.pendingSync = syncStatus.pendingActions;
-    stats.lastSync = syncStatus.lastSync;
-  } catch (error) {
-    console.error('Failed to load stats:', error);
-  }
-};
-
-const loadAnalytics = async () => {
-  try {
-    const summary = await analyticsService.getEventSummary();
-    stats.todayEvents = summary.totalEvents;
-    topEvents.value = summary.topEvents
-      .slice(0, 5)
-      .map(([type, count]) => ({ type, count }));
-
-    // Mock analytics data (in real app, would come from analytics service)
-    analyticsData.averageSessionTime = 15;
-    analyticsData.peakHour = 14;
-  } catch (error) {
-    console.error('Failed to load analytics:', error);
-  }
-};
-
-const downloadOfflineData = async () => {
-  try {
-    await offlineService.downloadLatestData();
-    $q.notify({
-      type: 'positive',
-      message: t('offline.messages.syncCompleted'),
-    });
-  } catch (error) {
-    console.error('Failed to download offline data:', error);
-    $q.notify({
-      type: 'negative',
-      message: t('offline.errors.downloadFailed'),
-    });
-  }
-};
-
-const forceSync = async () => {
-  try {
-    syncing.value = true;
-    await offlineService.forceSyncNow();
-    await loadStats(); // Refresh stats
-    $q.notify({
-      type: 'positive',
-      message: t('offline.messages.syncCompleted'),
-    });
-  } catch (error) {
-    console.error('Failed to force sync:', error);
-    $q.notify({
-      type: 'negative',
-      message: t('offline.messages.syncFailed'),
-    });
-  } finally {
-    syncing.value = false;
-  }
-};
-
-// Helper methods
-const formatDate = (date: string | Date | null): string => {
-  if (!date) return '-';
-  return new Date(date).toLocaleDateString();
-};
-
-const getRoleColor = (role: string): string => {
-  const colors = {
-    owner: 'red',
-    assistant: 'blue',
-    manager: 'orange',
-    viewer: 'grey',
-  };
-  return colors[role as keyof typeof colors] || 'grey';
-};
-
-const getPermissionColor = (type: string): string => {
-  const colors = {
-    read: 'blue',
-    write: 'orange',
-    delete: 'red',
-    admin: 'purple',
-  };
-  return colors[type as keyof typeof colors] || 'grey';
-};
-
-const isExpiringSoon = (expiryDate: string): boolean => {
-  if (!expiryDate) return false;
-  const expiry = new Date(expiryDate);
-  const now = new Date();
-  const daysUntilExpiry =
-    (expiry.getTime() - now.getTime()) / (1000 * 60 * 60 * 24);
-  return daysUntilExpiry <= 7 && daysUntilExpiry > 0;
-};
-
-// Action handlers (simplified for brevity)
-const editUser = (user: PracticeMember) => {
-  $q.notify({ type: 'info', message: `Editing user: ${user.user_id}` });
-};
-
-const manageUserPermissions = (user: PracticeMember) => {
-  $q.notify({
-    type: 'info',
-    message: `Managing permissions for: ${user.user_id}`,
+  // Stats
+  const stats = reactive({
+    totalUsers: 0,
+    activeUsers: 0,
+    totalLocations: 0,
+    activeLocations: 0,
+    pendingSync: 0,
+    lastSync: null as Date | null,
+    todayEvents: 0,
+    eventsGrowth: 0,
   });
-};
 
-const editLocation = (location: Location) => {
-  $q.notify({ type: 'info', message: `Editing location: ${location.name}` });
-};
-
-const setMainLocation = async (location: Location) => {
-  try {
-    await adminService.setMainLocation(location.id);
-    await loadLocations();
-    $q.notify({
-      type: 'positive',
-      message: t('locations.notifications.mainLocationSet'),
-    });
-  } catch (error) {
-    console.error('Failed to set main location:', error);
-    $q.notify({
-      type: 'negative',
-      message: t('locations.errors.setMainFailed'),
-    });
+  // Analytics data with proper typing
+  interface AnalyticsData {
+    averageSessionTime: number;
+    peakHour: number;
+    totalEvents: number;
+    topEvents: Array<{ type: string; count: number }>;
   }
-};
 
-const revokePermission = async (permission: UserPermission) => {
-  try {
-    await adminService.revokePermission(permission.id);
-    await loadPermissions();
-    $q.notify({
-      type: 'positive',
-      message: t('permissions.notifications.revoked'),
-    });
-  } catch (error) {
-    console.error('Failed to revoke permission:', error);
-    $q.notify({
-      type: 'negative',
-      message: t('permissions.errors.revokeFailed'),
-    });
-  }
-};
+  // Analytics data
+  const analyticsData = reactive<AnalyticsData>({
+    averageSessionTime: 0,
+    peakHour: 0,
+    totalEvents: 0,
+    topEvents: [],
+  });
 
-// Lifecycle
-onMounted(() => {
-  loadData();
-});
+  // Table columns
+  const userColumns = computed(() => [
+    {
+      name: 'email',
+      label: t('admin.userManagement.email'),
+      align: 'left' as const,
+      field: 'email',
+      sortable: true,
+    },
+    {
+      name: 'role',
+      label: t('admin.userManagement.roles'),
+      align: 'center' as const,
+      field: 'role',
+      sortable: true,
+    },
+    {
+      name: 'lastActive',
+      label: t('admin.userManagement.lastActive'),
+      align: 'left' as const,
+      field: 'last_active',
+      sortable: true,
+    },
+    {
+      name: 'actions',
+      label: t('common.actions'),
+      align: 'center' as const,
+      field: () => '',
+      sortable: false,
+    },
+  ]);
+
+  const locationColumns = computed(() => [
+    {
+      name: 'name',
+      label: t('locations.name'),
+      align: 'left' as const,
+      field: 'name',
+      sortable: true,
+    },
+    {
+      name: 'city',
+      label: t('locations.city'),
+      align: 'left' as const,
+      field: 'city',
+      sortable: true,
+    },
+    {
+      name: 'isMain',
+      label: t('locations.isMain'),
+      align: 'center' as const,
+      field: 'is_main',
+      sortable: false,
+    },
+    {
+      name: 'isActive',
+      label: t('common.status'),
+      align: 'center' as const,
+      field: 'is_active',
+      sortable: false,
+    },
+    {
+      name: 'actions',
+      label: t('common.actions'),
+      align: 'center' as const,
+      field: () => '',
+      sortable: false,
+    },
+  ]);
+
+  const permissionColumns = computed(() => [
+    {
+      name: 'user',
+      label: t('permissions.user'),
+      align: 'left' as const,
+      field: 'user_id',
+      sortable: false,
+    },
+    {
+      name: 'permissionType',
+      label: t('permissions.permissionType'),
+      align: 'center' as const,
+      field: 'permission_type',
+      sortable: false,
+    },
+    {
+      name: 'resourceType',
+      label: t('permissions.resourceType'),
+      align: 'left' as const,
+      field: 'resource_type',
+      sortable: false,
+    },
+    {
+      name: 'expiresAt',
+      label: t('permissions.expiresAt'),
+      align: 'left' as const,
+      field: 'expires_at',
+      sortable: false,
+    },
+    {
+      name: 'actions',
+      label: t('common.actions'),
+      align: 'center' as const,
+      field: () => '',
+      sortable: false,
+    },
+  ]);
+
+  // Permission templates
+  const permissionTemplates = [
+    { key: 'assistant', icon: 'support_agent', color: 'blue' },
+    { key: 'manager', icon: 'supervisor_account', color: 'orange' },
+    { key: 'admin', icon: 'admin_panel_settings', color: 'red' },
+  ];
+
+  // Methods
+  const loadData = async () => {
+    await Promise.all([
+      loadUsers(),
+      loadLocations(),
+      loadPermissions(),
+      loadStats(),
+      loadAnalytics(),
+    ]);
+  };
+
+  const loadUsers = async () => {
+    try {
+      loadingUsers.value = true;
+      users.value = await adminService.getPracticeMembers();
+      stats.totalUsers = users.value.length;
+      // Calculate active users (simplified)
+      stats.activeUsers = users.value.filter(u => u.role !== 'inactive').length;
+    } catch (error) {
+      console.error('Failed to load users:', error);
+      $q.notify({
+        type: 'negative',
+        message: t('admin.errors.loadUsersFailed'),
+      });
+    } finally {
+      loadingUsers.value = false;
+    }
+  };
+
+  const loadLocations = async () => {
+    try {
+      loadingLocations.value = true;
+      locations.value = await adminService.getLocations();
+      stats.totalLocations = locations.value.length;
+      stats.activeLocations = locations.value.filter(l => l.is_active).length;
+    } catch (error) {
+      console.error('Failed to load locations:', error);
+      $q.notify({
+        type: 'negative',
+        message: t('admin.errors.loadLocationsFailed'),
+      });
+    } finally {
+      loadingLocations.value = false;
+    }
+  };
+
+  const loadPermissions = async () => {
+    try {
+      loadingPermissions.value = true;
+      permissions.value = await adminService.getUserPermissions();
+    } catch (error) {
+      console.error('Failed to load permissions:', error);
+    } finally {
+      loadingPermissions.value = false;
+    }
+  };
+
+  const loadStats = async () => {
+    try {
+      const syncStatus = offlineService.getSyncStatus();
+      stats.pendingSync = syncStatus.pendingActions;
+      stats.lastSync = syncStatus.lastSync;
+    } catch (error) {
+      console.error('Failed to load stats:', error);
+    }
+  };
+
+  const loadAnalytics = async () => {
+    try {
+      const summary = await analyticsService.getEventSummary();
+      stats.todayEvents = summary.totalEvents;
+      analyticsData.totalEvents = summary.totalEvents;
+      analyticsData.topEvents = summary.topEvents
+        .slice(0, 5)
+        .map(([type, count]: [string, number]) => ({ type, count }));
+      topEvents.value = analyticsData.topEvents;
+
+      // Mock analytics data (in real app, would come from analytics service)
+      analyticsData.averageSessionTime = 15;
+      analyticsData.peakHour = 14;
+    } catch (error) {
+      console.error('Failed to load analytics:', error);
+    }
+  };
+
+  const downloadOfflineData = async () => {
+    try {
+      await offlineService.downloadLatestData();
+      $q.notify({
+        type: 'positive',
+        message: t('offline.messages.syncCompleted'),
+      });
+    } catch (error) {
+      console.error('Failed to download offline data:', error);
+      $q.notify({
+        type: 'negative',
+        message: t('offline.errors.downloadFailed'),
+      });
+    }
+  };
+
+  const forceSync = async () => {
+    try {
+      syncing.value = true;
+      await offlineService.forceSyncNow();
+      await loadStats(); // Refresh stats
+      $q.notify({
+        type: 'positive',
+        message: t('offline.messages.syncCompleted'),
+      });
+    } catch (error) {
+      console.error('Failed to force sync:', error);
+      $q.notify({
+        type: 'negative',
+        message: t('offline.messages.syncFailed'),
+      });
+    } finally {
+      syncing.value = false;
+    }
+  };
+
+  // Helper methods
+  const formatDate = (date: string | Date | null): string => {
+    if (!date) return '-';
+    return new Date(date).toLocaleDateString();
+  };
+
+  const getRoleColor = (role: string): string => {
+    const colors = {
+      owner: 'red',
+      assistant: 'blue',
+      manager: 'orange',
+      viewer: 'grey',
+    };
+    return colors[role as keyof typeof colors] || 'grey';
+  };
+
+  const getPermissionColor = (type: string): string => {
+    const colors = {
+      read: 'blue',
+      write: 'orange',
+      delete: 'red',
+      admin: 'purple',
+    };
+    return colors[type as keyof typeof colors] || 'grey';
+  };
+
+  const isExpiringSoon = (expiryDate: string): boolean => {
+    if (!expiryDate) return false;
+    const expiry = new Date(expiryDate);
+    const now = new Date();
+    const daysUntilExpiry =
+      (expiry.getTime() - now.getTime()) / (1000 * 60 * 60 * 24);
+    return daysUntilExpiry <= 7 && daysUntilExpiry > 0;
+  };
+
+  // Action handlers (simplified for brevity)
+  const editUser = (user: PracticeMember) => {
+    $q.notify({ type: 'info', message: `Editing user: ${user.user_id}` });
+  };
+
+  const manageUserPermissions = (user: PracticeMember) => {
+    $q.notify({
+      type: 'info',
+      message: `Managing permissions for: ${user.user_id}`,
+    });
+  };
+
+  // Add missing methods
+  const resetUserPassword = async (user: PracticeMember) => {
+    try {
+      $q.dialog({
+        title: 'Reset Password',
+        message: `Are you sure you want to reset the password for ${user.user_id}?`,
+        cancel: true,
+        persistent: true,
+      }).onOk(async () => {
+        await adminService.resetUserPassword(user.user_id);
+        $q.notify({
+          type: 'positive',
+          message: 'Password reset email sent successfully',
+        });
+      });
+    } catch (error) {
+      console.error('Failed to reset user password:', error);
+      $q.notify({
+        type: 'negative',
+        message: 'Failed to reset password',
+      });
+    }
+  };
+
+  const toggleUserStatus = async (user: PracticeMember) => {
+    try {
+      const action = user.role === 'inactive' ? 'activate' : 'deactivate';
+      $q.dialog({
+        title: `${action.charAt(0).toUpperCase() + action.slice(1)} User`,
+        message: `Are you sure you want to ${action} ${user.user_id}?`,
+        cancel: true,
+        persistent: true,
+      }).onOk(async () => {
+        await adminService.toggleUserStatus(
+          user.user_id,
+          action === 'activate'
+        );
+        await loadUsers();
+        $q.notify({
+          type: 'positive',
+          message: `User ${action}d successfully`,
+        });
+      });
+    } catch (error) {
+      console.error('Failed to toggle user status:', error);
+      $q.notify({
+        type: 'negative',
+        message: 'Failed to update user status',
+      });
+    }
+  };
+
+  const manageLocationAccess = (location: Location) => {
+    $q.notify({
+      type: 'info',
+      message: `Managing access for location: ${location.name}`,
+    });
+    // TODO: Implement location access management dialog
+  };
+
+  const showPermissionTemplate = (template: {
+    key: string;
+    icon: string;
+    color: string;
+  }) => {
+    $q.notify({
+      type: 'info',
+      message: `Showing template: ${template.key}`,
+    });
+    // TODO: Implement permission template display dialog
+  };
+
+  const editLocation = (location: Location) => {
+    $q.notify({ type: 'info', message: `Editing location: ${location.name}` });
+  };
+
+  const setMainLocation = async (location: Location) => {
+    try {
+      await adminService.setMainLocation(location.id);
+      await loadLocations();
+      $q.notify({
+        type: 'positive',
+        message: t('locations.notifications.mainLocationSet'),
+      });
+    } catch (error) {
+      console.error('Failed to set main location:', error);
+      $q.notify({
+        type: 'negative',
+        message: t('locations.errors.setMainFailed'),
+      });
+    }
+  };
+
+  const revokePermission = async (permission: UserPermission) => {
+    try {
+      await adminService.revokePermission(permission.id);
+      await loadPermissions();
+      $q.notify({
+        type: 'positive',
+        message: t('permissions.notifications.revoked'),
+      });
+    } catch (error) {
+      console.error('Failed to revoke permission:', error);
+      $q.notify({
+        type: 'negative',
+        message: t('permissions.errors.revokeFailed'),
+      });
+    }
+  };
+
+  // Lifecycle
+  onMounted(() => {
+    loadData();
+  });
 </script>
 
 <style scoped>
-.admin-dashboard {
-  max-width: 1200px;
-  margin: 0 auto;
-}
+  .admin-dashboard {
+    max-width: 1200px;
+    margin: 0 auto;
+  }
 
-.stats-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-  gap: 16px;
-}
+  .stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 16px;
+  }
 
-.stats-cards-container {
-  gap: 0;
-  
-  .stats-card-col {
-    padding: 8px;
-    
-    @media (max-width: 640px) {
-      padding: 6px;
+  .stats-cards-container {
+    gap: 0;
+
+    .stats-card-col {
+      padding: 8px;
+
+      @media (max-width: 640px) {
+        padding: 6px;
+      }
     }
   }
-}
 </style>

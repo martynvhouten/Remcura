@@ -1,14 +1,13 @@
-import { createClient } from "@supabase/supabase-js";
-import type { Database } from "src/types/supabase";
-import { monitoringService } from "./monitoring";
-import { apiLogger } from "src/utils/logger";
+import { createClient } from '@supabase/supabase-js';
+import type { Database } from 'src/types/supabase';
+import { handleSupabaseError } from 'src/utils/service-error-handler';
 
 // Create and configure Supabase client centrally
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
 const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
 
 if (!supabaseUrl || !supabaseAnonKey) {
-  throw new Error("Missing Supabase environment variables");
+  throw new Error('Missing Supabase environment variables');
 }
 
 export const supabase = createClient<Database>(supabaseUrl, supabaseAnonKey, {
@@ -32,28 +31,23 @@ import type {
   UserProfileUpdate,
   ProductUpdate,
   ProductWithItems,
-} from "src/types/supabase";
+} from 'src/types/supabase';
 
 // Practice operations
 export const practiceService = {
   async getById(id: string): Promise<Practice | null> {
     const { data, error } = await supabase
-      .from("practices")
-      .select("*")
-      .eq("id", id)
+      .from('practices')
+      .select('*')
+      .eq('id', id)
       .single();
 
     if (error) {
-      const enhancedError = new Error(
-        `Failed to fetch practice: ${error.message}`
-      );
-      apiLogger.error("Failed to fetch practice", enhancedError);
-      monitoringService.captureError(enhancedError, {
-        url: window.location.href,
-        userAgent: navigator.userAgent,
-        timestamp: new Date().toISOString(),
+      handleSupabaseError(error, {
+        service: 'practiceService',
+        operation: 'getById',
+        metadata: { practiceId: id },
       });
-      throw enhancedError;
     }
 
     return data;
@@ -61,13 +55,16 @@ export const practiceService = {
 
   async create(practice: PracticeInsert): Promise<Practice | null> {
     const { data, error } = await supabase
-      .from("practices")
+      .from('practices')
       .insert([practice])
       .select()
       .single();
 
     if (error) {
-      throw new Error(`Failed to create practice: ${error.message}`);
+      handleSupabaseError(error, {
+        service: 'practiceService',
+        operation: 'create',
+      }, 'Failed to create practice');
     }
 
     return data;
@@ -75,14 +72,18 @@ export const practiceService = {
 
   async update(id: string, updates: PracticeUpdate): Promise<Practice | null> {
     const { data, error } = await supabase
-      .from("practices")
+      .from('practices')
       .update(updates)
-      .eq("id", id)
+      .eq('id', id)
       .select()
       .single();
 
     if (error) {
-      throw new Error(`Failed to update practice: ${error.message}`);
+      handleSupabaseError(error, {
+        service: 'practiceService',
+        operation: 'update',
+        metadata: { practiceId: id },
+      }, 'Failed to update practice');
     }
 
     return data;
@@ -93,13 +94,17 @@ export const practiceService = {
 export const userProfileService = {
   async getById(id: string): Promise<UserProfile | null> {
     const { data, error } = await supabase
-      .from("user_profiles")
-      .select("*")
-      .eq("id", id)
+      .from('user_profiles')
+      .select('*')
+      .eq('id', id)
       .single();
 
     if (error) {
-      throw new Error(`Failed to fetch user profile: ${error.message}`);
+      handleSupabaseError(error, {
+        service: 'userProfileService',
+        operation: 'getById',
+        metadata: { userId: id },
+      }, 'Failed to fetch user profile');
     }
 
     return data;
@@ -107,13 +112,16 @@ export const userProfileService = {
 
   async create(profile: UserProfileInsert): Promise<UserProfile | null> {
     const { data, error } = await supabase
-      .from("user_profiles")
+      .from('user_profiles')
       .insert([profile])
       .select()
       .single();
 
     if (error) {
-      throw new Error(`Failed to create user profile: ${error.message}`);
+      handleSupabaseError(error, {
+        service: 'userProfileService',
+        operation: 'create',
+      }, 'Failed to create user profile');
     }
 
     return data;
@@ -124,14 +132,18 @@ export const userProfileService = {
     updates: UserProfileUpdate
   ): Promise<UserProfile | null> {
     const { data, error } = await supabase
-      .from("user_profiles")
+      .from('user_profiles')
       .update(updates)
-      .eq("id", id)
+      .eq('id', id)
       .select()
       .single();
 
     if (error) {
-      throw new Error(`Failed to update user profile: ${error.message}`);
+      handleSupabaseError(error, {
+        service: 'userProfileService',
+        operation: 'update',
+        metadata: { userId: id },
+      }, 'Failed to update user profile');
     }
 
     return data;
@@ -140,47 +152,38 @@ export const userProfileService = {
 
 // Products operations
 export const productService = {
-  async getByPracticeId(practiceId: string): Promise<ProductWithItems[]> {
+  async getAll(practiceId: string): Promise<ProductListItem[]> {
     const { data, error } = await supabase
-      .from("products")
-      .select(
-        `
-        *,
-        product_list_items!inner(
-          id,
-          product_list_id,
-          minimum_stock,
-          maximum_stock,
-          current_stock,
-          reorder_point,
-          preferred_supplier,
-          notes,
-          product_lists!inner(
-            practice_id,
-            name
-          )
-        )
-      `
-      )
-      .eq("product_list_items.product_lists.practice_id", practiceId)
-      .order("name");
+      .from('products')
+      .select('id, name, sku, category, brand, unit, price, image_url')
+      .eq('practice_id', practiceId)
+      .eq('active', true)
+      .order('name');
 
     if (error) {
-      throw new Error(`Failed to fetch products: ${error.message}`);
+      handleSupabaseError(error, {
+        service: 'productService',
+        operation: 'getAll',
+        practiceId,
+      }, 'Failed to fetch products');
     }
 
-    return (data || []) as ProductWithItems[];
+    return data || [];
   },
 
   async getById(id: string): Promise<Product | null> {
     const { data, error } = await supabase
-      .from("products")
-      .select("*")
-      .eq("id", id)
+      .from('products')
+      .select('*')
+      .eq('id', id)
       .single();
 
     if (error) {
-      throw new Error(`Failed to fetch product: ${error.message}`);
+      handleSupabaseError(error, {
+        service: 'productService',
+        operation: 'getById',
+        metadata: { productId: id },
+      }, 'Failed to fetch product');
     }
 
     return data;
@@ -188,13 +191,17 @@ export const productService = {
 
   async create(product: ProductInsert): Promise<Product | null> {
     const { data, error } = await supabase
-      .from("products")
+      .from('products')
       .insert([product])
       .select()
       .single();
 
     if (error) {
-      throw new Error(`Failed to create product: ${error.message}`);
+      handleSupabaseError(error, {
+        service: 'productService',
+        operation: 'create',
+        practiceId: product.practice_id,
+      }, 'Failed to create product');
     }
 
     return data;
@@ -202,21 +209,25 @@ export const productService = {
 
   async update(id: string, updates: ProductUpdate): Promise<Product | null> {
     const { data, error } = await supabase
-      .from("products")
+      .from('products')
       .update(updates)
-      .eq("id", id)
+      .eq('id', id)
       .select()
       .single();
 
     if (error) {
-      throw new Error(`Failed to update product: ${error.message}`);
+      handleSupabaseError(error, {
+        service: 'productService',
+        operation: 'update',
+        metadata: { productId: id },
+      }, 'Failed to update product');
     }
 
     return data;
   },
 
   async delete(id: string): Promise<boolean> {
-    const { error } = await supabase.from("products").delete().eq("id", id);
+    const { error } = await supabase.from('products').delete().eq('id', id);
 
     if (error) {
       throw new Error(`Failed to delete product: ${error.message}`);
@@ -227,7 +238,7 @@ export const productService = {
 
   async getLowStock(practiceId: string): Promise<any[]> {
     // Get products with low stock using the get_order_advice function
-    const { data, error } = await supabase.rpc("get_order_advice", {
+    const { data, error } = await supabase.rpc('get_order_advice', {
       practice_uuid: practiceId,
     });
 
@@ -240,14 +251,16 @@ export const productService = {
 
   async getOutOfStock(practiceId: string): Promise<any[]> {
     // Get out of stock products from the order advice
-    const { data, error } = await supabase.rpc("get_order_advice", {
+    const { data, error } = await supabase.rpc('get_order_advice', {
       practice_uuid: practiceId,
     });
 
     if (error) {
-      throw new Error(
-        `Failed to fetch out of stock products: ${error.message}`
-      );
+      handleSupabaseError(error, {
+        service: 'productService',
+        operation: 'getOutOfStock',
+        practiceId,
+      }, 'Failed to fetch out of stock products');
     }
 
     return (data || []).filter((item: any) => item.current_stock === 0);
@@ -260,20 +273,20 @@ export const realtimeService = {
     return supabase
       .channel(`products:${practiceId}`)
       .on(
-        "postgres_changes",
+        'postgres_changes',
         {
-          event: "*",
-          schema: "public",
-          table: "products",
+          event: '*',
+          schema: 'public',
+          table: 'products',
         },
         callback
       )
       .on(
-        "postgres_changes",
+        'postgres_changes',
         {
-          event: "*",
-          schema: "public",
-          table: "product_list_items",
+          event: '*',
+          schema: 'public',
+          table: 'product_list_items',
         },
         callback
       )
@@ -284,11 +297,11 @@ export const realtimeService = {
     return supabase
       .channel(`user_profile:${userId}`)
       .on(
-        "postgres_changes",
+        'postgres_changes',
         {
-          event: "*",
-          schema: "public",
-          table: "user_profiles",
+          event: '*',
+          schema: 'public',
+          table: 'user_profiles',
           filter: `id=eq.${userId}`,
         },
         callback

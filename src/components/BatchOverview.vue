@@ -2,7 +2,7 @@
   <div class="batch-overview">
     <!-- Header with actions -->
     <div class="row items-center q-mb-md">
-      <div class="text-h6">{{ $t("batch.batchOverview") }}</div>
+      <div class="text-h6">{{ $t('batch.batchOverview') }}</div>
       <q-space />
 
       <!-- Filter controls -->
@@ -47,9 +47,9 @@
       <template v-slot:avatar>
         <q-icon name="warning" />
       </template>
-      <div class="text-weight-medium">{{ $t("batch.expiryAlert") }}</div>
+      <div class="text-weight-medium">{{ $t('batch.expiryAlert') }}</div>
       <div class="text-caption">
-        {{ $t("batch.batchesExpiringSoon", { count: expiryAlerts.length }) }}
+        {{ $t('batch.batchesExpiringSoon', { count: expiryAlerts.length }) }}
       </div>
       <template v-slot:action>
         <q-btn
@@ -99,7 +99,7 @@
             v-if="props.row.supplierBatchNumber"
             class="text-caption text-grey"
           >
-            {{ $t("batch.supplierBatch") }}: {{ props.row.supplierBatchNumber }}
+            {{ $t('batch.supplierBatch') }}: {{ props.row.supplierBatchNumber }}
           </div>
         </q-td>
       </template>
@@ -137,7 +137,7 @@
             class="q-mt-xs"
           />
           <div class="text-caption text-grey">
-            {{ $t("batch.available") }}:
+            {{ $t('batch.available') }}:
             {{ formatQuantity(props.row.availableQuantity) }}
           </div>
         </q-td>
@@ -198,7 +198,7 @@
               color="primary"
               @click="editBatch(props.row)"
             >
-              <q-tooltip>{{ $t("common.edit") }}</q-tooltip>
+              <q-tooltip>{{ $t('common.edit') }}</q-tooltip>
             </q-btn>
 
             <q-btn
@@ -210,7 +210,7 @@
               @click="useBatch(props.row)"
               :disable="props.row.availableQuantity <= 0"
             >
-              <q-tooltip>{{ $t("batch.useBatch") }}</q-tooltip>
+              <q-tooltip>{{ $t('batch.useBatch') }}</q-tooltip>
             </q-btn>
 
             <q-btn
@@ -222,7 +222,7 @@
               color="orange"
               @click="quarantineBatch(props.row)"
             >
-              <q-tooltip>{{ $t("batch.quarantine") }}</q-tooltip>
+              <q-tooltip>{{ $t('batch.quarantine') }}</q-tooltip>
             </q-btn>
 
             <q-btn
@@ -232,7 +232,7 @@
               round
               @click="showBatchDetails(props.row)"
             >
-              <q-tooltip>{{ $t("common.moreActions") }}</q-tooltip>
+              <q-tooltip>{{ $t('common.moreActions') }}</q-tooltip>
             </q-btn>
           </div>
         </q-td>
@@ -270,329 +270,329 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted } from "vue";
-import { useI18n } from "vue-i18n";
-import { useQuasar, date } from "quasar";
-import { useBatchStore } from "src/stores/batch";
-import { useLocationStore } from "src/stores/location";
-import { useAuthStore } from "src/stores/auth";
-import BatchRegistrationForm from "./BatchRegistrationForm.vue";
-import BatchDetailCard from "./BatchDetailCard.vue";
-import UseBatchDialog from "./UseBatchDialog.vue";
-import type { ProductBatchWithDetails } from "src/types/inventory";
+  import { ref, computed, onMounted } from 'vue';
+  import { useI18n } from 'vue-i18n';
+  import { useQuasar, date } from 'quasar';
+  import { useBatchStore } from 'src/stores/batch';
+  import { useLocationStore } from 'src/stores/location';
+  import { useAuthStore } from 'src/stores/auth';
+  import BatchRegistrationForm from './BatchRegistrationForm.vue';
+  import BatchDetailCard from './BatchDetailCard.vue';
+  import UseBatchDialog from './UseBatchDialog.vue';
+  import type { ProductBatchWithDetails } from 'src/types/inventory';
 
-// Composables
-const { t } = useI18n();
-const $q = useQuasar();
-const batchStore = useBatchStore();
-const locationStore = useLocationStore();
-const authStore = useAuthStore();
+  // Composables
+  const { t } = useI18n();
+  const $q = useQuasar();
+  const batchStore = useBatchStore();
+  const locationStore = useLocationStore();
+  const authStore = useAuthStore();
 
-// State
-const loading = ref(false);
-const showAddBatchDialog = ref(false);
-const showDetailsDialog = ref(false);
-const showUseBatchDialog = ref(false);
-const showExpiringOnly = ref(false);
-const selectedBatch = ref<ProductBatchWithDetails | null>(null);
+  // State
+  const loading = ref(false);
+  const showAddBatchDialog = ref(false);
+  const showDetailsDialog = ref(false);
+  const showUseBatchDialog = ref(false);
+  const showExpiringOnly = ref(false);
+  const selectedBatch = ref<ProductBatchWithDetails | null>(null);
 
-// Filters
-const filters = ref({
-  location: null as string | null,
-  urgency: null as string | null,
-  search: "",
-});
+  // Filters
+  const filters = ref({
+    location: null as string | null,
+    urgency: null as string | null,
+    search: '',
+  });
 
-// Computed
-const columns = computed(() => [
-  {
-    name: "product",
-    label: t("product.product"),
-    align: "left",
-    sortable: true,
-    field: "productName",
-  },
-  {
-    name: "batchNumber",
-    label: t("batch.batchNumber"),
-    align: "left",
-    sortable: true,
-    field: "batchNumber",
-  },
-  {
-    name: "location",
-    label: t("location.location"),
-    align: "left",
-    sortable: true,
-    field: "locationName",
-  },
-  {
-    name: "quantity",
-    label: t("inventory.quantity"),
-    align: "right",
-    sortable: true,
-    field: "currentQuantity",
-  },
-  {
-    name: "expiry",
-    label: t("batch.expiryDate"),
-    align: "left",
-    sortable: true,
-    field: "expiryDate",
-  },
-  {
-    name: "status",
-    label: t("common.status"),
-    align: "center",
-    sortable: true,
-    field: "status",
-  },
-  {
-    name: "actions",
-    label: t("common.actions"),
-    align: "center",
-  },
-]);
+  // Computed
+  const columns = computed(() => [
+    {
+      name: 'product',
+      label: t('product.product'),
+      align: 'left',
+      sortable: true,
+      field: 'productName',
+    },
+    {
+      name: 'batchNumber',
+      label: t('batch.batchNumber'),
+      align: 'left',
+      sortable: true,
+      field: 'batchNumber',
+    },
+    {
+      name: 'location',
+      label: t('location.location'),
+      align: 'left',
+      sortable: true,
+      field: 'locationName',
+    },
+    {
+      name: 'quantity',
+      label: t('inventory.quantity'),
+      align: 'right',
+      sortable: true,
+      field: 'currentQuantity',
+    },
+    {
+      name: 'expiry',
+      label: t('batch.expiryDate'),
+      align: 'left',
+      sortable: true,
+      field: 'expiryDate',
+    },
+    {
+      name: 'status',
+      label: t('common.status'),
+      align: 'center',
+      sortable: true,
+      field: 'status',
+    },
+    {
+      name: 'actions',
+      label: t('common.actions'),
+      align: 'center',
+    },
+  ]);
 
-const locationOptions = computed(() => [
-  { label: t("common.all"), value: null },
-  ...locationStore.locations.map((location) => ({
-    label: location.name,
-    value: location.id,
-  })),
-]);
+  const locationOptions = computed(() => [
+    { label: t('common.all'), value: null },
+    ...locationStore.locations.map(location => ({
+      label: location.name,
+      value: location.id,
+    })),
+  ]);
 
-const urgencyOptions = computed(() => [
-  { label: t("common.all"), value: null },
-  { label: t("batch.urgency.expired"), value: "expired" },
-  { label: t("batch.urgency.critical"), value: "critical" },
-  { label: t("batch.urgency.warning"), value: "warning" },
-  { label: t("batch.urgency.normal"), value: "normal" },
-]);
+  const urgencyOptions = computed(() => [
+    { label: t('common.all'), value: null },
+    { label: t('batch.urgency.expired'), value: 'expired' },
+    { label: t('batch.urgency.critical'), value: 'critical' },
+    { label: t('batch.urgency.warning'), value: 'warning' },
+    { label: t('batch.urgency.normal'), value: 'normal' },
+  ]);
 
   const expiryAlerts = computed(() => {
     return batchStore.expiringBatches.filter(
-      (batch) =>
-        batch.urgency_level === "critical" || batch.urgency_level === "expired"
+      batch =>
+        batch.urgency_level === 'critical' || batch.urgency_level === 'expired'
     );
   });
 
-const filteredBatches = computed(() => {
-  let batches = [...batchStore.batches];
+  const filteredBatches = computed(() => {
+    let batches = [...batchStore.batches];
 
-  // Apply expiry filter
-  if (showExpiringOnly.value) {
-    batches = batches.filter((batch) =>
-      ["expired", "critical", "warning"].includes(
-        batch.urgencyLevel || "normal"
-      )
-    );
-  }
-
-  // Apply location filter
-  if (filters.value.location) {
-    batches = batches.filter(
-      (batch) => batch.location_id === filters.value.location
-    );
-  }
-
-  // Apply urgency filter
-  if (filters.value.urgency) {
-    batches = batches.filter(
-      (batch) => batch.urgency_level === filters.value.urgency
-    );
-  }
-
-  // Sort by expiry date (FIFO)
-  batches.sort((a, b) => {
-    const dateA = new Date(a.expiry_date).getTime();
-    const dateB = new Date(b.expiry_date).getTime();
-    return dateA - dateB;
-  });
-
-  return batches;
-});
-
-// Methods
-const formatDate = (dateStr: string) => {
-  return date.formatDate(dateStr, "DD/MM/YYYY");
-};
-
-const formatQuantity = (quantity: number) => {
-  return quantity.toLocaleString(undefined, {
-    minimumFractionDigits: 0,
-    maximumFractionDigits: 3,
-  });
-};
-
-const getLocationColor = (type: string) => {
-  const colors = {
-    storage: "blue",
-    emergency: "red",
-    treatment: "green",
-    default: "grey",
-  };
-  return colors[type] || colors.default;
-};
-
-const getQuantityColor = (ratio: number) => {
-  if (ratio > 0.5) return "green";
-  if (ratio > 0.2) return "orange";
-  return "red";
-};
-
-const getExpiryIcon = (urgency: string) => {
-  const icons = {
-    expired: "error",
-    critical: "warning",
-    warning: "schedule",
-    normal: "check_circle",
-  };
-  return icons[urgency] || "check_circle";
-};
-
-const getExpiryColor = (urgency: string) => {
-  const colors = {
-    expired: "red",
-    critical: "deep-orange",
-    warning: "amber",
-    normal: "green",
-  };
-  return colors[urgency] || "green";
-};
-
-const getExpiryTextClass = (urgency: string) => {
-  const classes = {
-    expired: "text-red",
-    critical: "text-deep-orange",
-    warning: "text-amber-8",
-    normal: "text-green",
-  };
-  return classes[urgency] || "text-green";
-};
-
-const getExpiryText = (days: number, urgency: string) => {
-  if (urgency === "expired") {
-    return t("batch.expiredDaysAgo", { days: Math.abs(days) });
-  } else if (days === 0) {
-    return t("batch.expiresToday");
-  } else if (days === 1) {
-    return t("batch.expiresTomorrow");
-  } else {
-    return t("batch.expiresInDays", { days });
-  }
-};
-
-const getStatusColor = (status: string) => {
-  const colors = {
-    active: "green",
-    expired: "red",
-    depleted: "grey",
-    recalled: "deep-orange",
-    quarantine: "amber",
-  };
-  return colors[status] || "grey";
-};
-
-const applyFilters = () => {
-  // Filters are reactive, so this just triggers recomputation
-};
-
-const editBatch = (batch: ProductBatchWithDetails) => {
-  selectedBatch.value = batch;
-  showDetailsDialog.value = true;
-};
-
-const useBatch = (batch: ProductBatchWithDetails) => {
-  selectedBatch.value = batch;
-  showUseBatchDialog.value = true;
-};
-
-const quarantineBatch = async (batch: ProductBatchWithDetails) => {
-  try {
-    const clinicId = authStore.clinicId;
-    if (!clinicId) {
-      throw new Error("No clinic ID available");
+    // Apply expiry filter
+    if (showExpiringOnly.value) {
+      batches = batches.filter(batch =>
+        ['expired', 'critical', 'warning'].includes(
+          batch.urgencyLevel || 'normal'
+        )
+      );
     }
-    await batchStore.updateBatch({
-      id: batch.id,
-      practice_id: clinicId,
-      status: "quarantine"
-    });
-    $q.notify({
-      type: "positive",
-      message: t("batch.quarantineSuccess"),
-    });
-  } catch (error) {
-    $q.notify({
-      type: "negative",
-      message: t("errors.failed"),
-    });
-  }
-};
 
-const showBatchDetails = (batch: ProductBatchWithDetails) => {
-  selectedBatch.value = batch;
-  showDetailsDialog.value = true;
-};
-
-const onBatchAdded = (batch: any) => {
-  showAddBatchDialog.value = false;
-  loadBatches();
-};
-
-const onBatchUpdated = () => {
-  showDetailsDialog.value = false;
-  loadBatches();
-};
-
-const onBatchUsed = () => {
-  showUseBatchDialog.value = false;
-  loadBatches();
-};
-
-const loadBatches = async () => {
-  try {
-    loading.value = true;
-    const clinicId = authStore.clinicId;
-    if (!clinicId) {
-      throw new Error("No clinic ID available");
+    // Apply location filter
+    if (filters.value.location) {
+      batches = batches.filter(
+        batch => batch.location_id === filters.value.location
+      );
     }
-    await Promise.all([
-      batchStore.fetchBatches(clinicId),
-      batchStore.fetchExpiringBatches(clinicId),
-    ]);
-  } catch (error) {
-    console.error(t("errors.failedToLoadData"), error);
-    $q.notify({
-      type: "negative",
-      message: t("errors.failedToLoadData"),
-    });
-  } finally {
-    loading.value = false;
-  }
-};
 
-// Lifecycle
-onMounted(async () => {
-  await Promise.all([loadBatches(), locationStore.fetchLocations()]);
-});
+    // Apply urgency filter
+    if (filters.value.urgency) {
+      batches = batches.filter(
+        batch => batch.urgency_level === filters.value.urgency
+      );
+    }
+
+    // Sort by expiry date (FIFO)
+    batches.sort((a, b) => {
+      const dateA = new Date(a.expiry_date).getTime();
+      const dateB = new Date(b.expiry_date).getTime();
+      return dateA - dateB;
+    });
+
+    return batches;
+  });
+
+  // Methods
+  const formatDate = (dateStr: string) => {
+    return date.formatDate(dateStr, 'DD/MM/YYYY');
+  };
+
+  const formatQuantity = (quantity: number) => {
+    return quantity.toLocaleString(undefined, {
+      minimumFractionDigits: 0,
+      maximumFractionDigits: 3,
+    });
+  };
+
+  const getLocationColor = (type: string) => {
+    const colors = {
+      storage: 'blue',
+      emergency: 'red',
+      treatment: 'green',
+      default: 'grey',
+    };
+    return colors[type] || colors.default;
+  };
+
+  const getQuantityColor = (ratio: number) => {
+    if (ratio > 0.5) return 'green';
+    if (ratio > 0.2) return 'orange';
+    return 'red';
+  };
+
+  const getExpiryIcon = (urgency: string) => {
+    const icons = {
+      expired: 'error',
+      critical: 'warning',
+      warning: 'schedule',
+      normal: 'check_circle',
+    };
+    return icons[urgency] || 'check_circle';
+  };
+
+  const getExpiryColor = (urgency: string) => {
+    const colors = {
+      expired: 'red',
+      critical: 'deep-orange',
+      warning: 'amber',
+      normal: 'green',
+    };
+    return colors[urgency] || 'green';
+  };
+
+  const getExpiryTextClass = (urgency: string) => {
+    const classes = {
+      expired: 'text-red',
+      critical: 'text-deep-orange',
+      warning: 'text-amber-8',
+      normal: 'text-green',
+    };
+    return classes[urgency] || 'text-green';
+  };
+
+  const getExpiryText = (days: number, urgency: string) => {
+    if (urgency === 'expired') {
+      return t('batch.expiredDaysAgo', { days: Math.abs(days) });
+    } else if (days === 0) {
+      return t('batch.expiresToday');
+    } else if (days === 1) {
+      return t('batch.expiresTomorrow');
+    } else {
+      return t('batch.expiresInDays', { days });
+    }
+  };
+
+  const getStatusColor = (status: string) => {
+    const colors = {
+      active: 'green',
+      expired: 'red',
+      depleted: 'grey',
+      recalled: 'deep-orange',
+      quarantine: 'amber',
+    };
+    return colors[status] || 'grey';
+  };
+
+  const applyFilters = () => {
+    // Filters are reactive, so this just triggers recomputation
+  };
+
+  const editBatch = (batch: ProductBatchWithDetails) => {
+    selectedBatch.value = batch;
+    showDetailsDialog.value = true;
+  };
+
+  const useBatch = (batch: ProductBatchWithDetails) => {
+    selectedBatch.value = batch;
+    showUseBatchDialog.value = true;
+  };
+
+  const quarantineBatch = async (batch: ProductBatchWithDetails) => {
+    try {
+      const clinicId = authStore.clinicId;
+      if (!clinicId) {
+        throw new Error('No clinic ID available');
+      }
+      await batchStore.updateBatch({
+        id: batch.id,
+        practice_id: clinicId,
+        status: 'quarantine',
+      });
+      $q.notify({
+        type: 'positive',
+        message: t('batch.quarantineSuccess'),
+      });
+    } catch (error) {
+      $q.notify({
+        type: 'negative',
+        message: t('errors.failed'),
+      });
+    }
+  };
+
+  const showBatchDetails = (batch: ProductBatchWithDetails) => {
+    selectedBatch.value = batch;
+    showDetailsDialog.value = true;
+  };
+
+  const onBatchAdded = (batch: any) => {
+    showAddBatchDialog.value = false;
+    loadBatches();
+  };
+
+  const onBatchUpdated = () => {
+    showDetailsDialog.value = false;
+    loadBatches();
+  };
+
+  const onBatchUsed = () => {
+    showUseBatchDialog.value = false;
+    loadBatches();
+  };
+
+  const loadBatches = async () => {
+    try {
+      loading.value = true;
+      const clinicId = authStore.clinicId;
+      if (!clinicId) {
+        throw new Error('No clinic ID available');
+      }
+      await Promise.all([
+        batchStore.fetchBatches(clinicId),
+        batchStore.fetchExpiringBatches(clinicId),
+      ]);
+    } catch (error) {
+      console.error(t('errors.failedToLoadData'), error);
+      $q.notify({
+        type: 'negative',
+        message: t('errors.failedToLoadData'),
+      });
+    } finally {
+      loading.value = false;
+    }
+  };
+
+  // Lifecycle
+  onMounted(async () => {
+    await Promise.all([loadBatches(), locationStore.fetchLocations()]);
+  });
 </script>
 
 <style scoped>
-.batch-overview {
-  padding: 16px;
-}
+  .batch-overview {
+    padding: 16px;
+  }
 
-.batch-table :deep(.q-table__top) {
-  padding: 12px 0;
-}
+  .batch-table :deep(.q-table__top) {
+    padding: 12px 0;
+  }
 
-.batch-table :deep(.q-table tbody td) {
-  padding: 12px 8px;
-}
+  .batch-table :deep(.q-table tbody td) {
+    padding: 12px 8px;
+  }
 
-.batch-table :deep(.q-table th) {
-  font-weight: 600;
-}
+  .batch-table :deep(.q-table th) {
+    font-weight: 600;
+  }
 </style>

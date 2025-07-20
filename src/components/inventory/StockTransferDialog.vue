@@ -16,7 +16,7 @@
         map-options
         outlined
         required
-        :rules="[(val) => !!val || $t('validation.required')]"
+        :rules="[val => !!val || $t('validation.required')]"
         class="form-field"
       >
         <template v-slot:prepend>
@@ -34,8 +34,8 @@
         outlined
         required
         :rules="[
-          (val) => !!val || $t('validation.required'),
-          (val) =>
+          val => !!val || $t('validation.required'),
+          val =>
             val !== form.fromLocationId ||
             $t('inventory.locationsMustBeDifferent'),
         ]"
@@ -68,7 +68,7 @@
         outlined
         required
         min="1"
-        :rules="[(val) => val > 0 || $t('validation.positiveNumber')]"
+        :rules="[val => val > 0 || $t('validation.positiveNumber')]"
         class="form-field"
       >
         <template v-slot:prepend>
@@ -106,115 +106,115 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from 'vue';
-import { useI18n } from 'vue-i18n';
-import { useQuasar } from 'quasar';
-import type { PracticeLocation } from 'src/types/inventory';
-import BaseDialog from 'src/components/base/BaseDialog.vue';
+  import { ref, computed } from 'vue';
+  import { useI18n } from 'vue-i18n';
+  import { useQuasar } from 'quasar';
+  import type { PracticeLocation } from 'src/types/inventory';
+  import BaseDialog from 'src/components/base/BaseDialog.vue';
 
-interface Props {
-  modelValue: boolean;
-  locations: PracticeLocation[];
-}
+  interface Props {
+    modelValue: boolean;
+    locations: PracticeLocation[];
+  }
 
-interface Emits {
-  (e: 'update:modelValue', value: boolean): void;
-  (e: 'transfer-completed'): void;
-}
+  interface Emits {
+    (e: 'update:modelValue', value: boolean): void;
+    (e: 'transfer-completed'): void;
+  }
 
-const props = defineProps<Props>();
-const emit = defineEmits<Emits>();
+  const props = defineProps<Props>();
+  const emit = defineEmits<Emits>();
 
-// Composables
-const { t } = useI18n();
-const $q = useQuasar();
+  // Composables
+  const { t } = useI18n();
+  const $q = useQuasar();
 
-// State
-const loading = ref(false);
-const productSearch = ref('');
-const form = ref({
-  fromLocationId: '',
-  toLocationId: '',
-  quantity: null as number | null,
-  notes: '',
-});
+  // State
+  const loading = ref(false);
+  const productSearch = ref('');
+  const form = ref({
+    fromLocationId: '',
+    toLocationId: '',
+    quantity: null as number | null,
+    notes: '',
+  });
 
-// Computed
-const dialogVisible = computed({
-  get: () => props.modelValue,
-  set: (value) => emit('update:modelValue', value),
-});
+  // Computed
+  const dialogVisible = computed({
+    get: () => props.modelValue,
+    set: value => emit('update:modelValue', value),
+  });
 
-const fromLocationOptions = computed(() =>
-  props.locations.map((location) => ({
-    label: location.name,
-    value: location.id,
-  }))
-);
-
-const toLocationOptions = computed(() =>
-  props.locations
-    .filter((location) => location.id !== form.value.fromLocationId)
-    .map((location) => ({
+  const fromLocationOptions = computed(() =>
+    props.locations.map(location => ({
       label: location.name,
       value: location.id,
     }))
-);
+  );
 
-// Methods
-const resetForm = () => {
-  form.value = {
-    fromLocationId: props.locations[0]?.id || '',
-    toLocationId: '',
-    quantity: null,
-    notes: '',
+  const toLocationOptions = computed(() =>
+    props.locations
+      .filter(location => location.id !== form.value.fromLocationId)
+      .map(location => ({
+        label: location.name,
+        value: location.id,
+      }))
+  );
+
+  // Methods
+  const resetForm = () => {
+    form.value = {
+      fromLocationId: props.locations[0]?.id || '',
+      toLocationId: '',
+      quantity: null,
+      notes: '',
+    };
+    productSearch.value = '';
   };
-  productSearch.value = '';
-};
 
-const onSubmit = async () => {
-  loading.value = true;
-  try {
-    // Simulate transfer
-    await new Promise((resolve) => setTimeout(resolve, 1000));
+  const onSubmit = async () => {
+    loading.value = true;
+    try {
+      // Simulate transfer
+      await new Promise(resolve => setTimeout(resolve, 1000));
 
-    $q.notify({
-      type: 'positive',
-      message: t('inventory.stockTransferred'),
-      position: 'top',
-    });
+      $q.notify({
+        type: 'positive',
+        message: t('inventory.stockTransferred'),
+        position: 'top',
+      });
 
-    emit('transfer-completed');
+      emit('transfer-completed');
+      dialogVisible.value = false;
+    } catch (error) {
+      $q.notify({
+        type: 'negative',
+        message: t('inventory.transferFailed'),
+        position: 'top',
+      });
+    } finally {
+      loading.value = false;
+    }
+  };
+
+  const onCancel = () => {
     dialogVisible.value = false;
-  } catch (error) {
-    $q.notify({
-      type: 'negative',
-      message: t('inventory.transferFailed'),
-      position: 'top',
-    });
-  } finally {
-    loading.value = false;
-  }
-};
+  };
 
-const onCancel = () => {
-  dialogVisible.value = false;
-};
-
-const onHide = () => {
-  resetForm();
-};
+  const onHide = () => {
+    resetForm();
+  };
 </script>
 
 <style lang="scss" scoped>
-.transfer-form {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-6);
-  padding: var(--space-6);
-}
+  .transfer-form {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-6);
+    padding: var(--space-6);
+  }
 
-.form-field {
-  width: 100%;
-}
+  .form-field {
+    width: 100%;
+  }
 </style>

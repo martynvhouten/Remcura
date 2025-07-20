@@ -1,11 +1,11 @@
-import { describe, it, expect, beforeEach, vi } from "vitest";
-import { setActivePinia, createPinia } from "pinia";
-import { useAuthStore } from "src/stores/auth";
-import { supabase } from "src/boot/supabase";
-import { ErrorHandler } from "src/utils/error-handler";
+import { describe, it, expect, beforeEach, vi } from 'vitest';
+import { setActivePinia, createPinia } from 'pinia';
+import { useAuthStore } from 'src/stores/auth';
+import { supabase } from 'src/boot/supabase';
+import { ErrorHandler } from 'src/utils/error-handler';
 
 // Mock Supabase
-vi.mock("src/boot/supabase", () => ({
+vi.mock('src/boot/supabase', () => ({
   supabase: {
     auth: {
       getSession: vi.fn(),
@@ -24,21 +24,21 @@ vi.mock("src/boot/supabase", () => ({
 }));
 
 // Mock ErrorHandler
-vi.mock("src/utils/error-handler", () => ({
+vi.mock('src/utils/error-handler', () => ({
   ErrorHandler: {
     handle: vi.fn(),
-    getErrorMessage: vi.fn((error) => error.message || "Generic error"),
+    getErrorMessage: vi.fn(error => error.message || 'Generic error'),
   },
 }));
 
-describe("Auth Store", () => {
+describe('Auth Store', () => {
   beforeEach(() => {
     setActivePinia(createPinia());
     vi.clearAllMocks();
   });
 
-  describe("initial state", () => {
-    it("should have correct initial state", () => {
+  describe('initial state', () => {
+    it('should have correct initial state', () => {
       const authStore = useAuthStore();
 
       expect(authStore.user).toBeNull();
@@ -52,26 +52,26 @@ describe("Auth Store", () => {
     });
   });
 
-  describe("demo login", () => {
-    it("should login successfully with demo credentials", async () => {
+  describe('demo login', () => {
+    it('should login successfully with demo credentials', async () => {
       const authStore = useAuthStore();
 
-      const result = await authStore.login("demo@medstock-pro.com", "demo123");
+      const result = await authStore.login('demo@medstock-pro.com', 'demo123');
 
       expect(result.success).toBe(true);
       expect(authStore.isAuthenticated).toBe(true);
-      expect(authStore.userEmail).toBe("demo@medstock-pro.com");
-      expect(authStore.clinicId).toBe("550e8400-e29b-41d4-a716-446655440000");
-      expect(authStore.userProfile?.full_name).toBe("Demo User");
+      expect(authStore.userEmail).toBe('demo@medstock-pro.com');
+      expect(authStore.clinicId).toBe('550e8400-e29b-41d4-a716-446655440000');
+      expect(authStore.userProfile?.full_name).toBe('Demo User');
     });
   });
 
-  describe("regular login", () => {
-    it("should login successfully with valid credentials", async () => {
+  describe('regular login', () => {
+    it('should login successfully with valid credentials', async () => {
       const mockSession = {
         user: {
-          id: "user-123",
-          email: "test@example.com",
+          id: 'user-123',
+          email: 'test@example.com',
         },
       };
 
@@ -81,17 +81,17 @@ describe("Auth Store", () => {
       });
 
       const authStore = useAuthStore();
-      const result = await authStore.login("test@example.com", "password");
+      const result = await authStore.login('test@example.com', 'password');
 
       expect(result.success).toBe(true);
       expect(supabase.auth.signInWithPassword).toHaveBeenCalledWith({
-        email: "test@example.com",
-        password: "password",
+        email: 'test@example.com',
+        password: 'password',
       });
     });
 
-    it("should handle login failure", async () => {
-      const mockError = new Error("Invalid credentials");
+    it('should handle login failure', async () => {
+      const mockError = new Error('Invalid credentials');
 
       vi.mocked(supabase.auth.signInWithPassword).mockResolvedValue({
         data: { session: null },
@@ -99,16 +99,16 @@ describe("Auth Store", () => {
       });
 
       const authStore = useAuthStore();
-      const result = await authStore.login("test@example.com", "wrongpassword");
+      const result = await authStore.login('test@example.com', 'wrongpassword');
 
       expect(result.success).toBe(false);
-      expect(result.error).toBe("Invalid credentials");
+      expect(result.error).toBe('Invalid credentials');
       expect(ErrorHandler.getErrorMessage).toHaveBeenCalledWith(mockError);
     });
   });
 
-  describe("logout", () => {
-    it("should logout successfully", async () => {
+  describe('logout', () => {
+    it('should logout successfully', async () => {
       vi.mocked(supabase.auth.signOut).mockResolvedValue({
         error: null,
       });
@@ -116,7 +116,7 @@ describe("Auth Store", () => {
       const authStore = useAuthStore();
 
       // First login with demo account
-      await authStore.login("demo@medstock-pro.com", "demo123");
+      await authStore.login('demo@medstock-pro.com', 'demo123');
       expect(authStore.isAuthenticated).toBe(true);
 
       // Then logout
@@ -129,8 +129,8 @@ describe("Auth Store", () => {
       expect(authStore.userProfile).toBeNull();
     });
 
-    it("should handle logout failure", async () => {
-      const mockError = new Error("Logout failed");
+    it('should handle logout failure', async () => {
+      const mockError = new Error('Logout failed');
 
       vi.mocked(supabase.auth.signOut).mockResolvedValue({
         error: mockError,
@@ -140,13 +140,13 @@ describe("Auth Store", () => {
       const result = await authStore.logout();
 
       expect(result.success).toBe(false);
-      expect(result.error).toBe("Logout failed");
+      expect(result.error).toBe('Logout failed');
       expect(ErrorHandler.getErrorMessage).toHaveBeenCalledWith(mockError);
     });
   });
 
-  describe("initialization", () => {
-    it("should initialize without existing session", async () => {
+  describe('initialization', () => {
+    it('should initialize without existing session', async () => {
       vi.mocked(supabase.auth.getSession).mockResolvedValue({
         data: { session: null },
         error: null,
@@ -163,8 +163,8 @@ describe("Auth Store", () => {
       expect(authStore.isAuthenticated).toBe(false);
     });
 
-    it("should handle initialization error", async () => {
-      const mockError = new Error("Initialization failed");
+    it('should handle initialization error', async () => {
+      const mockError = new Error('Initialization failed');
 
       vi.mocked(supabase.auth.getSession).mockRejectedValue(mockError);
 
@@ -173,11 +173,11 @@ describe("Auth Store", () => {
 
       expect(ErrorHandler.handle).toHaveBeenCalledWith(
         mockError,
-        "Auth Initialization"
+        'Auth Initialization'
       );
     });
 
-    it("should not reinitialize if already initialized", async () => {
+    it('should not reinitialize if already initialized', async () => {
       // Setup successful initialization mock
       vi.mocked(supabase.auth.getSession).mockResolvedValue({
         data: { session: null },
@@ -203,26 +203,26 @@ describe("Auth Store", () => {
     });
   });
 
-  describe("loading states", () => {
-    it("should set loading state during login", async () => {
+  describe('loading states', () => {
+    it('should set loading state during login', async () => {
       let loadingDuringLogin = false;
 
       vi.mocked(supabase.auth.signInWithPassword).mockImplementation(
         async () => {
           const authStore = useAuthStore();
           loadingDuringLogin = authStore.loading;
-          return { data: { session: null }, error: new Error("Test") };
+          return { data: { session: null }, error: new Error('Test') };
         }
       );
 
       const authStore = useAuthStore();
-      await authStore.login("test@example.com", "password");
+      await authStore.login('test@example.com', 'password');
 
       expect(loadingDuringLogin).toBe(true);
       expect(authStore.loading).toBe(false);
     });
 
-    it("should set loading state during logout", async () => {
+    it('should set loading state during logout', async () => {
       let loadingDuringLogout = false;
 
       vi.mocked(supabase.auth.signOut).mockImplementation(async () => {

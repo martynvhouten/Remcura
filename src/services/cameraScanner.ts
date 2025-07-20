@@ -1,5 +1,5 @@
-import { ref, reactive } from "vue";
-import { analyticsService } from "./analytics";
+import { ref, reactive } from 'vue';
+import { analyticsService } from './analytics';
 
 export interface ScanResult {
   code: string;
@@ -15,11 +15,11 @@ export interface CameraDevice {
 }
 
 export interface ScannerOptions {
-  facingMode?: "user" | "environment";
+  facingMode?: 'user' | 'environment';
   deviceId?: string;
   width?: number;
   height?: number;
-  focusMode?: "auto" | "manual";
+  focusMode?: 'auto' | 'manual';
   torch?: boolean;
 }
 
@@ -43,9 +43,9 @@ export class CameraScannerService {
   async getAvailableDevices(): Promise<CameraDevice[]> {
     try {
       const devices = await navigator.mediaDevices.enumerateDevices();
-      const cameras = devices.filter((device) => device.kind === "videoinput");
+      const cameras = devices.filter(device => device.kind === 'videoinput');
 
-      this.availableDevices.value = cameras.map((device) => ({
+      this.availableDevices.value = cameras.map(device => ({
         deviceId: device.deviceId,
         label: device.label || `Camera ${device.deviceId.substr(0, 8)}`,
         kind: device.kind,
@@ -53,8 +53,8 @@ export class CameraScannerService {
 
       return this.availableDevices.value;
     } catch (error) {
-      console.error("Failed to get camera devices:", error);
-      throw new Error("Unable to access camera devices");
+      console.error('Failed to get camera devices:', error);
+      throw new Error('Unable to access camera devices');
     }
   }
 
@@ -71,7 +71,7 @@ export class CameraScannerService {
       // Request camera permission
       const constraints: MediaStreamConstraints = {
         video: {
-          facingMode: options.facingMode || "environment",
+          facingMode: options.facingMode || 'environment',
           width: options.width || { ideal: 1280 },
           height: options.height || { ideal: 720 },
           deviceId: options.deviceId ? { exact: options.deviceId } : undefined,
@@ -87,10 +87,10 @@ export class CameraScannerService {
       // Start the scanning loop
       this.scanLoop();
 
-      console.log("Camera scanning started");
+      console.log('Camera scanning started');
     } catch (error) {
-      console.error("Failed to start camera:", error);
-      throw new Error("Unable to start camera scanning");
+      console.error('Failed to start camera:', error);
+      throw new Error('Unable to start camera scanning');
     }
   }
 
@@ -101,7 +101,7 @@ export class CameraScannerService {
     this.isScanning.value = false;
 
     if (this.stream) {
-      this.stream.getTracks().forEach((track) => track.stop());
+      this.stream.getTracks().forEach(track => track.stop());
       this.stream = null;
     }
 
@@ -109,7 +109,7 @@ export class CameraScannerService {
       this.videoElement.srcObject = null;
     }
 
-    console.log("Camera scanning stopped");
+    console.log('Camera scanning stopped');
   }
 
   /**
@@ -117,10 +117,10 @@ export class CameraScannerService {
    */
   async switchCamera(deviceId: string): Promise<void> {
     const device = this.availableDevices.value.find(
-      (d) => d.deviceId === deviceId
+      d => d.deviceId === deviceId
     );
     if (!device) {
-      throw new Error("Camera device not found");
+      throw new Error('Camera device not found');
     }
 
     this.currentDevice.value = device;
@@ -136,14 +136,14 @@ export class CameraScannerService {
    */
   async toggleTorch(): Promise<boolean> {
     if (!this.stream) {
-      throw new Error("Camera not started");
+      throw new Error('Camera not started');
     }
 
     try {
       const videoTrack = this.stream.getVideoTracks()[0];
       const capabilities = videoTrack.getCapabilities();
 
-      if ("torch" in capabilities) {
+      if ('torch' in capabilities) {
         const settings = videoTrack.getSettings();
         const newTorchState = !settings.torch;
 
@@ -153,10 +153,10 @@ export class CameraScannerService {
 
         return newTorchState;
       } else {
-        throw new Error("Torch not supported on this device");
+        throw new Error('Torch not supported on this device');
       }
     } catch (error) {
-      console.error("Failed to toggle torch:", error);
+      console.error('Failed to toggle torch:', error);
       throw error;
     }
   }
@@ -178,8 +178,8 @@ export class CameraScannerService {
 
     try {
       // Capture frame from video
-      const canvas = document.createElement("canvas");
-      const context = canvas.getContext("2d");
+      const canvas = document.createElement('canvas');
+      const context = canvas.getContext('2d');
 
       if (context) {
         canvas.width = this.videoElement.videoWidth;
@@ -191,7 +191,7 @@ export class CameraScannerService {
         this.simulateBarcodeDetection(canvas, context);
       }
     } catch (error) {
-      console.error("Scanning error:", error);
+      console.error('Scanning error:', error);
     }
 
     // Continue scanning
@@ -215,7 +215,7 @@ export class CameraScannerService {
       // Very low probability to simulate rare detection
       const simulatedResult: ScanResult = {
         code: this.generateSimulatedBarcode(),
-        format: "EAN-13",
+        format: 'EAN-13',
         timestamp: new Date(),
         confidence: 0.95,
       };
@@ -242,7 +242,7 @@ export class CameraScannerService {
     this.saveScanHistory();
 
     // Track analytics
-    analyticsService.trackScanEvent("unknown", "barcode", {
+    analyticsService.trackScanEvent('unknown', 'barcode', {
       code: result.code,
       format: result.format,
       confidence: result.confidence,
@@ -251,7 +251,7 @@ export class CameraScannerService {
     // Emit scan event (you can use an event emitter or Vue's emit)
     this.onScanResult?.(result);
 
-    console.log("Barcode detected:", result);
+    console.log('Barcode detected:', result);
   }
 
   /**
@@ -259,13 +259,13 @@ export class CameraScannerService {
    */
   private generateSimulatedBarcode(): string {
     // Generate a realistic EAN-13 barcode
-    const countryCode = "871"; // Netherlands
+    const countryCode = '871'; // Netherlands
     const companyCode = Math.floor(Math.random() * 100000)
       .toString()
-      .padStart(5, "0");
+      .padStart(5, '0');
     const productCode = Math.floor(Math.random() * 10000)
       .toString()
-      .padStart(4, "0");
+      .padStart(4, '0');
     const checkDigit = Math.floor(Math.random() * 10);
 
     return countryCode + companyCode + productCode + checkDigit;
@@ -277,11 +277,11 @@ export class CameraScannerService {
   private saveScanHistory(): void {
     try {
       localStorage.setItem(
-        "barcode_scan_history",
+        'barcode_scan_history',
         JSON.stringify(this.scanHistory.value)
       );
     } catch (error) {
-      console.error("Failed to save scan history:", error);
+      console.error('Failed to save scan history:', error);
     }
   }
 
@@ -290,7 +290,7 @@ export class CameraScannerService {
    */
   private loadScanHistory(): void {
     try {
-      const saved = localStorage.getItem("barcode_scan_history");
+      const saved = localStorage.getItem('barcode_scan_history');
       if (saved) {
         const history = JSON.parse(saved);
         this.scanHistory.value = history.map((item: any) => ({
@@ -299,7 +299,7 @@ export class CameraScannerService {
         }));
       }
     } catch (error) {
-      console.error("Failed to load scan history:", error);
+      console.error('Failed to load scan history:', error);
     }
   }
 
@@ -356,20 +356,20 @@ export class CameraScannerService {
    */
   async focusCamera(): Promise<void> {
     if (!this.stream) {
-      throw new Error("Camera not started");
+      throw new Error('Camera not started');
     }
 
     try {
       const videoTrack = this.stream.getVideoTracks()[0];
       const capabilities = videoTrack.getCapabilities();
 
-      if ("focusMode" in capabilities) {
+      if ('focusMode' in capabilities) {
         await videoTrack.applyConstraints({
-          advanced: [{ focusMode: "single-shot" } as any],
+          advanced: [{ focusMode: 'single-shot' } as any],
         });
       }
     } catch (error) {
-      console.error("Failed to focus camera:", error);
+      console.error('Failed to focus camera:', error);
     }
   }
 

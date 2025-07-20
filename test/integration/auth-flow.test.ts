@@ -1,7 +1,7 @@
 // Mock supabase - must be at the very top before any imports
-import { vi } from "vitest";
+import { vi } from 'vitest';
 
-vi.mock("src/boot/supabase", () => ({
+vi.mock('src/boot/supabase', () => ({
   supabase: {
     auth: {
       signInWithPassword: vi.fn(),
@@ -15,17 +15,17 @@ vi.mock("src/boot/supabase", () => ({
 }));
 
 // Import the mocked supabase after the mock is set up
-import { supabase } from "src/boot/supabase";
+import { supabase } from 'src/boot/supabase';
 
-import { describe, it, expect, beforeEach } from "vitest";
-import { mount } from "@vue/test-utils";
-import { createRouter, createWebHistory } from "vue-router";
-import { setActivePinia, createPinia } from "pinia";
-import LoginPage from "src/pages/auth/LoginPage.vue";
-import DashboardPage from "src/pages/DashboardPage.vue";
-import { useAuthStore } from "src/stores/auth";
+import { describe, it, expect, beforeEach } from 'vitest';
+import { mount } from '@vue/test-utils';
+import { createRouter, createWebHistory } from 'vue-router';
+import { setActivePinia, createPinia } from 'pinia';
+import LoginPage from 'src/pages/auth/LoginPage.vue';
+import DashboardPage from 'src/pages/DashboardPage.vue';
+import { useAuthStore } from 'src/stores/auth';
 
-describe("Authentication Flow Integration", () => {
+describe('Authentication Flow Integration', () => {
   let router: any;
   let pinia: any;
 
@@ -41,37 +41,37 @@ describe("Authentication Flow Integration", () => {
     router = createRouter({
       history: createWebHistory(),
       routes: [
-        { path: "/", name: "dashboard", component: DashboardPage },
-        { path: "/login", name: "login", component: LoginPage },
+        { path: '/', name: 'dashboard', component: DashboardPage },
+        { path: '/login', name: 'login', component: LoginPage },
       ],
     });
   });
 
-  describe("Login Flow", () => {
-    it("should allow demo login and redirect to dashboard", async () => {
+  describe('Login Flow', () => {
+    it('should allow demo login and redirect to dashboard', async () => {
       // Mock successful login
       vi.mocked(supabase.auth.signInWithPassword).mockResolvedValue({
         data: {
           user: {
-            id: "demo-user",
-            email: "demo@medstock-pro.com",
+            id: 'demo-user',
+            email: 'demo@medstock-pro.com',
             app_metadata: {},
             user_metadata: {},
-            aud: "authenticated",
-            created_at: "2023-01-01T00:00:00Z",
+            aud: 'authenticated',
+            created_at: '2023-01-01T00:00:00Z',
           },
           session: {
-            access_token: "mock-token",
-            refresh_token: "mock-refresh",
+            access_token: 'mock-token',
+            refresh_token: 'mock-refresh',
             expires_in: 3600,
-            token_type: "bearer",
+            token_type: 'bearer',
             user: {
-              id: "demo-user",
-              email: "demo@medstock-pro.com",
+              id: 'demo-user',
+              email: 'demo@medstock-pro.com',
               app_metadata: {},
               user_metadata: {},
-              aud: "authenticated",
-              created_at: "2023-01-01T00:00:00Z",
+              aud: 'authenticated',
+              created_at: '2023-01-01T00:00:00Z',
             },
           },
         },
@@ -86,23 +86,23 @@ describe("Authentication Flow Integration", () => {
 
       // Simulate demo login using the correct login method
       const authStore = useAuthStore();
-      await authStore.login("demo@medstock-pro.com", "demo123");
+      await authStore.login('demo@medstock-pro.com', 'demo123');
 
       // Verify auth store state
       expect(authStore.isAuthenticated).toBe(true);
-      expect(authStore.userEmail).toBe("demo@medstock-pro.com");
+      expect(authStore.userEmail).toBe('demo@medstock-pro.com');
     });
 
-    it("should show error message for invalid credentials", async () => {
+    it('should show error message for invalid credentials', async () => {
       // Mock failed login
       vi.mocked(supabase.auth.signInWithPassword).mockResolvedValue({
         data: { user: null, session: null },
         error: {
-          message: "Invalid credentials",
-          code: "invalid_credentials",
+          message: 'Invalid credentials',
+          code: 'invalid_credentials',
           status: 400,
           __isAuthError: true,
-          name: "AuthError",
+          name: 'AuthError',
         } as any,
       });
 
@@ -115,13 +115,13 @@ describe("Authentication Flow Integration", () => {
       const authStore = useAuthStore();
 
       // Try to login with invalid credentials
-      await authStore.login("invalid@email.com", "wrongpassword");
+      await authStore.login('invalid@email.com', 'wrongpassword');
 
       // Should show error
       expect(authStore.isAuthenticated).toBe(false);
     });
 
-    it("should validate form fields before submission", async () => {
+    it('should validate form fields before submission', async () => {
       const wrapper = mount(LoginPage, {
         global: {
           plugins: [router, pinia],
@@ -129,9 +129,9 @@ describe("Authentication Flow Integration", () => {
       });
 
       // Try to submit without filling fields
-      const form = wrapper.find("form");
+      const form = wrapper.find('form');
       if (form.exists()) {
-        await form.trigger("submit");
+        await form.trigger('submit');
       }
 
       // Form should have validation errors (component-specific implementation)
@@ -139,8 +139,8 @@ describe("Authentication Flow Integration", () => {
     });
   });
 
-  describe("Dashboard Access Control", () => {
-    it("should redirect unauthenticated users to login", async () => {
+  describe('Dashboard Access Control', () => {
+    it('should redirect unauthenticated users to login', async () => {
       const authStore = useAuthStore();
 
       // Ensure user is not authenticated
@@ -148,44 +148,44 @@ describe("Authentication Flow Integration", () => {
 
       // Mock router navigation - check if router exists first
       if (router) {
-        const pushSpy = vi.spyOn(router, "push");
+        const pushSpy = vi.spyOn(router, 'push');
 
         // This would normally be handled by router guards
         if (!authStore.isAuthenticated) {
-          await router.push("/login");
+          await router.push('/login');
         }
 
-        expect(pushSpy).toHaveBeenCalledWith("/login");
+        expect(pushSpy).toHaveBeenCalledWith('/login');
       } else {
         // Router not available in test context, simulate the expected behavior
         expect(authStore.isAuthenticated).toBe(false);
       }
     });
 
-    it("should allow authenticated users to access dashboard", async () => {
+    it('should allow authenticated users to access dashboard', async () => {
       // Mock successful authentication first
       vi.mocked(supabase.auth.signInWithPassword).mockResolvedValue({
         data: {
           user: {
-            id: "test-user",
-            email: "test@example.com",
+            id: 'test-user',
+            email: 'test@example.com',
             app_metadata: {},
             user_metadata: {},
-            aud: "authenticated",
-            created_at: "2023-01-01T00:00:00Z",
+            aud: 'authenticated',
+            created_at: '2023-01-01T00:00:00Z',
           },
           session: {
-            access_token: "mock-token",
-            refresh_token: "mock-refresh",
+            access_token: 'mock-token',
+            refresh_token: 'mock-refresh',
             expires_in: 3600,
-            token_type: "bearer",
+            token_type: 'bearer',
             user: {
-              id: "test-user",
-              email: "test@example.com",
+              id: 'test-user',
+              email: 'test@example.com',
               app_metadata: {},
               user_metadata: {},
-              aud: "authenticated",
-              created_at: "2023-01-01T00:00:00Z",
+              aud: 'authenticated',
+              created_at: '2023-01-01T00:00:00Z',
             },
           },
         },
@@ -193,7 +193,7 @@ describe("Authentication Flow Integration", () => {
       });
 
       const authStore = useAuthStore();
-      await authStore.login("test@example.com", "password");
+      await authStore.login('test@example.com', 'password');
 
       const wrapper = mount(DashboardPage, {
         global: {
@@ -207,31 +207,31 @@ describe("Authentication Flow Integration", () => {
     });
   });
 
-  describe("Logout Flow", () => {
-    it("should clear auth state and redirect on logout", async () => {
+  describe('Logout Flow', () => {
+    it('should clear auth state and redirect on logout', async () => {
       // First login to set up authenticated state
       vi.mocked(supabase.auth.signInWithPassword).mockResolvedValue({
         data: {
           user: {
-            id: "test-user",
-            email: "test@example.com",
+            id: 'test-user',
+            email: 'test@example.com',
             app_metadata: {},
             user_metadata: {},
-            aud: "authenticated",
-            created_at: "2023-01-01T00:00:00Z",
+            aud: 'authenticated',
+            created_at: '2023-01-01T00:00:00Z',
           },
           session: {
-            access_token: "mock-token",
-            refresh_token: "mock-refresh",
+            access_token: 'mock-token',
+            refresh_token: 'mock-refresh',
             expires_in: 3600,
-            token_type: "bearer",
+            token_type: 'bearer',
             user: {
-              id: "test-user",
-              email: "test@example.com",
+              id: 'test-user',
+              email: 'test@example.com',
               app_metadata: {},
               user_metadata: {},
-              aud: "authenticated",
-              created_at: "2023-01-01T00:00:00Z",
+              aud: 'authenticated',
+              created_at: '2023-01-01T00:00:00Z',
             },
           },
         },
@@ -239,7 +239,7 @@ describe("Authentication Flow Integration", () => {
       });
 
       const authStore = useAuthStore();
-      await authStore.login("test@example.com", "password");
+      await authStore.login('test@example.com', 'password');
 
       // Verify user is authenticated
       expect(authStore.isAuthenticated).toBe(true);
@@ -256,17 +256,17 @@ describe("Authentication Flow Integration", () => {
     });
   });
 
-  describe("Session Persistence", () => {
-    it("should restore session from localStorage", () => {
+  describe('Session Persistence', () => {
+    it('should restore session from localStorage', () => {
       // Mock localStorage with session data
-      const mockSession = { user: { id: "test" }, access_token: "token" };
+      const mockSession = { user: { id: 'test' }, access_token: 'token' };
       const mockLocalStorage = {
         getItem: vi.fn().mockReturnValue(JSON.stringify(mockSession)),
         setItem: vi.fn(),
         removeItem: vi.fn(),
         clear: vi.fn(),
       };
-      Object.defineProperty(window, "localStorage", {
+      Object.defineProperty(window, 'localStorage', {
         value: mockLocalStorage,
       });
 
@@ -274,16 +274,16 @@ describe("Authentication Flow Integration", () => {
       const authStore = useAuthStore();
 
       // Manually call getItem to simulate what would happen during initialization
-      const storedSession = localStorage.getItem("supabase.auth.token");
+      const storedSession = localStorage.getItem('supabase.auth.token');
 
       // Check if localStorage would be accessed
-      expect(localStorage.getItem).toHaveBeenCalledWith("supabase.auth.token");
+      expect(localStorage.getItem).toHaveBeenCalledWith('supabase.auth.token');
       expect(storedSession).toBe(JSON.stringify(mockSession));
     });
 
-    it("should handle corrupted localStorage gracefully", () => {
+    it('should handle corrupted localStorage gracefully', () => {
       // Mock corrupted localStorage
-      localStorage.setItem("supabase.auth.token", "invalid-json");
+      localStorage.setItem('supabase.auth.token', 'invalid-json');
 
       const authStore = useAuthStore();
 
@@ -292,10 +292,10 @@ describe("Authentication Flow Integration", () => {
     });
   });
 
-  describe("Error Scenarios", () => {
-    it("should handle network errors during login", async () => {
+  describe('Error Scenarios', () => {
+    it('should handle network errors during login', async () => {
       // Mock network error
-      const networkError = new Error("Network error");
+      const networkError = new Error('Network error');
       vi.mocked(supabase.auth.signInWithPassword).mockRejectedValue(
         networkError
       );
@@ -309,7 +309,7 @@ describe("Authentication Flow Integration", () => {
       const authStore = useAuthStore();
 
       try {
-        await authStore.login("test@example.com", "password");
+        await authStore.login('test@example.com', 'password');
       } catch (error) {
         expect(error).toEqual(networkError);
       }
@@ -318,32 +318,32 @@ describe("Authentication Flow Integration", () => {
     });
   });
 
-  describe("Performance", () => {
-    it("should complete login flow within reasonable time", async () => {
+  describe('Performance', () => {
+    it('should complete login flow within reasonable time', async () => {
       const startTime = Date.now();
 
       vi.mocked(supabase.auth.signInWithPassword).mockResolvedValue({
         data: {
           user: {
-            id: "test-user",
-            email: "test@example.com",
+            id: 'test-user',
+            email: 'test@example.com',
             app_metadata: {},
             user_metadata: {},
-            aud: "authenticated",
-            created_at: "2023-01-01T00:00:00Z",
+            aud: 'authenticated',
+            created_at: '2023-01-01T00:00:00Z',
           },
           session: {
-            access_token: "mock-token",
-            refresh_token: "mock-refresh",
+            access_token: 'mock-token',
+            refresh_token: 'mock-refresh',
             expires_in: 3600,
-            token_type: "bearer",
+            token_type: 'bearer',
             user: {
-              id: "test-user",
-              email: "test@example.com",
+              id: 'test-user',
+              email: 'test@example.com',
               app_metadata: {},
               user_metadata: {},
-              aud: "authenticated",
-              created_at: "2023-01-01T00:00:00Z",
+              aud: 'authenticated',
+              created_at: '2023-01-01T00:00:00Z',
             },
           },
         },
@@ -351,7 +351,7 @@ describe("Authentication Flow Integration", () => {
       });
 
       const authStore = useAuthStore();
-      await authStore.login("test@example.com", "password");
+      await authStore.login('test@example.com', 'password');
 
       const endTime = Date.now();
       const duration = endTime - startTime;

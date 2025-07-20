@@ -161,16 +161,20 @@ export default {
     support: 'Ondersteuning',
     allRightsReserved: 'Alle rechten voorbehouden',
     professionalInventory: 'Professioneel medisch voorraadbeheer',
-    platformDescription: 'Stroomlijn je medische voorraadbeheer met ons enterprise-grade platform. Volg voorraad, beheer bestellingen, en zorg voor compliance met gemak.',
+    platformDescription:
+      'Stroomlijn je medische voorraadbeheer met ons enterprise-grade platform. Volg voorraad, beheer bestellingen, en zorg voor compliance met gemak.',
     realtimeTracking: 'Realtime voorraad tracking',
     automatedAlerts: 'Geautomatiseerde herbestel waarschuwingen',
     complianceReporting: 'Compliance rapportage',
     multilocationSupport: 'Multi-locatie ondersteuning',
-    demoCredentialsFilled: 'Demo credentials ingevuld. Klik op Inloggen om door te gaan.',
-    passwordResetComingSoon: 'Wachtwoord reset functionaliteit komt binnenkort.',
+    demoCredentialsFilled:
+      'Demo credentials ingevuld. Klik op Inloggen om door te gaan.',
+    passwordResetComingSoon:
+      'Wachtwoord reset functionaliteit komt binnenkort.',
     copyright: '© {year} {company}. Alle rechten voorbehouden.',
     passwordHelp: 'Voer je wachtwoord in om veilig in te loggen',
-    demoHelp: 'Gebruik demo@medstock-pro.com met wachtwoord demo123 voor demonstratie',
+    demoHelp:
+      'Gebruik demo@medstock-pro.com met wachtwoord demo123 voor demonstratie',
     signingIn: 'Inloggen...',
   },
 
@@ -183,9 +187,11 @@ export default {
     resetDataSuccess: 'Demo data succesvol gereset',
     resetDataError: 'Fout bij het resetten van demo data',
     limitations: 'Demo beperkingen',
-    limitationsText: 'Dit is een demo account. Alle wijzigingen zijn zichtbaar maar kunnen worden gereset.',
+    limitationsText:
+      'Dit is een demo account. Alle wijzigingen zijn zichtbaar maar kunnen worden gereset.',
     practice: 'Remka demo kliniek',
-    practiceDescription: 'Volledig functionele demo omgeving met realistische data',
+    practiceDescription:
+      'Volledig functionele demo omgeving met realistische data',
   },
 
   // Dashboard
@@ -219,7 +225,8 @@ export default {
     viewAnalytics: 'Analyses bekijken',
     welcomeTitle: 'Welkom bij MedStock Pro',
     welcomeSubtitle: 'Je professionele medische voorraadbeheersysteem',
-    welcomeDescription: 'Beheer je voorraad efficiënt met onze geavanceerde tools en realtime tracking.',
+    welcomeDescription:
+      'Beheer je voorraad efficiënt met onze geavanceerde tools en realtime tracking.',
     systemStatus: 'Systeemstatus',
     systemStatusSubtitle: 'Huidige status van je systeem',
     systemOnline: 'Systeem online',
@@ -256,10 +263,12 @@ export default {
   // Error pages
   error: {
     pageNotFound: 'Pagina niet gevonden',
-    pageNotFoundDescription: 'Sorry, de pagina die je zoekt kan niet worden gevonden. Deze is mogelijk verplaatst, verwijderd, of je hebt een verkeerde URL ingevoerd.',
+    pageNotFoundDescription:
+      'Sorry, de pagina die je zoekt kan niet worden gevonden. Deze is mogelijk verplaatst, verwijderd, of je hebt een verkeerde URL ingevoerd.',
     goHome: 'Naar home',
     goBack: 'Terug',
-    tryThesePages: "Probeer in plaats daarvan een van deze populaire pagina's te bezoeken:",
+    tryThesePages:
+      "Probeer in plaats daarvan een van deze populaire pagina's te bezoeken:",
   },
 
   // Validation
@@ -455,8 +464,6 @@ export default {
       adjustment: 'Aanpassing',
       count_correction: 'Telling correctie',
     },
-
-
   },
 
   // Batch Management
@@ -521,7 +528,7 @@ export default {
     expiresToday: 'Verloopt vandaag',
     expiresTomorrow: 'Verloopt morgen',
     expiresInDays: 'Verloopt over {days} dagen',
-    
+
     // FIFO management
     fifoSuggestion: 'FIFO Suggestie',
     generateFifoSuggestion: 'Genereer FIFO Suggestie',
@@ -530,10 +537,11 @@ export default {
     fifoSuggestionGenerated: 'FIFO suggestie succesvol gegenereerd',
     applyFifoSuggestion: 'FIFO Suggestie Toepassen',
     confirmFifoApplication: 'FIFO Toepassing Bevestigen',
-    confirmFifoMessage: 'Weet je zeker dat je deze FIFO suggestie wilt toepassen?',
+    confirmFifoMessage:
+      'Weet je zeker dat je deze FIFO suggestie wilt toepassen?',
     fifoAppliedSuccessfully: 'FIFO suggestie succesvol toegepast',
     useQuantity: 'Gebruik hoeveelheid',
-    
+
     // Reports
     selectReport: 'Selecteer rapport',
     generateReport: 'Genereer rapport',
@@ -551,7 +559,7 @@ export default {
     fifoComplianceDesc: 'Controleer FIFO naleving',
     batchCosts: 'Batch kosten',
     batchCostsDesc: 'Analyseer kosten per batch',
-    
+
     // Batch details and usage
     batchDetails: 'Batch Details',
     batchInformation: 'Batch Informatie',
@@ -640,7 +648,8 @@ export default {
   // Products Page
   productsPage: {
     title: 'Producten',
-    subtitle: 'Overzicht van alle beschikbare producten van Remka en externe leveranciers',
+    subtitle:
+      'Overzicht van alle beschikbare producten van Remka en externe leveranciers',
 
     // Table headers
     table: {
@@ -928,12 +937,13 @@ export default {
     mainLocations: 'Hoofdlocaties',
     allLocations: 'Alle locaties',
     search: 'Locaties zoeken...',
-    comingSoonDescription: 'Locatiebeheer functies komen binnenkort beschikbaar. Je zult verschillende opslaggebieden voor je voorraad kunnen aanmaken en beheren.',
-          capacityItems: '{count} artikelen',
-      samples: {
-        emergencyStock: 'Spoedkast',
-      },
+    comingSoonDescription:
+      'Locatiebeheer functies komen binnenkort beschikbaar. Je zult verschillende opslaggebieden voor je voorraad kunnen aanmaken en beheren.',
+    capacityItems: '{count} artikelen',
+    samples: {
+      emergencyStock: 'Spoedkast',
     },
+  },
 
   // Location (singular for form fields)
   location: {
@@ -974,7 +984,8 @@ export default {
     title: 'Analyses',
     subtitle: 'Uitgebreide rapporten en inzichten voor je voorraad',
     comingSoon: 'Binnenkort beschikbaar',
-    comingSoonDescription: 'Geavanceerde analyses en rapportage functies worden binnenkort toegevoegd.',
+    comingSoonDescription:
+      'Geavanceerde analyses en rapportage functies worden binnenkort toegevoegd.',
     overview: 'Overzicht',
     trends: 'Trends',
     reports: 'Rapporten',
@@ -1087,9 +1098,11 @@ export default {
     save: 'Opslaan',
     nameRequired: 'Naam is verplicht',
     linkToMagento: 'Koppelen aan Magento',
-    linkToMagentoPrompt: 'Voer het Magento vendor ID in om deze leverancier te koppelen:',
+    linkToMagentoPrompt:
+      'Voer het Magento vendor ID in om deze leverancier te koppelen:',
     confirmDelete: 'Verwijderen bevestigen',
-    confirmDeleteMessage: 'Weet je zeker dat je "{name}" wilt verwijderen? Deze actie kan niet ongedaan worden gemaakt.',
+    confirmDeleteMessage:
+      'Weet je zeker dat je "{name}" wilt verwijderen? Deze actie kan niet ongedaan worden gemaakt.',
     supplierCreated: 'Leverancier succesvol aangemaakt',
     supplierUpdated: 'Leverancier succesvol bijgewerkt',
     supplierDeleted: 'Leverancier succesvol verwijderd',
@@ -1124,13 +1137,15 @@ export default {
     markAsReadTooltip: 'Markeren als gelezen',
     deleteTooltip: 'Verwijderen',
     clearAllConfirm: 'Alle meldingen wissen',
-    clearAllConfirmMessage: 'Weet je zeker dat je alle meldingen wilt verwijderen? Deze actie kan niet ongedaan worden gemaakt.',
+    clearAllConfirmMessage:
+      'Weet je zeker dat je alle meldingen wilt verwijderen? Deze actie kan niet ongedaan worden gemaakt.',
     allMarkedAsRead: 'Alle meldingen gemarkeerd als gelezen',
     notificationDeleted: 'Melding verwijderd',
     allNotificationsCleared: 'Alle meldingen gewist',
     testStockAlertCreated: 'Test voorraad waarschuwing aangemaakt',
     testOrderUpdateCreated: 'Test bestel update aangemaakt',
-    settingsFeatureComingSoon: 'Meldingen instellingen functie komt binnenkort!',
+    settingsFeatureComingSoon:
+      'Meldingen instellingen functie komt binnenkort!',
     loadNotificationsError: 'Fout bij laden meldingen',
 
     categories: {
@@ -1158,9 +1173,4 @@ export default {
       },
     },
   },
-
-
-
-
-
-}; 
+};

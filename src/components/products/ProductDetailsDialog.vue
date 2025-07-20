@@ -9,7 +9,7 @@
       <!-- Header -->
       <q-card-section class="row items-center bg-primary text-white q-pa-md">
         <q-icon name="info" size="1.5rem" class="q-mr-sm" />
-        <div class="text-h6">{{ $t("productsPage.details.title") }}</div>
+        <div class="text-h6">{{ $t('productsPage.details.title') }}</div>
         <q-space />
         <q-btn
           icon="close"
@@ -37,7 +37,7 @@
                 <div class="absolute-full flex flex-center bg-grey-3">
                   <q-icon name="image" size="3rem" color="grey-5" />
                   <div class="q-ml-sm text-grey-6">
-                    {{ $t("productsPage.details.noImage") }}
+                    {{ $t('productsPage.details.noImage') }}
                   </div>
                 </div>
               </template>
@@ -49,7 +49,7 @@
             <q-card-section>
               <div class="text-h6 q-mb-md">
                 <q-icon name="info" class="q-mr-sm" />
-                {{ $t("productsPage.details.basicInfo") }}
+                {{ $t('productsPage.details.basicInfo') }}
               </div>
 
               <div class="row q-gutter-md">
@@ -58,7 +58,7 @@
                     <q-item>
                       <q-item-section>
                         <q-item-label class="text-caption text-grey-6">
-                          {{ $t("productsPage.details.name") }}
+                          {{ $t('productsPage.details.name') }}
                         </q-item-label>
                         <q-item-label class="text-weight-medium">
                           {{ product.name }}
@@ -69,10 +69,10 @@
                     <q-item>
                       <q-item-section>
                         <q-item-label class="text-caption text-grey-6">
-                          {{ $t("productsPage.details.sku") }}
+                          {{ $t('productsPage.details.sku') }}
                         </q-item-label>
                         <q-item-label class="text-weight-medium">
-                          {{ product.sku || $t("common.noSku") }}
+                          {{ product.sku || $t('common.noSku') }}
                         </q-item-label>
                       </q-item-section>
                     </q-item>
@@ -80,7 +80,7 @@
                     <q-item>
                       <q-item-section>
                         <q-item-label class="text-caption text-grey-6">
-                          {{ $t("productsPage.details.category") }}
+                          {{ $t('productsPage.details.category') }}
                         </q-item-label>
                         <q-item-label class="text-weight-medium">
                           <q-chip
@@ -103,7 +103,7 @@
                     <q-item v-if="product.brand">
                       <q-item-section>
                         <q-item-label class="text-caption text-grey-6">
-                          {{ $t("productsPage.details.brand") }}
+                          {{ $t('productsPage.details.brand') }}
                         </q-item-label>
                         <q-item-label class="text-weight-medium">
                           {{ product.brand }}
@@ -114,7 +114,7 @@
                     <q-item v-if="product.unit">
                       <q-item-section>
                         <q-item-label class="text-caption text-grey-6">
-                          {{ $t("productsPage.details.unit") }}
+                          {{ $t('productsPage.details.unit') }}
                         </q-item-label>
                         <q-item-label class="text-weight-medium">
                           {{ product.unit }}
@@ -125,14 +125,14 @@
                     <q-item>
                       <q-item-section>
                         <q-item-label class="text-caption text-grey-6">
-                          {{ $t("productsPage.details.price") }}
+                          {{ $t('productsPage.details.price') }}
                         </q-item-label>
                         <q-item-label class="text-weight-medium">
                           <span v-if="bestPrice" class="text-h6 text-primary">
                             {{ formatPrice(bestPrice.price) }}
                           </span>
                           <span v-else class="text-grey-6">
-                            {{ $t("productsPage.details.priceNotAvailable") }}
+                            {{ $t('productsPage.details.priceNotAvailable') }}
                           </span>
                         </q-item-label>
                       </q-item-section>
@@ -144,12 +144,12 @@
               <!-- Description -->
               <div class="q-mt-md">
                 <q-item-label class="text-caption text-grey-6 q-mb-xs">
-                  {{ $t("productsPage.details.description") }}
+                  {{ $t('productsPage.details.description') }}
                 </q-item-label>
                 <div class="text-body2">
                   {{
                     product.description ||
-                    $t("productsPage.details.noDescription")
+                    $t('productsPage.details.noDescription')
                   }}
                 </div>
               </div>
@@ -161,7 +161,7 @@
             <q-card-section>
               <div class="text-h6 q-mb-md">
                 <q-icon name="inventory_2" class="q-mr-sm" />
-                {{ $t("productsPage.details.stockInfo") }}
+                {{ $t('productsPage.details.stockInfo') }}
               </div>
 
               <div class="row q-gutter-md">
@@ -169,10 +169,10 @@
                   <q-item>
                     <q-item-section>
                       <q-item-label class="text-caption text-grey-6">
-                        {{ $t("productsPage.details.currentStock") }}
+                        {{ $t('productsPage.details.currentStock') }}
                       </q-item-label>
                       <q-item-label class="text-h6">
-                        {{ product.total_stock }} {{ product.unit || "" }}
+                        {{ product.total_stock }} {{ product.unit || '' }}
                       </q-item-label>
                     </q-item-section>
                     <q-item-section side>
@@ -189,7 +189,7 @@
                   <q-item>
                     <q-item-section>
                       <q-item-label class="text-caption text-grey-6">
-                        {{ $t("productsPage.table.stockStatus") }}
+                        {{ $t('productsPage.table.stockStatus') }}
                       </q-item-label>
                       <q-item-label>
                         <q-badge
@@ -235,87 +235,82 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue';
-import { useI18n } from 'vue-i18n';
-import BaseCard from 'src/components/base/BaseCard.vue';
-import type { ProductWithStock } from 'src/types/inventory';
+  import { computed } from 'vue';
+  import { useI18n } from 'vue-i18n';
+  import BaseCard from 'src/components/base/BaseCard.vue';
+  import { useFormatting } from 'src/composables/useFormatting';
+  import type { ProductWithStock } from 'src/types/inventory';
 
-interface Props {
-  modelValue: boolean;
-  product?: ProductWithStock | null;
-}
-
-interface Emits {
-  (e: 'update:modelValue', value: boolean): void;
-  (e: 'addToCart', product: ProductWithStock): void;
-  (e: 'addToOrderList', product: ProductWithStock): void;
-}
-
-const props = defineProps<Props>();
-const emit = defineEmits<Emits>();
-const { t, locale } = useI18n();
-
-const isOpen = computed({
-  get: () => props.modelValue,
-  set: (value) => emit('update:modelValue', value),
-});
-
-const stockStatusColor = computed(() => {
-  if (!props.product) return 'grey';
-
-  switch (props.product.stock_status) {
-    case 'in_stock':
-      return 'positive';
-    case 'low_stock':
-      return 'warning';
-    case 'out_of_stock':
-      return 'negative';
-    default:
-      return 'grey';
+  interface Props {
+    modelValue: boolean;
+    product?: ProductWithStock | null;
   }
-});
 
-const stockStatusIcon = computed(() => {
-  if (!props.product) return 'help';
-
-  switch (props.product.stock_status) {
-    case 'in_stock':
-      return 'check_circle';
-    case 'low_stock':
-      return 'warning';
-    case 'out_of_stock':
-      return 'cancel';
-    default:
-      return 'help';
+  interface Emits {
+    (e: 'update:modelValue', value: boolean): void;
+    (e: 'addToCart', product: ProductWithStock): void;
+    (e: 'addToOrderList', product: ProductWithStock): void;
   }
-});
 
-const bestPrice = computed(() => {
-  if (!props.product?.supplier_products?.length) return null;
+  const props = defineProps<Props>();
+  const emit = defineEmits<Emits>();
+  const { t, locale } = useI18n();
+  const { formatPrice } = useFormatting();
 
-  const pricesWithSupplier = props.product.supplier_products
-    .filter((sp) => sp.price && sp.price > 0)
-    .map((sp) => ({
-      price: sp.price,
-      supplier: sp.supplier_name || sp.supplier_id,
-    }))
-    .sort((a, b) => a.price - b.price);
+  const isOpen = computed({
+    get: () => props.modelValue,
+    set: value => emit('update:modelValue', value),
+  });
 
-  return pricesWithSupplier[0] || null;
-});
+  const stockStatusColor = computed(() => {
+    if (!props.product) return 'grey';
 
-const formatPrice = (price: number): string => {
-  return new Intl.NumberFormat(locale.value, {
-    style: 'currency',
-    currency: 'EUR',
-  }).format(price);
-};
+    switch (props.product.stock_status) {
+      case 'in_stock':
+        return 'positive';
+      case 'low_stock':
+        return 'warning';
+      case 'out_of_stock':
+        return 'negative';
+      default:
+        return 'grey';
+    }
+  });
+
+  const stockStatusIcon = computed(() => {
+    if (!props.product) return 'help';
+
+    switch (props.product.stock_status) {
+      case 'in_stock':
+        return 'check_circle';
+      case 'low_stock':
+        return 'warning';
+      case 'out_of_stock':
+        return 'cancel';
+      default:
+        return 'help';
+    }
+  });
+
+  const bestPrice = computed(() => {
+    if (!props.product?.supplier_products?.length) return null;
+
+    const pricesWithSupplier = props.product.supplier_products
+      .filter(sp => sp.price && sp.price > 0)
+      .map(sp => ({
+        price: sp.price,
+        supplier: sp.supplier_name || sp.supplier_id,
+      }))
+      .sort((a, b) => a.price - b.price);
+
+    return pricesWithSupplier[0] || null;
+  });
 </script>
 
 <style lang="scss" scoped>
-.product-details-dialog {
-  .q-dialog__inner {
-    padding: 0;
+  .product-details-dialog {
+    .q-dialog__inner {
+      padding: 0;
+    }
   }
-}
 </style>

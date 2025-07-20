@@ -1,6 +1,7 @@
 # Supabase CORS Configuration Guide
 
-This guide explains how to inspect and configure CORS settings for your Supabase project to ensure secure frontend access.
+This guide explains how to inspect and configure CORS settings for your Supabase project to ensure
+secure frontend access.
 
 ## 🔍 **Current CORS Status Check**
 
@@ -88,9 +89,9 @@ https://app.medstock-pro.com
 ```typescript
 // In your application
 const allowedOrigins = {
-  development: ["http://localhost:8080", "http://localhost:3000"],
-  staging: ["https://staging.medstock-pro.com"],
-  production: ["https://medstock-pro.com", "https://www.medstock-pro.com"],
+  development: ['http://localhost:8080', 'http://localhost:3000'],
+  staging: ['https://staging.medstock-pro.com'],
+  production: ['https://medstock-pro.com', 'https://www.medstock-pro.com'],
 };
 ```
 
@@ -110,17 +111,17 @@ Create `test-cors.js`:
 // Test CORS from browser console
 async function testCORS() {
   try {
-    const response = await fetch("https://your-project.supabase.co/rest/v1/", {
-      method: "GET",
+    const response = await fetch('https://your-project.supabase.co/rest/v1/', {
+      method: 'GET',
       headers: {
         Authorization: `Bearer ${process.env.VITE_SUPABASE_ANON_KEY}`,
-        "Content-Type": "application/json",
+        'Content-Type': 'application/json',
       },
     });
 
-    console.log("CORS test successful:", response.status);
+    console.log('CORS test successful:', response.status);
   } catch (error) {
-    console.error("CORS test failed:", error);
+    console.error('CORS test failed:', error);
   }
 }
 
@@ -138,38 +139,32 @@ testCORS();
 
 ### Issue 1: "CORS policy blocked"
 
-**Cause**: Origin not in allowed list
-**Solution**: Add your domain to Supabase CORS settings
+**Cause**: Origin not in allowed list **Solution**: Add your domain to Supabase CORS settings
 
 ### Issue 2: "Preflight request failed"
 
-**Cause**: Missing OPTIONS method support
-**Solution**: Ensure Supabase API configuration allows OPTIONS
+**Cause**: Missing OPTIONS method support **Solution**: Ensure Supabase API configuration allows
+OPTIONS
 
 ### Issue 3: "Credentials not included"
 
-**Cause**: Missing credentials in requests
-**Solution**: Check Supabase client configuration:
+**Cause**: Missing credentials in requests **Solution**: Check Supabase client configuration:
 
 ```typescript
-import { createClient } from "@supabase/supabase-js";
+import { createClient } from '@supabase/supabase-js';
 
-const supabase = createClient(
-  process.env.VITE_SUPABASE_URL,
-  process.env.VITE_SUPABASE_ANON_KEY,
-  {
-    auth: {
-      persistSession: true,
-      autoRefreshToken: true,
-    },
-  }
-);
+const supabase = createClient(process.env.VITE_SUPABASE_URL, process.env.VITE_SUPABASE_ANON_KEY, {
+  auth: {
+    persistSession: true,
+    autoRefreshToken: true,
+  },
+});
 ```
 
 ### Issue 4: "Mixed content"
 
-**Cause**: HTTPS site trying to connect to HTTP endpoint
-**Solution**: Ensure all URLs use HTTPS in production
+**Cause**: HTTPS site trying to connect to HTTP endpoint **Solution**: Ensure all URLs use HTTPS in
+production
 
 ## 🔧 **Emergency CORS Fix**
 
@@ -191,7 +186,7 @@ With our monitoring setup, CORS errors will be tracked:
 
 ```typescript
 // In src/services/monitoring.ts
-monitoringService.captureError(new Error("CORS blocked"), {
+monitoringService.captureError(new Error('CORS blocked'), {
   url: window.location.href,
   userAgent: navigator.userAgent,
   timestamp: new Date().toISOString(),
@@ -210,5 +205,5 @@ monitoringService.captureError(new Error("CORS blocked"), {
 
 ---
 
-**Last Updated**: December 2024
-**Security Note**: Always prioritize security over convenience when configuring CORS.
+**Last Updated**: December 2024 **Security Note**: Always prioritize security over convenience when
+configuring CORS.

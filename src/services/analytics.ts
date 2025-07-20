@@ -1,10 +1,7 @@
-import { supabase } from "src/boot/supabase";
-import type {
-  UsageAnalytics,
-  UsageAnalyticsInsert,
-  AnalyticsEvent,
-} from "src/types/supabase";
-import { useAuthStore } from "src/stores/auth";
+import { supabase } from 'src/boot/supabase';
+import { useAuthStore } from 'src/stores/auth';
+import { handleSupabaseError, ServiceErrorHandler } from 'src/utils/service-error-handler';
+import type { AnalyticsEvent } from 'src/types/supabase';
 
 export interface AnalyticsDateRange {
   startDate: string;
@@ -80,10 +77,21 @@ export class AnalyticsService {
     const authStore = useAuthStore();
     const practiceId = authStore.clinicId;
 
-    if (!practiceId) return;
+    if (!practiceId) {
+      ServiceErrorHandler.handle(
+        new Error('No practice ID available for tracking'),
+        {
+          service: 'AnalyticsService',
+          operation: 'trackEvent',
+          metadata: { eventType },
+        },
+        { rethrow: false, logLevel: 'warn' }
+      );
+      return;
+    }
 
     try {
-      const { error } = await supabase.from("usage_analytics").insert([
+      const { error } = await supabase.from('usage_analytics').insert([
         {
           practice_id: practiceId,
           user_id: authStore.user?.id || null,
@@ -96,10 +104,22 @@ export class AnalyticsService {
       ]);
 
       if (error) {
-        console.error("Failed to track event:", error);
+        handleSupabaseError(error, {
+          service: 'AnalyticsService',
+          operation: 'trackEvent',
+          practiceId,
+          userId: authStore.user?.id ?? undefined,
+          metadata: { eventType, eventData },
+        });
       }
     } catch (error) {
-      console.error("Error tracking event:", error);
+      ServiceErrorHandler.handle(error, {
+        service: 'AnalyticsService',
+        operation: 'trackEvent',
+        practiceId,
+        userId: authStore.user?.id ?? undefined,
+        metadata: { eventType, eventData },
+      }, { rethrow: false, logLevel: 'error' });
     }
   }
 
@@ -127,28 +147,28 @@ export class AnalyticsService {
     try {
       // Get usage analytics events
       const { data: events = [] } = await supabase
-        .from("usage_analytics")
-        .select("*")
-        .eq("practice_id", practiceId)
-        .gte("created_at", dateRange.startDate)
-        .lte("created_at", dateRange.endDate)
-        .order("created_at", { ascending: false });
+        .from('usage_analytics')
+        .select('*')
+        .eq('practice_id', practiceId)
+        .gte('created_at', dateRange.startDate)
+        .lte('created_at', dateRange.endDate)
+        .order('created_at', { ascending: false });
 
       // Get orders count
       const { count: ordersCount = 0 } = await supabase
-        .from("orders")
-        .select("*", { count: "exact", head: true })
-        .eq("practice_id", practiceId)
-        .gte("created_at", dateRange.startDate)
-        .lte("created_at", dateRange.endDate);
+        .from('orders')
+        .select('*', { count: 'exact', head: true })
+        .eq('practice_id', practiceId)
+        .gte('created_at', dateRange.startDate)
+        .lte('created_at', dateRange.endDate);
 
       // Get stock entries count
       const { count: stockEntriesCount = 0 } = await supabase
-        .from("stock_entries")
-        .select("*", { count: "exact", head: true })
-        .eq("practice_id", practiceId)
-        .gte("created_at", dateRange.startDate)
-        .lte("created_at", dateRange.endDate);
+        .from('stock_entries')
+        .select('*', { count: 'exact', head: true })
+        .eq('practice_id', practiceId)
+        .gte('created_at', dateRange.startDate)
+        .lte('created_at', dateRange.endDate);
 
       // Process events
       const eventCounts: Record<string, number> = {};
@@ -158,7 +178,7 @@ export class AnalyticsService {
       > = {};
       const dailyActivity: Record<string, number> = {};
 
-      events?.forEach((event) => {
+      events?.forEach(event => {
         if (!event || !event.event_type || !event.created_at) return;
 
         // Count event types
@@ -201,7 +221,7 @@ export class AnalyticsService {
         dailyActivity,
       };
     } catch (error) {
-      console.error("Error getting analytics summary:", error);
+      console.error('Error getting analytics summary:', error);
       return {
         totalEvents: 0,
         activeUsers: 0,
@@ -237,7 +257,7 @@ export class AnalyticsService {
     try {
       // Get orders with items
       const { data: orders } = await supabase
-        .from("orders")
+        .from('orders')
         .select(
           `
           *,
@@ -247,9 +267,9 @@ export class AnalyticsService {
           )
         `
         )
-        .eq("practice_id", practiceId)
-        .gte("created_at", dateRange.startDate)
-        .lte("created_at", dateRange.endDate);
+        .eq('practice_id', practiceId)
+        .gte('created_at', dateRange.startDate)
+        .lte('created_at', dateRange.endDate);
 
       const totalOrders = orders?.length || 0;
       const totalOrderValue =
@@ -269,7 +289,7 @@ export class AnalyticsService {
       >();
       const orderTrends: Record<string, number> = {};
 
-      orders?.forEach((order) => {
+      orders?.forEach(order => {
         // Count by status
         ordersByStatus[order.status] = (ordersByStatus[order.status] || 0) + 1;
 
@@ -286,7 +306,7 @@ export class AnalyticsService {
             existing.order_count += 1;
           } else {
             itemCounts.set(key, {
-              product_name: item.products?.name || "Unknown Product",
+              product_name: item.products?.name || 'Unknown Product',
               total_quantity: item.quantity,
               order_count: 1,
               product_id: item.product_id,
@@ -308,7 +328,7 @@ export class AnalyticsService {
         orderTrends,
       };
     } catch (error) {
-      console.error("Error getting order metrics:", error);
+      console.error('Error getting order metrics:', error);
       return {
         totalOrders: 0,
         totalOrderValue: 0,
@@ -342,29 +362,29 @@ export class AnalyticsService {
     try {
       // Get stock entries
       const { data: stockEntries } = await supabase
-        .from("stock_entries")
+        .from('stock_entries')
         .select(
           `
           *,
           products(name)
         `
         )
-        .eq("practice_id", practiceId)
-        .gte("created_at", dateRange.startDate)
-        .lte("created_at", dateRange.endDate);
+        .eq('practice_id', practiceId)
+        .gte('created_at', dateRange.startDate)
+        .lte('created_at', dateRange.endDate);
 
       // Get low stock alerts
       const { data: lowStockItems } = await supabase
-        .from("order_suggestions")
-        .select("*")
-        .eq("practice_id", practiceId)
-        .in("urgency_level", ["high", "critical"])
-        .gte("created_at", dateRange.startDate)
-        .lte("created_at", dateRange.endDate);
+        .from('order_suggestions')
+        .select('*')
+        .eq('practice_id', practiceId)
+        .in('urgency_level', ['high', 'critical'])
+        .gte('created_at', dateRange.startDate)
+        .lte('created_at', dateRange.endDate);
 
       const totalUpdates = stockEntries?.length || 0;
       const productsScanned = new Set(
-        stockEntries?.map((entry) => entry.product_id)
+        stockEntries?.map(entry => entry.product_id)
       ).size;
       const lowStockAlerts = lowStockItems?.length || 0;
 
@@ -382,7 +402,7 @@ export class AnalyticsService {
           existing.update_count += 1;
         } else {
           productUpdateCounts.set(key, {
-            product_name: entry.products?.name || "Unknown Product",
+            product_name: entry.products?.name || 'Unknown Product',
             update_count: 1,
             product_id: entry.product_id,
           });
@@ -405,7 +425,7 @@ export class AnalyticsService {
         mostUpdatedProducts,
       };
     } catch (error) {
-      console.error("Error getting product metrics:", error);
+      console.error('Error getting product metrics:', error);
       return {
         totalUpdates: 0,
         productsScanned: 0,
@@ -437,12 +457,12 @@ export class AnalyticsService {
     try {
       // Get usage analytics
       const { data: analytics } = await supabase
-        .from("usage_analytics")
-        .select("*")
-        .eq("practice_id", practiceId)
-        .gte("created_at", dateRange.startDate)
-        .lte("created_at", dateRange.endDate)
-        .order("created_at", { ascending: false });
+        .from('usage_analytics')
+        .select('*')
+        .eq('practice_id', practiceId)
+        .gte('created_at', dateRange.startDate)
+        .lte('created_at', dateRange.endDate)
+        .order('created_at', { ascending: false });
 
       const userMap = new Map<
         string,
@@ -454,7 +474,7 @@ export class AnalyticsService {
         }
       >();
 
-      analytics?.forEach((event) => {
+      analytics?.forEach(event => {
         if (!event.user_id) return;
 
         const existing = userMap.get(event.user_id);
@@ -500,7 +520,7 @@ export class AnalyticsService {
         userList,
       };
     } catch (error) {
-      console.error("Error getting user activity metrics:", error);
+      console.error('Error getting user activity metrics:', error);
       return {
         activeUsers: 0,
         totalSessions: 0,
@@ -515,20 +535,20 @@ export class AnalyticsService {
    */
   static async getLowStockItems(clinicId: string): Promise<any[]> {
     if (!clinicId) {
-      throw new Error("Clinic ID is required");
+      throw new Error('Clinic ID is required');
     }
 
     try {
       const { data: products } = await supabase
-        .from("products")
-        .select("*")
-        .eq("practice_id", clinicId)
-        .filter("current_stock", "lte", "minimum_stock")
-        .order("current_stock", { ascending: true });
+        .from('products')
+        .select('*')
+        .eq('practice_id', clinicId)
+        .filter('current_stock', 'lte', 'minimum_stock')
+        .order('current_stock', { ascending: true });
 
       return products || [];
     } catch (error) {
-      console.error("Error fetching low stock items:", error);
+      console.error('Error fetching low stock items:', error);
       throw error;
     }
   }
@@ -542,18 +562,18 @@ export class AnalyticsService {
     endDate: Date
   ): Promise<any[]> {
     if (!clinicId) {
-      throw new Error("Clinic ID is required");
+      throw new Error('Clinic ID is required');
     }
 
     try {
       // Mock implementation - in real app would calculate based on usage data
       const { data: products } = await supabase
-        .from("products")
-        .select("*")
-        .eq("practice_id", clinicId);
+        .from('products')
+        .select('*')
+        .eq('practice_id', clinicId);
 
       return (
-        products?.map((product) => ({
+        products?.map(product => ({
           product_id: product.id,
           product_name: product.name,
           total_used: Math.floor(Math.random() * 100),
@@ -562,7 +582,7 @@ export class AnalyticsService {
         })) || []
       );
     } catch (error) {
-      console.error("Error calculating stock turnover rates:", error);
+      console.error('Error calculating stock turnover rates:', error);
       throw error;
     }
   }
@@ -576,20 +596,20 @@ export class AnalyticsService {
     endDate: Date
   ): Promise<any> {
     if (!clinicId) {
-      throw new Error("Clinic ID is required");
+      throw new Error('Clinic ID is required');
     }
 
     try {
       const { data: entries } = await supabase
-        .from("stock_entries")
-        .select("*")
-        .eq("practice_id", clinicId)
-        .gte("created_at", startDate.toISOString())
-        .lte("created_at", endDate.toISOString());
+        .from('stock_entries')
+        .select('*')
+        .eq('practice_id', clinicId)
+        .gte('created_at', startDate.toISOString())
+        .lte('created_at', endDate.toISOString());
 
       // Group by month
       const monthlyData: Record<string, number> = {};
-      entries?.forEach((entry) => {
+      entries?.forEach(entry => {
         const month = new Date(entry.created_at).getMonth();
         const year = new Date(entry.created_at).getFullYear();
         const key = `${year}-${month + 1}`;
@@ -599,7 +619,7 @@ export class AnalyticsService {
 
       return monthlyData;
     } catch (error) {
-      console.error("Error getting monthly usage trends:", error);
+      console.error('Error getting monthly usage trends:', error);
       throw error;
     }
   }
@@ -614,29 +634,29 @@ export class AnalyticsService {
     limit = 10
   ): Promise<any[]> {
     if (!clinicId) {
-      throw new Error("Clinic ID is required");
+      throw new Error('Clinic ID is required');
     }
 
     try {
       const { data: entries } = await supabase
-        .from("stock_entries")
-        .select("*, products(name)")
-        .eq("practice_id", clinicId)
-        .gte("created_at", startDate.toISOString())
-        .lte("created_at", endDate.toISOString())
-        .order("counted_quantity", { ascending: false })
+        .from('stock_entries')
+        .select('*, products(name)')
+        .eq('practice_id', clinicId)
+        .gte('created_at', startDate.toISOString())
+        .lte('created_at', endDate.toISOString())
+        .order('counted_quantity', { ascending: false })
         .limit(limit);
 
       return (
-        entries?.map((entry) => ({
+        entries?.map(entry => ({
           product_id: entry.product_id,
-          product_name: (entry.products as any)?.name || "Unknown",
+          product_name: (entry.products as any)?.name || 'Unknown',
           total_used: entry.counted_quantity,
           usage_count: 1,
         })) || []
       );
     } catch (error) {
-      console.error("Error getting top used products:", error);
+      console.error('Error getting top used products:', error);
       throw error;
     }
   }
@@ -650,7 +670,7 @@ export class AnalyticsService {
     endDate: Date
   ): Promise<any> {
     if (!clinicId) {
-      throw new Error("Clinic ID is required");
+      throw new Error('Clinic ID is required');
     }
 
     try {
@@ -662,7 +682,7 @@ export class AnalyticsService {
         cost_per_unit_improvement: Math.random() * 20,
       };
     } catch (error) {
-      console.error("Error calculating cost savings:", error);
+      console.error('Error calculating cost savings:', error);
       throw error;
     }
   }
@@ -676,14 +696,14 @@ export class AnalyticsService {
     endDate: Date
   ): Promise<any> {
     if (!clinicId) {
-      throw new Error("Clinic ID is required");
+      throw new Error('Clinic ID is required');
     }
 
     try {
       const { data: products } = await supabase
-        .from("products")
-        .select("*")
-        .eq("practice_id", clinicId);
+        .from('products')
+        .select('*')
+        .eq('practice_id', clinicId);
 
       // Mock calculation since we don't have price field
       const totalValue =
@@ -697,7 +717,7 @@ export class AnalyticsService {
         trend_data: [{ date: new Date().toISOString(), value: totalValue }],
       };
     } catch (error) {
-      console.error("Error getting inventory value trends:", error);
+      console.error('Error getting inventory value trends:', error);
       throw error;
     }
   }
@@ -710,17 +730,17 @@ export class AnalyticsService {
     daysAhead: number
   ): Promise<any[]> {
     if (!clinicId) {
-      throw new Error("Clinic ID is required");
+      throw new Error('Clinic ID is required');
     }
 
     try {
       const { data: products } = await supabase
-        .from("products")
-        .select("*")
-        .eq("practice_id", clinicId);
+        .from('products')
+        .select('*')
+        .eq('practice_id', clinicId);
 
       return (
-        products?.map((product) => ({
+        products?.map(product => ({
           product_id: product.id,
           product_name: product.name,
           current_stock: (product as any).current_stock || 0,
@@ -729,7 +749,7 @@ export class AnalyticsService {
         })) || []
       );
     } catch (error) {
-      console.error("Error predicting stock needs:", error);
+      console.error('Error predicting stock needs:', error);
       throw error;
     }
   }
@@ -743,7 +763,7 @@ export class AnalyticsService {
     endDate: Date
   ): Promise<any> {
     if (!clinicId) {
-      throw new Error("Clinic ID is required");
+      throw new Error('Clinic ID is required');
     }
 
     try {
@@ -755,10 +775,10 @@ export class AnalyticsService {
           pharmaceuticals: Math.random() * 100,
           equipment: Math.random() * 100,
         },
-        trend: "improving",
+        trend: 'improving',
       };
     } catch (error) {
-      console.error("Error calculating forecast accuracy:", error);
+      console.error('Error calculating forecast accuracy:', error);
       throw error;
     }
   }

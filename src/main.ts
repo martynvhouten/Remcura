@@ -33,7 +33,7 @@ myApp.config.errorHandler = (error, instance, info) => {
 };
 
 // Initialize monitoring service
-initializeMonitoring(router).catch((error) => {
+initializeMonitoring(router).catch(error => {
   console.error('Failed to initialize monitoring:', error);
 });
 

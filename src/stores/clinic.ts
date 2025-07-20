@@ -13,7 +13,7 @@ export const useClinicStore = defineStore('clinic', () => {
 
   // Computed
   const practiceLocations = computed<PracticeLocation[]>(() => {
-    return locations.value.map((location) => ({
+    return locations.value.map(location => ({
       id: location.id,
       practice_id: location.practice_id,
       name: location.name,
@@ -32,13 +32,11 @@ export const useClinicStore = defineStore('clinic', () => {
   });
 
   const mainLocation = computed(() => {
-    return practiceLocations.value.find(
-      (location) => location.is_main_location
-    );
+    return practiceLocations.value.find(location => location.is_main_location);
   });
 
   const activeLocations = computed(() => {
-    return practiceLocations.value.filter((location) => location.is_active);
+    return practiceLocations.value.filter(location => location.is_active);
   });
 
   // Actions

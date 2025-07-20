@@ -92,7 +92,7 @@ function hexToRgba(hex: string, alpha: number): string {
 
 // Get theme options for UI selectors
 export const themeOptions = computed(() =>
-  Object.values(themes).map((theme) => ({
+  Object.values(themes).map(theme => ({
     label: theme.label,
     value: theme.name,
   }))

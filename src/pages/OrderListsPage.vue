@@ -104,7 +104,7 @@
             <div class="row q-gutter-sm q-mb-md">
               <div class="col-6">
                 <div class="text-caption text-grey-6">
-                  {{ $t("orderLists.supplier") }}
+                  {{ $t('orderLists.supplier') }}
                 </div>
                 <div class="text-body2">
                   {{ orderList.supplier?.name || t('common.unknownSupplier') }}
@@ -112,7 +112,7 @@
               </div>
               <div class="col-6">
                 <div class="text-caption text-grey-6">
-                  {{ $t("orderLists.totalItems") }}
+                  {{ $t('orderLists.totalItems') }}
                 </div>
                 <div class="text-body2">{{ orderList.total_items }}</div>
               </div>
@@ -121,7 +121,7 @@
             <div class="row q-gutter-sm q-mb-md">
               <div class="col-6">
                 <div class="text-caption text-grey-6">
-                  {{ $t("orderLists.totalAmount") }}
+                  {{ $t('orderLists.totalAmount') }}
                 </div>
                 <div class="text-body2">
                   €{{ orderList.total_amount.toFixed(2) }}
@@ -129,7 +129,7 @@
               </div>
               <div class="col-6">
                 <div class="text-caption text-grey-6">
-                  {{ $t("orderLists.updatedAt") }}
+                  {{ $t('orderLists.updatedAt') }}
                 </div>
                 <div class="text-body2">
                   {{ formatDate(orderList.updated_at) }}
@@ -176,7 +176,7 @@
                     <q-icon name="content_copy" />
                   </q-item-section>
                   <q-item-section>{{
-                    $t("orderLists.duplicate")
+                    $t('orderLists.duplicate')
                   }}</q-item-section>
                 </q-item>
 
@@ -190,7 +190,7 @@
                     <q-icon name="auto_fix_high" />
                   </q-item-section>
                   <q-item-section>{{
-                    $t("orderLists.autoFill")
+                    $t('orderLists.autoFill')
                   }}</q-item-section>
                 </q-item>
 
@@ -205,7 +205,7 @@
                   <q-item-section avatar>
                     <q-icon name="delete" />
                   </q-item-section>
-                  <q-item-section>{{ $t("orderLists.delete") }}</q-item-section>
+                  <q-item-section>{{ $t('orderLists.delete') }}</q-item-section>
                 </q-item>
               </q-list>
             </q-btn-dropdown>
@@ -217,9 +217,9 @@
     <!-- Empty State -->
     <BaseCard v-else-if="!orderListsStore.loading" class="text-center q-pa-xl">
       <q-icon name="list_alt" size="4rem" color="grey-4" class="q-mb-md" />
-      <div class="text-h6 q-mb-sm">{{ $t("orderLists.noLists") }}</div>
+      <div class="text-h6 q-mb-sm">{{ $t('orderLists.noLists') }}</div>
       <div class="text-body1 text-grey-6 q-mb-lg">
-        {{ $t("orderLists.createNew") }}
+        {{ $t('orderLists.createNew') }}
       </div>
       <q-btn
         :label="$t('orderLists.create')"
@@ -246,11 +246,11 @@
     <q-dialog v-model="showDeleteDialog">
       <q-card style="min-width: 350px">
         <q-card-section>
-          <div class="text-h6">{{ $t("orderLists.deleteDialog") }}</div>
+          <div class="text-h6">{{ $t('orderLists.deleteDialog') }}</div>
         </q-card-section>
 
         <q-card-section class="q-pt-none">
-          {{ $t("orderLists.deleteConfirm") }}
+          {{ $t('orderLists.deleteConfirm') }}
         </q-card-section>
 
         <q-card-actions align="right">
@@ -273,242 +273,242 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted, watch } from 'vue';
-import { useQuasar } from 'quasar';
-import { useI18n } from 'vue-i18n';
-import { useOrderListsStore } from 'src/stores/orderLists';
-import { useSuppliersStore } from 'src/stores/suppliers';
-import { useProductsStore } from 'src/stores/products';
-import { useAuthStore } from 'src/stores/auth';
-import PageLayout from 'src/components/PageLayout.vue';
-import PageTitle from 'src/components/PageTitle.vue';
-import BaseCard from 'src/components/base/BaseCard.vue';
-import OrderListDialog from 'src/components/products/OrderListDialog.vue';
-import type { OrderListWithItems } from 'src/stores/orderLists';
+  import { ref, computed, onMounted, watch } from 'vue';
+  import { useQuasar } from 'quasar';
+  import { useI18n } from 'vue-i18n';
+  import { useOrderListsStore } from 'src/stores/orderLists';
+  import { useSuppliersStore } from 'src/stores/suppliers';
+  import { useProductsStore } from 'src/stores/products';
+  import { useAuthStore } from 'src/stores/auth';
+  import PageLayout from 'src/components/PageLayout.vue';
+  import PageTitle from 'src/components/PageTitle.vue';
+  import BaseCard from 'src/components/base/BaseCard.vue';
+  import OrderListDialog from 'src/components/products/OrderListDialog.vue';
+  import type { OrderListWithItems } from 'src/stores/orderLists';
 
-const $q = useQuasar();
-const { t } = useI18n();
+  const $q = useQuasar();
+  const { t } = useI18n();
 
-// Stores
-const orderListsStore = useOrderListsStore();
-const suppliersStore = useSuppliersStore();
-const productsStore = useProductsStore();
-const authStore = useAuthStore();
+  // Stores
+  const orderListsStore = useOrderListsStore();
+  const suppliersStore = useSuppliersStore();
+  const productsStore = useProductsStore();
+  const authStore = useAuthStore();
 
-// State
-const showCreateDialog = ref(false);
-const showDeleteDialog = ref(false);
-const selectedOrderList = ref<OrderListWithItems | null>(null);
-const orderListToDelete = ref<OrderListWithItems | null>(null);
+  // State
+  const showCreateDialog = ref(false);
+  const showDeleteDialog = ref(false);
+  const selectedOrderList = ref<OrderListWithItems | null>(null);
+  const orderListToDelete = ref<OrderListWithItems | null>(null);
 
-// Filters
-const filters = ref({
-  search: '',
-  supplier: '',
-  status: '',
-});
-
-// Computed
-const supplierOptions = computed(() => [
-  { label: t('common.all'), value: '' },
-  ...suppliersStore.suppliers.map((supplier) => ({
-    label: supplier.name,
-    value: supplier.id,
-  })),
-]);
-
-const statusOptions = computed(() => [
-  { label: t('common.all'), value: '' },
-  { label: t('orderLists.draft'), value: 'draft' },
-  { label: t('orderLists.ready'), value: 'ready' },
-  { label: t('orderLists.submitted'), value: 'submitted' },
-  { label: t('orderLists.confirmed'), value: 'confirmed' },
-  { label: t('orderLists.delivered'), value: 'delivered' },
-  { label: t('orderLists.cancelled'), value: 'cancelled' },
-]);
-
-const filteredOrderLists = computed(() => {
-  let result = [...orderListsStore.orderLists];
-
-  // Apply search filter
-  if (filters.value.search) {
-    const searchTerm = filters.value.search.toLowerCase();
-    result = result.filter(
-      (list) =>
-        list.name.toLowerCase().includes(searchTerm) ||
-        (list.description &&
-          list.description.toLowerCase().includes(searchTerm)) ||
-        (list.supplier?.name &&
-          list.supplier.name.toLowerCase().includes(searchTerm))
-    );
-  }
-
-  // Apply supplier filter
-  if (filters.value.supplier) {
-    result = result.filter(
-      (list) => list.supplier_id === filters.value.supplier
-    );
-  }
-
-  // Apply status filter
-  if (filters.value.status) {
-    result = result.filter((list) => list.status === filters.value.status);
-  }
-
-  return result;
-});
-
-// Methods
-const clearFilters = () => {
-  filters.value = {
+  // Filters
+  const filters = ref({
     search: '',
     supplier: '',
     status: '',
-  };
-};
+  });
 
-const getStatusColor = (status: string) => {
-  const colors: Record<string, string> = {
-    draft: 'grey',
-    ready: 'blue',
-    submitted: 'orange',
-    confirmed: 'green',
-    delivered: 'positive',
-    cancelled: 'negative',
-  };
-  return colors[status] || 'grey';
-};
+  // Computed
+  const supplierOptions = computed(() => [
+    { label: t('common.all'), value: '' },
+    ...suppliersStore.suppliers.map(supplier => ({
+      label: supplier.name,
+      value: supplier.id,
+    })),
+  ]);
 
-const formatDate = (dateString: string) => {
-  const date = new Date(dateString);
-  return date.toLocaleDateString();
-};
+  const statusOptions = computed(() => [
+    { label: t('common.all'), value: '' },
+    { label: t('orderLists.draft'), value: 'draft' },
+    { label: t('orderLists.ready'), value: 'ready' },
+    { label: t('orderLists.submitted'), value: 'submitted' },
+    { label: t('orderLists.confirmed'), value: 'confirmed' },
+    { label: t('orderLists.delivered'), value: 'delivered' },
+    { label: t('orderLists.cancelled'), value: 'cancelled' },
+  ]);
 
-const editOrderList = (orderList: OrderListWithItems) => {
-  selectedOrderList.value = orderList;
-  showCreateDialog.value = true;
-};
+  const filteredOrderLists = computed(() => {
+    let result = [...orderListsStore.orderLists];
 
-const duplicateOrderList = async (orderList: OrderListWithItems) => {
-  try {
-    const newName = t('orderLists.duplicateName', { name: orderList.name });
-    await orderListsStore.duplicateOrderList(orderList.id, newName);
-    $q.notify({
-      type: 'positive',
-      message: t('orderLists.duplicated'),
-    });
-  } catch (error) {
-    console.error(t('orderLists.saveError'), error);
-    $q.notify({
-      type: 'negative',
-      message: t('orderLists.saveError'),
-    });
-  }
-};
-
-const deleteOrderList = (orderList: OrderListWithItems) => {
-  orderListToDelete.value = orderList;
-  showDeleteDialog.value = true;
-};
-
-const confirmDelete = async () => {
-  if (!orderListToDelete.value) return;
-
-  try {
-    await orderListsStore.deleteOrderList(orderListToDelete.value.id);
-    showDeleteDialog.value = false;
-    orderListToDelete.value = null;
-    $q.notify({
-      type: 'positive',
-      message: t('orderLists.deleted'),
-    });
-  } catch (error) {
-    console.error(t('orderLists.deleteError'), error);
-    $q.notify({
-      type: 'negative',
-      message: t('orderLists.deleteError'),
-    });
-  }
-};
-
-const addListToCart = async (orderList: OrderListWithItems) => {
-  try {
-    await orderListsStore.addToCart(orderList.id);
-    $q.notify({
-      type: 'positive',
-      message: t('orderLists.addedToCart'),
-    });
-  } catch (error) {
-    console.error(t('orderLists.cartError'), error);
-    $q.notify({
-      type: 'negative',
-      message: t('orderLists.cartError'),
-    });
-  }
-};
-
-const autoFillOrderList = async (orderList: OrderListWithItems) => {
-  try {
-    await orderListsStore.autoFillFromStockLevels(orderList.id);
-    $q.notify({
-      type: 'positive',
-      message: t('orderLists.autoFilled'),
-    });
-  } catch (error) {
-    console.error(t('orderLists.autoFillError'), error);
-    $q.notify({
-      type: 'negative',
-      message: t('orderLists.autoFillError'),
-    });
-  }
-};
-
-const onOrderListSaved = () => {
-  showCreateDialog.value = false;
-  selectedOrderList.value = null;
-};
-
-// Lifecycle
-onMounted(async () => {
-  try {
-    const practiceId = authStore.clinicId;
-    if (practiceId) {
-      await Promise.all([
-        orderListsStore.fetchOrderLists(practiceId),
-        suppliersStore.fetchSuppliers(),
-        productsStore.fetchProducts(practiceId),
-      ]);
+    // Apply search filter
+    if (filters.value.search) {
+      const searchTerm = filters.value.search.toLowerCase();
+      result = result.filter(
+        list =>
+          list.name.toLowerCase().includes(searchTerm) ||
+          (list.description &&
+            list.description.toLowerCase().includes(searchTerm)) ||
+          (list.supplier?.name &&
+            list.supplier.name.toLowerCase().includes(searchTerm))
+      );
     }
-  } catch (error) {
-    console.error(t('orderLists.loadError'), error);
-    $q.notify({
-      type: 'negative',
-      message: t('orderLists.loadError'),
-    });
-  }
-});
 
-// Watch for practice changes
-watch(
-  () => authStore.clinicId,
-  async (newPracticeId) => {
-    if (newPracticeId) {
-      try {
-        await orderListsStore.fetchOrderLists(newPracticeId);
-      } catch (error) {
-        console.error(t('orderLists.loadError'), error);
-        $q.notify({
-          type: 'negative',
-          message: t('orderLists.loadError'),
-        });
+    // Apply supplier filter
+    if (filters.value.supplier) {
+      result = result.filter(
+        list => list.supplier_id === filters.value.supplier
+      );
+    }
+
+    // Apply status filter
+    if (filters.value.status) {
+      result = result.filter(list => list.status === filters.value.status);
+    }
+
+    return result;
+  });
+
+  // Methods
+  const clearFilters = () => {
+    filters.value = {
+      search: '',
+      supplier: '',
+      status: '',
+    };
+  };
+
+  const getStatusColor = (status: string) => {
+    const colors: Record<string, string> = {
+      draft: 'grey',
+      ready: 'blue',
+      submitted: 'orange',
+      confirmed: 'green',
+      delivered: 'positive',
+      cancelled: 'negative',
+    };
+    return colors[status] || 'grey';
+  };
+
+  const formatDate = (dateString: string) => {
+    const date = new Date(dateString);
+    return date.toLocaleDateString();
+  };
+
+  const editOrderList = (orderList: OrderListWithItems) => {
+    selectedOrderList.value = orderList;
+    showCreateDialog.value = true;
+  };
+
+  const duplicateOrderList = async (orderList: OrderListWithItems) => {
+    try {
+      const newName = t('orderLists.duplicateName', { name: orderList.name });
+      await orderListsStore.duplicateOrderList(orderList.id, newName);
+      $q.notify({
+        type: 'positive',
+        message: t('orderLists.duplicated'),
+      });
+    } catch (error) {
+      console.error(t('orderLists.saveError'), error);
+      $q.notify({
+        type: 'negative',
+        message: t('orderLists.saveError'),
+      });
+    }
+  };
+
+  const deleteOrderList = (orderList: OrderListWithItems) => {
+    orderListToDelete.value = orderList;
+    showDeleteDialog.value = true;
+  };
+
+  const confirmDelete = async () => {
+    if (!orderListToDelete.value) return;
+
+    try {
+      await orderListsStore.deleteOrderList(orderListToDelete.value.id);
+      showDeleteDialog.value = false;
+      orderListToDelete.value = null;
+      $q.notify({
+        type: 'positive',
+        message: t('orderLists.deleted'),
+      });
+    } catch (error) {
+      console.error(t('orderLists.deleteError'), error);
+      $q.notify({
+        type: 'negative',
+        message: t('orderLists.deleteError'),
+      });
+    }
+  };
+
+  const addListToCart = async (orderList: OrderListWithItems) => {
+    try {
+      await orderListsStore.addToCart(orderList.id);
+      $q.notify({
+        type: 'positive',
+        message: t('orderLists.addedToCart'),
+      });
+    } catch (error) {
+      console.error(t('orderLists.cartError'), error);
+      $q.notify({
+        type: 'negative',
+        message: t('orderLists.cartError'),
+      });
+    }
+  };
+
+  const autoFillOrderList = async (orderList: OrderListWithItems) => {
+    try {
+      await orderListsStore.autoFillFromStockLevels(orderList.id);
+      $q.notify({
+        type: 'positive',
+        message: t('orderLists.autoFilled'),
+      });
+    } catch (error) {
+      console.error(t('orderLists.autoFillError'), error);
+      $q.notify({
+        type: 'negative',
+        message: t('orderLists.autoFillError'),
+      });
+    }
+  };
+
+  const onOrderListSaved = () => {
+    showCreateDialog.value = false;
+    selectedOrderList.value = null;
+  };
+
+  // Lifecycle
+  onMounted(async () => {
+    try {
+      const practiceId = authStore.clinicId;
+      if (practiceId) {
+        await Promise.all([
+          orderListsStore.fetchOrderLists(practiceId),
+          suppliersStore.fetchSuppliers(),
+          productsStore.fetchProducts(practiceId),
+        ]);
+      }
+    } catch (error) {
+      console.error(t('orderLists.loadError'), error);
+      $q.notify({
+        type: 'negative',
+        message: t('orderLists.loadError'),
+      });
+    }
+  });
+
+  // Watch for practice changes
+  watch(
+    () => authStore.clinicId,
+    async newPracticeId => {
+      if (newPracticeId) {
+        try {
+          await orderListsStore.fetchOrderLists(newPracticeId);
+        } catch (error) {
+          console.error(t('orderLists.loadError'), error);
+          $q.notify({
+            type: 'negative',
+            message: t('orderLists.loadError'),
+          });
+        }
       }
     }
-  }
-);
+  );
 </script>
 
 <style scoped>
-.full-height {
-  height: 100%;
-}
+  .full-height {
+    height: 100%;
+  }
 </style>

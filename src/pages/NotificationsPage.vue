@@ -14,7 +14,7 @@
             <div class="row items-center justify-between">
               <div class="col-auto">
                 <div class="text-h6">
-                  {{ $t("notificationsPage.notificationStatistics") }}
+                  {{ $t('notificationsPage.notificationStatistics') }}
                 </div>
               </div>
               <div class="col-auto">
@@ -44,7 +44,7 @@
                 <div class="text-center">
                   <div class="text-h4 text-primary">{{ unreadCount }}</div>
                   <div class="text-caption">
-                    {{ $t("notificationsPage.unreadCount") }}
+                    {{ $t('notificationsPage.unreadCount') }}
                   </div>
                 </div>
               </div>
@@ -52,7 +52,7 @@
                 <div class="text-center">
                   <div class="text-h4">{{ mockNotifications.length }}</div>
                   <div class="text-caption">
-                    {{ $t("notificationsPage.total") }}
+                    {{ $t('notificationsPage.total') }}
                   </div>
                 </div>
               </div>
@@ -121,10 +121,10 @@
           >
             <q-icon name="notifications_none" size="64px" color="grey-4" />
             <div class="text-h6 text-grey-6 q-mt-md">
-              {{ $t("notificationsPage.noNotifications") }}
+              {{ $t('notificationsPage.noNotifications') }}
             </div>
             <div class="text-body2 text-grey-5">
-              {{ $t("notificationsPage.allCaughtUp") }}
+              {{ $t('notificationsPage.allCaughtUp') }}
             </div>
           </div>
 
@@ -197,324 +197,329 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted } from 'vue';
-import { useQuasar } from 'quasar';
-import { useI18n } from 'vue-i18n';
-import { useAuthStore } from 'src/stores/auth';
-import { monitoringService } from 'src/services/monitoring';
-import { useButtons } from 'src/composables/useButtons';
-import PageLayout from 'src/components/PageLayout.vue';
-import PageTitle from 'src/components/PageTitle.vue';
-import BaseCard from 'src/components/base/BaseCard.vue';
+  import { ref, computed, onMounted } from 'vue';
+  import { useQuasar } from 'quasar';
+  import { useI18n } from 'vue-i18n';
+  import { useAuthStore } from 'src/stores/auth';
+  import { monitoringService } from 'src/services/monitoring';
+  import { useButtons } from 'src/composables/useButtons';
+  import PageLayout from 'src/components/PageLayout.vue';
+  import PageTitle from 'src/components/PageTitle.vue';
+  import BaseCard from 'src/components/base/BaseCard.vue';
 
-const $q = useQuasar();
-const { t } = useI18n();
-const authStore = useAuthStore();
-const { quickActions, getThemeConfig } = useButtons();
+  const $q = useQuasar();
+  const { t } = useI18n();
+  const authStore = useAuthStore();
+  const { quickActions, getThemeConfig } = useButtons();
 
-// State
-const loading = ref(false);
-const filter = ref<'all' | 'unread'>('all');
-const categoryFilter = ref<string | null>(null);
+  // State
+  const loading = ref(false);
+  const filter = ref<'all' | 'unread'>('all');
+  const categoryFilter = ref<string | null>(null);
 
-// Button configurations
-const markAllReadBtn = computed(() =>
-  quickActions.markAllRead({
-    label: t('notificationsPage.markAllRead'),
-  })
-);
-
-const testStockAlertBtn = computed(() =>
-  getThemeConfig('warning', {
-    icon: 'warning',
-    label: t('notificationsPage.testStockAlert'),
-  })
-);
-
-const testOrderUpdateBtn = computed(() =>
-  getThemeConfig('info', {
-    icon: 'shopping_cart',
-    label: t('notificationsPage.testOrderUpdate'),
-  })
-);
-
-const clearAllBtn = computed(() =>
-  quickActions.clearAll({
-    label: t('notificationsPage.clearAllNotifications'),
-  })
-);
-
-// Mock notifications data since we don't have a notifications table
-const mockNotifications = ref([
-  {
-    id: '1',
-    title: t('sampleNotifications.lowStockWarning'),
-    message: 'Spuiten 10ml zijn bijna op (2 stuks resterend)',
-    category: 'stock_alert',
-    is_read: false,
-    created_at: new Date(Date.now() - 2 * 60 * 60 * 1000).toISOString(), // 2 hours ago
-  },
-  {
-    id: '2',
-    title: t('sampleNotifications.orderConfirmed'),
-    message: 'Bestelling #ORD-2024-003 is bevestigd door leverancier',
-    category: 'order_update',
-    is_read: false,
-    created_at: new Date(Date.now() - 4 * 60 * 60 * 1000).toISOString(), // 4 hours ago
-  },
-  {
-    id: '3',
-    title: t('sampleNotifications.stockUpdated'),
-    message: 'Handschoenen latex voorraad is bijgewerkt naar 150 stuks',
-    category: 'stock_alert',
-    is_read: true,
-    created_at: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000).toISOString(), // 1 day ago
-  },
-  {
-    id: '4',
-    title: t('sampleNotifications.systemMaintenance'),
-    message: 'Gepland onderhoud op zondag 3:00-5:00 AM',
-    category: 'system_notification',
-    is_read: true,
-    created_at: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toISOString(), // 2 days ago
-  },
-]);
-
-// Computed properties
-const unreadCount = computed(
-  () => mockNotifications.value.filter((n) => !n.is_read).length
-);
-
-const filteredNotifications = computed(() => {
-  let filtered = mockNotifications.value;
-
-  if (filter.value === 'unread') {
-    filtered = filtered.filter((n) => !n.is_read);
-  }
-
-  if (categoryFilter.value) {
-    filtered = filtered.filter((n) => n.category === categoryFilter.value);
-  }
-
-  return filtered.sort(
-    (a, b) =>
-      new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
+  // Button configurations
+  const markAllReadBtn = computed(() =>
+    quickActions.markAllRead({
+      label: t('notificationsPage.markAllRead'),
+    })
   );
-});
 
-const categoryOptions = computed(() => [
-  { label: t('notificationsPage.categories.stockAlert'), value: 'stock_alert' },
-  {
-    label: t('notificationsPage.categories.orderUpdate'),
-    value: 'order_update',
-  },
-  {
-    label: t('notificationsPage.categories.systemNotification'),
-    value: 'system_notification',
-  },
-  { label: t('notificationsPage.categories.reminder'), value: 'reminder' },
-]);
+  const testStockAlertBtn = computed(() =>
+    getThemeConfig('warning', {
+      icon: 'warning',
+      label: t('notificationsPage.testStockAlert'),
+    })
+  );
 
-// Methods
-const loadNotifications = async () => {
-  loading.value = true;
-  try {
-    // In a real implementation, this would fetch from Supabase
-    // For now, we use mock data
-    await monitoringService.trackEvent('notifications_viewed', {
-      total: mockNotifications.value.length,
-      unread: unreadCount.value,
-    });
-  } catch (error) {
-    console.error('Error loading notifications:', error);
-    $q.notify({
-      type: 'negative',
-      message: t('notificationsPage.loadNotificationsError'),
-    });
-  } finally {
-    loading.value = false;
-  }
-};
+  const testOrderUpdateBtn = computed(() =>
+    getThemeConfig('info', {
+      icon: 'shopping_cart',
+      label: t('notificationsPage.testOrderUpdate'),
+    })
+  );
 
-const markAsRead = async (notificationId: string) => {
-  try {
-    const notification = mockNotifications.value.find(
-      (n) => n.id === notificationId
-    );
-    if (notification) {
-      notification.is_read = true;
+  const clearAllBtn = computed(() =>
+    quickActions.clearAll({
+      label: t('notificationsPage.clearAllNotifications'),
+    })
+  );
+
+  // Mock notifications data since we don't have a notifications table
+  const mockNotifications = ref([
+    {
+      id: '1',
+      title: t('sampleNotifications.lowStockWarning'),
+      message: 'Spuiten 10ml zijn bijna op (2 stuks resterend)',
+      category: 'stock_alert',
+      is_read: false,
+      created_at: new Date(Date.now() - 2 * 60 * 60 * 1000).toISOString(), // 2 hours ago
+    },
+    {
+      id: '2',
+      title: t('sampleNotifications.orderConfirmed'),
+      message: 'Bestelling #ORD-2024-003 is bevestigd door leverancier',
+      category: 'order_update',
+      is_read: false,
+      created_at: new Date(Date.now() - 4 * 60 * 60 * 1000).toISOString(), // 4 hours ago
+    },
+    {
+      id: '3',
+      title: t('sampleNotifications.stockUpdated'),
+      message: 'Handschoenen latex voorraad is bijgewerkt naar 150 stuks',
+      category: 'stock_alert',
+      is_read: true,
+      created_at: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000).toISOString(), // 1 day ago
+    },
+    {
+      id: '4',
+      title: t('sampleNotifications.systemMaintenance'),
+      message: 'Gepland onderhoud op zondag 3:00-5:00 AM',
+      category: 'system_notification',
+      is_read: true,
+      created_at: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toISOString(), // 2 days ago
+    },
+  ]);
+
+  // Computed properties
+  const unreadCount = computed(
+    () => mockNotifications.value.filter(n => !n.is_read).length
+  );
+
+  const filteredNotifications = computed(() => {
+    let filtered = mockNotifications.value;
+
+    if (filter.value === 'unread') {
+      filtered = filtered.filter(n => !n.is_read);
     }
 
-    await monitoringService.trackEvent('notification_marked_read', {
-      notification_id: notificationId,
-    });
-  } catch (error) {
-    console.error('Error marking notification as read:', error);
-  }
-};
+    if (categoryFilter.value) {
+      filtered = filtered.filter(n => n.category === categoryFilter.value);
+    }
 
-const markAllAsRead = async () => {
-  try {
-    const unreadIds = mockNotifications.value
-      .filter((n) => !n.is_read)
-      .map((n) => n.id);
-
-    if (unreadIds.length === 0) return;
-
-    mockNotifications.value.forEach((n) => {
-      if (unreadIds.includes(n.id)) {
-        n.is_read = true;
-      }
-    });
-
-    $q.notify({
-      type: 'positive',
-      message: t('notificationsPage.allMarkedAsRead'),
-    });
-
-    await monitoringService.trackEvent('notifications_mark_all_read', {
-      count: unreadIds.length,
-    });
-  } catch (error) {
-    console.error('Error marking all as read:', error);
-  }
-};
-
-const deleteNotification = async (notificationId: string) => {
-  try {
-    mockNotifications.value = mockNotifications.value.filter(
-      (n) => n.id !== notificationId
+    return filtered.sort(
+      (a, b) =>
+        new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
     );
+  });
 
-    $q.notify({
-      type: 'positive',
-      message: t('notificationsPage.notificationDeleted'),
-    });
+  const categoryOptions = computed(() => [
+    {
+      label: t('notificationsPage.categories.stockAlert'),
+      value: 'stock_alert',
+    },
+    {
+      label: t('notificationsPage.categories.orderUpdate'),
+      value: 'order_update',
+    },
+    {
+      label: t('notificationsPage.categories.systemNotification'),
+      value: 'system_notification',
+    },
+    { label: t('notificationsPage.categories.reminder'), value: 'reminder' },
+  ]);
 
-    await monitoringService.trackEvent('notification_deleted', {
-      notification_id: notificationId,
-    });
-  } catch (error) {
-    console.error('Error deleting notification:', error);
-  }
-};
-
-const confirmClearAll = () => {
-  $q.dialog({
-    title: t('notificationsPage.clearAllConfirm'),
-    message: t('notificationsPage.clearAllConfirmMessage'),
-    cancel: true,
-    persistent: true,
-  }).onOk(async () => {
+  // Methods
+  const loadNotifications = async () => {
+    loading.value = true;
     try {
-      mockNotifications.value = [];
+      // In a real implementation, this would fetch from Supabase
+      // For now, we use mock data
+      await monitoringService.trackEvent('notifications_viewed', {
+        total: mockNotifications.value.length,
+        unread: unreadCount.value,
+      });
+    } catch (error) {
+      console.error('Error loading notifications:', error);
+      $q.notify({
+        type: 'negative',
+        message: t('notificationsPage.loadNotificationsError'),
+      });
+    } finally {
+      loading.value = false;
+    }
+  };
+
+  const markAsRead = async (notificationId: string) => {
+    try {
+      const notification = mockNotifications.value.find(
+        n => n.id === notificationId
+      );
+      if (notification) {
+        notification.is_read = true;
+      }
+
+      await monitoringService.trackEvent('notification_marked_read', {
+        notification_id: notificationId,
+      });
+    } catch (error) {
+      console.error('Error marking notification as read:', error);
+    }
+  };
+
+  const markAllAsRead = async () => {
+    try {
+      const unreadIds = mockNotifications.value
+        .filter(n => !n.is_read)
+        .map(n => n.id);
+
+      if (unreadIds.length === 0) return;
+
+      mockNotifications.value.forEach(n => {
+        if (unreadIds.includes(n.id)) {
+          n.is_read = true;
+        }
+      });
 
       $q.notify({
         type: 'positive',
-        message: t('notificationsPage.allNotificationsCleared'),
+        message: t('notificationsPage.allMarkedAsRead'),
       });
 
-      await monitoringService.trackEvent('notifications_cleared_all');
+      await monitoringService.trackEvent('notifications_mark_all_read', {
+        count: unreadIds.length,
+      });
     } catch (error) {
-      console.error('Error clearing all notifications:', error);
+      console.error('Error marking all as read:', error);
     }
+  };
+
+  const deleteNotification = async (notificationId: string) => {
+    try {
+      mockNotifications.value = mockNotifications.value.filter(
+        n => n.id !== notificationId
+      );
+
+      $q.notify({
+        type: 'positive',
+        message: t('notificationsPage.notificationDeleted'),
+      });
+
+      await monitoringService.trackEvent('notification_deleted', {
+        notification_id: notificationId,
+      });
+    } catch (error) {
+      console.error('Error deleting notification:', error);
+    }
+  };
+
+  const confirmClearAll = () => {
+    $q.dialog({
+      title: t('notificationsPage.clearAllConfirm'),
+      message: t('notificationsPage.clearAllConfirmMessage'),
+      cancel: true,
+      persistent: true,
+    }).onOk(async () => {
+      try {
+        mockNotifications.value = [];
+
+        $q.notify({
+          type: 'positive',
+          message: t('notificationsPage.allNotificationsCleared'),
+        });
+
+        await monitoringService.trackEvent('notifications_cleared_all');
+      } catch (error) {
+        console.error('Error clearing all notifications:', error);
+      }
+    });
+  };
+
+  const createTestNotification = async (
+    type: 'stock_alert' | 'order_update'
+  ) => {
+    try {
+      const testMessages = {
+        stock_alert: {
+          title: t('notificationsPage.testMessages.stockAlert.title'),
+          message: t('notificationsPage.testMessages.stockAlert.message'),
+        },
+        order_update: {
+          title: t('notificationsPage.testMessages.orderUpdate.title'),
+          message: t('notificationsPage.testMessages.orderUpdate.message'),
+        },
+      };
+
+      const newNotification = {
+        id: Date.now().toString(),
+        title: testMessages[type].title,
+        message: testMessages[type].message,
+        category: type,
+        is_read: false,
+        created_at: new Date().toISOString(),
+      };
+
+      mockNotifications.value.unshift(newNotification);
+
+      const successMessage =
+        type === 'stock_alert'
+          ? t('notificationsPage.testStockAlertCreated')
+          : t('notificationsPage.testOrderUpdateCreated');
+
+      $q.notify({
+        type: 'positive',
+        message: successMessage,
+      });
+
+      await monitoringService.trackEvent('test_notification_created', {
+        type,
+      });
+    } catch (error) {
+      console.error('Error creating test notification:', error);
+    }
+  };
+
+  const getCategoryIcon = (category: string) => {
+    const icons = {
+      stock_alert: 'warning',
+      order_update: 'shopping_cart',
+      system_notification: 'info',
+      reminder: 'schedule',
+    };
+    return icons[category as keyof typeof icons] || 'notifications';
+  };
+
+  const getCategoryColor = (category: string) => {
+    const colors = {
+      stock_alert: 'warning',
+      order_update: 'primary',
+      system_notification: 'info',
+      reminder: 'accent',
+    };
+    return colors[category as keyof typeof colors] || 'grey';
+  };
+
+  const formatDate = (dateString: string) => {
+    const date = new Date(dateString);
+    const now = new Date();
+    const diffMs = now.getTime() - date.getTime();
+    const diffHours = Math.floor(diffMs / (1000 * 60 * 60));
+    const diffDays = Math.floor(diffHours / 24);
+
+    if (diffDays > 0) {
+      return `${diffDays} dag${diffDays > 1 ? 'en' : ''} geleden`;
+    } else if (diffHours > 0) {
+      return `${diffHours} uur geleden`;
+    } else {
+      const diffMinutes = Math.floor(diffMs / (1000 * 60));
+      return `${diffMinutes} minuten geleden`;
+    }
+  };
+
+  // Lifecycle
+  onMounted(() => {
+    loadNotifications();
   });
-};
-
-const createTestNotification = async (type: 'stock_alert' | 'order_update') => {
-  try {
-    const testMessages = {
-      stock_alert: {
-        title: t('notificationsPage.testMessages.stockAlert.title'),
-        message: t('notificationsPage.testMessages.stockAlert.message'),
-      },
-      order_update: {
-        title: t('notificationsPage.testMessages.orderUpdate.title'),
-        message: t('notificationsPage.testMessages.orderUpdate.message'),
-      },
-    };
-
-    const newNotification = {
-      id: Date.now().toString(),
-      title: testMessages[type].title,
-      message: testMessages[type].message,
-      category: type,
-      is_read: false,
-      created_at: new Date().toISOString(),
-    };
-
-    mockNotifications.value.unshift(newNotification);
-
-    const successMessage =
-      type === 'stock_alert'
-        ? t('notificationsPage.testStockAlertCreated')
-        : t('notificationsPage.testOrderUpdateCreated');
-
-    $q.notify({
-      type: 'positive',
-      message: successMessage,
-    });
-
-    await monitoringService.trackEvent('test_notification_created', {
-      type,
-    });
-  } catch (error) {
-    console.error('Error creating test notification:', error);
-  }
-};
-
-const getCategoryIcon = (category: string) => {
-  const icons = {
-    stock_alert: 'warning',
-    order_update: 'shopping_cart',
-    system_notification: 'info',
-    reminder: 'schedule',
-  };
-  return icons[category as keyof typeof icons] || 'notifications';
-};
-
-const getCategoryColor = (category: string) => {
-  const colors = {
-    stock_alert: 'warning',
-    order_update: 'primary',
-    system_notification: 'info',
-    reminder: 'accent',
-  };
-  return colors[category as keyof typeof colors] || 'grey';
-};
-
-const formatDate = (dateString: string) => {
-  const date = new Date(dateString);
-  const now = new Date();
-  const diffMs = now.getTime() - date.getTime();
-  const diffHours = Math.floor(diffMs / (1000 * 60 * 60));
-  const diffDays = Math.floor(diffHours / 24);
-
-  if (diffDays > 0) {
-    return `${diffDays} dag${diffDays > 1 ? 'en' : ''} geleden`;
-  } else if (diffHours > 0) {
-    return `${diffHours} uur geleden`;
-  } else {
-    const diffMinutes = Math.floor(diffMs / (1000 * 60));
-    return `${diffMinutes} minuten geleden`;
-  }
-};
-
-// Lifecycle
-onMounted(() => {
-  loadNotifications();
-});
 </script>
 
 <style scoped>
-.glass-card {
-  backdrop-filter: blur(10px);
-  background: rgba(255, 255, 255, 0.9);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-}
+  .glass-card {
+    backdrop-filter: blur(10px);
+    background: rgba(255, 255, 255, 0.9);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+  }
 
-.body--dark .glass-card {
-  background: rgba(30, 30, 30, 0.9);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-}
+  .body--dark .glass-card {
+    background: rgba(30, 30, 30, 0.9);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+  }
 </style>

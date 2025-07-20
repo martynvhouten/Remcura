@@ -15,7 +15,7 @@
               <div class="col">
                 <div class="text-h6">{{ locations.length }}</div>
                 <div class="text-caption text-grey">
-                  {{ $t("locations.allLocations") }}
+                  {{ $t('locations.allLocations') }}
                 </div>
               </div>
               <div class="col-auto">
@@ -33,7 +33,7 @@
               <div class="col">
                 <div class="text-h6">{{ mainLocationsCount }}</div>
                 <div class="text-caption text-grey">
-                  {{ $t("locations.mainLocations") }}
+                  {{ $t('locations.mainLocations') }}
                 </div>
               </div>
               <div class="col-auto">
@@ -50,9 +50,9 @@
       <template v-slot:avatar>
         <q-icon name="info" color="white" />
       </template>
-      <div class="text-subtitle1">{{ $t("locations.title") }}</div>
+      <div class="text-subtitle1">{{ $t('locations.title') }}</div>
       <div class="text-body2 q-mt-xs">
-        {{ $t("locations.comingSoonDescription") }}
+        {{ $t('locations.comingSoonDescription') }}
       </div>
     </q-banner>
 
@@ -111,128 +111,128 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted } from 'vue';
-import { useI18n } from 'vue-i18n';
-import { useQuasar } from 'quasar';
-import PageTitle from '@/components/PageTitle.vue';
-import PageLayout from '@/components/PageLayout.vue';
+  import { ref, computed, onMounted } from 'vue';
+  import { useI18n } from 'vue-i18n';
+  import { useQuasar } from 'quasar';
+  import PageTitle from '@/components/PageTitle.vue';
+  import PageLayout from '@/components/PageLayout.vue';
 
-const { t } = useI18n();
-const $q = useQuasar();
+  const { t } = useI18n();
+  const $q = useQuasar();
 
-// Data
-const loading = ref(false);
-const searchQuery = ref('');
+  // Data
+  const loading = ref(false);
+  const searchQuery = ref('');
 
-// Sample data for demonstration
-const locations = ref([
-  {
-    id: 1,
-    name: t('locations.sampleData.mainWarehouse.name'),
-    type: t('locations.sampleData.mainWarehouse.type'),
-    description: t('locations.sampleData.mainWarehouse.description'),
-    capacity: t('locations.capacityItems', { count: 1000 }),
-    isMain: true,
-  },
-  {
-    id: 2,
-    name: t('locations.sampleData.pharmacy.name'),
-    type: t('locations.sampleData.pharmacy.type'),
-    description: t('locations.sampleData.pharmacy.description'),
-    capacity: t('locations.capacityItems', { count: 500 }),
-    isMain: false,
-  },
-  {
-    id: 3,
-    name: t('locations.sampleData.treatmentRoom.name'),
-    type: t('locations.sampleData.treatmentRoom.type'),
-    description: t('locations.sampleData.treatmentRoom.description'),
-    capacity: t('locations.capacityItems', { count: 50 }),
-    isMain: false,
-  },
-]);
+  // Sample data for demonstration
+  const locations = ref([
+    {
+      id: 1,
+      name: t('locations.sampleData.mainWarehouse.name'),
+      type: t('locations.sampleData.mainWarehouse.type'),
+      description: t('locations.sampleData.mainWarehouse.description'),
+      capacity: t('locations.capacityItems', { count: 1000 }),
+      isMain: true,
+    },
+    {
+      id: 2,
+      name: t('locations.sampleData.pharmacy.name'),
+      type: t('locations.sampleData.pharmacy.type'),
+      description: t('locations.sampleData.pharmacy.description'),
+      capacity: t('locations.capacityItems', { count: 500 }),
+      isMain: false,
+    },
+    {
+      id: 3,
+      name: t('locations.sampleData.treatmentRoom.name'),
+      type: t('locations.sampleData.treatmentRoom.type'),
+      description: t('locations.sampleData.treatmentRoom.description'),
+      capacity: t('locations.capacityItems', { count: 50 }),
+      isMain: false,
+    },
+  ]);
 
-// Computed
-const filteredLocations = computed(() => {
-  if (!searchQuery.value) return locations.value;
+  // Computed
+  const filteredLocations = computed(() => {
+    if (!searchQuery.value) return locations.value;
 
-  const query = searchQuery.value.toLowerCase();
-  return locations.value.filter(
-    (location) =>
-      location.name.toLowerCase().includes(query) ||
-      location.type.toLowerCase().includes(query) ||
-      location.description.toLowerCase().includes(query)
-  );
-});
-
-const mainLocationsCount = computed(() => {
-  return locations.value.filter((loc) => loc.isMain).length;
-});
-
-const columns = computed(() => [
-  {
-    name: 'name',
-    label: t('locations.name'),
-    field: 'name',
-    align: 'left' as const,
-    sortable: true,
-  },
-  {
-    name: 'type',
-    label: t('locations.type'),
-    field: 'type',
-    align: 'left' as const,
-    sortable: true,
-  },
-  {
-    name: 'description',
-    label: t('locations.description'),
-    field: 'description',
-    align: 'left' as const,
-    sortable: false,
-  },
-  {
-    name: 'capacity',
-    label: t('locations.capacity'),
-    field: 'capacity',
-    align: 'left' as const,
-    sortable: false,
-  },
-  {
-    name: 'actions',
-    label: t('common.actions'),
-    field: 'actions',
-    align: 'center' as const,
-    sortable: false,
-  },
-]);
-
-// Methods
-const showComingSoon = () => {
-  $q.notify({
-    type: 'info',
-    message: t('locations.comingSoonDescription'),
-    position: 'top',
+    const query = searchQuery.value.toLowerCase();
+    return locations.value.filter(
+      location =>
+        location.name.toLowerCase().includes(query) ||
+        location.type.toLowerCase().includes(query) ||
+        location.description.toLowerCase().includes(query)
+    );
   });
-};
 
-// Lifecycle
-onMounted(() => {
-  // Future: Load actual locations from API
-});
+  const mainLocationsCount = computed(() => {
+    return locations.value.filter(loc => loc.isMain).length;
+  });
+
+  const columns = computed(() => [
+    {
+      name: 'name',
+      label: t('locations.name'),
+      field: 'name',
+      align: 'left' as const,
+      sortable: true,
+    },
+    {
+      name: 'type',
+      label: t('locations.type'),
+      field: 'type',
+      align: 'left' as const,
+      sortable: true,
+    },
+    {
+      name: 'description',
+      label: t('locations.description'),
+      field: 'description',
+      align: 'left' as const,
+      sortable: false,
+    },
+    {
+      name: 'capacity',
+      label: t('locations.capacity'),
+      field: 'capacity',
+      align: 'left' as const,
+      sortable: false,
+    },
+    {
+      name: 'actions',
+      label: t('common.actions'),
+      field: 'actions',
+      align: 'center' as const,
+      sortable: false,
+    },
+  ]);
+
+  // Methods
+  const showComingSoon = () => {
+    $q.notify({
+      type: 'info',
+      message: t('locations.comingSoonDescription'),
+      position: 'top',
+    });
+  };
+
+  // Lifecycle
+  onMounted(() => {
+    // Future: Load actual locations from API
+  });
 </script>
 
 <style scoped>
-.locations-content {
-  padding: 24px;
-}
+  .locations-content {
+    padding: 24px;
+  }
 
-.coming-soon-container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  min-height: 300px;
-  text-align: center;
-}
+  .coming-soon-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 300px;
+    text-align: center;
+  }
 </style>
