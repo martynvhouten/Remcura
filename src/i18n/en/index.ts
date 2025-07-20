@@ -112,6 +112,24 @@ export default {
     userMenu: 'User menu',
     shoppingCart: 'Shopping cart',
     styleGuide: 'Style Guide',
+    designSystem: 'Design system reference',
+    // Navigation sections
+    sections: {
+      main: 'Overview',
+      inventory: 'Inventory Management',
+      supplyChain: 'Supply Chain',
+      analytics: 'Analytics & Reports',
+      administration: 'Administration',
+    },
+    // Inventory sub-navigation
+    inventoryLevels: 'Inventory Levels',
+    currentStock: 'Current stock overview',
+    locations: 'Locations',
+    warehouseManagement: 'Warehouse & location management',
+    stockCounting: 'Stock Counting',
+    physicalCounts: 'Physical counts & audits',
+    movements: 'Stock Movements',
+    stockMovements: 'Stock ins and outs',
   },
 
   // Authentication

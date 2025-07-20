@@ -30,87 +30,47 @@
     </div>
 
     <!-- Key Metrics Cards -->
-    <div class="row q-gutter-md q-mb-lg">
-      <div class="col-12 col-md-6 col-lg-3">
+    <div class="row q-mb-lg stats-cards-container">
+      <div class="col-12 col-sm-6 col-md-3 stats-card-col">
         <BaseCard
-          variant="elevated"
-          size="sm"
-          padding="sm"
-          content-class="text-center"
-        >
-          <div class="text-h6 text-primary">{{ summary.totalEvents || 0 }}</div>
-          <div class="text-body2 text-grey-7">
-            {{ $t("analyticsPage.totalEvents") }}
-          </div>
-          <q-icon name="event" size="md" class="text-primary q-mt-sm" />
-        </BaseCard>
+          variant="stats"
+          :value="summary.totalEvents || 0"
+          :label="$t('analyticsPage.totalEvents')"
+          icon="event"
+          icon-color="primary"
+        />
       </div>
 
-      <div class="col-12 col-md-6 col-lg-3">
+      <div class="col-12 col-sm-6 col-md-3 stats-card-col">
         <BaseCard
-          variant="elevated"
-          size="sm"
-          padding="sm"
-          content-class="text-center"
-        >
-          <div class="text-h6 text-green">{{ summary.activeUsers || 0 }}</div>
-          <div class="text-body2 text-grey-7">
-            {{ $t("analyticsPage.activeUsers") }}
-          </div>
-          <q-icon name="people" size="md" class="text-green q-mt-sm" />
-        </BaseCard>
+          variant="stats"
+          :value="summary.activeUsers || 0"
+          :label="$t('analyticsPage.activeUsers')"
+          icon="people"
+          icon-color="positive"
+        />
       </div>
 
-      <div class="col-12 col-md-6 col-lg-3">
+      <div class="col-12 col-sm-6 col-md-3 stats-card-col">
         <BaseCard
-          variant="elevated"
-          size="sm"
-          padding="sm"
-          content-class="text-center"
-        >
-          <div class="text-h6 text-orange">
-            {{ orderMetrics.totalOrders || 0 }}
-          </div>
-          <div class="text-body2 text-grey-7">
-            {{ $t("analyticsPage.totalOrders") }}
-          </div>
-          <q-icon name="shopping_cart" size="md" class="text-orange q-mt-sm" />
-        </BaseCard>
+          variant="stats"
+          :value="orderMetrics.totalOrders || 0"
+          :label="$t('analyticsPage.totalOrders')"
+          icon="shopping_cart"
+          icon-color="warning"
+        />
       </div>
 
-      <div class="col-12 col-md-6 col-lg-3">
+      <div class="col-12 col-sm-6 col-md-3 stats-card-col">
         <BaseCard
-          variant="elevated"
-          size="sm"
-          padding="sm"
-          content-class="text-center"
-        >
-          <div class="text-h6 text-purple">
-            {{ productMetrics.totalUpdates || 0 }}
-          </div>
-          <div class="text-body2 text-grey-7">
-            {{ $t("analyticsPage.productUpdates") }}
-          </div>
-          <q-icon name="inventory" size="md" class="text-purple q-mt-sm" />
-        </BaseCard>
+          variant="stats"
+          :value="productMetrics.totalUpdates || 0"
+          :label="$t('analyticsPage.productUpdates')"
+          icon="inventory"
+          icon-color="info"
+        />
       </div>
 
-      <div class="col-12 col-md-6 col-lg-3">
-        <BaseCard
-          variant="elevated"
-          size="sm"
-          padding="sm"
-          content-class="text-center"
-        >
-          <div class="text-h6 text-red">
-            {{ productMetrics.lowStockAlerts || 0 }}
-          </div>
-          <div class="text-body2 text-grey-7">
-            {{ $t("analyticsPage.lowStockAlerts") }}
-          </div>
-          <q-icon name="warning" size="md" class="text-red q-mt-sm" />
-        </BaseCard>
-      </div>
     </div>
 
     <!-- Charts Row -->
@@ -571,5 +531,17 @@ onMounted(() => {
   background: transparent;
   border-radius: 8px;
   flex-direction: column;
+}
+
+.stats-cards-container {
+  gap: 0;
+  
+  .stats-card-col {
+    padding: 8px;
+    
+    @media (max-width: 640px) {
+      padding: 6px;
+    }
+  }
 }
 </style>

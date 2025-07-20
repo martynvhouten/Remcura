@@ -26,47 +26,54 @@
     </template>
 
     <!-- Overview Cards -->
-    <div class="row q-gutter-md q-mb-lg">
-      <div class="col-12 col-md-6 col-lg-3">
-        <BaseCard variant="elevated" size="sm" padding="sm">
-          <div class="text-h4 text-primary">{{ stats.totalUsers }}</div>
-          <div class="text-subtitle2">{{ $t("admin.stats.totalUsers") }}</div>
-          <div class="text-caption text-grey-6">
-            {{ stats.activeUsers }} {{ $t("admin.stats.activeToday") }}
-          </div>
-        </BaseCard>
+    <div class="row q-mb-lg stats-cards-container">
+      <div class="col-12 col-sm-6 col-md-3 stats-card-col">
+        <BaseCard 
+          variant="stats"
+          :value="stats.totalUsers"
+          :label="$t('admin.stats.totalUsers')"
+          icon="people"
+          icon-color="primary"
+          :trend="`${stats.activeUsers} ${$t('admin.stats.activeToday')}`"
+          trend-direction="neutral"
+        />
       </div>
 
-      <div class="col-12 col-md-6 col-lg-3">
-        <BaseCard variant="elevated" size="sm" padding="sm">
-          <div class="text-h4 text-positive">{{ stats.totalLocations }}</div>
-          <div class="text-subtitle2">
-            {{ $t("admin.stats.totalLocations") }}
-          </div>
-          <div class="text-caption text-grey-6">
-            {{ stats.activeLocations }} {{ $t("admin.stats.active") }}
-          </div>
-        </BaseCard>
+      <div class="col-12 col-sm-6 col-md-3 stats-card-col">
+        <BaseCard 
+          variant="stats"
+          :value="stats.totalLocations"
+          :label="$t('admin.stats.totalLocations')"
+          icon="place"
+          icon-color="positive"
+          :trend="`${stats.activeLocations} ${$t('admin.stats.active')}`"
+          trend-direction="neutral"
+        />
       </div>
 
-      <div class="col-12 col-md-6 col-lg-3">
-        <BaseCard variant="elevated" size="sm" padding="sm">
-          <div class="text-h4 text-warning">{{ stats.pendingSync }}</div>
-          <div class="text-subtitle2">{{ $t("admin.stats.pendingSync") }}</div>
-          <div class="text-caption text-grey-6">
-            {{ $t("admin.stats.lastSync") }}: {{ formatDate(stats.lastSync) }}
-          </div>
-        </BaseCard>
+      <div class="col-12 col-sm-6 col-md-3 stats-card-col">
+        <BaseCard 
+          variant="stats"
+          :value="stats.pendingSync"
+          :label="$t('admin.stats.pendingSync')"
+          icon="sync_problem"
+          icon-color="warning"
+          :trend="`${$t('admin.stats.lastSync')}: ${formatDate(stats.lastSync)}`"
+          trend-direction="neutral"
+        />
       </div>
 
-      <div class="col-12 col-md-6 col-lg-3">
-        <BaseCard variant="elevated" size="sm" padding="sm">
-          <div class="text-h4 text-info">{{ stats.todayEvents }}</div>
-          <div class="text-subtitle2">{{ $t("admin.stats.todayEvents") }}</div>
-          <div class="text-caption text-grey-6">
-            +{{ stats.eventsGrowth }}% {{ $t("admin.stats.fromYesterday") }}
-          </div>
-        </BaseCard>
+      <div class="col-12 col-sm-6 col-md-3 stats-card-col">
+        <BaseCard 
+          variant="stats"
+          :value="stats.todayEvents"
+          :label="$t('admin.stats.todayEvents')"
+          icon="event"
+          icon-color="info"
+          :trend="`+${stats.eventsGrowth}% ${$t('admin.stats.fromYesterday')}`"
+          trend-direction="up"
+          trend-color="positive"
+        />
       </div>
     </div>
 
@@ -800,5 +807,17 @@ onMounted(() => {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
   gap: 16px;
+}
+
+.stats-cards-container {
+  gap: 0;
+  
+  .stats-card-col {
+    padding: 8px;
+    
+    @media (max-width: 640px) {
+      padding: 6px;
+    }
+  }
 }
 </style>

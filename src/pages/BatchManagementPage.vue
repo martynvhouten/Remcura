@@ -19,49 +19,46 @@
 
     <div class="batch-management-page">
       <!-- Dashboard Cards -->
-      <div class="row q-gutter-md q-mb-lg">
+      <div class="row q-mb-lg stats-cards-container">
         <!-- Total Batches Card -->
-        <div class="col-12 col-md-3">
+        <div class="col-12 col-sm-6 col-md-3 stats-card-col">
           <BaseCard 
-            variant="modern"
-            :title="totalBatches.toString()"
-            :subtitle="$t('batch.totalBatches')"
+            variant="stats"
+            :value="totalBatches"
+            :label="$t('batch.totalBatches')"
             icon="inventory"
             icon-color="primary"
           />
         </div>
 
         <!-- Expiring Soon Card -->
-        <div class="col-12 col-md-3">
+        <div class="col-12 col-sm-6 col-md-3 stats-card-col">
           <BaseCard 
-            variant="modern"
-            :title="expiringBatches.toString()"
-            :subtitle="$t('batch.expiringSoon')"
+            variant="stats"
+            :value="expiringBatches"
+            :label="$t('batch.expiringSoon')"
             icon="warning"
-            :icon-color="expiringBatches > 0 ? 'orange' : 'grey'"
-            :header-color="expiringBatches > 0 ? 'warning' : 'info'"
-            :card-class="expiringBatches > 0 ? 'bg-orange-1' : ''"
+            :icon-color="expiringBatches > 0 ? 'warning' : 'info'"
           />
         </div>
 
         <!-- Active Batches Card -->
-        <div class="col-12 col-md-3">
+        <div class="col-12 col-sm-6 col-md-3 stats-card-col">
           <BaseCard 
-            variant="modern"
-            :title="activeBatches.toString()"
-            :subtitle="$t('batch.activeBatches')"
+            variant="stats"
+            :value="activeBatches"
+            :label="$t('batch.activeBatches')"
             icon="check_circle"
             icon-color="positive"
-            header-color="positive"
           />
         </div>
 
         <!-- Total Value Card -->
-        <div class="col-12 col-md-3">
+        <div class="col-12 col-sm-6 col-md-3 stats-card-col">
           <BaseCard 
-            variant="modern"
-            :title="formatCurrency(totalValue, 'EUR')"
-            :subtitle="$t('batch.totalValue')"
+            variant="stats"
+            :value="formatCurrency(totalValue, 'EUR')"
+            :label="$t('batch.totalValue')"
             icon="euro"
             icon-color="primary"
           />
@@ -483,6 +480,18 @@ onMounted(() => {
 
   .dashboard-card {
     height: 80px;
+  }
+}
+
+.stats-cards-container {
+  gap: 0;
+  
+  .stats-card-col {
+    padding: 8px;
+    
+    @media (max-width: 640px) {
+      padding: 6px;
+    }
   }
 }
 </style>

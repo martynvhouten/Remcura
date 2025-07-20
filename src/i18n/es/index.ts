@@ -108,6 +108,24 @@ export default {
     userMenu: 'Menú de usuario',
     shoppingCart: 'Carrito de compras',
     styleGuide: 'Guía de estilo',
+    designSystem: 'Referencia del sistema de diseño',
+    // Navigation sections
+    sections: {
+      main: 'Resumen',
+      inventory: 'Gestión de Inventario',
+      supplyChain: 'Cadena de Suministro',
+      analytics: 'Análisis e Informes',
+      administration: 'Administración',
+    },
+    // Inventory sub-navigation
+    inventoryLevels: 'Niveles de Inventario',
+    currentStock: 'Resumen de stock actual',
+    locations: 'Ubicaciones',
+    warehouseManagement: 'Gestión de almacén y ubicaciones',
+    stockCounting: 'Conteo de Stock',
+    physicalCounts: 'Conteos físicos y auditorías',
+    movements: 'Movimientos de Stock',
+    stockMovements: 'Entradas y salidas de stock',
   },
 
   // Authentication

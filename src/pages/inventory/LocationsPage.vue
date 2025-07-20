@@ -1,5 +1,5 @@
 <template>
-  <div class="q-pa-md">
+  <PageLayout>
     <PageTitle
       :title="$t('locations.title')"
       :subtitle="$t('locations.manage')"
@@ -107,7 +107,7 @@
         </q-td>
       </template>
     </q-table>
-  </div>
+  </PageLayout>
 </template>
 
 <script setup lang="ts">
@@ -115,6 +115,7 @@ import { ref, computed, onMounted } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useQuasar } from 'quasar';
 import PageTitle from '@/components/PageTitle.vue';
+import PageLayout from '@/components/PageLayout.vue';
 
 const { t } = useI18n();
 const $q = useQuasar();

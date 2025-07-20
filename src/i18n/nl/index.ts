@@ -118,6 +118,24 @@ export default {
     userMenu: 'Gebruikersmenu',
     shoppingCart: 'Winkelwagen',
     styleGuide: 'Stijlgids',
+    designSystem: 'Ontwerp systeem referentie',
+    // Navigation sections
+    sections: {
+      main: 'Overzicht',
+      inventory: 'Voorraadbeheer',
+      supplyChain: 'Supply Chain',
+      analytics: 'Analyses & Rapporten',
+      administration: 'Beheer',
+    },
+    // Inventory sub-navigation
+    inventoryLevels: 'Voorraadniveaus',
+    currentStock: 'Huidige voorraad overzicht',
+    locations: 'Locaties',
+    warehouseManagement: 'Magazijn & locatie beheer',
+    stockCounting: 'Voorraadtelling',
+    physicalCounts: 'Fysieke tellingen & audits',
+    movements: 'Voorraadmutaties',
+    stockMovements: 'Voorraad in- en uitgangen',
   },
 
   // Authentication

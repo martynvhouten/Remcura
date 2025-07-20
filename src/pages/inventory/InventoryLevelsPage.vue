@@ -36,18 +36,20 @@
     </template>
 
     <!-- Statistics Cards -->
-    <div class="row q-gutter-md q-mb-lg">
-      <BaseCard
-        v-for="(stat, key) in statsCards"
-        :key="key"
-        class="col-12 col-sm-6 col-md-3"
-        padding="none"
+    <div class="row q-mb-lg stats-cards-container">
+      <div 
+        v-for="(stat, key) in statsCards" 
+        :key="key" 
+        class="col-12 col-sm-6 col-md-3 stats-card-col"
       >
-        <q-card-section class="text-center">
-          <div class="text-h4" :class="stat.color">{{ stat.value }}</div>
-          <div class="text-caption text-grey-7">{{ stat.label }}</div>
-        </q-card-section>
-      </BaseCard>
+        <BaseCard
+          variant="stats"
+          :value="stat.value"
+          :label="stat.label"
+          :icon="stat.icon"
+          :icon-color="stat.iconColor"
+        />
+      </div>
     </div>
 
     <!-- Filter Bar -->
@@ -307,22 +309,26 @@ const statsCards = computed(() => {
     {
       label: t('inventory.totalProducts'),
       value: stats.total,
-      color: 'text-primary',
+      icon: 'inventory_2',
+      iconColor: 'primary',
     },
     {
       label: t('inventory.inStock'),
       value: stats.inStock,
-      color: 'text-positive',
+      icon: 'check_circle',
+      iconColor: 'positive',
     },
     {
       label: t('inventory.lowStock'),
       value: stats.lowStock,
-      color: 'text-warning',
+      icon: 'warning',
+      iconColor: 'warning',
     },
     {
       label: t('inventory.outOfStock'),
       value: stats.outOfStock,
-      color: 'text-negative',
+      icon: 'cancel',
+      iconColor: 'negative',
     },
   ];
 });
@@ -531,6 +537,19 @@ onMounted(async () => {
         font-weight: 500;
         font-size: 0.8rem;
       }
+    }
+  }
+}
+
+// Stats cards styling
+.stats-cards-container {
+  gap: 0;
+  
+  .stats-card-col {
+    padding: 8px;
+    
+    @media (max-width: 640px) {
+      padding: 6px;
     }
   }
 }
