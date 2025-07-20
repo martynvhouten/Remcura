@@ -148,7 +148,7 @@
       class="navigation-drawer"
       :width="280"
       role="navigation"
-      aria-label="Main navigation"
+              :aria-label="$t('common.accessibility.mainNavigation')"
     >
       <!-- Clinic Info Section -->
       <div class="clinic-info-section" role="banner">

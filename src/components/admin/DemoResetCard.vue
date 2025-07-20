@@ -49,7 +49,7 @@
           <div class="reset-info">
             <q-icon name="info_outline" color="grey-6" size="16px" />
             <span class="reset-info-text">
-              Dit zal alle demo data verwijderen en vers opnieuw aanmaken
+              {{ $t('demo.resetInfo') }}
             </span>
           </div>
         </div>
@@ -79,7 +79,7 @@
     if (authStore.userEmail !== 'demo@medstock-pro.com') {
       $q.notify({
         type: 'negative',
-        message: 'Alleen demo gebruiker kan demo data resetten',
+        message: t('demo.onlyDemoUserCanReset'),
         position: 'top',
       });
       return;

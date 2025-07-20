@@ -35,18 +35,17 @@
         <!-- Error Message -->
         <div class="error-message-section">
           <h1 class="error-title">
-            {{ $t('error.pageNotFound') || 'Pagina niet gevonden' }}
+            {{ $t('error.pageNotFound') }}
           </h1>
           <p class="error-description">
             {{
-              $t('error.pageNotFoundDescription') ||
-              'De pagina die je zoekt bestaat niet of is verplaatst.'
+              $t('error.pageNotFoundDescription')
             }}
           </p>
         </div>
 
         <!-- Action Buttons -->
-        <div class="error-actions" role="group" aria-label="Navigation actions">
+        <div class="error-actions" role="group" :aria-label="$t('common.accessibility.navigationActions')">
           <q-btn
             color="primary"
             icon="home"
@@ -60,13 +59,13 @@
           <q-btn
             color="primary"
             icon="arrow_back"
-            :label="$t('error.goBack') || 'Terug'"
+            :label="$t('error.goBack')"
             @click="goBack"
             class="btn-modern"
             outline
             no-caps
             :aria-label="
-              ($t('error.goBack') || 'Terug') + ' - Ga naar de vorige pagina'
+              $t('error.goBack') + ' - Ga naar de vorige pagina'
             "
           />
         </div>
@@ -76,7 +75,7 @@
           <div
             class="help-grid"
             role="navigation"
-            aria-label="Quick navigation"
+            :aria-label="$t('common.accessibility.quickNavigation')"
           >
             <div
               class="help-item"

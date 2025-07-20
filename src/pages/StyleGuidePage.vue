@@ -184,12 +184,12 @@
       <div class="subsection">
         <h3 class="subsection-title">{{ $t('settings.solidButtons') }}</h3>
         <div class="button-showcase">
-          <q-btn label="Primary" color="primary" class="btn-modern" />
-          <q-btn label="Secondary" color="secondary" class="btn-modern" />
-          <q-btn label="Success" color="positive" class="btn-modern" />
-          <q-btn label="Warning" color="warning" class="btn-modern" />
-          <q-btn label="Danger" color="negative" class="btn-modern" />
-          <q-btn label="Info" color="info" class="btn-modern" />
+          <q-btn :label="$t('settings.primaryButton')" color="primary" class="btn-modern" />
+          <q-btn :label="$t('settings.secondaryButton')" color="secondary" class="btn-modern" />
+          <q-btn :label="$t('settings.successButton')" color="positive" class="btn-modern" />
+          <q-btn :label="$t('settings.warningButton')" color="warning" class="btn-modern" />
+          <q-btn :label="$t('settings.dangerButton')" color="negative" class="btn-modern" />
+          <q-btn :label="$t('settings.infoButton')" color="info" class="btn-modern" />
         </div>
       </div>
 
@@ -197,17 +197,17 @@
       <div class="subsection">
         <h3 class="subsection-title">{{ $t('settings.outlinedButtons') }}</h3>
         <div class="button-showcase">
-          <q-btn label="Primary" outline color="primary" class="btn-modern" />
+          <q-btn :label="$t('settings.primaryButton')" outline color="primary" class="btn-modern" />
           <q-btn
-            label="Secondary"
+            :label="$t('settings.secondaryButton')"
             outline
             color="secondary"
             class="btn-modern"
           />
-          <q-btn label="Success" outline color="positive" class="btn-modern" />
-          <q-btn label="Warning" outline color="warning" class="btn-modern" />
-          <q-btn label="Danger" outline color="negative" class="btn-modern" />
-          <q-btn label="Info" outline color="info" class="btn-modern" />
+          <q-btn :label="$t('settings.successButton')" outline color="positive" class="btn-modern" />
+          <q-btn :label="$t('settings.warningButton')" outline color="warning" class="btn-modern" />
+          <q-btn :label="$t('settings.dangerButton')" outline color="negative" class="btn-modern" />
+          <q-btn :label="$t('settings.infoButton')" outline color="info" class="btn-modern" />
         </div>
       </div>
 
@@ -215,12 +215,12 @@
       <div class="subsection">
         <h3 class="subsection-title">{{ $t('settings.flatButtons') }}</h3>
         <div class="button-showcase">
-          <q-btn label="Primary" flat color="primary" class="btn-modern" />
-          <q-btn label="Secondary" flat color="secondary" class="btn-modern" />
-          <q-btn label="Success" flat color="positive" class="btn-modern" />
-          <q-btn label="Warning" flat color="warning" class="btn-modern" />
-          <q-btn label="Danger" flat color="negative" class="btn-modern" />
-          <q-btn label="Info" flat color="info" class="btn-modern" />
+          <q-btn :label="$t('settings.primaryButton')" flat color="primary" class="btn-modern" />
+          <q-btn :label="$t('settings.secondaryButton')" flat color="secondary" class="btn-modern" />
+          <q-btn :label="$t('settings.successButton')" flat color="positive" class="btn-modern" />
+          <q-btn :label="$t('settings.warningButton')" flat color="warning" class="btn-modern" />
+          <q-btn :label="$t('settings.dangerButton')" flat color="negative" class="btn-modern" />
+          <q-btn :label="$t('settings.infoButton')" flat color="info" class="btn-modern" />
         </div>
       </div>
 
@@ -229,26 +229,26 @@
         <h3 class="subsection-title">{{ $t('settings.iconButtons') }}</h3>
         <div class="button-showcase">
           <q-btn
-            label="Add Product"
+            :label="$t('settings.addProductButton')"
             icon="add"
             color="primary"
             class="btn-modern"
           />
           <q-btn
-            label="Edit"
+            :label="$t('settings.editButton')"
             icon="edit"
             color="secondary"
             class="btn-modern"
           />
           <q-btn
-            label="Delete"
+            :label="$t('settings.deleteButton')"
             icon="delete"
             color="negative"
             class="btn-modern"
           />
-          <q-btn label="Save" icon="save" color="positive" class="btn-modern" />
+          <q-btn :label="$t('settings.saveButton')" icon="save" color="positive" class="btn-modern" />
           <q-btn
-            label="Download"
+            :label="$t('settings.downloadButton')"
             icon="download"
             color="info"
             class="btn-modern"
@@ -265,102 +265,96 @@
         <!-- Default Card -->
         <BaseCard
           variant="default"
-          title="Default Card"
-          subtitle="Standard card for general content"
+          :title="$t('settings.cards.defaultCard.title')"
+          :subtitle="$t('settings.cards.defaultCard.subtitle')"
           icon="article"
         >
           <p>
-            This is the default card variant with standard styling. It uses
-            neutral backgrounds that adapt properly to light and dark modes.
+            {{ $t('settings.cards.defaultCard.description') }}
           </p>
           <template #actions>
-            <q-btn outline color="primary" label="Action" />
+            <q-btn outline color="primary" :label="$t('settings.cards.defaultCard.action')" />
           </template>
         </BaseCard>
 
         <!-- Modern Card -->
         <BaseCard
           variant="modern"
-          title="Modern Card"
-          subtitle="Enhanced modern styling with borders"
+          :title="$t('settings.cards.modernCard.title')"
+          :subtitle="$t('settings.cards.modernCard.subtitle')"
           icon="auto_awesome"
           header-color="primary"
         >
           <p>
-            Modern card variant with enhanced styling and subtle borders for a
-            contemporary look.
+            {{ $t('settings.cards.modernCard.description') }}
           </p>
           <template #actions>
-            <q-btn color="primary" label="Primary Action" />
+            <q-btn color="primary" :label="$t('settings.cards.modernCard.action')" />
           </template>
         </BaseCard>
 
         <!-- Elevated Card -->
         <BaseCard
           variant="elevated"
-          title="Elevated Card"
-          subtitle="Card with enhanced shadow for emphasis"
+          :title="$t('settings.cards.elevatedCard.title')"
+          :subtitle="$t('settings.cards.elevatedCard.subtitle')"
           icon="star"
           header-color="secondary"
         >
           <p>
-            This card has elevated styling with enhanced shadows to create depth
-            and hierarchy.
+            {{ $t('settings.cards.elevatedCard.description') }}
           </p>
           <template #actions>
-            <q-btn color="secondary" label="Elevated Action" />
+            <q-btn color="secondary" :label="$t('settings.cards.elevatedCard.action')" />
           </template>
         </BaseCard>
 
         <!-- Glass Card -->
         <BaseCard
           variant="glass"
-          title="Glass Card"
-          subtitle="Glass morphism effect with transparency"
+          :title="$t('settings.cards.glassCard.title')"
+          :subtitle="$t('settings.cards.glassCard.subtitle')"
           icon="blur_on"
           header-color="info"
         >
           <p>
-            Glass morphism card with backdrop blur and transparency effects for
-            a modern, sophisticated look.
+            {{ $t('settings.cards.glassCard.description') }}
           </p>
           <template #actions>
-            <q-btn outline color="info" label="Glass Action" />
+            <q-btn outline color="info" :label="$t('settings.cards.glassCard.action')" />
           </template>
         </BaseCard>
 
         <!-- Outlined Card -->
         <BaseCard
           variant="outlined"
-          title="Outlined Card"
-          subtitle="Card with border emphasis"
+          :title="$t('settings.cards.outlinedCard.title')"
+          :subtitle="$t('settings.cards.outlinedCard.subtitle')"
           icon="border_style"
           header-color="positive"
           size="sm"
         >
           <p>
-            This card uses borders instead of shadows for definition, perfect
-            for minimal designs.
+            {{ $t('settings.cards.outlinedCard.description') }}
           </p>
           <template #actions>
-            <q-btn flat color="positive" label="Outlined Action" />
+            <q-btn flat color="positive" :label="$t('settings.cards.outlinedCard.action')" />
           </template>
         </BaseCard>
 
         <!-- Warning Card Example -->
         <BaseCard
           variant="modern"
-          title="Warning Card"
-          subtitle="Card with warning color theme"
+          :title="$t('settings.cards.warningCard.title')"
+          :subtitle="$t('settings.cards.warningCard.subtitle')"
           icon="warning"
           header-color="warning"
         >
           <p>
-            Example of using header colors to create themed cards for different
-            types of content.
+            {{ $t('settings.cards.warningCard.description') }}
           </p>
           <template #actions>
-            <q-btn color="warning" label="Warning Action" />
+            <q-btn color="warning" :label="$t('settings.cards.warningCard.action')" />
           </template>
         </BaseCard>
       </div>

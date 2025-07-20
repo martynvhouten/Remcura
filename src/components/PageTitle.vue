@@ -35,7 +35,7 @@
           v-if="props.meta && props.meta.length > 0"
           class="title-meta"
           role="list"
-          aria-label="Page metadata"
+          :aria-label="$t('common.accessibility.pageMetadata')"
         >
           <div
             v-for="(item, index) in props.meta"
@@ -53,7 +53,7 @@
         v-if="slots.actions"
         class="title-actions"
         role="group"
-        aria-label="Page actions"
+        :aria-label="$t('common.accessibility.pageActions')"
       >
         <slot name="actions" />
       </div>

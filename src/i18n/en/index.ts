@@ -76,6 +76,21 @@ export default {
     today: 'Today',
     yesterday: 'Yesterday',
     comingSoon: 'Coming soon',
+    
+    // Accessibility labels
+    accessibility: {
+      mainNavigation: 'Main navigation',
+      pageMetadata: 'Page metadata',
+      pageActions: 'Page actions',
+      navigationActions: 'Navigation actions',
+      quickNavigation: 'Quick navigation',
+      userMenu: 'User menu',
+      openMenu: 'Open menu',
+      closeMenu: 'Close menu',
+      toggleTheme: 'Toggle theme',
+      searchButton: 'Search',
+      notificationPanel: 'Notification panel',
+    },
   },
 
   // Navigation
@@ -184,6 +199,9 @@ export default {
     practice: 'Remka Demo Clinic',
     practiceDescription:
       'Fully functional demo environment with realistic data',
+    resetInfo: 'This will delete all demo data and recreate it fresh',
+    onlyDemoUserCanReset: 'Only demo user can reset demo data',
+    changesCanBeReset: 'All changes are saved but can be reset via the Admin page.',
   },
 
   // Dashboard
@@ -508,6 +526,108 @@ export default {
     leadTime: 'Lead Time (days)',
     availability: 'Availability',
     backorderAllowed: 'Backorder Allowed',
+  },
+
+  // Admin
+  admin: {
+    title: 'Administration',
+    settings: 'Settings',
+    audit: 'Audit log',
+    users: 'Users',
+    locations: 'Locations',
+    permissions: 'Permissions',
+    analytics: 'Analytics',
+    quickActions: 'Quick actions',
+    
+    // Statistics
+    stats: {
+      totalUsers: 'Total users',
+      activeUsers: 'Active users',
+      activeToday: 'active today',
+      totalLocations: 'Total locations',
+      active: 'active',
+      pendingSync: 'Pending sync',
+      lastSync: 'Last sync',
+      todayEvents: 'Today\'s events',
+      fromYesterday: 'vs yesterday',
+    },
+
+    // User Management
+    userManagement: {
+      title: 'User management',
+      invite: 'Invite user',
+      email: 'Email address',
+      roles: 'Roles',
+      lastActive: 'Last active',
+      resetPassword: 'Reset password',
+      activate: 'Activate',
+      deactivate: 'Deactivate',
+    },
+
+    // Errors
+    errors: {
+      loadUsersFailed: 'Failed to load users',
+      loadLocationsFailed: 'Failed to load locations',
+      loadPermissionsFailed: 'Failed to load permissions',
+    },
+  },
+
+  // Permissions
+  permissions: {
+    title: 'Permissions and access',
+    user: 'User',
+    permissionType: 'Permission type',
+    resourceType: 'Resource type',
+    expiresAt: 'Expires at',
+    
+    // Templates
+    templates: {
+      title: 'Permission templates',
+      assistant: 'Assistant',
+      manager: 'Manager',
+      admin: 'Administrator',
+      owner: 'Owner',
+      viewer: 'Viewer',
+    },
+
+    // Types
+    types: {
+      read: 'Read',
+      write: 'Write',
+      delete: 'Delete',
+      admin: 'Admin',
+    },
+
+    // Notifications
+    notifications: {
+      revoked: 'Permissions revoked',
+      granted: 'Permissions granted',
+    },
+
+    // Errors
+    errors: {
+      revokeFailed: 'Failed to revoke permissions',
+      grantFailed: 'Failed to grant permissions',
+    },
+  },
+
+  // Locations - Enhanced
+  locationsAdmin: {
+    isMain: 'Main location',
+    setAsMain: 'Set as main location',
+    manageAccess: 'Manage access',
+    
+    // Notifications
+    notifications: {
+      mainLocationSet: 'Main location set',
+      accessUpdated: 'Access updated',
+    },
+
+    // Errors
+    errors: {
+      setMainFailed: 'Failed to set main location',
+      accessUpdateFailed: 'Failed to update access',
+    },
   },
 
   // Locations
@@ -977,6 +1097,140 @@ export default {
     movementReport: 'Movement Report',
     varianceReport: 'Variance Report',
     supplierReport: 'Supplier Report',
+
+    // Admin analytics
+    dashboard: 'Dashboard analytics',
+    usage: 'Usage statistics',
+    patterns: 'Usage patterns',
+    
+    // Events
+    events: {
+      login: 'Login',
+      logout: 'Logout',
+      stock_update: 'Stock update',
+      order_create: 'Order created',
+      product_view: 'Product viewed',
+      batch_register: 'Batch registered',
+    },
+
+    // Metrics
+    metrics: {
+      averageSession: 'Average session time',
+      peakHours: 'Peak hours',
+    },
+  },
+
+  // Offline Services
+  offline: {
+    title: 'Offline mode',
+    
+    // Data management
+    data: {
+      download: 'Download offline data',
+      downloadDescription: 'Download latest data for offline use',
+      lastDownload: 'Last downloaded',
+      dataSize: 'Data size',
+    },
+
+    // Sync
+    sync: {
+      forceSync: 'Force sync',
+      syncNow: 'Sync now',
+      autoSync: 'Auto sync',
+      syncStatus: 'Sync status',
+      lastSync: 'Last sync',
+      pendingActions: 'Pending actions',
+    },
+
+    // Messages
+    messages: {
+      syncCompleted: 'Sync completed',
+      syncFailed: 'Sync failed',
+      downloadCompleted: 'Download completed',
+      downloadFailed: 'Download failed',
+      offlineMode: 'Offline mode active',
+      onlineMode: 'Online mode active',
+    },
+
+    // Errors
+    errors: {
+      syncFailed: 'Sync failed',
+      downloadFailed: 'Failed to download offline data',
+      networkUnavailable: 'Network unavailable',
+    },
+  },
+
+  // Exports
+  exports: {
+    title: 'Exports',
+    subtitle: 'Data export and reporting',
+    selectFormat: 'Select format',
+    selectData: 'Select data',
+    generateExport: 'Generate export',
+    downloadExport: 'Download export',
+    
+    // Formats
+    formats: {
+      csv: 'CSV file',
+      pdf: 'PDF document',
+      excel: 'Excel spreadsheet',
+      json: 'JSON data',
+    },
+
+    // Data types
+    dataTypes: {
+      inventory: 'Inventory data',
+      orders: 'Orders',
+      suppliers: 'Suppliers',
+      analytics: 'Analytics',
+      users: 'Users',
+    },
+
+    // Messages
+    messages: {
+      exportGenerated: 'Export generated successfully',
+      exportFailed: 'Failed to generate export',
+      exportDownloaded: 'Export downloaded',
+    },
+  },
+
+  // Analytics Page  
+  analyticsPage: {
+    title: 'Analytics',
+    subtitle: 'Comprehensive reports and insights for your inventory',
+    period: 'Period',
+    totalEvents: 'Total Events',
+    activeUsers: 'Active Users',
+    totalOrders: 'Total Orders',
+    productUpdates: 'Product Updates',
+    dailyActivity: 'Daily Activity',
+    topEvents: 'Top Events',
+    frequentlyOrderedItems: 'Frequently Ordered Items',
+    mostUpdatedProducts: 'Most Updated Products',
+    userActivity: 'User Activity',
+    export: 'Export',
+    
+    // Periods
+    periods: {
+      '7d': 'Last 7 days',
+      '30d': 'Last 30 days',
+      '90d': 'Last 90 days', 
+      '1y': 'Last year',
+    },
+
+    // Table columns
+    user: 'User',
+    activityCount: 'Activity Count',
+    lastActivity: 'Last Activity',
+    product: 'Product',
+    totalQuantity: 'Total Quantity',
+    orderCount: 'Order Count',
+    updates: 'Updates',
+
+    // Messages
+    loadError: 'Failed to load analytics data',
+    exportSuccess: 'Analytics exported successfully',
+    exportError: 'Failed to export analytics',
   },
 
   // Settings
@@ -1014,10 +1268,47 @@ export default {
     manageSettingsSubtitle:
       'Manage your settings and preferences for an optimal experience',
 
+    darkModeEnabled: 'Dark mode is enabled',
+    lightModeEnabled: 'Light mode is enabled',
+    settingsSaved: 'Settings saved successfully',
+    settingsSaveError: 'An error occurred while saving',
+    saveSettings: 'Save settings',
+    role: 'Role',
+    
+    // Settings Page specific
+    manageSettingsSubtitle: 'Manage your system settings and preferences for an optimal experience',
+    profile: 'Profile',
+    profileSubtitle: 'Your personal user information',
+    appearanceTitle: 'Appearance',
+    appearanceSubtitle: 'Customize the look and feel of the application',
+    darkModeDescription: 'Switch between light and dark modes for better visibility',
+    selectLanguage: 'Choose your preferred interface language',
+    colorSchemeTitle: 'Color Scheme',
+    colorSchemeDescription: 'Select the color scheme that matches your preference',
+    clinic: 'Clinic',
+    clinicInfoSubtitle: 'Contact details and business information',
+    contactSettingsNotice: 'Contact details can only be changed by an administrator',
+    notificationSettingsSubtitle: 'Manage your notifications and alerts',
+    stockAlertsLabel: 'Stock Alerts',
+    stockAlertsDescription: 'Receive notifications when stock levels are low',
+    emailNotificationsLabel: 'Email Notifications',
+    emailNotificationsDescription: 'Receive important updates via email',
+    browserNotificationsLabel: 'Browser Notifications',
+    browserNotificationsDescription: 'Push notifications in your browser',
+    systemInfoTitle: 'System Information',
+    systemInfoSubtitle: 'Version details and support information',
+    versionLabel: 'Version',
+    lastUpdateLabel: 'Last Update',
+    supportLabel: 'Support',
+    languageChanged: 'Language changed to {language}',
+    clinicName: 'Clinic name',
+    contactEmail: 'Contact email',
+    phoneNumber: 'Phone number',
+    address: 'Address',
+
     // Style Guide translations
     styleGuideTitle: 'MedStock Pro Style Guide',
-    styleGuideSubtitle:
-      'Complete design system reference and component showcase',
+    styleGuideSubtitle: 'Complete design system reference and component showcase',
     colorsSection: 'Colors',
     primaryColors: 'Primary Colors',
     neutralColors: 'Neutral Colors',
@@ -1029,73 +1320,81 @@ export default {
     iconButtons: 'Icon Buttons',
     cardsSection: 'Cards',
 
-    // Button labels for Style Guide
-    primaryButton: 'Primary',
-    secondaryButton: 'Secondary',
-    successButton: 'Success',
-    warningButton: 'Warning',
-    dangerButton: 'Danger',
-    infoButton: 'Info',
-    addProductButton: 'Add Product',
-    editButton: 'Edit',
-    deleteButton: 'Delete',
-    saveButton: 'Save',
-    downloadButton: 'Download',
-
-    darkModeEnabled: 'Dark mode is enabled',
-    lightModeEnabled: 'Light mode is enabled',
-    settingsSaved: 'Settings saved successfully',
-    settingsSaveError: 'An error occurred while saving',
-    saveSettings: 'Save settings',
-    role: 'Role',
-    clinicName: 'Clinic name',
-    contactEmail: 'Contact email',
-    phoneNumber: 'Phone number',
-    address: 'Address',
+    // Card examples
+    cards: {
+      defaultCard: {
+        title: 'Default Card',
+        subtitle: 'Standard card for general content',
+        description: 'This is the default card variant with standard styling. It uses neutral backgrounds that adapt properly to light and dark modes.',
+        action: 'Action',
+      },
+      modernCard: {
+        title: 'Modern Card',
+        subtitle: 'Enhanced modern styling with borders',
+        description: 'Modern card variant with enhanced styling and subtle borders for a contemporary look.',
+        action: 'Primary Action',
+      },
+      elevatedCard: {
+        title: 'Elevated Card',
+        subtitle: 'Card with enhanced shadow for emphasis',
+        description: 'This card has elevated styling with enhanced shadows to create depth and hierarchy.',
+        action: 'Elevated Action',
+      },
+      glassCard: {
+        title: 'Glass Card',
+        subtitle: 'Glass morphism effect with transparency',
+        description: 'Glass morphism card with backdrop blur and transparency effects for a modern, sophisticated look.',
+        action: 'Glass Action',
+      },
+      outlinedCard: {
+        title: 'Outlined Card',
+        subtitle: 'Card with border emphasis',
+        description: 'This card uses borders instead of shadows for definition, perfect for minimal designs.',
+        action: 'Outlined Action',
+      },
+      warningCard: {
+        title: 'Warning Card',
+        subtitle: 'Card with warning color theme',
+        description: 'Example of using header colors to create themed cards for different types of content.',
+        action: 'Warning Action',
+      },
+    },
   },
 
-  // Analytics Page
+  // Analytics Page  
   analyticsPage: {
     title: 'Analytics',
-    subtitle: 'Comprehensive analytics and insights for your practice',
-    period: 'Time period',
-    dateFrom: 'Date from',
-    dateTo: 'Date to',
-    export: 'Export data',
-    totalEvents: 'Total events',
-    activeUsers: 'Active users',
-    totalOrders: 'Total orders',
-    productUpdates: 'Product updates',
-    lowStockAlerts: 'Low stock alerts',
-    dailyActivity: 'Daily activity',
-    topEvents: 'Top events',
-    frequentlyOrderedItems: 'Frequently ordered items',
-    mostUpdatedProducts: 'Most updated products',
-    userActivity: 'User activity',
-    user: 'User',
-    activityCount: 'Activity count',
-    lastActivity: 'Last activity',
-    product: 'Product',
-    totalQuantity: 'Total quantity',
-    orderCount: 'Order count',
-    updates: 'Updates',
-
+    subtitle: 'Comprehensive reports and insights for your inventory',
+    period: 'Period',
+    totalEvents: 'Total Events',
+    activeUsers: 'Active Users',
+    totalOrders: 'Total Orders',
+    productUpdates: 'Product Updates',
+    dailyActivity: 'Daily Activity',
+    topEvents: 'Top Events',
+    frequentlyOrderedItems: 'Frequently Ordered Items',
+    mostUpdatedProducts: 'Most Updated Products',
+    userActivity: 'User Activity',
+    export: 'Export',
+    
+    // Periods
     periods: {
       '7d': 'Last 7 days',
       '30d': 'Last 30 days',
-      '90d': 'Last 90 days',
+      '90d': 'Last 90 days', 
       '1y': 'Last year',
     },
 
-    productInsights: 'Product insights',
-    filters: 'Filters',
-    custom: 'Custom',
-    startDate: 'Start date',
-    endDate: 'End date',
-    apply: 'Apply',
-    reset: 'Reset',
-    noData: 'No data available for the selected period',
-    loading: 'Loading analytics...',
+    // Table columns
+    user: 'User',
+    activityCount: 'Activity Count',
+    lastActivity: 'Last Activity',
+    product: 'Product',
+    totalQuantity: 'Total Quantity',
+    orderCount: 'Order Count',
+    updates: 'Updates',
+
+    // Messages
     loadError: 'Failed to load analytics data',
     exportSuccess: 'Analytics exported successfully',
     exportError: 'Failed to export analytics',

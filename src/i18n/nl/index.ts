@@ -82,6 +82,21 @@ export default {
     submit: 'Verzenden',
     fromDate: 'Vanaf datum',
     toDate: 'Tot datum',
+    
+    // Accessibility labels
+    accessibility: {
+      mainNavigation: 'Hoofdnavigatie',
+      pageMetadata: 'Pagina metadata',
+      pageActions: 'Pagina acties',
+      navigationActions: 'Navigatie acties',
+      quickNavigation: 'Snelle navigatie',
+      userMenu: 'Gebruiker menu',
+      openMenu: 'Menu openen',
+      closeMenu: 'Menu sluiten',
+      toggleTheme: 'Thema wisselen',
+      searchButton: 'Zoeken',
+      notificationPanel: 'Meldingen paneel',
+    },
   },
 
   // Navigation
@@ -192,6 +207,11 @@ export default {
     practice: 'Remka demo kliniek',
     practiceDescription:
       'Volledig functionele demo omgeving met realistische data',
+    resetInfo: 'Dit zal alle demo data verwijderen en vers opnieuw aanmaken',
+    onlyDemoUserCanReset: 'Alleen demo gebruiker kan demo data resetten',
+    changesCanBeReset: 'Alle wijzigingen worden opgeslagen maar kunnen worden gereset via de Admin pagina.',
+    resetInProgress: 'Demo data wordt gereset...',
+    reloadingAfterReset: 'Pagina wordt herladen met nieuwe data...',
   },
 
   // Dashboard
@@ -999,6 +1019,140 @@ export default {
     orderFrequency: 'Bestelfrequentie',
     supplierPerformance: 'Leverancier prestaties',
     costAnalysis: 'Kostenanalyse',
+    
+    // Admin analytics
+    dashboard: 'Dashboard analyses',
+    usage: 'Gebruik statistieken',
+    patterns: 'Gebruikspatronen',
+    
+    // Events
+    events: {
+      login: 'Inloggen',
+      logout: 'Uitloggen',
+      stock_update: 'Voorraad update',
+      order_create: 'Bestelling aangemaakt',
+      product_view: 'Product bekeken',
+      batch_register: 'Batch geregistreerd',
+    },
+
+    // Metrics
+    metrics: {
+      averageSession: 'Gemiddelde sessietijd',
+      peakHours: 'Piekuren',
+    },
+  },
+
+  // Offline Services
+  offline: {
+    title: 'Offline modus',
+    
+    // Data management
+    data: {
+      download: 'Offline data downloaden',
+      downloadDescription: 'Download laatste data voor offline gebruik',
+      lastDownload: 'Laatst gedownload',
+      dataSize: 'Data grootte',
+    },
+
+    // Sync
+    sync: {
+      forceSync: 'Sync forceren',
+      syncNow: 'Nu synchroniseren',
+      autoSync: 'Automatisch synchroniseren',
+      syncStatus: 'Sync status',
+      lastSync: 'Laatste sync',
+      pendingActions: 'Acties in afwachting',
+    },
+
+    // Messages
+    messages: {
+      syncCompleted: 'Synchronisatie voltooid',
+      syncFailed: 'Synchronisatie mislukt',
+      downloadCompleted: 'Download voltooid',
+      downloadFailed: 'Download mislukt',
+      offlineMode: 'Offline modus actief',
+      onlineMode: 'Online modus actief',
+    },
+
+    // Errors
+    errors: {
+      syncFailed: 'Synchronisatie mislukt',
+      downloadFailed: 'Download offline data mislukt',
+      networkUnavailable: 'Netwerk niet beschikbaar',
+    },
+  },
+
+  // Exports
+  exports: {
+    title: 'Exports',
+    subtitle: 'Data export en rapportage',
+    selectFormat: 'Formaat selecteren',
+    selectData: 'Data selecteren',
+    generateExport: 'Export genereren',
+    downloadExport: 'Export downloaden',
+    
+    // Formats
+    formats: {
+      csv: 'CSV bestand',
+      pdf: 'PDF document',
+      excel: 'Excel spreadsheet',
+      json: 'JSON data',
+    },
+
+    // Data types
+    dataTypes: {
+      inventory: 'Voorraad data',
+      orders: 'Bestellingen',
+      suppliers: 'Leveranciers',
+      analytics: 'Analyses',
+      users: 'Gebruikers',
+    },
+
+    // Messages
+    messages: {
+      exportGenerated: 'Export succesvol gegenereerd',
+      exportFailed: 'Export genereren mislukt',
+      exportDownloaded: 'Export gedownload',
+    },
+  },
+
+  // Analytics Page
+  analyticsPage: {
+    title: 'Analyses',
+    subtitle: 'Uitgebreide rapporten en inzichten voor je voorraad',
+    period: 'Periode',
+    totalEvents: 'Totaal gebeurtenissen',
+    activeUsers: 'Actieve gebruikers',
+    totalOrders: 'Totaal bestellingen',
+    productUpdates: 'Product updates',
+    dailyActivity: 'Dagelijkse activiteit',
+    topEvents: 'Top gebeurtenissen',
+    frequentlyOrderedItems: 'Veel bestelde items',
+    mostUpdatedProducts: 'Meest geüpdatet producten',
+    userActivity: 'Gebruiker activiteit',
+    export: 'Exporteren',
+    
+    // Periods
+    periods: {
+      '7d': 'Laatste 7 dagen',
+      '30d': 'Laatste 30 dagen', 
+      '90d': 'Laatste 90 dagen',
+      '1y': 'Laatste jaar',
+    },
+
+    // Table columns
+    user: 'Gebruiker',
+    activityCount: 'Activiteit aantal',
+    lastActivity: 'Laatste activiteit',
+    product: 'Product',
+    totalQuantity: 'Totaal hoeveelheid',
+    orderCount: 'Aantal bestellingen',
+    updates: 'Updates',
+
+    // Messages
+    loadError: 'Fout bij laden analyse data',
+    exportSuccess: 'Analyses succesvol geëxporteerd',
+    exportError: 'Fout bij exporteren analyses',
   },
 
   // Settings
@@ -1027,6 +1181,100 @@ export default {
     reset: 'Herstellen',
     resetToDefaults: 'Herstellen naar standaardwaarden',
     confirmReset: 'Weet je zeker dat je wilt herstellen naar standaardwaarden?',
+    
+    // Settings Page specific  
+    manageSettingsSubtitle: 'Beheer je systeeminstellingen en voorkeuren voor een optimale ervaring',
+    profile: 'Profiel',
+    profileSubtitle: 'Jouw persoonlijke gebruikersinformatie',
+    appearanceTitle: 'Weergave',
+    appearanceSubtitle: 'Personaliseer het uiterlijk van de applicatie',
+    darkModeDescription: 'Schakel tussen lichte en donkere modus voor betere zichtbaarheid',
+    selectLanguage: 'Kies je voorkeurstaal voor de interface',
+    colorSchemeTitle: 'Kleurenschema',
+    colorSchemeDescription: 'Selecteer het kleurenschema dat bij je voorkeur past',
+    clinic: 'Kliniek',
+    clinicInfoSubtitle: 'Contactgegevens en bedrijfsinformatie',
+    contactSettingsNotice: 'Contactgegevens kunnen alleen worden aangepast door een beheerder',
+    notificationSettingsSubtitle: 'Beheer je meldingen en alerts',
+    stockAlertsLabel: 'Voorraad waarschuwingen',
+    stockAlertsDescription: 'Ontvang meldingen wanneer voorraad laag is',
+    emailNotificationsLabel: 'E-mail meldingen',
+    emailNotificationsDescription: 'Belangrijke updates via e-mail ontvangen',
+    browserNotificationsLabel: 'Browser meldingen',
+    browserNotificationsDescription: 'Push meldingen in je browser',
+    systemInfoTitle: 'Systeem informatie',
+    systemInfoSubtitle: 'Versie-informatie en ondersteuning',
+    versionLabel: 'Versie',
+    lastUpdateLabel: 'Laatste update',
+    supportLabel: 'Ondersteuning',
+    languageChanged: 'Taal gewijzigd naar {language}',
+
+    // Style Guide translations
+    styleGuideTitle: 'MedStock Pro Stijlgids',
+    styleGuideSubtitle: 'Complete ontwerpsysteem referentie en component showcase',
+    colorsSection: 'Kleuren',
+    primaryColors: 'Primaire kleuren',
+    neutralColors: 'Neutrale kleuren', 
+    typographySection: 'Typografie',
+    buttonsSection: 'Knoppen',
+    solidButtons: 'Solide knoppen',
+    outlinedButtons: 'Omlijnd knoppen',
+    flatButtons: 'Vlakke knoppen',
+    iconButtons: 'Icoon knoppen',
+    cardsSection: 'Kaarten',
+
+    // Button labels for Style Guide
+    primaryButton: 'Primair',
+    secondaryButton: 'Secundair',
+    successButton: 'Succes',
+    warningButton: 'Waarschuwing',
+    dangerButton: 'Gevaar',
+    infoButton: 'Info',
+    addProductButton: 'Product toevoegen',
+    editButton: 'Bewerken',
+    deleteButton: 'Verwijderen',
+    saveButton: 'Opslaan',
+    downloadButton: 'Downloaden',
+
+    // Card examples
+    cards: {
+      defaultCard: {
+        title: 'Standaard kaart',
+        subtitle: 'Standaard kaart voor algemene inhoud',
+        description: 'Dit is de standaard kaart variant met standaard styling. Het gebruikt neutrale achtergronden die goed aanpassen aan lichte en donkere modi.',
+        action: 'Actie',
+      },
+      modernCard: {
+        title: 'Moderne kaart',
+        subtitle: 'Verbeterde moderne styling met randen',
+        description: 'Moderne kaart variant met verbeterde styling en subtiele randen voor een hedendaagse uitstraling.',
+        action: 'Primaire actie',
+      },
+      elevatedCard: {
+        title: 'Verhoogde kaart',
+        subtitle: 'Kaart met verbeterde schaduw voor nadruk',
+        description: 'Deze kaart heeft verhoogde styling met verbeterde schaduwen om diepte en hiërarchie te creëren.',
+        action: 'Verhoogde actie',
+      },
+      glassCard: {
+        title: 'Glas kaart',
+        subtitle: 'Glas morfisme effect met transparantie',
+        description: 'Glas morfisme kaart met achtergrond blur en transparantie effecten voor een moderne, verfijnde uitstraling.',
+        action: 'Glas actie',
+      },
+      outlinedCard: {
+        title: 'Omlijnd kaart',
+        subtitle: 'Kaart met rand nadruk',
+        description: 'Deze kaart gebruikt randen in plaats van schaduwen voor definitie, perfect voor minimale ontwerpen.',
+        action: 'Omlijnd actie',
+      },
+      warningCard: {
+        title: 'Waarschuwing kaart',
+        subtitle: 'Kaart met waarschuwing kleur thema',
+        description: 'Voorbeeld van het gebruik van header kleuren om thematische kaarten te maken voor verschillende soorten content.',
+        action: 'Waarschuwing actie',
+      },
+    },
   },
 
   // Suppliers
@@ -1060,6 +1308,108 @@ export default {
     packSize: 'Verpakkingsgrootte',
     availability: 'Beschikbaarheid',
     backorderAllowed: 'Nabestelling toegestaan',
+  },
+
+  // Admin
+  admin: {
+    title: 'Beheer',
+    settings: 'Instellingen',
+    audit: 'Audit log',
+    users: 'Gebruikers',
+    locations: 'Locaties',
+    permissions: 'Rechten',
+    analytics: 'Analyses',
+    quickActions: 'Snelle acties',
+    
+    // Statistics
+    stats: {
+      totalUsers: 'Totaal gebruikers',
+      activeUsers: 'Actieve gebruikers',
+      activeToday: 'actief vandaag',
+      totalLocations: 'Totaal locaties',
+      active: 'actief',
+      pendingSync: 'In afwachting van sync',
+      lastSync: 'Laatste sync',
+      todayEvents: 'Gebeurtenissen vandaag',
+      fromYesterday: 't.o.v. gisteren',
+    },
+
+    // User Management
+    userManagement: {
+      title: 'Gebruikersbeheer',
+      invite: 'Gebruiker uitnodigen',
+      email: 'E-mailadres',
+      roles: 'Rollen',
+      lastActive: 'Laatst actief',
+      resetPassword: 'Wachtwoord resetten',
+      activate: 'Activeren',
+      deactivate: 'Deactiveren',
+    },
+
+    // Errors
+    errors: {
+      loadUsersFailed: 'Fout bij laden gebruikers',
+      loadLocationsFailed: 'Fout bij laden locaties',
+      loadPermissionsFailed: 'Fout bij laden rechten',
+    },
+  },
+
+  // Permissions
+  permissions: {
+    title: 'Rechten en toegang',
+    user: 'Gebruiker',
+    permissionType: 'Rechten type',
+    resourceType: 'Resource type',
+    expiresAt: 'Verloopt op',
+    
+    // Templates
+    templates: {
+      title: 'Rechten sjablonen',
+      assistant: 'Assistent',
+      manager: 'Manager',
+      admin: 'Beheerder',
+      owner: 'Eigenaar',
+      viewer: 'Bekijker',
+    },
+
+    // Types
+    types: {
+      read: 'Lezen',
+      write: 'Schrijven',
+      delete: 'Verwijderen',
+      admin: 'Beheer',
+    },
+
+    // Notifications
+    notifications: {
+      revoked: 'Rechten ingetrokken',
+      granted: 'Rechten toegekend',
+    },
+
+    // Errors
+    errors: {
+      revokeFailed: 'Fout bij intrekken rechten',
+      grantFailed: 'Fout bij toekennen rechten',
+    },
+  },
+
+  // Locations - Enhanced
+  locationsAdmin: {
+    isMain: 'Hoofdlocatie',
+    setAsMain: 'Instellen als hoofdlocatie',
+    manageAccess: 'Toegang beheren',
+    
+    // Notifications
+    notifications: {
+      mainLocationSet: 'Hoofdlocatie ingesteld',
+      accessUpdated: 'Toegang bijgewerkt',
+    },
+
+    // Errors
+    errors: {
+      setMainFailed: 'Fout bij instellen hoofdlocatie',
+      accessUpdateFailed: 'Fout bij bijwerken toegang',
+    },
   },
 
   // Suppliers Page

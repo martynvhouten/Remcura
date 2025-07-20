@@ -837,6 +837,108 @@ export default {
     discontinued: 'Descontinuado',
   },
 
+  // Admin
+  admin: {
+    title: 'Administración',
+    settings: 'Configuración',
+    audit: 'Registro de auditoría',
+    users: 'Usuarios',
+    locations: 'Ubicaciones',
+    permissions: 'Permisos',
+    analytics: 'Análisis',
+    quickActions: 'Acciones rápidas',
+    
+    // Statistics
+    stats: {
+      totalUsers: 'Total de usuarios',
+      activeUsers: 'Usuarios activos',
+      activeToday: 'activos hoy',
+      totalLocations: 'Total de ubicaciones',
+      active: 'activo',
+      pendingSync: 'Sincronización pendiente',
+      lastSync: 'Última sincronización',
+      todayEvents: 'Eventos de hoy',
+      fromYesterday: 'vs ayer',
+    },
+
+    // User Management
+    userManagement: {
+      title: 'Gestión de usuarios',
+      invite: 'Invitar usuario',
+      email: 'Dirección de correo',
+      roles: 'Roles',
+      lastActive: 'Último activo',
+      resetPassword: 'Restablecer contraseña',
+      activate: 'Activar',
+      deactivate: 'Desactivar',
+    },
+
+    // Errors
+    errors: {
+      loadUsersFailed: 'Error al cargar usuarios',
+      loadLocationsFailed: 'Error al cargar ubicaciones',
+      loadPermissionsFailed: 'Error al cargar permisos',
+    },
+  },
+
+  // Permissions
+  permissions: {
+    title: 'Permisos y acceso',
+    user: 'Usuario',
+    permissionType: 'Tipo de permiso',
+    resourceType: 'Tipo de recurso',
+    expiresAt: 'Expira el',
+    
+    // Templates
+    templates: {
+      title: 'Plantillas de permisos',
+      assistant: 'Asistente',
+      manager: 'Gerente',
+      admin: 'Administrador',
+      owner: 'Propietario',
+      viewer: 'Visualizador',
+    },
+
+    // Types
+    types: {
+      read: 'Leer',
+      write: 'Escribir',
+      delete: 'Eliminar',
+      admin: 'Admin',
+    },
+
+    // Notifications
+    notifications: {
+      revoked: 'Permisos revocados',
+      granted: 'Permisos otorgados',
+    },
+
+    // Errors
+    errors: {
+      revokeFailed: 'Error al revocar permisos',
+      grantFailed: 'Error al otorgar permisos',
+    },
+  },
+
+  // Locations - Enhanced
+  locationsAdmin: {
+    isMain: 'Ubicación principal',
+    setAsMain: 'Establecer como principal',
+    manageAccess: 'Gestionar acceso',
+    
+    // Notifications
+    notifications: {
+      mainLocationSet: 'Ubicación principal establecida',
+      accessUpdated: 'Acceso actualizado',
+    },
+
+    // Errors
+    errors: {
+      setMainFailed: 'Error al establecer ubicación principal',
+      accessUpdateFailed: 'Error al actualizar acceso',
+    },
+  },
+
   // Stock Movements
   movements: {
     title: 'Movimientos de existencias',
@@ -865,6 +967,84 @@ export default {
     transferOut: 'Transferencia salida',
     countCorrection: 'Corrección de conteo',
   },
+
+
+
+  // Offline Services
+  offline: {
+    title: 'Modo sin conexión',
+    
+    // Data management
+    data: {
+      download: 'Descargar datos sin conexión',
+      downloadDescription: 'Descargar datos más recientes para uso sin conexión',
+      lastDownload: 'Última descarga',
+      dataSize: 'Tamaño de datos',
+    },
+
+    // Sync
+    sync: {
+      forceSync: 'Forzar sincronización',
+      syncNow: 'Sincronizar ahora',
+      autoSync: 'Sincronización automática',
+      syncStatus: 'Estado de sincronización',
+      lastSync: 'Última sincronización',
+      pendingActions: 'Acciones pendientes',
+    },
+
+    // Messages
+    messages: {
+      syncCompleted: 'Sincronización completada',
+      syncFailed: 'Error en sincronización',
+      downloadCompleted: 'Descarga completada',
+      downloadFailed: 'Error en descarga',
+      offlineMode: 'Modo sin conexión activo',
+      onlineMode: 'Modo en línea activo',
+    },
+
+    // Errors
+    errors: {
+      syncFailed: 'Error en sincronización',
+      downloadFailed: 'Error al descargar datos sin conexión',
+      networkUnavailable: 'Red no disponible',
+    },
+  },
+
+  // Exports
+  exports: {
+    title: 'Exportaciones',
+    subtitle: 'Exportación de datos e informes',
+    selectFormat: 'Seleccionar formato',
+    selectData: 'Seleccionar datos',
+    generateExport: 'Generar exportación',
+    downloadExport: 'Descargar exportación',
+    
+    // Formats
+    formats: {
+      csv: 'Archivo CSV',
+      pdf: 'Documento PDF',
+      excel: 'Hoja de cálculo Excel',
+      json: 'Datos JSON',
+    },
+
+    // Data types
+    dataTypes: {
+      inventory: 'Datos de inventario',
+      orders: 'Pedidos',
+      suppliers: 'Proveedores',
+      analytics: 'Análisis',
+      users: 'Usuarios',
+    },
+
+    // Messages
+    messages: {
+      exportGenerated: 'Exportación generada exitosamente',
+      exportFailed: 'Error al generar exportación',
+      exportDownloaded: 'Exportación descargada',
+    },
+  },
+
+
 
   // Analytics
   analytics: {

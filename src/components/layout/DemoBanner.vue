@@ -51,7 +51,7 @@
         <p><strong>${t('demo.limitations')}:</strong> ${t(
         'demo.limitationsText'
       )}</p>
-        <p><em>Alle wijzigingen worden opgeslagen maar kunnen worden gereset via de Admin pagina.</em></p>
+        <p><em>{{ $t('demo.changesCanBeReset') }}</em></p>
       </div>
     `,
       html: true,
