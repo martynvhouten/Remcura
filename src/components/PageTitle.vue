@@ -81,9 +81,9 @@ interface Props {
 }
 
 const props = withDefaults(defineProps<Props>(), {
-  iconSize: "24px",
-  iconColor: "primary",
-  badgeColor: "primary",
+  iconSize: '24px',
+  iconColor: 'primary',
+  badgeColor: 'primary',
 });
 
 // Define slots using defineSlots instead of useSlots

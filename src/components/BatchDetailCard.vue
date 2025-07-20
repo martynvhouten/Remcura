@@ -298,11 +298,11 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from "vue";
-import { useI18n } from "vue-i18n";
-import { useQuasar, date } from "quasar";
-import { useBatchStore } from "src/stores/batch";
-import type { ProductBatchWithDetails } from "src/types/inventory";
+import { ref } from 'vue';
+import { useI18n } from 'vue-i18n';
+import { useQuasar, date } from 'quasar';
+import { useBatchStore } from 'src/stores/batch';
+import type { ProductBatchWithDetails } from 'src/types/inventory';
 
 // Props & Emits
 interface Props {
@@ -314,7 +314,7 @@ const props = defineProps<Props>();
 const emit = defineEmits<{
   close: [];
   updated: [];
-  "use-batch": [batch: ProductBatchWithDetails];
+  'use-batch': [batch: ProductBatchWithDetails];
 }>();
 
 // Composables
@@ -327,7 +327,7 @@ const editMode = ref(false);
 
 // Methods
 const formatDate = (dateStr: string) => {
-  return date.formatDate(dateStr, "DD/MM/YYYY");
+  return date.formatDate(dateStr, 'DD/MM/YYYY');
 };
 
 const formatQuantity = (quantity: number) => {
@@ -338,93 +338,93 @@ const formatQuantity = (quantity: number) => {
 };
 
 const formatCurrency = (amount: number, currency: string) => {
-  return new Intl.NumberFormat("nl-NL", {
-    style: "currency",
-    currency: currency || "EUR",
+  return new Intl.NumberFormat('nl-NL', {
+    style: 'currency',
+    currency: currency || 'EUR',
   }).format(amount);
 };
 
 const getLocationColor = (type: string) => {
   const colors = {
-    storage: "blue",
-    emergency: "red",
-    treatment: "green",
-    default: "grey",
+    storage: 'blue',
+    emergency: 'red',
+    treatment: 'green',
+    default: 'grey',
   };
   return colors[type] || colors.default;
 };
 
 const getQuantityColor = (ratio: number) => {
-  if (ratio > 0.5) return "green";
-  if (ratio > 0.2) return "orange";
-  return "red";
+  if (ratio > 0.5) return 'green';
+  if (ratio > 0.2) return 'orange';
+  return 'red';
 };
 
 const getExpiryIcon = (urgency: string) => {
   const icons = {
-    expired: "error",
-    critical: "warning",
-    warning: "schedule",
-    normal: "check_circle",
+    expired: 'error',
+    critical: 'warning',
+    warning: 'schedule',
+    normal: 'check_circle',
   };
-  return icons[urgency] || "check_circle";
+  return icons[urgency] || 'check_circle';
 };
 
 const getExpiryColor = (urgency: string) => {
   const colors = {
-    expired: "red",
-    critical: "deep-orange",
-    warning: "amber",
-    normal: "green",
+    expired: 'red',
+    critical: 'deep-orange',
+    warning: 'amber',
+    normal: 'green',
   };
-  return colors[urgency] || "green";
+  return colors[urgency] || 'green';
 };
 
 const getExpiryTextClass = (urgency: string) => {
   const classes = {
-    expired: "text-red",
-    critical: "text-deep-orange",
-    warning: "text-amber-8",
-    normal: "text-green",
+    expired: 'text-red',
+    critical: 'text-deep-orange',
+    warning: 'text-amber-8',
+    normal: 'text-green',
   };
-  return classes[urgency] || "text-green";
+  return classes[urgency] || 'text-green';
 };
 
 const getExpiryText = (days: number, urgency: string) => {
-  if (urgency === "expired") {
-    return t("batch.expiredDaysAgo", { days: Math.abs(days) });
+  if (urgency === 'expired') {
+    return t('batch.expiredDaysAgo', { days: Math.abs(days) });
   } else if (days === 0) {
-    return t("batch.expiresToday");
+    return t('batch.expiresToday');
   } else if (days === 1) {
-    return t("batch.expiresTomorrow");
+    return t('batch.expiresTomorrow');
   } else {
-    return t("batch.expiresInDays", { days });
+    return t('batch.expiresInDays', { days });
   }
 };
 
 const getStatusColor = (status: string) => {
   const colors = {
-    active: "green",
-    expired: "red",
-    depleted: "grey",
-    recalled: "deep-orange",
-    quarantine: "amber",
+    active: 'green',
+    expired: 'red',
+    depleted: 'grey',
+    recalled: 'deep-orange',
+    quarantine: 'amber',
   };
-  return colors[status] || "grey";
+  return colors[status] || 'grey';
 };
 
 const quarantineBatch = async () => {
   try {
-    await batchStore.updateBatch(props.batch.id, { status: "quarantine" });
+    await batchStore.updateBatch(props.batch.id, { status: 'quarantine' });
     $q.notify({
-      type: "positive",
-      message: t("batch.quarantineSuccess"),
+      type: 'positive',
+      message: t('batch.quarantineSuccess'),
     });
-    emit("updated");
+    emit('updated');
   } catch (error) {
     $q.notify({
-      type: "negative",
-      message: t("errors.failed"),
+      type: 'negative',
+      message: t('errors.failed'),
     });
   }
 };

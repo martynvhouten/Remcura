@@ -229,24 +229,24 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted, defineAsyncComponent } from "vue";
-import { useI18n } from "vue-i18n";
-import { useQuasar } from "quasar";
-import { useRouter, useRoute } from "vue-router";
-import { useAuthStore } from "src/stores/auth";
-import { useCountingStore } from "src/stores/counting";
+import { ref, computed, onMounted, defineAsyncComponent } from 'vue';
+import { useI18n } from 'vue-i18n';
+import { useQuasar } from 'quasar';
+import { useRouter, useRoute } from 'vue-router';
+import { useAuthStore } from 'src/stores/auth';
+import { useCountingStore } from 'src/stores/counting';
 import type {
   CountingSession,
   CountingEntry,
   CountingProduct,
-} from "src/types/inventory";
-import PageLayout from "src/components/PageLayout.vue";
-import PageTitle from "src/components/PageTitle.vue";
-import BaseCard from "src/components/base/BaseCard.vue";
+} from 'src/types/inventory';
+import PageLayout from 'src/components/PageLayout.vue';
+import PageTitle from 'src/components/PageTitle.vue';
+import BaseCard from 'src/components/base/BaseCard.vue';
 
 // Lazy loaded components
 const MobileCountingInterface = defineAsyncComponent(
-  () => import("src/components/inventory/MobileCountingInterface.vue")
+  () => import('src/components/inventory/MobileCountingInterface.vue')
 );
 
 // Props
@@ -269,7 +269,7 @@ const entriesLoading = ref(false);
 
 // Pagination
 const pagination = ref({
-  sortBy: "created_at",
+  sortBy: 'created_at',
   descending: false,
   page: 1,
   rowsPerPage: 25,
@@ -279,42 +279,42 @@ const pagination = ref({
 const session = computed(() => countingStore.currentSession);
 
 const sessionName = computed(
-  () => session.value?.name || t("counting.unknownSession")
+  () => session.value?.name || t('counting.unknownSession')
 );
 
 const sessionType = computed(() =>
-  session.value ? formatSessionType(session.value.session_type) : ""
+  session.value ? formatSessionType(session.value.session_type) : ''
 );
 
 const statusColor = computed(() => {
-  if (!session.value) return "grey";
+  if (!session.value) return 'grey';
   switch (session.value.status) {
-    case "active":
-      return "primary";
-    case "completed":
-      return "positive";
-    case "cancelled":
-      return "negative";
-    case "approved":
-      return "info";
+    case 'active':
+      return 'primary';
+    case 'completed':
+      return 'positive';
+    case 'cancelled':
+      return 'negative';
+    case 'approved':
+      return 'info';
     default:
-      return "grey";
+      return 'grey';
   }
 });
 
 const statusIcon = computed(() => {
-  if (!session.value) return "help";
+  if (!session.value) return 'help';
   switch (session.value.status) {
-    case "active":
-      return "play_circle";
-    case "completed":
-      return "check_circle";
-    case "cancelled":
-      return "cancel";
-    case "approved":
-      return "verified";
+    case 'active':
+      return 'play_circle';
+    case 'completed':
+      return 'check_circle';
+    case 'cancelled':
+      return 'cancel';
+    case 'approved':
+      return 'verified';
     default:
-      return "help";
+      return 'help';
   }
 });
 
@@ -324,39 +324,39 @@ const canComplete = computed(() => {
 
 const resultsColumns = computed(() => [
   {
-    name: "product",
-    label: t("counting.product"),
-    field: "product_id",
+    name: 'product',
+    label: t('counting.product'),
+    field: 'product_id',
     sortable: true,
-    align: "left" as const,
-    style: "width: 200px",
+    align: 'left' as const,
+    style: 'width: 200px',
   },
   {
-    name: "system_quantity",
-    label: t("counting.systemQuantity"),
-    field: "system_quantity",
-    align: "center" as const,
-    sortable: true,
-  },
-  {
-    name: "counted_quantity",
-    label: t("counting.countedQuantity"),
-    field: "counted_quantity",
-    align: "center" as const,
+    name: 'system_quantity',
+    label: t('counting.systemQuantity'),
+    field: 'system_quantity',
+    align: 'center' as const,
     sortable: true,
   },
   {
-    name: "variance",
-    label: t("counting.variance"),
-    field: "variance",
-    align: "center" as const,
+    name: 'counted_quantity',
+    label: t('counting.countedQuantity'),
+    field: 'counted_quantity',
+    align: 'center' as const,
     sortable: true,
   },
   {
-    name: "status",
-    label: t("common.status"),
-    field: "status",
-    align: "center" as const,
+    name: 'variance',
+    label: t('counting.variance'),
+    field: 'variance',
+    align: 'center' as const,
+    sortable: true,
+  },
+  {
+    name: 'status',
+    label: t('common.status'),
+    field: 'status',
+    align: 'center' as const,
     sortable: true,
   },
 ]);
@@ -364,19 +364,19 @@ const resultsColumns = computed(() => [
 // Methods
 const loadSession = async () => {
   try {
-    await countingStore.fetchSessions(authStore.userProfile?.clinic_id || "");
+    await countingStore.fetchSessions(authStore.userProfile?.clinic_id || '');
     if (
-      session.value?.status === "completed" ||
-      session.value?.status === "approved"
+      session.value?.status === 'completed' ||
+      session.value?.status === 'approved'
     ) {
       await loadCountingEntries();
     }
   } catch (error) {
-    console.error("Error loading session:", error);
+    console.error('Error loading session:', error);
     $q.notify({
-      type: "negative",
-      message: t("counting.sessionLoadFailed"),
-      position: "top",
+      type: 'negative',
+      message: t('counting.sessionLoadFailed'),
+      position: 'top',
     });
   }
 };
@@ -387,7 +387,7 @@ const loadCountingEntries = async () => {
     await countingStore.fetchCountingEntries(props.sessionId);
     countingEntries.value = countingStore.countingEntries;
   } catch (error) {
-    console.error("Error loading counting entries:", error);
+    console.error('Error loading counting entries:', error);
   } finally {
     entriesLoading.value = false;
   }
@@ -395,31 +395,31 @@ const loadCountingEntries = async () => {
 
 const completeSession = () => {
   $q.dialog({
-    title: t("counting.completeSession"),
-    message: t("counting.confirmComplete"),
+    title: t('counting.completeSession'),
+    message: t('counting.confirmComplete'),
     cancel: true,
     persistent: true,
   }).onOk(async () => {
     try {
       await countingStore.updateSession(props.sessionId, {
-        status: "completed",
+        status: 'completed',
         completed_at: new Date().toISOString(),
-        completed_by: authStore.user?.id || "",
+        completed_by: authStore.user?.id || '',
       });
 
       $q.notify({
-        type: "positive",
-        message: t("counting.sessionCompleted"),
-        position: "top",
+        type: 'positive',
+        message: t('counting.sessionCompleted'),
+        position: 'top',
       });
 
       await loadSession();
     } catch (error) {
-      console.error("Error completing session:", error);
+      console.error('Error completing session:', error);
       $q.notify({
-        type: "negative",
-        message: t("counting.completeFailed"),
-        position: "top",
+        type: 'negative',
+        message: t('counting.completeFailed'),
+        position: 'top',
       });
     }
   });
@@ -427,38 +427,38 @@ const completeSession = () => {
 
 const approveSession = () => {
   $q.dialog({
-    title: t("counting.approveSession"),
-    message: t("counting.confirmApprove"),
+    title: t('counting.approveSession'),
+    message: t('counting.confirmApprove'),
     cancel: true,
     persistent: true,
   }).onOk(async () => {
     try {
       await countingStore.updateSession(props.sessionId, {
-        status: "approved",
+        status: 'approved',
         approved_at: new Date().toISOString(),
-        approved_by: authStore.user?.id || "",
+        approved_by: authStore.user?.id || '',
       });
 
       $q.notify({
-        type: "positive",
-        message: t("counting.sessionApproved"),
-        position: "top",
+        type: 'positive',
+        message: t('counting.sessionApproved'),
+        position: 'top',
       });
 
       await loadSession();
     } catch (error) {
-      console.error("Error approving session:", error);
+      console.error('Error approving session:', error);
       $q.notify({
-        type: "negative",
-        message: t("counting.approveFailed"),
-        position: "top",
+        type: 'negative',
+        message: t('counting.approveFailed'),
+        position: 'top',
       });
     }
   });
 };
 
 const handleBack = () => {
-  router.push("/inventory/counting");
+  router.push('/inventory/counting');
 };
 
 const onProductCounted = () => {
@@ -476,7 +476,7 @@ const formatSessionType = (type: string): string => {
 };
 
 const formatStatus = (status?: string): string => {
-  if (!status) return "";
+  if (!status) return '';
   return t(`counting.status.${status}`, status);
 };
 
@@ -485,40 +485,40 @@ const formatEntryStatus = (status: string): string => {
 };
 
 const formatDateTime = (dateString: string): string => {
-  return new Intl.DateTimeFormat("nl-NL", {
-    year: "numeric",
-    month: "long",
-    day: "numeric",
-    hour: "2-digit",
-    minute: "2-digit",
+  return new Intl.DateTimeFormat('nl-NL', {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit',
   }).format(new Date(dateString));
 };
 
 const formatVariance = (variance: number): string => {
-  if (variance === 0) return "0";
+  if (variance === 0) return '0';
   return variance > 0 ? `+${variance}` : `${variance}`;
 };
 
 const varianceColor = (variance: number): string => {
-  if (variance === 0) return "positive";
-  return variance > 0 ? "warning" : "negative";
+  if (variance === 0) return 'positive';
+  return variance > 0 ? 'warning' : 'negative';
 };
 
 const varianceIcon = (variance: number): string => {
-  if (variance === 0) return "check";
-  return variance > 0 ? "arrow_upward" : "arrow_downward";
+  if (variance === 0) return 'check';
+  return variance > 0 ? 'arrow_upward' : 'arrow_downward';
 };
 
 const entryStatusColor = (status: string): string => {
   switch (status) {
-    case "verified":
-      return "positive";
-    case "discrepancy":
-      return "warning";
-    case "pending":
-      return "info";
+    case 'verified':
+      return 'positive';
+    case 'discrepancy':
+      return 'warning';
+    case 'pending':
+      return 'info';
     default:
-      return "grey";
+      return 'grey';
   }
 };
 

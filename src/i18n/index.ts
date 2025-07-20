@@ -1,10 +1,10 @@
-import { createI18n } from "vue-i18n";
-import en from "./en";
-import nl from "./nl";
-import es from "./es";
+import { createI18n } from 'vue-i18n';
+import en from './en';
+import nl from './nl';
+import es from './es';
 
 // Supported locales
-export type SupportedLocale = "en" | "nl" | "es";
+export type SupportedLocale = 'en' | 'nl' | 'es';
 
 // All messages loaded upfront for now (we can optimize later if needed)
 const messages = {
@@ -15,18 +15,18 @@ const messages = {
 
 // Get saved locale from localStorage or default to 'nl'
 const getSavedLocale = (): SupportedLocale => {
-  const saved = localStorage.getItem("medstock_locale");
-  if (saved && ["en", "nl", "es"].includes(saved)) {
+  const saved = localStorage.getItem('medstock_locale');
+  if (saved && ['en', 'nl', 'es'].includes(saved)) {
     return saved as SupportedLocale;
   }
-  return "nl";
+  return 'nl';
 };
 
 // Create i18n instance with all translations loaded
 // Use legacy mode for better Quasar compatibility
 export const i18n = createI18n({
   locale: getSavedLocale(),
-  fallbackLocale: "en",
+  fallbackLocale: 'en',
   messages,
   legacy: true, // Changed to true for better compatibility
   globalInjection: true,
@@ -43,8 +43,8 @@ export const setI18nLanguage = (locale: SupportedLocale) => {
   } else {
     (i18n.global.locale as any).value = locale;
   }
-  document.querySelector("html")?.setAttribute("lang", locale);
-  localStorage.setItem("medstock_locale", locale);
+  document.querySelector('html')?.setAttribute('lang', locale);
+  localStorage.setItem('medstock_locale', locale);
   return locale;
 };
 

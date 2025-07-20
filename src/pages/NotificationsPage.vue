@@ -197,15 +197,15 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted } from "vue";
-import { useQuasar } from "quasar";
-import { useI18n } from "vue-i18n";
-import { useAuthStore } from "src/stores/auth";
-import { monitoringService } from "src/services/monitoring";
-import { useButtons } from "src/composables/useButtons";
-import PageLayout from "src/components/PageLayout.vue";
-import PageTitle from "src/components/PageTitle.vue";
-import BaseCard from "src/components/base/BaseCard.vue";
+import { ref, computed, onMounted } from 'vue';
+import { useQuasar } from 'quasar';
+import { useI18n } from 'vue-i18n';
+import { useAuthStore } from 'src/stores/auth';
+import { monitoringService } from 'src/services/monitoring';
+import { useButtons } from 'src/composables/useButtons';
+import PageLayout from 'src/components/PageLayout.vue';
+import PageTitle from 'src/components/PageTitle.vue';
+import BaseCard from 'src/components/base/BaseCard.vue';
 
 const $q = useQuasar();
 const { t } = useI18n();
@@ -214,67 +214,67 @@ const { quickActions, getThemeConfig } = useButtons();
 
 // State
 const loading = ref(false);
-const filter = ref<"all" | "unread">("all");
+const filter = ref<'all' | 'unread'>('all');
 const categoryFilter = ref<string | null>(null);
 
 // Button configurations
 const markAllReadBtn = computed(() =>
   quickActions.markAllRead({
-    label: t("notificationsPage.markAllRead"),
+    label: t('notificationsPage.markAllRead'),
   })
 );
 
 const testStockAlertBtn = computed(() =>
-  getThemeConfig("warning", {
-    icon: "warning",
-    label: t("notificationsPage.testStockAlert"),
+  getThemeConfig('warning', {
+    icon: 'warning',
+    label: t('notificationsPage.testStockAlert'),
   })
 );
 
 const testOrderUpdateBtn = computed(() =>
-  getThemeConfig("info", {
-    icon: "shopping_cart",
-    label: t("notificationsPage.testOrderUpdate"),
+  getThemeConfig('info', {
+    icon: 'shopping_cart',
+    label: t('notificationsPage.testOrderUpdate'),
   })
 );
 
 const clearAllBtn = computed(() =>
   quickActions.clearAll({
-    label: t("notificationsPage.clearAllNotifications"),
+    label: t('notificationsPage.clearAllNotifications'),
   })
 );
 
 // Mock notifications data since we don't have a notifications table
 const mockNotifications = ref([
   {
-    id: "1",
-    title: t("sampleNotifications.lowStockWarning"),
-    message: "Spuiten 10ml zijn bijna op (2 stuks resterend)",
-    category: "stock_alert",
+    id: '1',
+    title: t('sampleNotifications.lowStockWarning'),
+    message: 'Spuiten 10ml zijn bijna op (2 stuks resterend)',
+    category: 'stock_alert',
     is_read: false,
     created_at: new Date(Date.now() - 2 * 60 * 60 * 1000).toISOString(), // 2 hours ago
   },
   {
-    id: "2",
-    title: t("sampleNotifications.orderConfirmed"),
-    message: "Bestelling #ORD-2024-003 is bevestigd door leverancier",
-    category: "order_update",
+    id: '2',
+    title: t('sampleNotifications.orderConfirmed'),
+    message: 'Bestelling #ORD-2024-003 is bevestigd door leverancier',
+    category: 'order_update',
     is_read: false,
     created_at: new Date(Date.now() - 4 * 60 * 60 * 1000).toISOString(), // 4 hours ago
   },
   {
-    id: "3",
-    title: t("sampleNotifications.stockUpdated"),
-    message: "Handschoenen latex voorraad is bijgewerkt naar 150 stuks",
-    category: "stock_alert",
+    id: '3',
+    title: t('sampleNotifications.stockUpdated'),
+    message: 'Handschoenen latex voorraad is bijgewerkt naar 150 stuks',
+    category: 'stock_alert',
     is_read: true,
     created_at: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000).toISOString(), // 1 day ago
   },
   {
-    id: "4",
-    title: t("sampleNotifications.systemMaintenance"),
-    message: "Gepland onderhoud op zondag 3:00-5:00 AM",
-    category: "system_notification",
+    id: '4',
+    title: t('sampleNotifications.systemMaintenance'),
+    message: 'Gepland onderhoud op zondag 3:00-5:00 AM',
+    category: 'system_notification',
     is_read: true,
     created_at: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toISOString(), // 2 days ago
   },
@@ -288,7 +288,7 @@ const unreadCount = computed(
 const filteredNotifications = computed(() => {
   let filtered = mockNotifications.value;
 
-  if (filter.value === "unread") {
+  if (filter.value === 'unread') {
     filtered = filtered.filter((n) => !n.is_read);
   }
 
@@ -303,16 +303,16 @@ const filteredNotifications = computed(() => {
 });
 
 const categoryOptions = computed(() => [
-  { label: t("notificationsPage.categories.stockAlert"), value: "stock_alert" },
+  { label: t('notificationsPage.categories.stockAlert'), value: 'stock_alert' },
   {
-    label: t("notificationsPage.categories.orderUpdate"),
-    value: "order_update",
+    label: t('notificationsPage.categories.orderUpdate'),
+    value: 'order_update',
   },
   {
-    label: t("notificationsPage.categories.systemNotification"),
-    value: "system_notification",
+    label: t('notificationsPage.categories.systemNotification'),
+    value: 'system_notification',
   },
-  { label: t("notificationsPage.categories.reminder"), value: "reminder" },
+  { label: t('notificationsPage.categories.reminder'), value: 'reminder' },
 ]);
 
 // Methods
@@ -321,15 +321,15 @@ const loadNotifications = async () => {
   try {
     // In a real implementation, this would fetch from Supabase
     // For now, we use mock data
-    await monitoringService.trackEvent("notifications_viewed", {
+    await monitoringService.trackEvent('notifications_viewed', {
       total: mockNotifications.value.length,
       unread: unreadCount.value,
     });
   } catch (error) {
-    console.error("Error loading notifications:", error);
+    console.error('Error loading notifications:', error);
     $q.notify({
-      type: "negative",
-      message: t("notificationsPage.loadNotificationsError"),
+      type: 'negative',
+      message: t('notificationsPage.loadNotificationsError'),
     });
   } finally {
     loading.value = false;
@@ -345,11 +345,11 @@ const markAsRead = async (notificationId: string) => {
       notification.is_read = true;
     }
 
-    await monitoringService.trackEvent("notification_marked_read", {
+    await monitoringService.trackEvent('notification_marked_read', {
       notification_id: notificationId,
     });
   } catch (error) {
-    console.error("Error marking notification as read:", error);
+    console.error('Error marking notification as read:', error);
   }
 };
 
@@ -368,15 +368,15 @@ const markAllAsRead = async () => {
     });
 
     $q.notify({
-      type: "positive",
-      message: t("notificationsPage.allMarkedAsRead"),
+      type: 'positive',
+      message: t('notificationsPage.allMarkedAsRead'),
     });
 
-    await monitoringService.trackEvent("notifications_mark_all_read", {
+    await monitoringService.trackEvent('notifications_mark_all_read', {
       count: unreadIds.length,
     });
   } catch (error) {
-    console.error("Error marking all as read:", error);
+    console.error('Error marking all as read:', error);
   }
 };
 
@@ -387,22 +387,22 @@ const deleteNotification = async (notificationId: string) => {
     );
 
     $q.notify({
-      type: "positive",
-      message: t("notificationsPage.notificationDeleted"),
+      type: 'positive',
+      message: t('notificationsPage.notificationDeleted'),
     });
 
-    await monitoringService.trackEvent("notification_deleted", {
+    await monitoringService.trackEvent('notification_deleted', {
       notification_id: notificationId,
     });
   } catch (error) {
-    console.error("Error deleting notification:", error);
+    console.error('Error deleting notification:', error);
   }
 };
 
 const confirmClearAll = () => {
   $q.dialog({
-    title: t("notificationsPage.clearAllConfirm"),
-    message: t("notificationsPage.clearAllConfirmMessage"),
+    title: t('notificationsPage.clearAllConfirm'),
+    message: t('notificationsPage.clearAllConfirmMessage'),
     cancel: true,
     persistent: true,
   }).onOk(async () => {
@@ -410,27 +410,27 @@ const confirmClearAll = () => {
       mockNotifications.value = [];
 
       $q.notify({
-        type: "positive",
-        message: t("notificationsPage.allNotificationsCleared"),
+        type: 'positive',
+        message: t('notificationsPage.allNotificationsCleared'),
       });
 
-      await monitoringService.trackEvent("notifications_cleared_all");
+      await monitoringService.trackEvent('notifications_cleared_all');
     } catch (error) {
-      console.error("Error clearing all notifications:", error);
+      console.error('Error clearing all notifications:', error);
     }
   });
 };
 
-const createTestNotification = async (type: "stock_alert" | "order_update") => {
+const createTestNotification = async (type: 'stock_alert' | 'order_update') => {
   try {
     const testMessages = {
       stock_alert: {
-        title: t("notificationsPage.testMessages.stockAlert.title"),
-        message: t("notificationsPage.testMessages.stockAlert.message"),
+        title: t('notificationsPage.testMessages.stockAlert.title'),
+        message: t('notificationsPage.testMessages.stockAlert.message'),
       },
       order_update: {
-        title: t("notificationsPage.testMessages.orderUpdate.title"),
-        message: t("notificationsPage.testMessages.orderUpdate.message"),
+        title: t('notificationsPage.testMessages.orderUpdate.title'),
+        message: t('notificationsPage.testMessages.orderUpdate.message'),
       },
     };
 
@@ -446,41 +446,41 @@ const createTestNotification = async (type: "stock_alert" | "order_update") => {
     mockNotifications.value.unshift(newNotification);
 
     const successMessage =
-      type === "stock_alert"
-        ? t("notificationsPage.testStockAlertCreated")
-        : t("notificationsPage.testOrderUpdateCreated");
+      type === 'stock_alert'
+        ? t('notificationsPage.testStockAlertCreated')
+        : t('notificationsPage.testOrderUpdateCreated');
 
     $q.notify({
-      type: "positive",
+      type: 'positive',
       message: successMessage,
     });
 
-    await monitoringService.trackEvent("test_notification_created", {
+    await monitoringService.trackEvent('test_notification_created', {
       type,
     });
   } catch (error) {
-    console.error("Error creating test notification:", error);
+    console.error('Error creating test notification:', error);
   }
 };
 
 const getCategoryIcon = (category: string) => {
   const icons = {
-    stock_alert: "warning",
-    order_update: "shopping_cart",
-    system_notification: "info",
-    reminder: "schedule",
+    stock_alert: 'warning',
+    order_update: 'shopping_cart',
+    system_notification: 'info',
+    reminder: 'schedule',
   };
-  return icons[category as keyof typeof icons] || "notifications";
+  return icons[category as keyof typeof icons] || 'notifications';
 };
 
 const getCategoryColor = (category: string) => {
   const colors = {
-    stock_alert: "warning",
-    order_update: "primary",
-    system_notification: "info",
-    reminder: "accent",
+    stock_alert: 'warning',
+    order_update: 'primary',
+    system_notification: 'info',
+    reminder: 'accent',
   };
-  return colors[category as keyof typeof colors] || "grey";
+  return colors[category as keyof typeof colors] || 'grey';
 };
 
 const formatDate = (dateString: string) => {
@@ -491,7 +491,7 @@ const formatDate = (dateString: string) => {
   const diffDays = Math.floor(diffHours / 24);
 
   if (diffDays > 0) {
-    return `${diffDays} dag${diffDays > 1 ? "en" : ""} geleden`;
+    return `${diffDays} dag${diffDays > 1 ? 'en' : ''} geleden`;
   } else if (diffHours > 0) {
     return `${diffHours} uur geleden`;
   } else {

@@ -205,15 +205,15 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted } from "vue";
-import { useI18n } from "vue-i18n";
-import { useQuasar } from "quasar";
-import { useAuthStore } from "src/stores/auth";
-import { useClinicStore } from "src/stores/clinic";
-import { supabase } from "src/boot/supabase";
-import PageLayout from "src/components/PageLayout.vue";
-import PageTitle from "src/components/PageTitle.vue";
-import BaseCard from "src/components/base/BaseCard.vue";
+import { ref, computed, onMounted } from 'vue';
+import { useI18n } from 'vue-i18n';
+import { useQuasar } from 'quasar';
+import { useAuthStore } from 'src/stores/auth';
+import { useClinicStore } from 'src/stores/clinic';
+import { supabase } from 'src/boot/supabase';
+import PageLayout from 'src/components/PageLayout.vue';
+import PageTitle from 'src/components/PageTitle.vue';
+import BaseCard from 'src/components/base/BaseCard.vue';
 
 // Composables
 const { t } = useI18n();
@@ -224,16 +224,16 @@ const clinicStore = useClinicStore();
 // State
 const loading = ref(false);
 const stockLevels = ref([]);
-const selectedLocation = ref("all");
+const selectedLocation = ref('all');
 const filters = ref({
-  search: "",
-  stockStatus: "",
-  category: "",
+  search: '',
+  stockStatus: '',
+  category: '',
 });
 
 // Computed
 const locationOptions = computed(() => [
-  { label: t("inventory.allLocations"), value: "all" },
+  { label: t('inventory.allLocations'), value: 'all' },
   ...clinicStore.locations.map((loc) => ({
     label: loc.name,
     value: loc.id,
@@ -254,9 +254,9 @@ const categoryOptions = computed(() => {
 });
 
 const stockStatusOptions = computed(() => [
-  { label: t("inventory.inStock"), value: "in_stock" },
-  { label: t("inventory.lowStock"), value: "low_stock" },
-  { label: t("inventory.outOfStock"), value: "out_of_stock" },
+  { label: t('inventory.inStock'), value: 'in_stock' },
+  { label: t('inventory.lowStock'), value: 'low_stock' },
+  { label: t('inventory.outOfStock'), value: 'out_of_stock' },
 ]);
 
 const filteredStockLevels = computed(() => {
@@ -293,71 +293,71 @@ const statsCards = computed(() => {
   const stats = {
     total: stockLevels.value.length,
     inStock: stockLevels.value.filter(
-      (item) => item.stock_status === "in_stock"
+      (item) => item.stock_status === 'in_stock'
     ).length,
     lowStock: stockLevels.value.filter(
-      (item) => item.stock_status === "low_stock"
+      (item) => item.stock_status === 'low_stock'
     ).length,
     outOfStock: stockLevels.value.filter(
-      (item) => item.stock_status === "out_of_stock"
+      (item) => item.stock_status === 'out_of_stock'
     ).length,
   };
 
   return [
     {
-      label: t("inventory.totalProducts"),
+      label: t('inventory.totalProducts'),
       value: stats.total,
-      color: "text-primary",
+      color: 'text-primary',
     },
     {
-      label: t("inventory.inStock"),
+      label: t('inventory.inStock'),
       value: stats.inStock,
-      color: "text-positive",
+      color: 'text-positive',
     },
     {
-      label: t("inventory.lowStock"),
+      label: t('inventory.lowStock'),
       value: stats.lowStock,
-      color: "text-warning",
+      color: 'text-warning',
     },
     {
-      label: t("inventory.outOfStock"),
+      label: t('inventory.outOfStock'),
       value: stats.outOfStock,
-      color: "text-negative",
+      color: 'text-negative',
     },
   ];
 });
 
 const columns = computed(() => [
   {
-    name: "product",
-    label: t("inventory.product"),
-    align: "left",
-    field: "product_name",
+    name: 'product',
+    label: t('inventory.product'),
+    align: 'left',
+    field: 'product_name',
     sortable: true,
   },
   {
-    name: "current_quantity",
-    label: t("inventory.currentStock"),
-    align: "center",
-    field: "current_quantity",
+    name: 'current_quantity',
+    label: t('inventory.currentStock'),
+    align: 'center',
+    field: 'current_quantity',
     sortable: true,
   },
   {
-    name: "stock_status",
-    label: t("inventory.status"),
-    align: "center",
-    field: "stock_status",
+    name: 'stock_status',
+    label: t('inventory.status'),
+    align: 'center',
+    field: 'stock_status',
     sortable: true,
   },
   {
-    name: "levels",
-    label: t("inventory.stockLevels"),
-    align: "center",
+    name: 'levels',
+    label: t('inventory.stockLevels'),
+    align: 'center',
   },
   {
-    name: "actions",
-    label: t("common.actions"),
-    align: "center",
+    name: 'actions',
+    label: t('common.actions'),
+    align: 'center',
   },
 ]);
 
@@ -368,7 +368,7 @@ const loadStockLevels = async () => {
   loading.value = true;
   try {
     let query = supabase
-      .from("stock_levels")
+      .from('stock_levels')
       .select(
         `
         *,
@@ -383,13 +383,13 @@ const loadStockLevels = async () => {
         )
       `
       )
-      .eq("practice_id", authStore.clinicId);
+      .eq('practice_id', authStore.clinicId);
 
-    if (selectedLocation.value !== "all") {
-      query = query.eq("location_id", selectedLocation.value);
+    if (selectedLocation.value !== 'all') {
+      query = query.eq('location_id', selectedLocation.value);
     }
 
-    const { data, error } = await query.order("products(name)");
+    const { data, error } = await query.order('products(name)');
 
     if (error) throw error;
 
@@ -406,10 +406,10 @@ const loadStockLevels = async () => {
       ),
     }));
   } catch (error) {
-    console.error("Error loading stock levels:", error);
+    console.error('Error loading stock levels:', error);
     $q.notify({
-      type: "negative",
-      message: t("inventory.loadingError"),
+      type: 'negative',
+      message: t('inventory.loadingError'),
     });
   } finally {
     loading.value = false;
@@ -417,34 +417,34 @@ const loadStockLevels = async () => {
 };
 
 const determineStockStatus = (current, minimum) => {
-  if (current <= 0) return "out_of_stock";
-  if (current <= minimum) return "low_stock";
-  return "in_stock";
+  if (current <= 0) return 'out_of_stock';
+  if (current <= minimum) return 'low_stock';
+  return 'in_stock';
 };
 
 const getStockStatusColor = (status) => {
   switch (status) {
-    case "in_stock":
-      return "positive";
-    case "low_stock":
-      return "warning";
-    case "out_of_stock":
-      return "negative";
+    case 'in_stock':
+      return 'positive';
+    case 'low_stock':
+      return 'warning';
+    case 'out_of_stock':
+      return 'negative';
     default:
-      return "grey";
+      return 'grey';
   }
 };
 
 const getStockStatusIcon = (status) => {
   switch (status) {
-    case "in_stock":
-      return "check_circle";
-    case "low_stock":
-      return "warning";
-    case "out_of_stock":
-      return "error";
+    case 'in_stock':
+      return 'check_circle';
+    case 'low_stock':
+      return 'warning';
+    case 'out_of_stock':
+      return 'error';
     default:
-      return "help";
+      return 'help';
   }
 };
 
@@ -454,30 +454,30 @@ const refreshData = async () => {
     loadStockLevels(),
   ]);
   $q.notify({
-    type: "positive",
-    message: t("inventory.dataRefreshed"),
+    type: 'positive',
+    message: t('inventory.dataRefreshed'),
   });
 };
 
 const clearFilters = () => {
   filters.value = {
-    search: "",
-    stockStatus: "",
-    category: "",
+    search: '',
+    stockStatus: '',
+    category: '',
   };
 };
 
-const editStockLevel = (stockLevel) => {
+const editStockLevel = (_stockLevel) => {
   $q.notify({
-    type: "info",
-    message: t("common.comingSoon"),
+    type: 'info',
+    message: t('common.comingSoon'),
   });
 };
 
-const viewMovements = (stockLevel) => {
+const viewMovements = (_stockLevel) => {
   $q.notify({
-    type: "info",
-    message: t("common.comingSoon"),
+    type: 'info',
+    message: t('common.comingSoon'),
   });
 };
 

@@ -66,8 +66,8 @@
 </template>
 
 <script setup lang="ts">
-import { computed, useSlots } from "vue";
-import { useI18n } from "vue-i18n";
+import { computed, useSlots } from 'vue';
+import { useI18n } from 'vue-i18n';
 
 interface Props {
   modelValue: boolean;
@@ -78,7 +78,7 @@ interface Props {
   iconSize?: string;
   persistent?: boolean;
   maximized?: boolean;
-  position?: "standard" | "top" | "right" | "bottom" | "left";
+  position?: 'standard' | 'top' | 'right' | 'bottom' | 'left';
   fullWidth?: boolean;
   transitionShow?: string;
   transitionHide?: string;
@@ -87,32 +87,31 @@ interface Props {
   contentClass?: string | string[];
   actionsClass?: string | string[];
   dialogClass?: string | string[];
-  variant?: "standard" | "modern" | "glass";
-  size?: "sm" | "md" | "lg" | "xl";
+  variant?: 'standard' | 'modern' | 'glass';
+  size?: 'sm' | 'md' | 'lg' | 'xl';
 }
 
 interface Emits {
-  (e: "update:modelValue", value: boolean): void;
-  (e: "close"): void;
+  (e: 'update:modelValue', value: boolean): void;
+  (e: 'close'): void;
 }
 
 const props = withDefaults(defineProps<Props>(), {
   persistent: true,
   maximized: false,
-  position: "standard",
+  position: 'standard',
   fullWidth: false,
-  transitionShow: "scale",
-  transitionHide: "scale",
+  transitionShow: 'scale',
+  transitionHide: 'scale',
   closable: true,
-  iconColor: "primary",
-  iconSize: "48px",
-  variant: "modern",
-  size: "md",
+  iconColor: 'primary',
+  iconSize: '48px',
+  variant: 'modern',
+  size: 'md',
 });
 
 const emit = defineEmits<Emits>();
 const slots = useSlots();
-const { t } = useI18n();
 
 // Computed properties
 const titleId = computed(
@@ -131,11 +130,11 @@ const iconInnerSize = computed(() => {
 
 const closeButtonSize = computed(() => {
   const size = parseInt(props.iconSize);
-  return size > 40 ? "md" : "sm";
+  return size > 40 ? 'md' : 'sm';
 });
 
 const cardClasses = computed(() => {
-  const classes = ["base-dialog-card"];
+  const classes = ['base-dialog-card'];
 
   // Variant classes
   classes.push(`dialog-${props.variant}`);
@@ -148,8 +147,8 @@ const cardClasses = computed(() => {
 
 // Methods
 const close = () => {
-  emit("close");
-  emit("update:modelValue", false);
+  emit('close');
+  emit('update:modelValue', false);
 };
 </script>
 

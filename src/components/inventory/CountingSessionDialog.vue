@@ -116,16 +116,16 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, watch } from "vue";
-import { useI18n } from "vue-i18n";
-import { useQuasar } from "quasar";
-import { useCountingStore } from "src/stores/counting";
-import { useAuthStore } from "src/stores/auth";
+import { ref, computed, watch } from 'vue';
+import { useI18n } from 'vue-i18n';
+import { useQuasar } from 'quasar';
+import { useCountingStore } from 'src/stores/counting';
+import { useAuthStore } from 'src/stores/auth';
 import type {
   PracticeLocation,
   StartCountingSessionRequest,
-} from "src/types/inventory";
-import BaseDialog from "src/components/base/BaseDialog.vue";
+} from 'src/types/inventory';
+import BaseDialog from 'src/components/base/BaseDialog.vue';
 
 interface Props {
   modelValue: boolean;
@@ -133,8 +133,8 @@ interface Props {
 }
 
 interface Emits {
-  (e: "update:modelValue", value: boolean): void;
-  (e: "session-created", sessionId: string): void;
+  (e: 'update:modelValue', value: boolean): void;
+  (e: 'session-created', sessionId: string): void;
 }
 
 const props = defineProps<Props>();
@@ -149,43 +149,43 @@ const authStore = useAuthStore();
 // State
 const loading = ref(false);
 const form = ref({
-  name: "",
-  sessionType: "partial" as const,
+  name: '',
+  sessionType: 'partial' as const,
   locationIds: [] as string[],
   allowNegativeCounts: false,
   requireApproval: true,
   autoAdjustStock: false,
-  notes: "",
+  notes: '',
 });
 
 // Computed
 const dialogVisible = computed({
   get: () => props.modelValue,
-  set: (value) => emit("update:modelValue", value),
+  set: (value) => emit('update:modelValue', value),
 });
 
-const practiceId = computed(() => authStore.userProfile?.clinic_id || "");
+const practiceId = computed(() => authStore.userProfile?.clinic_id || '');
 
 const sessionTypeOptions = computed(() => [
   {
-    label: t("inventory.partialCount"),
-    value: "partial",
-    description: t("inventory.partialCountDescription"),
+    label: t('inventory.partialCount'),
+    value: 'partial',
+    description: t('inventory.partialCountDescription'),
   },
   {
-    label: t("inventory.fullCount"),
-    value: "full",
-    description: t("inventory.fullCountDescription"),
+    label: t('inventory.fullCount'),
+    value: 'full',
+    description: t('inventory.fullCountDescription'),
   },
   {
-    label: t("inventory.spotCheck"),
-    value: "spot_check",
-    description: t("inventory.spotCheckDescription"),
+    label: t('inventory.spotCheck'),
+    value: 'spot_check',
+    description: t('inventory.spotCheckDescription'),
   },
   {
-    label: t("inventory.cycleCount"),
-    value: "cycle",
-    description: t("inventory.cycleCountDescription"),
+    label: t('inventory.cycleCount'),
+    value: 'cycle',
+    description: t('inventory.cycleCountDescription'),
   },
 ]);
 
@@ -202,28 +202,28 @@ const locationOptions = computed(() =>
 // Methods
 const getLocationIcon = (type: string): string => {
   switch (type) {
-    case "storage":
-      return "inventory_2";
-    case "treatment":
-      return "medical_services";
-    case "emergency":
-      return "emergency";
-    case "mobile":
-      return "directions_car";
+    case 'storage':
+      return 'inventory_2';
+    case 'treatment':
+      return 'medical_services';
+    case 'emergency':
+      return 'emergency';
+    case 'mobile':
+      return 'directions_car';
     default:
-      return "place";
+      return 'place';
   }
 };
 
 const resetForm = () => {
   form.value = {
-    name: "",
-    sessionType: "partial",
+    name: '',
+    sessionType: 'partial',
     locationIds: [],
     allowNegativeCounts: false,
     requireApproval: true,
     autoAdjustStock: false,
-    notes: "",
+    notes: '',
   };
 };
 
@@ -240,7 +240,7 @@ const onSubmit = async () => {
       allow_negative_counts: form.value.allowNegativeCounts,
       require_approval: form.value.requireApproval,
       auto_adjust_stock: form.value.autoAdjustStock,
-      notes: form.value.notes || "",
+      notes: form.value.notes || '',
     };
 
     // In a real implementation, this would create the session via the counting store
@@ -250,19 +250,19 @@ const onSubmit = async () => {
     const sessionId = `session_${Date.now()}`;
 
     $q.notify({
-      type: "positive",
-      message: t("inventory.sessionCreated"),
-      position: "top",
+      type: 'positive',
+      message: t('inventory.sessionCreated'),
+      position: 'top',
     });
 
-    emit("session-created", sessionId);
+    emit('session-created', sessionId);
     dialogVisible.value = false;
   } catch (error) {
-    console.error("Error creating counting session:", error);
+    console.error('Error creating counting session:', error);
     $q.notify({
-      type: "negative",
-      message: t("inventory.sessionCreationFailed"),
-      position: "top",
+      type: 'negative',
+      message: t('inventory.sessionCreationFailed'),
+      position: 'top',
     });
   } finally {
     loading.value = false;
@@ -283,12 +283,12 @@ watch(
   (isVisible) => {
     if (isVisible && !form.value.name) {
       const now = new Date();
-      const dateStr = now.toLocaleDateString("nl-NL");
-      const timeStr = now.toLocaleTimeString("nl-NL", {
-        hour: "2-digit",
-        minute: "2-digit",
+      const dateStr = now.toLocaleDateString('nl-NL');
+      const timeStr = now.toLocaleTimeString('nl-NL', {
+        hour: '2-digit',
+        minute: '2-digit',
       });
-      form.value.name = t("inventory.defaultSessionName", {
+      form.value.name = t('inventory.defaultSessionName', {
         date: dateStr,
         time: timeStr,
       });

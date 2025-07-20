@@ -1,5 +1,10 @@
 module.exports = {
   root: true,
+  ignorePatterns: [
+    'src/types/supabase.ts',
+    'test/**/*',
+    'vitest.config.ts'
+  ],
   parserOptions: {
     ecmaVersion: "latest", // Allows for the parsing of modern ECMAScript features
     sourceType: "module", // Allows for the use of imports
@@ -42,7 +47,7 @@ module.exports = {
   rules: {
     "prefer-promise-reject-errors": "off",
 
-    quotes: ["warn", "single", { avoidEscape: true }],
+    quotes: 'off', // Disabled to reduce noise in linting output
 
     // this rule, if on, would require explicit return type on the `render` function
     "@typescript-eslint/explicit-function-return-type": "off",

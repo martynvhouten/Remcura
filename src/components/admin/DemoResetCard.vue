@@ -59,11 +59,11 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from "vue";
-import { useI18n } from "vue-i18n";
-import { useQuasar } from "quasar";
-import BaseCard from "../base/BaseCard.vue";
-import { useAuthStore } from "../../stores/auth";
+import { ref } from 'vue';
+import { useI18n } from 'vue-i18n';
+import { useQuasar } from 'quasar';
+import BaseCard from '../base/BaseCard.vue';
+import { useAuthStore } from '../../stores/auth';
 
 // Composables
 const { t } = useI18n();
@@ -76,26 +76,26 @@ const resetting = ref(false);
 // Methods
 const resetDemoData = async () => {
   // Only allow demo user to reset
-  if (authStore.userEmail !== "demo@medstock-pro.com") {
+  if (authStore.userEmail !== 'demo@medstock-pro.com') {
     $q.notify({
-      type: "negative",
-      message: "Alleen demo gebruiker kan demo data resetten",
-      position: "top",
+      type: 'negative',
+      message: 'Alleen demo gebruiker kan demo data resetten',
+      position: 'top',
     });
     return;
   }
 
   // Confirmation dialog
   $q.dialog({
-    title: t("demo.resetData"),
-    message: t("demo.resetDataConfirm"),
+    title: t('demo.resetData'),
+    message: t('demo.resetDataConfirm'),
     cancel: {
-      label: t("common.cancel"),
-      color: "grey",
+      label: t('common.cancel'),
+      color: 'grey',
     },
     ok: {
-      label: t("demo.resetData"),
-      color: "warning",
+      label: t('demo.resetData'),
+      color: 'warning',
     },
     persistent: true,
   }).onOk(async () => {
@@ -103,19 +103,19 @@ const resetDemoData = async () => {
       resetting.value = true;
 
       // Call reset function via MCP or API
-      const response = await fetch("/api/demo/reset", {
-        method: "POST",
+      const response = await fetch('/api/demo/reset', {
+        method: 'POST',
         headers: {
-          "Content-Type": "application/json",
+          'Content-Type': 'application/json',
           Authorization: `Bearer ${authStore.session?.access_token}`,
         },
       });
 
       if (response.ok) {
         $q.notify({
-          type: "positive",
-          message: t("demo.resetDataSuccess"),
-          position: "top",
+          type: 'positive',
+          message: t('demo.resetDataSuccess'),
+          position: 'top',
           timeout: 5000,
         });
 
@@ -124,14 +124,14 @@ const resetDemoData = async () => {
           window.location.reload();
         }, 2000);
       } else {
-        throw new Error("Reset failed");
+        throw new Error('Reset failed');
       }
     } catch (error) {
-      console.error("Demo reset error:", error);
+      console.error('Demo reset error:', error);
       $q.notify({
-        type: "negative",
-        message: t("demo.resetDataError"),
-        position: "top",
+        type: 'negative',
+        message: t('demo.resetDataError'),
+        position: 'top',
       });
     } finally {
       resetting.value = false;

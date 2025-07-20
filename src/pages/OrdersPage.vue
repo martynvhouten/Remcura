@@ -353,18 +353,18 @@
 </template>
 
 <script setup lang="ts">
-import { ref, reactive, onMounted, computed } from "vue";
-import { useRouter } from "vue-router";
-import { useI18n } from "vue-i18n";
-import { useQuasar } from "quasar";
-import { useButtons } from "src/composables/useButtons";
-import PageLayout from "@/components/PageLayout.vue";
-import PageTitle from "@/components/PageTitle.vue";
-import BaseCard from "src/components/base/BaseCard.vue";
-import { orderProcessingService } from "@/services/orderProcessing";
-import { analyticsService } from "@/services/analytics";
-import { notificationService } from "@/services/notifications";
-import type { OrderWithItems, OrderStatus } from "@/types/supabase";
+import { ref, reactive, onMounted, computed } from 'vue';
+import { useRouter } from 'vue-router';
+import { useI18n } from 'vue-i18n';
+import { useQuasar } from 'quasar';
+import { useButtons } from 'src/composables/useButtons';
+import PageLayout from '@/components/PageLayout.vue';
+import PageTitle from '@/components/PageTitle.vue';
+import BaseCard from 'src/components/base/BaseCard.vue';
+import { orderProcessingService } from '@/services/orderProcessing';
+import { analyticsService } from '@/services/analytics';
+import { notificationService } from '@/services/notifications';
+import type { OrderWithItems, OrderStatus } from '@/types/supabase';
 
 // Composables
 const router = useRouter();
@@ -374,39 +374,39 @@ const { quickActions, getThemeConfig } = useButtons();
 
 // Button configurations
 const exportBtn = computed(() =>
-  getThemeConfig("secondary", {
-    icon: "file_download",
-    label: t("orders.export"),
-    variant: "outline",
+  getThemeConfig('secondary', {
+    icon: 'file_download',
+    label: t('orders.export'),
+    variant: 'outline',
   })
 );
 
 const analyticsBtn = computed(() =>
-  getThemeConfig("info", {
-    icon: "insights",
-    label: t("orders.analytics"),
+  getThemeConfig('info', {
+    icon: 'insights',
+    label: t('orders.analytics'),
   })
 );
 
 const createOrderBtn = computed(() =>
-  getThemeConfig("primary", {
-    icon: "shopping_cart_checkout",
-    label: t("orders.createOrder"),
+  getThemeConfig('primary', {
+    icon: 'shopping_cart_checkout',
+    label: t('orders.createOrder'),
   })
 );
 
 const filterBtn = computed(() =>
-  getThemeConfig("primary", {
-    icon: "filter_list",
-    label: t("common.filter"),
+  getThemeConfig('primary', {
+    icon: 'filter_list',
+    label: t('common.filter'),
   })
 );
 
 const resetBtn = computed(() =>
-  getThemeConfig("secondary", {
-    icon: "clear",
-    label: t("common.reset"),
-    variant: "flat",
+  getThemeConfig('secondary', {
+    icon: 'clear',
+    label: t('common.reset'),
+    variant: 'flat',
   })
 );
 
@@ -422,22 +422,22 @@ const showEmailDialog = ref(false);
 
 // Filters
 const filters = reactive({
-  status: "",
-  supplier: "",
-  dateFrom: "",
-  dateTo: "",
+  status: '',
+  supplier: '',
+  dateFrom: '',
+  dateTo: '',
 });
 
 // Export options
-const exportFormat = ref<"csv" | "pdf">("csv");
-const exportScope = ref<"all" | "filtered" | "selected">("filtered");
+const exportFormat = ref<'csv' | 'pdf'>('csv');
+const exportScope = ref<'all' | 'filtered' | 'selected'>('filtered');
 
 // Email data
 const emailData = reactive({
-  recipient: "",
-  subject: "",
-  message: "",
-  orderId: "",
+  recipient: '',
+  subject: '',
+  message: '',
+  orderId: '',
 });
 
 // Analytics data
@@ -457,30 +457,30 @@ const pagination = ref({
 
 // Options
 const statusOptions = computed(() => [
-  { label: t("orders.status.draft"), value: "draft" },
-  { label: t("orders.status.submitted"), value: "submitted" },
-  { label: t("orders.status.confirmed"), value: "confirmed" },
-  { label: t("orders.status.shipped"), value: "shipped" },
-  { label: t("orders.status.delivered"), value: "delivered" },
-  { label: t("orders.status.cancelled"), value: "cancelled" },
+  { label: t('orders.status.draft'), value: 'draft' },
+  { label: t('orders.status.submitted'), value: 'submitted' },
+  { label: t('orders.status.confirmed'), value: 'confirmed' },
+  { label: t('orders.status.shipped'), value: 'shipped' },
+  { label: t('orders.status.delivered'), value: 'delivered' },
+  { label: t('orders.status.cancelled'), value: 'cancelled' },
 ]);
 
 const supplierOptions = computed(() => [
   // These would be loaded from the suppliers table
-  { label: t("orders.filters.allSuppliers"), value: "" },
+  { label: t('orders.filters.allSuppliers'), value: '' },
 ]);
 
 const exportFormatOptions = computed(() => [
-  { label: t("orders.exportFormat.csv"), value: "csv" },
-  { label: t("orders.exportFormat.pdf"), value: "pdf" },
+  { label: t('orders.exportFormat.csv'), value: 'csv' },
+  { label: t('orders.exportFormat.pdf'), value: 'pdf' },
 ]);
 
 const exportScopeOptions = computed(() => [
-  { label: t("orders.exportScope.all"), value: "all" },
-  { label: t("orders.exportScope.filtered"), value: "filtered" },
+  { label: t('orders.exportScope.all'), value: 'all' },
+  { label: t('orders.exportScope.filtered'), value: 'filtered' },
   {
-    label: t("orders.exportScope.selected"),
-    value: "selected",
+    label: t('orders.exportScope.selected'),
+    value: 'selected',
     disable: selected.value.length === 0,
   },
 ]);
@@ -488,41 +488,41 @@ const exportScopeOptions = computed(() => [
 // Table columns
 const columns = computed(() => [
   {
-    name: "id",
-    label: t("orders.table.orderNumber"),
-    field: "id",
+    name: 'id',
+    label: t('orders.table.orderNumber'),
+    field: 'id',
     sortable: true,
-    align: "left" as const,
-    style: "width: 120px",
+    align: 'left' as const,
+    style: 'width: 120px',
   },
   {
-    name: "supplier",
-    label: t("orders.table.supplier"),
+    name: 'supplier',
+    label: t('orders.table.supplier'),
     field: (row: any) => row.supplier?.name || t('common.unknownSupplier'),
-    align: "left" as const,
+    align: 'left' as const,
     sortable: true,
-    style: "width: 200px",
+    style: 'width: 200px',
   },
   {
-    name: "status",
-    label: t("orders.table.status"),
-    field: "status",
+    name: 'status',
+    label: t('orders.table.status'),
+    field: 'status',
     sortable: true,
-    align: "left" as const,
-    style: "width: 120px",
+    align: 'left' as const,
+    style: 'width: 120px',
   },
   {
-    name: "total",
-    label: t("orders.table.total"),
-    field: "total_amount",
-    align: "left" as const,
+    name: 'total',
+    label: t('orders.table.total'),
+    field: 'total_amount',
+    align: 'left' as const,
     sortable: true,
-    style: "width: 120px",
+    style: 'width: 120px',
   },
   {
-    name: "actions",
-    label: t("common.actions"),
-    align: "center",
+    name: 'actions',
+    label: t('common.actions'),
+    align: 'center',
   },
 ]);
 
@@ -542,31 +542,31 @@ const loadOrders = async () => {
     pagination.value.rowsNumber = orders.value.length;
 
     // Track analytics
-    analyticsService.trackEvent("orders_viewed", {
+    analyticsService.trackEvent('orders_viewed', {
       count: orders.value.length,
       filters: filterOptions,
     });
   } catch (error: any) {
-    console.error("Failed to load orders:", error);
+    console.error('Failed to load orders:', error);
 
     // Show user-friendly message for "No practice selected" error
-    if (error.message === t("orders.noPracticeSelected")) {
+    if (error.message === t('orders.noPracticeSelected')) {
       $q.notify({
-        type: "warning",
-        message: t("orders.errors.noPracticeSelected"),
-        position: "top",
+        type: 'warning',
+        message: t('orders.errors.noPracticeSelected'),
+        position: 'top',
         timeout: 5000,
         actions: [
           {
-            label: t("common.dismiss"),
-            color: "white",
+            label: t('common.dismiss'),
+            color: 'white',
           },
         ],
       });
     } else {
       $q.notify({
-        type: "negative",
-        message: t("orders.errors.loadFailed"),
+        type: 'negative',
+        message: t('orders.errors.loadFailed'),
       });
     }
   } finally {
@@ -587,7 +587,7 @@ const loadAnalytics = async () => {
     analyticsData.orderFrequency =
       Math.round(patterns.orderFrequency * 10) / 10;
   } catch (error) {
-    console.error("Failed to load analytics:", error);
+    console.error('Failed to load analytics:', error);
   }
 };
 
@@ -597,10 +597,10 @@ const applyFilters = () => {
 
 const resetFilters = () => {
   Object.assign(filters, {
-    status: "",
-    supplier: "",
-    dateFrom: "",
-    dateTo: "",
+    status: '',
+    supplier: '',
+    dateFrom: '',
+    dateTo: '',
   });
   loadOrders();
 };
@@ -616,24 +616,24 @@ const onRequest = (props: any) => {
 
 const getStatusColor = (status: OrderStatus) => {
   const colors = {
-    draft: "grey",
-    submitted: "blue",
-    confirmed: "orange",
-    shipped: "purple",
-    delivered: "positive",
-    cancelled: "negative",
+    draft: 'grey',
+    submitted: 'blue',
+    confirmed: 'orange',
+    shipped: 'purple',
+    delivered: 'positive',
+    cancelled: 'negative',
   };
-  return colors[status] || "grey";
+  return colors[status] || 'grey';
 };
 
 const createNewOrder = () => {
-  router.push("/bestellijsten");
+  router.push('/bestellijsten');
 };
 
 const viewOrder = (order: OrderWithItems) => {
   // Navigate to order detail view
   $q.notify({
-    type: "info",
+    type: 'info',
     message: `Viewing order ${order.order_number}`,
   });
 };
@@ -641,7 +641,7 @@ const viewOrder = (order: OrderWithItems) => {
 const editOrder = (order: OrderWithItems) => {
   // Navigate to order edit view
   $q.notify({
-    type: "info",
+    type: 'info',
     message: `Editing order ${order.order_number}`,
   });
 };
@@ -654,19 +654,19 @@ const downloadOrderPDF = async (order: OrderWithItems) => {
       `order-${order.order_number}.html`
     );
 
-    analyticsService.trackExportEvent("order_pdf", "pdf", {
+    analyticsService.trackExportEvent('order_pdf', 'pdf', {
       order_id: order.id,
     });
 
     $q.notify({
-      type: "positive",
-      message: t("orders.notifications.pdfDownloaded"),
+      type: 'positive',
+      message: t('orders.notifications.pdfDownloaded'),
     });
   } catch (error) {
-    console.error("Failed to download PDF:", error);
+    console.error('Failed to download PDF:', error);
     $q.notify({
-      type: "negative",
-      message: t("orders.errors.pdfFailed"),
+      type: 'negative',
+      message: t('orders.errors.pdfFailed'),
     });
   }
 };
@@ -679,19 +679,19 @@ const downloadOrderCSV = async (order: OrderWithItems) => {
       `order-${order.order_number}.csv`
     );
 
-    analyticsService.trackExportEvent("order_csv", "csv", {
+    analyticsService.trackExportEvent('order_csv', 'csv', {
       order_id: order.id,
     });
 
     $q.notify({
-      type: "positive",
-      message: t("orders.notifications.csvDownloaded"),
+      type: 'positive',
+      message: t('orders.notifications.csvDownloaded'),
     });
   } catch (error) {
-    console.error("Failed to download CSV:", error);
+    console.error('Failed to download CSV:', error);
     $q.notify({
-      type: "negative",
-      message: t("orders.errors.csvFailed"),
+      type: 'negative',
+      message: t('orders.errors.csvFailed'),
     });
   }
 };
@@ -718,22 +718,22 @@ const sendEmail = async () => {
     showEmailDialog.value = false;
 
     $q.notify({
-      type: "positive",
-      message: t("orders.notifications.emailSent"),
+      type: 'positive',
+      message: t('orders.notifications.emailSent'),
     });
 
     // Reset email data
     Object.assign(emailData, {
-      recipient: "",
-      subject: "",
-      message: "",
-      orderId: "",
+      recipient: '',
+      subject: '',
+      message: '',
+      orderId: '',
     });
   } catch (error) {
-    console.error("Failed to send email:", error);
+    console.error('Failed to send email:', error);
     $q.notify({
-      type: "negative",
-      message: t("orders.errors.emailFailed"),
+      type: 'negative',
+      message: t('orders.errors.emailFailed'),
     });
   } finally {
     emailSending.value = false;
@@ -745,8 +745,8 @@ const submitToMagento = async (order: OrderWithItems) => {
     const result = await orderProcessingService.submitOrderToMagento(order.id);
 
     $q.notify({
-      type: "positive",
-      message: t("orders.notifications.magentoSubmitted", {
+      type: 'positive',
+      message: t('orders.notifications.magentoSubmitted', {
         orderNumber: result.increment_id,
       }),
     });
@@ -754,36 +754,36 @@ const submitToMagento = async (order: OrderWithItems) => {
     // Reload orders to show updated status
     loadOrders();
   } catch (error) {
-    console.error("Failed to submit to Magento:", error);
+    console.error('Failed to submit to Magento:', error);
     $q.notify({
-      type: "negative",
-      message: t("orders.errors.magentoFailed"),
+      type: 'negative',
+      message: t('orders.errors.magentoFailed'),
     });
   }
 };
 
 const duplicateOrder = (order: OrderWithItems) => {
   $q.notify({
-    type: "info",
+    type: 'info',
     message: `Duplicating order ${order.order_number}`,
   });
 };
 
 const cancelOrder = async (order: OrderWithItems) => {
   try {
-    await orderProcessingService.updateOrderStatus(order.id, "cancelled");
+    await orderProcessingService.updateOrderStatus(order.id, 'cancelled');
 
     $q.notify({
-      type: "positive",
-      message: t("orders.notifications.orderCancelled"),
+      type: 'positive',
+      message: t('orders.notifications.orderCancelled'),
     });
 
     loadOrders();
   } catch (error) {
-    console.error("Failed to cancel order:", error);
+    console.error('Failed to cancel order:', error);
     $q.notify({
-      type: "negative",
-      message: t("orders.errors.cancelFailed"),
+      type: 'negative',
+      message: t('orders.errors.cancelFailed'),
     });
   }
 };
@@ -795,41 +795,41 @@ const performExport = async () => {
     let ordersToExport: OrderWithItems[] = [];
 
     switch (exportScope.value) {
-      case "all":
+      case 'all':
         ordersToExport = await orderProcessingService.getOrders();
         break;
-      case "filtered":
+      case 'filtered':
         ordersToExport = orders.value;
         break;
-      case "selected":
+      case 'selected':
         ordersToExport = selected.value;
         break;
     }
 
     if (ordersToExport.length === 0) {
       $q.notify({
-        type: "warning",
-        message: t("orders.errors.noOrdersToExport"),
+        type: 'warning',
+        message: t('orders.errors.noOrdersToExport'),
       });
       return;
     }
 
     const orderIds = ordersToExport.map((order) => order.id);
 
-    if (exportFormat.value === "csv") {
+    if (exportFormat.value === 'csv') {
       const blob = await orderProcessingService.exportOrdersToCSV(orderIds);
-      const filename = `orders-${new Date().toISOString().split("T")[0]}.csv`;
+      const filename = `orders-${new Date().toISOString().split('T')[0]}.csv`;
       orderProcessingService.downloadFile(blob, filename);
     } else {
       // For PDF, we'd need to implement bulk PDF generation
       $q.notify({
-        type: "info",
-        message: t("orders.notifications.pdfBulkNotSupported"),
+        type: 'info',
+        message: t('orders.notifications.pdfBulkNotSupported'),
       });
       return;
     }
 
-    analyticsService.trackExportEvent("orders_bulk", exportFormat.value, {
+    analyticsService.trackExportEvent('orders_bulk', exportFormat.value, {
       count: ordersToExport.length,
       scope: exportScope.value,
     });
@@ -837,16 +837,16 @@ const performExport = async () => {
     showExportDialog.value = false;
 
     $q.notify({
-      type: "positive",
-      message: t("orders.notifications.exportCompleted", {
+      type: 'positive',
+      message: t('orders.notifications.exportCompleted', {
         count: ordersToExport.length,
       }),
     });
   } catch (error) {
-    console.error("Failed to export orders:", error);
+    console.error('Failed to export orders:', error);
     $q.notify({
-      type: "negative",
-      message: t("orders.errors.exportFailed"),
+      type: 'negative',
+      message: t('orders.errors.exportFailed'),
     });
   } finally {
     exporting.value = false;
@@ -854,14 +854,14 @@ const performExport = async () => {
 };
 
 const bulkExport = () => {
-  exportScope.value = "selected";
+  exportScope.value = 'selected';
   showExportDialog.value = true;
 };
 
 const bulkEmail = () => {
   $q.notify({
-    type: "info",
-    message: t("orders.notifications.bulkEmailComingSoon"),
+    type: 'info',
+    message: t('orders.notifications.bulkEmailComingSoon'),
   });
 };
 

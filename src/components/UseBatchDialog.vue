@@ -172,11 +172,11 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from "vue";
-import { useI18n } from "vue-i18n";
-import { useQuasar, date } from "quasar";
-import { useBatchStore } from "src/stores/batch";
-import type { ProductBatchWithDetails } from "src/types/inventory";
+import { ref, computed } from 'vue';
+import { useI18n } from 'vue-i18n';
+import { useQuasar, date } from 'quasar';
+import { useBatchStore } from 'src/stores/batch';
+import type { ProductBatchWithDetails } from 'src/types/inventory';
 
 interface Props {
   batch: ProductBatchWithDetails;
@@ -198,23 +198,23 @@ const loading = ref(false);
 
 const form = ref({
   quantity: 0,
-  reason: "",
-  notes: "",
+  reason: '',
+  notes: '',
 });
 
 // Computed
 const reasonOptions = computed(() => [
-  { label: t("batch.usage.consumption"), value: "consumption" },
-  { label: t("batch.usage.expired"), value: "expired" },
-  { label: t("batch.usage.damaged"), value: "damaged" },
-  { label: t("batch.usage.transfer"), value: "transfer" },
-  { label: t("batch.usage.adjustment"), value: "adjustment" },
-  { label: t("batch.usage.other"), value: "other" },
+  { label: t('batch.usage.consumption'), value: 'consumption' },
+  { label: t('batch.usage.expired'), value: 'expired' },
+  { label: t('batch.usage.damaged'), value: 'damaged' },
+  { label: t('batch.usage.transfer'), value: 'transfer' },
+  { label: t('batch.usage.adjustment'), value: 'adjustment' },
+  { label: t('batch.usage.other'), value: 'other' },
 ]);
 
 // Methods
 const formatDate = (dateStr: string) => {
-  return date.formatDate(dateStr, "DD/MM/YYYY");
+  return date.formatDate(dateStr, 'DD/MM/YYYY');
 };
 
 const formatQuantity = (quantity: number) => {
@@ -225,22 +225,22 @@ const formatQuantity = (quantity: number) => {
 };
 
 const formatCurrency = (amount: number) => {
-  return new Intl.NumberFormat("nl-NL", {
-    style: "currency",
-    currency: props.batch.currency || "EUR",
+  return new Intl.NumberFormat('nl-NL', {
+    style: 'currency',
+    currency: props.batch.currency || 'EUR',
   }).format(amount);
 };
 
 const getNewStatusColor = () => {
   const remaining = props.batch.availableQuantity - form.value.quantity;
-  if (remaining <= 0) return "grey";
-  return "green";
+  if (remaining <= 0) return 'grey';
+  return 'green';
 };
 
 const getNewStatusText = () => {
   const remaining = props.batch.availableQuantity - form.value.quantity;
-  if (remaining <= 0) return t("batch.status.depleted");
-  return t("batch.status.active");
+  if (remaining <= 0) return t('batch.status.depleted');
+  return t('batch.status.active');
 };
 
 const onSubmit = async () => {
@@ -252,11 +252,11 @@ const onSubmit = async () => {
       productId: props.batch.productId,
       locationId: props.batch.locationId,
       batchId: props.batch.id,
-      movementType: "consumption",
+      movementType: 'consumption',
       quantityChange: -form.value.quantity,
       quantityBefore: props.batch.currentQuantity,
       quantityAfter: props.batch.currentQuantity - form.value.quantity,
-      referenceType: "manual_usage",
+      referenceType: 'manual_usage',
       notes: form.value.notes,
       reason: form.value.reason,
     };
@@ -265,22 +265,22 @@ const onSubmit = async () => {
     await batchStore.processStockMovement(stockMovement);
 
     $q.notify({
-      type: "positive",
-      message: t("batch.batchUsedSuccessfully"),
+      type: 'positive',
+      message: t('batch.batchUsedSuccessfully'),
       actions: [
         {
-          label: t("common.dismiss"),
-          color: "white",
+          label: t('common.dismiss'),
+          color: 'white',
         },
       ],
     });
 
-    emit("used", props.batch, form.value.quantity);
+    emit('used', props.batch, form.value.quantity);
   } catch (error) {
-    console.error("Failed to use batch:", error);
+    console.error('Failed to use batch:', error);
     $q.notify({
-      type: "negative",
-      message: t("errors.failedToUseBatch"),
+      type: 'negative',
+      message: t('errors.failedToUseBatch'),
     });
   } finally {
     loading.value = false;

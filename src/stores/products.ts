@@ -1,9 +1,9 @@
-import { defineStore } from "pinia";
-import { ref, computed } from "vue";
-import { supabase } from "src/boot/supabase";
-import { magentoApi } from "src/services/magento";
-import { useAuthStore } from "./auth";
-import { useSuppliersStore } from "./suppliers";
+import { defineStore } from 'pinia';
+import { ref, computed } from 'vue';
+import { supabase } from 'src/boot/supabase';
+import { magentoApi } from 'src/services/magento';
+import { useAuthStore } from './auth';
+import { useSuppliersStore } from './suppliers';
 import type {
   Product,
   ProductWithStock,
@@ -11,10 +11,9 @@ import type {
   ProductFilter,
   CartItem,
   OrderListCart,
-  Supplier,
-} from "src/types/inventory";
+} from 'src/types/inventory';
 
-export const useProductsStore = defineStore("products", () => {
+export const useProductsStore = defineStore('products', () => {
   // State
   const products = ref<ProductWithStock[]>([]);
   const categories = ref<ProductCategory[]>([]);
@@ -23,16 +22,15 @@ export const useProductsStore = defineStore("products", () => {
   const loading = ref(false);
   const lastSyncAt = ref<Date | null>(null);
   const filters = ref<ProductFilter>({
-    search: "",
-    category: "",
-    supplier: "",
-    stock_status: "all",
-    sort_by: "name",
-    sort_order: "asc",
+    search: '',
+    category: '',
+    supplier: '',
+    stock_status: 'all',
+    sort_by: 'name',
+    sort_order: 'asc',
   });
 
-  // Auth store reference
-  const authStore = useAuthStore();
+  // Store references
   const suppliersStore = useSuppliersStore();
 
   // Getters
@@ -55,27 +53,27 @@ export const useProductsStore = defineStore("products", () => {
     }
 
     // Apply category filter
-    if (filters.value.category && filters.value.category !== "all") {
+    if (filters.value.category && filters.value.category !== 'all') {
       result = result.filter(
         (product) => product.category === filters.value.category
       );
     }
 
     // Apply supplier filter
-    if (filters.value.supplier && filters.value.supplier !== "all") {
-      if (filters.value.supplier === "remka") {
+    if (filters.value.supplier && filters.value.supplier !== 'all') {
+      if (filters.value.supplier === 'remka') {
         result = result.filter(
           (product) =>
             !product.supplier_products ||
             product.supplier_products.length === 0 ||
-            product.supplier_products.some((sp) => sp.supplier_id === "remka")
+            product.supplier_products.some((sp) => sp.supplier_id === 'remka')
         );
-      } else if (filters.value.supplier === "external") {
+      } else if (filters.value.supplier === 'external') {
         result = result.filter(
           (product) =>
             product.supplier_products &&
             product.supplier_products.length > 0 &&
-            product.supplier_products.some((sp) => sp.supplier_id !== "remka")
+            product.supplier_products.some((sp) => sp.supplier_id !== 'remka')
         );
       } else {
         result = result.filter(
@@ -89,7 +87,7 @@ export const useProductsStore = defineStore("products", () => {
     }
 
     // Apply stock status filter
-    if (filters.value.stock_status && filters.value.stock_status !== "all") {
+    if (filters.value.stock_status && filters.value.stock_status !== 'all') {
       result = result.filter(
         (product) => product.stock_status === filters.value.stock_status
       );
@@ -101,27 +99,27 @@ export const useProductsStore = defineStore("products", () => {
         let aValue: any, bValue: any;
 
         switch (filters.value.sort_by) {
-          case "name":
+          case 'name':
             aValue = a.name.toLowerCase();
             bValue = b.name.toLowerCase();
             break;
-          case "price":
+          case 'price':
             aValue = a.lowest_price || Number.MAX_VALUE;
             bValue = b.lowest_price || Number.MAX_VALUE;
             break;
-          case "stock":
+          case 'stock':
             aValue = a.total_stock;
             bValue = b.total_stock;
             break;
-          case "category":
-            aValue = a.category || "";
-            bValue = b.category || "";
+          case 'category':
+            aValue = a.category || '';
+            bValue = b.category || '';
             break;
           default:
             return 0;
         }
 
-        if (filters.value.sort_order === "desc") {
+        if (filters.value.sort_order === 'desc') {
           return aValue < bValue ? 1 : aValue > bValue ? -1 : 0;
         } else {
           return aValue > bValue ? 1 : aValue < bValue ? -1 : 0;
@@ -159,7 +157,7 @@ export const useProductsStore = defineStore("products", () => {
           suppliers.add(sp.supplier_id);
         });
       } else {
-        suppliers.add("remka"); // Default to Remka for products without supplier
+        suppliers.add('remka'); // Default to Remka for products without supplier
       }
     });
 
@@ -169,12 +167,12 @@ export const useProductsStore = defineStore("products", () => {
   const productStats = computed(() => {
     return {
       total: products.value.length,
-      inStock: products.value.filter((p) => p.stock_status === "in_stock")
+      inStock: products.value.filter((p) => p.stock_status === 'in_stock')
         .length,
-      lowStock: products.value.filter((p) => p.stock_status === "low_stock")
+      lowStock: products.value.filter((p) => p.stock_status === 'low_stock')
         .length,
       outOfStock: products.value.filter(
-        (p) => p.stock_status === "out_of_stock"
+        (p) => p.stock_status === 'out_of_stock'
       ).length,
       categories: availableCategories.value.length,
       suppliers: availableSuppliers.value.length,
@@ -194,7 +192,7 @@ export const useProductsStore = defineStore("products", () => {
         try {
           magentoProducts = await fetchProductsFromMagento();
         } catch (error) {
-          console.warn("Magento sync failed, using Supabase data only:", error);
+          console.warn('Magento sync failed, using Supabase data only:', error);
         }
       }
 
@@ -203,7 +201,7 @@ export const useProductsStore = defineStore("products", () => {
 
       lastSyncAt.value = new Date();
     } catch (error) {
-      console.error("Error fetching products:", error);
+      console.error('Error fetching products:', error);
       throw error;
     } finally {
       loading.value = false;
@@ -214,7 +212,7 @@ export const useProductsStore = defineStore("products", () => {
     practiceId: string
   ): Promise<ProductWithStock[]> => {
     const { data, error } = await supabase.rpc(
-      "get_products_with_stock" as any,
+      'get_products_with_stock' as any,
       { p_practice_id: practiceId }
     );
 
@@ -225,8 +223,8 @@ export const useProductsStore = defineStore("products", () => {
       (item: any) =>
         ({
           id: item.product_id,
-          sku: item.product_sku || "",
-          name: item.product_name || "Onbekend product",
+          sku: item.product_sku || '',
+          name: item.product_name || 'Onbekend product',
           description: item.product_description,
           category: item.product_category,
           brand: item.product_brand,
@@ -234,8 +232,9 @@ export const useProductsStore = defineStore("products", () => {
           image_url: item.product_image_url,
           barcode: item.product_barcode,
           price: item.product_price,
-          currency: item.product_currency || "EUR",
+          currency: item.product_currency || 'EUR',
           is_active: item.product_is_active !== false,
+          requires_batch_tracking: item.requires_batch_tracking || false,
           total_stock: item.total_stock || 0,
           available_stock: item.available_stock || 0,
           reserved_stock: item.reserved_stock || 0,
@@ -267,19 +266,20 @@ export const useProductsStore = defineStore("products", () => {
           id: `magento_${mp.id}`,
           sku: mp.sku,
           name: mp.name,
-          description: "",
-          category: "",
-          brand: "",
-          unit: "",
-          image_url: "",
-          barcode: "",
+          description: '',
+          category: '',
+          brand: '',
+          unit: '',
+          image_url: '',
+          barcode: '',
           price: mp.price,
-          currency: "EUR",
+          currency: 'EUR',
           is_active: mp.status === 1,
+          requires_batch_tracking: false, // Magento products default to no batch tracking
           total_stock: 0, // Magento doesn't provide stock in product list
           available_stock: 0,
           reserved_stock: 0,
-          stock_status: "out_of_stock" as const,
+          stock_status: 'out_of_stock' as const,
           lowest_price: mp.price,
           supplier_products: [],
           stock_levels: [],
@@ -309,10 +309,10 @@ export const useProductsStore = defineStore("products", () => {
   const determineStockStatus = (
     currentStock: number,
     minimumStock: number | null
-  ): "in_stock" | "low_stock" | "out_of_stock" => {
-    if (currentStock <= 0) return "out_of_stock";
-    if (minimumStock && currentStock <= minimumStock) return "low_stock";
-    return "in_stock";
+  ): 'in_stock' | 'low_stock' | 'out_of_stock' => {
+    if (currentStock <= 0) return 'out_of_stock';
+    if (minimumStock && currentStock <= minimumStock) return 'low_stock';
+    return 'in_stock';
   };
 
   const fetchCategories = async () => {
@@ -329,14 +329,14 @@ export const useProductsStore = defineStore("products", () => {
       ).map((name, index) => ({
         id: `cat_${index}`,
         name,
-        description: "",
-        parent_id: "",
+        description: '',
+        parent_id: '',
         sort_order: index,
         is_active: true,
       }));
       categories.value = productCategories;
     } catch (error) {
-      console.error("Error fetching categories:", error);
+      console.error('Error fetching categories:', error);
       categories.value = [];
     }
   };
@@ -419,7 +419,7 @@ export const useProductsStore = defineStore("products", () => {
 
     if (orderListId) {
       const existing = orderLists.value.find((ol) => ol.id === orderListId);
-      if (!existing) throw new Error("Order list not found");
+      if (!existing) throw new Error('Order list not found');
       targetOrderList = existing;
     } else {
       // Create new order list
@@ -427,10 +427,10 @@ export const useProductsStore = defineStore("products", () => {
         (s) => s.id === supplierId
       );
       targetOrderList = {
-        name: `Bestellijst ${new Date().toLocaleDateString("nl-NL")}`,
+        name: `Bestellijst ${new Date().toLocaleDateString('nl-NL')}`,
         items: [],
         total_items: 0,
-        notes: "",
+        notes: '',
       };
 
       // Add supplier_id only if defined
@@ -490,12 +490,12 @@ export const useProductsStore = defineStore("products", () => {
 
   const clearFilters = () => {
     filters.value = {
-      search: "",
-      category: "",
-      supplier: "",
-      stock_status: "all",
-      sort_by: "name",
-      sort_order: "asc",
+      search: '',
+      category: '',
+      supplier: '',
+      stock_status: 'all',
+      sort_by: 'name',
+      sort_order: 'asc',
     };
   };
 
@@ -507,6 +507,22 @@ export const useProductsStore = defineStore("products", () => {
   const getProductBySku = (sku: string): ProductWithStock | undefined => {
     return products.value.find((p) => p.sku === sku);
   };
+
+  // Helper function to check if a product requires batch tracking
+  const requiresBatchTracking = (productId: string): boolean => {
+    const product = getProductById(productId);
+    return product?.requires_batch_tracking || false;
+  };
+
+  // Get products that require batch tracking
+  const batchTrackedProducts = computed(() => {
+    return products.value.filter(p => p.requires_batch_tracking);
+  });
+
+  // Get products that use manual stock management
+  const manualStockProducts = computed(() => {
+    return products.value.filter(p => !p.requires_batch_tracking);
+  });
 
   const refreshData = async (practiceId: string) => {
     await Promise.all([fetchProducts(practiceId), fetchCategories()]);
@@ -529,6 +545,8 @@ export const useProductsStore = defineStore("products", () => {
     availableCategories,
     availableSuppliers,
     productStats,
+    batchTrackedProducts,
+    manualStockProducts,
 
     // Actions
     fetchProducts,
@@ -551,5 +569,6 @@ export const useProductsStore = defineStore("products", () => {
     // Utility functions
     getProductById,
     getProductBySku,
+    requiresBatchTracking,
   };
 });

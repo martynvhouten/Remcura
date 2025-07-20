@@ -66,7 +66,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, useSlots, useAttrs } from "vue";
+import { computed, useSlots, useAttrs } from 'vue';
 
 interface Props {
   // Content props
@@ -77,19 +77,19 @@ interface Props {
   iconSize?: string;
 
   // Styling props
-  variant?: "default" | "modern" | "elevated" | "glass" | "outlined";
+  variant?: 'default' | 'modern' | 'elevated' | 'glass' | 'outlined';
   headerColor?:
-    | "primary"
-    | "secondary"
-    | "positive"
-    | "negative"
-    | "warning"
-    | "info";
-  size?: "sm" | "md" | "lg" | "xl";
+    | 'primary'
+    | 'secondary'
+    | 'positive'
+    | 'negative'
+    | 'warning'
+    | 'info';
+  size?: 'sm' | 'md' | 'lg' | 'xl';
 
   // Layout props
   separator?: boolean;
-  padding?: "none" | "sm" | "md" | "lg";
+  padding?: 'none' | 'sm' | 'md' | 'lg';
 
   // Custom classes
   cardClass?: string;
@@ -102,12 +102,12 @@ interface Props {
 }
 
 const props = withDefaults(defineProps<Props>(), {
-  variant: "default",
-  iconSize: "24px",
-  size: "md",
+  variant: 'default',
+  iconSize: '24px',
+  size: 'md',
   separator: true,
-  padding: "md",
-  role: "article",
+  padding: 'md',
+  role: 'article',
 });
 
 const slots = useSlots();
@@ -117,7 +117,7 @@ const attrs = useAttrs();
 const titleId = computed(() => {
   if (attrs.id) return `${attrs.id}-title`;
   if (props.title)
-    return `card-title-${props.title.replace(/\s+/g, "-").toLowerCase()}`;
+    return `card-title-${props.title.replace(/\s+/g, '-').toLowerCase()}`;
   return `card-title-${Date.now()}`;
 });
 
@@ -128,8 +128,8 @@ const hasHeader = computed(
       props.title ||
       props.subtitle ||
       props.icon ||
-      slots["header-content"] ||
-      slots["header-actions"]
+      slots['header-content'] ||
+      slots['header-actions']
     )
 );
 
@@ -137,25 +137,25 @@ const hasContent = computed(() => !!slots.default);
 
 const hasActions = computed(() => !!slots.actions);
 
-const hasHeaderActions = computed(() => !!slots["header-actions"]);
+const hasHeaderActions = computed(() => !!slots['header-actions']);
 
 // Card classes
 const cardClasses = computed(() => {
-  const classes = ["base-card"];
+  const classes = ['base-card'];
 
   // Variant styles
   switch (props.variant) {
-    case "modern":
-      classes.push("card-modern");
+    case 'modern':
+      classes.push('card-modern');
       break;
-    case "elevated":
-      classes.push("card-modern", "card-elevated");
+    case 'elevated':
+      classes.push('card-modern', 'card-elevated');
       break;
-    case "glass":
-      classes.push("glass-card");
+    case 'glass':
+      classes.push('glass-card');
       break;
-    case "outlined":
-      classes.push("card-outlined");
+    case 'outlined':
+      classes.push('card-outlined');
       break;
   }
 
@@ -163,7 +163,7 @@ const cardClasses = computed(() => {
   classes.push(`card-${props.size}`);
 
   // Padding classes
-  if (props.padding !== "md") {
+  if (props.padding !== 'md') {
     classes.push(`card-padding-${props.padding}`);
   }
 
@@ -172,7 +172,7 @@ const cardClasses = computed(() => {
     classes.push(props.cardClass);
   }
 
-  return classes.join(" ");
+  return classes.join(' ');
 });
 </script>
 

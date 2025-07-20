@@ -154,15 +154,14 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted, onUnmounted, nextTick, watch } from "vue";
-import { useI18n } from "vue-i18n";
+import { ref, computed, onMounted, onUnmounted, nextTick, watch } from 'vue';
+import { useI18n } from 'vue-i18n';
 import {
   cameraScannerService,
   type ScanResult,
   type CameraDevice,
-} from "@/services/cameraScanner";
-import { offlineService } from "@/services/offline";
-import { notificationService } from "@/services/notifications";
+} from '@/services/cameraScanner';
+import { notificationService } from '@/services/notifications';
 
 // Props & Emits
 interface Props {
@@ -170,8 +169,8 @@ interface Props {
 }
 
 interface Emits {
-  (e: "update:modelValue", value: boolean): void;
-  (e: "scan", code: string): void;
+  (e: 'update:modelValue', value: boolean): void;
+  (e: 'scan', code: string): void;
 }
 
 const props = defineProps<Props>();
@@ -183,10 +182,10 @@ const { t } = useI18n();
 // Refs
 const videoElement = ref<HTMLVideoElement>();
 const manualInput = ref();
-const manualBarcode = ref("");
-const scanMode = ref<"manual" | "camera">("manual");
+const manualBarcode = ref('');
+const scanMode = ref<'manual' | 'camera'>('manual');
 const cameraLoading = ref(false);
-const cameraError = ref("");
+const cameraError = ref('');
 const torchEnabled = ref(false);
 const torchSupported = ref(false);
 const availableCameras = ref<CameraDevice[]>([]);
@@ -196,7 +195,7 @@ const recentScans = ref<ScanResult[]>([]);
 // Computed
 const isOpen = computed({
   get: () => props.modelValue,
-  set: (value) => emit("update:modelValue", value),
+  set: (value) => emit('update:modelValue', value),
 });
 
 const cameraSupported = computed(() =>
@@ -205,13 +204,13 @@ const cameraSupported = computed(() =>
 
 // Methods
 const toggleScanMode = () => {
-  if (scanMode.value === "manual") {
-    scanMode.value = "camera";
+  if (scanMode.value === 'manual') {
+    scanMode.value = 'camera';
     if (cameraSupported.value) {
       startCamera();
     }
   } else {
-    scanMode.value = "manual";
+    scanMode.value = 'manual';
     stopCamera();
     nextTick(() => {
       manualInput.value?.focus();
@@ -220,11 +219,11 @@ const toggleScanMode = () => {
 };
 
 const toggleCamera = () => {
-  if (scanMode.value === "camera") {
-    scanMode.value = "manual";
+  if (scanMode.value === 'camera') {
+    scanMode.value = 'manual';
     stopCamera();
   } else {
-    scanMode.value = "camera";
+    scanMode.value = 'camera';
     startCamera();
   }
 };
@@ -234,7 +233,7 @@ const startCamera = async () => {
 
   try {
     cameraLoading.value = true;
-    cameraError.value = "";
+    cameraError.value = '';
 
     // Get available cameras
     availableCameras.value = await cameraScannerService.getAvailableDevices();
@@ -245,7 +244,7 @@ const startCamera = async () => {
     // Start scanning with current camera
     const currentCamera = availableCameras.value[currentCameraIndex.value];
     const scannerOptions: any = {
-      facingMode: "environment",
+      facingMode: 'environment',
     };
 
     // Only add deviceId if it exists
@@ -260,16 +259,16 @@ const startCamera = async () => {
 
     // Check torch support
     const capabilities = cameraScannerService.getCameraCapabilities();
-    torchSupported.value = capabilities ? "torch" in capabilities : false;
+    torchSupported.value = capabilities ? 'torch' in capabilities : false;
   } catch (error) {
-    console.error("Failed to start camera:", error);
+    console.error('Failed to start camera:', error);
     cameraError.value =
-      error instanceof Error ? error.message : t("camera.errors.cameraError");
+      error instanceof Error ? error.message : t('camera.errors.cameraError');
 
     // Show notification
     notificationService.sendSystemNotification(
-      t("camera.errors.cameraError"),
-      "Failed to start camera. Please check permissions."
+      t('camera.errors.cameraError'),
+      'Failed to start camera. Please check permissions.'
     );
   } finally {
     cameraLoading.value = false;
@@ -287,7 +286,7 @@ const switchCamera = async () => {
   currentCameraIndex.value =
     (currentCameraIndex.value + 1) % availableCameras.value.length;
 
-  if (scanMode.value === "camera" && videoElement.value) {
+  if (scanMode.value === 'camera' && videoElement.value) {
     const currentCamera = availableCameras.value[currentCameraIndex.value];
     if (currentCamera && currentCamera.deviceId) {
       await cameraScannerService.switchCamera(currentCamera.deviceId);
@@ -302,7 +301,7 @@ const toggleTorch = async () => {
     const newState = await cameraScannerService.toggleTorch();
     torchEnabled.value = newState;
   } catch (error) {
-    console.error("Failed to toggle torch:", error);
+    console.error('Failed to toggle torch:', error);
   }
 };
 
@@ -310,7 +309,7 @@ const focusCamera = async () => {
   try {
     await cameraScannerService.focusCamera();
   } catch (error) {
-    console.error("Failed to focus camera:", error);
+    console.error('Failed to focus camera:', error);
   }
 };
 
@@ -322,7 +321,7 @@ const handleManualScan = () => {
   if (!manualBarcode.value.trim()) return;
 
   handleScanResult(manualBarcode.value.trim());
-  manualBarcode.value = "";
+  manualBarcode.value = '';
 };
 
 const onManualInput = () => {
@@ -347,7 +346,7 @@ const handleScanResult = (code: string, format?: string) => {
   // Create scan result
   const scanResult: ScanResult = {
     code,
-    format: format || "Manual",
+    format: format || 'Manual',
     timestamp: new Date(),
     confidence: format ? 0.95 : 1.0,
   };
@@ -367,17 +366,17 @@ const handleScanResult = (code: string, format?: string) => {
   }
 
   // Emit scan event
-  emit("scan", code);
+  emit('scan', code);
 
   // Close dialog
   isOpen.value = false;
 
   // Show success notification
   notificationService.showInAppNotification({
-    title: t("camera.scanning.scanSuccessful"),
+    title: t('camera.scanning.scanSuccessful'),
     body: `Scanned: ${code}`,
-    type: "system_notification",
-    icon: "/icons/success.png",
+    type: 'system_notification',
+    icon: '/icons/success.png',
   });
 };
 
@@ -397,7 +396,7 @@ const formatTimestamp = (timestamp: Date): string => {
 
   if (diff < 60000) {
     // Less than 1 minute
-    return t("camera.scanning.justNow");
+    return t('camera.scanning.justNow');
   } else if (diff < 3600000) {
     // Less than 1 hour
     return `${Math.floor(diff / 60000)}m ago`;
@@ -412,17 +411,17 @@ const formatTimestamp = (timestamp: Date): string => {
 const saveScanHistory = () => {
   try {
     localStorage.setItem(
-      "manual_scan_history",
+      'manual_scan_history',
       JSON.stringify(recentScans.value)
     );
   } catch (error) {
-    console.error("Failed to save scan history:", error);
+    console.error('Failed to save scan history:', error);
   }
 };
 
 const loadScanHistory = () => {
   try {
-    const saved = localStorage.getItem("manual_scan_history");
+    const saved = localStorage.getItem('manual_scan_history');
     if (saved) {
       const history = JSON.parse(saved);
       recentScans.value = history.map((item: any) => ({
@@ -439,7 +438,7 @@ const loadScanHistory = () => {
 
     recentScans.value = allScans;
   } catch (error) {
-    console.error("Failed to load scan history:", error);
+    console.error('Failed to load scan history:', error);
   }
 };
 
@@ -447,14 +446,14 @@ const loadScanHistory = () => {
 watch(isOpen, (newValue) => {
   if (newValue) {
     loadScanHistory();
-    if (scanMode.value === "manual") {
+    if (scanMode.value === 'manual') {
       nextTick(() => {
         manualInput.value?.focus();
       });
     }
   } else {
     stopCamera();
-    manualBarcode.value = "";
+    manualBarcode.value = '';
   }
 });
 

@@ -1,13 +1,13 @@
-import { defineStore } from "pinia";
-import { ref, computed } from "vue";
-import { supabase } from "src/boot/supabase";
+import { defineStore } from 'pinia';
+import { ref, computed } from 'vue';
+import { supabase } from 'src/boot/supabase';
 import type {
   Supplier,
   SupplierProduct,
   CreateSupplierRequest,
-} from "src/types/inventory";
+} from 'src/types/inventory';
 
-export const useSuppliersStore = defineStore("suppliers", () => {
+export const useSuppliersStore = defineStore('suppliers', () => {
   // State
   const suppliers = ref<Supplier[]>([]);
   const supplierProducts = ref<SupplierProduct[]>([]);
@@ -42,16 +42,16 @@ export const useSuppliersStore = defineStore("suppliers", () => {
     loading.value = true;
     try {
       const { data, error } = await supabase
-        .from("suppliers")
-        .select("*")
-        .order("name");
+        .from('suppliers')
+        .select('*')
+        .order('name');
 
       if (error) throw error;
 
       suppliers.value = data || [];
       lastSyncAt.value = new Date();
     } catch (error) {
-      console.error("Error fetching suppliers:", error);
+      console.error('Error fetching suppliers:', error);
       throw error;
     } finally {
       loading.value = false;
@@ -61,7 +61,7 @@ export const useSuppliersStore = defineStore("suppliers", () => {
   const createSupplier = async (supplierData: CreateSupplierRequest) => {
     try {
       const { data, error } = await supabase
-        .from("suppliers")
+        .from('suppliers')
         .insert([
           {
             ...supplierData,
@@ -70,7 +70,7 @@ export const useSuppliersStore = defineStore("suppliers", () => {
             shipping_cost: supplierData.shipping_cost || 0,
             sync_enabled: false,
             is_active: true,
-            country: supplierData.country || "Netherlands",
+            country: supplierData.country || 'Netherlands',
           },
         ])
         .select()
@@ -81,7 +81,7 @@ export const useSuppliersStore = defineStore("suppliers", () => {
       suppliers.value.push(data);
       return data;
     } catch (error) {
-      console.error("Error creating supplier:", error);
+      console.error('Error creating supplier:', error);
       throw error;
     }
   };
@@ -89,9 +89,9 @@ export const useSuppliersStore = defineStore("suppliers", () => {
   const updateSupplier = async (id: string, updates: Partial<Supplier>) => {
     try {
       const { data, error } = await supabase
-        .from("suppliers")
+        .from('suppliers')
         .update(updates)
-        .eq("id", id)
+        .eq('id', id)
         .select()
         .single();
 
@@ -104,20 +104,20 @@ export const useSuppliersStore = defineStore("suppliers", () => {
 
       return data;
     } catch (error) {
-      console.error("Error updating supplier:", error);
+      console.error('Error updating supplier:', error);
       throw error;
     }
   };
 
   const deleteSupplier = async (id: string) => {
     try {
-      const { error } = await supabase.from("suppliers").delete().eq("id", id);
+      const { error } = await supabase.from('suppliers').delete().eq('id', id);
 
       if (error) throw error;
 
       suppliers.value = suppliers.value.filter((s) => s.id !== id);
     } catch (error) {
-      console.error("Error deleting supplier:", error);
+      console.error('Error deleting supplier:', error);
       throw error;
     }
   };
@@ -125,7 +125,7 @@ export const useSuppliersStore = defineStore("suppliers", () => {
   const fetchSupplierProducts = async (supplierId?: string) => {
     try {
       let query = supabase
-        .from("supplier_products")
+        .from('supplier_products')
         .select(
           `
           *,
@@ -133,10 +133,10 @@ export const useSuppliersStore = defineStore("suppliers", () => {
           product:products(name, sku, category, brand)
         `
         )
-        .order("supplier_name");
+        .order('supplier_name');
 
       if (supplierId) {
-        query = query.eq("supplier_id", supplierId);
+        query = query.eq('supplier_id', supplierId);
       }
 
       const { data, error } = await query;
@@ -145,7 +145,7 @@ export const useSuppliersStore = defineStore("suppliers", () => {
 
       supplierProducts.value = data || [];
     } catch (error) {
-      console.error("Error fetching supplier products:", error);
+      console.error('Error fetching supplier products:', error);
       throw error;
     }
   };
@@ -153,16 +153,16 @@ export const useSuppliersStore = defineStore("suppliers", () => {
   const createSupplierProduct = async (
     supplierProductData: Omit<
       SupplierProduct,
-      "id" | "created_at" | "updated_at" | "last_price_update"
+      'id' | 'created_at' | 'updated_at' | 'last_price_update'
     >
   ) => {
     try {
       const { data, error } = await supabase
-        .from("supplier_products")
+        .from('supplier_products')
         .insert([
           {
             ...supplierProductData,
-            currency: supplierProductData.currency || "EUR",
+            currency: supplierProductData.currency || 'EUR',
             minimum_order_quantity:
               supplierProductData.minimum_order_quantity || 1,
             order_multiple: supplierProductData.order_multiple || 1,
@@ -181,7 +181,7 @@ export const useSuppliersStore = defineStore("suppliers", () => {
       supplierProducts.value.push(data);
       return data;
     } catch (error) {
-      console.error("Error creating supplier product:", error);
+      console.error('Error creating supplier product:', error);
       throw error;
     }
   };
@@ -192,7 +192,7 @@ export const useSuppliersStore = defineStore("suppliers", () => {
   ) => {
     try {
       const { data, error } = await supabase
-        .from("supplier_products")
+        .from('supplier_products')
         .update({
           ...updates,
           last_price_update:
@@ -200,7 +200,7 @@ export const useSuppliersStore = defineStore("suppliers", () => {
               ? new Date().toISOString()
               : undefined,
         })
-        .eq("id", id)
+        .eq('id', id)
         .select()
         .single();
 
@@ -213,7 +213,7 @@ export const useSuppliersStore = defineStore("suppliers", () => {
 
       return data;
     } catch (error) {
-      console.error("Error updating supplier product:", error);
+      console.error('Error updating supplier product:', error);
       throw error;
     }
   };
@@ -221,9 +221,9 @@ export const useSuppliersStore = defineStore("suppliers", () => {
   const deleteSupplierProduct = async (id: string) => {
     try {
       const { error } = await supabase
-        .from("supplier_products")
+        .from('supplier_products')
         .delete()
-        .eq("id", id);
+        .eq('id', id);
 
       if (error) throw error;
 
@@ -231,7 +231,7 @@ export const useSuppliersStore = defineStore("suppliers", () => {
         (sp) => sp.id !== id
       );
     } catch (error) {
-      console.error("Error deleting supplier product:", error);
+      console.error('Error deleting supplier product:', error);
       throw error;
     }
   };
@@ -256,7 +256,7 @@ export const useSuppliersStore = defineStore("suppliers", () => {
     try {
       const supplier = suppliers.value.find((s) => s.id === supplierId);
       if (!supplier || !supplier.sync_enabled) {
-        throw new Error("Supplier sync not enabled");
+        throw new Error('Supplier sync not enabled');
       }
 
       // This would implement actual API sync based on supplier.api_type
@@ -268,9 +268,9 @@ export const useSuppliersStore = defineStore("suppliers", () => {
       // Refresh supplier products after sync
       await fetchSupplierProducts(supplierId);
 
-      return { success: true, message: "Supplier data synced successfully" };
+      return { success: true, message: 'Supplier data synced successfully' };
     } catch (error) {
-      console.error("Error syncing supplier data:", error);
+      console.error('Error syncing supplier data:', error);
       throw error;
     }
   };

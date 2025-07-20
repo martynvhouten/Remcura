@@ -133,13 +133,13 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from "vue";
-import { useRouter, useRoute } from "vue-router";
-import { useI18n } from "vue-i18n";
-import { useQuasar } from "quasar";
-import { useAuthStore } from "src/stores/auth";
-import { useFormValidation } from "src/composables/useFormValidation";
-import { useErrorHandler } from "src/utils/error-handler";
+import { ref } from 'vue';
+import { useRouter, useRoute } from 'vue-router';
+import { useI18n } from 'vue-i18n';
+import { useQuasar } from 'quasar';
+import { useAuthStore } from 'src/stores/auth';
+import { useFormValidation } from 'src/composables/useFormValidation';
+import { useErrorHandler } from 'src/utils/error-handler';
 
 const router = useRouter();
 const route = useRoute();
@@ -150,8 +150,8 @@ const { rules, createField, validateForm } = useFormValidation();
 const { handleError } = useErrorHandler();
 
 // Form fields with validation
-const email = createField("", [rules.required, rules.email]);
-const password = createField("", [rules.required]);
+const email = createField('', [rules.required, rules.email]);
+const password = createField('', [rules.required]);
 
 // UI state
 const showPassword = ref(false);
@@ -174,56 +174,56 @@ const handleLogin = async () => {
 
     if (result.success) {
       $q.notify({
-        type: "positive",
-        message: t("auth.loginSuccess"),
-        position: "top-right",
+        type: 'positive',
+        message: t('auth.loginSuccess'),
+        position: 'top-right',
         timeout: 3000,
-        icon: "check_circle",
+        icon: 'check_circle',
       });
 
       // Check for intended route from sessionStorage
-      const intendedRoute = sessionStorage.getItem("medstock_intended_route");
-      sessionStorage.removeItem("medstock_intended_route");
+      const intendedRoute = sessionStorage.getItem('medstock_intended_route');
+      sessionStorage.removeItem('medstock_intended_route');
 
       // Redirect to intended page or dashboard
-      const redirectPath = intendedRoute || "/";
+      const redirectPath = intendedRoute || '/';
       await router.push(redirectPath);
     } else {
       $q.notify({
-        type: "negative",
-        message: result.error || t("auth.loginError"),
-        position: "top-right",
+        type: 'negative',
+        message: result.error || t('auth.loginError'),
+        position: 'top-right',
         timeout: 4000,
-        icon: "error",
+        icon: 'error',
       });
     }
   } catch (error) {
-    handleError(error as Error, t("auth.login"));
+    handleError(error as Error, t('auth.login'));
   } finally {
     loading.value = false;
   }
 };
 
 const fillDemoCredentials = () => {
-  email.value.value = "demo@medstock-pro.com";
-  password.value.value = "demo123";
+  email.value.value = 'demo@medstock-pro.com';
+  password.value.value = 'demo123';
 
   $q.notify({
-    type: "info",
-    message: t("auth.demoCredentialsFilled"),
+    type: 'info',
+    message: t('auth.demoCredentialsFilled'),
     timeout: 3000,
-    position: "top-right",
-    icon: "info",
+    position: 'top-right',
+    icon: 'info',
   });
 };
 
 const handleForgotPassword = () => {
   $q.notify({
-    type: "info",
-    message: t("auth.passwordResetComingSoon"),
+    type: 'info',
+    message: t('auth.passwordResetComingSoon'),
     timeout: 3000,
-    position: "top-right",
-    icon: "info",
+    position: 'top-right',
+    icon: 'info',
   });
 };
 </script>

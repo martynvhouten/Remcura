@@ -106,11 +106,11 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from "vue";
-import { useI18n } from "vue-i18n";
-import { useQuasar } from "quasar";
-import type { PracticeLocation } from "src/types/inventory";
-import BaseDialog from "src/components/base/BaseDialog.vue";
+import { ref, computed } from 'vue';
+import { useI18n } from 'vue-i18n';
+import { useQuasar } from 'quasar';
+import type { PracticeLocation } from 'src/types/inventory';
+import BaseDialog from 'src/components/base/BaseDialog.vue';
 
 interface Props {
   modelValue: boolean;
@@ -118,8 +118,8 @@ interface Props {
 }
 
 interface Emits {
-  (e: "update:modelValue", value: boolean): void;
-  (e: "transfer-completed"): void;
+  (e: 'update:modelValue', value: boolean): void;
+  (e: 'transfer-completed'): void;
 }
 
 const props = defineProps<Props>();
@@ -131,18 +131,18 @@ const $q = useQuasar();
 
 // State
 const loading = ref(false);
-const productSearch = ref("");
+const productSearch = ref('');
 const form = ref({
-  fromLocationId: "",
-  toLocationId: "",
+  fromLocationId: '',
+  toLocationId: '',
   quantity: null as number | null,
-  notes: "",
+  notes: '',
 });
 
 // Computed
 const dialogVisible = computed({
   get: () => props.modelValue,
-  set: (value) => emit("update:modelValue", value),
+  set: (value) => emit('update:modelValue', value),
 });
 
 const fromLocationOptions = computed(() =>
@@ -164,12 +164,12 @@ const toLocationOptions = computed(() =>
 // Methods
 const resetForm = () => {
   form.value = {
-    fromLocationId: props.locations[0]?.id || "",
-    toLocationId: "",
+    fromLocationId: props.locations[0]?.id || '',
+    toLocationId: '',
     quantity: null,
-    notes: "",
+    notes: '',
   };
-  productSearch.value = "";
+  productSearch.value = '';
 };
 
 const onSubmit = async () => {
@@ -179,18 +179,18 @@ const onSubmit = async () => {
     await new Promise((resolve) => setTimeout(resolve, 1000));
 
     $q.notify({
-      type: "positive",
-      message: t("inventory.stockTransferred"),
-      position: "top",
+      type: 'positive',
+      message: t('inventory.stockTransferred'),
+      position: 'top',
     });
 
-    emit("transfer-completed");
+    emit('transfer-completed');
     dialogVisible.value = false;
   } catch (error) {
     $q.notify({
-      type: "negative",
-      message: t("inventory.transferFailed"),
-      position: "top",
+      type: 'negative',
+      message: t('inventory.transferFailed'),
+      position: 'top',
     });
   } finally {
     loading.value = false;

@@ -1,8 +1,8 @@
-import { defineStore } from "pinia";
-import { ref, computed } from "vue";
-import type { PracticeLocation } from "src/types/inventory";
+import { defineStore } from 'pinia';
+import { ref, computed } from 'vue';
+import type { PracticeLocation } from 'src/types/inventory';
 
-export const useLocationStore = defineStore("location", () => {
+export const useLocationStore = defineStore('location', () => {
   // State
   const locations = ref<PracticeLocation[]>([]);
   const currentLocation = ref<PracticeLocation | null>(null);
@@ -28,12 +28,12 @@ export const useLocationStore = defineStore("location", () => {
       // Mock implementation - this should fetch from Supabase
       locations.value = [
         {
-          id: "550e8400-e29b-41d4-a716-446655440000",
+          id: '550e8400-e29b-41d4-a716-446655440000',
           practice_id: practiceId,
-          name: "Hoofdlocatie",
-          code: "MAIN",
-          description: "Hoofdlocatie voor voorraadopslag",
-          location_type: "storage",
+          name: 'Hoofdlocatie',
+          code: 'MAIN',
+          description: 'Hoofdlocatie voor voorraadopslag',
+          location_type: 'storage',
           is_active: true,
           is_main_location: true,
           requires_counting: true,
@@ -43,12 +43,12 @@ export const useLocationStore = defineStore("location", () => {
           updated_at: new Date().toISOString(),
         },
         {
-          id: "550e8400-e29b-41d4-a716-446655440001",
+          id: '550e8400-e29b-41d4-a716-446655440001',
           practice_id: practiceId,
-          name: "Locatie Centrum",
-          code: "CTR",
-          description: "Centrum behandelkamer",
-          location_type: "treatment",
+          name: 'Locatie Centrum',
+          code: 'CTR',
+          description: 'Centrum behandelkamer',
+          location_type: 'treatment',
           is_active: true,
           is_main_location: false,
           requires_counting: true,
@@ -58,12 +58,12 @@ export const useLocationStore = defineStore("location", () => {
           updated_at: new Date().toISOString(),
         },
         {
-          id: "550e8400-e29b-41d4-a716-446655440002",
+          id: '550e8400-e29b-41d4-a716-446655440002',
           practice_id: practiceId,
-          name: "Locatie Noord",
-          code: "NTH",
-          description: "Noord behandelkamer",
-          location_type: "treatment",
+          name: 'Locatie Noord',
+          code: 'NTH',
+          description: 'Noord behandelkamer',
+          location_type: 'treatment',
           is_active: true,
           is_main_location: false,
           requires_counting: true,
@@ -79,7 +79,7 @@ export const useLocationStore = defineStore("location", () => {
         currentLocation.value = mainLocation.value;
       }
     } catch (error) {
-      console.error("Error fetching locations:", error);
+      console.error('Error fetching locations:', error);
       throw error;
     } finally {
       loading.value = false;
@@ -94,11 +94,11 @@ export const useLocationStore = defineStore("location", () => {
     // Mock implementation
     const newLocation: PracticeLocation = {
       id: `loc_${Date.now()}`,
-      practice_id: locationData.practice_id || "",
-      name: locationData.name || "",
-      code: locationData.code || "",
+      practice_id: locationData.practice_id || '',
+      name: locationData.name || '',
+      code: locationData.code || '',
       description: locationData.description,
-      location_type: locationData.location_type || "storage",
+      location_type: locationData.location_type || 'storage',
       is_active: locationData.is_active !== false,
       is_main_location: locationData.is_main_location || false,
       requires_counting: locationData.requires_counting !== false,

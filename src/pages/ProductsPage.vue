@@ -180,7 +180,7 @@
           </template>
 
           <!-- No Data -->
-          <template #no-data="{ message }">
+          <template #no-data>
             <div class="full-width row flex-center q-gutter-sm">
               <q-icon size="2em" name="sentiment_dissatisfied" />
               <span>{{ $t('productsPage.noProductsFound') }}</span>
@@ -238,19 +238,30 @@
           <!-- Batch Status Cell -->
           <template #body-cell-batch_status="props">
             <q-td :props="props">
-              <div v-if="props.row.batches?.length > 0" class="batch-info">
+              <div v-if="props.row.requires_batch_tracking">
+                <div v-if="props.row.batches?.length > 0" class="batch-info">
+                  <q-chip
+                    :color="getBatchStatusColor(props.row)"
+                    :text-color="getBatchStatusTextColor(props.row)"
+                    :label="getBatchStatusLabel(props.row)"
+                    size="sm"
+                    dense
+                  />
+                  <div class="batch-count">
+                    {{ props.row.batches.length }} {{ $t('productsPage.batches') }}
+                  </div>
+                </div>
+                <span v-else class="text-grey-6">{{ $t('productsPage.noBatches') }}</span>
+              </div>
+              <div v-else class="manual-stock-indicator">
                 <q-chip
-                  :color="getBatchStatusColor(props.row)"
-                  :text-color="getBatchStatusTextColor(props.row)"
-                  :label="getBatchStatusLabel(props.row)"
+                  color="info"
+                  text-color="white"
+                  :label="$t('productsPage.manualStock')"
                   size="sm"
                   dense
                 />
-                <div class="batch-count">
-                  {{ props.row.batches.length }} {{ $t('productsPage.batches') }}
-                </div>
               </div>
-              <span v-else class="text-grey-6">{{ $t('productsPage.noBatches') }}</span>
             </q-td>
           </template>
 
@@ -395,18 +406,18 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted, watch } from "vue";
-import { useI18n } from "vue-i18n";
-import { useQuasar } from "quasar";
-import { useProductsStore } from "src/stores/products";
-import { useOrderListsStore } from "src/stores/orderLists";
-import { useAuthStore } from "src/stores/auth";
-import PageLayout from "src/components/PageLayout.vue";
-import PageTitle from "src/components/PageTitle.vue";
-import ProductDetailsDialog from "src/components/products/ProductDetailsDialog.vue";
-import ShoppingCartDialog from "src/components/products/ShoppingCartDialog.vue";
-import OrderListDialog from "src/components/products/OrderListDialog.vue";
-import type { ProductWithStock, ProductBatchSummary } from "src/types/inventory";
+import { ref, computed, onMounted, watch } from 'vue';
+import { useI18n } from 'vue-i18n';
+import { useQuasar } from 'quasar';
+import { useProductsStore } from 'src/stores/products';
+import { useOrderListsStore } from 'src/stores/orderLists';
+import { useAuthStore } from 'src/stores/auth';
+import PageLayout from 'src/components/PageLayout.vue';
+import PageTitle from 'src/components/PageTitle.vue';
+import ProductDetailsDialog from 'src/components/products/ProductDetailsDialog.vue';
+import ShoppingCartDialog from 'src/components/products/ShoppingCartDialog.vue';
+import OrderListDialog from 'src/components/products/OrderListDialog.vue';
+import type { ProductWithStock, ProductBatchSummary } from 'src/types/inventory';
 
 const { t, locale } = useI18n();
 const $q = useQuasar();
@@ -420,7 +431,7 @@ const showDetailsDialog = ref(false);
 const showCartDialog = ref(false);
 const showOrderListDialog = ref(false);
 const showFilters = ref(false);
-const localSearch = ref("");
+const localSearch = ref('');
 const expandedRows = ref<string[]>([]);
 const localPriceMin = ref<number | null>(null);
 const localPriceMax = ref<number | null>(null);
@@ -451,52 +462,52 @@ const {
 // Table columns configuration
 const tableColumns = computed(() => [
   {
-    name: "name",
-    label: t("productsPage.table.name"),
-    field: "name",
-    align: "left" as const,
+    name: 'name',
+    label: t('productsPage.table.name'),
+    field: 'name',
+    align: 'left' as const,
     sortable: true,
-    style: "width: 250px",
+    style: 'width: 250px',
   },
   {
-    name: "sku",
-    label: t("productsPage.table.sku"),
-    field: "sku",
-    align: "left" as const,
+    name: 'sku',
+    label: t('productsPage.table.sku'),
+    field: 'sku',
+    align: 'left' as const,
     sortable: true,
-    style: "width: 120px",
+    style: 'width: 120px',
   },
   {
-    name: "stock_status",
-    label: t("productsPage.table.stockStatus"),
-    field: "stock_status",
-    align: "center" as const,
+    name: 'stock_status',
+    label: t('productsPage.table.stockStatus'),
+    field: 'stock_status',
+    align: 'center' as const,
     sortable: true,
-    style: "width: 150px",
+    style: 'width: 150px',
   },
   {
-    name: "price",
-    label: t("productsPage.table.price"),
-    field: "lowest_price",
-    align: "right" as const,
+    name: 'price',
+    label: t('productsPage.table.price'),
+    field: 'lowest_price',
+    align: 'right' as const,
     sortable: true,
-    style: "width: 120px",
+    style: 'width: 120px',
   },
   {
-    name: "batch_status",
-    label: t("productsPage.table.batchStatus"),
-    field: "batch_status",
-    align: "center" as const,
+    name: 'batch_status',
+    label: t('productsPage.table.stockType'),
+    field: 'batch_status',
+    align: 'center' as const,
     sortable: false,
-    style: "width: 140px",
+    style: 'width: 140px',
   },
   {
-    name: "actions",
-    label: t("productsPage.table.actions"),
-    field: "",
-    align: "center" as const,
+    name: 'actions',
+    label: t('productsPage.table.actions'),
+    field: '',
+    align: 'center' as const,
     sortable: false,
-    style: "width: 180px",
+    style: 'width: 180px',
   },
 ]);
 
@@ -506,14 +517,14 @@ const categoryOptions = computed(() =>
 );
 
 const supplierOptions = computed(() => [
-  { label: t("productsPage.filters.remka"), value: "remka" },
-  { label: t("productsPage.filters.external"), value: "external" },
+  { label: t('productsPage.filters.remka'), value: 'remka' },
+  { label: t('productsPage.filters.external'), value: 'external' },
 ]);
 
 const stockStatusOptions = computed(() => [
-  { label: t("productsPage.stockStatus.in_stock"), value: "in_stock" },
-  { label: t("productsPage.stockStatus.low_stock"), value: "low_stock" },
-  { label: t("productsPage.stockStatus.out_of_stock"), value: "out_of_stock" },
+  { label: t('productsPage.stockStatus.in_stock'), value: 'in_stock' },
+  { label: t('productsPage.stockStatus.low_stock'), value: 'low_stock' },
+  { label: t('productsPage.stockStatus.out_of_stock'), value: 'out_of_stock' },
 ]);
 
 // Filter state
@@ -542,66 +553,66 @@ const activeFiltersCount = computed(() => {
 const statsCards = computed(() => ({
   total: {
     value: productStats?.total ?? 0,
-    label: t("productsPage.stats.totalProducts"),
+    label: t('productsPage.stats.totalProducts'),
   },
   inStock: {
     value: productStats?.inStock ?? 0,
-    label: t("productsPage.stats.inStockProducts"),
+    label: t('productsPage.stats.inStockProducts'),
   },
   lowStock: {
     value: productStats?.lowStock ?? 0,
-    label: t("productsPage.stats.lowStockProducts"),
+    label: t('productsPage.stats.lowStockProducts'),
   },
   outOfStock: {
     value: productStats?.outOfStock ?? 0,
-    label: t("productsPage.stats.outOfStockProducts"),
+    label: t('productsPage.stats.outOfStockProducts'),
   },
 }));
 
 // Helper functions
 const getStockStatusColor = (status: string): string => {
   switch (status) {
-    case "in_stock": return "positive";
-    case "low_stock": return "warning";
-    case "out_of_stock": return "negative";
-    default: return "grey";
+    case 'in_stock': return 'positive';
+    case 'low_stock': return 'warning';
+    case 'out_of_stock': return 'negative';
+    default: return 'grey';
   }
 };
 
 const getStockStatusTextColor = (status: string): string => {
   switch (status) {
-    case "in_stock": return "white";
-    case "low_stock": return "black";
-    case "out_of_stock": return "white";
-    default: return "black";
+    case 'in_stock': return 'white';
+    case 'low_stock': return 'black';
+    case 'out_of_stock': return 'white';
+    default: return 'black';
   }
 };
 
 const getBatchStatusColor = (product: ProductWithStock): string => {
-  if (!product.batches?.length) return "grey";
+  if (!product.batches?.length) return 'grey';
   
-  const hasExpiring = product.batches.some((b: ProductBatchSummary) => b.urgency === "warning" || b.urgency === "critical");
-  const hasExpired = product.batches.some((b: ProductBatchSummary) => b.urgency === "expired");
+  const hasExpiring = product.batches.some((b: ProductBatchSummary) => b.urgency === 'warning' || b.urgency === 'critical');
+  const hasExpired = product.batches.some((b: ProductBatchSummary) => b.urgency === 'expired');
   
-  if (hasExpired) return "negative";
-  if (hasExpiring) return "warning";
-  return "positive";
+  if (hasExpired) return 'negative';
+  if (hasExpiring) return 'warning';
+  return 'positive';
 };
 
 const getBatchStatusTextColor = (product: ProductWithStock): string => {
   const color = getBatchStatusColor(product);
-  return color === "warning" ? "black" : "white";
+  return color === 'warning' ? 'black' : 'white';
 };
 
 const getBatchStatusLabel = (product: ProductWithStock): string => {
-  if (!product.batches?.length) return t("productsPage.noBatches");
+  if (!product.batches?.length) return t('productsPage.noBatches');
   
-  const hasExpired = product.batches.some((b: ProductBatchSummary) => b.urgency === "expired");
-  const hasExpiring = product.batches.some((b: ProductBatchSummary) => b.urgency === "warning" || b.urgency === "critical");
+  const hasExpired = product.batches.some((b: ProductBatchSummary) => b.urgency === 'expired');
+  const hasExpiring = product.batches.some((b: ProductBatchSummary) => b.urgency === 'warning' || b.urgency === 'critical');
   
-  if (hasExpired) return t("productsPage.batchStatus.expired");
-  if (hasExpiring) return t("productsPage.batchStatus.expiring");
-  return t("productsPage.batchStatus.good");
+  if (hasExpired) return t('productsPage.batchStatus.expired');
+  if (hasExpiring) return t('productsPage.batchStatus.expiring');
+  return t('productsPage.batchStatus.good');
 };
 
 const getBestPrice = (product: ProductWithStock): number | null => {
@@ -617,19 +628,19 @@ const getBestPrice = (product: ProductWithStock): number | null => {
 
 const formatPrice = (price: number): string => {
   return new Intl.NumberFormat(locale.value, {
-    style: "currency",
-    currency: "EUR",
+    style: 'currency',
+    currency: 'EUR',
   }).format(price);
 };
 
 // Event handlers
 const updateSearchFilter = (searchValue: string | number | null) => {
-  const searchString = searchValue?.toString() || "";
+  const searchString = searchValue?.toString() || '';
   updateFilters({ search: searchString });
 };
 
 const clearAllFilters = () => {
-  localSearch.value = "";
+  localSearch.value = '';
   localPriceMin.value = null;
   localPriceMax.value = null;
   productsStore.clearFilters();
@@ -664,15 +675,15 @@ const handleAddToCart = (product: ProductWithStock) => {
   try {
     productsStore.addToCart(product, 1);
     $q.notify({
-      type: "positive",
-      message: t("productsPage.addedToCart", { productName: product.name }),
-      position: "top",
+      type: 'positive',
+      message: t('productsPage.addedToCart', { productName: product.name }),
+      position: 'top',
     });
   } catch (error) {
     $q.notify({
-      type: "negative",
-      message: t("productsPage.cartAddError"),
-      position: "top",
+      type: 'negative',
+      message: t('productsPage.cartAddError'),
+      position: 'top',
     });
   }
 };
@@ -689,13 +700,13 @@ const refreshData = async () => {
     
     await productsStore.refreshData(practiceId);
     $q.notify({
-      type: "positive",
-      message: t("productsPage.dataRefreshed"),
+      type: 'positive',
+      message: t('productsPage.dataRefreshed'),
     });
   } catch (error) {
     $q.notify({
-      type: "negative",
-      message: t("productsPage.productLoadError"),
+      type: 'negative',
+      message: t('productsPage.productLoadError'),
     });
   }
 };
@@ -708,8 +719,8 @@ const handleAddToExistingOrderList = orderListsStore.addOrderListItem;
 
 const handleCheckout = () => {
   $q.notify({
-    type: "info",
-    message: t("common.comingSoon"),
+    type: 'info',
+    message: t('common.comingSoon'),
   });
 };
 

@@ -20,7 +20,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, useSlots } from "vue";
+import { computed, useSlots } from 'vue';
 
 interface Props {
   maxWidth?: string | number;
@@ -34,9 +34,9 @@ interface Props {
 }
 
 const props = withDefaults(defineProps<Props>(), {
-  maxWidth: "1400px",
-  padding: "lg",
-  verticalSpacing: "lg",
+  maxWidth: '1400px',
+  padding: 'lg',
+  verticalSpacing: 'lg',
   fullWidth: false,
   noTopPadding: false,
   noBottomPadding: false,
@@ -49,7 +49,7 @@ const hasHeader = computed(() => !!slots.header);
 const hasFooter = computed(() => !!slots.footer);
 
 const pageClasses = computed(() => {
-  const classes = ["page-layout"];
+  const classes = ['page-layout'];
 
   if (!props.noTopPadding && !props.noBottomPadding) {
     classes.push(`q-py-${props.verticalSpacing}`);
@@ -70,7 +70,7 @@ const containerStyles = computed(() => {
   const styles: Record<string, string> = {};
 
   if (!props.fullWidth) {
-    if (typeof props.maxWidth === "number") {
+    if (typeof props.maxWidth === 'number') {
       styles.maxWidth = `${props.maxWidth}px`;
     } else {
       styles.maxWidth = props.maxWidth;

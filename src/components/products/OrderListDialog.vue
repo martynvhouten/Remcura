@@ -297,21 +297,21 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, watch, nextTick, onMounted } from "vue";
-import { useQuasar } from "quasar";
-import { useI18n } from "vue-i18n";
-import { useOrderListsStore } from "src/stores/orderLists";
-import { useSuppliersStore } from "src/stores/suppliers";
-import { useProductsStore } from "src/stores/products";
-import { useAuthStore } from "src/stores/auth";
-import BaseCard from "src/components/base/BaseCard.vue";
+import { ref, computed, watch, nextTick, onMounted } from 'vue';
+import { useQuasar } from 'quasar';
+import { useI18n } from 'vue-i18n';
+import { useOrderListsStore } from 'src/stores/orderLists';
+import { useSuppliersStore } from 'src/stores/suppliers';
+import { useProductsStore } from 'src/stores/products';
+import { useAuthStore } from 'src/stores/auth';
+import BaseCard from 'src/components/base/BaseCard.vue';
 import type {
   OrderListWithItems,
   CreateOrderListRequest,
   UpdateOrderListRequest,
   AddOrderListItemRequest,
-} from "src/stores/orderLists";
-import type { OrderListItem, ProductWithStock } from "src/types/inventory";
+} from 'src/stores/orderLists';
+import type { OrderListItem, ProductWithStock } from 'src/types/inventory';
 
 interface Props {
   modelValue: boolean;
@@ -323,7 +323,7 @@ const props = withDefaults(defineProps<Props>(), {
 });
 
 const emit = defineEmits<{
-  "update:modelValue": [value: boolean];
+  'update:modelValue': [value: boolean];
   saved: [];
 }>();
 
@@ -341,19 +341,19 @@ const nameInput = ref();
 
 // State
 const form = ref({
-  name: "",
-  description: "",
-  supplier_id: "",
-  notes: "",
+  name: '',
+  description: '',
+  supplier_id: '',
+  notes: '',
   auto_suggest_quantities: false,
   urgent_order: false,
 });
 
 const orderListItems = ref<OrderListItem[]>([]);
 const showAddProductDialog = ref(false);
-const selectedProduct = ref("");
+const selectedProduct = ref('');
 const newItemQuantity = ref(1);
-const newItemNotes = ref("");
+const newItemNotes = ref('');
 const availableProducts = ref<ProductWithStock[]>([]);
 
 // Computed
@@ -398,26 +398,26 @@ const filteredProducts = computed(() => {
 // Methods
 const resetForm = () => {
   form.value = {
-    name: "",
-    description: "",
-    supplier_id: "",
-    notes: "",
+    name: '',
+    description: '',
+    supplier_id: '',
+    notes: '',
     auto_suggest_quantities: false,
     urgent_order: false,
   };
   orderListItems.value = [];
-  selectedProduct.value = "";
+  selectedProduct.value = '';
   newItemQuantity.value = 1;
-  newItemNotes.value = "";
+  newItemNotes.value = '';
 };
 
 const populateForm = () => {
   if (props.orderList) {
     form.value = {
       name: props.orderList.name,
-      description: props.orderList.description || "",
+      description: props.orderList.description || '',
       supplier_id: props.orderList.supplier_id,
-      notes: props.orderList.notes || "",
+      notes: props.orderList.notes || '',
       auto_suggest_quantities: props.orderList.auto_suggest_quantities || false,
       urgent_order: props.orderList.urgent_order || false,
     };
@@ -445,7 +445,7 @@ const removeItem = (index: number) => {
 
 const filterProducts = (val: string, update: any) => {
   update(() => {
-    if (val === "") {
+    if (val === '') {
       availableProducts.value = filteredProducts.value;
     } else {
       const needle = val.toLowerCase();
@@ -471,16 +471,16 @@ const addProduct = () => {
 
   const newItem: OrderListItem = {
     id: `temp_${Date.now()}`,
-    order_list_id: props.orderList?.id || "",
-    practice_id: authStore.clinicId || "",
+    order_list_id: props.orderList?.id || '',
+    practice_id: authStore.clinicId || '',
     product_id: product.id,
     supplier_product_id: supplierProduct.id,
     requested_quantity: newItemQuantity.value,
     unit_price: supplierProduct.unit_price,
     total_price: supplierProduct.unit_price * newItemQuantity.value,
     currency: supplierProduct.currency,
-    suggestion_source: "manual",
-    status: "pending",
+    suggestion_source: 'manual',
+    status: 'pending',
     created_at: new Date().toISOString(),
     updated_at: new Date().toISOString(),
   };
@@ -495,9 +495,9 @@ const addProduct = () => {
 
 const cancelAddProduct = () => {
   showAddProductDialog.value = false;
-  selectedProduct.value = "";
+  selectedProduct.value = '';
   newItemQuantity.value = 1;
-  newItemNotes.value = "";
+  newItemNotes.value = '';
 };
 
 const saveOrderList = async () => {
@@ -506,7 +506,7 @@ const saveOrderList = async () => {
 
     const practiceId = authStore.clinicId;
     if (!practiceId) {
-      throw new Error("No practice selected");
+      throw new Error('No practice selected');
     }
 
     if (isEditing.value && props.orderList) {
@@ -527,8 +527,8 @@ const saveOrderList = async () => {
       await orderListsStore.updateOrderList(updateRequest);
 
       $q.notify({
-        type: "positive",
-        message: t("orderLists.updated"),
+        type: 'positive',
+        message: t('orderLists.updated'),
       });
     } else {
       // Create new order list
@@ -564,24 +564,24 @@ const saveOrderList = async () => {
       }
 
       $q.notify({
-        type: "positive",
-        message: t("orderLists.created"),
+        type: 'positive',
+        message: t('orderLists.created'),
       });
     }
 
-    emit("saved");
+    emit('saved');
     closeDialog();
   } catch (error) {
-    console.error("Error saving order list:", error);
+    console.error('Error saving order list:', error);
     $q.notify({
-      type: "negative",
-      message: t("orderLists.saveError"),
+      type: 'negative',
+      message: t('orderLists.saveError'),
     });
   }
 };
 
 const closeDialog = () => {
-  emit("update:modelValue", false);
+  emit('update:modelValue', false);
 };
 
 const onDialogHide = () => {

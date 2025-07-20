@@ -111,17 +111,17 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted } from "vue";
-import { useI18n } from "vue-i18n";
-import { useQuasar } from "quasar";
-import PageTitle from "@/components/PageTitle.vue";
+import { ref, computed, onMounted } from 'vue';
+import { useI18n } from 'vue-i18n';
+import { useQuasar } from 'quasar';
+import PageTitle from '@/components/PageTitle.vue';
 
 const { t } = useI18n();
 const $q = useQuasar();
 
 // Data
 const loading = ref(false);
-const searchQuery = ref("");
+const searchQuery = ref('');
 
 // Sample data for demonstration
 const locations = ref([
@@ -170,38 +170,38 @@ const mainLocationsCount = computed(() => {
 
 const columns = computed(() => [
   {
-    name: "name",
-    label: t("locations.name"),
-    field: "name",
-    align: "left" as const,
+    name: 'name',
+    label: t('locations.name'),
+    field: 'name',
+    align: 'left' as const,
     sortable: true,
   },
   {
-    name: "type",
-    label: t("locations.type"),
-    field: "type",
-    align: "left" as const,
+    name: 'type',
+    label: t('locations.type'),
+    field: 'type',
+    align: 'left' as const,
     sortable: true,
   },
   {
-    name: "description",
-    label: t("locations.description"),
-    field: "description",
-    align: "left" as const,
+    name: 'description',
+    label: t('locations.description'),
+    field: 'description',
+    align: 'left' as const,
     sortable: false,
   },
   {
-    name: "capacity",
-    label: t("locations.capacity"),
-    field: "capacity",
-    align: "left" as const,
+    name: 'capacity',
+    label: t('locations.capacity'),
+    field: 'capacity',
+    align: 'left' as const,
     sortable: false,
   },
   {
-    name: "actions",
-    label: t("common.actions"),
-    field: "actions",
-    align: "center" as const,
+    name: 'actions',
+    label: t('common.actions'),
+    field: 'actions',
+    align: 'center' as const,
     sortable: false,
   },
 ]);
@@ -209,9 +209,9 @@ const columns = computed(() => [
 // Methods
 const showComingSoon = () => {
   $q.notify({
-    type: "info",
-    message: t("locations.comingSoonDescription"),
-    position: "top",
+    type: 'info',
+    message: t('locations.comingSoonDescription'),
+    position: 'top',
   });
 };
 

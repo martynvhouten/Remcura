@@ -198,11 +198,11 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted } from "vue";
-import { useI18n } from "vue-i18n";
-import { useQuasar } from "quasar";
-import { useBatchStore } from "src/stores/batch";
-import type { CreateBatchRequest } from "src/types/inventory";
+import { ref, computed, onMounted } from 'vue';
+import { useI18n } from 'vue-i18n';
+import { useQuasar } from 'quasar';
+import { useBatchStore } from 'src/stores/batch';
+import type { CreateBatchRequest } from 'src/types/inventory';
 
 // Props & Emits
 interface Props {
@@ -232,44 +232,44 @@ const productOptions = ref<any[]>([]);
 
 // Form data
 const form = ref<CreateBatchRequest>({
-  productId: props.prefilledProductId || "",
-  locationId: props.prefilledLocationId || "",
-  batchNumber: "",
-  supplierBatchNumber: "",
-  expiryDate: "",
-  receivedDate: new Date().toISOString().split("T")[0],
+  productId: props.prefilledProductId || '',
+  locationId: props.prefilledLocationId || '',
+  batchNumber: '',
+  supplierBatchNumber: '',
+  expiryDate: '',
+  receivedDate: new Date().toISOString().split('T')[0],
   initialQuantity: 0,
   unitCost: 0,
-  currency: "EUR",
-  purchaseOrderNumber: "",
-  invoiceNumber: "",
+  currency: 'EUR',
+  purchaseOrderNumber: '',
+  invoiceNumber: '',
   qualityCheckPassed: true,
-  qualityNotes: "",
-  quarantineUntil: "",
+  qualityNotes: '',
+  quarantineUntil: '',
 });
 
 // Computed
 const locationOptions = computed(() => [
-  { id: "1", name: t("location.sampleData.mainWarehouse.name") },
-  { id: "2", name: t("location.samples.emergencyStock") },
-  { id: "3", name: t("location.sampleData.treatmentRoom.name") },
+  { id: '1', name: t('location.sampleData.mainWarehouse.name') },
+  { id: '2', name: t('location.samples.emergencyStock') },
+  { id: '3', name: t('location.sampleData.treatmentRoom.name') },
 ]);
 
 const currencyOptions = computed(() => [
-  { label: "EUR (€)", value: "EUR" },
-  { label: "USD ($)", value: "USD" },
-  { label: "GBP (£)", value: "GBP" },
+  { label: 'EUR (€)', value: 'EUR' },
+  { label: 'USD ($)', value: 'USD' },
+  { label: 'GBP (£)', value: 'GBP' },
 ]);
 
 // Methods
 const validateExpiryDate = (value: string) => {
-  if (!value) return t("validation.required");
+  if (!value) return t('validation.required');
 
   const expiryDate = new Date(value);
   const today = new Date();
 
   if (expiryDate < today) {
-    return t("batch.validation.expiryDateInPast");
+    return t('batch.validation.expiryDateInPast');
   }
 
   return true;
@@ -284,20 +284,20 @@ const filterProducts = (val: string, update: Function) => {
 
 const resetForm = () => {
   form.value = {
-    productId: props.prefilledProductId || "",
-    locationId: props.prefilledLocationId || "",
-    batchNumber: "",
-    supplierBatchNumber: "",
-    expiryDate: "",
-    receivedDate: new Date().toISOString().split("T")[0],
+    productId: props.prefilledProductId || '',
+    locationId: props.prefilledLocationId || '',
+    batchNumber: '',
+    supplierBatchNumber: '',
+    expiryDate: '',
+    receivedDate: new Date().toISOString().split('T')[0],
     initialQuantity: 0,
     unitCost: 0,
-    currency: "EUR",
-    purchaseOrderNumber: "",
-    invoiceNumber: "",
+    currency: 'EUR',
+    purchaseOrderNumber: '',
+    invoiceNumber: '',
     qualityCheckPassed: true,
-    qualityNotes: "",
-    quarantineUntil: "",
+    qualityNotes: '',
+    quarantineUntil: '',
   };
 };
 
@@ -313,22 +313,22 @@ const onSubmit = async () => {
     const newBatch = await batchStore.createBatch(batchData);
 
     $q.notify({
-      type: "positive",
-      message: t("batch.batchRegisteredSuccessfully"),
+      type: 'positive',
+      message: t('batch.batchRegisteredSuccessfully'),
     });
 
-    emit("success", newBatch);
+    emit('success', newBatch);
 
     if (!props.embedded) {
-      emit("close");
+      emit('close');
     } else {
       resetForm();
     }
   } catch (error) {
-    console.error(t("errors.failedToRegisterBatch"), error);
+    console.error(t('errors.failedToRegisterBatch'), error);
     $q.notify({
-      type: "negative",
-      message: t("errors.failedToRegisterBatch"),
+      type: 'negative',
+      message: t('errors.failedToRegisterBatch'),
     });
   } finally {
     loading.value = false;

@@ -1,13 +1,13 @@
-import { defineStore } from "pinia";
-import { ref, computed, readonly } from "vue";
-import { supabase } from "src/boot/supabase";
-import type { User, Session } from "@supabase/supabase-js";
-import type { UserProfile } from "src/types/supabase";
-import { ErrorHandler } from "src/utils/error-handler";
-import { authLogger } from "src/utils/logger";
-import { monitoringService } from "src/services/monitoring";
+import { defineStore } from 'pinia';
+import { ref, computed, readonly } from 'vue';
+import { supabase } from 'src/boot/supabase';
+import type { User, Session } from '@supabase/supabase-js';
+import type { UserProfile } from 'src/types/supabase';
+import { ErrorHandler } from 'src/utils/error-handler';
+import { authLogger } from 'src/utils/logger';
+import { monitoringService } from 'src/services/monitoring';
 
-export const useAuthStore = defineStore("auth", () => {
+export const useAuthStore = defineStore('auth', () => {
   // State
   const user = ref<User | null>(null);
   const session = ref<Session | null>(null);
@@ -20,18 +20,18 @@ export const useAuthStore = defineStore("auth", () => {
   const userEmail = computed(() => user.value?.email);
   const clinicId = computed(() => {
     const id = userProfile.value?.clinic_id;
-    console.log("clinicId computed - userProfile:", userProfile.value);
-    console.log("clinicId computed - returning:", id);
+    console.log('clinicId computed - userProfile:', userProfile.value);
+    console.log('clinicId computed - returning:', id);
     return id;
   });
 
   // Helper function to check and clear old demo data
   const checkAndClearOldDemoData = () => {
-    const savedProfile = localStorage.getItem("medstock_auth_profile");
+    const savedProfile = localStorage.getItem('medstock_auth_profile');
     if (savedProfile) {
       try {
         const profile = JSON.parse(savedProfile);
-        if (profile.clinic_id === "demo-clinic-id") {
+        if (profile.clinic_id === 'demo-clinic-id') {
           authLogger.warn(
             'Detected old demo data with clinic_id="demo-clinic-id", clearing localStorage'
           );
@@ -39,7 +39,7 @@ export const useAuthStore = defineStore("auth", () => {
           return true; // Indicates old data was cleared
         }
       } catch (e) {
-        authLogger.warn("Error parsing saved profile, clearing localStorage");
+        authLogger.warn('Error parsing saved profile, clearing localStorage');
         clearAuthData();
         return true;
       }
@@ -53,15 +53,15 @@ export const useAuthStore = defineStore("auth", () => {
 
     loading.value = true;
     try {
-      authLogger.info("Initializing authentication store");
+      authLogger.info('Initializing authentication store');
 
       // Check for and clear old demo data first
       const wasOldDataCleared = checkAndClearOldDemoData();
 
       // First check localStorage for persisted session
-      const savedSession = localStorage.getItem("medstock_auth_session");
-      const savedUser = localStorage.getItem("medstock_auth_user");
-      const savedProfile = localStorage.getItem("medstock_auth_profile");
+      const savedSession = localStorage.getItem('medstock_auth_session');
+      const savedUser = localStorage.getItem('medstock_auth_user');
+      const savedProfile = localStorage.getItem('medstock_auth_profile');
 
       if (savedSession && savedUser && !wasOldDataCleared) {
         try {
@@ -70,7 +70,7 @@ export const useAuthStore = defineStore("auth", () => {
           if (savedProfile) {
             userProfile.value = JSON.parse(savedProfile);
           }
-          authLogger.info("Restored session from localStorage");
+          authLogger.info('Restored session from localStorage');
 
           // Set user context for monitoring
           if (user.value) {
@@ -80,7 +80,7 @@ export const useAuthStore = defineStore("auth", () => {
             });
           }
         } catch (e) {
-          authLogger.warn("Corrupted localStorage data, clearing");
+          authLogger.warn('Corrupted localStorage data, clearing');
           // Clear corrupted localStorage data
           clearAuthData();
         }
@@ -88,46 +88,46 @@ export const useAuthStore = defineStore("auth", () => {
 
       // If no localStorage session, check Supabase
       if (!session.value) {
-        authLogger.info("No localStorage session, checking Supabase");
+        authLogger.info('No localStorage session, checking Supabase');
         const {
           data: { session: initialSession },
         } = await supabase.auth.getSession();
 
         if (initialSession) {
-          authLogger.info("Found Supabase session");
+          authLogger.info('Found Supabase session');
           await setAuthData(initialSession);
         } else {
-          authLogger.info("No active session found");
+          authLogger.info('No active session found');
         }
       }
 
       // Listen for auth changes
       supabase.auth.onAuthStateChange(async (event, newSession) => {
-        authLogger.info("Auth state changed", { event });
+        authLogger.info('Auth state changed', { event });
 
-        if (event === "SIGNED_IN" && newSession) {
+        if (event === 'SIGNED_IN' && newSession) {
           await setAuthData(newSession);
-          monitoringService.trackEvent("auth_state_change", {
-            event: "signed_in",
+          monitoringService.trackEvent('auth_state_change', {
+            event: 'signed_in',
           });
-        } else if (event === "SIGNED_OUT") {
+        } else if (event === 'SIGNED_OUT') {
           clearAuthData();
-          monitoringService.trackEvent("auth_state_change", {
-            event: "signed_out",
+          monitoringService.trackEvent('auth_state_change', {
+            event: 'signed_out',
           });
         }
       });
 
       initialized.value = true;
-      authLogger.info("Authentication store initialized successfully");
+      authLogger.info('Authentication store initialized successfully');
     } catch (error) {
-      authLogger.error("Failed to initialize auth store", error as Error);
+      authLogger.error('Failed to initialize auth store', error as Error);
       monitoringService.captureError(error as Error, {
         url: window.location.href,
         userAgent: navigator.userAgent,
         timestamp: new Date().toISOString(),
       });
-      ErrorHandler.handle(error as Error, "Auth Initialization");
+      ErrorHandler.handle(error as Error, 'Auth Initialization');
     } finally {
       loading.value = false;
     }
@@ -136,13 +136,13 @@ export const useAuthStore = defineStore("auth", () => {
   const login = async (email: string, password: string) => {
     loading.value = true;
     try {
-      authLogger.info("Starting login process", { email });
+      authLogger.info('Starting login process', { email });
 
       // Demo mode - bypass Supabase for demo account
-      if (email === "demo@medstock-pro.com" && password === "demo123") {
-        authLogger.info("Demo login detected");
+      if (email === 'demo@medstock-pro.com' && password === 'demo123') {
+        authLogger.info('Demo login detected');
         await setDemoAuthData();
-        monitoringService.trackEvent("login_success", { method: "demo" });
+        monitoringService.trackEvent('login_success', { method: 'demo' });
         return { success: true };
       }
 
@@ -152,24 +152,24 @@ export const useAuthStore = defineStore("auth", () => {
       });
 
       if (error) {
-        authLogger.warn("Login failed", { email, error: error.message });
-        monitoringService.trackEvent("login_failed", {
+        authLogger.warn('Login failed', { email, error: error.message });
+        monitoringService.trackEvent('login_failed', {
           email,
           error: error.message,
-          method: "supabase",
+          method: 'supabase',
         });
         throw error;
       }
 
       if (data.session) {
-        authLogger.info("Login successful", { userId: data.session.user.id });
+        authLogger.info('Login successful', { userId: data.session.user.id });
         await setAuthData(data.session);
-        monitoringService.trackEvent("login_success", { method: "supabase" });
+        monitoringService.trackEvent('login_success', { method: 'supabase' });
       }
 
       return { success: true };
     } catch (error: any) {
-      authLogger.error("Login error", error);
+      authLogger.error('Login error', error);
       monitoringService.captureError(error, {
         url: window.location.href,
         userAgent: navigator.userAgent,
@@ -187,19 +187,19 @@ export const useAuthStore = defineStore("auth", () => {
   const logout = async () => {
     loading.value = true;
     try {
-      authLogger.info("Starting logout process");
+      authLogger.info('Starting logout process');
       const { error } = await supabase.auth.signOut();
       if (error) {
-        authLogger.error("Logout error", error);
+        authLogger.error('Logout error', error);
         throw error;
       }
 
-      authLogger.info("Logout successful");
+      authLogger.info('Logout successful');
       clearAuthData();
-      monitoringService.trackEvent("logout_success");
+      monitoringService.trackEvent('logout_success');
       return { success: true };
     } catch (error: any) {
-      authLogger.error("Logout failed", error);
+      authLogger.error('Logout failed', error);
       monitoringService.captureError(error, {
         url: window.location.href,
         userAgent: navigator.userAgent,
@@ -225,8 +225,8 @@ export const useAuthStore = defineStore("auth", () => {
     });
 
     // Persist to localStorage for page reload persistence
-    localStorage.setItem("medstock_auth_session", JSON.stringify(newSession));
-    localStorage.setItem("medstock_auth_user", JSON.stringify(newSession.user));
+    localStorage.setItem('medstock_auth_session', JSON.stringify(newSession));
+    localStorage.setItem('medstock_auth_user', JSON.stringify(newSession.user));
 
     // Fetch user profile
     if (newSession.user) {
@@ -240,31 +240,31 @@ export const useAuthStore = defineStore("auth", () => {
     userProfile.value = null;
 
     // Clear localStorage
-    localStorage.removeItem("medstock_auth_session");
-    localStorage.removeItem("medstock_auth_user");
-    localStorage.removeItem("medstock_auth_profile");
+    localStorage.removeItem('medstock_auth_session');
+    localStorage.removeItem('medstock_auth_user');
+    localStorage.removeItem('medstock_auth_profile');
   };
 
   const setDemoAuthData = async () => {
     // Use the actual practice UUID from the database
-    const demoPracticeId = "550e8400-e29b-41d4-a716-446655440000";
-    const demoUserId = "550e8400-e29b-41d4-a716-446655440001";
+    const demoPracticeId = '550e8400-e29b-41d4-a716-446655440000';
+    const demoUserId = '550e8400-e29b-41d4-a716-446655440001';
 
     // Create mock session for demo
     const mockUser = {
       id: demoUserId,
-      email: "demo@medstock-pro.com",
+      email: 'demo@medstock-pro.com',
       created_at: new Date().toISOString(),
       updated_at: new Date().toISOString(),
       app_metadata: {},
-      user_metadata: { full_name: "Demo User" },
-      aud: "authenticated",
+      user_metadata: { full_name: 'Demo User' },
+      aud: 'authenticated',
       confirmation_sent_at: new Date().toISOString(),
       confirmed_at: new Date().toISOString(),
       email_confirmed_at: new Date().toISOString(),
       last_sign_in_at: new Date().toISOString(),
-      role: "authenticated",
-      phone: "",
+      role: 'authenticated',
+      phone: '',
       phone_confirmed_at: undefined,
       recovery_sent_at: undefined,
       email_change_sent_at: undefined,
@@ -277,11 +277,11 @@ export const useAuthStore = defineStore("auth", () => {
     };
 
     const mockSession = {
-      access_token: "demo-access-token",
-      refresh_token: "demo-refresh-token",
+      access_token: 'demo-access-token',
+      refresh_token: 'demo-refresh-token',
       expires_in: 3600,
       expires_at: Math.floor(Date.now() / 1000) + 3600,
-      token_type: "bearer",
+      token_type: 'bearer',
       user: mockUser,
     };
 
@@ -292,19 +292,19 @@ export const useAuthStore = defineStore("auth", () => {
     userProfile.value = {
       id: demoUserId,
       clinic_id: demoPracticeId,
-      email: "demo@medstock-pro.com",
-      full_name: "Demo User",
-      role: "admin",
+      email: 'demo@medstock-pro.com',
+      full_name: 'Demo User',
+      role: 'admin',
       avatar_url: null,
       created_at: new Date().toISOString(),
       updated_at: new Date().toISOString(),
     };
 
     // Persist demo data to localStorage
-    localStorage.setItem("medstock_auth_session", JSON.stringify(mockSession));
-    localStorage.setItem("medstock_auth_user", JSON.stringify(mockUser));
+    localStorage.setItem('medstock_auth_session', JSON.stringify(mockSession));
+    localStorage.setItem('medstock_auth_user', JSON.stringify(mockUser));
     localStorage.setItem(
-      "medstock_auth_profile",
+      'medstock_auth_profile',
       JSON.stringify(userProfile.value)
     );
   };
@@ -312,19 +312,19 @@ export const useAuthStore = defineStore("auth", () => {
   const fetchUserProfile = async (userId: string) => {
     try {
       // For demo user, use the hardcoded demo profile
-      if (userId === "550e8400-e29b-41d4-a716-446655440001") {
+      if (userId === '550e8400-e29b-41d4-a716-446655440001') {
         userProfile.value = {
           id: userId,
-          clinic_id: "550e8400-e29b-41d4-a716-446655440000",
-          email: "demo@medstock-pro.com",
-          full_name: "Demo User",
-          role: "owner",
+          clinic_id: '550e8400-e29b-41d4-a716-446655440000',
+          email: 'demo@medstock-pro.com',
+          full_name: 'Demo User',
+          role: 'owner',
           avatar_url: null,
           created_at: new Date().toISOString(),
           updated_at: new Date().toISOString(),
         };
         localStorage.setItem(
-          "medstock_auth_profile",
+          'medstock_auth_profile',
           JSON.stringify(userProfile.value)
         );
         return;
@@ -332,18 +332,18 @@ export const useAuthStore = defineStore("auth", () => {
 
       // For real users, get practice membership data
       const { data, error } = await supabase
-        .from("practice_members")
+        .from('practice_members')
         .select(
           `
           *,
           practices:practice_id (*)
         `
         )
-        .eq("user_id", userId)
+        .eq('user_id', userId)
         .single();
 
       if (error) {
-        authLogger.warn("No practice membership found for user", {
+        authLogger.warn('No practice membership found for user', {
           userId,
           error: error.message,
         });
@@ -351,15 +351,15 @@ export const useAuthStore = defineStore("auth", () => {
         userProfile.value = {
           id: userId,
           clinic_id: null,
-          email: user.value?.email || "",
-          full_name: user.value?.user_metadata?.full_name || "User",
-          role: "member",
+          email: user.value?.email || '',
+          full_name: user.value?.user_metadata?.full_name || 'User',
+          role: 'member',
           avatar_url: user.value?.user_metadata?.avatar_url || null,
           created_at: new Date().toISOString(),
           updated_at: new Date().toISOString(),
         };
         localStorage.setItem(
-          "medstock_auth_profile",
+          'medstock_auth_profile',
           JSON.stringify(userProfile.value)
         );
         return;
@@ -369,8 +369,8 @@ export const useAuthStore = defineStore("auth", () => {
       userProfile.value = {
         id: userId,
         clinic_id: data.practice_id,
-        email: user.value?.email || "",
-        full_name: user.value?.user_metadata?.full_name || "User",
+        email: user.value?.email || '',
+        full_name: user.value?.user_metadata?.full_name || 'User',
         role: data.role,
         avatar_url: user.value?.user_metadata?.avatar_url || null,
         created_at: data.created_at || new Date().toISOString(),
@@ -379,12 +379,12 @@ export const useAuthStore = defineStore("auth", () => {
 
       // Persist user profile to localStorage
       localStorage.setItem(
-        "medstock_auth_profile",
+        'medstock_auth_profile',
         JSON.stringify(userProfile.value)
       );
     } catch (error) {
-      authLogger.error("Error fetching user profile", error as Error);
-      ErrorHandler.handle(error as Error, "Fetch User Profile");
+      authLogger.error('Error fetching user profile', error as Error);
+      ErrorHandler.handle(error as Error, 'Fetch User Profile');
     }
   };
 

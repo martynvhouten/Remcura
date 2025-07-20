@@ -1,18 +1,18 @@
-import { RouteRecordRaw } from "vue-router";
+import { RouteRecordRaw } from 'vue-router';
 
 const routes: RouteRecordRaw[] = [
   // Auth pages - uses AuthLayout
   {
-    path: "/auth",
+    path: '/auth',
     component: () =>
-      import(/* webpackChunkName: "auth-layout" */ "layouts/AuthLayout.vue"),
+      import(/* webpackChunkName: "auth-layout" */ 'layouts/AuthLayout.vue'),
     children: [
       {
-        path: "login",
-        name: "login",
+        path: 'login',
+        name: 'login',
         component: () =>
           import(
-            /* webpackChunkName: "auth-login" */ "pages/auth/LoginPage.vue"
+            /* webpackChunkName: "auth-login" */ 'pages/auth/LoginPage.vue'
           ),
         meta: { requiresAuth: false },
       },
@@ -28,151 +28,151 @@ const routes: RouteRecordRaw[] = [
 
   // Redirect /login to /auth/login for backwards compatibility
   {
-    path: "/login",
-    redirect: "/auth/login",
+    path: '/login',
+    redirect: '/auth/login',
   },
 
   // Main Layout - for authenticated users
   {
-    path: "/",
+    path: '/',
     component: () =>
-      import(/* webpackChunkName: "main-layout" */ "layouts/MainLayout.vue"),
+      import(/* webpackChunkName: "main-layout" */ 'layouts/MainLayout.vue'),
     meta: { requiresAuth: true },
     children: [
       {
-        path: "",
-        name: "dashboard",
+        path: '',
+        name: 'dashboard',
         component: () =>
-          import(/* webpackChunkName: "dashboard" */ "pages/DashboardPage.vue"),
+          import(/* webpackChunkName: "dashboard" */ 'pages/DashboardPage.vue'),
         meta: { requiresAuth: true, preload: true },
       },
 
       // Inventory Management Routes
       {
-        path: "inventory",
-        name: "inventory",
+        path: 'inventory',
+        name: 'inventory',
         component: () =>
-          import(/* webpackChunkName: "inventory" */ "pages/InventoryPage.vue"),
+          import(/* webpackChunkName: "inventory" */ 'pages/InventoryPage.vue'),
         meta: { requiresAuth: true },
       },
       {
-        path: "inventory/levels",
-        name: "inventory-levels",
+        path: 'inventory/levels',
+        name: 'inventory-levels',
         component: () =>
           import(
-            /* webpackChunkName: "inventory-levels" */ "pages/inventory/InventoryLevelsPage.vue"
+            /* webpackChunkName: "inventory-levels" */ 'pages/inventory/InventoryLevelsPage.vue'
           ),
         meta: { requiresAuth: true },
       },
       {
-        path: "inventory/locations",
-        name: "inventory-locations",
+        path: 'inventory/locations',
+        name: 'inventory-locations',
         component: () =>
           import(
-            /* webpackChunkName: "inventory-locations" */ "pages/inventory/LocationsPage.vue"
+            /* webpackChunkName: "inventory-locations" */ 'pages/inventory/LocationsPage.vue'
           ),
         meta: { requiresAuth: true },
       },
       {
-        path: "inventory/counting",
-        name: "inventory-counting",
+        path: 'inventory/counting',
+        name: 'inventory-counting',
         component: () =>
           import(
-            /* webpackChunkName: "inventory-counting" */ "pages/inventory/CountingPage.vue"
+            /* webpackChunkName: "inventory-counting" */ 'pages/inventory/CountingPage.vue'
           ),
         meta: { requiresAuth: true },
       },
       {
-        path: "inventory/counting/:sessionId",
-        name: "inventory-counting-session",
+        path: 'inventory/counting/:sessionId',
+        name: 'inventory-counting-session',
         component: () =>
           import(
-            /* webpackChunkName: "inventory-counting-session" */ "pages/inventory/CountingSessionPage.vue"
+            /* webpackChunkName: "inventory-counting-session" */ 'pages/inventory/CountingSessionPage.vue'
           ),
         meta: { requiresAuth: true },
         props: true,
       },
       {
-        path: "inventory/movements",
-        name: "inventory-movements",
+        path: 'inventory/movements',
+        name: 'inventory-movements',
         component: () =>
           import(
-            /* webpackChunkName: "inventory-movements" */ "pages/inventory/MovementsPage.vue"
+            /* webpackChunkName: "inventory-movements" */ 'pages/inventory/MovementsPage.vue'
           ),
         meta: { requiresAuth: true },
       },
       {
-        path: "inventory/batches",
-        name: "inventory-batches",
+        path: 'inventory/batches',
+        name: 'inventory-batches',
         component: () =>
           import(
-            /* webpackChunkName: "batch-management" */ "pages/BatchManagementPage.vue"
+            /* webpackChunkName: "batch-management" */ 'pages/BatchManagementPage.vue'
           ),
         meta: { requiresAuth: true },
       },
 
       // Products & Orders & Suppliers
       {
-        path: "products",
-        name: "products",
+        path: 'products',
+        name: 'products',
         component: () =>
-          import(/* webpackChunkName: "products" */ "pages/ProductsPage.vue"),
+          import(/* webpackChunkName: "products" */ 'pages/ProductsPage.vue'),
         meta: { requiresAuth: true },
       },
       {
-        path: "order-lists",
-        name: "order-lists",
+        path: 'order-lists',
+        name: 'order-lists',
         component: () =>
           import(
-            /* webpackChunkName: "order-lists" */ "pages/OrderListsPage.vue"
+            /* webpackChunkName: "order-lists" */ 'pages/OrderListsPage.vue'
           ),
         meta: { requiresAuth: true },
       },
       {
-        path: "orders",
-        name: "orders",
+        path: 'orders',
+        name: 'orders',
         component: () =>
-          import(/* webpackChunkName: "orders" */ "pages/OrdersPage.vue"),
+          import(/* webpackChunkName: "orders" */ 'pages/OrdersPage.vue'),
         meta: { requiresAuth: true },
       },
       {
-        path: "analytics",
-        name: "analytics",
+        path: 'analytics',
+        name: 'analytics',
         component: () =>
-          import(/* webpackChunkName: "analytics" */ "pages/AnalyticsPage.vue"),
+          import(/* webpackChunkName: "analytics" */ 'pages/AnalyticsPage.vue'),
         meta: { requiresAuth: true },
       },
       {
-        path: "suppliers",
-        name: "suppliers",
+        path: 'suppliers',
+        name: 'suppliers',
         component: () =>
-          import(/* webpackChunkName: "suppliers" */ "pages/SuppliersPage.vue"),
+          import(/* webpackChunkName: "suppliers" */ 'pages/SuppliersPage.vue'),
         meta: { requiresAuth: true },
       },
       {
-        path: "notifications",
-        name: "notifications",
+        path: 'notifications',
+        name: 'notifications',
         component: () =>
           import(
-            /* webpackChunkName: "notifications" */ "pages/NotificationsPage.vue"
+            /* webpackChunkName: "notifications" */ 'pages/NotificationsPage.vue'
           ),
         meta: { requiresAuth: true },
       },
       {
-        path: "admin",
-        name: "admin",
+        path: 'admin',
+        name: 'admin',
         component: () =>
-          import(/* webpackChunkName: "admin" */ "pages/AdminDashboard.vue"),
+          import(/* webpackChunkName: "admin" */ 'pages/AdminDashboard.vue'),
         meta: {
           requiresAuth: true,
           requiresAdmin: true,
         },
       },
       {
-        path: "beheer",
-        name: "beheer",
+        path: 'beheer',
+        name: 'beheer',
         component: () =>
-          import(/* webpackChunkName: "admin" */ "pages/AdminDashboard.vue"),
+          import(/* webpackChunkName: "admin" */ 'pages/AdminDashboard.vue'),
         meta: {
           requiresAuth: true,
           requiresAdmin: true,
@@ -180,18 +180,18 @@ const routes: RouteRecordRaw[] = [
       },
 
       {
-        path: "settings",
-        name: "settings",
+        path: 'settings',
+        name: 'settings',
         component: () =>
-          import(/* webpackChunkName: "settings" */ "pages/SettingsPage.vue"),
+          import(/* webpackChunkName: "settings" */ 'pages/SettingsPage.vue'),
         meta: { requiresAuth: true },
       },
       {
-        path: "style-guide",
-        name: "style-guide",
+        path: 'style-guide',
+        name: 'style-guide',
         component: () =>
           import(
-            /* webpackChunkName: "style-guide" */ "pages/StyleGuidePage.vue"
+            /* webpackChunkName: "style-guide" */ 'pages/StyleGuidePage.vue'
           ),
         meta: { requiresAuth: true },
       },
@@ -201,9 +201,9 @@ const routes: RouteRecordRaw[] = [
   // Always leave this as last one,
   // but you can also remove it
   {
-    path: "/:catchAll(.*)*",
+    path: '/:catchAll(.*)*',
     component: () =>
-      import(/* webpackChunkName: "error" */ "pages/ErrorNotFound.vue"),
+      import(/* webpackChunkName: "error" */ 'pages/ErrorNotFound.vue'),
   },
 ];
 

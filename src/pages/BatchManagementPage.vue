@@ -233,23 +233,23 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted } from "vue";
-import { useI18n } from "vue-i18n";
-import { useQuasar } from "quasar";
-import { useBatchStore } from "src/stores/batch";
-import { useInventoryStore } from "src/stores/inventory";
-import { useAuthStore } from "src/stores/auth";
-import PageLayout from "src/components/PageLayout.vue";
-import PageTitle from "src/components/PageTitle.vue";
-import BaseCard from "src/components/base/BaseCard.vue";
-import BatchOverview from "src/components/BatchOverview.vue";
-import BatchRegistrationForm from "src/components/BatchRegistrationForm.vue";
-import BatchDetailCard from "src/components/BatchDetailCard.vue";
-import BarcodeScanner from "src/components/BarcodeScanner.vue";
-import ExpiringBatchesList from "src/components/ExpiringBatchesList.vue";
-import FifoBatchManager from "src/components/FifoBatchManager.vue";
-import BatchReports from "src/components/BatchReports.vue";
-import type { ProductBatchWithDetails } from "src/types/inventory";
+import { ref, computed, onMounted } from 'vue';
+import { useI18n } from 'vue-i18n';
+import { useQuasar } from 'quasar';
+import { useBatchStore } from 'src/stores/batch';
+import { useInventoryStore } from 'src/stores/inventory';
+import { useAuthStore } from 'src/stores/auth';
+import PageLayout from 'src/components/PageLayout.vue';
+import PageTitle from 'src/components/PageTitle.vue';
+import BaseCard from 'src/components/base/BaseCard.vue';
+import BatchOverview from 'src/components/BatchOverview.vue';
+import BatchRegistrationForm from 'src/components/BatchRegistrationForm.vue';
+import BatchDetailCard from 'src/components/BatchDetailCard.vue';
+import BarcodeScanner from 'src/components/BarcodeScanner.vue';
+import ExpiringBatchesList from 'src/components/ExpiringBatchesList.vue';
+import FifoBatchManager from 'src/components/FifoBatchManager.vue';
+import BatchReports from 'src/components/BatchReports.vue';
+import type { ProductBatchWithDetails } from 'src/types/inventory';
 
 // Composables
 const { t } = useI18n();
@@ -259,16 +259,16 @@ const inventoryStore = useInventoryStore();
 const authStore = useAuthStore();
 
 // Debug i18n
-console.log("🔧 BatchManagementPage - i18n debug:");
-console.log("🔧 t function:", t);
-console.log("🔧 Test translation:", t('batch.batchManagement'));
-console.log("🔧 Test with $t:", t.te && t.te('batch.batchManagement') ? 'key exists' : 'key missing');
+console.log('🔧 BatchManagementPage - i18n debug:');
+console.log('🔧 t function:', t);
+console.log('🔧 Test translation:', t('batch.batchManagement'));
+console.log('🔧 Test with $t:', t.te && t.te('batch.batchManagement') ? 'key exists' : 'key missing');
 
 // Also test global $t in mounted
 import { getCurrentInstance } from 'vue';
 
 // State
-const activeTab = ref("overview");
+const activeTab = ref('overview');
 const showAddBatchDialog = ref(false);
 const showBatchDetailDialog = ref(false);
 const showScannerDialog = ref(false);
@@ -281,21 +281,21 @@ const batchOverviewRef = ref();
 const totalBatches = computed(() => batchStore.batches.length);
 
 const activeBatches = computed(
-  () => batchStore.batches.filter((batch) => batch.status === "active").length
+  () => batchStore.batches.filter((batch) => batch.status === 'active').length
 );
 
 const expiringBatches = computed(
   () =>
     batchStore.expiringBatches.filter(
       (batch) =>
-        batch.urgency_level === "critical" || batch.urgency_level === "warning"
+        batch.urgency_level === 'critical' || batch.urgency_level === 'warning'
     ).length
 );
 
 const criticalBatches = computed(() =>
   batchStore.expiringBatches.filter(
     (batch) =>
-      batch.urgency_level === "expired" || batch.urgency_level === "critical"
+      batch.urgency_level === 'expired' || batch.urgency_level === 'critical'
   )
 );
 
@@ -308,9 +308,9 @@ const totalValue = computed(() =>
 
 // Methods
 const formatCurrency = (amount: number, currency: string) => {
-  return new Intl.NumberFormat("nl-NL", {
-    style: "currency",
-    currency: currency || "EUR",
+  return new Intl.NumberFormat('nl-NL', {
+    style: 'currency',
+    currency: currency || 'EUR',
   }).format(amount);
 };
 
@@ -326,15 +326,15 @@ const refreshData = async () => {
     ]);
 
     $q.notify({
-      type: "positive",
-      message: t("common.dataRefreshed"),
+      type: 'positive',
+      message: t('common.dataRefreshed'),
       timeout: 1000,
     });
   } catch (error) {
-    console.error(t("errors.failedToRefreshData"), error);
+    console.error(t('errors.failedToRefreshData'), error);
     $q.notify({
-      type: "negative",
-      message: t("errors.failedToRefreshData"),
+      type: 'negative',
+      message: t('errors.failedToRefreshData'),
     });
   } finally {
     refreshing.value = false;
@@ -347,11 +347,11 @@ const openBarcodeScanner = () => {
 
 const filterExpiring = () => {
   showExpiringOnly.value = !showExpiringOnly.value;
-  activeTab.value = "expiring";
+  activeTab.value = 'expiring';
 };
 
 const filterCritical = () => {
-  activeTab.value = "expiring";
+  activeTab.value = 'expiring';
   // Apply critical filter in the expiring tab
 };
 
@@ -367,30 +367,30 @@ const exportBatches = () => {
   }));
 
   const csv = convertToCSV(csvData);
-  downloadCSV(csv, "batch-overview.csv");
+  downloadCSV(csv, 'batch-overview.csv');
 
   $q.notify({
-    type: "positive",
-    message: t("batch.exportSuccess"),
+    type: 'positive',
+    message: t('batch.exportSuccess'),
   });
 };
 
 const convertToCSV = (data: any[]) => {
-  if (!data.length) return "";
+  if (!data.length) return '';
 
   const headers = Object.keys(data[0]);
-  const csvHeaders = headers.join(",");
+  const csvHeaders = headers.join(',');
   const csvRows = data.map((row) =>
-    headers.map((header) => `"${row[header] || ""}"`).join(",")
+    headers.map((header) => `"${row[header] || ''}"`).join(',')
   );
 
-  return [csvHeaders, ...csvRows].join("\n");
+  return [csvHeaders, ...csvRows].join('\n');
 };
 
 const downloadCSV = (csv: string, filename: string) => {
-  const blob = new Blob([csv], { type: "text/csv" });
+  const blob = new Blob([csv], { type: 'text/csv' });
   const url = window.URL.createObjectURL(blob);
-  const a = document.createElement("a");
+  const a = document.createElement('a');
   a.href = url;
   a.download = filename;
   a.click();
@@ -437,15 +437,15 @@ const onBarcodeScanned = (barcodeData: string) => {
     showBatchDetailDialog.value = true;
   } else {
     $q.notify({
-      type: "warning",
-      message: t("batch.batchNotFound", { batchNumber: barcodeData }),
+      type: 'warning',
+      message: t('batch.batchNotFound', { batchNumber: barcodeData }),
     });
   }
 };
 
 const onFifoSuggestion = (suggestion: any) => {
   // Handle FIFO batch suggestion
-  console.log("FIFO suggestion:", suggestion);
+  console.log('FIFO suggestion:', suggestion);
 };
 
 // Lifecycle

@@ -413,33 +413,33 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted, watch, defineAsyncComponent } from "vue";
-import { useI18n } from "vue-i18n";
-import { useQuasar } from "quasar";
-import { useRouter } from "vue-router";
-import { useAuthStore } from "src/stores/auth";
-import { useInventoryStore } from "src/stores/inventory";
-import { useClinicStore } from "src/stores/clinic";
-import { useCountingStore } from "src/stores/counting";
+import { ref, computed, onMounted, watch, defineAsyncComponent } from 'vue';
+import { useI18n } from 'vue-i18n';
+import { useQuasar } from 'quasar';
+import { useRouter } from 'vue-router';
+import { useAuthStore } from 'src/stores/auth';
+import { useInventoryStore } from 'src/stores/inventory';
+import { useClinicStore } from 'src/stores/clinic';
+import { useCountingStore } from 'src/stores/counting';
 import type {
   CountingSession,
   StockAlert,
   MovementWithRelations,
   PracticeLocation,
-} from "src/types/inventory";
-import PageLayout from "src/components/PageLayout.vue";
-import PageTitle from "src/components/PageTitle.vue";
-import BaseCard from "src/components/base/BaseCard.vue";
+} from 'src/types/inventory';
+import PageLayout from 'src/components/PageLayout.vue';
+import PageTitle from 'src/components/PageTitle.vue';
+import BaseCard from 'src/components/base/BaseCard.vue';
 
 // Lazy loaded dialogs
 const CountingSessionDialog = defineAsyncComponent(
-  () => import("src/components/inventory/CountingSessionDialog.vue")
+  () => import('src/components/inventory/CountingSessionDialog.vue')
 );
 const QuickAdjustmentDialog = defineAsyncComponent(
-  () => import("src/components/inventory/QuickAdjustmentDialog.vue")
+  () => import('src/components/inventory/QuickAdjustmentDialog.vue')
 );
 const StockTransferDialog = defineAsyncComponent(
-  () => import("src/components/inventory/StockTransferDialog.vue")
+  () => import('src/components/inventory/StockTransferDialog.vue')
 );
 
 // Composables
@@ -452,7 +452,7 @@ const clinicStore = useClinicStore();
 const countingStore = useCountingStore();
 
 // Reactive state
-const selectedLocationId = ref<string>("all");
+const selectedLocationId = ref<string>('all');
 const refreshing = ref(false);
 const syncing = ref(false);
 const showCountingDialogFlag = ref(false);
@@ -462,14 +462,14 @@ const displayedAlertsCount = ref(5);
 const displayedMovementsCount = ref(10);
 
 // Computed properties
-const practiceId = computed(() => authStore.userProfile?.clinic_id || "");
+const practiceId = computed(() => authStore.userProfile?.clinic_id || '');
 
 const availableLocations = computed<PracticeLocation[]>(() => {
   return clinicStore.activeLocations;
 });
 
 const locationOptions = computed(() => [
-  { label: t("inventory.allLocations"), value: "all" },
+  { label: t('inventory.allLocations'), value: 'all' },
   ...availableLocations.value.map((location) => ({
     label: location.name,
     value: location.id,
@@ -477,13 +477,13 @@ const locationOptions = computed(() => [
 ]);
 
 const selectedLocationName = computed(() => {
-  if (selectedLocationId.value === "all") {
-    return t("inventory.allLocations");
+  if (selectedLocationId.value === 'all') {
+    return t('inventory.allLocations');
   }
   const location = availableLocations.value.find(
     (l) => l.id === selectedLocationId.value
   );
-  return location?.name || t("inventory.allLocations");
+  return location?.name || t('inventory.allLocations');
 });
 
 const inventoryKPIs = computed(() =>
@@ -533,16 +533,16 @@ const refreshData = async () => {
     inventoryStore.generateStockAlerts();
 
     $q.notify({
-      type: "positive",
-      message: t("inventory.dataRefreshed"),
-      position: "top",
+      type: 'positive',
+      message: t('inventory.dataRefreshed'),
+      position: 'top',
     });
   } catch (error) {
-    console.error("Error refreshing data:", error);
+    console.error('Error refreshing data:', error);
     $q.notify({
-      type: "negative",
-      message: t("inventory.refreshFailed"),
-      position: "top",
+      type: 'negative',
+      message: t('inventory.refreshFailed'),
+      position: 'top',
     });
   } finally {
     refreshing.value = false;
@@ -561,9 +561,9 @@ const syncRecentData = async () => {
 const exportInventoryData = () => {
   // Implementation for exporting inventory data
   $q.notify({
-    type: "info",
-    message: t("common.comingSoon"),
-    position: "top",
+    type: 'info',
+    message: t('common.comingSoon'),
+    position: 'top',
   });
 };
 
@@ -581,12 +581,12 @@ const showTransferDialog = () => {
 
 const showLowStockDetails = () => {
   // Navigate to filtered inventory view
-  router.push("/inventory/levels?filter=low-stock");
+  router.push('/inventory/levels?filter=low-stock');
 };
 
 const showOutOfStockDetails = () => {
   // Navigate to filtered inventory view
-  router.push("/inventory/levels?filter=out-of-stock");
+  router.push('/inventory/levels?filter=out-of-stock');
 };
 
 const showAllAlerts = () => {
@@ -614,13 +614,13 @@ const onTransferCompleted = () => {
 
 // Formatting helpers
 const formatNumber = (value: number): string => {
-  return new Intl.NumberFormat("nl-NL").format(value);
+  return new Intl.NumberFormat('nl-NL').format(value);
 };
 
 const formatCurrency = (value: number): string => {
-  return new Intl.NumberFormat("nl-NL", {
-    style: "currency",
-    currency: "EUR",
+  return new Intl.NumberFormat('nl-NL', {
+    style: 'currency',
+    currency: 'EUR',
   }).format(value);
 };
 
@@ -629,10 +629,10 @@ const formatPercentage = (value: number): string => {
 };
 
 const formatDate = (dateString: string): string => {
-  return new Intl.DateTimeFormat("nl-NL", {
-    year: "numeric",
-    month: "short",
-    day: "numeric",
+  return new Intl.DateTimeFormat('nl-NL', {
+    year: 'numeric',
+    month: 'short',
+    day: 'numeric',
   }).format(new Date(dateString));
 };
 
@@ -642,11 +642,11 @@ const formatRelativeTime = (dateString: string): string => {
   const diffInHours = (now.getTime() - date.getTime()) / (1000 * 60 * 60);
 
   if (diffInHours < 1) {
-    return t("inventory.today");
+    return t('inventory.today');
   } else if (diffInHours < 24) {
-    return t("inventory.today");
+    return t('inventory.today');
   } else if (diffInHours < 48) {
-    return t("inventory.yesterday");
+    return t('inventory.yesterday');
   } else {
     return formatDate(dateString);
   }
@@ -657,80 +657,80 @@ const formatMovementType = (type: string): string => {
 };
 
 const formatQuantityChange = (change: number): string => {
-  return `${change > 0 ? "+" : ""}${change} ${t("inventory.units")}`;
+  return `${change > 0 ? '+' : ''}${change} ${t('inventory.units')}`;
 };
 
 // UI helper methods
 const alertVariantClass = (urgency: string): string => {
   switch (urgency) {
-    case "critical":
-      return "alert-critical";
-    case "high":
-      return "alert-high";
-    case "medium":
-      return "alert-medium";
+    case 'critical':
+      return 'alert-critical';
+    case 'high':
+      return 'alert-high';
+    case 'medium':
+      return 'alert-medium';
     default:
-      return "alert-low";
+      return 'alert-low';
   }
 };
 
 const alertIcon = (type: string): string => {
   switch (type) {
-    case "out_of_stock":
-      return "error";
-    case "low_stock":
-      return "warning";
-    case "overstock":
-      return "info";
+    case 'out_of_stock':
+      return 'error';
+    case 'low_stock':
+      return 'warning';
+    case 'overstock':
+      return 'info';
     default:
-      return "notification_important";
+      return 'notification_important';
   }
 };
 
 const alertColor = (urgency: string): string => {
   switch (urgency) {
-    case "critical":
-      return "negative";
-    case "high":
-      return "orange";
-    case "medium":
-      return "warning";
+    case 'critical':
+      return 'negative';
+    case 'high':
+      return 'orange';
+    case 'medium':
+      return 'warning';
     default:
-      return "info";
+      return 'info';
   }
 };
 
 const movementIcon = (type: string): string => {
   switch (type) {
-    case "receipt":
-      return "add_circle";
-    case "usage":
-      return "remove_circle";
-    case "transfer":
-      return "swap_horiz";
-    case "adjustment":
-      return "edit";
-    case "count":
-      return "checklist";
+    case 'receipt':
+      return 'add_circle';
+    case 'usage':
+      return 'remove_circle';
+    case 'transfer':
+      return 'swap_horiz';
+    case 'adjustment':
+      return 'edit';
+    case 'count':
+      return 'checklist';
     default:
-      return "timeline";
+      return 'timeline';
   }
 };
 
 const movementColor = (type: string): string => {
   switch (type) {
-    case "receipt":
-      return "positive";
-    case "usage":
-      return "negative";
-    case "transfer":
-      return "info";
-    case "adjustment":
-      return "warning";
-    case "count":
-      return "secondary";
+    case 'receipt':
+      return 'positive';
+    case 'usage':
+      return 'negative';
+    case 'transfer':
+      return 'info';
+    case 'adjustment':
+      return 'warning';
+    case 'count':
+      return 'secondary';
     default:
-      return "primary";
+      return 'primary';
   }
 };
 

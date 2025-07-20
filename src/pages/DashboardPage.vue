@@ -82,12 +82,12 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from "vue";
-import { useI18n } from "vue-i18n";
-import { useAuthStore } from "src/stores/auth";
-import PageLayout from "src/components/PageLayout.vue";
-import PageTitle from "src/components/PageTitle.vue";
-import BaseCard from "src/components/base/BaseCard.vue";
+import { computed } from 'vue';
+import { useI18n } from 'vue-i18n';
+import { useAuthStore } from 'src/stores/auth';
+import PageLayout from 'src/components/PageLayout.vue';
+import PageTitle from 'src/components/PageTitle.vue';
+import BaseCard from 'src/components/base/BaseCard.vue';
 
 const { t } = useI18n();
 const authStore = useAuthStore();

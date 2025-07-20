@@ -24,10 +24,10 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from "vue";
-import { useI18n } from "vue-i18n";
-import { useQuasar } from "quasar";
-import { useAuthStore } from "@/stores/auth";
+import { computed } from 'vue';
+import { useI18n } from 'vue-i18n';
+import { useQuasar } from 'quasar';
+import { useAuthStore } from '@/stores/auth';
 
 // Composables
 const { t } = useI18n();
@@ -36,28 +36,28 @@ const authStore = useAuthStore();
 
 // Computed
 const isDemoUser = computed(() => {
-  return authStore.userEmail === "demo@medstock-pro.com";
+  return authStore.userEmail === 'demo@medstock-pro.com';
 });
 
 // Methods
 const showDemoInfo = () => {
   $q.dialog({
-    title: t("demo.title"),
+    title: t('demo.title'),
     message: `
       <div class="demo-info-dialog">
-        <p><strong>${t("demo.practice")}:</strong> ${t(
-      "demo.practiceDescription"
+        <p><strong>${t('demo.practice')}:</strong> ${t(
+      'demo.practiceDescription'
     )}</p>
-        <p><strong>${t("demo.limitations")}:</strong> ${t(
-      "demo.limitationsText"
+        <p><strong>${t('demo.limitations')}:</strong> ${t(
+      'demo.limitationsText'
     )}</p>
         <p><em>Alle wijzigingen worden opgeslagen maar kunnen worden gereset via de Admin pagina.</em></p>
       </div>
     `,
     html: true,
     ok: {
-      label: t("common.close"),
-      color: "primary",
+      label: t('common.close'),
+      color: 'primary',
     },
   });
 };

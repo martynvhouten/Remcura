@@ -135,21 +135,21 @@
 </template>
 
 <script setup lang="ts">
-import { useI18n } from "vue-i18n";
-import { useRouter } from "vue-router";
+import { useI18n } from 'vue-i18n';
+import { useRouter } from 'vue-router';
 
 const { t } = useI18n();
 const router = useRouter();
 
 const goHome = () => {
-  router.push("/");
+  router.push('/');
 };
 
 const goBack = () => {
   if (window.history.length > 1) {
     router.go(-1);
   } else {
-    router.push("/");
+    router.push('/');
   }
 };
 

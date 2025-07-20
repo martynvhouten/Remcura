@@ -235,10 +235,10 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from "vue";
-import { useI18n } from "vue-i18n";
-import BaseCard from "src/components/base/BaseCard.vue";
-import type { ProductWithStock } from "src/types/inventory";
+import { computed } from 'vue';
+import { useI18n } from 'vue-i18n';
+import BaseCard from 'src/components/base/BaseCard.vue';
+import type { ProductWithStock } from 'src/types/inventory';
 
 interface Props {
   modelValue: boolean;
@@ -246,9 +246,9 @@ interface Props {
 }
 
 interface Emits {
-  (e: "update:modelValue", value: boolean): void;
-  (e: "addToCart", product: ProductWithStock): void;
-  (e: "addToOrderList", product: ProductWithStock): void;
+  (e: 'update:modelValue', value: boolean): void;
+  (e: 'addToCart', product: ProductWithStock): void;
+  (e: 'addToOrderList', product: ProductWithStock): void;
 }
 
 const props = defineProps<Props>();
@@ -257,36 +257,36 @@ const { t, locale } = useI18n();
 
 const isOpen = computed({
   get: () => props.modelValue,
-  set: (value) => emit("update:modelValue", value),
+  set: (value) => emit('update:modelValue', value),
 });
 
 const stockStatusColor = computed(() => {
-  if (!props.product) return "grey";
+  if (!props.product) return 'grey';
 
   switch (props.product.stock_status) {
-    case "in_stock":
-      return "positive";
-    case "low_stock":
-      return "warning";
-    case "out_of_stock":
-      return "negative";
+    case 'in_stock':
+      return 'positive';
+    case 'low_stock':
+      return 'warning';
+    case 'out_of_stock':
+      return 'negative';
     default:
-      return "grey";
+      return 'grey';
   }
 });
 
 const stockStatusIcon = computed(() => {
-  if (!props.product) return "help";
+  if (!props.product) return 'help';
 
   switch (props.product.stock_status) {
-    case "in_stock":
-      return "check_circle";
-    case "low_stock":
-      return "warning";
-    case "out_of_stock":
-      return "cancel";
+    case 'in_stock':
+      return 'check_circle';
+    case 'low_stock':
+      return 'warning';
+    case 'out_of_stock':
+      return 'cancel';
     default:
-      return "help";
+      return 'help';
   }
 });
 
@@ -306,8 +306,8 @@ const bestPrice = computed(() => {
 
 const formatPrice = (price: number): string => {
   return new Intl.NumberFormat(locale.value, {
-    style: "currency",
-    currency: "EUR",
+    style: 'currency',
+    currency: 'EUR',
   }).format(price);
 };
 </script>

@@ -579,23 +579,23 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from "vue";
-import PageLayout from "src/components/PageLayout.vue";
-import PageTitle from "src/components/PageTitle.vue";
-import BaseCard from "src/components/base/BaseCard.vue";
+import { ref } from 'vue';
+import PageLayout from 'src/components/PageLayout.vue';
+import PageTitle from 'src/components/PageTitle.vue';
+import BaseCard from 'src/components/base/BaseCard.vue';
 
 // Neutral colors data
 const neutralColors = [
-  { name: "Neutral 50", value: "50" },
-  { name: "Neutral 100", value: "100" },
-  { name: "Neutral 200", value: "200" },
-  { name: "Neutral 300", value: "300" },
-  { name: "Neutral 400", value: "400" },
-  { name: "Neutral 500", value: "500" },
-  { name: "Neutral 600", value: "600" },
-  { name: "Neutral 700", value: "700" },
-  { name: "Neutral 800", value: "800" },
-  { name: "Neutral 900", value: "900" },
+  { name: 'Neutral 50', value: '50' },
+  { name: 'Neutral 100', value: '100' },
+  { name: 'Neutral 200', value: '200' },
+  { name: 'Neutral 300', value: '300' },
+  { name: 'Neutral 400', value: '400' },
+  { name: 'Neutral 500', value: '500' },
+  { name: 'Neutral 600', value: '600' },
+  { name: 'Neutral 700', value: '700' },
+  { name: 'Neutral 800', value: '800' },
+  { name: 'Neutral 900', value: '900' },
 ];
 
 // Demo data for design system components

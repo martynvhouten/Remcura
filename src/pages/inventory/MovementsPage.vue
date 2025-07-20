@@ -278,20 +278,20 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted } from "vue";
-import { useI18n } from "vue-i18n";
-import { useQuasar } from "quasar";
-import { useAuthStore } from "src/stores/auth";
-import { useInventoryStore } from "src/stores/inventory";
-import { useClinicStore } from "src/stores/clinic";
+import { ref, computed, onMounted } from 'vue';
+import { useI18n } from 'vue-i18n';
+import { useQuasar } from 'quasar';
+import { useAuthStore } from 'src/stores/auth';
+import { useInventoryStore } from 'src/stores/inventory';
+import { useClinicStore } from 'src/stores/clinic';
 import type {
   MovementWithRelations,
   MovementType,
   ReasonCode,
-} from "src/types/inventory";
-import PageLayout from "src/components/PageLayout.vue";
-import PageTitle from "src/components/PageTitle.vue";
-import BaseCard from "src/components/base/BaseCard.vue";
+} from 'src/types/inventory';
+import PageLayout from 'src/components/PageLayout.vue';
+import PageTitle from 'src/components/PageTitle.vue';
+import BaseCard from 'src/components/base/BaseCard.vue';
 
 // Composables
 const { t } = useI18n();
@@ -303,28 +303,28 @@ const clinicStore = useClinicStore();
 // Reactive state
 const selectedMovementType = ref<MovementType | null>(null);
 const selectedLocationId = ref<string | null>(null);
-const dateRange = ref<string>("");
+const dateRange = ref<string>('');
 const showMovementDetails = ref(false);
 const selectedMovement = ref<MovementWithRelations | null>(null);
 
 // Pagination
 const pagination = ref({
-  sortBy: "created_at",
+  sortBy: 'created_at',
   descending: true,
   page: 1,
   rowsPerPage: 25,
 });
 
 // Computed properties
-const practiceId = computed(() => authStore.userProfile?.clinic_id || "");
+const practiceId = computed(() => authStore.userProfile?.clinic_id || '');
 
 const movementTypeOptions = computed(() => [
-  { label: t("inventory.movement.receipt"), value: "receipt" },
-  { label: t("inventory.movement.usage"), value: "usage" },
-  { label: t("inventory.movement.transfer"), value: "transfer" },
-  { label: t("inventory.movement.adjustment"), value: "adjustment" },
-  { label: t("inventory.movement.count"), value: "count" },
-  { label: t("inventory.movement.waste"), value: "waste" },
+  { label: t('inventory.movement.receipt'), value: 'receipt' },
+  { label: t('inventory.movement.usage'), value: 'usage' },
+  { label: t('inventory.movement.transfer'), value: 'transfer' },
+  { label: t('inventory.movement.adjustment'), value: 'adjustment' },
+  { label: t('inventory.movement.count'), value: 'count' },
+  { label: t('inventory.movement.waste'), value: 'waste' },
 ]);
 
 const locationOptions = computed(() =>
@@ -353,7 +353,7 @@ const filteredMovements = computed(() => {
 
   // Filter by date range
   if (dateRange.value) {
-    const [startDate, endDate] = dateRange.value.split(" - ");
+    const [startDate, endDate] = dateRange.value.split(' - ');
     if (startDate && endDate) {
       movements = movements.filter((m) => {
         const movementDate = new Date(m.created_at);
@@ -370,52 +370,52 @@ const filteredMovements = computed(() => {
 
 const columns = computed(() => [
   {
-    name: "movement_type",
-    label: t("inventory.movementType"),
-    field: "movement_type",
-    align: "left",
+    name: 'movement_type',
+    label: t('inventory.movementType'),
+    field: 'movement_type',
+    align: 'left',
     sortable: true,
   },
   {
-    name: "product",
-    label: t("inventory.product"),
-    field: "product",
-    align: "left",
+    name: 'product',
+    label: t('inventory.product'),
+    field: 'product',
+    align: 'left',
     sortable: false,
   },
   {
-    name: "quantity_change",
-    label: t("inventory.quantityChange"),
-    field: "quantity_change",
-    align: "center",
+    name: 'quantity_change',
+    label: t('inventory.quantityChange'),
+    field: 'quantity_change',
+    align: 'center',
     sortable: true,
   },
   {
-    name: "location",
-    label: t("inventory.location"),
-    field: "location",
-    align: "left",
+    name: 'location',
+    label: t('inventory.location'),
+    field: 'location',
+    align: 'left',
     sortable: false,
   },
   {
-    name: "created_at",
-    label: t("common.date"),
-    field: "created_at",
-    align: "left",
+    name: 'created_at',
+    label: t('common.date'),
+    field: 'created_at',
+    align: 'left',
     sortable: true,
   },
   {
-    name: "notes",
-    label: t("common.notes"),
-    field: "notes",
-    align: "left",
+    name: 'notes',
+    label: t('common.notes'),
+    field: 'notes',
+    align: 'left',
     sortable: false,
   },
   {
-    name: "actions",
-    label: t("common.actions"),
-    field: "actions",
-    align: "center",
+    name: 'actions',
+    label: t('common.actions'),
+    field: 'actions',
+    align: 'center',
     sortable: false,
   },
 ]);
@@ -427,25 +427,25 @@ const refreshData = async () => {
   try {
     await inventoryStore.fetchStockMovements(practiceId.value, 200);
     $q.notify({
-      type: "positive",
-      message: t("common.dataRefreshed"),
-      position: "top",
+      type: 'positive',
+      message: t('common.dataRefreshed'),
+      position: 'top',
     });
   } catch (error) {
-    console.error("Error refreshing movements:", error);
+    console.error('Error refreshing movements:', error);
     $q.notify({
-      type: "negative",
-      message: t("common.refreshFailed"),
-      position: "top",
+      type: 'negative',
+      message: t('common.refreshFailed'),
+      position: 'top',
     });
   }
 };
 
 const exportMovements = () => {
   $q.notify({
-    type: "info",
-    message: t("common.comingSoon"),
-    position: "top",
+    type: 'info',
+    message: t('common.comingSoon'),
+    position: 'top',
   });
 };
 
@@ -469,64 +469,64 @@ const formatReasonCode = (code: ReasonCode): string => {
 
 const movementIcon = (type: MovementType): string => {
   switch (type) {
-    case "receipt":
-      return "add_circle";
-    case "usage":
-      return "remove_circle";
-    case "transfer":
-      return "swap_horiz";
-    case "adjustment":
-      return "edit";
-    case "count":
-      return "checklist";
-    case "waste":
-      return "delete";
+    case 'receipt':
+      return 'add_circle';
+    case 'usage':
+      return 'remove_circle';
+    case 'transfer':
+      return 'swap_horiz';
+    case 'adjustment':
+      return 'edit';
+    case 'count':
+      return 'checklist';
+    case 'waste':
+      return 'delete';
     default:
-      return "timeline";
+      return 'timeline';
   }
 };
 
 const movementColor = (type: MovementType): string => {
   switch (type) {
-    case "receipt":
-      return "positive";
-    case "usage":
-      return "negative";
-    case "transfer":
-      return "info";
-    case "adjustment":
-      return "warning";
-    case "count":
-      return "secondary";
-    case "waste":
-      return "negative";
+    case 'receipt':
+      return 'positive';
+    case 'usage':
+      return 'negative';
+    case 'transfer':
+      return 'info';
+    case 'adjustment':
+      return 'warning';
+    case 'count':
+      return 'secondary';
+    case 'waste':
+      return 'negative';
     default:
-      return "primary";
+      return 'primary';
   }
 };
 
 const formatDate = (dateString: string): string => {
-  return new Intl.DateTimeFormat("nl-NL", {
-    year: "numeric",
-    month: "short",
-    day: "numeric",
+  return new Intl.DateTimeFormat('nl-NL', {
+    year: 'numeric',
+    month: 'short',
+    day: 'numeric',
   }).format(new Date(dateString));
 };
 
 const formatTime = (dateString: string): string => {
-  return new Intl.DateTimeFormat("nl-NL", {
-    hour: "2-digit",
-    minute: "2-digit",
+  return new Intl.DateTimeFormat('nl-NL', {
+    hour: '2-digit',
+    minute: '2-digit',
   }).format(new Date(dateString));
 };
 
 const formatDateTime = (dateString: string): string => {
-  return new Intl.DateTimeFormat("nl-NL", {
-    year: "numeric",
-    month: "long",
-    day: "numeric",
-    hour: "2-digit",
-    minute: "2-digit",
+  return new Intl.DateTimeFormat('nl-NL', {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit',
   }).format(new Date(dateString));
 };
 

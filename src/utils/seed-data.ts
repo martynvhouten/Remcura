@@ -3,55 +3,55 @@ import type {
   ClinicInsert,
   UserProfileInsert,
   ClinicProductInsert,
-} from "src/types/supabase";
+} from 'src/types/supabase';
 
 // Sample clinics for demo
 export const sampleClinics: ClinicInsert[] = [
   {
-    id: "00000000-0000-0000-0000-000000000001",
-    name: "Medisch Centrum Amsterdam",
-    address: "Hoofdstraat 123, 1000 AB Amsterdam",
-    contact_email: "info@mcamsterdam.nl",
-    contact_phone: "+31 20 123 4567",
+    id: '00000000-0000-0000-0000-000000000001',
+    name: 'Medisch Centrum Amsterdam',
+    address: 'Hoofdstraat 123, 1000 AB Amsterdam',
+    contact_email: 'info@mcamsterdam.nl',
+    contact_phone: '+31 20 123 4567',
   },
   {
-    id: "00000000-0000-0000-0000-000000000002",
-    name: "Kliniek Rotterdam Zuid",
-    address: "Zuidplein 456, 3000 CD Rotterdam",
-    contact_email: "contact@klinierkdam.nl",
-    contact_phone: "+31 10 987 6543",
+    id: '00000000-0000-0000-0000-000000000002',
+    name: 'Kliniek Rotterdam Zuid',
+    address: 'Zuidplein 456, 3000 CD Rotterdam',
+    contact_email: 'contact@klinierkdam.nl',
+    contact_phone: '+31 10 987 6543',
   },
   {
-    id: "00000000-0000-0000-0000-000000000003",
-    name: "Gezondheidscentrum Utrecht",
-    address: "Centraal Park 789, 3500 EF Utrecht",
-    contact_email: "admin@gcutrecht.nl",
-    contact_phone: "+31 30 555 0123",
+    id: '00000000-0000-0000-0000-000000000003',
+    name: 'Gezondheidscentrum Utrecht',
+    address: 'Centraal Park 789, 3500 EF Utrecht',
+    contact_email: 'admin@gcutrecht.nl',
+    contact_phone: '+31 30 555 0123',
   },
 ];
 
 // Sample user profiles (for development only - in production these come from auth)
 export const sampleUserProfiles: UserProfileInsert[] = [
   {
-    id: "00000000-0000-0000-0000-100000000001",
-    clinic_id: "00000000-0000-0000-0000-000000000001",
-    email: "admin@mcamsterdam.nl",
-    full_name: "Dr. Maria van der Berg",
-    role: "admin",
+    id: '00000000-0000-0000-0000-100000000001',
+    clinic_id: '00000000-0000-0000-0000-000000000001',
+    email: 'admin@mcamsterdam.nl',
+    full_name: 'Dr. Maria van der Berg',
+    role: 'admin',
   },
   {
-    id: "00000000-0000-0000-0000-100000000002",
-    clinic_id: "00000000-0000-0000-0000-000000000001",
-    email: "manager@mcamsterdam.nl",
-    full_name: "Jan Klaassen",
-    role: "manager",
+    id: '00000000-0000-0000-0000-100000000002',
+    clinic_id: '00000000-0000-0000-0000-000000000001',
+    email: 'manager@mcamsterdam.nl',
+    full_name: 'Jan Klaassen',
+    role: 'manager',
   },
   {
-    id: "00000000-0000-0000-0000-100000000003",
-    clinic_id: "00000000-0000-0000-0000-000000000002",
-    email: "admin@klinierkdam.nl",
-    full_name: "Dr. Petra de Wit",
-    role: "admin",
+    id: '00000000-0000-0000-0000-100000000003',
+    clinic_id: '00000000-0000-0000-0000-000000000002',
+    email: 'admin@klinierkdam.nl',
+    full_name: 'Dr. Petra de Wit',
+    role: 'admin',
   },
 ];
 
@@ -59,9 +59,9 @@ export const sampleUserProfiles: UserProfileInsert[] = [
 export const sampleProducts: ClinicProductInsert[] = [
   // Products for Medisch Centrum Amsterdam
   {
-    clinic_id: "00000000-0000-0000-0000-000000000001",
-    product_name: "Disposable Handschoenen - Nitril",
-    product_sku: "GLV-NITR-100",
+    clinic_id: '00000000-0000-0000-0000-000000000001',
+    product_name: 'Disposable Handschoenen - Nitril',
+    product_sku: 'GLV-NITR-100',
     current_stock: 15,
     minimum_stock: 20,
     maximum_stock: 100,
@@ -69,9 +69,9 @@ export const sampleProducts: ClinicProductInsert[] = [
     low_stock_alert_enabled: true,
   },
   {
-    clinic_id: "00000000-0000-0000-0000-000000000001",
-    product_name: "Chirurgische Mondkapjes",
-    product_sku: "MSK-CHIR-50",
+    clinic_id: '00000000-0000-0000-0000-000000000001',
+    product_name: 'Chirurgische Mondkapjes',
+    product_sku: 'MSK-CHIR-50',
     current_stock: 45,
     minimum_stock: 30,
     maximum_stock: 150,
@@ -79,9 +79,9 @@ export const sampleProducts: ClinicProductInsert[] = [
     low_stock_alert_enabled: true,
   },
   {
-    clinic_id: "00000000-0000-0000-0000-000000000001",
-    product_name: "Desinfectie Alcohol 70%",
-    product_sku: "DIS-ALC-500",
+    clinic_id: '00000000-0000-0000-0000-000000000001',
+    product_name: 'Desinfectie Alcohol 70%',
+    product_sku: 'DIS-ALC-500',
     current_stock: 0,
     minimum_stock: 5,
     maximum_stock: 25,
@@ -89,9 +89,9 @@ export const sampleProducts: ClinicProductInsert[] = [
     low_stock_alert_enabled: true,
   },
   {
-    clinic_id: "00000000-0000-0000-0000-000000000001",
-    product_name: "Steriele Kompressen 5x5cm",
-    product_sku: "KMP-STER-100",
+    clinic_id: '00000000-0000-0000-0000-000000000001',
+    product_name: 'Steriele Kompressen 5x5cm',
+    product_sku: 'KMP-STER-100',
     current_stock: 75,
     minimum_stock: 50,
     maximum_stock: 200,
@@ -99,9 +99,9 @@ export const sampleProducts: ClinicProductInsert[] = [
     low_stock_alert_enabled: true,
   },
   {
-    clinic_id: "00000000-0000-0000-0000-000000000001",
-    product_name: "Spuiten 5ml - Eenmalig gebruik",
-    product_sku: "SPT-5ML-100",
+    clinic_id: '00000000-0000-0000-0000-000000000001',
+    product_name: 'Spuiten 5ml - Eenmalig gebruik',
+    product_sku: 'SPT-5ML-100',
     current_stock: 25,
     minimum_stock: 30,
     maximum_stock: 120,
@@ -111,9 +111,9 @@ export const sampleProducts: ClinicProductInsert[] = [
 
   // Products for Kliniek Rotterdam Zuid
   {
-    clinic_id: "00000000-0000-0000-0000-000000000002",
-    product_name: "Latex Handschoenen - Gepoederd",
-    product_sku: "GLV-LAT-100",
+    clinic_id: '00000000-0000-0000-0000-000000000002',
+    product_name: 'Latex Handschoenen - Gepoederd',
+    product_sku: 'GLV-LAT-100',
     current_stock: 5,
     minimum_stock: 25,
     maximum_stock: 100,
@@ -121,9 +121,9 @@ export const sampleProducts: ClinicProductInsert[] = [
     low_stock_alert_enabled: true,
   },
   {
-    clinic_id: "00000000-0000-0000-0000-000000000002",
-    product_name: "FFP2 Maskers",
-    product_sku: "MSK-FFP2-20",
+    clinic_id: '00000000-0000-0000-0000-000000000002',
+    product_name: 'FFP2 Maskers',
+    product_sku: 'MSK-FFP2-20',
     current_stock: 35,
     minimum_stock: 20,
     maximum_stock: 80,
@@ -131,9 +131,9 @@ export const sampleProducts: ClinicProductInsert[] = [
     low_stock_alert_enabled: true,
   },
   {
-    clinic_id: "00000000-0000-0000-0000-000000000002",
-    product_name: "Thermometer Covers",
-    product_sku: "THM-COV-200",
+    clinic_id: '00000000-0000-0000-0000-000000000002',
+    product_name: 'Thermometer Covers',
+    product_sku: 'THM-COV-200',
     current_stock: 150,
     minimum_stock: 100,
     maximum_stock: 500,
@@ -141,9 +141,9 @@ export const sampleProducts: ClinicProductInsert[] = [
     low_stock_alert_enabled: false,
   },
   {
-    clinic_id: "00000000-0000-0000-0000-000000000002",
-    product_name: "Bloeddrukmeter Manchetten",
-    product_sku: "BDM-MAN-ADULT",
+    clinic_id: '00000000-0000-0000-0000-000000000002',
+    product_name: 'Bloeddrukmeter Manchetten',
+    product_sku: 'BDM-MAN-ADULT',
     current_stock: 8,
     minimum_stock: 10,
     maximum_stock: 25,
@@ -153,9 +153,9 @@ export const sampleProducts: ClinicProductInsert[] = [
 
   // Products for Gezondheidscentrum Utrecht
   {
-    clinic_id: "00000000-0000-0000-0000-000000000003",
-    product_name: "Vacutainer Buizen - EDTA",
-    product_sku: "VAC-EDTA-100",
+    clinic_id: '00000000-0000-0000-0000-000000000003',
+    product_name: 'Vacutainer Buizen - EDTA',
+    product_sku: 'VAC-EDTA-100',
     current_stock: 200,
     minimum_stock: 150,
     maximum_stock: 500,
@@ -163,9 +163,9 @@ export const sampleProducts: ClinicProductInsert[] = [
     low_stock_alert_enabled: true,
   },
   {
-    clinic_id: "00000000-0000-0000-0000-000000000003",
-    product_name: "Wegwerp Spatels",
-    product_sku: "SPT-WEGW-200",
+    clinic_id: '00000000-0000-0000-0000-000000000003',
+    product_name: 'Wegwerp Spatels',
+    product_sku: 'SPT-WEGW-200',
     current_stock: 18,
     minimum_stock: 25,
     maximum_stock: 100,
@@ -173,9 +173,9 @@ export const sampleProducts: ClinicProductInsert[] = [
     low_stock_alert_enabled: true,
   },
   {
-    clinic_id: "00000000-0000-0000-0000-000000000003",
-    product_name: "Urine Containers",
-    product_sku: "URN-CONT-100",
+    clinic_id: '00000000-0000-0000-0000-000000000003',
+    product_name: 'Urine Containers',
+    product_sku: 'URN-CONT-100',
     current_stock: 0,
     minimum_stock: 20,
     maximum_stock: 80,
@@ -217,7 +217,7 @@ export const seedDataUtils = {
     const suggested = product.maximum_stock - product.current_stock;
     return {
       quantity: suggested,
-      reason: product.current_stock === 0 ? "out_of_stock" : "low_stock",
+      reason: product.current_stock === 0 ? 'out_of_stock' : 'low_stock',
     };
   },
 

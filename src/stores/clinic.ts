@@ -1,10 +1,10 @@
-import { defineStore } from "pinia";
-import { ref, computed } from "vue";
-import { supabase } from "src/boot/supabase";
-import type { Practice, Location } from "src/types/supabase";
-import type { PracticeLocation } from "src/types/inventory";
+import { defineStore } from 'pinia';
+import { ref, computed } from 'vue';
+import { supabase } from 'src/boot/supabase';
+import type { Practice, Location } from 'src/types/supabase';
+import type { PracticeLocation } from 'src/types/inventory';
 
-export const useClinicStore = defineStore("clinic", () => {
+export const useClinicStore = defineStore('clinic', () => {
   // State
   const clinic = ref<Practice | null>(null);
   const locations = ref<Location[]>([]);
@@ -17,10 +17,10 @@ export const useClinicStore = defineStore("clinic", () => {
       id: location.id,
       practice_id: location.practice_id,
       name: location.name,
-      code: location.name.toUpperCase().replace(/\s+/g, "_"),
-      description: location.description || "",
-      location_type: "storage" as const, // Default type since the Supabase schema doesn't have this field
-      address: location.address || "",
+      code: location.name.toUpperCase().replace(/\s+/g, '_'),
+      description: location.description || '',
+      location_type: 'storage' as const, // Default type since the Supabase schema doesn't have this field
+      address: location.address || '',
       is_active: location.is_active,
       is_main_location: location.is_main,
       requires_counting: true,
@@ -46,16 +46,16 @@ export const useClinicStore = defineStore("clinic", () => {
     loading.value = true;
     try {
       const { data, error } = await supabase
-        .from("practices")
-        .select("*")
-        .eq("id", clinicId)
+        .from('practices')
+        .select('*')
+        .eq('id', clinicId)
         .single();
 
       if (error) throw error;
 
       clinic.value = data;
     } catch (error) {
-      console.error("Error fetching practice:", error);
+      console.error('Error fetching practice:', error);
     } finally {
       loading.value = false;
     }
@@ -65,18 +65,18 @@ export const useClinicStore = defineStore("clinic", () => {
     locationsLoading.value = true;
     try {
       const { data, error } = await supabase
-        .from("locations")
-        .select("*")
-        .eq("practice_id", practiceId)
-        .eq("is_active", true)
-        .order("is_main", { ascending: false })
-        .order("name");
+        .from('locations')
+        .select('*')
+        .eq('practice_id', practiceId)
+        .eq('is_active', true)
+        .order('is_main', { ascending: false })
+        .order('name');
 
       if (error) throw error;
 
       locations.value = data || [];
     } catch (error) {
-      console.error("Error fetching locations:", error);
+      console.error('Error fetching locations:', error);
       throw error;
     } finally {
       locationsLoading.value = false;

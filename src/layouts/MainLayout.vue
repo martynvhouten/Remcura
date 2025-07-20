@@ -231,12 +231,12 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted, onUnmounted } from "vue";
-import { useQuasar } from "quasar";
-import { useRouter } from "vue-router";
-import { useI18n } from "vue-i18n";
-import { useAuthStore } from "src/stores/auth";
-import { useClinicStore } from "src/stores/clinic";
+import { ref, computed, onMounted, onUnmounted } from 'vue';
+import { useQuasar } from 'quasar';
+import { useRouter } from 'vue-router';
+import { useI18n } from 'vue-i18n';
+import { useAuthStore } from 'src/stores/auth';
+import { useClinicStore } from 'src/stores/clinic';
 
 const $q = useQuasar();
 const router = useRouter();
@@ -252,104 +252,104 @@ const isScrolled = ref(false);
 const userProfile = computed(() => authStore.userProfile);
 const userEmail = computed(() => authStore.userEmail);
 const clinicName = computed(
-  () => clinicStore.clinic?.name || t("clinic.defaultName")
+  () => clinicStore.clinic?.name || t('clinic.defaultName')
 );
-const isDemoUser = computed(() => authStore.userEmail === "demo@medstock-pro.com");
+const isDemoUser = computed(() => authStore.userEmail === 'demo@medstock-pro.com');
 
 // Check if user has admin permissions
 const isAdmin = computed(() => {
-  const role = userProfile.value?.role || "";
-  return role === "admin" || role === "owner";
+  const role = userProfile.value?.role || '';
+  return role === 'admin' || role === 'owner';
 });
 
 // Enhanced navigation links with more details
 const navigationLinks = computed(() => {
   const links = [
     {
-      title: t("nav.dashboard"),
-      caption: t("nav.overviewAnalytics"),
-      icon: "space_dashboard",
-      to: "/",
-      routeName: "dashboard",
+      title: t('nav.dashboard'),
+      caption: t('nav.overviewAnalytics'),
+      icon: 'space_dashboard',
+      to: '/',
+      routeName: 'dashboard',
     },
 
     {
-      title: t("nav.inventory"),
-      caption: t("nav.stockManagement"),
-      icon: "inventory_2",
-      to: "/inventory",
-      routeName: "inventory",
+      title: t('nav.inventory'),
+      caption: t('nav.stockManagement'),
+      icon: 'inventory_2',
+      to: '/inventory',
+      routeName: 'inventory',
     },
     {
-      title: t("batch.batchManagement"),
-      caption: t("batch.trackBatchesExpiry"),
-      icon: "qr_code_scanner",
-      to: "/inventory/batches",
-      routeName: "inventory-batches",
+      title: t('batch.batchManagement'),
+      caption: t('batch.trackBatchesExpiry'),
+      icon: 'qr_code_scanner',
+      to: '/inventory/batches',
+      routeName: 'inventory-batches',
     },
     {
-      title: t("nav.products"),
-      caption: t("nav.productManagement"),
-      icon: "inventory",
-      to: "/products",
-      routeName: "products",
+      title: t('nav.products'),
+      caption: t('nav.productManagement'),
+      icon: 'inventory',
+      to: '/products',
+      routeName: 'products',
     },
     {
-      title: t("orderLists.title"),
-      caption: t("orderLists.subtitle"),
-      icon: "list_alt",
-      to: "/order-lists",
-      routeName: "order-lists",
+      title: t('orderLists.title'),
+      caption: t('orderLists.subtitle'),
+      icon: 'list_alt',
+      to: '/order-lists',
+      routeName: 'order-lists',
     },
     {
-      title: t("nav.orders"),
-      caption: t("nav.purchaseOrders"),
-      icon: "assignment",
-      to: "/orders",
-      routeName: "orders",
+      title: t('nav.orders'),
+      caption: t('nav.purchaseOrders'),
+      icon: 'assignment',
+      to: '/orders',
+      routeName: 'orders',
     },
     {
-      title: t("nav.analytics"),
-      caption: t("nav.reportsInsights"),
-      icon: "insights",
-      to: "/analytics",
-      routeName: "analytics",
+      title: t('nav.analytics'),
+      caption: t('nav.reportsInsights'),
+      icon: 'insights',
+      to: '/analytics',
+      routeName: 'analytics',
     },
     {
-      title: t("nav.suppliers"),
-      caption: t("nav.vendorManagement"),
-      icon: "corporate_fare",
-      to: "/suppliers",
-      routeName: "suppliers",
+      title: t('nav.suppliers'),
+      caption: t('nav.vendorManagement'),
+      icon: 'corporate_fare',
+      to: '/suppliers',
+      routeName: 'suppliers',
     },
     {
-      title: t("nav.notifications"),
-      caption: t("nav.alertsNotifications"),
-      icon: "campaign",
-      to: "/notifications",
-      routeName: "notifications",
+      title: t('nav.notifications'),
+      caption: t('nav.alertsNotifications'),
+      icon: 'campaign',
+      to: '/notifications',
+      routeName: 'notifications',
       badge: 3, // Mock unread count
-      badgeColor: "red",
+      badgeColor: 'red',
     },
   ];
 
   // Add admin dashboard for admin users
   if (isAdmin.value) {
     links.push({
-      title: t("nav.admin"),
-      caption: t("nav.systemAdmin"),
-      icon: "supervisor_account",
-      to: "/admin",
-      routeName: "admin",
+      title: t('nav.admin'),
+      caption: t('nav.systemAdmin'),
+      icon: 'supervisor_account',
+      to: '/admin',
+      routeName: 'admin',
     });
 
     // Add style guide for admins/developers
     links.push({
-      title: t("nav.styleGuide"),
-      caption: "Design system reference",
-      icon: "palette",
-      to: "/style-guide",
-      routeName: "style-guide",
+      title: t('nav.styleGuide'),
+      caption: 'Design system reference',
+      icon: 'palette',
+      to: '/style-guide',
+      routeName: 'style-guide',
     });
   }
 
@@ -363,23 +363,23 @@ const toggleLeftDrawer = () => {
 
 const toggleDarkMode = () => {
   $q.dark.toggle();
-  $q.localStorage.set("darkMode", $q.dark.isActive.toString());
+  $q.localStorage.set('darkMode', $q.dark.isActive.toString());
 };
 
 const goToSettings = () => {
-  router.push({ name: "settings" });
+  router.push({ name: 'settings' });
 };
 
 const goToNotifications = () => {
-  router.push({ name: "notifications" });
+  router.push({ name: 'notifications' });
 };
 
 const getUserInitials = () => {
-  const name = userProfile.value?.full_name || userEmail.value || "U";
+  const name = userProfile.value?.full_name || userEmail.value || 'U';
   return name
-    .split(" ")
+    .split(' ')
     .map((n) => n[0])
-    .join("")
+    .join('')
     .toUpperCase()
     .slice(0, 2);
 };
@@ -388,16 +388,16 @@ const handleLogout = async () => {
   const result = await authStore.logout();
   if (result.success) {
     $q.notify({
-      type: "positive",
-      message: t("auth.logoutSuccess"),
-      position: "top",
+      type: 'positive',
+      message: t('auth.logoutSuccess'),
+      position: 'top',
     });
-    router.push({ name: "login" });
+    router.push({ name: 'login' });
   } else {
     $q.notify({
-      type: "negative",
-      message: result.error || t("errors.generic"),
-      position: "top",
+      type: 'negative',
+      message: result.error || t('errors.generic'),
+      position: 'top',
     });
   }
 };
@@ -410,11 +410,11 @@ const handleScroll = () => {
 // Lifecycle
 
 onMounted(() => {
-  window.addEventListener("scroll", handleScroll);
+  window.addEventListener('scroll', handleScroll);
 });
 
 onUnmounted(() => {
-  window.removeEventListener("scroll", handleScroll);
+  window.removeEventListener('scroll', handleScroll);
 });
 </script>
 

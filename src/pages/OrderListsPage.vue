@@ -273,18 +273,18 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted, watch } from "vue";
-import { useQuasar } from "quasar";
-import { useI18n } from "vue-i18n";
-import { useOrderListsStore } from "src/stores/orderLists";
-import { useSuppliersStore } from "src/stores/suppliers";
-import { useProductsStore } from "src/stores/products";
-import { useAuthStore } from "src/stores/auth";
-import PageLayout from "src/components/PageLayout.vue";
-import PageTitle from "src/components/PageTitle.vue";
-import BaseCard from "src/components/base/BaseCard.vue";
-import OrderListDialog from "src/components/products/OrderListDialog.vue";
-import type { OrderListWithItems } from "src/stores/orderLists";
+import { ref, computed, onMounted, watch } from 'vue';
+import { useQuasar } from 'quasar';
+import { useI18n } from 'vue-i18n';
+import { useOrderListsStore } from 'src/stores/orderLists';
+import { useSuppliersStore } from 'src/stores/suppliers';
+import { useProductsStore } from 'src/stores/products';
+import { useAuthStore } from 'src/stores/auth';
+import PageLayout from 'src/components/PageLayout.vue';
+import PageTitle from 'src/components/PageTitle.vue';
+import BaseCard from 'src/components/base/BaseCard.vue';
+import OrderListDialog from 'src/components/products/OrderListDialog.vue';
+import type { OrderListWithItems } from 'src/stores/orderLists';
 
 const $q = useQuasar();
 const { t } = useI18n();
@@ -303,14 +303,14 @@ const orderListToDelete = ref<OrderListWithItems | null>(null);
 
 // Filters
 const filters = ref({
-  search: "",
-  supplier: "",
-  status: "",
+  search: '',
+  supplier: '',
+  status: '',
 });
 
 // Computed
 const supplierOptions = computed(() => [
-  { label: t("common.all"), value: "" },
+  { label: t('common.all'), value: '' },
   ...suppliersStore.suppliers.map((supplier) => ({
     label: supplier.name,
     value: supplier.id,
@@ -318,13 +318,13 @@ const supplierOptions = computed(() => [
 ]);
 
 const statusOptions = computed(() => [
-  { label: t("common.all"), value: "" },
-  { label: t("orderLists.draft"), value: "draft" },
-  { label: t("orderLists.ready"), value: "ready" },
-  { label: t("orderLists.submitted"), value: "submitted" },
-  { label: t("orderLists.confirmed"), value: "confirmed" },
-  { label: t("orderLists.delivered"), value: "delivered" },
-  { label: t("orderLists.cancelled"), value: "cancelled" },
+  { label: t('common.all'), value: '' },
+  { label: t('orderLists.draft'), value: 'draft' },
+  { label: t('orderLists.ready'), value: 'ready' },
+  { label: t('orderLists.submitted'), value: 'submitted' },
+  { label: t('orderLists.confirmed'), value: 'confirmed' },
+  { label: t('orderLists.delivered'), value: 'delivered' },
+  { label: t('orderLists.cancelled'), value: 'cancelled' },
 ]);
 
 const filteredOrderLists = computed(() => {
@@ -361,22 +361,22 @@ const filteredOrderLists = computed(() => {
 // Methods
 const clearFilters = () => {
   filters.value = {
-    search: "",
-    supplier: "",
-    status: "",
+    search: '',
+    supplier: '',
+    status: '',
   };
 };
 
 const getStatusColor = (status: string) => {
   const colors: Record<string, string> = {
-    draft: "grey",
-    ready: "blue",
-    submitted: "orange",
-    confirmed: "green",
-    delivered: "positive",
-    cancelled: "negative",
+    draft: 'grey',
+    ready: 'blue',
+    submitted: 'orange',
+    confirmed: 'green',
+    delivered: 'positive',
+    cancelled: 'negative',
   };
-  return colors[status] || "grey";
+  return colors[status] || 'grey';
 };
 
 const formatDate = (dateString: string) => {
@@ -391,17 +391,17 @@ const editOrderList = (orderList: OrderListWithItems) => {
 
 const duplicateOrderList = async (orderList: OrderListWithItems) => {
   try {
-    const newName = t("orderLists.duplicateName", { name: orderList.name });
+    const newName = t('orderLists.duplicateName', { name: orderList.name });
     await orderListsStore.duplicateOrderList(orderList.id, newName);
     $q.notify({
-      type: "positive",
-      message: t("orderLists.duplicated"),
+      type: 'positive',
+      message: t('orderLists.duplicated'),
     });
   } catch (error) {
-    console.error(t("orderLists.saveError"), error);
+    console.error(t('orderLists.saveError'), error);
     $q.notify({
-      type: "negative",
-      message: t("orderLists.saveError"),
+      type: 'negative',
+      message: t('orderLists.saveError'),
     });
   }
 };
@@ -419,14 +419,14 @@ const confirmDelete = async () => {
     showDeleteDialog.value = false;
     orderListToDelete.value = null;
     $q.notify({
-      type: "positive",
-      message: t("orderLists.deleted"),
+      type: 'positive',
+      message: t('orderLists.deleted'),
     });
   } catch (error) {
-    console.error(t("orderLists.deleteError"), error);
+    console.error(t('orderLists.deleteError'), error);
     $q.notify({
-      type: "negative",
-      message: t("orderLists.deleteError"),
+      type: 'negative',
+      message: t('orderLists.deleteError'),
     });
   }
 };
@@ -435,14 +435,14 @@ const addListToCart = async (orderList: OrderListWithItems) => {
   try {
     await orderListsStore.addToCart(orderList.id);
     $q.notify({
-      type: "positive",
-      message: t("orderLists.addedToCart"),
+      type: 'positive',
+      message: t('orderLists.addedToCart'),
     });
   } catch (error) {
-    console.error(t("orderLists.cartError"), error);
+    console.error(t('orderLists.cartError'), error);
     $q.notify({
-      type: "negative",
-      message: t("orderLists.cartError"),
+      type: 'negative',
+      message: t('orderLists.cartError'),
     });
   }
 };
@@ -451,14 +451,14 @@ const autoFillOrderList = async (orderList: OrderListWithItems) => {
   try {
     await orderListsStore.autoFillFromStockLevels(orderList.id);
     $q.notify({
-      type: "positive",
-      message: t("orderLists.autoFilled"),
+      type: 'positive',
+      message: t('orderLists.autoFilled'),
     });
   } catch (error) {
-    console.error(t("orderLists.autoFillError"), error);
+    console.error(t('orderLists.autoFillError'), error);
     $q.notify({
-      type: "negative",
-      message: t("orderLists.autoFillError"),
+      type: 'negative',
+      message: t('orderLists.autoFillError'),
     });
   }
 };
@@ -480,10 +480,10 @@ onMounted(async () => {
       ]);
     }
   } catch (error) {
-    console.error(t("orderLists.loadError"), error);
+    console.error(t('orderLists.loadError'), error);
     $q.notify({
-      type: "negative",
-      message: t("orderLists.loadError"),
+      type: 'negative',
+      message: t('orderLists.loadError'),
     });
   }
 });
@@ -496,10 +496,10 @@ watch(
       try {
         await orderListsStore.fetchOrderLists(newPracticeId);
       } catch (error) {
-        console.error(t("orderLists.loadError"), error);
+        console.error(t('orderLists.loadError'), error);
         $q.notify({
-          type: "negative",
-          message: t("orderLists.loadError"),
+          type: 'negative',
+          message: t('orderLists.loadError'),
         });
       }
     }

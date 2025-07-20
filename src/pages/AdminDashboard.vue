@@ -419,22 +419,22 @@
 </template>
 
 <script setup lang="ts">
-import { ref, reactive, onMounted, computed } from "vue";
-import { useI18n } from "vue-i18n";
-import { useQuasar } from "quasar";
-import { useAuthStore } from "@/stores/auth";
-import PageLayout from "@/components/PageLayout.vue";
-import PageTitle from "@/components/PageTitle.vue";
-import BaseCard from "@/components/base/BaseCard.vue";
-import DemoResetCard from "@/components/admin/DemoResetCard.vue";
-import { adminService } from "@/services/admin";
-import { analyticsService } from "@/services/analytics";
-import { offlineService } from "@/services/offline";
+import { ref, reactive, onMounted, computed } from 'vue';
+import { useI18n } from 'vue-i18n';
+import { useQuasar } from 'quasar';
+import { useAuthStore } from '@/stores/auth';
+import PageLayout from '@/components/PageLayout.vue';
+import PageTitle from '@/components/PageTitle.vue';
+import BaseCard from '@/components/base/BaseCard.vue';
+import DemoResetCard from '@/components/admin/DemoResetCard.vue';
+import { adminService } from '@/services/admin';
+import { analyticsService } from '@/services/analytics';
+import { offlineService } from '@/services/offline';
 import type {
   Location,
   PracticeMember,
   UserPermission,
-} from "@/types/supabase";
+} from '@/types/supabase';
 
 // Composables
 const { t } = useI18n();
@@ -442,7 +442,7 @@ const $q = useQuasar();
 const authStore = useAuthStore();
 
 // State
-const activeTab = ref("users");
+const activeTab = ref('users');
 const loadingUsers = ref(false);
 const loadingLocations = ref(false);
 const loadingPermissions = ref(false);
@@ -480,104 +480,104 @@ const analyticsData = reactive({
 // Table columns
 const userColumns = computed(() => [
   {
-    name: "email",
-    label: t("admin.userManagement.email"),
-    align: "left",
-    field: "email",
+    name: 'email',
+    label: t('admin.userManagement.email'),
+    align: 'left',
+    field: 'email',
     sortable: true,
   },
   {
-    name: "role",
-    label: t("admin.userManagement.roles"),
-    align: "center",
-    field: "role",
+    name: 'role',
+    label: t('admin.userManagement.roles'),
+    align: 'center',
+    field: 'role',
     sortable: true,
   },
   {
-    name: "lastActive",
-    label: t("admin.userManagement.lastActive"),
-    align: "left",
-    field: "last_active",
+    name: 'lastActive',
+    label: t('admin.userManagement.lastActive'),
+    align: 'left',
+    field: 'last_active',
     sortable: true,
   },
   {
-    name: "actions",
-    label: t("common.actions"),
-    align: "center",
+    name: 'actions',
+    label: t('common.actions'),
+    align: 'center',
   },
 ]);
 
 const locationColumns = computed(() => [
   {
-    name: "name",
-    label: t("locations.name"),
-    align: "left",
-    field: "name",
+    name: 'name',
+    label: t('locations.name'),
+    align: 'left',
+    field: 'name',
     sortable: true,
   },
   {
-    name: "city",
-    label: t("locations.city"),
-    align: "left",
-    field: "city",
+    name: 'city',
+    label: t('locations.city'),
+    align: 'left',
+    field: 'city',
     sortable: true,
   },
   {
-    name: "isMain",
-    label: t("locations.isMain"),
-    align: "center",
-    field: "is_main",
+    name: 'isMain',
+    label: t('locations.isMain'),
+    align: 'center',
+    field: 'is_main',
   },
   {
-    name: "isActive",
-    label: t("common.status"),
-    align: "center",
-    field: "is_active",
+    name: 'isActive',
+    label: t('common.status'),
+    align: 'center',
+    field: 'is_active',
   },
   {
-    name: "actions",
-    label: t("common.actions"),
-    align: "center",
+    name: 'actions',
+    label: t('common.actions'),
+    align: 'center',
   },
 ]);
 
 const permissionColumns = computed(() => [
   {
-    name: "user",
-    label: t("permissions.user"),
-    align: "left",
-    field: "user_id", // Would need to join with user data
+    name: 'user',
+    label: t('permissions.user'),
+    align: 'left',
+    field: 'user_id', // Would need to join with user data
   },
   {
-    name: "permissionType",
-    label: t("permissions.permissionType"),
-    align: "center",
-    field: "permission_type",
+    name: 'permissionType',
+    label: t('permissions.permissionType'),
+    align: 'center',
+    field: 'permission_type',
   },
   {
-    name: "resourceType",
-    label: t("permissions.resourceType"),
-    align: "left",
-    field: "resource_type",
+    name: 'resourceType',
+    label: t('permissions.resourceType'),
+    align: 'left',
+    field: 'resource_type',
   },
   {
-    name: "expiresAt",
-    label: t("permissions.expiresAt"),
-    align: "left",
-    field: "expires_at",
+    name: 'expiresAt',
+    label: t('permissions.expiresAt'),
+    align: 'left',
+    field: 'expires_at',
   },
   {
-    name: "actions",
-    label: t("common.actions"),
-    align: "center",
+    name: 'actions',
+    label: t('common.actions'),
+    align: 'center',
   },
 ]);
 
 // Permission templates
 const permissionTemplates = [
-  { key: "assistant", icon: "support_agent", color: "blue" },
-  { key: "manager", icon: "supervisor_account", color: "orange" },
-  { key: "admin", icon: "admin_panel_settings", color: "red" },
+  { key: 'assistant', icon: 'support_agent', color: 'blue' },
+  { key: 'manager', icon: 'supervisor_account', color: 'orange' },
+  { key: 'admin', icon: 'admin_panel_settings', color: 'red' },
 ];
 
 // Methods
@@ -597,12 +597,12 @@ const loadUsers = async () => {
     users.value = await adminService.getPracticeMembers();
     stats.totalUsers = users.value.length;
     // Calculate active users (simplified)
-    stats.activeUsers = users.value.filter((u) => u.role !== "inactive").length;
+    stats.activeUsers = users.value.filter((u) => u.role !== 'inactive').length;
   } catch (error) {
-    console.error("Failed to load users:", error);
+    console.error('Failed to load users:', error);
     $q.notify({
-      type: "negative",
-      message: t("admin.errors.loadUsersFailed"),
+      type: 'negative',
+      message: t('admin.errors.loadUsersFailed'),
     });
   } finally {
     loadingUsers.value = false;
@@ -616,10 +616,10 @@ const loadLocations = async () => {
     stats.totalLocations = locations.value.length;
     stats.activeLocations = locations.value.filter((l) => l.is_active).length;
   } catch (error) {
-    console.error("Failed to load locations:", error);
+    console.error('Failed to load locations:', error);
     $q.notify({
-      type: "negative",
-      message: t("admin.errors.loadLocationsFailed"),
+      type: 'negative',
+      message: t('admin.errors.loadLocationsFailed'),
     });
   } finally {
     loadingLocations.value = false;
@@ -631,7 +631,7 @@ const loadPermissions = async () => {
     loadingPermissions.value = true;
     permissions.value = await adminService.getUserPermissions();
   } catch (error) {
-    console.error("Failed to load permissions:", error);
+    console.error('Failed to load permissions:', error);
   } finally {
     loadingPermissions.value = false;
   }
@@ -643,7 +643,7 @@ const loadStats = async () => {
     stats.pendingSync = syncStatus.pendingActions;
     stats.lastSync = syncStatus.lastSync;
   } catch (error) {
-    console.error("Failed to load stats:", error);
+    console.error('Failed to load stats:', error);
   }
 };
 
@@ -659,7 +659,7 @@ const loadAnalytics = async () => {
     analyticsData.averageSessionTime = 15;
     analyticsData.peakHour = 14;
   } catch (error) {
-    console.error("Failed to load analytics:", error);
+    console.error('Failed to load analytics:', error);
   }
 };
 
@@ -667,14 +667,14 @@ const downloadOfflineData = async () => {
   try {
     await offlineService.downloadLatestData();
     $q.notify({
-      type: "positive",
-      message: t("offline.messages.syncCompleted"),
+      type: 'positive',
+      message: t('offline.messages.syncCompleted'),
     });
   } catch (error) {
-    console.error("Failed to download offline data:", error);
+    console.error('Failed to download offline data:', error);
     $q.notify({
-      type: "negative",
-      message: t("offline.errors.downloadFailed"),
+      type: 'negative',
+      message: t('offline.errors.downloadFailed'),
     });
   }
 };
@@ -685,14 +685,14 @@ const forceSync = async () => {
     await offlineService.forceSyncNow();
     await loadStats(); // Refresh stats
     $q.notify({
-      type: "positive",
-      message: t("offline.messages.syncCompleted"),
+      type: 'positive',
+      message: t('offline.messages.syncCompleted'),
     });
   } catch (error) {
-    console.error("Failed to force sync:", error);
+    console.error('Failed to force sync:', error);
     $q.notify({
-      type: "negative",
-      message: t("offline.messages.syncFailed"),
+      type: 'negative',
+      message: t('offline.messages.syncFailed'),
     });
   } finally {
     syncing.value = false;
@@ -701,28 +701,28 @@ const forceSync = async () => {
 
 // Helper methods
 const formatDate = (date: string | Date | null): string => {
-  if (!date) return "-";
+  if (!date) return '-';
   return new Date(date).toLocaleDateString();
 };
 
 const getRoleColor = (role: string): string => {
   const colors = {
-    owner: "red",
-    assistant: "blue",
-    manager: "orange",
-    viewer: "grey",
+    owner: 'red',
+    assistant: 'blue',
+    manager: 'orange',
+    viewer: 'grey',
   };
-  return colors[role as keyof typeof colors] || "grey";
+  return colors[role as keyof typeof colors] || 'grey';
 };
 
 const getPermissionColor = (type: string): string => {
   const colors = {
-    read: "blue",
-    write: "orange",
-    delete: "red",
-    admin: "purple",
+    read: 'blue',
+    write: 'orange',
+    delete: 'red',
+    admin: 'purple',
   };
-  return colors[type as keyof typeof colors] || "grey";
+  return colors[type as keyof typeof colors] || 'grey';
 };
 
 const isExpiringSoon = (expiryDate: string): boolean => {
@@ -736,18 +736,18 @@ const isExpiringSoon = (expiryDate: string): boolean => {
 
 // Action handlers (simplified for brevity)
 const editUser = (user: PracticeMember) => {
-  $q.notify({ type: "info", message: `Editing user: ${user.user_id}` });
+  $q.notify({ type: 'info', message: `Editing user: ${user.user_id}` });
 };
 
 const manageUserPermissions = (user: PracticeMember) => {
   $q.notify({
-    type: "info",
+    type: 'info',
     message: `Managing permissions for: ${user.user_id}`,
   });
 };
 
 const editLocation = (location: Location) => {
-  $q.notify({ type: "info", message: `Editing location: ${location.name}` });
+  $q.notify({ type: 'info', message: `Editing location: ${location.name}` });
 };
 
 const setMainLocation = async (location: Location) => {
@@ -755,14 +755,14 @@ const setMainLocation = async (location: Location) => {
     await adminService.setMainLocation(location.id);
     await loadLocations();
     $q.notify({
-      type: "positive",
-      message: t("locations.notifications.mainLocationSet"),
+      type: 'positive',
+      message: t('locations.notifications.mainLocationSet'),
     });
   } catch (error) {
-    console.error("Failed to set main location:", error);
+    console.error('Failed to set main location:', error);
     $q.notify({
-      type: "negative",
-      message: t("locations.errors.setMainFailed"),
+      type: 'negative',
+      message: t('locations.errors.setMainFailed'),
     });
   }
 };
@@ -772,14 +772,14 @@ const revokePermission = async (permission: UserPermission) => {
     await adminService.revokePermission(permission.id);
     await loadPermissions();
     $q.notify({
-      type: "positive",
-      message: t("permissions.notifications.revoked"),
+      type: 'positive',
+      message: t('permissions.notifications.revoked'),
     });
   } catch (error) {
-    console.error("Failed to revoke permission:", error);
+    console.error('Failed to revoke permission:', error);
     $q.notify({
-      type: "negative",
-      message: t("permissions.errors.revokeFailed"),
+      type: 'negative',
+      message: t('permissions.errors.revokeFailed'),
     });
   }
 };

@@ -1,18 +1,18 @@
-import { ref, reactive } from "vue";
-import { supabase } from "@/services/supabase";
+import { ref, reactive } from 'vue';
+import { supabase } from '@/services/supabase';
 import type {
   Bestellijst,
   BestellijstItem,
   Product,
   ShoppingCart,
   ShoppingCartItem,
-} from "@/types/supabase";
-import { useAuthStore } from "@/stores/auth";
-import { analyticsService } from "./analytics";
+} from '@/types/supabase';
+import { useAuthStore } from '@/stores/auth';
+import { analyticsService } from './analytics';
 
 export interface OfflineAction {
   id: string;
-  type: "create" | "update" | "delete";
+  type: 'create' | 'update' | 'delete';
   table: string;
   data: any;
   timestamp: Date;
@@ -55,14 +55,14 @@ export class OfflineService {
    * Setup network status listeners
    */
   private setupNetworkListeners(): void {
-    window.addEventListener("online", () => {
-      console.log("Network: Online");
+    window.addEventListener('online', () => {
+      console.log('Network: Online');
       this.isOnline.value = true;
       this.syncWhenOnline();
     });
 
-    window.addEventListener("offline", () => {
-      console.log("Network: Offline");
+    window.addEventListener('offline', () => {
+      console.log('Network: Offline');
       this.isOnline.value = false;
     });
   }
@@ -89,7 +89,7 @@ export class OfflineService {
    */
   async downloadLatestData(): Promise<void> {
     if (!this.isOnline.value) {
-      console.log("Cannot download data - device is offline");
+      console.log('Cannot download data - device is offline');
       return;
     }
 
@@ -97,31 +97,31 @@ export class OfflineService {
     const practiceId = authStore.selectedPractice?.id;
 
     if (!practiceId) {
-      console.log("No practice selected for offline data download");
+      console.log('No practice selected for offline data download');
       return;
     }
 
     try {
-      console.log("Downloading latest data for offline use...");
+      console.log('Downloading latest data for offline use...');
 
       // Download bestellijsten
       const { data: bestellijsten, error: bestellijstenError } = await supabase
-        .from("product_lists")
-        .select("*")
-        .eq("practice_id", practiceId);
+        .from('product_lists')
+        .select('*')
+        .eq('practice_id', practiceId);
 
       if (bestellijstenError) throw bestellijstenError;
 
       // Download bestellijst items
       const { data: items, error: itemsError } = await supabase
-        .from("product_list_items")
+        .from('product_list_items')
         .select(
           `
           *,
           product_lists!inner (practice_id)
         `
         )
-        .eq("product_lists.practice_id", practiceId);
+        .eq('product_lists.practice_id', practiceId);
 
       if (itemsError) throw itemsError;
 
@@ -133,9 +133,9 @@ export class OfflineService {
 
       if (productIds.length > 0) {
         const { data: productsData, error: productsError } = await supabase
-          .from("products")
-          .select("*")
-          .in("id", productIds);
+          .from('products')
+          .select('*')
+          .in('id', productIds);
 
         if (productsError) throw productsError;
         products = productsData || [];
@@ -143,9 +143,9 @@ export class OfflineService {
 
       // Download shopping carts
       const { data: carts, error: cartsError } = await supabase
-        .from("shopping_carts")
-        .select("*")
-        .eq("practice_id", practiceId);
+        .from('shopping_carts')
+        .select('*')
+        .eq('practice_id', practiceId);
 
       if (cartsError) throw cartsError;
 
@@ -155,9 +155,9 @@ export class OfflineService {
 
       if (cartIds.length > 0) {
         const { data: cartItemsData, error: cartItemsError } = await supabase
-          .from("shopping_cart_items")
-          .select("*")
-          .in("cart_id", cartIds);
+          .from('shopping_cart_items')
+          .select('*')
+          .in('cart_id', cartIds);
 
         if (cartItemsError) throw cartItemsError;
         cartItems = cartItemsData || [];
@@ -178,16 +178,16 @@ export class OfflineService {
       // Save to localStorage
       this.saveOfflineData();
 
-      console.log("Offline data downloaded successfully");
+      console.log('Offline data downloaded successfully');
 
       // Track analytics
-      analyticsService.trackEvent("offline_data_downloaded", {
+      analyticsService.trackEvent('offline_data_downloaded', {
         bestellijsten_count: this.offlineData.bestellijsten.length,
         items_count: this.offlineData.bestellijst_items.length,
         products_count: this.offlineData.products.length,
       });
     } catch (error) {
-      console.error("Failed to download offline data:", error);
+      console.error('Failed to download offline data:', error);
       throw error;
     }
   }
@@ -203,7 +203,7 @@ export class OfflineService {
    * Add action to offline queue
    */
   addOfflineAction(
-    type: OfflineAction["type"],
+    type: OfflineAction['type'],
     table: string,
     data: any
   ): void {
@@ -212,7 +212,7 @@ export class OfflineService {
     const userId = authStore.user?.id;
 
     if (!practiceId || !userId) {
-      console.error("Cannot add offline action - no practice or user");
+      console.error('Cannot add offline action - no practice or user');
       return;
     }
 
@@ -230,7 +230,7 @@ export class OfflineService {
     this.offlineActions.value.push(action);
     this.saveOfflineActions();
 
-    console.log("Added offline action:", action);
+    console.log('Added offline action:', action);
 
     // Try to sync immediately if online
     if (this.isOnline.value) {
@@ -266,13 +266,13 @@ export class OfflineService {
           await this.syncSingleAction(action);
           syncedActions.push(action.id);
         } catch (error) {
-          console.error("Failed to sync action:", action, error);
+          console.error('Failed to sync action:', action, error);
 
           // Increment retry count
           action.retry_count++;
 
           if (action.retry_count >= this.maxRetries) {
-            console.error("Max retries reached for action:", action);
+            console.error('Max retries reached for action:', action);
             // Remove from queue after max retries
             syncedActions.push(action.id);
           } else {
@@ -303,13 +303,13 @@ export class OfflineService {
       );
 
       // Track analytics
-      analyticsService.trackEvent("offline_sync_completed", {
+      analyticsService.trackEvent('offline_sync_completed', {
         synced_count: syncedActions.length,
         failed_count: failedActions.length,
         remaining_count: this.offlineActions.value.length,
       });
     } catch (error) {
-      console.error("Sync process failed:", error);
+      console.error('Sync process failed:', error);
     } finally {
       this.syncInProgress.value = false;
     }
@@ -320,13 +320,13 @@ export class OfflineService {
    */
   private async syncSingleAction(action: OfflineAction): Promise<void> {
     switch (action.type) {
-      case "create":
+      case 'create':
         await this.syncCreateAction(action);
         break;
-      case "update":
+      case 'update':
         await this.syncUpdateAction(action);
         break;
-      case "delete":
+      case 'delete':
         await this.syncDeleteAction(action);
         break;
       default:
@@ -354,7 +354,7 @@ export class OfflineService {
     const { error } = await supabase
       .from(action.table)
       .update(updateData)
-      .eq("id", id);
+      .eq('id', id);
 
     if (error) {
       throw new Error(`Failed to sync update action: ${error.message}`);
@@ -368,7 +368,7 @@ export class OfflineService {
     const { error } = await supabase
       .from(action.table)
       .delete()
-      .eq("id", action.data.id);
+      .eq('id', action.data.id);
 
     if (error) {
       throw new Error(`Failed to sync delete action: ${error.message}`);
@@ -396,7 +396,7 @@ export class OfflineService {
     }
 
     // Add to sync queue
-    this.addOfflineAction("update", "product_list_items", {
+    this.addOfflineAction('update', 'product_list_items', {
       id: itemId,
       ...updates,
       updated_at: new Date().toISOString(),
@@ -416,7 +416,7 @@ export class OfflineService {
       existingItem.quantity += quantity;
       existingItem.updated_at = new Date().toISOString();
 
-      this.addOfflineAction("update", "shopping_cart_items", {
+      this.addOfflineAction('update', 'shopping_cart_items', {
         id: existingItem.id,
         quantity: existingItem.quantity,
         updated_at: existingItem.updated_at,
@@ -428,13 +428,13 @@ export class OfflineService {
         product_id: productId,
         quantity,
         notes: null,
-        suggested_by: "manual",
+        suggested_by: 'manual',
         created_at: new Date().toISOString(),
         updated_at: new Date().toISOString(),
       };
 
       this.offlineData.shopping_cart_items.push(newItem);
-      this.addOfflineAction("create", "shopping_cart_items", newItem);
+      this.addOfflineAction('create', 'shopping_cart_items', newItem);
     }
 
     this.saveOfflineData();
@@ -446,14 +446,14 @@ export class OfflineService {
   private saveOfflineData(): void {
     try {
       localStorage.setItem(
-        "medstock_offline_data",
+        'medstock_offline_data',
         JSON.stringify({
           ...this.offlineData,
           last_sync: this.offlineData.last_sync?.toISOString(),
         })
       );
     } catch (error) {
-      console.error("Failed to save offline data:", error);
+      console.error('Failed to save offline data:', error);
     }
   }
 
@@ -462,7 +462,7 @@ export class OfflineService {
    */
   private loadOfflineData(): void {
     try {
-      const saved = localStorage.getItem("medstock_offline_data");
+      const saved = localStorage.getItem('medstock_offline_data');
       if (saved) {
         const data = JSON.parse(saved);
         Object.assign(this.offlineData, {
@@ -471,7 +471,7 @@ export class OfflineService {
         });
       }
     } catch (error) {
-      console.error("Failed to load offline data:", error);
+      console.error('Failed to load offline data:', error);
     }
   }
 
@@ -481,7 +481,7 @@ export class OfflineService {
   private saveOfflineActions(): void {
     try {
       localStorage.setItem(
-        "medstock_offline_actions",
+        'medstock_offline_actions',
         JSON.stringify(
           this.offlineActions.value.map((action) => ({
             ...action,
@@ -490,7 +490,7 @@ export class OfflineService {
         )
       );
     } catch (error) {
-      console.error("Failed to save offline actions:", error);
+      console.error('Failed to save offline actions:', error);
     }
   }
 
@@ -499,7 +499,7 @@ export class OfflineService {
    */
   private loadOfflineActions(): void {
     try {
-      const saved = localStorage.getItem("medstock_offline_actions");
+      const saved = localStorage.getItem('medstock_offline_actions');
       if (saved) {
         const actions = JSON.parse(saved);
         this.offlineActions.value = actions.map((action: any) => ({
@@ -508,7 +508,7 @@ export class OfflineService {
         }));
       }
     } catch (error) {
-      console.error("Failed to load offline actions:", error);
+      console.error('Failed to load offline actions:', error);
     }
   }
 
@@ -537,8 +537,8 @@ export class OfflineService {
 
     this.offlineActions.value = [];
 
-    localStorage.removeItem("medstock_offline_data");
-    localStorage.removeItem("medstock_offline_actions");
+    localStorage.removeItem('medstock_offline_data');
+    localStorage.removeItem('medstock_offline_actions');
   }
 
   /**
@@ -568,7 +568,7 @@ export class OfflineService {
       await this.syncToServer();
       await this.downloadLatestData();
     } else {
-      throw new Error("Cannot sync while offline");
+      throw new Error('Cannot sync while offline');
     }
   }
 

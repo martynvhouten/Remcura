@@ -37,9 +37,9 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from "vue";
-import { useI18n } from "vue-i18n";
-import type { ExpiringBatch } from "src/types/inventory";
+import { computed } from 'vue';
+import { useI18n } from 'vue-i18n';
+import type { ExpiringBatch } from 'src/types/inventory';
 
 interface Props {
   batches: ExpiringBatch[];
@@ -47,63 +47,63 @@ interface Props {
 
 defineProps<Props>();
 defineEmits<{
-  "batch-selected": [batch: ExpiringBatch];
+  'batch-selected': [batch: ExpiringBatch];
 }>();
 
 const { t } = useI18n();
 
 const columns = computed(() => [
   {
-    name: "productName",
-    label: t("product.product"),
-    field: "productName",
-    align: "left",
+    name: 'productName',
+    label: t('product.product'),
+    field: 'productName',
+    align: 'left',
   },
   {
-    name: "batchNumber",
-    label: t("batch.batchNumber"),
-    field: "batchNumber",
-    align: "left",
+    name: 'batchNumber',
+    label: t('batch.batchNumber'),
+    field: 'batchNumber',
+    align: 'left',
   },
   {
-    name: "locationName",
-    label: t("location.location"),
-    field: "locationName",
-    align: "left",
+    name: 'locationName',
+    label: t('location.location'),
+    field: 'locationName',
+    align: 'left',
   },
   {
-    name: "currentQuantity",
-    label: t("inventory.quantity"),
-    field: "currentQuantity",
-    align: "right",
+    name: 'currentQuantity',
+    label: t('inventory.quantity'),
+    field: 'currentQuantity',
+    align: 'right',
   },
   {
-    name: "daysUntilExpiry",
-    label: t("batch.daysUntilExpiry"),
-    field: "daysUntilExpiry",
-    align: "center",
+    name: 'daysUntilExpiry',
+    label: t('batch.daysUntilExpiry'),
+    field: 'daysUntilExpiry',
+    align: 'center',
   },
   {
-    name: "urgency",
-    label: t("batch.urgencyLevel"),
-    field: "urgencyLevel",
-    align: "center",
+    name: 'urgency',
+    label: t('batch.urgencyLevel'),
+    field: 'urgencyLevel',
+    align: 'center',
   },
   {
-    name: "actions",
-    label: t("common.actions"),
-    align: "center",
+    name: 'actions',
+    label: t('common.actions'),
+    align: 'center',
   },
 ]);
 
 const getUrgencyColor = (urgency: string) => {
   const colors = {
-    expired: "red",
-    critical: "deep-orange",
-    warning: "amber",
-    normal: "green",
+    expired: 'red',
+    critical: 'deep-orange',
+    warning: 'amber',
+    normal: 'green',
   };
-  return colors[urgency] || "grey";
+  return colors[urgency] || 'grey';
 };
 </script>
 

@@ -261,21 +261,21 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted, defineAsyncComponent } from "vue";
-import { useI18n } from "vue-i18n";
-import { useQuasar } from "quasar";
-import { useRouter } from "vue-router";
-import { useAuthStore } from "src/stores/auth";
-import { useCountingStore } from "src/stores/counting";
-import { useClinicStore } from "src/stores/clinic";
-import type { CountingSession, PracticeLocation } from "src/types/inventory";
-import PageLayout from "src/components/PageLayout.vue";
-import PageTitle from "src/components/PageTitle.vue";
-import BaseCard from "src/components/base/BaseCard.vue";
+import { ref, computed, onMounted, defineAsyncComponent } from 'vue';
+import { useI18n } from 'vue-i18n';
+import { useQuasar } from 'quasar';
+import { useRouter } from 'vue-router';
+import { useAuthStore } from 'src/stores/auth';
+import { useCountingStore } from 'src/stores/counting';
+import { useClinicStore } from 'src/stores/clinic';
+import type { CountingSession, PracticeLocation } from 'src/types/inventory';
+import PageLayout from 'src/components/PageLayout.vue';
+import PageTitle from 'src/components/PageTitle.vue';
+import BaseCard from 'src/components/base/BaseCard.vue';
 
 // Lazy loaded dialogs
 const CountingSessionDialog = defineAsyncComponent(
-  () => import("src/components/inventory/CountingSessionDialog.vue")
+  () => import('src/components/inventory/CountingSessionDialog.vue')
 );
 
 // Composables
@@ -292,20 +292,20 @@ const showStartDialog = ref(false);
 
 // Pagination
 const pagination = ref({
-  sortBy: "started_at",
+  sortBy: 'started_at',
   descending: true,
   page: 1,
   rowsPerPage: 25,
 });
 
 // Computed properties
-const practiceId = computed(() => authStore.userProfile?.clinic_id || "");
+const practiceId = computed(() => authStore.userProfile?.clinic_id || '');
 
 const statusOptions = computed(() => [
-  { label: t("counting.status.active"), value: "active" },
-  { label: t("counting.status.completed"), value: "completed" },
-  { label: t("counting.status.cancelled"), value: "cancelled" },
-  { label: t("counting.status.approved"), value: "approved" },
+  { label: t('counting.status.active'), value: 'active' },
+  { label: t('counting.status.completed'), value: 'completed' },
+  { label: t('counting.status.cancelled'), value: 'cancelled' },
+  { label: t('counting.status.approved'), value: 'approved' },
 ]);
 
 const availableLocations = computed<PracticeLocation[]>(() => {
@@ -314,7 +314,7 @@ const availableLocations = computed<PracticeLocation[]>(() => {
 
 const activeSession = computed(() => {
   return (
-    countingStore.sessions.find((session) => session.status === "active") ||
+    countingStore.sessions.find((session) => session.status === 'active') ||
     null
   );
 });
@@ -333,40 +333,40 @@ const filteredSessions = computed(() => {
 
 const columns = computed(() => [
   {
-    name: "name",
-    label: t("counting.sessionName"),
-    field: "name",
+    name: 'name',
+    label: t('counting.sessionName'),
+    field: 'name',
     sortable: true,
-    align: "left" as const,
-    style: "width: 200px",
+    align: 'left' as const,
+    style: 'width: 200px',
   },
   {
-    name: "status",
-    label: t("counting.status"),
-    field: "status",
+    name: 'status',
+    label: t('counting.status'),
+    field: 'status',
     sortable: true,
-    align: "left" as const,
-    style: "width: 120px",
+    align: 'left' as const,
+    style: 'width: 120px',
   },
   {
-    name: "progress",
-    label: t("counting.progress"),
-    field: "progress",
-    align: "center" as const,
+    name: 'progress',
+    label: t('counting.progress'),
+    field: 'progress',
+    align: 'center' as const,
     sortable: false,
   },
   {
-    name: "started_at",
-    label: t("common.startedAt"),
-    field: "started_at",
-    align: "left" as const,
+    name: 'started_at',
+    label: t('common.startedAt'),
+    field: 'started_at',
+    align: 'left' as const,
     sortable: true,
   },
   {
-    name: "actions",
-    label: t("common.actions"),
-    field: "actions",
-    align: "center" as const,
+    name: 'actions',
+    label: t('common.actions'),
+    field: 'actions',
+    align: 'center' as const,
     sortable: false,
   },
 ]);
@@ -378,16 +378,16 @@ const refreshData = async () => {
   try {
     await countingStore.fetchSessions(practiceId.value);
     $q.notify({
-      type: "positive",
-      message: t("common.dataRefreshed"),
-      position: "top",
+      type: 'positive',
+      message: t('common.dataRefreshed'),
+      position: 'top',
     });
   } catch (error) {
-    console.error("Error refreshing sessions:", error);
+    console.error('Error refreshing sessions:', error);
     $q.notify({
-      type: "negative",
-      message: t("common.refreshFailed"),
-      position: "top",
+      type: 'negative',
+      message: t('common.refreshFailed'),
+      position: 'top',
     });
   }
 };
@@ -406,31 +406,31 @@ const viewSession = (session: CountingSession) => {
 
 const completeSession = async (session: CountingSession) => {
   $q.dialog({
-    title: t("counting.completeSession"),
-    message: t("counting.confirmComplete"),
+    title: t('counting.completeSession'),
+    message: t('counting.confirmComplete'),
     cancel: true,
     persistent: true,
   }).onOk(async () => {
     try {
       await countingStore.updateSession(session.id, {
-        status: "completed",
+        status: 'completed',
         completed_at: new Date().toISOString(),
-        completed_by: authStore.user?.id || "",
+        completed_by: authStore.user?.id || '',
       });
 
       $q.notify({
-        type: "positive",
-        message: t("counting.sessionCompleted"),
-        position: "top",
+        type: 'positive',
+        message: t('counting.sessionCompleted'),
+        position: 'top',
       });
 
       await refreshData();
     } catch (error) {
-      console.error("Error completing session:", error);
+      console.error('Error completing session:', error);
       $q.notify({
-        type: "negative",
-        message: t("counting.completeFailed"),
-        position: "top",
+        type: 'negative',
+        message: t('counting.completeFailed'),
+        position: 'top',
       });
     }
   });
@@ -451,67 +451,67 @@ const formatStatus = (status: string): string => {
 
 const statusColor = (status: string): string => {
   switch (status) {
-    case "active":
-      return "primary";
-    case "completed":
-      return "positive";
-    case "cancelled":
-      return "negative";
-    case "approved":
-      return "info";
+    case 'active':
+      return 'primary';
+    case 'completed':
+      return 'positive';
+    case 'cancelled':
+      return 'negative';
+    case 'approved':
+      return 'info';
     default:
-      return "grey";
+      return 'grey';
   }
 };
 
 const statusIcon = (status: string): string => {
   switch (status) {
-    case "active":
-      return "play_circle";
-    case "completed":
-      return "check_circle";
-    case "cancelled":
-      return "cancel";
-    case "approved":
-      return "verified";
+    case 'active':
+      return 'play_circle';
+    case 'completed':
+      return 'check_circle';
+    case 'cancelled':
+      return 'cancel';
+    case 'approved':
+      return 'verified';
     default:
-      return "help";
+      return 'help';
   }
 };
 
 const progressColor = (status: string): string => {
   switch (status) {
-    case "active":
-      return "primary";
-    case "completed":
-      return "positive";
+    case 'active':
+      return 'primary';
+    case 'completed':
+      return 'positive';
     default:
-      return "grey";
+      return 'grey';
   }
 };
 
 const formatDate = (dateString: string): string => {
-  return new Intl.DateTimeFormat("nl-NL", {
-    year: "numeric",
-    month: "short",
-    day: "numeric",
+  return new Intl.DateTimeFormat('nl-NL', {
+    year: 'numeric',
+    month: 'short',
+    day: 'numeric',
   }).format(new Date(dateString));
 };
 
 const formatTime = (dateString: string): string => {
-  return new Intl.DateTimeFormat("nl-NL", {
-    hour: "2-digit",
-    minute: "2-digit",
+  return new Intl.DateTimeFormat('nl-NL', {
+    hour: '2-digit',
+    minute: '2-digit',
   }).format(new Date(dateString));
 };
 
 const formatDateTime = (dateString: string): string => {
-  return new Intl.DateTimeFormat("nl-NL", {
-    year: "numeric",
-    month: "long",
-    day: "numeric",
-    hour: "2-digit",
-    minute: "2-digit",
+  return new Intl.DateTimeFormat('nl-NL', {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit',
   }).format(new Date(dateString));
 };
 

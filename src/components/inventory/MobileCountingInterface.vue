@@ -250,10 +250,10 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted, watch } from "vue";
-import { useI18n } from "vue-i18n";
-import { useCountingStore } from "src/stores/counting";
-import type { CountingProduct } from "src/types/inventory";
+import { ref, computed, onMounted, watch } from 'vue';
+import { useI18n } from 'vue-i18n';
+import { useCountingStore } from 'src/stores/counting';
+import type { CountingProduct } from 'src/types/inventory';
 
 // Props
 interface Props {
@@ -270,10 +270,10 @@ const countingStore = useCountingStore();
 
 // State
 const countedQuantity = ref(0);
-const notes = ref("");
-const batchNumber = ref("");
-const expiryDate = ref("");
-const confidenceLevel = ref<"high" | "medium" | "low">("high");
+const notes = ref('');
+const batchNumber = ref('');
+const expiryDate = ref('');
+const confidenceLevel = ref<'high' | 'medium' | 'low'>('high');
 const submitting = ref(false);
 const sessionStartTime = ref<Date>(new Date());
 
@@ -317,27 +317,27 @@ const variance = computed(() => {
 
 const varianceClass = computed(() => {
   const v = variance.value;
-  if (v > 0) return "variance-positive";
-  if (v < 0) return "variance-negative";
-  return "variance-neutral";
+  if (v > 0) return 'variance-positive';
+  if (v < 0) return 'variance-negative';
+  return 'variance-neutral';
 });
 
 const varianceIcon = computed(() => {
   const v = variance.value;
-  if (v > 0) return "trending_up";
-  if (v < 0) return "trending_down";
-  return "check";
+  if (v > 0) return 'trending_up';
+  if (v < 0) return 'trending_down';
+  return 'check';
 });
 
 const varianceText = computed(() => {
   const v = variance.value;
   const absV = Math.abs(v);
   if (v > 0) {
-    return t("counting.variancePositive", { amount: absV });
+    return t('counting.variancePositive', { amount: absV });
   } else if (v < 0) {
-    return t("counting.varianceNegative", { amount: absV });
+    return t('counting.varianceNegative', { amount: absV });
   }
-  return t("counting.varianceMatch");
+  return t('counting.varianceMatch');
 });
 
 const isValidCount = computed(() => {
@@ -348,13 +348,13 @@ const formatSessionTime = computed(() => {
   const elapsed = Date.now() - sessionStartTime.value.getTime();
   const minutes = Math.floor(elapsed / 60000);
   const seconds = Math.floor((elapsed % 60000) / 1000);
-  return `${minutes}:${seconds.toString().padStart(2, "0")}`;
+  return `${minutes}:${seconds.toString().padStart(2, '0')}`;
 });
 
 const confidenceLevelOptions = computed(() => [
-  { label: t("counting.confidence.high"), value: "high" },
-  { label: t("counting.confidence.medium"), value: "medium" },
-  { label: t("counting.confidence.low"), value: "low" },
+  { label: t('counting.confidence.high'), value: 'high' },
+  { label: t('counting.confidence.medium'), value: 'medium' },
+  { label: t('counting.confidence.low'), value: 'low' },
 ]);
 
 // Methods
@@ -388,7 +388,7 @@ const confirmCount = async () => {
       currentProduct.value.location_id,
       countedQuantity.value,
       {
-        countMethod: "manual",
+        countMethod: 'manual',
         confidenceLevel: confidenceLevel.value,
         batchNumber: batchNumber.value || undefined,
         expiryDate: expiryDate.value || undefined,
@@ -399,7 +399,7 @@ const confirmCount = async () => {
     // Reset form for next product
     resetForm();
   } catch (error) {
-    console.error("Error confirming count:", error);
+    console.error('Error confirming count:', error);
     // Handle error (show notification, etc.)
   } finally {
     submitting.value = false;
@@ -413,10 +413,10 @@ const skipProduct = () => {
 
 const resetForm = () => {
   countedQuantity.value = 0;
-  notes.value = "";
-  batchNumber.value = "";
-  expiryDate.value = "";
-  confidenceLevel.value = "high";
+  notes.value = '';
+  batchNumber.value = '';
+  expiryDate.value = '';
+  confidenceLevel.value = 'high';
 };
 
 const completeSession = async () => {
@@ -424,13 +424,13 @@ const completeSession = async () => {
     await countingStore.completeCountingSession();
     // Navigate away or show completion message
   } catch (error) {
-    console.error("Error completing session:", error);
+    console.error('Error completing session:', error);
   }
 };
 
 const openBarcodeScanner = () => {
   // Implement barcode scanning functionality
-  console.log("Opening barcode scanner...");
+  console.log('Opening barcode scanner...');
 };
 
 // Initialize

@@ -426,20 +426,20 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted } from "vue";
-import { useQuasar } from "quasar";
-import { useI18n } from "vue-i18n";
-import { useAuthStore } from "src/stores/auth";
-import { useClinicStore } from "src/stores/clinic";
-import { useThemeManager } from "src/composables/themeManager";
+import { ref, computed, onMounted } from 'vue';
+import { useQuasar } from 'quasar';
+import { useI18n } from 'vue-i18n';
+import { useAuthStore } from 'src/stores/auth';
+import { useClinicStore } from 'src/stores/clinic';
+import { useThemeManager } from 'src/composables/themeManager';
 import {
   setI18nLanguage,
   getCurrentLocale,
   type SupportedLocale,
-} from "src/i18n";
-import PageLayout from "src/components/PageLayout.vue";
-import PageTitle from "src/components/PageTitle.vue";
-import BaseCard from "src/components/base/BaseCard.vue";
+} from 'src/i18n';
+import PageLayout from 'src/components/PageLayout.vue';
+import PageTitle from 'src/components/PageTitle.vue';
+import BaseCard from 'src/components/base/BaseCard.vue';
 
 const $q = useQuasar();
 const { t } = useI18n();
@@ -456,20 +456,20 @@ const selectedTheme = ref(getCurrentThemeName());
 
 // Computed properties
 const userProfile = computed(() => authStore.userProfile);
-const clinicName = computed(() => clinicStore.clinic?.name || "Kliniek");
+const clinicName = computed(() => clinicStore.clinic?.name || 'Kliniek');
 
 // Form data
 const userSettings = ref({
-  fullName: userProfile.value?.full_name || "",
-  email: authStore.userEmail || "",
-  role: "Administrator", // This would come from your role system
+  fullName: userProfile.value?.full_name || '',
+  email: authStore.userEmail || '',
+  role: 'Administrator', // This would come from your role system
 });
 
 const clinicSettings = ref({
   name: clinicName.value,
-  contactEmail: "contact@example.com",
-  contactPhone: "+31 20 123 4567",
-  address: "Voorbeeldstraat 123, Amsterdam",
+  contactEmail: 'contact@example.com',
+  contactPhone: '+31 20 123 4567',
+  address: 'Voorbeeldstraat 123, Amsterdam',
 });
 
 const notificationSettings = ref({
@@ -479,9 +479,9 @@ const notificationSettings = ref({
 });
 
 const languageOptions = [
-  { label: "Nederlands", value: "nl" },
-  { label: "English", value: "en" },
-  { label: "Español", value: "es" },
+  { label: 'Nederlands', value: 'nl' },
+  { label: 'English', value: 'en' },
+  { label: 'Español', value: 'es' },
 ];
 
 // Methods
@@ -489,11 +489,11 @@ const toggleDarkMode = (value: boolean) => {
   $q.dark.set(value);
   
   $q.notify({
-    type: "positive",
+    type: 'positive',
     message: value
-      ? t("settings.darkModeEnabled")
-      : t("settings.lightModeEnabled"),
-    position: "top-right",
+      ? t('settings.darkModeEnabled')
+      : t('settings.lightModeEnabled'),
+    position: 'top-right',
     timeout: 2000,
   });
 };
@@ -506,9 +506,9 @@ const changeTheme = (themeName: string) => {
     themeOptions.value.find((option) => option.value === themeName)?.label ||
     themeName;
   $q.notify({
-    type: "positive",
+    type: 'positive',
     message: `Kleurenschema "${themeLabel}" toegepast`,
-    position: "top-right",
+    position: 'top-right',
     timeout: 2000,
   });
 };
@@ -520,9 +520,9 @@ const changeLanguage = (locale: SupportedLocale) => {
   const languageLabel =
     languageOptions.find((option) => option.value === locale)?.label || locale;
   $q.notify({
-    type: "positive",
-    message: t("settings.languageChanged", { language: languageLabel }),
-    position: "top-right",
+    type: 'positive',
+    message: t('settings.languageChanged', { language: languageLabel }),
+    position: 'top-right',
     timeout: 2000,
   });
 };
@@ -535,16 +535,16 @@ const saveSettings = async () => {
     await new Promise((resolve) => setTimeout(resolve, 1000)); // Simulate API call
     
     $q.notify({
-      type: "positive",
-      message: t("settings.settingsSaved"),
-      position: "top-right",
+      type: 'positive',
+      message: t('settings.settingsSaved'),
+      position: 'top-right',
       timeout: 3000,
     });
   } catch (error) {
     $q.notify({
-      type: "negative",
-      message: t("settings.settingsSaveError"),
-      position: "top-right",
+      type: 'negative',
+      message: t('settings.settingsSaveError'),
+      position: 'top-right',
       timeout: 3000,
     });
   } finally {
@@ -555,9 +555,9 @@ const saveSettings = async () => {
 // Initialize data
 onMounted(() => {
   // Load settings from store/localStorage if available
-  const savedDarkMode = $q.localStorage.getItem("darkMode");
+  const savedDarkMode = $q.localStorage.getItem('darkMode');
   if (savedDarkMode !== null) {
-    const darkModeValue = savedDarkMode === "true";
+    const darkModeValue = savedDarkMode === 'true';
     isDarkMode.value = darkModeValue;
     $q.dark.set(darkModeValue);
   }

@@ -1,5 +1,5 @@
-import { ref, onMounted, onUnmounted, readonly } from "vue";
-import { useQuasar } from "quasar";
+import { ref, onMounted, onUnmounted, readonly } from 'vue';
+import { useQuasar } from 'quasar';
 
 export function useOffline() {
   const $q = useQuasar();
@@ -12,10 +12,10 @@ export function useOffline() {
 
     if (hasBeenOffline.value) {
       $q.notify({
-        type: "positive",
-        message: "Internetverbinding hersteld",
-        icon: "wifi",
-        position: "top",
+        type: 'positive',
+        message: 'Internetverbinding hersteld',
+        icon: 'wifi',
+        position: 'top',
         timeout: 3000,
       });
       hasBeenOffline.value = false;
@@ -27,16 +27,16 @@ export function useOffline() {
     hasBeenOffline.value = true;
 
     $q.notify({
-      type: "warning",
+      type: 'warning',
       message:
-        "Geen internetverbinding. Sommige functies zijn beperkt beschikbaar.",
-      icon: "wifi_off",
-      position: "top",
+        'Geen internetverbinding. Sommige functies zijn beperkt beschikbaar.',
+      icon: 'wifi_off',
+      position: 'top',
       timeout: 0, // Persistent until online
       actions: [
         {
-          icon: "close",
-          color: "white",
+          icon: 'close',
+          color: 'white',
           round: true,
           handler: () => {
             /* dismiss */
@@ -47,13 +47,13 @@ export function useOffline() {
   };
 
   onMounted(() => {
-    window.addEventListener("online", handleOnline);
-    window.addEventListener("offline", handleOffline);
+    window.addEventListener('online', handleOnline);
+    window.addEventListener('offline', handleOffline);
   });
 
   onUnmounted(() => {
-    window.removeEventListener("online", handleOnline);
-    window.removeEventListener("offline", handleOffline);
+    window.removeEventListener('online', handleOnline);
+    window.removeEventListener('offline', handleOffline);
   });
 
   return {
@@ -63,25 +63,25 @@ export function useOffline() {
 
 // Service worker registration helper
 export function registerServiceWorker() {
-  if ("serviceWorker" in navigator) {
-    window.addEventListener("load", async () => {
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', async () => {
       try {
-        const registration = await navigator.serviceWorker.register("/sw.js");
+        const registration = await navigator.serviceWorker.register('/sw.js');
         // Service Worker registered successfully
 
         // Check for updates
-        registration.addEventListener("updatefound", () => {
+        registration.addEventListener('updatefound', () => {
           const newWorker = registration.installing;
           if (newWorker) {
-            newWorker.addEventListener("statechange", () => {
+            newWorker.addEventListener('statechange', () => {
               if (
-                newWorker.state === "installed" &&
+                newWorker.state === 'installed' &&
                 navigator.serviceWorker.controller
               ) {
                 // New content is available
                 if (
                   confirm(
-                    "Een nieuwe versie van de app is beschikbaar. Wilt u nu herladen?"
+                    'Een nieuwe versie van de app is beschikbaar. Wilt u nu herladen?'
                   )
                 ) {
                   window.location.reload();

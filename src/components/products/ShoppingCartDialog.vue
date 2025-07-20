@@ -151,10 +151,10 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from "vue";
-import { useI18n } from "vue-i18n";
-import { useQuasar } from "quasar";
-import type { CartItem } from "src/types/inventory";
+import { computed } from 'vue';
+import { useI18n } from 'vue-i18n';
+import { useQuasar } from 'quasar';
+import type { CartItem } from 'src/types/inventory';
 
 interface Props {
   modelValue: boolean;
@@ -163,16 +163,16 @@ interface Props {
 }
 
 interface Emits {
-  (e: "update:modelValue", value: boolean): void;
+  (e: 'update:modelValue', value: boolean): void;
   (
-    e: "updateQuantity",
+    e: 'updateQuantity',
     productId: string,
     quantity: number,
     supplierId?: string
   ): void;
-  (e: "removeItem", productId: string, supplierId?: string): void;
-  (e: "clearCart"): void;
-  (e: "checkout"): void;
+  (e: 'removeItem', productId: string, supplierId?: string): void;
+  (e: 'clearCart'): void;
+  (e: 'checkout'): void;
 }
 
 const props = defineProps<Props>();
@@ -188,15 +188,15 @@ const totalItems = computed(() => {
 
 // Methods
 const formatPrice = (price: number): string => {
-  return new Intl.NumberFormat("nl-NL", {
-    style: "currency",
-    currency: "EUR",
+  return new Intl.NumberFormat('nl-NL', {
+    style: 'currency',
+    currency: 'EUR',
   }).format(price);
 };
 
 const updateQuantity = (item: CartItem, quantity: number) => {
   if (quantity > 0) {
-    emit("updateQuantity", item.product_id, quantity, item.supplier_id);
+    emit('updateQuantity', item.product_id, quantity, item.supplier_id);
   }
 };
 
@@ -212,28 +212,28 @@ const decreaseQuantity = (item: CartItem) => {
 
 const removeItem = (item: CartItem) => {
   $q.dialog({
-    title: t("common.confirm"),
-    message: t("productsPage.cart.remove") + ": " + item.product.name,
+    title: t('common.confirm'),
+    message: t('productsPage.cart.remove') + ': ' + item.product.name,
     cancel: true,
     persistent: true,
   }).onOk(() => {
-    emit("removeItem", item.product_id, item.supplier_id);
+    emit('removeItem', item.product_id, item.supplier_id);
   });
 };
 
 const confirmClearCart = () => {
   $q.dialog({
-    title: t("productsPage.cart.clear"),
-    message: "Weet je zeker dat je de winkelwagen wilt legen?",
+    title: t('productsPage.cart.clear'),
+    message: 'Weet je zeker dat je de winkelwagen wilt legen?',
     cancel: true,
     persistent: true,
   }).onOk(() => {
-    emit("clearCart");
+    emit('clearCart');
   });
 };
 
 const checkout = () => {
-  emit("checkout");
+  emit('checkout');
 };
 </script>
 
