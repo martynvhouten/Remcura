@@ -206,25 +206,25 @@ export const useBatchStore = defineStore('batch', () => {
         product_id: request.product_id,
         location_id: request.location_id,
         batch_number: request.batch_number,
-        supplier_batch_number: request.supplier_batch_number || undefined,
         expiry_date: request.expiry_date,
-        received_date: request.received_date ? request.received_date : new Date().toISOString().split('T')[0],
+        received_date: request.received_date || new Date().toISOString().substring(0, 10),
         initial_quantity: request.initial_quantity,
         current_quantity: request.initial_quantity,
         reserved_quantity: 0,
         available_quantity: request.initial_quantity,
-        unit_cost: request.unit_cost,
+        ...(request.unit_cost !== undefined && { unit_cost: request.unit_cost }),
         total_cost: (request.unit_cost || 0) * request.initial_quantity,
         currency: request.currency || 'EUR',
-        supplier_id: request.supplier_id,
-        purchase_order_number: request.purchase_order_number,
-        invoice_number: request.invoice_number,
         status: 'active',
         quality_check_passed: request.quality_check_passed || true,
-        quality_notes: request.quality_notes,
         created_at: new Date().toISOString(),
         updated_at: new Date().toISOString(),
-        created_by: 'current-user' // Should come from auth
+        created_by: 'current-user', // Should come from auth
+        ...(request.supplier_batch_number && { supplier_batch_number: request.supplier_batch_number }),
+        ...(request.supplier_id && { supplier_id: request.supplier_id }),
+        ...(request.purchase_order_number && { purchase_order_number: request.purchase_order_number }),
+        ...(request.invoice_number && { invoice_number: request.invoice_number }),
+        ...(request.quality_notes && { quality_notes: request.quality_notes }),
       };
 
       return mockBatch;
