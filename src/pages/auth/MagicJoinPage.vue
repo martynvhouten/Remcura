@@ -337,7 +337,7 @@ const handleInviteCode = async (inviteData: any) => {
       } else {
         // 👤 REGULAR GUEST ACCESS
         welcomeMessage.value = t('magicJoin.welcomeMessage', { 
-          practice: result.practice.name 
+          practice: currentPractice.value.name 
         });
         showWelcome.value = true;
         
@@ -392,7 +392,7 @@ const handleUpgradeCompleted = async (upgradeResult: any) => {
     });
 
     // Create the permanent user account
-    const createRequest = {
+    const createRequest: any = {
       practice_id: currentInvite.value.practice_id,
       invite_id: currentInvite.value.id,
       full_name: upgradeResult.name,
@@ -401,9 +401,12 @@ const handleUpgradeCompleted = async (upgradeResult: any) => {
       login_method: upgradeResult.method,
       email: upgradeResult.email,
       password: upgradeResult.password, // Only if email method
-      device_fingerprint: upgradeResult.method === 'device_remember' ? 
-        PermanentUserService.getDeviceFingerprint() : null
     };
+
+    // Add device_fingerprint only if method is device_remember
+    if (upgradeResult.method === 'device_remember') {
+      createRequest.device_fingerprint = PermanentUserService.getDeviceFingerprint();
+    }
 
     const result = await PermanentUserService.createPermanentUser(createRequest);
 
@@ -417,19 +420,24 @@ const handleUpgradeCompleted = async (upgradeResult: any) => {
       welcomeMessage.value = successMessage;
       showWelcome.value = true;
 
-      $q.notify({
+      const notifyOptions: any = {
         type: 'positive',
         message: t('upgrade.accountCreated'),
         position: 'top-right',
         timeout: 8000,
-        actions: result.personal_code ? [
+      };
+
+      if (result.personal_code) {
+        notifyOptions.actions = [
           {
             label: t('common.copy') || 'Kopieer',
             color: 'white',
             handler: () => navigator.clipboard?.writeText(result.personal_code || '')
           }
-        ] : undefined
-      });
+        ];
+      }
+
+      $q.notify(notifyOptions);
     } else {
       throw new Error(result.error);
     }

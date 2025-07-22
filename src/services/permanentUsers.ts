@@ -222,7 +222,9 @@ export class PermanentUserService {
     } catch (error) {
       console.error('Error generating personal magic code:', error);
       // Fallback generation
-      const cleanName = ((fullName && fullName.toString()) || 'USER').split(' ')[0].toUpperCase().replace(/[^A-Z]/g, '');
+      const nameToUse: string = fullName ? fullName.toString() : 'USER';
+      const nameParts = nameToUse.split(' ');
+      const cleanName = (nameParts[0] || 'USER').toUpperCase().replace(/[^A-Z]/g, '');
       const year = new Date().getFullYear();
       return `🏥${cleanName}${year}`;
     }
