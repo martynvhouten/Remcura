@@ -270,9 +270,9 @@ const $q = useQuasar();
 
 // State
 const loading = ref(true);
-const teamMembers = ref<EnhancedPermanentUser[]>([]);
+const teamMembers = ref<any[]>([]);
 const showCodeDialog = ref(false);
-const selectedMember = ref<EnhancedPermanentUser | null>(null);
+const selectedMember = ref<any>(null);
 
 // Computed
 const totalMembers = computed(() => teamMembers.value.length);

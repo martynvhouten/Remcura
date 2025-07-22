@@ -201,7 +201,7 @@ export class PermanentUserService {
       return {
         success: true,
         user: newUser,
-        personal_code: personalMagicCode
+        personal_code: personalMagicCode || ''
       };
     } catch (error) {
       console.error('Error creating permanent user:', error);
@@ -222,7 +222,7 @@ export class PermanentUserService {
     } catch (error) {
       console.error('Error generating personal magic code:', error);
       // Fallback generation
-      const cleanName = fullName.split(' ')[0].toUpperCase().replace(/[^A-Z]/g, '');
+      const cleanName = (fullName || 'USER').split(' ')[0].toUpperCase().replace(/[^A-Z]/g, '');
       const year = new Date().getFullYear();
       return `🏥${cleanName}${year}`;
     }
