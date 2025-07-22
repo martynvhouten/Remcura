@@ -207,6 +207,15 @@ import { useI18n } from 'vue-i18n';
 import { useQuasar } from 'quasar';
 import { useAuthStore } from 'src/stores/auth';
 
+// Types
+interface MagicInvite {
+  id: string;
+  magic_code: string;
+  target_role: string;
+  department: string;
+  created_at: string;
+}
+
 // Composables
 const { t } = useI18n();
 const $q = useQuasar();
@@ -215,8 +224,8 @@ const authStore = useAuthStore();
 // State
 const generating = ref(false);
 const showQRDialog = ref(false);
-const activeInvites = ref([]);
-const generatedInvite = ref(null);
+const activeInvites = ref<MagicInvite[]>([]);
+const generatedInvite = ref<MagicInvite | null>(null);
 
 // Form
 const newInvite = ref({
@@ -282,6 +291,7 @@ const generateInvite = async () => {
 };
 
 const copyCode = () => {
+  if (!generatedInvite.value) return;
   navigator.clipboard.writeText(generatedInvite.value.magic_code);
   $q.notify({
     type: 'positive',
@@ -291,6 +301,7 @@ const copyCode = () => {
 };
 
 const shareViaWhatsApp = () => {
+  if (!generatedInvite.value) return;
   const code = generatedInvite.value.magic_code;
   const message = t('magicInvite.whatsappMessage', { 
     code,
@@ -301,6 +312,7 @@ const shareViaWhatsApp = () => {
 };
 
 const shareViaEmail = () => {
+  if (!generatedInvite.value) return;
   const code = generatedInvite.value.magic_code;
   const subject = t('magicInvite.emailSubject');
   const body = t('magicInvite.emailMessage', { 
@@ -316,19 +328,19 @@ const showQRCode = () => {
   showQRDialog.value = true;
 };
 
-const shareInvite = (invite) => {
+const shareInvite = (invite: MagicInvite) => {
   generatedInvite.value = invite;
   shareViaWhatsApp();
 };
 
-const deleteInvite = (invite) => {
+const deleteInvite = (invite: MagicInvite) => {
   $q.dialog({
     title: t('magicInvite.deleteInvite'),
     message: t('magicInvite.deleteConfirm', { code: invite.magic_code }),
     cancel: true,
     persistent: true
   }).onOk(() => {
-          activeInvites.value = activeInvites.value.filter((i: any) => i.id !== invite.id);
+    activeInvites.value = activeInvites.value.filter((i: MagicInvite) => i.id !== invite.id);
     $q.notify({
       type: 'positive',
       message: t('magicInvite.inviteDeleted')
@@ -336,7 +348,7 @@ const deleteInvite = (invite) => {
   });
 };
 
-const formatDate = (dateString: any) => {
+const formatDate = (dateString: string) => {
   return new Date(dateString).toLocaleDateString();
 };
 

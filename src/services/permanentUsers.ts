@@ -73,7 +73,7 @@ export class PermanentUserService {
       if (data && typeof data === 'object' && 'success' in data && data.success) {
         // Create session token
         const sessionToken = this.generateSessionToken();
-        await this.createUserSession(data.user_id, 'magic_code', sessionToken);
+        await this.createUserSession(data.user_id as string, 'magic_code', sessionToken);
 
         return {
           success: true,
@@ -83,6 +83,7 @@ export class PermanentUserService {
         };
       }
 
+      // @ts-ignore - Json type complexity
       return { success: false, error: data?.error || 'Invalid magic code' };
     } catch (error) {
       console.error('Error validating personal magic code:', error);
@@ -173,6 +174,7 @@ export class PermanentUserService {
         language: 'nl'
       };
 
+      // @ts-ignore - Supabase type complexity with department null/undefined
       const { data: newUser, error } = await supabase
         .from('permanent_users')
         .insert([userData])

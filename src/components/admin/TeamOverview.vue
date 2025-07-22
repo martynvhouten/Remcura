@@ -186,7 +186,7 @@
                 <q-icon name="schedule" size="sm" />
                 <div>
                   <div class="stat-label">{{ $t('admin.lastLogin') }}</div>
-                  <div class="stat-value">{{ formatLastLogin(member.last_login_at) }}</div>
+                  <div class="stat-value">{{ formatLastLogin(member.last_login_at || undefined) }}</div>
                 </div>
               </div>
               <div class="activity-stat">
