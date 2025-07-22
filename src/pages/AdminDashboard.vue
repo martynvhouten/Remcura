@@ -132,6 +132,28 @@
       </div>
     </BaseCard>
 
+    <!-- 🎭 Revolutionary Magic Invite System -->
+    <BaseCard
+      variant="elevated"
+      :title="$t('magicInvite.revolutionaryUserSystem')"
+      icon="auto_awesome"
+      header-color="secondary"
+      class="q-mb-lg"
+    >
+      <MagicInviteManager />
+    </BaseCard>
+
+    <!-- 👥 Team Overview - Auto-Upgrade System -->
+    <BaseCard
+      variant="elevated"
+      :title="$t('admin.teamOverview')"
+      icon="group"
+      header-color="primary"
+      class="q-mb-lg"
+    >
+      <TeamOverview />
+    </BaseCard>
+
     <!-- Tabs for different admin sections -->
     <q-tabs
       v-model="activeTab"
@@ -436,6 +458,8 @@
   import PageTitle from '@/components/PageTitle.vue';
   import BaseCard from '@/components/base/BaseCard.vue';
   import DemoResetCard from '@/components/admin/DemoResetCard.vue';
+  import MagicInviteManager from '@/components/admin/MagicInviteManager.vue';
+  import TeamOverview from '@/components/admin/TeamOverview.vue';
   import { adminService } from '@/services/admin';
   import { analyticsService } from '@/services/analytics';
   import { offlineService } from '@/services/offline';

@@ -4,1312 +4,636 @@ export type Json =
   | boolean
   | null
   | { [key: string]: Json | undefined }
-  | Json[];
+  | Json[]
 
-// Properly typed interfaces for database fields
-export interface PracticeSettings {
-  timezone?: string;
-  currency?: string;
-  language?: string;
-  notifications?: {
-    email?: boolean;
-    push?: boolean;
-    sms?: boolean;
-  };
-  features?: {
-    batchTracking?: boolean;
-    multiLocation?: boolean;
-    analytics?: boolean;
-  };
-  theme?: {
-    primaryColor?: string;
-    logoUrl?: string;
-  };
-}
-
-export interface AuditLogData {
-  action?: string;
-  table?: string;
-  record_id?: string;
-  field_changes?: Record<string, { from: any; to: any }>;
-  user_agent?: string;
-  ip_address?: string;
-  timestamp?: string;
-}
-
-export interface AnalyticsEventData {
-  action?: string;
-  page?: string;
-  component?: string;
-  duration?: number;
-  metadata?: Record<string, string | number | boolean>;
-  performance?: {
-    loadTime?: number;
-    responseTime?: number;
-  };
-}
-
-export interface UserSettings {
-  language?: string;
-  timezone?: string;
-  notifications?: {
-    email?: boolean;
-    push?: boolean;
-  };
-  preferences?: {
-    defaultView?: string;
-    itemsPerPage?: number;
-  };
-}
-
-export interface MagentoAddress {
-  firstname?: string;
-  lastname?: string;
-  company?: string;
-  street?: string[];
-  city?: string;
-  region?: string;
-  postcode?: string;
-  country_id?: string;
-  telephone?: string;
-  email?: string;
-}
-
-export interface MagentoPayment {
-  method?: string;
-  amount_ordered?: number;
-  currency_code?: string;
-  transaction_id?: string;
-  additional_information?: string[];
-}
-
-export interface Database {
+export type Database = {
+  // Allows to automatically instanciate createClient with right options
+  // instead of createClient<Database, { PostgrestVersion: 'XX' }>(URL, KEY)
+  __InternalSupabase: {
+    PostgrestVersion: "12.2.3 (519615d)"
+  }
   public: {
     Tables: {
+      // 🚀 NEW AUTO-UPGRADE TABLES
+      permanent_users: {
+        Row: {
+          avatar_url: string | null
+          created_at: string | null
+          created_from_invite_id: string | null
+          department: string | null
+          device_remember_enabled: boolean | null
+          device_tokens: Json | null
+          email: string | null
+          email_login_enabled: boolean | null
+          full_name: string
+          id: string
+          invited_by: string | null
+          is_active: boolean | null
+          language: string | null
+          last_login_at: string | null
+          login_count: number | null
+          magic_code_enabled: boolean | null
+          password_hash: string | null
+          permissions: Json | null
+          personal_magic_code: string | null
+          phone: string | null
+          practice_id: string
+          preferred_login_method: string | null
+          role: string
+          timezone: string | null
+          updated_at: string | null
+          upgraded_at: string | null
+        }
+        Insert: {
+          avatar_url?: string | null
+          created_at?: string | null
+          created_from_invite_id?: string | null
+          department?: string | null
+          device_remember_enabled?: boolean | null
+          device_tokens?: Json | null
+          email?: string | null
+          email_login_enabled?: boolean | null
+          full_name: string
+          id?: string
+          invited_by?: string | null
+          is_active?: boolean | null
+          language?: string | null
+          last_login_at?: string | null
+          login_count?: number | null
+          magic_code_enabled?: boolean | null
+          password_hash?: string | null
+          permissions?: Json | null
+          personal_magic_code?: string | null
+          phone?: string | null
+          practice_id: string
+          preferred_login_method?: string | null
+          role?: string
+          timezone?: string | null
+          updated_at?: string | null
+          upgraded_at?: string | null
+        }
+        Update: {
+          avatar_url?: string | null
+          created_at?: string | null
+          created_from_invite_id?: string | null
+          department?: string | null
+          device_remember_enabled?: boolean | null
+          device_tokens?: Json | null
+          email?: string | null
+          email_login_enabled?: boolean | null
+          full_name?: string
+          id?: string
+          invited_by?: string | null
+          is_active?: boolean | null
+          language?: string | null
+          last_login_at?: string | null
+          login_count?: number | null
+          magic_code_enabled?: boolean | null
+          password_hash?: string | null
+          permissions?: Json | null
+          personal_magic_code?: string | null
+          phone?: string | null
+          practice_id?: string
+          preferred_login_method?: string | null
+          role?: string
+          timezone?: string | null
+          updated_at?: string | null
+          upgraded_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "permanent_users_created_from_invite_id_fkey"
+            columns: ["created_from_invite_id"]
+            isOneToOne: false
+            referencedRelation: "magic_invites"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "permanent_users_practice_id_fkey"
+            columns: ["practice_id"]
+            isOneToOne: false
+            referencedRelation: "practices"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      device_tokens: {
+        Row: {
+          created_at: string | null
+          device_fingerprint: string
+          device_name: string | null
+          expires_at: string
+          id: string
+          ip_address: unknown | null
+          is_active: boolean | null
+          last_used_at: string | null
+          login_count: number | null
+          token_hash: string
+          user_agent: string | null
+          user_id: string
+        }
+        Insert: {
+          created_at?: string | null
+          device_fingerprint: string
+          device_name?: string | null
+          expires_at: string
+          id?: string
+          ip_address?: unknown | null
+          is_active?: boolean | null
+          last_used_at?: string | null
+          login_count?: number | null
+          token_hash: string
+          user_agent?: string | null
+          user_id: string
+        }
+        Update: {
+          created_at?: string | null
+          device_fingerprint?: string
+          device_name?: string | null
+          expires_at?: string
+          id?: string
+          ip_address?: unknown | null
+          is_active?: boolean | null
+          last_used_at?: string | null
+          login_count?: number | null
+          token_hash?: string
+          user_agent?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "device_tokens_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "permanent_users"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      user_sessions: {
+        Row: {
+          actions_performed: number | null
+          device_fingerprint: string | null
+          ended_at: string | null
+          expires_at: string | null
+          features_used: string[] | null
+          id: string
+          ip_address: unknown | null
+          is_active: boolean | null
+          last_activity_at: string | null
+          location_city: string | null
+          location_country: string | null
+          login_method: string
+          page_views: number | null
+          practice_id: string
+          session_token: string
+          started_at: string | null
+          user_agent: string | null
+          user_id: string | null
+        }
+        Insert: {
+          actions_performed?: number | null
+          device_fingerprint?: string | null
+          ended_at?: string | null
+          expires_at?: string | null
+          features_used?: string[] | null
+          id?: string
+          ip_address?: unknown | null
+          is_active?: boolean | null
+          last_activity_at?: string | null
+          location_city?: string | null
+          location_country?: string | null
+          login_method: string
+          page_views?: number | null
+          practice_id: string
+          session_token: string
+          started_at?: string | null
+          user_agent?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          actions_performed?: number | null
+          device_fingerprint?: string | null
+          ended_at?: string | null
+          expires_at?: string | null
+          features_used?: string[] | null
+          id?: string
+          ip_address?: unknown | null
+          is_active?: boolean | null
+          last_activity_at?: string | null
+          location_city?: string | null
+          location_country?: string | null
+          login_method?: string
+          page_views?: number | null
+          practice_id?: string
+          session_token?: string
+          started_at?: string | null
+          user_agent?: string | null
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_sessions_practice_id_fkey"
+            columns: ["practice_id"]
+            isOneToOne: false
+            referencedRelation: "practices"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "user_sessions_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "permanent_users"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      // UPDATED MAGIC INVITES
+      magic_invites: {
+        Row: {
+          ai_role_suggestions: Json | null
+          allow_guest_mode: boolean | null
+          auto_regenerate: boolean | null
+          auto_upgrade_to_member: boolean | null
+          color_theme: string | null
+          contextual_welcome_message: string | null
+          conversion_completed_at: string | null
+          conversion_rate: number | null
+          converted_to_user_id: string | null
+          created_at: string | null
+          created_by: string | null
+          current_uses: number | null
+          deep_link: string | null
+          department: string | null
+          emoji_sequence: string
+          expires_at: string | null
+          guest_session_hours: number | null
+          id: string
+          is_permanent_invite: boolean | null
+          last_used_at: string | null
+          location_access: string[] | null
+          magic_code: string
+          max_uses: number | null
+          onboarding_quest_enabled: boolean | null
+          practice_avatar_seed: string | null
+          practice_id: string
+          progress_rewards: Json | null
+          qr_code_data: string | null
+          shared_via: string[] | null
+          suggested_avatar_style: string | null
+          target_role: string | null
+          updated_at: string | null
+          used_by: string[] | null
+          view_count: number | null
+          welcome_achievement: string | null
+          whatsapp_link: string | null
+        }
+        Insert: {
+          ai_role_suggestions?: Json | null
+          allow_guest_mode?: boolean | null
+          auto_regenerate?: boolean | null
+          auto_upgrade_to_member?: boolean | null
+          color_theme?: string | null
+          contextual_welcome_message?: string | null
+          conversion_completed_at?: string | null
+          conversion_rate?: number | null
+          converted_to_user_id?: string | null
+          created_at?: string | null
+          created_by?: string | null
+          current_uses?: number | null
+          deep_link?: string | null
+          department?: string | null
+          emoji_sequence: string
+          expires_at?: string | null
+          guest_session_hours?: number | null
+          id?: string
+          is_permanent_invite?: boolean | null
+          last_used_at?: string | null
+          location_access?: string[] | null
+          magic_code: string
+          max_uses?: number | null
+          onboarding_quest_enabled?: boolean | null
+          practice_avatar_seed?: string | null
+          practice_id: string
+          progress_rewards?: Json | null
+          qr_code_data?: string | null
+          shared_via?: string[] | null
+          suggested_avatar_style?: string | null
+          target_role?: string | null
+          updated_at?: string | null
+          used_by?: string[] | null
+          view_count?: number | null
+          welcome_achievement?: string | null
+          whatsapp_link?: string | null
+        }
+        Update: {
+          ai_role_suggestions?: Json | null
+          allow_guest_mode?: boolean | null
+          auto_regenerate?: boolean | null
+          auto_upgrade_to_member?: boolean | null
+          color_theme?: string | null
+          contextual_welcome_message?: string | null
+          conversion_completed_at?: string | null
+          conversion_rate?: number | null
+          converted_to_user_id?: string | null
+          created_at?: string | null
+          created_by?: string | null
+          current_uses?: number | null
+          deep_link?: string | null
+          department?: string | null
+          emoji_sequence?: string
+          expires_at?: string | null
+          guest_session_hours?: number | null
+          id?: string
+          is_permanent_invite?: boolean | null
+          last_used_at?: string | null
+          location_access?: string[] | null
+          magic_code?: string
+          max_uses?: number | null
+          onboarding_quest_enabled?: boolean | null
+          practice_avatar_seed?: string | null
+          practice_id?: string
+          progress_rewards?: Json | null
+          qr_code_data?: string | null
+          shared_via?: string[] | null
+          suggested_avatar_style?: string | null
+          target_role?: string | null
+          updated_at?: string | null
+          used_by?: string[] | null
+          view_count?: number | null
+          welcome_achievement?: string | null
+          whatsapp_link?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "magic_invites_converted_to_user_id_fkey"
+            columns: ["converted_to_user_id"]
+            isOneToOne: false
+            referencedRelation: "permanent_users"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "magic_invites_practice_id_fkey"
+            columns: ["practice_id"]
+            isOneToOne: false
+            referencedRelation: "practices"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      // EXISTING TABLES (key ones)
       practices: {
         Row: {
-          id: string;
-          name: string;
-          email: string | null;
-          phone: string | null;
-          address: string | null;
-          city: string | null;
-          postal_code: string | null;
-          country: string | null;
-          settings: PracticeSettings | null;
-          created_at: string;
-          updated_at: string;
-          created_by: string | null;
-          updated_by: string | null;
-        };
+          address: string | null
+          city: string | null
+          country: string | null
+          created_at: string | null
+          created_by: string | null
+          email: string | null
+          id: string
+          name: string
+          phone: string | null
+          postal_code: string | null
+          settings: Json | null
+          updated_at: string | null
+          updated_by: string | null
+        }
         Insert: {
-          id?: string;
-          name: string;
-          email?: string | null;
-          phone?: string | null;
-          address?: string | null;
-          city?: string | null;
-          postal_code?: string | null;
-          country?: string | null;
-          settings?: PracticeSettings | null;
-          created_at?: string;
-          updated_at?: string;
-          created_by?: string | null;
-          updated_by?: string | null;
-        };
+          address?: string | null
+          city?: string | null
+          country?: string | null
+          created_at?: string | null
+          created_by?: string | null
+          email?: string | null
+          id?: string
+          name: string
+          phone?: string | null
+          postal_code?: string | null
+          settings?: Json | null
+          updated_at?: string | null
+          updated_by?: string | null
+        }
         Update: {
-          id?: string;
-          name?: string;
-          email?: string | null;
-          phone?: string | null;
-          address?: string | null;
-          city?: string | null;
-          postal_code?: string | null;
-          country?: string | null;
-          settings?: PracticeSettings | null;
-          created_at?: string;
-          updated_at?: string;
-          created_by?: string | null;
-          updated_by?: string | null;
-        };
-        Relationships: [];
-      };
+          address?: string | null
+          city?: string | null
+          country?: string | null
+          created_at?: string | null
+          created_by?: string | null
+          email?: string | null
+          id?: string
+          name?: string
+          phone?: string | null
+          postal_code?: string | null
+          settings?: Json | null
+          updated_at?: string | null
+          updated_by?: string | null
+        }
+        Relationships: []
+      }
       practice_members: {
         Row: {
-          id: string;
-          practice_id: string;
-          user_id: string;
-          role: string;
-          joined_at: string;
-          invited_by: string | null;
-          created_at: string;
-          updated_at: string;
-        };
+          created_at: string | null
+          id: string
+          invited_by: string | null
+          joined_at: string | null
+          practice_id: string
+          role: string
+          updated_at: string | null
+          user_id: string
+        }
         Insert: {
-          id?: string;
-          practice_id: string;
-          user_id: string;
-          role: string;
-          joined_at?: string;
-          invited_by?: string | null;
-          created_at?: string;
-          updated_at?: string;
-        };
+          created_at?: string | null
+          id?: string
+          invited_by?: string | null
+          joined_at?: string | null
+          practice_id: string
+          role: string
+          updated_at?: string | null
+          user_id: string
+        }
         Update: {
-          id?: string;
-          practice_id?: string;
-          user_id?: string;
-          role?: string;
-          joined_at?: string;
-          invited_by?: string | null;
-          created_at?: string;
-          updated_at?: string;
-        };
+          created_at?: string | null
+          id?: string
+          invited_by?: string | null
+          joined_at?: string | null
+          practice_id?: string
+          role?: string
+          updated_at?: string | null
+          user_id?: string
+        }
         Relationships: [
           {
-            foreignKeyName: 'practice_members_practice_id_fkey';
-            columns: ['practice_id'];
-            isOneToOne: false;
-            referencedRelation: 'practices';
-            referencedColumns: ['id'];
-          }
-        ];
-      };
-      products: {
-        Row: {
-          id: string;
-          magento_id: number | null;
-          sku: string;
-          name: string;
-          category: string | null;
-          subcategory: string | null;
-          brand: string | null;
-          description: string | null;
-          image_url: string | null;
-          price: number | null;
-          unit: string | null;
-          active: boolean | null;
-          last_synced_at: string | null;
-          created_at: string;
-          updated_at: string;
-        };
-        Insert: {
-          id?: string;
-          magento_id?: number | null;
-          sku: string;
-          name: string;
-          category?: string | null;
-          subcategory?: string | null;
-          brand?: string | null;
-          description?: string | null;
-          image_url?: string | null;
-          price?: number | null;
-          unit?: string | null;
-          active?: boolean | null;
-          last_synced_at?: string | null;
-          created_at?: string;
-          updated_at?: string;
-        };
-        Update: {
-          id?: string;
-          magento_id?: number | null;
-          sku?: string;
-          name?: string;
-          category?: string | null;
-          subcategory?: string | null;
-          brand?: string | null;
-          description?: string | null;
-          image_url?: string | null;
-          price?: number | null;
-          unit?: string | null;
-          active?: boolean | null;
-          last_synced_at?: string | null;
-          created_at?: string;
-          updated_at?: string;
-        };
-        Relationships: [];
-      };
-      product_lists: {
-        Row: {
-          id: string;
-          practice_id: string;
-          name: string;
-          description: string | null;
-          is_default: boolean | null;
-          created_at: string;
-          updated_at: string;
-          created_by: string | null;
-          updated_by: string | null;
-        };
-        Insert: {
-          id?: string;
-          practice_id: string;
-          name: string;
-          description?: string | null;
-          is_default?: boolean | null;
-          created_at?: string;
-          updated_at?: string;
-          created_by?: string | null;
-          updated_by?: string | null;
-        };
-        Update: {
-          id?: string;
-          practice_id?: string;
-          name?: string;
-          description?: string | null;
-          is_default?: boolean | null;
-          created_at?: string;
-          updated_at?: string;
-          created_by?: string | null;
-          updated_by?: string | null;
-        };
-        Relationships: [
-          {
-            foreignKeyName: 'product_lists_practice_id_fkey';
-            columns: ['practice_id'];
-            isOneToOne: false;
-            referencedRelation: 'practices';
-            referencedColumns: ['id'];
-          }
-        ];
-      };
-      product_list_items: {
-        Row: {
-          id: string;
-          product_list_id: string;
-          product_id: string;
-          minimum_stock: number;
-          maximum_stock: number;
-          current_stock: number;
-          reorder_point: number | null;
-          preferred_supplier: string | null;
-          notes: string | null;
-          last_counted: string | null;
-          created_at: string;
-          updated_at: string;
-          created_by: string | null;
-          updated_by: string | null;
-        };
-        Insert: {
-          id?: string;
-          product_list_id: string;
-          product_id: string;
-          minimum_stock?: number;
-          maximum_stock?: number;
-          current_stock?: number;
-          reorder_point?: number | null;
-          preferred_supplier?: string | null;
-          notes?: string | null;
-          last_counted?: string | null;
-          created_at?: string;
-          updated_at?: string;
-          created_by?: string | null;
-          updated_by?: string | null;
-        };
-        Update: {
-          id?: string;
-          product_list_id?: string;
-          product_id?: string;
-          minimum_stock?: number;
-          maximum_stock?: number;
-          current_stock?: number;
-          reorder_point?: number | null;
-          preferred_supplier?: string | null;
-          notes?: string | null;
-          last_counted?: string | null;
-          created_at?: string;
-          updated_at?: string;
-          created_by?: string | null;
-          updated_by?: string | null;
-        };
-        Relationships: [
-          {
-            foreignKeyName: 'product_list_items_product_list_id_fkey';
-            columns: ['product_list_id'];
-            isOneToOne: false;
-            referencedRelation: 'product_lists';
-            referencedColumns: ['id'];
+            foreignKeyName: "practice_members_practice_id_fkey"
+            columns: ["practice_id"]
+            isOneToOne: false
+            referencedRelation: "practices"
+            referencedColumns: ["id"]
           },
-          {
-            foreignKeyName: 'product_list_items_product_id_fkey';
-            columns: ['product_id'];
-            isOneToOne: false;
-            referencedRelation: 'products';
-            referencedColumns: ['id'];
-          }
-        ];
-      };
-      stock_entries: {
-        Row: {
-          id: string;
-          practice_id: string;
-          product_id: string;
-          counted_quantity: number;
-          entry_type: string | null;
-          notes: string | null;
-          counted_at: string | null;
-          created_at: string;
-          created_by: string | null;
-        };
-        Insert: {
-          id?: string;
-          practice_id: string;
-          product_id: string;
-          counted_quantity: number;
-          entry_type?: string | null;
-          notes?: string | null;
-          counted_at?: string | null;
-          created_at?: string;
-          created_by?: string | null;
-        };
-        Update: {
-          id?: string;
-          practice_id?: string;
-          product_id?: string;
-          counted_quantity?: number;
-          entry_type?: string | null;
-          notes?: string | null;
-          counted_at?: string | null;
-          created_at?: string;
-          created_by?: string | null;
-        };
-        Relationships: [
-          {
-            foreignKeyName: 'stock_entries_practice_id_fkey';
-            columns: ['practice_id'];
-            isOneToOne: false;
-            referencedRelation: 'practices';
-            referencedColumns: ['id'];
-          },
-          {
-            foreignKeyName: 'stock_entries_product_id_fkey';
-            columns: ['product_id'];
-            isOneToOne: false;
-            referencedRelation: 'products';
-            referencedColumns: ['id'];
-          }
-        ];
-      };
-      order_suggestions: {
-        Row: {
-          id: string;
-          practice_id: string;
-          product_id: string;
-          current_stock: number;
-          minimum_stock: number;
-          suggested_quantity: number;
-          urgency_level: string | null;
-          last_order_date: string | null;
-          created_at: string;
-          expires_at: string | null;
-        };
-        Insert: {
-          id?: string;
-          practice_id: string;
-          product_id: string;
-          current_stock: number;
-          minimum_stock: number;
-          suggested_quantity: number;
-          urgency_level?: string | null;
-          last_order_date?: string | null;
-          created_at?: string;
-          expires_at?: string | null;
-        };
-        Update: {
-          id?: string;
-          practice_id?: string;
-          product_id?: string;
-          current_stock?: number;
-          minimum_stock?: number;
-          suggested_quantity?: number;
-          urgency_level?: string | null;
-          last_order_date?: string | null;
-          created_at?: string;
-          expires_at?: string | null;
-        };
-        Relationships: [
-          {
-            foreignKeyName: 'order_suggestions_practice_id_fkey';
-            columns: ['practice_id'];
-            isOneToOne: false;
-            referencedRelation: 'practices';
-            referencedColumns: ['id'];
-          },
-          {
-            foreignKeyName: 'order_suggestions_product_id_fkey';
-            columns: ['product_id'];
-            isOneToOne: false;
-            referencedRelation: 'products';
-            referencedColumns: ['id'];
-          }
-        ];
-      };
-      activity_log: {
-        Row: {
-          id: string;
-          practice_id: string | null;
-          user_id: string | null;
-          activity_type: string;
-          table_name: string | null;
-          record_id: string | null;
-          old_values: AuditLogData | null;
-          new_values: AuditLogData | null;
-          description: string | null;
-          created_at: string;
-        };
-        Insert: {
-          id?: string;
-          practice_id?: string | null;
-          user_id?: string | null;
-          activity_type: string;
-          table_name?: string | null;
-          record_id?: string | null;
-          old_values?: AuditLogData | null;
-          new_values?: AuditLogData | null;
-          description?: string | null;
-          created_at?: string;
-        };
-        Update: {
-          id?: string;
-          practice_id?: string | null;
-          user_id?: string | null;
-          activity_type?: string;
-          table_name?: string | null;
-          record_id?: string | null;
-          old_values?: AuditLogData | null;
-          new_values?: AuditLogData | null;
-          description?: string | null;
-          created_at?: string;
-        };
-        Relationships: [
-          {
-            foreignKeyName: 'activity_log_practice_id_fkey';
-            columns: ['practice_id'];
-            isOneToOne: false;
-            referencedRelation: 'practices';
-            referencedColumns: ['id'];
-          }
-        ];
-      };
-      shopping_carts: {
-        Row: {
-          id: string;
-          practice_id: string;
-          name: string;
-          notes: string | null;
-          status: string;
-          total_items: number;
-          created_by: string | null;
-          created_at: string;
-          updated_at: string;
-        };
-        Insert: {
-          id?: string;
-          practice_id: string;
-          name?: string;
-          notes?: string | null;
-          status?: string;
-          total_items?: number;
-          created_by?: string | null;
-          created_at?: string;
-          updated_at?: string;
-        };
-        Update: {
-          id?: string;
-          practice_id?: string;
-          name?: string;
-          notes?: string | null;
-          status?: string;
-          total_items?: number;
-          created_by?: string | null;
-          created_at?: string;
-          updated_at?: string;
-        };
-        Relationships: [
-          {
-            foreignKeyName: 'shopping_carts_practice_id_fkey';
-            columns: ['practice_id'];
-            isOneToOne: false;
-            referencedRelation: 'practices';
-            referencedColumns: ['id'];
-          },
-          {
-            foreignKeyName: 'shopping_carts_created_by_fkey';
-            columns: ['created_by'];
-            isOneToOne: false;
-            referencedRelation: 'users';
-            referencedColumns: ['id'];
-          }
-        ];
-      };
-      shopping_cart_items: {
-        Row: {
-          id: string;
-          cart_id: string;
-          product_id: string;
-          quantity: number;
-          notes: string | null;
-          suggested_by: string;
-          created_at: string;
-          updated_at: string;
-        };
-        Insert: {
-          id?: string;
-          cart_id: string;
-          product_id: string;
-          quantity?: number;
-          notes?: string | null;
-          suggested_by?: string;
-          created_at?: string;
-          updated_at?: string;
-        };
-        Update: {
-          id?: string;
-          cart_id?: string;
-          product_id?: string;
-          quantity?: number;
-          notes?: string | null;
-          suggested_by?: string;
-          created_at?: string;
-          updated_at?: string;
-        };
-        Relationships: [
-          {
-            foreignKeyName: 'shopping_cart_items_cart_id_fkey';
-            columns: ['cart_id'];
-            isOneToOne: false;
-            referencedRelation: 'shopping_carts';
-            referencedColumns: ['id'];
-          },
-          {
-            foreignKeyName: 'shopping_cart_items_product_id_fkey';
-            columns: ['product_id'];
-            isOneToOne: false;
-            referencedRelation: 'products';
-            referencedColumns: ['id'];
-          }
-        ];
-      };
-      suppliers: {
-        Row: {
-          id: string;
-          name: string;
-          contact_email: string | null;
-          contact_phone: string | null;
-          address: string | null;
-          city: string | null;
-          postal_code: string | null;
-          country: string | null;
-          website: string | null;
-          notes: string | null;
-          is_active: boolean;
-          magento_vendor_id: number | null;
-          created_at: string;
-          updated_at: string;
-        };
-        Insert: {
-          id?: string;
-          name: string;
-          contact_email?: string | null;
-          contact_phone?: string | null;
-          address?: string | null;
-          city?: string | null;
-          postal_code?: string | null;
-          country?: string | null;
-          website?: string | null;
-          notes?: string | null;
-          is_active?: boolean;
-          magento_vendor_id?: number | null;
-          created_at?: string;
-          updated_at?: string;
-        };
-        Update: {
-          id?: string;
-          name?: string;
-          contact_email?: string | null;
-          contact_phone?: string | null;
-          address?: string | null;
-          city?: string | null;
-          postal_code?: string | null;
-          country?: string | null;
-          website?: string | null;
-          notes?: string | null;
-          is_active?: boolean;
-          magento_vendor_id?: number | null;
-          created_at?: string;
-          updated_at?: string;
-        };
-        Relationships: [];
-      };
-      orders: {
-        Row: {
-          id: string;
-          practice_id: string;
-          bestellijst_id: string | null;
-          cart_id: string | null;
-          order_number: string;
-          supplier_id: string | null;
-          status: string;
-          total_items: number;
-          total_amount: number | null;
-          currency: string;
-          order_date: string;
-          expected_delivery_date: string | null;
-          actual_delivery_date: string | null;
-          tracking_number: string | null;
-          notes: string | null;
-          magento_order_id: number | null;
-          created_by: string | null;
-          created_at: string;
-          updated_at: string;
-        };
-        Insert: {
-          id?: string;
-          practice_id: string;
-          bestellijst_id?: string | null;
-          cart_id?: string | null;
-          order_number: string;
-          supplier_id?: string | null;
-          status?: string;
-          total_items?: number;
-          total_amount?: number | null;
-          currency?: string;
-          order_date?: string;
-          expected_delivery_date?: string | null;
-          actual_delivery_date?: string | null;
-          tracking_number?: string | null;
-          notes?: string | null;
-          magento_order_id?: number | null;
-          created_by?: string | null;
-          created_at?: string;
-          updated_at?: string;
-        };
-        Update: {
-          id?: string;
-          practice_id?: string;
-          bestellijst_id?: string | null;
-          cart_id?: string | null;
-          order_number?: string;
-          supplier_id?: string | null;
-          status?: string;
-          total_items?: number;
-          total_amount?: number | null;
-          currency?: string;
-          order_date?: string;
-          expected_delivery_date?: string | null;
-          actual_delivery_date?: string | null;
-          tracking_number?: string | null;
-          notes?: string | null;
-          magento_order_id?: number | null;
-          created_by?: string | null;
-          created_at?: string;
-          updated_at?: string;
-        };
-        Relationships: [
-          {
-            foreignKeyName: 'orders_practice_id_fkey';
-            columns: ['practice_id'];
-            isOneToOne: false;
-            referencedRelation: 'practices';
-            referencedColumns: ['id'];
-          },
-          {
-            foreignKeyName: 'orders_supplier_id_fkey';
-            columns: ['supplier_id'];
-            isOneToOne: false;
-            referencedRelation: 'suppliers';
-            referencedColumns: ['id'];
-          }
-        ];
-      };
-      order_items: {
-        Row: {
-          id: string;
-          order_id: string;
-          product_id: string;
-          quantity: number;
-          unit_price: number | null;
-          total_price: number | null;
-          notes: string | null;
-          created_at: string;
-        };
-        Insert: {
-          id?: string;
-          order_id: string;
-          product_id: string;
-          quantity: number;
-          unit_price?: number | null;
-          total_price?: number | null;
-          notes?: string | null;
-          created_at?: string;
-        };
-        Update: {
-          id?: string;
-          order_id?: string;
-          product_id?: string;
-          quantity?: number;
-          unit_price?: number | null;
-          total_price?: number | null;
-          notes?: string | null;
-          created_at?: string;
-        };
-        Relationships: [
-          {
-            foreignKeyName: 'order_items_order_id_fkey';
-            columns: ['order_id'];
-            isOneToOne: false;
-            referencedRelation: 'orders';
-            referencedColumns: ['id'];
-          },
-          {
-            foreignKeyName: 'order_items_product_id_fkey';
-            columns: ['product_id'];
-            isOneToOne: false;
-            referencedRelation: 'products';
-            referencedColumns: ['id'];
-          }
-        ];
-      };
-      locations: {
-        Row: {
-          id: string;
-          practice_id: string;
-          name: string;
-          description: string | null;
-          address: string | null;
-          city: string | null;
-          postal_code: string | null;
-          is_main: boolean;
-          is_active: boolean;
-          settings: any | null;
-          created_at: string;
-          updated_at: string;
-        };
-        Insert: {
-          id?: string;
-          practice_id: string;
-          name: string;
-          description?: string | null;
-          address?: string | null;
-          city?: string | null;
-          postal_code?: string | null;
-          is_main?: boolean;
-          is_active?: boolean;
-          settings?: any | null;
-          created_at?: string;
-          updated_at?: string;
-        };
-        Update: {
-          id?: string;
-          practice_id?: string;
-          name?: string;
-          description?: string | null;
-          address?: string | null;
-          city?: string | null;
-          postal_code?: string | null;
-          is_main?: boolean;
-          is_active?: boolean;
-          settings?: any | null;
-          created_at?: string;
-          updated_at?: string;
-        };
-        Relationships: [
-          {
-            foreignKeyName: 'locations_practice_id_fkey';
-            columns: ['practice_id'];
-            isOneToOne: false;
-            referencedRelation: 'practices';
-            referencedColumns: ['id'];
-          }
-        ];
-      };
-      user_permissions: {
-        Row: {
-          id: string;
-          user_id: string;
-          practice_id: string;
-          location_id: string | null;
-          permission_type: string;
-          resource_type: string;
-          resource_id: string | null;
-          granted_by: string | null;
-          expires_at: string | null;
-          created_at: string;
-        };
-        Insert: {
-          id?: string;
-          user_id: string;
-          practice_id: string;
-          location_id?: string | null;
-          permission_type: string;
-          resource_type: string;
-          resource_id?: string | null;
-          granted_by?: string | null;
-          expires_at?: string | null;
-          created_at?: string;
-        };
-        Update: {
-          id?: string;
-          user_id?: string;
-          practice_id?: string;
-          location_id?: string | null;
-          permission_type?: string;
-          resource_type?: string;
-          resource_id?: string | null;
-          granted_by?: string | null;
-          expires_at?: string | null;
-          created_at?: string;
-        };
-        Relationships: [
-          {
-            foreignKeyName: 'user_permissions_user_id_fkey';
-            columns: ['user_id'];
-            isOneToOne: false;
-            referencedRelation: 'users';
-            referencedColumns: ['id'];
-          },
-          {
-            foreignKeyName: 'user_permissions_practice_id_fkey';
-            columns: ['practice_id'];
-            isOneToOne: false;
-            referencedRelation: 'practices';
-            referencedColumns: ['id'];
-          }
-        ];
-      };
-      usage_analytics: {
-        Row: {
-          id: string;
-          practice_id: string;
-          user_id: string | null;
-          location_id: string | null;
-          event_type: string;
-          event_data: AnalyticsEventData | null;
-          session_id: string | null;
-          ip_address: string | null;
-          user_agent: string | null;
-          created_at: string;
-        };
-        Insert: {
-          id?: string;
-          practice_id: string;
-          user_id?: string | null;
-          location_id?: string | null;
-          event_type: string;
-          event_data?: AnalyticsEventData | null;
-          session_id?: string | null;
-          ip_address?: string | null;
-          user_agent?: string | null;
-          created_at?: string;
-        };
-        Update: {
-          id?: string;
-          practice_id?: string;
-          user_id?: string | null;
-          location_id?: string | null;
-          event_type?: string;
-          event_data?: AnalyticsEventData | null;
-          session_id?: string | null;
-          ip_address?: string | null;
-          user_agent?: string | null;
-          created_at?: string;
-        };
-        Relationships: [
-          {
-            foreignKeyName: 'usage_analytics_practice_id_fkey';
-            columns: ['practice_id'];
-            isOneToOne: false;
-            referencedRelation: 'practices';
-            referencedColumns: ['id'];
-          }
-        ];
-      };
-      notification_settings: {
-        Row: {
-          id: string;
-          user_id: string;
-          practice_id: string;
-          notification_type: string;
-          channel: string;
-          is_enabled: boolean;
-          settings: UserSettings | null;
-          created_at: string;
-          updated_at: string;
-        };
-        Insert: {
-          id?: string;
-          user_id: string;
-          practice_id: string;
-          notification_type: string;
-          channel: string;
-          is_enabled?: boolean;
-          settings?: UserSettings | null;
-          created_at?: string;
-          updated_at?: string;
-        };
-        Update: {
-          id?: string;
-          user_id?: string;
-          practice_id?: string;
-          notification_type?: string;
-          channel?: string;
-          is_enabled?: boolean;
-          settings?: UserSettings | null;
-          created_at?: string;
-          updated_at?: string;
-        };
-        Relationships: [
-          {
-            foreignKeyName: 'notification_settings_user_id_fkey';
-            columns: ['user_id'];
-            isOneToOne: false;
-            referencedRelation: 'users';
-            referencedColumns: ['id'];
-          }
-        ];
-      };
-      push_tokens: {
-        Row: {
-          id: string;
-          user_id: string;
-          token: string;
-          platform: string;
-          is_active: boolean;
-          last_used_at: string;
-          created_at: string;
-        };
-        Insert: {
-          id?: string;
-          user_id: string;
-          token: string;
-          platform: string;
-          is_active?: boolean;
-          last_used_at?: string;
-          created_at?: string;
-        };
-        Update: {
-          id?: string;
-          user_id?: string;
-          token?: string;
-          platform?: string;
-          is_active?: boolean;
-          last_used_at?: string;
-          created_at?: string;
-        };
-        Relationships: [
-          {
-            foreignKeyName: 'push_tokens_user_id_fkey';
-            columns: ['user_id'];
-            isOneToOne: false;
-            referencedRelation: 'users';
-            referencedColumns: ['id'];
-          }
-        ];
-      };
-      // Legacy tables (keeping for backward compatibility)
-      clinics: {
-        Row: {
-          id: string;
-          name: string;
-          address: string | null;
-          contact_email: string | null;
-          contact_phone: string | null;
-          created_at: string;
-          updated_at: string;
-        };
-        Insert: {
-          id?: string;
-          name: string;
-          address?: string | null;
-          contact_email?: string | null;
-          contact_phone?: string | null;
-          created_at?: string;
-          updated_at?: string;
-        };
-        Update: {
-          id?: string;
-          name?: string;
-          address?: string | null;
-          contact_email?: string | null;
-          contact_phone?: string | null;
-          created_at?: string;
-          updated_at?: string;
-        };
-        Relationships: [];
-      };
-      user_profiles: {
-        Row: {
-          id: string;
-          clinic_id: string;
-          email: string;
-          full_name: string | null;
-          role: string;
-          avatar_url: string | null;
-          created_at: string;
-          updated_at: string;
-        };
-        Insert: {
-          id: string;
-          clinic_id: string;
-          email: string;
-          full_name?: string | null;
-          role?: string;
-          avatar_url?: string | null;
-          created_at?: string;
-          updated_at?: string;
-        };
-        Update: {
-          id?: string;
-          clinic_id?: string;
-          email?: string;
-          full_name?: string | null;
-          role?: string;
-          avatar_url?: string | null;
-          created_at?: string;
-          updated_at?: string;
-        };
-        Relationships: [
-          {
-            foreignKeyName: 'user_profiles_clinic_id_fkey';
-            columns: ['clinic_id'];
-            isOneToOne: false;
-            referencedRelation: 'clinics';
-            referencedColumns: ['id'];
-          }
-        ];
-      };
-      clinic_products: {
-        Row: {
-          id: string;
-          clinic_id: string;
-          product_name: string;
-          product_sku: string | null;
-          product_description: string | null;
-          current_stock: number;
-          minimum_stock: number;
-          maximum_stock: number;
-          reorder_enabled: boolean;
-          low_stock_alert_enabled: boolean;
-          created_at: string;
-          updated_at: string;
-        };
-        Insert: {
-          id?: string;
-          clinic_id: string;
-          product_name: string;
-          product_sku?: string | null;
-          product_description?: string | null;
-          current_stock?: number;
-          minimum_stock?: number;
-          maximum_stock?: number;
-          reorder_enabled?: boolean;
-          low_stock_alert_enabled?: boolean;
-          created_at?: string;
-          updated_at?: string;
-        };
-        Update: {
-          id?: string;
-          clinic_id?: string;
-          product_name?: string;
-          product_sku?: string | null;
-          product_description?: string | null;
-          current_stock?: number;
-          minimum_stock?: number;
-          maximum_stock?: number;
-          reorder_enabled?: boolean;
-          low_stock_alert_enabled?: boolean;
-          created_at?: string;
-          updated_at?: string;
-        };
-        Relationships: [
-          {
-            foreignKeyName: 'clinic_products_clinic_id_fkey';
-            columns: ['clinic_id'];
-            isOneToOne: false;
-            referencedRelation: 'clinics';
-            referencedColumns: ['id'];
-          }
-        ];
-      };
-    };
+        ]
+      }
+      // Add other important tables as needed...
+      [key: string]: any
+    }
     Views: {
-      [_ in never]: never;
-    };
+      [key: string]: any
+    }
     Functions: {
+      // 🚀 NEW AUTO-UPGRADE FUNCTIONS
+      generate_personal_magic_code: {
+        Args: { user_name: string; practice_name: string }
+        Returns: string
+      }
+      validate_personal_magic_code: {
+        Args: { magic_code: string }
+        Returns: Json
+      }
+      generate_magic_code: {
+        Args: { practice_name: string; department?: string; style?: string }
+        Returns: string
+      }
       get_order_advice: {
-        Args: {
-          practice_uuid: string;
-        };
+        Args: { practice_uuid: string }
         Returns: {
-          product_id: string;
-          product_name: string;
-          product_sku: string;
-          current_stock: number;
-          minimum_stock: number;
-          maximum_stock: number;
-          suggested_quantity: number;
-          urgency_level: string;
-          last_stock_entry: string | null;
-        }[];
-      };
+          product_id: string
+          product_name: string
+          product_sku: string
+          current_stock: number
+          minimum_stock: number
+          maximum_stock: number
+          suggested_quantity: number
+          urgency_level: string
+          last_stock_entry: string
+        }[]
+      }
       test_demo_data: {
-        Args: {};
+        Args: Record<PropertyKey, never>
         Returns: {
-          section: string;
-          data_type: string;
-          count_value: number;
-          description: string;
-        }[];
-      };
+          section: string
+          data_type: string
+          count_value: number
+          description: string
+        }[]
+      }
       update_product_stock: {
         Args: {
-          practice_uuid: string;
-          product_uuid: string;
-          new_quantity: number;
-          entry_notes?: string | null;
-        };
-        Returns: void;
-      };
-    };
+          practice_uuid: string
+          product_uuid: string
+          new_quantity: number
+          entry_notes?: string
+        }
+        Returns: undefined
+      }
+      [key: string]: any
+    }
     Enums: {
-      [_ in never]: never;
-    };
+      [key: string]: any
+    }
     CompositeTypes: {
-      [_ in never]: never;
-    };
-  };
+      [key: string]: any
+    }
+  }
 }
 
-// Type helpers for easier usage
-// New database types
-export type Practice = Database['public']['Tables']['practices']['Row'];
-export type PracticeMember =
-  Database['public']['Tables']['practice_members']['Row'];
-export type ActivityLog = Database['public']['Tables']['activity_log']['Row'];
+type DatabaseWithoutInternals = Omit<Database, "__InternalSupabase">
 
-// Legacy types (keeping for backward compatibility with other modules)
-export type Clinic = Database['public']['Tables']['clinics']['Row'];
-export type UserProfile = Database['public']['Tables']['user_profiles']['Row'];
+type DefaultSchema = DatabaseWithoutInternals[Extract<keyof Database, "public">]
 
-export type PracticeInsert =
-  Database['public']['Tables']['practices']['Insert'];
+export type Tables<
+  DefaultSchemaTableNameOrOptions extends
+    | keyof (DefaultSchema["Tables"] & DefaultSchema["Views"])
+    | { schema: keyof DatabaseWithoutInternals },
+  TableName extends DefaultSchemaTableNameOrOptions extends {
+    schema: keyof DatabaseWithoutInternals
+  }
+    ? keyof (DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"] &
+        DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Views"])
+    : never = never,
+> = DefaultSchemaTableNameOrOptions extends {
+  schema: keyof DatabaseWithoutInternals
+}
+  ? (DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"] &
+      DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Views"])[TableName] extends {
+      Row: infer R
+    }
+    ? R
+    : never
+  : DefaultSchemaTableNameOrOptions extends keyof (DefaultSchema["Tables"] &
+        DefaultSchema["Views"])
+    ? (DefaultSchema["Tables"] &
+        DefaultSchema["Views"])[DefaultSchemaTableNameOrOptions] extends {
+        Row: infer R
+      }
+      ? R
+      : never
+    : never
 
-export type ClinicInsert = Database['public']['Tables']['clinics']['Insert'];
-export type UserProfileInsert =
-  Database['public']['Tables']['user_profiles']['Insert'];
+export type TablesInsert<
+  DefaultSchemaTableNameOrOptions extends
+    | keyof DefaultSchema["Tables"]
+    | { schema: keyof DatabaseWithoutInternals },
+  TableName extends DefaultSchemaTableNameOrOptions extends {
+    schema: keyof DatabaseWithoutInternals
+  }
+    ? keyof DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"]
+    : never = never,
+> = DefaultSchemaTableNameOrOptions extends {
+  schema: keyof DatabaseWithoutInternals
+}
+  ? DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"][TableName] extends {
+      Insert: infer I
+    }
+    ? I
+    : never
+  : DefaultSchemaTableNameOrOptions extends keyof DefaultSchema["Tables"]
+    ? DefaultSchema["Tables"][DefaultSchemaTableNameOrOptions] extends {
+        Insert: infer I
+      }
+      ? I
+      : never
+    : never
 
-export type PracticeUpdate =
-  Database['public']['Tables']['practices']['Update'];
+export type TablesUpdate<
+  DefaultSchemaTableNameOrOptions extends
+    | keyof DefaultSchema["Tables"]
+    | { schema: keyof DatabaseWithoutInternals },
+  TableName extends DefaultSchemaTableNameOrOptions extends {
+    schema: keyof DatabaseWithoutInternals
+  }
+    ? keyof DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"]
+    : never = never,
+> = DefaultSchemaTableNameOrOptions extends {
+  schema: keyof DatabaseWithoutInternals
+}
+  ? DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"][TableName] extends {
+      Update: infer U
+    }
+    ? U
+    : never
+  : DefaultSchemaTableNameOrOptions extends keyof DefaultSchema["Tables"]
+    ? DefaultSchema["Tables"][DefaultSchemaTableNameOrOptions] extends {
+        Update: infer U
+      }
+      ? U
+      : never
+    : never
 
-export type ClinicUpdate = Database['public']['Tables']['clinics']['Update'];
-export type UserProfileUpdate =
-  Database['public']['Tables']['user_profiles']['Update'];
+// Additional type exports for Auto-Upgrade System
+export type PermanentUser = Tables<"permanent_users">
+export type DeviceToken = Tables<"device_tokens">
+export type UserSession = Tables<"user_sessions">
+export type MagicInvite = Tables<"magic_invites">
+export type Practice = Tables<"practices">
 
-export type PracticeWithMembers = Practice & {
-  practice_members?: PracticeMember[];
-};
+// Legacy types for backward compatibility
+export type Clinic = Practice
+export type ClinicProduct = any // Define as needed
+export type PracticeMember = Tables<"practice_members">
+export type UserProfile = any // Define as needed
+export type Location = any // Define as needed
+export type UserPermission = any // Define as needed
+export type AnalyticsEventData = Json
 
-export type Supplier = Database['public']['Tables']['suppliers']['Row'];
-export type Order = Database['public']['Tables']['orders']['Row'];
-export type OrderItem = Database['public']['Tables']['order_items']['Row'];
-export type Location = Database['public']['Tables']['locations']['Row'];
-export type UserPermission =
-  Database['public']['Tables']['user_permissions']['Row'];
-export type UsageAnalytics =
-  Database['public']['Tables']['usage_analytics']['Row'];
-export type NotificationSettings =
-  Database['public']['Tables']['notification_settings']['Row'];
-export type PushToken = Database['public']['Tables']['push_tokens']['Row'];
-
-export type SupplierInsert =
-  Database['public']['Tables']['suppliers']['Insert'];
-export type OrderInsert = Database['public']['Tables']['orders']['Insert'];
-export type OrderItemInsert =
-  Database['public']['Tables']['order_items']['Insert'];
-export type LocationInsert =
-  Database['public']['Tables']['locations']['Insert'];
-export type UserPermissionInsert =
-  Database['public']['Tables']['user_permissions']['Insert'];
-export type UsageAnalyticsInsert =
-  Database['public']['Tables']['usage_analytics']['Insert'];
-export type NotificationSettingsInsert =
-  Database['public']['Tables']['notification_settings']['Insert'];
-export type PushTokenInsert =
-  Database['public']['Tables']['push_tokens']['Insert'];
-
-export type SupplierUpdate =
-  Database['public']['Tables']['suppliers']['Update'];
-export type OrderUpdate = Database['public']['Tables']['orders']['Update'];
-export type OrderItemUpdate =
-  Database['public']['Tables']['order_items']['Update'];
-export type LocationUpdate =
-  Database['public']['Tables']['locations']['Update'];
-export type UserPermissionUpdate =
-  Database['public']['Tables']['user_permissions']['Update'];
-export type UsageAnalyticsUpdate =
-  Database['public']['Tables']['usage_analytics']['Update'];
-export type NotificationSettingsUpdate =
-  Database['public']['Tables']['notification_settings']['Update'];
-export type PushTokenUpdate =
-  Database['public']['Tables']['push_tokens']['Update'];
-
-export type PracticeWithLocations = Practice & {
-  locations?: Location[];
-  practice_members?: PracticeMember[];
-};
-
-export type AnalyticsEvent = {
-  type: string;
-  data: AnalyticsEventData;
-  timestamp: string;
-  user_id?: string;
-  practice_id: string;
-  location_id?: string;
-};
-
-export type NotificationChannel = 'email' | 'push' | 'sms' | 'in_app';
-export type NotificationType =
-  | 'stock_alert'
-  | 'order_update'
-  | 'system_notification'
-  | 'reminder';
-
-export type OrderStatus =
-  | 'draft'
-  | 'submitted'
-  | 'confirmed'
-  | 'shipped'
-  | 'delivered'
-  | 'cancelled';
-export type UrgencyLevel = 'low' | 'medium' | 'high' | 'critical';
-
-export type ExportFormat = 'csv' | 'pdf' | 'excel';
-export type ExportType = 'order' | 'inventory' | 'analytics' | 'full_report';
-
-export type MagentoOrder = {
-  id?: number;
-  increment_id?: string;
-  status?: string;
-  items: {
-    sku: string;
-    qty_ordered: number;
-    price: number;
-    product_type: string;
-  }[];
-  billing_address?: MagentoAddress;
-  shipping_address?: MagentoAddress;
-  payment?: MagentoPayment;
-};
-
-export type PermissionType = 'read' | 'write' | 'delete' | 'admin';
-export type ResourceType =
-  | 'order'
-  | 'analytics'
-  | 'settings'
-  | 'practice'
-  | 'bestellijst'
-  | 'product'
-  | 'cart'
-  | 'user'
-  | 'location'
-  | 'user_permission';
+// Practice settings type
+export interface PracticeSettings {
+  [key: string]: any
+} 

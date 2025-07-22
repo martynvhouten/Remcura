@@ -539,24 +539,8 @@
   // Handle item click - open submenu and/or navigate
   const handleItemClick = (item: NavigationItem) => {
     if (item.submenu && item.submenu.length > 0) {
-      const wasExpanded = isSubmenuExpanded(item.routeName);
-      const isCurrentPage = router.currentRoute.value.name === item.routeName;
-
-      if (!wasExpanded) {
-        // Submenu is closed: open it and navigate to main page
-        toggleSubmenu(item.routeName);
-        if (!isCurrentPage) {
-          router.push(item.to);
-        }
-      } else {
-        // Submenu is open: if we're on main page, just close submenu
-        // If we're on child page, navigate to main page
-        if (isCurrentPage) {
-          toggleSubmenu(item.routeName);
-        } else {
-          router.push(item.to);
-        }
-      }
+      // For items with submenu, only toggle the submenu - don't navigate to the main page
+      toggleSubmenu(item.routeName);
     } else {
       // No submenu, just navigate normally
       router.push(item.to);

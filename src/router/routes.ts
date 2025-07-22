@@ -32,6 +32,34 @@ const routes: RouteRecordRaw[] = [
     redirect: '/auth/login',
   },
 
+  // 🎭 REVOLUTIONARY MAGIC INVITE ROUTES - No passwords, instant access!
+  {
+    path: '/join',
+    component: () =>
+      import(/* webpackChunkName: "auth-layout" */ 'layouts/AuthLayout.vue'),
+    children: [
+      {
+        path: '',
+        name: 'magicJoin',
+        component: () =>
+          import(
+            /* webpackChunkName: "magic-join" */ 'pages/auth/MagicJoinPage.vue'
+          ),
+        meta: { requiresAuth: false },
+      },
+      {
+        path: ':code',
+        name: 'magicJoinWithCode',
+        component: () =>
+          import(
+            /* webpackChunkName: "magic-join" */ 'pages/auth/MagicJoinPage.vue'
+          ),
+        meta: { requiresAuth: false },
+        props: true,
+      },
+    ],
+  },
+
   // Main Layout - for authenticated users
   {
     path: '/',

@@ -24,7 +24,7 @@
                 </q-avatar>
                 <div class="brand-text">
                   <h1 class="brand-title">{{ $t('brand.name') }}</h1>
-                  <p class="brand-subtitle">{{ $t('auth.pleaseLogin') }}</p>
+                  <p class="brand-subtitle">{{ subtitleText }}</p>
                 </div>
               </div>
             </div>
@@ -118,8 +118,30 @@
   </q-layout>
 </template>
 
-<script setup lang="ts">
-  // No additional setup needed for this layout
+<script lang="ts">
+import { defineComponent, computed } from 'vue';
+import { useRoute } from 'vue-router';
+import { useI18n } from 'vue-i18n';
+
+export default defineComponent({
+  name: 'AuthLayout',
+  setup() {
+    const route = useRoute();
+    const { t } = useI18n();
+
+    // Dynamic subtitle based on current route
+    const subtitleText = computed(() => {
+      if (route.path.startsWith('/join')) {
+        return t('magicJoin.subtitle');
+      }
+      return t('auth.pleaseLogin');
+    });
+
+    return {
+      subtitleText
+    };
+  }
+});
 </script>
 
 <style lang="scss" scoped>
