@@ -178,6 +178,46 @@ export const useInventoryStore = defineStore('inventory', () => {
     }
   };
 
+  // New methods for stock transfer dialog
+  const getProductStockAtLocation = (productId: string, locationId: string): number => {
+    // This would typically query the database or local state
+    // For demo purposes, return a placeholder value
+    const stockLevel = stockLevels.value.find(sl => 
+      sl.product_id === productId && sl.location_id === locationId
+    );
+    return stockLevel?.current_quantity || 0;
+  };
+
+  const getProductBatches = (productId: string, locationId: string) => {
+    // This would query product_batches table
+    // For demo purposes, return empty array
+    return [];
+  };
+
+  const executeStockTransfer = async (transferData: any) => {
+    const authStore = useAuthStore();
+    const practiceId = authStore.currentPractice?.id;
+    
+    if (!practiceId) {
+      throw new Error('No practice selected');
+    }
+
+    try {
+      // Use the existing transferStock method
+      await transferStock(
+        practiceId,
+        transferData.product_id,
+        transferData.from_location_id,
+        transferData.to_location_id,
+        transferData.quantity,
+        transferData.notes
+      );
+    } catch (error) {
+      console.error('Error executing stock transfer:', error);
+      throw error;
+    }
+  };
+
   return {
     // State
     stockMovements,
@@ -195,5 +235,8 @@ export const useInventoryStore = defineStore('inventory', () => {
     fetchStockMovements,
     transferStock,
     refreshData,
+    getProductStockAtLocation,
+    getProductBatches,
+    executeStockTransfer,
   };
 });

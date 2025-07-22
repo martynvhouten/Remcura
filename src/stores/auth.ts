@@ -144,12 +144,9 @@ export const useAuthStore = defineStore('auth', () => {
     try {
       authLogger.info('Starting login process', { email });
 
-      // Demo mode - bypass Supabase for demo account
+      // Demo mode - use real Supabase auth for demo account but log it specially
       if (email === 'demo@medstock-pro.com' && password === 'demo123') {
-        authLogger.info('Demo login detected');
-        await setDemoAuthData();
-        monitoringService.trackEvent('login_success', { method: 'demo' });
-        return { success: true };
+        authLogger.info('Demo login detected - using real Supabase auth for RLS compatibility');
       }
 
       const { data, error } = await supabase.auth.signInWithPassword({

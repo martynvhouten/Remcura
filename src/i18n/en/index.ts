@@ -375,6 +375,13 @@ export default {
     transferStock: 'Transfer stock',
     viewMovements: 'View movements',
     exportData: 'Export data',
+    scanBarcode: 'Scan Barcode',
+    barcodeFound: 'Product found: {product}',
+    barcodeNotFound: 'No product found for barcode: {barcode}',
+    searchProduct: 'Search product',
+    noProductsFound: 'No products found',
+    barcodeScanned: 'Barcode scanned: {barcode}',
+    changeProduct: 'Change product',
     inStock: 'In stock',
     lowStock: 'Low stock',
     outOfStock: 'Out of stock',
@@ -466,6 +473,23 @@ export default {
     batchTrackingWarning: 'This product requires batch tracking',
     cannotAdjustBatchTrackedProduct: 'Cannot manually adjust batch-tracked product',
     redirectingToBatchManagement: 'Redirecting to batch management',
+    
+    // Quick Adjustment Dialog
+    adjustmentType: 'Adjustment type',
+    increase: 'Increase',
+    decrease: 'Decrease',
+    setTo: 'Set to',
+    quantityToAdd: 'Quantity to add',
+    quantityToRemove: 'Quantity to remove',
+    newQuantity: 'New quantity',
+    preview: 'Preview',
+    change: 'Change',
+    reason: 'Reason',
+    notes: 'Notes',
+    notesPlaceholder: 'Optional notes for this adjustment...',
+    stockUpdated: 'Stock updated',
+    errorUpdatingStock: 'Error updating stock',
+    dataRefreshed: 'Data refreshed',
 
     movement: {
       receipt: 'Receipt',
@@ -476,7 +500,7 @@ export default {
       waste: 'Waste',
     },
 
-    reason: {
+    reasons: {
       normal_usage: 'Normal usage',
       expired: 'Expired',
       damaged: 'Damaged',
@@ -487,6 +511,30 @@ export default {
       adjustment: 'Adjustment',
       count_correction: 'Count correction',
     },
+
+    // Stock Transfer Dialog
+    stockTransfer: 'Stock Transfer',
+    quantityToTransfer: 'Quantity to transfer',
+    transferReason: 'Transfer reason',
+    executeTransfer: 'Execute transfer',
+    transferPreview: 'Transfer preview',
+    remaining: 'remaining',
+    newTotal: 'new total',
+    selectBatch: 'Select batch',
+    expiryDate: 'Expiry date',
+    available: 'available',
+    expiresSoon: 'Expires soon',
+    expiresThisMonth: 'Expires this month',
+    fresh: 'Fresh',
+    maxAvailable: 'Max available',
+    
+    // Transfer reasons
+    locationRebalance: 'Location rebalancing',
+    stockReplenishment: 'Stock replenishment',
+    emergencyTransfer: 'Emergency transfer',
+    expiryManagement: 'Expiry management',
+    maintenanceRelocation: 'Maintenance relocation',
+
   },
 
   // Counting System

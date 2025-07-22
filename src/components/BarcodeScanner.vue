@@ -1,8 +1,11 @@
 <template>
-  <q-dialog v-model="isOpen" position="bottom" full-width>
-    <q-card class="scanner-card">
+  <q-dialog v-model="isOpen" persistent>
+    <q-card class="scanner-card" style="min-width: 500px; max-width: 600px;">
       <q-card-section class="row items-center q-pb-none">
-        <div class="text-h6">{{ $t('bestellijsten.scanner.title') }}</div>
+        <div class="text-h6">
+          <q-icon name="qr_code_scanner" class="q-mr-sm" />
+          {{ $t('inventory.scanBarcode') }}
+        </div>
         <q-space />
         <q-btn-group>
           <q-btn
@@ -469,8 +472,9 @@
 
 <style scoped>
   .scanner-card {
-    max-width: 500px;
     margin: 0 auto;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    border-radius: 12px;
   }
 
   .camera-section {

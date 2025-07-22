@@ -17,15 +17,15 @@ export const useClinicStore = defineStore('clinic', () => {
       id: location.id,
       practice_id: location.practice_id,
       name: location.name,
-      code: location.name.toUpperCase().replace(/\s+/g, '_'),
+      code: location.code || location.name.toUpperCase().replace(/\s+/g, '_'),
       description: location.description || '',
-      location_type: 'storage' as const, // Default type since the Supabase schema doesn't have this field
+      location_type: location.location_type || 'storage' as const,
       address: location.address || '',
-      is_active: location.is_active,
-      is_main_location: location.is_main,
-      requires_counting: true,
-      allows_negative_stock: false,
-      restricted_access: false,
+      is_active: location.is_active !== false, // Default to true if not specified
+      is_main_location: location.is_main_location || false,
+      requires_counting: location.requires_counting !== false, // Default to true
+      allows_negative_stock: location.allows_negative_stock || false,
+      restricted_access: location.restricted_access || false,
       created_at: location.created_at,
       updated_at: location.updated_at,
     }));
@@ -63,11 +63,11 @@ export const useClinicStore = defineStore('clinic', () => {
     locationsLoading.value = true;
     try {
       const { data, error } = await supabase
-        .from('locations')
+        .from('practice_locations')
         .select('*')
         .eq('practice_id', practiceId)
         .eq('is_active', true)
-        .order('is_main', { ascending: false })
+        .order('is_main_location', { ascending: false })
         .order('name');
 
       if (error) throw error;

@@ -153,6 +153,17 @@
             />
           </div>
 
+          <!-- Barcode Scanner -->
+          <div class="col-12 col-md-2">
+            <q-btn
+              :label="$t('inventory.scanBarcode')"
+              icon="qr_code_scanner"
+              color="primary"
+              flat
+              @click="showBarcodeScanner = true"
+            />
+          </div>
+
           <!-- Clear Filters -->
           <div class="col-12 col-md-2">
             <q-btn
@@ -180,9 +191,9 @@
         <template v-slot:body-cell-product="props">
           <q-td :props="props">
             <div class="product-info">
-              <div class="product-name">{{ props.row.product_name }}</div>
+              <div class="product-name">{{ props.row.products?.name || 'Unknown Product' }}</div>
               <div class="product-sku text-caption text-grey-6">
-                {{ props.row.product_sku }}
+                {{ props.row.products?.sku || 'N/A' }} • {{ props.row.products?.brand || 'N/A' }}
               </div>
             </div>
           </q-td>
@@ -191,12 +202,12 @@
         <template v-slot:body-cell-stock_status="props">
           <q-td :props="props">
             <q-chip
-              :color="getStockStatusColor(props.row.stock_status)"
+              :color="getStockStatusColor(props.row)"
               text-color="white"
               size="sm"
-              :icon="getStockStatusIcon(props.row.stock_status)"
+              :icon="getStockStatusIcon(props.row)"
             >
-              {{ $t(`inventory.${props.row.stock_status}`) }}
+              {{ getStockStatusText(props.row) }}
             </q-chip>
           </q-td>
         </template>
@@ -208,7 +219,7 @@
                 props.row.current_quantity
               }}</span>
               <span class="stock-unit text-caption text-grey-6">{{
-                props.row.unit || 'st'
+                props.row.products?.unit || 'st'
               }}</span>
             </div>
           </q-td>
@@ -245,6 +256,14 @@
                 :title="$t('inventory.adjustStock')"
               />
               <q-btn
+                icon="swap_horiz"
+                size="sm"
+                flat
+                color="blue-6"
+                @click="transferStock(props.row)"
+                :title="$t('inventory.stockTransfer')"
+              />
+              <q-btn
                 icon="history"
                 size="sm"
                 flat
@@ -257,6 +276,28 @@
         </template>
       </q-table>
     </BaseCard>
+
+    <!-- Quick Stock Adjustment Dialog -->
+    <QuickAdjustmentDialog
+      v-model="showAdjustmentDialog"
+      :selected-product="selectedProductForAdjustment"
+      :selected-location="selectedLocationObject"
+      @stock-updated="handleStockUpdated"
+    />
+
+    <!-- Barcode Scanner -->
+    <BarcodeScanner
+      v-model="showBarcodeScanner"
+      @scan="handleBarcodeScan"
+    />
+
+    <!-- Stock Transfer Dialog -->
+    <StockTransferDialog
+      v-model="showTransferDialog"
+      :selected-product="selectedProductForTransfer"
+      :current-location="selectedLocationObject"
+      @transfer-completed="handleTransferCompleted"
+    />
   </PageLayout>
 </template>
 
@@ -270,6 +311,9 @@
   import PageLayout from 'src/components/PageLayout.vue';
   import PageTitle from 'src/components/PageTitle.vue';
   import BaseCard from 'src/components/base/BaseCard.vue';
+  import BarcodeScanner from 'src/components/BarcodeScanner.vue';
+  import QuickAdjustmentDialog from 'src/components/inventory/QuickAdjustmentDialog.vue';
+  import StockTransferDialog from 'src/components/inventory/StockTransferDialog.vue';
 
   // Composables
   const { t } = useI18n();
@@ -282,11 +326,20 @@
   const stockLevels = ref<any[]>([]); // Properly typed to allow clinic_products data
   const selectedLocation = ref('all');
   const isUnmounted = ref(false);
+  
+  // Barcode scanner state
+  const showBarcodeScanner = ref(false);
   const filters = ref({
     search: '',
     stockStatus: '',
     category: '',
   });
+  
+  // Dialog state
+  const showAdjustmentDialog = ref(false);
+  const showTransferDialog = ref(false);
+  const selectedProductForAdjustment = ref<any>(null);
+  const selectedProductForTransfer = ref<any>(null);
 
   // Computed
   const locationOptions = computed(() => [
@@ -305,11 +358,18 @@
     return location?.name || t('inventory.allLocations');
   });
 
+  const selectedLocationObject = computed(() => {
+    if (selectedLocation.value === 'all') return null;
+    return clinicStore.locations.find(
+      loc => loc.id === selectedLocation.value
+    ) || null;
+  });
+
   const categoryOptions = computed(() => {
     const categories = new Set();
     stockLevels.value.forEach(item => {
-      if (item.product_category) {
-        categories.add(item.product_category);
+      if (item.products?.category) {
+        categories.add(item.products.category);
       }
     });
     return Array.from(categories).map(cat => ({
@@ -332,22 +392,30 @@
       const searchTerm = filters.value.search.toLowerCase();
       result = result.filter(
         item =>
-          item.product_name.toLowerCase().includes(searchTerm) ||
-          item.product_sku.toLowerCase().includes(searchTerm)
+          item.products?.name?.toLowerCase().includes(searchTerm) ||
+          item.products?.sku?.toLowerCase().includes(searchTerm)
       );
     }
 
     // Apply stock status filter
     if (filters.value.stockStatus) {
-      result = result.filter(
-        item => item.stock_status === filters.value.stockStatus
-      );
+      const status = filters.value.stockStatus;
+      result = result.filter(item => {
+        const current = item.current_quantity || 0;
+        const minimum = item.minimum_quantity || 0;
+        
+        if (status === 'out_of_stock') return current === 0;
+        if (status === 'low_stock') return current > 0 && current <= minimum;
+        if (status === 'in_stock') return current > minimum;
+        
+        return true;
+      });
     }
 
     // Apply category filter
     if (filters.value.category) {
       result = result.filter(
-        item => item.product_category === filters.value.category
+        item => item.products?.category === filters.value.category
       );
     }
 
@@ -358,13 +426,17 @@
     const stats = {
       total: stockLevels.value.length,
       inStock: stockLevels.value.filter(
-        item => item.stock_status === 'in_stock'
+        item => (item.current_quantity || 0) > (item.minimum_quantity || 0)
       ).length,
       lowStock: stockLevels.value.filter(
-        item => item.stock_status === 'low_stock'
+        item => {
+          const current = item.current_quantity || 0;
+          const minimum = item.minimum_quantity || 0;
+          return current > 0 && current <= minimum;
+        }
       ).length,
       outOfStock: stockLevels.value.filter(
-        item => item.stock_status === 'out_of_stock'
+        item => (item.current_quantity || 0) === 0
       ).length,
     };
 
@@ -401,7 +473,7 @@
       name: 'product',
       label: t('inventory.product'),
       align: 'left' as const,
-      field: 'product_name',
+      field: (row: any) => row.products?.name || '',
       sortable: true,
     },
     {
@@ -415,7 +487,14 @@
       name: 'stock_status',
       label: t('inventory.status'),
       align: 'center' as const,
-      field: 'stock_status',
+      field: (row: any) => {
+        const current = row.current_quantity || 0;
+        const minimum = row.minimum_quantity || 0;
+        
+        if (current === 0) return 'out_of_stock';
+        if (current <= minimum) return 'low_stock';
+        return 'in_stock';
+      },
       sortable: true,
     },
     {
@@ -440,25 +519,34 @@
     
     loading.value = true;
     try {
-      if (!authStore.clinicId) {
+      const practiceId = '550e8400-e29b-41d4-a716-446655440000'; // Demo practice ID
+      
+      if (!practiceId) {
         stockLevels.value = [];
         return;
       }
 
       let query = supabase
-        .from('clinic_products')
+        .from('stock_levels')
         .select(`
           *,
-          product:products (
+          products (
             id,
             name,
             sku,
+            barcode,
             category,
             brand,
-            unit
+            unit,
+            price
+          ),
+          practice_locations (
+            id,
+            name,
+            code
           )
         `)
-        .eq('clinic_id', authStore.clinicId);
+        .eq('practice_id', practiceId);
 
       if (selectedLocation.value !== 'all') {
         query = query.eq('location_id', selectedLocation.value);
@@ -467,9 +555,11 @@
       const { data, error } = await query;
 
       if (error) throw error;
+      
       if (isUnmounted.value) return; // Check again after async operation
 
       stockLevels.value = data || [];
+      
     } catch (error) {
       if (!isUnmounted.value) {
         console.error('Error loading stock levels:', error);
@@ -491,35 +581,36 @@
     return 'in_stock';
   };
 
-  const getStockStatusColor = (status: string): string => {
-    switch (status) {
-      case 'in_stock':
-        return 'positive';
-      case 'low_stock':
-        return 'warning';
-      case 'out_of_stock':
-        return 'negative';
-      default:
-        return 'grey';
-    }
+  const getStockStatusColor = (stockLevel: any): string => {
+    const current = stockLevel.current_quantity || 0;
+    const minimum = stockLevel.minimum_quantity || 0;
+    
+    if (current === 0) return 'negative';
+    if (current <= minimum) return 'warning';
+    return 'positive';
   };
 
-  const getStockStatusIcon = (status: string): string => {
-    switch (status) {
-      case 'in_stock':
-        return 'check_circle';
-      case 'low_stock':
-        return 'warning';
-      case 'out_of_stock':
-        return 'error';
-      default:
-        return 'help';
-    }
+  const getStockStatusIcon = (stockLevel: any): string => {
+    const current = stockLevel.current_quantity || 0;
+    const minimum = stockLevel.minimum_quantity || 0;
+    
+    if (current === 0) return 'error';
+    if (current <= minimum) return 'warning';
+    return 'check_circle';
+  };
+
+  const getStockStatusText = (stockLevel: any): string => {
+    const current = stockLevel.current_quantity || 0;
+    const minimum = stockLevel.minimum_quantity || 0;
+    
+    if (current === 0) return t('inventory.outOfStock');
+    if (current <= minimum) return t('inventory.lowStock');
+    return t('inventory.inStock');
   };
 
   const refreshData = async () => {
     await Promise.all([
-      clinicStore.fetchLocations(authStore.clinicId || ''),
+      clinicStore.fetchLocations('550e8400-e29b-41d4-a716-446655440000'),
       loadStockLevels(),
     ]);
     $q.notify({
@@ -536,11 +627,70 @@
     };
   };
 
-  const editStockLevel = (_stockLevel: any) => {
+  // Barcode scanning
+  const handleBarcodeScan = async (barcode: string) => {
+    try {
+      // Search for products matching the barcode
+      const matchingProduct = stockLevels.value.find(level => {
+        const product = level.products;
+        if (!product) return false;
+        
+        return product.sku === barcode || 
+               product.barcode === barcode ||
+               product.name?.toLowerCase().includes(barcode.toLowerCase());
+      });
+
+      if (matchingProduct) {
+        // Focus on the found product by filtering
+        filters.value.search = matchingProduct.products.name;
+        
+        $q.notify({
+          type: 'positive',
+          message: t('inventory.barcodeFound', { 
+            product: matchingProduct.products.name 
+          }),
+          icon: 'qr_code_scanner'
+        });
+      } else {
+        $q.notify({
+          type: 'warning',
+          message: t('inventory.barcodeNotFound', { barcode }),
+          icon: 'search_off'
+        });
+      }
+    } catch (error) {
+      console.error('Error processing barcode:', error);
+      $q.notify({
+        type: 'negative',
+        message: t('errors.processingError'),
+        icon: 'error'
+      });
+    }
+  };
+
+  const editStockLevel = (stockLevel: any) => {
+    selectedProductForAdjustment.value = stockLevel;
+    showAdjustmentDialog.value = true;
+  };
+
+  const handleStockUpdated = async (product: any) => {
+    // Refresh the stock levels after an update
+    await loadStockLevels();
     $q.notify({
-      type: 'info',
-      message: t('common.comingSoon'),
+      type: 'positive', 
+      message: t('inventory.dataRefreshed'),
     });
+  };
+
+  const transferStock = (stockLevel: any) => {
+    selectedProductForTransfer.value = stockLevel;
+    showTransferDialog.value = true;
+  };
+
+  const handleTransferCompleted = async (transfer: any) => {
+    // Refresh the stock levels after a transfer
+    await loadStockLevels();
+    showTransferDialog.value = false;
   };
 
   const viewMovements = (_stockLevel: any) => {
@@ -552,11 +702,21 @@
 
   // Lifecycle
   onMounted(async () => {
-    if (authStore.clinicId && !isUnmounted.value) {
+    // First ensure we have the demo practice ID set correctly
+    const demoPracticeId = '550e8400-e29b-41d4-a716-446655440000';
+    
+    try {
+      // Load locations and stock levels in parallel
       await Promise.all([
-        clinicStore.fetchLocations(authStore.clinicId),
+        clinicStore.fetchLocations(demoPracticeId),
         loadStockLevels(),
       ]);
+    } catch (error) {
+      console.error('Error loading inventory data:', error);
+      $q.notify({
+        type: 'negative',
+        message: t('errors.failedToLoadData'),
+      });
     }
   });
 

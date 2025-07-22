@@ -428,6 +428,13 @@ export default {
     transferStock: 'Voorraad overbrengen',
     viewMovements: 'Mutaties bekijken',
     exportData: 'Gegevens exporteren',
+    scanBarcode: 'Scan Barcode',
+    barcodeFound: 'Product gevonden: {product}',
+    barcodeNotFound: 'Geen product gevonden voor barcode: {barcode}',
+    searchProduct: 'Product zoeken',
+    noProductsFound: 'Geen producten gevonden',
+    barcodeScanned: 'Barcode gescand: {barcode}',
+    changeProduct: 'Product wijzigen',
     inStock: 'Op voorraad',
     lowStock: 'Lage voorraad',
     outOfStock: 'Niet op voorraad',
@@ -482,7 +489,6 @@ export default {
     sessionCreated: 'Tellingsessie aangemaakt',
     sessionCreationFailed: 'Aanmaken tellingsessie mislukt',
     selectLocation: 'Locatie selecteren',
-    searchProduct: 'Product zoeken',
     searchProductPlaceholder: 'Typ om te zoeken...',
     quantityMustNotBeZero: 'Hoeveelheid mag niet nul zijn',
     quantityChangeHint: 'Gebruik + om toe te voegen, - om te verwijderen',
@@ -514,11 +520,27 @@ export default {
     lastMovement: 'Laatste mutatie',
     noMovements: 'Geen mutaties',
     viewHistory: 'Geschiedenis bekijken',
-    noProductsFound: 'Geen producten gevonden',
     overStockItems: 'Artikelen met overvoorraad',
     batchTrackingWarning: 'Dit product vereist batch tracking',
     cannotAdjustBatchTrackedProduct: 'Kan geen handmatige aanpassing doen voor batch-tracked product',
     redirectingToBatchManagement: 'Doorverwijzen naar batch beheer',
+    
+    // Quick Adjustment Dialog
+    adjustmentType: 'Aanpassingstype',
+    increase: 'Verhogen',
+    decrease: 'Verlagen',
+    setTo: 'Instellen op',
+    quantityToAdd: 'Hoeveelheid toevoegen',
+    quantityToRemove: 'Hoeveelheid verwijderen',
+    newQuantity: 'Nieuwe hoeveelheid',
+    preview: 'Voorbeeld',
+    change: 'Verandering',
+    reason: 'Reden',
+    notes: 'Notities',
+    notesPlaceholder: 'Optionele notities voor deze aanpassing...',
+    stockUpdated: 'Voorraad bijgewerkt',
+    errorUpdatingStock: 'Fout bij bijwerken voorraad',
+    dataRefreshed: 'Gegevens ververst',
 
     movement: {
       receipt: 'Ontvangst',
@@ -529,7 +551,7 @@ export default {
       waste: 'Afval',
     },
 
-    reason: {
+    reasons: {
       normal_usage: 'Normaal gebruik',
       expired: 'Verlopen',
       damaged: 'Beschadigd',
@@ -540,6 +562,30 @@ export default {
       adjustment: 'Aanpassing',
       count_correction: 'Telling correctie',
     },
+
+    // Stock Transfer Dialog
+    stockTransfer: 'Voorraad Transfer',
+    quantityToTransfer: 'Hoeveelheid om over te dragen',
+    transferReason: 'Reden voor transfer',
+    executeTransfer: 'Transfer uitvoeren',
+    transferPreview: 'Transfer voorbeeld',
+    remaining: 'resterend',
+    newTotal: 'nieuw totaal',
+    selectBatch: 'Selecteer batch',
+    expiryDate: 'Vervaldatum',
+    available: 'beschikbaar',
+    expiresSoon: 'Vervalt binnenkort',
+    expiresThisMonth: 'Vervalt deze maand',
+    fresh: 'Vers',
+    maxAvailable: 'Maximaal beschikbaar',
+    
+    // Transfer reasons
+    locationRebalance: 'Locatie herbalancering',
+    stockReplenishment: 'Voorraad aanvulling',
+    emergencyTransfer: 'Spoed transfer',
+    expiryManagement: 'Vervaldatum management',
+    maintenanceRelocation: 'Onderhoud verplaatsing',
+
   },
 
   // Counting System
@@ -836,7 +882,6 @@ export default {
     cartAddError: 'Fout bij toevoegen product aan winkelwagen',
     dataRefreshed: 'Gegevens succesvol vernieuwd',
     productLoadError: 'Fout bij laden producten',
-    noProductsFound: 'Geen producten gevonden',
     noProductsForFilter: 'Geen producten gevonden voor huidige filters',
     loadingProducts: 'Producten laden...',
 
