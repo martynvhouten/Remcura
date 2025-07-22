@@ -56,13 +56,11 @@ export class OfflineService {
    */
   private setupNetworkListeners(): void {
     window.addEventListener('online', () => {
-      console.log('Network: Online');
       this.isOnline.value = true;
       this.syncWhenOnline();
     });
 
     window.addEventListener('offline', () => {
-      console.log('Network: Offline');
       this.isOnline.value = false;
     });
   }
@@ -89,7 +87,6 @@ export class OfflineService {
    */
   async downloadLatestData(): Promise<void> {
     if (!this.isOnline.value) {
-      console.log('Cannot download data - device is offline');
       return;
     }
 
@@ -97,13 +94,10 @@ export class OfflineService {
     const practiceId = authStore.selectedPractice?.id;
 
     if (!practiceId) {
-      console.log('No practice selected for offline data download');
       return;
     }
 
     try {
-      console.log('Downloading latest data for offline use...');
-
       // Download bestellijsten
       const { data: bestellijsten, error: bestellijstenError } = await supabase
         .from('product_lists')
@@ -178,8 +172,6 @@ export class OfflineService {
       // Save to localStorage
       this.saveOfflineData();
 
-      console.log('Offline data downloaded successfully');
-
       // Track analytics
       analyticsService.trackEvent('offline_data_downloaded', {
         bestellijsten_count: this.offlineData.bestellijsten.length,
@@ -229,8 +221,6 @@ export class OfflineService {
 
     this.offlineActions.value.push(action);
     this.saveOfflineActions();
-
-    console.log('Added offline action:', action);
 
     // Try to sync immediately if online
     if (this.isOnline.value) {

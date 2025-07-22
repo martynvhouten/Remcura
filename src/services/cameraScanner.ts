@@ -86,8 +86,6 @@ export class CameraScannerService {
 
       // Start the scanning loop
       this.scanLoop();
-
-      console.log('Camera scanning started');
     } catch (error) {
       console.error('Failed to start camera:', error);
       throw new Error('Unable to start camera scanning');
@@ -108,8 +106,6 @@ export class CameraScannerService {
     if (this.videoElement) {
       this.videoElement.srcObject = null;
     }
-
-    console.log('Camera scanning stopped');
   }
 
   /**
@@ -250,8 +246,6 @@ export class CameraScannerService {
 
     // Emit scan event (you can use an event emitter or Vue's emit)
     this.onScanResult?.(result);
-
-    console.log('Barcode detected:', result);
   }
 
   /**

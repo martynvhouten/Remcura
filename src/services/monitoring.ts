@@ -43,10 +43,6 @@ class MonitoringService {
     }
 
     this.isInitialized = true;
-    console.info(
-      'Monitoring service initialized for environment:',
-      config.environment
-    );
   }
 
   /**
@@ -108,10 +104,6 @@ class MonitoringService {
     // TODO: Send to analytics service
     // Example:
     // analytics.track(eventName, properties)
-
-    if (this.config.environment !== 'production') {
-      console.info('Tracked event:', eventName, properties);
-    }
   }
 
   /**
@@ -123,10 +115,6 @@ class MonitoringService {
     // Update Sentry user context in production
     if (this.config?.environment === 'production') {
       this.setSentryUser(user);
-    }
-
-    if (this.config?.environment !== 'production') {
-      console.info('Set user context:', user);
     }
   }
 
@@ -198,10 +186,6 @@ class MonitoringService {
     // TODO: Send performance data
     // Example:
     // analytics.track('performance', { metric, value, unit })
-
-    if (this.config?.environment !== 'production') {
-      console.info('Performance metric:', { metric, value, unit });
-    }
   }
 
   // Private methods for service initialization
@@ -252,8 +236,6 @@ class MonitoringService {
             return event;
           },
         });
-
-        console.info('Sentry initialized successfully');
       } catch (error) {
         console.error('Failed to initialize Sentry:', error);
       }
@@ -262,7 +244,6 @@ class MonitoringService {
 
   private async initializeLogRocket(config: MonitoringConfig): Promise<void> {
     // TODO: Implement LogRocket initialization
-    console.info('LogRocket initialization placeholder', config.version);
     // import LogRocket from 'logrocket'
     //
     // LogRocket.init('your-app-id', {

@@ -47,13 +47,10 @@ const routes: RouteRecordRaw[] = [
         meta: { requiresAuth: true, preload: true },
       },
 
-      // Inventory Management Routes
+      // Inventory Management Routes - redirect main route to levels
       {
         path: 'inventory',
-        name: 'inventory',
-        component: () =>
-          import(/* webpackChunkName: "inventory" */ 'pages/InventoryPage.vue'),
-        meta: { requiresAuth: true },
+        redirect: '/inventory/levels'
       },
       {
         path: 'inventory/levels',

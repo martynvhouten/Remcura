@@ -20,8 +20,6 @@ export const useAuthStore = defineStore('auth', () => {
   const userEmail = computed(() => user.value?.email);
   const clinicId = computed(() => {
     const id = userProfile.value?.clinic_id;
-    console.log('clinicId computed - userProfile:', userProfile.value);
-    console.log('clinicId computed - returning:', id);
     return id;
   });
 

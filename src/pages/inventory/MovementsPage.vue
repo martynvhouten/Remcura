@@ -282,7 +282,7 @@
 </template>
 
 <script setup lang="ts">
-  import { ref, computed, onMounted } from 'vue';
+  import { ref, computed, onMounted, onBeforeUnmount } from 'vue';
   import { useI18n } from 'vue-i18n';
   import { useQuasar } from 'quasar';
   import { useAuthStore } from 'src/stores/auth';
@@ -310,6 +310,7 @@
   const dateRange = ref<string>('');
   const showMovementDetails = ref(false);
   const selectedMovement = ref<MovementWithRelations | null>(null);
+  const isUnmounted = ref(false);
 
   // Pagination
   const pagination = ref({
@@ -540,6 +541,10 @@
       await clinicStore.fetchLocations(practiceId.value);
       await refreshData();
     }
+  });
+
+  onBeforeUnmount(() => {
+    isUnmounted.value = true;
   });
 </script>
 

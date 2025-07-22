@@ -124,7 +124,7 @@ export const useOrderListsStore = defineStore('orderLists', () => {
         items: [],
         supplier: suppliersStore.suppliers.find(
           s => s.id === request.supplier_id
-        ),
+        ) || undefined,
       };
 
       orderLists.value.unshift(newOrderList);
@@ -146,6 +146,8 @@ export const useOrderListsStore = defineStore('orderLists', () => {
       const index = orderLists.value.findIndex(list => list.id === request.id);
       if (index !== -1) {
         const orderList = orderLists.value[index];
+        if (!orderList) return;
+        
         if (request.name !== undefined) orderList.name = request.name;
         if (request.description !== undefined)
           orderList.description = request.description;
@@ -153,7 +155,7 @@ export const useOrderListsStore = defineStore('orderLists', () => {
           orderList.supplier_id = request.supplier_id;
           orderList.supplier = suppliersStore.suppliers.find(
             s => s.id === request.supplier_id
-          );
+          ) || undefined;
         }
         if (request.auto_suggest_quantities !== undefined)
           orderList.auto_suggest_quantities = request.auto_suggest_quantities;
@@ -231,10 +233,10 @@ export const useOrderListsStore = defineStore('orderLists', () => {
       const newItem: OrderListItem = {
         id: `oli_${Date.now()}`,
         order_list_id: request.order_list_id,
-        practice_id: authStore.currentPractice?.id || '',
+        practice_id: authStore.clinicId || '',
         product_id: request.product_id,
         supplier_product_id: request.supplier_product_id,
-        location_id: request.location_id,
+        location_id: request.location_id || '',
         requested_quantity: request.requested_quantity,
         unit_price: supplierProduct.unit_price,
         total_price: supplierProduct.unit_price * request.requested_quantity,
@@ -349,7 +351,6 @@ export const useOrderListsStore = defineStore('orderLists', () => {
     saving.value = true;
     try {
       // Mock implementation - replace with actual logic based on stock levels
-      console.log('Auto-filling order list from stock levels:', orderListId);
       // This would implement logic to automatically suggest products based on stock levels
     } catch (error) {
       console.error('Error auto-filling order list:', error);

@@ -111,14 +111,19 @@
 </template>
 
 <script setup lang="ts">
-  import { ref, computed, onMounted } from 'vue';
+  import { ref, computed, onMounted, onBeforeUnmount } from 'vue';
   import { useI18n } from 'vue-i18n';
   import { useQuasar } from 'quasar';
   import PageTitle from '@/components/PageTitle.vue';
   import PageLayout from '@/components/PageLayout.vue';
+  import { useAuthStore } from 'src/stores/auth';
 
   const { t } = useI18n();
   const $q = useQuasar();
+
+  // State
+  const authStore = useAuthStore();
+  const isUnmounted = ref(false);
 
   // Data
   const loading = ref(false);
@@ -219,6 +224,10 @@
   // Lifecycle
   onMounted(() => {
     // Future: Load actual locations from API
+  });
+
+  onBeforeUnmount(() => {
+    isUnmounted.value = true;
   });
 </script>
 

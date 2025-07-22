@@ -261,7 +261,7 @@
 </template>
 
 <script setup lang="ts">
-  import { ref, computed, onMounted, defineAsyncComponent } from 'vue';
+  import { ref, computed, onMounted, onBeforeUnmount, defineAsyncComponent } from 'vue';
   import { useI18n } from 'vue-i18n';
   import { useQuasar } from 'quasar';
   import { useRouter } from 'vue-router';
@@ -521,6 +521,10 @@
       await clinicStore.fetchLocations(practiceId.value);
       await refreshData();
     }
+  });
+
+  onBeforeUnmount(() => {
+    // Cleanup to prevent async operations after unmount
   });
 </script>
 

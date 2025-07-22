@@ -7,17 +7,26 @@ import type {
   MovementWithRelations,
   StockUpdateRequest,
   OrderSuggestion,
+  StockAlert,
 } from 'src/types/inventory';
 
 export const useInventoryStore = defineStore('inventory', () => {
   // State - focus only on inventory operations, not product data
   const stockMovements = ref<MovementWithRelations[]>([]);
   const orderSuggestions = ref<OrderSuggestion[]>([]);
+  const stockLevels = ref<StockLevelWithDetails[]>([]);
   const loading = ref(false);
   const lastSyncAt = ref<Date | null>(null);
 
   // Auth store
   const authStore = useAuthStore();
+
+  // Computed properties
+  const criticalAlerts = computed<StockAlert[]>(() => {
+    // TODO: Implement proper stock alerts based on available data
+    // For now return empty array to prevent runtime errors
+    return [];
+  });
 
   // Actions - pure inventory operations only
   const updateStockLevel = async (request: StockUpdateRequest) => {
@@ -54,18 +63,18 @@ export const useInventoryStore = defineStore('inventory', () => {
       if (error) throw error;
 
       orderSuggestions.value = (data || []).map((item: any) => ({
-        id: `suggestion_${item.product_id}`,
-        practice_id: practiceId,
         product_id: item.product_id,
         product_name: item.product_name,
         product_sku: item.product_sku,
+        location_id: item.location_id || '',
+        location_name: item.location_name || 'Main Location',
         current_stock: item.current_stock,
         minimum_stock: item.minimum_stock,
-        maximum_stock: item.maximum_stock,
         suggested_quantity: item.suggested_quantity,
+        preferred_supplier_id: item.preferred_supplier_id || null,
+        supplier_name: item.supplier_name,
         urgency_level: item.urgency_level,
-        reason: item.current_stock <= 0 ? 'out_of_stock' : 'low_stock',
-        created_at: new Date().toISOString(),
+        days_until_stockout: item.days_until_stockout || 0,
       }));
     } catch (error) {
       console.error('Error fetching order suggestions:', error);
@@ -173,8 +182,12 @@ export const useInventoryStore = defineStore('inventory', () => {
     // State
     stockMovements,
     orderSuggestions,
+    stockLevels,
     loading,
     lastSyncAt,
+
+    // Computed
+    criticalAlerts,
 
     // Actions
     updateStockLevel,

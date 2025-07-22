@@ -189,6 +189,7 @@
               :aria-label="
                 item.title + (item.badge ? ' (' + item.badge + ' items)' : '')
               "
+              :aria-expanded="item.submenu ? isSubmenuExpanded(item.routeName) : undefined"
               @click="handleItemClick(item)"
             >
               <q-item-section avatar>
@@ -309,7 +310,6 @@
   // Type definitions for navigation
   interface NavigationItem {
     title: string;
-    caption?: string;
     icon: string;
     to: string;
     routeName: string;
@@ -384,8 +384,8 @@
           {
             title: t('nav.inventory'),
             icon: 'inventory_2',
-            to: '/inventory',
-            routeName: 'inventory',
+            to: '/inventory/levels', // Redirect directly to levels instead of main inventory
+            routeName: 'inventory-levels',
             submenu: [
               {
                 title: t('nav.inventoryLevels'),

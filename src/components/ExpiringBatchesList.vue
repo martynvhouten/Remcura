@@ -57,53 +57,53 @@
       name: 'productName',
       label: t('product.product'),
       field: 'productName',
-      align: 'left',
+      align: 'left' as const,
     },
     {
       name: 'batchNumber',
       label: t('batch.batchNumber'),
       field: 'batchNumber',
-      align: 'left',
+      align: 'left' as const,
     },
     {
       name: 'locationName',
       label: t('location.location'),
       field: 'locationName',
-      align: 'left',
+      align: 'left' as const,
     },
     {
       name: 'currentQuantity',
       label: t('inventory.quantity'),
       field: 'currentQuantity',
-      align: 'right',
+      align: 'right' as const,
     },
     {
       name: 'daysUntilExpiry',
       label: t('batch.daysUntilExpiry'),
       field: 'daysUntilExpiry',
-      align: 'center',
+      align: 'center' as const,
     },
     {
       name: 'urgency',
       label: t('batch.urgencyLevel'),
       field: 'urgencyLevel',
-      align: 'center',
+      align: 'center' as const,
     },
     {
       name: 'actions',
       label: t('common.actions'),
-      align: 'center',
+      align: 'center' as const,
     },
   ]);
 
-  const getUrgencyColor = (urgency: string) => {
+  const getUrgencyColor = (urgency: keyof typeof colors | string) => {
     const colors = {
       expired: 'red',
       critical: 'deep-orange',
       warning: 'amber',
       normal: 'green',
-    };
-    return colors[urgency] || 'grey';
+    } as const;
+    return colors[urgency as keyof typeof colors] || 'grey';
   };
 </script>
 

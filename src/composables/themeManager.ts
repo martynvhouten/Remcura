@@ -177,8 +177,6 @@ export function applyTheme(themeName: string) {
 
   // Save to localStorage
   localStorage.setItem('theme', themeName);
-
-  console.log(`Applied theme: ${selectedTheme.label}`);
 }
 
 // Load theme from localStorage
