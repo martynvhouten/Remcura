@@ -430,7 +430,7 @@
 
   const openBarcodeScanner = () => {
     // Implement barcode scanning functionality
-    console.log('Opening barcode scanner...');
+    // Opening barcode scanner
   };
 
   // Initialize

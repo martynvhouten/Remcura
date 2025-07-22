@@ -53,8 +53,13 @@ export default {
     open: 'Abrir',
     unknownProduct: 'Producto desconocido',
     unknownLocation: 'Ubicación desconocida',
+    unknownSupplier: 'Proveedor desconocido',
     noSku: 'Sin SKU',
+    uncategorized: 'Sin categorizar',
+    defaultUnit: 'ud',
     create: 'Crear',
+    reset: 'Resetear',
+    export: 'Exportar',
     import: 'Importar',
     download: 'Descargar',
     upload: 'Subir',
@@ -74,6 +79,26 @@ export default {
     today: 'Hoy',
     yesterday: 'Ayer',
     comingSoon: 'Próximamente',
+    dataRefreshed: 'Datos actualizados exitosamente',
+    clearFilters: 'Limpiar filtros',
+    submit: 'Enviar',
+    fromDate: 'Fecha desde',
+    toDate: 'Fecha hasta',
+    
+    // Accessibility labels
+    accessibility: {
+      mainNavigation: 'Navegación principal',
+      pageMetadata: 'Metadatos de página',
+      pageActions: 'Acciones de página',
+      navigationActions: 'Acciones de navegación',
+      quickNavigation: 'Navegación rápida',
+      userMenu: 'Menú de usuario',
+      openMenu: 'Abrir menú',
+      closeMenu: 'Cerrar menú',
+      toggleTheme: 'Cambiar tema',
+      searchButton: 'Buscar',
+      notificationPanel: 'Panel de notificaciones',
+    },
   },
 
   // Navigation
@@ -92,12 +117,14 @@ export default {
     inventory: 'Inventario',
     analytics: 'Análisis',
     suppliers: 'Proveedores',
-    admin: 'Administrador',
+    admin: 'Administración',
+    products: 'Productos',
     overviewAnalytics: 'Resumen y análisis',
     stockManagement: 'Niveles de stock y seguimiento de inventario',
     inventoryManagement: 'Gestión de inventario',
+    productManagement: 'Resumen de productos y pedidos',
     purchaseOrders: 'Órdenes de compra',
-    reportsInsights: 'Informes y estadísticas',
+    reportsInsights: 'Informes y perspectivas',
     vendorManagement: 'Gestión de proveedores',
     systemAdmin: 'Administración del sistema',
     openNavigation: 'Abrir navegación',
@@ -109,22 +136,22 @@ export default {
     shoppingCart: 'Carrito de compras',
     styleGuide: 'Guía de estilo',
     designSystem: 'Referencia del sistema de diseño',
-    // Navigation sections
+    
     sections: {
       main: 'Resumen',
-      inventory: 'Gestión de Inventario',
-      supplyChain: 'Cadena de Suministro',
-      analytics: 'Análisis e Informes',
+      inventory: 'Gestión de inventario',
+      supplyChain: 'Cadena de suministro',
+      analytics: 'Análisis e informes',
       administration: 'Administración',
     },
-    // Inventory sub-navigation
-    inventoryLevels: 'Niveles de Inventario',
+    
+    inventoryLevels: 'Niveles de inventario',
     currentStock: 'Resumen de stock actual',
     locations: 'Ubicaciones',
     warehouseManagement: 'Gestión de almacén y ubicaciones',
-    stockCounting: 'Conteo de Stock',
+    stockCounting: 'Conteo de stock',
     physicalCounts: 'Conteos físicos y auditorías',
-    movements: 'Movimientos de Stock',
+    movements: 'Movimientos de stock',
     stockMovements: 'Entradas y salidas de stock',
   },
 
@@ -138,12 +165,12 @@ export default {
     resetPassword: 'Restablecer contraseña',
     hidePassword: 'Ocultar contraseña',
     showPassword: 'Mostrar contraseña',
-    loginError: 'Error de inicio de sesión. Verifique sus credenciales.',
-    sessionExpired: 'Su sesión ha expirado. Inicie sesión nuevamente.',
+    loginError: 'Error al iniciar sesión. Verifica tus credenciales.',
+    sessionExpired: 'Tu sesión ha expirado. Por favor, inicia sesión nuevamente.',
     loginSuccess: 'Inicio de sesión exitoso',
     logoutSuccess: 'Cierre de sesión exitoso',
-    pleaseLogin: 'Inicie sesión para continuar',
-    demoAccount: 'Cuenta de demostración',
+    pleaseLogin: 'Por favor, inicia sesión para continuar',
+    demoAccount: 'Cuenta demo',
     or: 'o',
     secureConnection: 'Conexión segura',
     privacyPolicy: 'Política de privacidad',
@@ -151,126 +178,37 @@ export default {
     support: 'Soporte',
     allRightsReserved: 'Todos los derechos reservados',
     professionalInventory: 'Gestión profesional de inventario médico',
-    platformDescription:
-      'Optimice la gestión de su inventario médico con nuestra plataforma de nivel empresarial. Rastree existencias, gestione pedidos y asegure el cumplimiento con facilidad.',
+    platformDescription: 'Optimiza tu gestión de inventario médico con nuestra plataforma de nivel empresarial. Rastrea stock, gestiona pedidos y asegura el cumplimiento con facilidad.',
     realtimeTracking: 'Seguimiento de inventario en tiempo real',
-    automatedAlerts: 'Alertas automáticas de reorden',
+    automatedAlerts: 'Alertas automatizadas de reorden',
     complianceReporting: 'Informes de cumplimiento',
-    multilocationSupport: 'Soporte multi-ubicación',
-    demoCredentialsFilled:
-      'Credenciales de demostración completadas. Haga clic en Iniciar sesión para continuar.',
-    passwordResetComingSoon:
-      'La funcionalidad de restablecimiento de contraseña estará disponible pronto.',
+    multilocationSupport: 'Soporte para múltiples ubicaciones',
+    demoCredentialsFilled: 'Credenciales demo completadas. Haz clic en Iniciar sesión para continuar.',
+    passwordResetComingSoon: 'La funcionalidad de restablecimiento de contraseña estará disponible pronto.',
     copyright: '© {year} {company}. Todos los derechos reservados.',
-    passwordHelp: 'Ingrese su contraseña para iniciar sesión de forma segura',
-    demoHelp:
-      'Use demo@medstock-pro.com con contraseña demo123 para demostración',
+    passwordHelp: 'Ingresa tu contraseña para iniciar sesión de forma segura',
+    demoHelp: 'Usa demo@medstock-pro.com con contraseña demo123 para demostración',
     signingIn: 'Iniciando sesión...',
-  },
-
-  // Settings
-  settings: {
-    title: 'Configuración',
-    general: 'General',
-    darkMode: 'Modo oscuro',
-    language: 'Idioma',
-    selectLanguage: 'Seleccione su idioma preferido',
-    languageChanged: 'Idioma cambiado a {language}',
-    notifications: 'Notificaciones',
-    clinic: 'Configuración de clínica',
-    profile: 'Configuración de perfil',
-    profileSubtitle: 'Información personal de la cuenta',
-    appearanceTitle: 'Apariencia',
-    appearanceSubtitle: 'Configuración de interfaz e idioma',
-    darkModeDescription: 'Cambiar entre modo claro y oscuro',
-    colorSchemeTitle: 'Elegir esquema de colores',
-    colorSchemeDescription: 'Cambiar el esquema de colores de la aplicación',
-    clinicInfoSubtitle: 'Información y datos de contacto de la clínica',
-    contactSettingsNotice:
-      'Para modificar la información de la clínica, póngase en contacto con el administrador.',
-    notificationSettingsSubtitle: 'Notificaciones y alertas',
-    stockAlertsLabel: 'Alertas de existencias',
-    stockAlertsDescription: 'Recibir notificaciones para existencias bajas',
-    emailNotificationsLabel: 'Notificaciones por correo electrónico',
-    emailNotificationsDescription:
-      'Recibir actualizaciones importantes por correo electrónico',
-    browserNotificationsLabel: 'Notificaciones del navegador',
-    browserNotificationsDescription: 'Permitir notificaciones del navegador',
-    systemInfoTitle: 'Información del sistema',
-    systemInfoSubtitle: 'Versión y soporte',
-    versionLabel: 'Versión',
-    lastUpdateLabel: 'Última actualización',
-    supportLabel: 'Soporte',
-    manageSettingsSubtitle:
-      'Gestione su configuración y preferencias para una experiencia óptima',
-
-    // Style Guide translations
-    styleGuideTitle: 'Guía de Estilo MedStock Pro',
-    styleGuideSubtitle:
-      'Referencia completa del sistema de diseño y muestra de componentes',
-    colorsSection: 'Colores',
-    primaryColors: 'Colores Primarios',
-    neutralColors: 'Colores Neutrales',
-    typographySection: 'Tipografía',
-    buttonsSection: 'Botones',
-    solidButtons: 'Botones Sólidos',
-    outlinedButtons: 'Botones Delineados',
-    flatButtons: 'Botones Planos',
-    iconButtons: 'Botones con Iconos',
-    cardsSection: 'Tarjetas',
-
-    // Button labels for Style Guide
-    primaryButton: 'Primario',
-    secondaryButton: 'Secundario',
-    successButton: 'Éxito',
-    warningButton: 'Advertencia',
-    dangerButton: 'Peligro',
-    infoButton: 'Información',
-    addProductButton: 'Agregar Producto',
-    editButton: 'Editar',
-    deleteButton: 'Eliminar',
-    saveButton: 'Guardar',
-    downloadButton: 'Descargar',
-
-    darkModeEnabled: 'Modo oscuro habilitado',
-    lightModeEnabled: 'Modo claro habilitado',
-    settingsSaved: 'Configuración guardada exitosamente',
-    settingsSaveError: 'Ocurrió un error al guardar',
-    saveSettings: 'Guardar configuración',
-    role: 'Rol',
-    clinicName: 'Nombre de clínica',
-    contactEmail: 'Correo electrónico de contacto',
-    phoneNumber: 'Número de teléfono',
-    address: 'Dirección',
+    fullName: 'Nombre completo',
   },
 
   // Demo Account
   demo: {
-    title: 'Cuenta Demo',
+    title: 'Cuenta demo',
     subtitle: 'Has iniciado sesión con la cuenta demo',
-    resetData: 'Resetear Datos Demo',
-    resetDataConfirm:
-      '¿Estás seguro de que quieres resetear todos los datos demo?',
-    resetDataSuccess: 'Datos demo reseteados exitosamente',
-    resetDataError: 'Error al resetear los datos demo',
-    limitations: 'Limitaciones Demo',
-    limitationsText:
-      'Esta es una cuenta demo. Todos los cambios son visibles pero pueden ser reseteados.',
-    practice: 'Clínica Demo Remka',
-    practiceDescription:
-      'Entorno demo totalmente funcional con datos realistas',
-  },
-
-  // Validation
-  validation: {
-    required: 'Este campo es requerido',
-    email: 'Ingrese una dirección de correo electrónico válida',
-    minLength: 'Se requieren mínimo {min} caracteres',
-    maxLength: 'Máximo {max} caracteres permitidos',
-    numeric: 'Solo se permiten números',
-    positive: 'El valor debe ser positivo',
-    positiveNumber: 'El valor debe ser un número positivo',
-    integer: 'Solo se permiten números enteros',
+    resetData: 'Restablecer datos demo',
+    resetDataConfirm: '¿Estás seguro de que quieres restablecer todos los datos demo?',
+    resetDataSuccess: 'Datos demo restablecidos exitosamente',
+    resetDataError: 'Error al restablecer datos demo',
+    limitations: 'Limitaciones demo',
+    limitationsText: 'Esta es una cuenta demo. Todos los cambios son visibles pero pueden ser restablecidos.',
+    practice: 'Clínica demo Remka',
+    practiceDescription: 'Entorno demo completamente funcional con datos realistas',
+    resetInfo: 'Esto eliminará todos los datos demo y creará datos frescos',
+    onlyDemoUserCanReset: 'Solo el usuario demo puede restablecer los datos demo',
+    changesCanBeReset: 'Todos los cambios se guardan pero pueden ser restablecidos a través de la página Admin.',
+    resetInProgress: 'Restableciendo datos demo...',
+    reloadingAfterReset: 'Recargando página con datos frescos...',
   },
 
   // Dashboard
@@ -279,18 +217,18 @@ export default {
     welcome: 'Bienvenido',
     user: 'Usuario',
     clinicInfo: 'Información de clínica',
-    stockSummary: 'Resumen de existencias',
-    lowStockItems: 'Artículos con pocas existencias',
-    outOfStockItems: 'Sin existencias',
+    stockSummary: 'Resumen de stock',
+    lowStockItems: 'Artículos con stock bajo',
+    outOfStockItems: 'Sin stock',
     reorderSuggestions: 'Sugerencias de reorden',
-    outOfStock: 'Sin existencias',
-    lowStock: 'Pocas existencias',
-    inStock: 'En existencias',
-    noLowStock: '¡Todo en existencias!',
+    outOfStock: 'Sin stock',
+    lowStock: 'Stock bajo',
+    inStock: 'En stock',
+    noLowStock: '¡Todos los niveles de stock están bien!',
     viewMore: 'Ver {count} más',
     quickActions: 'Acciones rápidas',
-    manageStock: 'Gestionar existencias',
-    updateStockLevels: 'Actualizar niveles de existencias y configuración',
+    manageStock: 'Gestionar stock',
+    updateStockLevels: 'Actualizar niveles de stock y configuraciones',
     viewOrders: 'Ver pedidos',
     manageOrders: 'Gestionar pedidos e historial de pedidos',
     configureSystem: 'Configurar ajustes del sistema',
@@ -302,35 +240,36 @@ export default {
     currentMin: 'Actual / mín',
     latestUpdates: 'Últimas actualizaciones',
     viewAnalytics: 'Ver análisis',
+    welcomeTitle: 'Bienvenido a MedStock Pro',
+    welcomeSubtitle: 'Tu sistema profesional de gestión de inventario médico',
+    welcomeDescription: 'Gestiona tu inventario eficientemente con nuestras herramientas avanzadas y seguimiento en tiempo real.',
+    systemStatus: 'Estado del sistema',
+    systemStatusSubtitle: 'Estado actual de tu sistema',
+    systemOnline: 'Sistema en línea',
+    dataSynced: 'Datos sincronizados',
+    secureConnection: 'Conexión segura',
     vsLastMonth: 'vs mes pasado',
     summaryOverview: 'Resumen general',
     moreOptions: 'Más opciones',
     quickActionsList: 'Lista de acciones rápidas',
     optionsMenu: 'Menú de opciones',
-    lowStockItemsList: 'Lista de artículos con pocas existencias',
+    lowStockItemsList: 'Lista de artículos con stock bajo',
     dashboardSummary: 'Resumen del panel',
     failedToLoadData: 'Error al cargar datos del panel',
     dataRefreshedSuccessfully: 'Datos actualizados exitosamente',
     failedToRefreshData: 'Error al actualizar datos',
-    welcomeTitle: 'Bienvenido a MedStock Pro',
-    welcomeSubtitle: 'Su sistema profesional de gestión de inventario médico',
-    welcomeDescription:
-      'Gestione su inventario de manera eficiente con nuestras herramientas avanzadas y seguimiento en tiempo real.',
-    systemStatus: 'Estado del sistema',
-    systemStatusSubtitle: 'Estado actual de su sistema',
-    systemOnline: 'Sistema en línea',
-    dataSynced: 'Datos sincronizados',
-    secureConnection: 'Conexión segura',
   },
 
   // Errors
   errors: {
-    generic: 'Ocurrió un error. Inténtelo de nuevo.',
-    network: 'Error de red. Verifique su conexión a internet.',
-    unauthorized: 'No está autorizado para esta acción.',
+    generic: 'Ocurrió un error. Por favor, intenta nuevamente.',
+    network: 'Error de red. Verifica tu conexión a internet.',
+    unauthorized: 'No tienes autorización para esta acción.',
     notFound: 'El recurso solicitado no fue encontrado.',
-    validation: 'Error de validación. Verifique los datos ingresados.',
-    serverError: 'Error del servidor. Inténtelo más tarde.',
+    validation: 'Error de validación. Verifica los datos ingresados.',
+    serverError: 'Error del servidor. Intenta nuevamente más tarde.',
+    failedToGenerateSuggestion: 'Error al generar sugerencia',
+    failedToRefreshData: 'Error al actualizar datos',
     failed: 'Acción falló',
     failedToLoadData: 'Error al cargar datos',
     failedToGenerateReport: 'Error al generar reporte',
@@ -340,141 +279,159 @@ export default {
   // Error pages
   error: {
     pageNotFound: 'Página no encontrada',
-    pageNotFoundDescription:
-      'Lo sentimos, la página que busca no se puede encontrar. Puede haber sido movida, eliminada, o ingresó una URL incorrecta.',
+    pageNotFoundDescription: 'Lo sentimos, la página que buscas no se puede encontrar. Puede haber sido movida, eliminada, o ingresaste una URL incorrecta.',
     goHome: 'Ir al inicio',
-    goBack: 'Regresar',
-    tryThesePages:
-      'Intente visitar una de estas páginas populares en su lugar:',
+    goBack: 'Volver',
+    tryThesePages: 'Intenta visitar una de estas páginas populares en su lugar:',
+  },
+
+  // Validation
+  validation: {
+    required: 'Este campo es obligatorio',
+    email: 'Por favor ingresa una dirección de correo válida',
+    minLength: 'Mínimo {min} caracteres requeridos',
+    maxLength: 'Máximo {max} caracteres permitidos',
+    numeric: 'Solo números permitidos',
+    positive: 'El valor debe ser positivo',
+    positiveNumber: 'El valor debe ser un número positivo',
+    integer: 'Solo números enteros permitidos',
+    mustBePositive: 'El valor debe ser positivo',
+    textMustMatch: 'El texto debe coincidir con {text}',
+    formErrors: 'El formulario contiene errores',
+  },
+
+  // Product (for form fields and references)
+  product: {
+    product: 'Producto',
+    selectProduct: 'Seleccionar producto',
+    samples: {
+      syringeBD: 'Jeringa BD Plastipak',
+      needleBD: 'Aguja BD Microlance',
+    },
+  },
+
+  // Location (for form fields and references)
+  location: {
+    location: 'Ubicación',
+    selectLocation: 'Seleccionar ubicación',
+    sampleData: {
+      mainWarehouse: {
+        name: 'Almacén principal',
+        type: 'Almacén',
+        description: 'Almacén central de almacenamiento',
+      },
+      pharmacy: {
+        name: 'Almacén de farmacia',
+        type: 'Farmacia',
+        description: 'Almacenamiento de medicamentos',
+      },
+      treatmentRoom: {
+        name: 'Sala de tratamiento A',
+        type: 'Sala de tratamiento',
+        description: 'Stock para sala de tratamiento A',
+      },
+    },
+    samples: {
+      emergencyStock: 'Gabinete de emergencia',
+    },
   },
 
   // Inventory & Stock Management
   inventory: {
     title: 'Inventario',
-    stockLevels: 'Niveles de existencias',
-    stockMovements: 'Movimientos de existencias',
+    stockLevels: 'Niveles de stock',
+    stockMovements: 'Movimientos de stock',
     locations: 'Ubicaciones',
-
-    // Overview cards
+    suppliers: 'Proveedores',
+    orders: 'Pedidos',
+    stockCounting: 'Conteo de stock',
     overview: 'Resumen de inventario',
     totalProducts: 'Total de productos',
     totalValue: 'Valor total',
-    lowStockItems: 'Artículos con pocas existencias',
-    outOfStockItems: 'Artículos sin existencias',
-    stockAccuracy: 'Precisión del inventario',
+    lowStockItems: 'Artículos con stock bajo',
+    outOfStockItems: 'Artículos sin stock',
+    stockAccuracy: 'Precisión de stock',
     lastFullCount: 'Último conteo completo',
-
-    // Location filters
     allLocations: 'Todas las ubicaciones',
     currentLocation: 'Ubicación actual',
     switchLocation: 'Cambiar ubicación',
-
-    // Actions
-    stockCounting: 'Conteo de inventario',
+    startCounting: 'Iniciar conteo',
     startCountingSession: 'Iniciar sesión de conteo',
     quickAdjustment: 'Ajuste rápido',
-    adjustStock: 'Ajustar existencias',
-    transferStock: 'Transferir existencias',
+    adjustStock: 'Ajustar stock',
+    transferStock: 'Transferir stock',
     viewMovements: 'Ver movimientos',
     exportData: 'Exportar datos',
-
-    // Stock status
-    inStock: 'En existencias',
-    lowStock: 'Pocas existencias',
-    outOfStock: 'Sin existencias',
-    overStock: 'Exceso de existencias',
-
-    // Recent activity
+    inStock: 'En stock',
+    lowStock: 'Stock bajo',
+    outOfStock: 'Sin stock',
+    overStock: 'Exceso de stock',
     recentActivity: 'Actividad reciente',
     recentMovements: 'Movimientos recientes',
     noRecentActivity: 'Sin actividad reciente',
-
-    // Stock alerts
-    stockAlerts: 'Alertas de existencias',
+    stockAlerts: 'Alertas de stock',
     criticalAlerts: 'Alertas críticas',
     urgentAttention: 'Requiere atención urgente',
     noAlerts: 'Sin alertas',
-
-    // Counting
-    countingStatus: 'Estado del conteo',
+    countingStatus: 'Estado de conteo',
     activeSession: 'Sesión activa',
     noActiveSession: 'Sin conteo activo',
-
-    // Integration status
     syncStatus: 'Estado de sincronización',
     lastSync: 'Última sincronización',
     syncNow: 'Sincronizar ahora',
-
-    // Messages
     loadingData: 'Cargando datos de inventario...',
     refreshingData: 'Actualizando datos...',
     dataRefreshed: 'Datos actualizados exitosamente',
     refreshFailed: 'Error al actualizar',
-
-    // Supplier integration
     manualOrder: 'Pedido manual',
     apiOrder: 'Pedido API',
     downloadPdf: 'Descargar PDF',
     placeOrder: 'Realizar pedido',
-
-    // Thresholds and settings
     setMinimum: 'Establecer mínimo',
     setMaximum: 'Establecer máximo',
     reorderPoint: 'Punto de reorden',
-
-    // Units and measurements
     pieces: 'piezas',
     units: 'unidades',
-
-    // Time references
+    quantity: 'Cantidad',
     today: 'hoy',
     yesterday: 'ayer',
     thisWeek: 'esta semana',
     thisMonth: 'este mes',
     neverCounted: 'nunca contado',
-
-    // Dialog specific
     sessionName: 'Nombre de sesión',
-    sessionNamePlaceholder: 'Ingrese un nombre para la sesión de conteo',
-    sessionType: 'Tipo de conteo',
+    sessionNamePlaceholder: 'Ingresa un nombre para la sesión de conteo',
+    sessionType: 'Tipo de sesión',
     selectLocations: 'Seleccionar ubicaciones',
     allowNegativeCounts: 'Permitir conteos negativos',
     requireApproval: 'Requiere aprobación',
-    autoAdjustStock: 'Ajustar existencias automáticamente',
+    autoAdjustStock: 'Auto ajustar stock',
     sessionNotesPlaceholder: 'Notas opcionales para esta sesión de conteo',
     partialCount: 'Conteo parcial',
     fullCount: 'Conteo completo',
     spotCheck: 'Verificación puntual',
     cycleCount: 'Conteo cíclico',
     partialCountDescription: 'Contar solo productos seleccionados',
-    fullCountDescription:
-      'Contar todos los productos en ubicaciones seleccionadas',
+    fullCountDescription: 'Contar todos los productos en ubicaciones seleccionadas',
     spotCheckDescription: 'Verificación rápida de artículos específicos',
-    cycleCountDescription: 'Conteo sistemático según programación',
+    cycleCountDescription: 'Conteo sistemático según programa',
     defaultSessionName: 'Conteo {date} {time}',
     sessionCreated: 'Sesión de conteo creada',
     sessionCreationFailed: 'Error al crear sesión de conteo',
-
-    // Adjustment dialog
     selectLocation: 'Seleccionar ubicación',
     searchProduct: 'Buscar producto',
-    searchProductPlaceholder: 'Escriba para buscar...',
-    quantityMustNotBeZero: 'La cantidad no puede ser cero',
-    quantityChangeHint: 'Use + para agregar, - para quitar',
-    adjustmentNotesPlaceholder: 'Razón del ajuste...',
-    stockAdjusted: 'Existencias ajustadas',
-    adjustmentFailed: 'Error al ajustar existencias',
-
-    // Transfer dialog
+    searchProductPlaceholder: 'Escribe para buscar...',
+    quantityMustNotBeZero: 'La cantidad no debe ser cero',
+    quantityChangeHint: 'Usa + para agregar, - para quitar',
+    adjustmentNotesPlaceholder: 'Razón para el ajuste...',
+    stockAdjusted: 'Stock ajustado',
+    adjustmentFailed: 'Error al ajustar stock',
     fromLocation: 'Desde ubicación',
     toLocation: 'Hacia ubicación',
     locationsMustBeDifferent: 'Las ubicaciones deben ser diferentes',
     enterQuantity: 'Ingresar cantidad',
-    transferNotesPlaceholder: 'Notas para la transferencia...',
-    stockTransferred: 'Existencias transferidas',
-    transferFailed: 'Error en transferencia de existencias',
-
-    // Stock movements
+    transferNotesPlaceholder: 'Notas para transferencia...',
+    stockTransferred: 'Stock transferido',
+    transferFailed: 'Error al transferir stock',
     movementHistory: 'Historial de movimientos',
     movementType: 'Tipo de movimiento',
     movementDetails: 'Detalles del movimiento',
@@ -484,11 +441,9 @@ export default {
     reasonCode: 'Código de razón',
     loadingMovements: 'Cargando movimientos...',
     noMovementsFound: 'No se encontraron movimientos',
-
-    // Stock levels
-    stockFilter: 'Filtro de existencias',
+    stockFilter: 'Filtro de stock',
     searchProducts: 'Buscar productos...',
-    currentStock: 'Existencias actuales',
+    currentStock: 'Stock actual',
     thresholds: 'Umbrales',
     min: 'Mín',
     max: 'Máx',
@@ -497,12 +452,13 @@ export default {
     noMovements: 'Sin movimientos',
     viewHistory: 'Ver historial',
     noProductsFound: 'No se encontraron productos',
-    products: 'productos',
-    overStockItems: 'Artículos con exceso de existencias',
+    overStockItems: 'Artículos con exceso de stock',
+    batchTrackingWarning: 'Este producto requiere seguimiento por lotes',
+    cannotAdjustBatchTrackedProduct: 'No se puede ajustar manualmente producto con seguimiento por lotes',
+    redirectingToBatchManagement: 'Redirigiendo a gestión de lotes',
 
-    // Movement types
     movement: {
-      receipt: 'Recepción',
+      receipt: 'Recibo',
       usage: 'Uso',
       transfer: 'Transferencia',
       adjustment: 'Ajuste',
@@ -510,7 +466,6 @@ export default {
       waste: 'Desperdicio',
     },
 
-    // Reason codes
     reason: {
       normal_usage: 'Uso normal',
       expired: 'Vencido',
@@ -526,9 +481,8 @@ export default {
 
   // Counting System
   counting: {
-    title: 'Conteo de existencias',
-    overview:
-      'Gestione sus sesiones de conteo de existencias y seguimiento de precisión de inventario',
+    title: 'Conteo de stock',
+    overview: 'Gestiona tus sesiones de conteo de inventario y rastrea la precisión del stock',
     sessionStatus: 'Estado de sesión',
     startSession: 'Iniciar sesión de conteo',
     activeSession: 'Sesión de conteo activa',
@@ -547,246 +501,144 @@ export default {
     countedProducts: 'Productos contados',
     loadingSession: 'Cargando sesión de conteo...',
     sessionNotFound: 'Sesión no encontrada',
-    sessionNotFoundDescription:
-      'La sesión de conteo que busca no se pudo encontrar',
+    sessionNotFoundDescription: 'La sesión de conteo que buscas no se pudo encontrar',
     countingResults: 'Resultados de conteo',
     viewResults: 'Ver resultados de conteo y discrepancias',
     noResultsFound: 'No se encontraron resultados de conteo',
     product: 'Producto',
-    variance: 'Varianza',
+    variance: 'Variancia',
     approveSession: 'Aprobar sesión',
   },
 
-  // Suppliers
-  suppliers: {
-    title: 'Proveedores',
-    addSupplier: 'Agregar proveedor',
-    editSupplier: 'Editar proveedor',
-    supplierDetails: 'Detalles del proveedor',
-    supplierCode: 'Código de proveedor',
-    contactPerson: 'Persona de contacto',
-    paymentTerms: 'Términos de pago',
-    minimumOrder: 'Pedido mínimo',
-    shippingCost: 'Costo de envío',
-    freeShippingThreshold: 'Umbral de envío gratuito',
-    preferredOrderDay: 'Día preferido de pedido',
-    orderCutoffTime: 'Hora límite de pedido',
-    apiIntegration: 'Integración API',
-    syncEnabled: 'Sincronización habilitada',
-    lastSync: 'Última sincronización',
-
-    // Supplier products
-    supplierProducts: 'Productos del proveedor',
-    supplierSKU: 'SKU del proveedor',
-    supplierName: 'Nombre del proveedor',
-    unitPrice: 'Precio unitario',
-    minimumOrderQty: 'Cantidad mínima de pedido',
-    packSize: 'Tamaño del paquete',
-    leadTime: 'Tiempo de entrega (días)',
-    availability: 'Disponibilidad',
-    backorderAllowed: 'Pedido pendiente permitido',
-  },
-
-  // Locations
-  locations: {
-    title: 'Ubicaciones',
-    manage: 'Gestionar ubicaciones de almacenamiento y áreas de almacén',
-    add: 'Agregar ubicación',
-    edit: 'Editar ubicación',
-    delete: 'Eliminar ubicación',
-    name: 'Nombre de ubicación',
-    description: 'Descripción',
-    type: 'Tipo de ubicación',
-    capacity: 'Capacidad',
-    noLocations: 'No se encontraron ubicaciones',
-    mainLocations: 'Ubicaciones principales',
-    allLocations: 'Todas las ubicaciones',
-    search: 'Buscar ubicaciones...',
-    comingSoonDescription:
-      'Las funciones de gestión de ubicaciones estarán disponibles pronto. Podrá crear y gestionar diferentes áreas de almacenamiento para su inventario.',
-    sampleData: {
-      mainWarehouse: {
-        name: 'Almacén principal',
-        type: 'Almacén',
-        description: 'Almacén central de almacenamiento',
-      },
-      pharmacy: {
-        name: 'Almacenamiento de farmacia',
-        type: 'Farmacia',
-        description: 'Almacenamiento de medicamentos',
-      },
-      treatmentRoom: {
-        name: 'Sala de tratamiento A',
-        type: 'Sala de tratamiento',
-        description: 'Inventario para sala de tratamiento A',
-      },
-    },
-    capacityItems: '{count} artículos',
-  },
-
-  // Gestión de lotes
+  // Batch Management
   batch: {
     batchManagement: 'Gestión de lotes',
-    manageBatchesSubtitle:
-      'Gestiona tus lotes de productos y fechas de vencimiento de manera efectiva',
+    manageBatchesSubtitle: 'Gestiona los lotes de tus productos y fechas de vencimiento efectivamente',
     title: 'Gestión de lotes',
     batchNumber: 'Número de lote',
     lotNumber: 'Número de lote',
     supplierBatchNumber: 'Número de lote del proveedor',
-    expiryDate: 'Fecha de caducidad',
-    houdbaarheidstot: 'Fecha de vencimiento',
+    supplierBatch: 'Lote del proveedor',
+    expiryDate: 'Fecha de vencimiento',
+    houdbaarheidstot: 'Mejor antes de',
     receivedDate: 'Fecha de recepción',
     initialQuantity: 'Cantidad inicial',
     currentQuantity: 'Cantidad actual',
     availableQuantity: 'Cantidad disponible',
+    available: 'Disponible',
     reservedQuantity: 'Cantidad reservada',
     batchStatus: 'Estado del lote',
     unitCost: 'Costo unitario',
     totalCost: 'Costo total',
     qualityCheck: 'Control de calidad',
     qualityPassed: 'Calidad aprobada',
-    qualityFailed: 'Calidad rechazada',
+    qualityApproved: 'Calidad aprobada',
+    qualityFailed: 'Calidad reprobada',
     qualityNotes: 'Notas de calidad',
-    quarantineUntil: 'En cuarentena hasta',
-
-    // Dashboard items
+    quarantineUntil: 'Cuarentena hasta',
     addBatch: 'Agregar lote',
     totalBatches: 'Total de lotes',
-    expiringSoon: 'Por vencer',
+    expiringSoon: 'Venciendo pronto',
     activeBatches: 'Lotes activos',
     totalValue: 'Valor total',
     quickActions: 'Acciones rápidas',
     scanBatch: 'Escanear lote',
-    viewExpiring: 'Ver por vencer',
+    viewExpiring: 'Ver venciendo',
     exportBatches: 'Exportar lotes',
     criticalAlert: 'Alerta crítica',
-    criticalBatchesFound: '{count} lote(s) requieren atención inmediata',
+    nearExpiry: 'Cerca del vencimiento',
+    criticalExpiryText: 'Hay {count} lotes que vencen en 7 días',
+    criticalBatchesFound: 'Se encontraron {count} lotes críticos',
     viewCritical: 'Ver críticos',
-
-    // Tabs
-    overview: 'Resumen',
-    expiring: 'Por vencer',
+    manageExpiring: 'Gestionar vencimientos',
     fifoManagement: 'Gestión FIFO',
-    reports: 'Informes',
-    expiringBatches: 'Lotes por vencer',
-    batchReports: 'Informes de lotes',
-
-    // Operaciones de lote
-    registerBatch: 'Registrar lote',
-    editBatch: 'Editar lote',
-    viewBatch: 'Ver lote',
-    deleteBatch: 'Eliminar lote',
-    mergeBatches: 'Fusionar lotes',
-    splitBatch: 'Dividir lote',
-
-    // FIFO
-    fifo: 'FIFO (Primero en entrar, primero en salir)',
-    fifoExplanation: 'Los lotes más antiguos se usan automáticamente primero',
+    fifoSubtitle: 'Rotación de inventario Primero en Entrar, Primero en Salir',
     useBatch: 'Usar lote',
-    autoSelectBatch: 'Seleccionar lote automáticamente',
-
-    // Gestión de caducidad
-    expiryManagement: 'Gestión de caducidad',
-    daysUntilExpiry: 'Días hasta caducidad',
-    expiryAlert: 'Alerta de caducidad',
-
-    // Mensajes de validación
-    batchNumberRequired: 'El número de lote es obligatorio',
-    expiryDateRequired: 'La fecha de caducidad es obligatoria',
-    invalidExpiryDate: 'Fecha de caducidad inválida',
-    expiryInPast: 'La fecha de caducidad no puede estar en el pasado',
-    batchAlreadyExists: 'El lote ya existe',
-    insufficientBatchStock: 'Stock insuficiente en el lote',
-
-    // Mensajes de éxito
-    batchRegistered: 'Lote registrado exitosamente',
-    batchUpdated: 'Lote actualizado exitosamente',
-    batchDeleted: 'Lote eliminado exitosamente',
-    stockUsedFromBatch: 'Stock usado del lote {batchNumber}',
+    registerBatch: 'Registrar lote',
+    batchOverview: 'Resumen de lotes',
+    overview: 'Resumen',
+    expiring: 'Venciendo',
+    batchReports: 'Informes de lotes',
+    reports: 'Informes',
+    expiringBatches: 'Lotes venciendo',
+    batchHistory: 'Historial de lotes',
     exportSuccess: 'Lotes exportados exitosamente',
+    batchNotFound: 'Lote {batchNumber} no encontrado',
     quarantine: 'Cuarentena',
     quarantineSuccess: 'Lote puesto en cuarentena exitosamente',
-    expiredDaysAgo: 'Caducó hace {days} días',
-    expiresToday: 'Caduca hoy',
-    expiresTomorrow: 'Caduca mañana',
-    expiresInDays: 'Caduca en {days} días',
-    batchNotFound: 'Lote {batchNumber} no encontrado',
-
-    // Reportes
-    selectReport: 'Seleccionar reporte',
-    generateReport: 'Generar reporte',
-    exportReport: 'Exportar reporte',
-    reportResults: 'Resultados del reporte',
-    reportConfiguration: 'Configuración del reporte',
-    reportGenerated: 'Reporte generado exitosamente',
-    reportExported: 'Reporte exportado exitosamente',
-    expiredBatches: 'Lotes caducados',
-    expiryAnalysis: 'Análisis de caducidad',
-    expiryAnalysisDesc: 'Analizar fechas de caducidad y urgencia de lotes',
+    expiredDaysAgo: 'Vencido hace {days} días',
+    expiresToday: 'Vence hoy',
+    expiresTomorrow: 'Vence mañana',
+    expiresInDays: 'Vence en {days} días',
+    fifoSuggestion: 'Sugerencia FIFO',
+    generateFifoSuggestion: 'Generar sugerencia FIFO',
+    fifoResults: 'Resultados FIFO',
+    noFifoResults: 'No hay resultados FIFO disponibles',
+    fifoSuggestionGenerated: 'Sugerencia FIFO generada exitosamente',
+    applyFifoSuggestion: 'Aplicar sugerencia FIFO',
+    confirmFifoApplication: 'Confirmar aplicación FIFO',
+    confirmFifoMessage: '¿Estás seguro de que quieres aplicar esta sugerencia FIFO?',
+    fifoAppliedSuccessfully: 'Sugerencia FIFO aplicada exitosamente',
+    useQuantity: 'Cantidad a usar',
+    selectReport: 'Seleccionar informe',
+    generateReport: 'Generar informe',
+    exportReport: 'Exportar informe',
+    reportResults: 'Resultados del informe',
+    reportConfiguration: 'Configuración del informe',
+    reportGenerated: 'Informe generado exitosamente',
+    reportExported: 'Informe exportado exitosamente',
+    expiredBatches: 'Lotes vencidos',
+    expiryAnalysis: 'Análisis de vencimiento',
+    expiryAnalysisDesc: 'Analizar fechas de vencimiento y urgencia de lotes',
     batchUsage: 'Uso de lotes',
-    batchUsageDesc: 'Ver cómo se están usando los lotes',
+    batchUsageDesc: 'Ver cómo se usan los lotes',
     fifoCompliance: 'Cumplimiento FIFO',
     fifoComplianceDesc: 'Verificar cumplimiento FIFO',
     batchCosts: 'Costos de lotes',
     batchCostsDesc: 'Analizar costos por lote',
-
-    // Registro y validación de lotes
+    batchDetails: 'Detalles del lote',
+    batchInformation: 'Información del lote',
+    quantityStatus: 'Estado de cantidad',
+    expiryInformation: 'Información de vencimiento',
+    statusInformation: 'Información de estado',
+    costInformation: 'Información de costos',
+    currentValue: 'Valor actual',
+    quantityToUse: 'Cantidad a usar',
+    usageReason: 'Razón de uso',
+    usageNotes: 'Notas de uso',
+    usageNotesHint: 'Notas opcionales para este uso',
+    useAll: 'Usar todo',
+    usageSummary: 'Resumen de uso',
+    quantityUsed: 'Cantidad usada',
+    remainingQuantity: 'Cantidad restante',
+    costImpact: 'Impacto en costos',
+    newStatus: 'Nuevo estado',
+    confirmUsage: 'Confirmar uso',
+    purchaseInformation: 'Información de compra',
+    purchaseOrderNumber: 'Número de orden de compra',
+    invoiceNumber: 'Número de factura',
+    currency: 'Moneda',
     registerNewBatch: 'Registrar nuevo lote',
     batchRegisteredSuccessfully: 'Lote registrado exitosamente',
-    batchOverview: 'Resumen de Lotes',
-    urgencyLevel: 'Nivel de Urgencia',
-    batchesExpiringSoon: '{count} lotes expiran pronto',
+    urgencyLevel: 'Nivel de urgencia',
+    expiryAlert: 'Alerta de vencimiento',
+    batchesExpiringSoon: '{count} lotes venciendo pronto',
     noBatchesFound: 'No se encontraron lotes',
-    noExpiringBatches: 'No hay lotes expirando',
-    available: 'Disponible',
-    supplierBatch: 'Lote del proveedor',
-
-    // Filtros
+    noExpiringBatches: 'No hay lotes venciendo',
+    daysUntilExpiry: 'Días hasta vencimiento',
     filterByStatus: 'Filtrar por estado',
-    filterByExpiry: 'Filtrar por caducidad',
-    showExpiring: 'Mostrar lotes por vencer',
-    showExpired: 'Mostrar lotes caducados',
+    filterByExpiry: 'Filtrar por vencimiento',
+    showExpiring: 'Mostrar lotes venciendo',
+    showExpired: 'Mostrar lotes vencidos',
     showActive: 'Mostrar lotes activos',
+    requestedQuantity: 'Cantidad solicitada',
 
-    // Funcionalidad FIFO
-    fifoSuggestion: 'Sugerencia FIFO',
-    requestedQuantity: 'Cantidad Solicitada',
-    generateFifoSuggestion: 'Generar Sugerencia FIFO',
-    fifoResults: 'Resultados FIFO',
-    noFifoResults: 'No hay resultados FIFO disponibles',
-    useQuantity: 'Cantidad a Usar',
-    applyFifoSuggestion: 'Aplicar Sugerencia FIFO',
-    fifoSuggestionGenerated: 'Sugerencia FIFO generada',
-    confirmFifoApplication: 'Confirmar Aplicación FIFO',
-    confirmFifoMessage:
-      '¿Estás seguro de que quieres aplicar esta sugerencia FIFO?',
-    fifoAppliedSuccessfully: 'FIFO aplicado exitosamente',
+    validation: {
+      expiryDateInPast: 'La fecha de vencimiento no puede estar en el pasado',
+      exceededAvailable: 'Excede la cantidad disponible',
+      mustBePositive: 'Debe ser un valor positivo',
+    },
 
-    // Detalles y uso de lotes
-    batchDetails: 'Detalles del Lote',
-    batchInformation: 'Información del Lote',
-    quantityStatus: 'Estado de Cantidad',
-    expiryInformation: 'Información de Vencimiento',
-    statusInformation: 'Información de Estado',
-    costInformation: 'Información de Costos',
-    currentValue: 'Valor Actual',
-    quantityToUse: 'Cantidad a Usar',
-    usageReason: 'Razón de Uso',
-    usageNotes: 'Notas de Uso',
-    usageNotesHint: 'Notas opcionales sobre este uso',
-    useAll: 'Usar Todo',
-    usageSummary: 'Resumen de Uso',
-    quantityUsed: 'Cantidad Usada',
-    remainingQuantity: 'Cantidad Restante',
-    costImpact: 'Impacto de Costos',
-    newStatus: 'Nuevo Estado',
-    confirmUsage: 'Confirmar Uso',
-    purchaseInformation: 'Información de Compra',
-    purchaseOrderNumber: 'Número de Orden de Compra',
-    invoiceNumber: 'Número de Factura',
-    currency: 'Moneda',
-
-    // Niveles de urgencia
     urgency: {
       expired: 'Vencido',
       critical: 'Crítico',
@@ -797,18 +649,20 @@ export default {
     status: {
       available: 'Disponible',
       reserved: 'Reservado',
-      expired: 'Caducado',
+      expired: 'Vencido',
       quarantine: 'Cuarentena',
       used: 'Usado',
       active: 'Activo',
       inactive: 'Inactivo',
     },
 
-    // Validación adicional
-    validation: {
-      expiryDateInPast: 'La fecha de vencimiento no puede estar en el pasado',
-      exceededAvailable: 'Excede la cantidad disponible',
-      mustBePositive: 'Debe ser positivo',
+    usage: {
+      consumption: 'Consumo',
+      expired: 'Vencido',
+      damaged: 'Dañado',
+      transfer: 'Transferencia',
+      adjustment: 'Ajuste',
+      other: 'Otro',
     },
   },
 
@@ -824,259 +678,142 @@ export default {
     description: 'Descripción',
     unit: 'Unidad',
     price: 'Precio',
-
-    // Stock settings
-    minimumStock: 'Existencias mínimas',
-    maximumStock: 'Existencias máximas',
+    minimumStock: 'Stock mínimo',
+    maximumStock: 'Stock máximo',
     reorderPoint: 'Punto de reorden',
     preferredSupplier: 'Proveedor preferido',
-
-    // Status
     active: 'Activo',
     inactive: 'Inactivo',
     discontinued: 'Descontinuado',
   },
 
-  // Admin
-  admin: {
-    title: 'Administración',
-    settings: 'Configuración',
-    audit: 'Registro de auditoría',
-    users: 'Usuarios',
-    locations: 'Ubicaciones',
-    permissions: 'Permisos',
-    analytics: 'Análisis',
-    quickActions: 'Acciones rápidas',
-    
-    // Statistics
+  // Products Page
+  productsPage: {
+    title: 'Productos',
+    subtitle: 'Resumen de todos los productos disponibles de Remka y proveedores externos',
+
+    table: {
+      name: 'Nombre',
+      sku: 'SKU',
+      description: 'Descripción',
+      stockStatus: 'Estado de stock',
+      supplier: 'Proveedor',
+      price: 'Precio',
+      actions: 'Acciones',
+      category: 'Categoría',
+      currentStock: 'Stock actual',
+      lastUpdated: 'Última actualización',
+      batchStatus: 'Estado del lote',
+    },
+
+    searchPlaceholder: 'Buscar por nombre o SKU...',
+    viewCart: 'Ver carrito',
+    filterByCategory: 'Filtrar por categoría',
+    filterBySupplier: 'Filtrar por proveedor',
+    filterByStockStatus: 'Filtrar por estado de stock',
+    sortBy: 'Ordenar por',
+    clearFilters: 'Limpiar filtros',
+
+    filters: {
+      title: 'Filtros',
+      category: 'Categoría',
+      stockStatus: 'Estado de stock',
+      supplier: 'Proveedor',
+      priceRange: 'Rango de precios',
+      selectCategory: 'Seleccionar categoría',
+      selectStockStatus: 'Seleccionar estado de stock',
+      selectSupplier: 'Seleccionar proveedor',
+      minPrice: 'Precio mínimo',
+      maxPrice: 'Precio máximo',
+      all: 'Todos',
+      allCategories: 'Todas las categorías',
+      allSuppliers: 'Todos los proveedores',
+      remka: 'Remka',
+      external: 'Proveedores externos',
+    },
+
     stats: {
-      totalUsers: 'Total de usuarios',
-      activeUsers: 'Usuarios activos',
-      activeToday: 'activos hoy',
-      totalLocations: 'Total de ubicaciones',
-      active: 'activo',
-      pendingSync: 'Sincronización pendiente',
-      lastSync: 'Última sincronización',
-      todayEvents: 'Eventos de hoy',
-      fromYesterday: 'vs ayer',
+      totalProducts: 'Total de productos',
+      inStockProducts: 'En stock',
+      lowStockProducts: 'Stock bajo',
+      outOfStockProducts: 'Sin stock',
+      suppliersCount: 'Proveedores',
+      categoriesCount: 'Categorías',
     },
 
-    // User Management
-    userManagement: {
-      title: 'Gestión de usuarios',
-      invite: 'Invitar usuario',
-      email: 'Dirección de correo',
-      roles: 'Roles',
-      lastActive: 'Último activo',
-      resetPassword: 'Restablecer contraseña',
-      activate: 'Activar',
-      deactivate: 'Desactivar',
+    stockStatus: {
+      in_stock: 'En stock',
+      low_stock: 'Stock bajo',
+      out_of_stock: 'Sin stock',
+      unavailable: 'No disponible',
     },
 
-    // Errors
-    errors: {
-      loadUsersFailed: 'Error al cargar usuarios',
-      loadLocationsFailed: 'Error al cargar ubicaciones',
-      loadPermissionsFailed: 'Error al cargar permisos',
-    },
-  },
-
-  // Permissions
-  permissions: {
-    title: 'Permisos y acceso',
-    user: 'Usuario',
-    permissionType: 'Tipo de permiso',
-    resourceType: 'Tipo de recurso',
-    expiresAt: 'Expira el',
-    
-    // Templates
-    templates: {
-      title: 'Plantillas de permisos',
-      assistant: 'Asistente',
-      manager: 'Gerente',
-      admin: 'Administrador',
-      owner: 'Propietario',
-      viewer: 'Visualizador',
+    batchStatus: {
+      good: 'Bueno',
+      expiring: 'Venciendo pronto',
+      expired: 'Vencido',
     },
 
-    // Types
-    types: {
-      read: 'Leer',
-      write: 'Escribir',
-      delete: 'Eliminar',
-      admin: 'Admin',
-    },
+    productDetails: 'Detalles del producto',
+    description: 'Descripción',
+    category: 'Categoría',
+    unit: 'Unidad',
+    suppliers: 'Proveedores',
+    stockLevels: 'Niveles de stock',
+    batches: 'lotes',
+    noBatches: 'Sin lotes',
+    bestPrice: 'Mejor precio',
 
-    // Notifications
-    notifications: {
-      revoked: 'Permisos revocados',
-      granted: 'Permisos otorgados',
-    },
+    viewDetails: 'Ver detalles',
+    addToCart: 'Agregar al carrito',
+    addToOrderList: 'Agregar a lista de pedidos',
+    expandDetails: 'Expandir detalles',
 
-    // Errors
-    errors: {
-      revokeFailed: 'Error al revocar permisos',
-      grantFailed: 'Error al otorgar permisos',
-    },
-  },
+    addedToCart: '{productName} agregado al carrito',
+    cartAddError: 'Error al agregar producto al carrito',
+    dataRefreshed: 'Datos actualizados exitosamente',
+    productLoadError: 'Error al cargar productos',
+    noProductsFound: 'No se encontraron productos',
+    noProductsForFilter: 'No se encontraron productos para los filtros actuales',
+    loadingProducts: 'Cargando productos...',
 
-  // Locations - Enhanced
-  locationsAdmin: {
-    isMain: 'Ubicación principal',
-    setAsMain: 'Establecer como principal',
-    manageAccess: 'Gestionar acceso',
-    
-    // Notifications
-    notifications: {
-      mainLocationSet: 'Ubicación principal establecida',
-      accessUpdated: 'Acceso actualizado',
-    },
-
-    // Errors
-    errors: {
-      setMainFailed: 'Error al establecer ubicación principal',
-      accessUpdateFailed: 'Error al actualizar acceso',
-    },
-  },
-
-  // Stock Movements
-  movements: {
-    title: 'Movimientos de existencias',
-    movementType: 'Tipo de movimiento',
-    quantityChange: 'Cambio de cantidad',
-    quantityBefore: 'Cantidad antes',
-    quantityAfter: 'Cantidad después',
-    performedBy: 'Realizado por',
-    reasonCode: 'Código de razón',
-
-    // Movement types
-    count: 'Ajuste de conteo',
-    receipt: 'Recepción de existencias',
-    usage: 'Uso de existencias',
-    transfer: 'Transferencia de existencias',
-    adjustment: 'Ajuste manual',
-    waste: 'Desperdicio/Eliminación',
-
-    // Reason codes
-    normalUsage: 'Uso normal',
-    expired: 'Vencido',
-    damaged: 'Dañado',
-    lost: 'Perdido',
-    found: 'Encontrado',
-    transferIn: 'Transferencia entrada',
-    transferOut: 'Transferencia salida',
-    countCorrection: 'Corrección de conteo',
-  },
-
-
-
-  // Offline Services
-  offline: {
-    title: 'Modo sin conexión',
-    
-    // Data management
-    data: {
-      download: 'Descargar datos sin conexión',
-      downloadDescription: 'Descargar datos más recientes para uso sin conexión',
-      lastDownload: 'Última descarga',
-      dataSize: 'Tamaño de datos',
-    },
-
-    // Sync
-    sync: {
-      forceSync: 'Forzar sincronización',
-      syncNow: 'Sincronizar ahora',
-      autoSync: 'Sincronización automática',
-      syncStatus: 'Estado de sincronización',
-      lastSync: 'Última sincronización',
-      pendingActions: 'Acciones pendientes',
-    },
-
-    // Messages
-    messages: {
-      syncCompleted: 'Sincronización completada',
-      syncFailed: 'Error en sincronización',
-      downloadCompleted: 'Descarga completada',
-      downloadFailed: 'Error en descarga',
-      offlineMode: 'Modo sin conexión activo',
-      onlineMode: 'Modo en línea activo',
-    },
-
-    // Errors
-    errors: {
-      syncFailed: 'Error en sincronización',
-      downloadFailed: 'Error al descargar datos sin conexión',
-      networkUnavailable: 'Red no disponible',
-    },
-  },
-
-  // Exports
-  exports: {
-    title: 'Exportaciones',
-    subtitle: 'Exportación de datos e informes',
-    selectFormat: 'Seleccionar formato',
-    selectData: 'Seleccionar datos',
-    generateExport: 'Generar exportación',
-    downloadExport: 'Descargar exportación',
-    
-    // Formats
-    formats: {
-      csv: 'Archivo CSV',
-      pdf: 'Documento PDF',
-      excel: 'Hoja de cálculo Excel',
-      json: 'Datos JSON',
-    },
-
-    // Data types
-    dataTypes: {
-      inventory: 'Datos de inventario',
-      orders: 'Pedidos',
+    details: {
+      title: 'Detalles del producto',
+      basicInfo: 'Información básica',
+      stockInfo: 'Información de stock',
+      supplierInfo: 'Información del proveedor',
+      orderHistory: 'Historial de pedidos',
+      sku: 'SKU',
+      name: 'Nombre',
+      description: 'Descripción',
+      category: 'Categoría',
+      brand: 'Marca',
+      unit: 'Unidad',
+      price: 'Precio',
+      currentStock: 'Stock actual',
+      minimumStock: 'Stock mínimo',
+      locations: 'Ubicaciones de stock',
       suppliers: 'Proveedores',
-      analytics: 'Análisis',
-      users: 'Usuarios',
+      lastOrderDate: 'Fecha del último pedido',
+      averageOrderQuantity: 'Cantidad promedio de pedido',
+      totalOrdered: 'Total pedido',
+      image: 'Imagen del producto',
+      noImage: 'No hay imagen disponible',
+      noDescription: 'No hay descripción disponible',
+      priceNotAvailable: 'Precio no disponible',
     },
-
-    // Messages
-    messages: {
-      exportGenerated: 'Exportación generada exitosamente',
-      exportFailed: 'Error al generar exportación',
-      exportDownloaded: 'Exportación descargada',
-    },
-  },
-
-
-
-  // Analytics
-  analytics: {
-    title: 'Análisis',
-    overview: 'Resumen',
-    performance: 'Rendimiento',
-    trends: 'Tendencias',
-
-    // KPIs
-    stockTurnover: 'Tasa de rotación de existencias',
-    stockAccuracy: 'Precisión de existencias',
-    avgDaysToStockout: 'Promedio de días hasta agotamiento',
-    topMovingProducts: 'Productos más movidos',
-    lastFullCount: 'Último conteo completo',
-
-    // Reports
-    inventoryReport: 'Reporte de inventario',
-    movementReport: 'Reporte de movimientos',
-    varianceReport: 'Reporte de variaciones',
-    supplierReport: 'Reporte de proveedores',
   },
 
   // Orders
   orders: {
     title: 'Pedidos',
     export: 'Exportar',
-    createOrder: 'Nuevo pedido',
+    createOrder: 'Crear pedido',
     bulkExport: 'Exportar seleccionados',
-    bulkEmail: 'Enviar seleccionados por correo',
+    bulkEmail: 'Enviar seleccionados por email',
     downloadPDF: 'Descargar PDF',
     downloadCSV: 'Descargar CSV',
-    sendEmail: 'Enviar correo electrónico',
+    sendEmail: 'Enviar email',
     submitToMagento: 'Enviar a Magento',
     duplicate: 'Duplicar',
     cancel: 'Cancelar pedido',
@@ -1120,10 +857,10 @@ export default {
     },
 
     email: {
-      recipient: 'Correo electrónico del destinatario',
+      recipient: 'Email del destinatario',
       subject: 'Asunto',
       message: 'Mensaje',
-      send: 'Enviar correo electrónico',
+      send: 'Enviar email',
     },
 
     analytics: {
@@ -1138,56 +875,52 @@ export default {
     notifications: {
       pdfDownloaded: 'PDF descargado exitosamente',
       csvDownloaded: 'CSV descargado exitosamente',
-      emailSent: 'Correo electrónico enviado exitosamente',
+      emailSent: 'Email enviado exitosamente',
       magentoSubmitted: 'Pedido enviado a Magento: {orderNumber}',
       orderCancelled: 'Pedido cancelado exitosamente',
       exportCompleted: 'Exportación completada: {count} pedidos',
-      pdfBulkNotSupported: 'Exportación masiva de PDF aún no compatible',
-      bulkEmailComingSoon: 'Función de correo masivo próximamente',
+      pdfBulkNotSupported: 'Exportación masiva PDF aún no soportada',
+      bulkEmailComingSoon: 'Función de email masivo próximamente',
     },
 
     errors: {
       loadFailed: 'Error al cargar pedidos',
       pdfFailed: 'Error al generar PDF',
       csvFailed: 'Error al generar CSV',
-      emailFailed: 'Error al enviar correo electrónico',
+      emailFailed: 'Error al enviar email',
       magentoFailed: 'Error al enviar a Magento',
       cancelFailed: 'Error al cancelar pedido',
       exportFailed: 'Error al exportar pedidos',
       noOrdersToExport: 'No hay pedidos para exportar',
-      noPracticeSelected: 'Seleccione primero una práctica para ver pedidos',
+      noPracticeSelected: 'Por favor selecciona una práctica primero para ver pedidos',
     },
 
     exportFilteredNote: 'Exportar {count} pedidos filtrados',
     exportSelectedNote: 'Exportar {count} pedidos seleccionados',
-
-    // Validation messages
-    emailRequired: 'Correo electrónico es requerido',
-    noPracticeSelected: 'No se ha seleccionado práctica',
+    emailRequired: 'Email es requerido',
+    noPracticeSelected: 'No hay práctica seleccionada',
   },
 
   // Order Lists
   orderLists: {
-    title: 'Listas de Pedidos',
-    subtitle: 'Gestione sus listas de pedidos por clínica',
+    title: 'Listas de pedidos',
+    subtitle: 'Gestiona las listas de pedidos de tu práctica',
     create: 'Nueva lista de pedidos',
     edit: 'Editar lista de pedidos',
     duplicate: 'Duplicar',
     delete: 'Eliminar',
     noLists: 'No se encontraron listas de pedidos',
-    createNew: 'Cree una nueva lista de pedidos para comenzar',
+    createNew: 'Crea una nueva lista de pedidos para comenzar',
 
-    // List details
     name: 'Nombre',
     description: 'Descripción',
     supplier: 'Proveedor',
     totalItems: 'Total de artículos',
-    totalAmount: 'Monto total',
+    totalAmount: 'Cantidad total',
     status: 'Estado',
     createdAt: 'Creado en',
     updatedAt: 'Actualizado en',
 
-    // Status values
     draft: 'Borrador',
     ready: 'Listo',
     submitted: 'Enviado',
@@ -1195,30 +928,25 @@ export default {
     delivered: 'Entregado',
     cancelled: 'Cancelado',
 
-    // Actions
     addToCart: 'Agregar al carrito',
     processOrder: 'Procesar pedido',
-    autoFill: 'Rellenar automáticamente',
-    autoFillDescription: 'Rellenar automáticamente basado en niveles de stock',
+    autoFill: 'Llenar automáticamente',
+    autoFillDescription: 'Llenar automáticamente basado en niveles de stock',
 
-    // Dialog
     createDialog: 'Crear nueva lista de pedidos',
     editDialog: 'Editar lista de pedidos',
     details: 'Detalles',
     summary: 'Resumen',
     deleteDialog: 'Eliminar lista de pedidos',
-    deleteConfirm: '¿Está seguro de que desea eliminar esta lista de pedidos?',
+    deleteConfirm: '¿Estás seguro de que quieres eliminar esta lista de pedidos?',
     duplicateDialog: 'Duplicar lista de pedidos',
     duplicateName: 'Copia de {name}',
 
-    // Form fields
-    nameRequired: 'El nombre es obligatorio',
+    nameRequired: 'El nombre es requerido',
     nameMinLength: 'El nombre debe tener al menos 3 caracteres',
     selectSupplier: 'Seleccionar proveedor',
-    supplierRequired: 'El proveedor es obligatorio',
+    supplierRequired: 'El proveedor es requerido',
 
-    // Products
-    products: 'Productos',
     addProduct: 'Agregar producto',
     removeProduct: 'Eliminar producto',
     productName: 'Nombre del producto',
@@ -1226,500 +954,540 @@ export default {
     unitPrice: 'Precio unitario',
     totalPrice: 'Precio total',
     notes: 'Notas',
-    noProducts: 'No se agregaron productos',
+    urgent: 'Urgente',
+    exportOrderList: 'Exportar lista de pedidos',
+    noProducts: 'No hay productos agregados',
     selectProduct: 'Seleccionar producto',
 
-    // Success messages
     created: 'Lista de pedidos creada exitosamente',
     updated: 'Lista de pedidos actualizada exitosamente',
     deleted: 'Lista de pedidos eliminada exitosamente',
     duplicated: 'Lista de pedidos duplicada exitosamente',
     addedToCart: 'Productos agregados al carrito',
-    autoFilled: 'Lista de pedidos rellenada automáticamente',
+    autoFilled: 'Lista de pedidos llenada automáticamente',
 
-    // Error messages
     loadError: 'Error al cargar listas de pedidos',
     saveError: 'Error al guardar lista de pedidos',
     deleteError: 'Error al eliminar lista de pedidos',
     cartError: 'Error al agregar al carrito',
-    autoFillError: 'Error al rellenar automáticamente',
+    autoFillError: 'Error al llenar automáticamente la lista de pedidos',
   },
 
-  // Order Messages
-  messages: {
-    addToCartComingSoon: 'Función de agregar al carrito próximamente',
-    addAllSuggestionsComingSoon:
-      'Función de agregar todas las sugerencias próximamente',
-    cartCleared: 'Carrito vaciado',
-    cartSaved: 'Carrito guardado',
+  // Locations
+  locations: {
+    title: 'Ubicaciones',
+    manage: 'Gestionar ubicaciones de almacenamiento y áreas de almacén',
+    add: 'Agregar ubicación',
+    edit: 'Editar ubicación',
+    delete: 'Eliminar ubicación',
+    name: 'Nombre de ubicación',
+    description: 'Descripción',
+    type: 'Tipo de ubicación',
+    capacity: 'Capacidad',
+    sampleData: {
+      mainWarehouse: {
+        name: 'Almacén principal',
+        type: 'Almacén',
+        description: 'Almacén central de almacenamiento',
+      },
+      pharmacy: {
+        name: 'Almacén de farmacia',
+        type: 'Farmacia',
+        description: 'Almacenamiento de medicamentos',
+      },
+      treatmentRoom: {
+        name: 'Sala de tratamiento A',
+        type: 'Sala de tratamiento',
+        description: 'Stock para sala de tratamiento A',
+      },
+    },
+    noLocations: 'No se encontraron ubicaciones',
+    mainLocations: 'Ubicaciones principales',
+    allLocations: 'Todas las ubicaciones',
+    search: 'Buscar ubicaciones...',
+    comingSoonDescription: 'Las funciones de gestión de ubicaciones estarán disponibles pronto. Podrás crear y gestionar diferentes áreas de almacenamiento para tu inventario.',
+    capacityItems: '{count} artículos',
+    samples: {
+      emergencyStock: 'Gabinete de emergencia',
+    },
   },
 
-  // Notifications
-  notifications: {
-    title: 'Notificaciones',
-    settings: 'Configuración de notificaciones',
-    channels: {
-      email: 'Correo electrónico',
-      push: 'Notificaciones push',
-      sms: 'SMS',
-      in_app: 'En la aplicación',
+  // Stock Movements
+  movements: {
+    title: 'Movimientos de stock',
+    movementType: 'Tipo de movimiento',
+    quantityChange: 'Cambio de cantidad',
+    quantityBefore: 'Cantidad antes',
+    quantityAfter: 'Cantidad después',
+    performedBy: 'Realizado por',
+    reasonCode: 'Código de razón',
+
+    count: 'Ajuste de conteo',
+    receipt: 'Recibo de stock',
+    usage: 'Uso de stock',
+    transfer: 'Transferencia de stock',
+    adjustment: 'Ajuste manual',
+    waste: 'Desperdicio/eliminación',
+
+    normalUsage: 'Uso normal',
+    expired: 'Vencido',
+    damaged: 'Dañado',
+    lost: 'Perdido',
+    found: 'Encontrado',
+    transferred: 'Transferido',
+    corrected: 'Corregido',
+  },
+
+  // Analytics
+  analytics: {
+    title: 'Análisis',
+    subtitle: 'Informes e insights completos para tu inventario',
+    comingSoon: 'Próximamente',
+    comingSoonDescription: 'Las funciones avanzadas de análisis e informes se agregarán pronto.',
+    overview: 'Resumen',
+    trends: 'Tendencias',
+    reports: 'Informes',
+    insights: 'Perspectivas',
+    period: 'Período',
+    lastWeek: 'Semana pasada',
+    lastMonth: 'Mes pasado',
+    lastQuarter: 'Trimestre pasado',
+    lastYear: 'Año pasado',
+    stockTurnover: 'Rotación de stock',
+    orderFrequency: 'Frecuencia de pedidos',
+    supplierPerformance: 'Rendimiento de proveedores',
+    costAnalysis: 'Análisis de costos',
+    
+    dashboard: 'Análisis del panel',
+    usage: 'Estadísticas de uso',
+    patterns: 'Patrones de uso',
+    
+    events: {
+      login: 'Iniciar sesión',
+      logout: 'Cerrar sesión',
+      stock_update: 'Actualización de stock',
+      order_create: 'Pedido creado',
+      product_view: 'Producto visto',
+      batch_register: 'Lote registrado',
     },
 
-    types: {
-      stock_alert: 'Alertas de existencias',
-      order_update: 'Actualizaciones de pedidos',
-      system_notification: 'Notificaciones del sistema',
-      reminder: 'Recordatorios',
-    },
-
-    permissions: {
-      title: 'Permisos de notificaciones',
-      request: 'Habilitar notificaciones',
-      granted: 'Notificaciones habilitadas',
-      denied: 'Notificaciones deshabilitadas',
-      description:
-        'Reciba notificaciones sobre actualizaciones importantes y existencias bajas',
+    metrics: {
+      averageSession: 'Tiempo promedio de sesión',
+      peakHours: 'Horas pico',
     },
   },
 
-  // Offline Mode
+  // Offline Services
   offline: {
     title: 'Modo sin conexión',
-    status: {
-      online: 'En línea',
-      offline: 'Sin conexión',
-      syncing: 'Sincronizando...',
-      syncComplete: 'Sincronización completada',
+    
+    data: {
+      download: 'Descargar datos sin conexión',
+      downloadDescription: 'Descargar datos más recientes para uso sin conexión',
+      lastDownload: 'Última descarga',
+      dataSize: 'Tamaño de datos',
     },
 
     sync: {
-      pending: 'Pendiente de sincronización',
-      failed: 'Sincronización fallida',
-      retry: 'Reintentar sincronización',
-      forceSync: 'Forzar ahora',
+      forceSync: 'Forzar sincronización',
+      syncNow: 'Sincronizar ahora',
+      autoSync: 'Sincronización automática',
+      syncStatus: 'Estado de sincronización',
       lastSync: 'Última sincronización',
-      pendingChanges: 'Cambios pendientes',
-    },
-
-    data: {
-      download: 'Descargar para uso sin conexión',
-      clear: 'Limpiar datos sin conexión',
-      size: 'Tamaño de datos sin conexión',
-      lastDownload: 'Última descarga',
+      pendingActions: 'Acciones pendientes',
     },
 
     messages: {
-      workingOffline:
-        'Trabajando sin conexión - los cambios se sincronizarán cuando esté en línea',
-      syncCompleted: 'Todos los cambios sincronizados exitosamente',
-      syncFailed: 'Algunos cambios no pudieron sincronizarse',
-      noConnection: 'No se detectó conexión a internet',
-    },
-  },
-
-  // Camera Scanner
-  camera: {
-    title: 'Escáner de cámara',
-    start: 'Iniciar cámara',
-    stop: 'Detener cámara',
-    switch: 'Cambiar cámara',
-    focus: 'Enfocar',
-    torch: 'Linterna',
-
-    permissions: {
-      request: 'Se requiere acceso a la cámara para escanear códigos de barras',
-      denied: 'Acceso a la cámara denegado',
-      unavailable: 'Cámara no disponible',
-    },
-
-    scanning: {
-      lookingForBarcode: 'Buscando código de barras...',
-      codeDetected: 'Código detectado',
-      processingCode: 'Procesando código...',
-      scanSuccessful: 'Escaneo exitoso',
-      justNow: 'Ahora mismo',
+      syncCompleted: 'Sincronización completada',
+      syncFailed: 'Sincronización falló',
+      downloadCompleted: 'Descarga completada',
+      downloadFailed: 'Descarga falló',
+      offlineMode: 'Modo sin conexión activo',
+      onlineMode: 'Modo en línea activo',
     },
 
     errors: {
-      cameraFailed: 'Error al iniciar cámara',
-      noDevices: 'No se encontraron dispositivos de cámara',
-      permissionDenied: 'Permiso de cámara denegado',
-      deviceNotSupported: 'Cámara no compatible en este dispositivo',
-      cameraError: 'Error de cámara',
+      syncFailed: 'Sincronización falló',
+      downloadFailed: 'Error al descargar datos sin conexión',
+      networkUnavailable: 'Red no disponible',
     },
+    
+    newVersionAvailable: 'Una nueva versión de la aplicación está disponible. ¿Te gustaría recargar ahora?',
   },
 
-  // Data Export
+  // Exports
   exports: {
-    title: 'Exportar datos',
-    format: 'Formato de exportación',
-    type: 'Tipo de exportación',
-
+    title: 'Exportaciones',
+    subtitle: 'Exportación de datos e informes',
+    selectFormat: 'Seleccionar formato',
+    selectData: 'Seleccionar datos',
+    generateExport: 'Generar exportación',
+    downloadExport: 'Descargar exportación',
+    
     formats: {
-      csv: 'CSV (Excel)',
+      csv: 'Archivo CSV',
       pdf: 'Documento PDF',
-      excel: 'Libro de Excel',
+      excel: 'Hoja de cálculo Excel',
+      json: 'Datos JSON',
     },
 
-    types: {
-      inventory: 'Reporte de inventario',
-      orders: 'Reporte de pedidos',
-      analytics: 'Reporte de análisis',
-      full_report: 'Reporte completo',
-    },
-
-    options: {
-      includeImages: 'Incluir imágenes de productos',
-      includeNotes: 'Incluir notas',
-      groupByCategory: 'Agrupar por categoría',
-      dateRange: 'Rango de fechas',
-    },
-
-    status: {
-      preparing: 'Preparando exportación...',
-      generating: 'Generando archivo...',
-      complete: 'Exportación completada',
-      failed: 'Exportación fallida',
-    },
-  },
-
-  // Administration
-  admin: {
-    title: 'Administración',
-    dashboard: 'Panel de administración',
-    users: 'Usuarios',
-    locations: 'Ubicaciones',
-    permissions: 'Permisos',
-    audit: 'Registro de auditoría',
-    settings: 'Configuración',
-    analytics: 'Análisis',
-    quickActions: 'Acciones rápidas',
-
-    stats: {
-      totalUsers: 'Total de usuarios',
-      activeToday: 'activos hoy',
-      totalLocations: 'Total de ubicaciones',
-      active: 'activos',
-      pendingSync: 'Sincronización pendiente',
-      lastSync: 'Última sincronización',
-      todayEvents: 'Eventos de hoy',
-      fromYesterday: 'desde ayer',
-    },
-
-    auditLog: {
-      title: 'Registro de auditoría',
-      action: 'Acción',
-      user: 'Usuario',
-      resource: 'Recurso',
-      timestamp: 'Marca de tiempo',
-      details: 'Detalles',
-
-      actions: {
-        created: 'Creado',
-        updated: 'Actualizado',
-        deleted: 'Eliminado',
-        accessed: 'Accedido',
-        exported: 'Exportado',
-      },
-    },
-
-    userManagement: {
-      title: 'Gestión de usuarios',
-      invite: 'Invitar usuario',
-      email: 'Correo electrónico',
-      roles: 'Roles',
-      lastActive: 'Último activo',
-      permissions: 'Permisos',
-    },
-
-    errors: {
-      loadUsersFailed: 'Error al cargar usuarios',
-      loadLocationsFailed: 'Error al cargar ubicaciones',
-    },
-  },
-
-  // Permissions
-  permissions: {
-    title: 'Permisos de usuario',
-    grant: 'Otorgar permiso',
-    revoke: 'Revocar permiso',
-    user: 'Usuario',
-    permissionType: 'Tipo de permiso',
-    resourceType: 'Tipo de recurso',
-    location: 'Ubicación',
-    expiresAt: 'Expira en',
-
-    types: {
-      read: 'Leer',
-      write: 'Escribir',
-      delete: 'Eliminar',
-      admin: 'Administrador',
-    },
-
-    resources: {
-      bestellijst: 'Listas de pedidos',
-      product: 'Productos',
-      order: 'Pedidos',
-      cart: 'Carritos',
+    dataTypes: {
+      inventory: 'Datos de inventario',
+      orders: 'Pedidos',
+      suppliers: 'Proveedores',
       analytics: 'Análisis',
-      settings: 'Configuración',
-      practice: 'Práctica',
+      users: 'Usuarios',
     },
 
-    templates: {
-      assistant: 'Asistente',
-      manager: 'Gerente',
-      admin: 'Administrador',
-    },
-  },
-
-  // Magento Integration
-  magento: {
-    title: 'Integración Magento',
-    settings: 'Configuración de Magento',
-    connection: 'Conexión',
-    sync: 'Sincronización',
-    orders: 'Pedidos de Magento',
-    products: 'Productos de Magento',
-
-    status: {
-      connected: 'Conectado',
-      disconnected: 'Desconectado',
-      syncing: 'Sincronizando...',
-      error: 'Error de conexión',
-    },
-
-    actions: {
-      testConnection: 'Probar conexión',
-      syncNow: 'Sincronizar ahora',
-      viewLogs: 'Ver registros',
-      disconnect: 'Desconectar',
-    },
-
-    config: {
-      baseUrl: 'URL base de Magento',
-      apiKey: 'Clave API',
-      username: 'Nombre de usuario',
-      password: 'Contraseña',
-      storeView: 'Vista de tienda',
-    },
-  },
-
-  // User Roles
-  roles: {
-    title: 'Roles de usuario',
-    admin: 'Administrador',
-    manager: 'Gerente',
-    assistant: 'Asistente',
-    viewer: 'Visualizador',
-    guest: 'Invitado',
-
-    permissions: {
-      inventory_read: 'Ver inventario',
-      inventory_write: 'Editar inventario',
-      orders_read: 'Ver pedidos',
-      orders_write: 'Crear/editar pedidos',
-      analytics_read: 'Ver análisis',
-      settings_write: 'Configurar sistema',
-      users_manage: 'Gestionar usuarios',
-    },
-  },
-
-  // Time Periods
-  timePeriods: {
-    realtime: 'Tiempo real',
-    hourly: 'Por hora',
-    daily: 'Diario',
-    weekly: 'Semanal',
-    monthly: 'Mensual',
-    quarterly: 'Trimestral',
-    yearly: 'Anual',
-
-    last: {
-      hour: 'Última hora',
-      day: 'Último día',
-      week: 'Última semana',
-      month: 'Último mes',
-      quarter: 'Último trimestre',
-      year: 'Último año',
-    },
-
-    this: {
-      hour: 'Esta hora',
-      day: 'Hoy',
-      week: 'Esta semana',
-      month: 'Este mes',
-      quarter: 'Este trimestre',
-      year: 'Este año',
-    },
-  },
-
-  // File Management
-  files: {
-    upload: 'Subir archivo',
-    download: 'Descargar',
-    delete: 'Eliminar',
-    rename: 'Renombrar',
-    size: 'Tamaño',
-    type: 'Tipo',
-    lastModified: 'Última modificación',
-
-    types: {
-      image: 'Imagen',
-      document: 'Documento',
-      spreadsheet: 'Hoja de cálculo',
-      pdf: 'PDF',
-      other: 'Otro',
-    },
-  },
-
-  // API & Integration
-  api: {
-    title: 'Integración API',
-    keys: 'Claves API',
-    endpoints: 'Puntos finales',
-    rateLimit: 'Límite de velocidad',
-    authentication: 'Autenticación',
-    documentation: 'Documentación',
-
-    status: {
-      active: 'Activo',
-      inactive: 'Inactivo',
-      expired: 'Expirado',
-      suspended: 'Suspendido',
-    },
-  },
-
-  // Search and Filters
-  search: {
-    placeholder: 'Buscar...',
-    noResults: 'Sin resultados',
-    searchResults: 'Resultados de búsqueda',
-    filters: 'Filtros',
-    clearFilters: 'Limpiar filtros',
-    advancedSearch: 'Búsqueda avanzada',
-
-    filterOptions: {
-      category: 'Categoría',
-      status: 'Estado',
-      dateRange: 'Rango de fechas',
-      location: 'Ubicación',
-      supplier: 'Proveedor',
-      user: 'Usuario',
-    },
-  },
-
-  // Miscellaneous
-  misc: {
-    comingSoon: 'Próximamente',
-    workInProgress: 'Trabajo en progreso',
-    beta: 'Beta',
-    new: 'Nuevo',
-    updated: 'Actualizado',
-    deprecated: 'Obsoleto',
-    experimental: 'Experimental',
-
-    status: {
-      pending: 'Pendiente',
-      inProgress: 'En progreso',
-      completed: 'Completado',
-      failed: 'Fallido',
-      cancelled: 'Cancelado',
-      suspended: 'Suspendido',
-    },
-
-    priority: {
-      low: 'Baja',
-      medium: 'Media',
-      high: 'Alta',
-      critical: 'Crítica',
-      urgent: 'Urgente',
-    },
-  },
-
-  // QR Code & Barcode
-  barcode: {
-    title: 'Código de barras',
-    scan: 'Escanear código',
-    generate: 'Generar código',
-    types: {
-      qr: 'Código QR',
-      ean: 'EAN',
-      upc: 'UPC',
-      code128: 'Code 128',
-    },
-  },
-
-  // Reports
-  reports: {
-    title: 'Reportes',
-    generate: 'Generar reporte',
-    schedule: 'Programar reporte',
-    download: 'Descargar reporte',
-    email: 'Enviar por correo',
-
-    types: {
-      inventory: 'Reporte de inventario',
-      sales: 'Reporte de ventas',
-      usage: 'Reporte de uso',
-      variance: 'Reporte de variaciones',
-      audit: 'Reporte de auditoría',
-    },
-
-    frequency: {
-      daily: 'Diario',
-      weekly: 'Semanal',
-      monthly: 'Mensual',
-      quarterly: 'Trimestral',
+    messages: {
+      exportGenerated: 'Exportación generada exitosamente',
+      exportFailed: 'Error al generar exportación',
+      exportDownloaded: 'Exportación descargada',
     },
   },
 
   // Analytics Page
   analyticsPage: {
     title: 'Análisis',
-    subtitle: 'Análisis e información detallada para su práctica',
-    period: 'Período de tiempo',
-    dateFrom: 'Fecha desde',
-    dateTo: 'Fecha hasta',
-    export: 'Exportar datos',
+    subtitle: 'Informes e insights completos para tu inventario',
+    period: 'Período',
     totalEvents: 'Total de eventos',
     activeUsers: 'Usuarios activos',
     totalOrders: 'Total de pedidos',
     productUpdates: 'Actualizaciones de productos',
-    lowStockAlerts: 'Alertas de existencias bajas',
     dailyActivity: 'Actividad diaria',
-    topEvents: 'Principales eventos',
-    userActivity: 'Actividad del usuario',
-    productInsights: 'Información de productos',
+    topEvents: 'Eventos principales',
     frequentlyOrderedItems: 'Artículos pedidos frecuentemente',
     mostUpdatedProducts: 'Productos más actualizados',
-    user: 'Usuario',
-    activityCount: 'Número de actividades',
-    lastActivity: 'Última actividad',
-    product: 'Producto',
-    updates: 'Actualizaciones',
-    frequency: 'Frecuencia',
-    totalQuantity: 'Cantidad total',
-    orderCount: 'Número de pedidos',
+    userActivity: 'Actividad del usuario',
+    export: 'Exportar',
+    
     periods: {
       '7d': 'Últimos 7 días',
       '30d': 'Últimos 30 días',
       '90d': 'Últimos 90 días',
       '1y': 'Último año',
     },
-    charts: {
-      dailyActivity: 'Actividad diaria',
-    },
+
+    user: 'Usuario',
+    activityCount: 'Cantidad de actividad',
+    lastActivity: 'Última actividad',
+    product: 'Producto',
+    totalQuantity: 'Cantidad total',
+    orderCount: 'Cantidad de pedidos',
+    updates: 'Actualizaciones',
+
     loadError: 'Error al cargar datos de análisis',
-    exportSuccess: 'Datos de análisis exportados exitosamente',
-    exportError: 'Error al exportar datos de análisis',
+    exportSuccess: 'Análisis exportados exitosamente',
+    exportError: 'Error al exportar análisis',
+  },
+
+  // Settings
+  settings: {
+    title: 'Configuración',
+    subtitle: 'Configura tu sistema y preferencias',
+    general: 'General',
+    notifications: 'Notificaciones',
+    integrations: 'Integraciones',
+    users: 'Usuarios',
+    backup: 'Respaldo',
+    language: 'Idioma',
+    theme: 'Tema',
+    timezone: 'Zona horaria',
+    currency: 'Moneda',
+    dateFormat: 'Formato de fecha',
+    timeFormat: 'Formato de hora',
+    emailNotifications: 'Notificaciones por email',
+    pushNotifications: 'Notificaciones push',
+    stockAlerts: 'Alertas de stock',
+    orderAlerts: 'Alertas de pedidos',
+    systemAlerts: 'Alertas del sistema',
+    save: 'Guardar',
+    saved: 'Configuración guardada',
+    saveError: 'Error al guardar configuración',
+    reset: 'Restablecer',
+    resetToDefaults: 'Restablecer a valores predeterminados',
+    confirmReset: '¿Estás seguro de que quieres restablecer a valores predeterminados?',
+    
+    manageSettingsSubtitle: 'Gestiona la configuración de tu sistema y preferencias para una experiencia óptima',
+    profile: 'Perfil',
+    profileSubtitle: 'Tu información personal de usuario',
+    appearanceTitle: 'Apariencia',
+    appearanceSubtitle: 'Personaliza la apariencia de la aplicación',
+    darkModeDescription: 'Cambia entre modo claro y oscuro para mejor visibilidad',
+    selectLanguage: 'Elige tu idioma preferido para la interfaz',
+    colorSchemeTitle: 'Esquema de colores',
+    colorSchemeDescription: 'Selecciona el esquema de colores que se adapte a tu preferencia',
+    clinic: 'Clínica',
+    clinicInfoSubtitle: 'Detalles de contacto e información empresarial',
+    contactSettingsNotice: 'Los detalles de contacto solo pueden ser modificados por un administrador',
+    notificationSettingsSubtitle: 'Gestiona tus alertas y notificaciones',
+    stockAlertsLabel: 'Alertas de stock',
+    stockAlertsDescription: 'Recibe notificaciones cuando el stock esté bajo',
+    emailNotificationsLabel: 'Notificaciones por email',
+    emailNotificationsDescription: 'Recibe actualizaciones importantes por email',
+    browserNotificationsLabel: 'Notificaciones del navegador',
+    browserNotificationsDescription: 'Notificaciones push en tu navegador',
+    systemInfoTitle: 'Información del sistema',
+    systemInfoSubtitle: 'Información de versión y soporte',
+    versionLabel: 'Versión',
+    lastUpdateLabel: 'Última actualización',
+    supportLabel: 'Soporte',
+    languageChanged: 'Idioma cambiado a {language}',
+    clinicName: 'Nombre de clínica',
+    contactEmail: 'Email de contacto',
+    phoneNumber: 'Número de teléfono',
+    address: 'Dirección',
+    role: 'Rol',
+    darkModeEnabled: 'Modo oscuro habilitado',
+    lightModeEnabled: 'Modo claro habilitado',
+    settingsSaved: 'Configuración guardada exitosamente',
+    settingsSaveError: 'Ocurrió un error al guardar',
+    saveSettings: 'Guardar configuración',
+
+    styleGuideTitle: 'Guía de estilo de MedStock Pro',
+    styleGuideSubtitle: 'Referencia completa del sistema de diseño y showcase de componentes',
+    colorsSection: 'Colores',
+    primaryColors: 'Colores primarios',
+    neutralColors: 'Colores neutros',
+    typographySection: 'Tipografía',
+    buttonsSection: 'Botones',
+    solidButtons: 'Botones sólidos',
+    outlinedButtons: 'Botones delineados',
+    flatButtons: 'Botones planos',
+    iconButtons: 'Botones de icono',
+    cardsSection: 'Tarjetas',
+
+    primaryButton: 'Primario',
+    secondaryButton: 'Secundario',
+    successButton: 'Éxito',
+    warningButton: 'Advertencia',
+    dangerButton: 'Peligro',
+    infoButton: 'Info',
+    addProductButton: 'Agregar producto',
+    editButton: 'Editar',
+    deleteButton: 'Eliminar',
+    saveButton: 'Guardar',
+    downloadButton: 'Descargar',
+
+    cards: {
+      defaultCard: {
+        title: 'Tarjeta predeterminada',
+        subtitle: 'Tarjeta estándar para contenido general',
+        description: 'Esta es la variante de tarjeta predeterminada con estilo estándar. Usa fondos neutros que se adaptan bien a los modos claro y oscuro.',
+        action: 'Acción',
+      },
+      modernCard: {
+        title: 'Tarjeta moderna',
+        subtitle: 'Estilo moderno mejorado con bordes',
+        description: 'Variante de tarjeta moderna con estilo mejorado y bordes sutiles para una apariencia contemporánea.',
+        action: 'Acción primaria',
+      },
+      elevatedCard: {
+        title: 'Tarjeta elevada',
+        subtitle: 'Tarjeta con sombra mejorada para énfasis',
+        description: 'Esta tarjeta tiene estilo elevado con sombras mejoradas para crear profundidad y jerarquía.',
+        action: 'Acción elevada',
+      },
+      glassCard: {
+        title: 'Tarjeta de vidrio',
+        subtitle: 'Efecto glassmorphism con transparencia',
+        description: 'Tarjeta glassmorphism con desenfoque de fondo y efectos de transparencia para una apariencia moderna y elegante.',
+        action: 'Acción de vidrio',
+      },
+      outlinedCard: {
+        title: 'Tarjeta delineada',
+        subtitle: 'Tarjeta con énfasis en bordes',
+        description: 'Esta tarjeta usa bordes en lugar de sombras para definición, perfecta para diseños minimalistas.',
+        action: 'Acción delineada',
+      },
+      warningCard: {
+        title: 'Tarjeta de advertencia',
+        subtitle: 'Tarjeta con tema de color de advertencia',
+        description: 'Ejemplo de uso de colores de encabezado para crear tarjetas temáticas para diferentes tipos de contenido.',
+        action: 'Acción de advertencia',
+      },
+    },
+  },
+
+  // Suppliers
+  suppliers: {
+    title: 'Proveedores',
+    name: 'Nombre',
+    contactEmail: 'Email de contacto',
+    contactPhone: 'Teléfono de contacto',
+    website: 'Sitio web',
+    address: 'Dirección',
+    city: 'Ciudad',
+    postalCode: 'Código postal',
+    country: 'País',
+    status: 'Estado',
+    active: 'Activo',
+    inactive: 'Inactivo',
+    notes: 'Notas',
+    products: 'Productos',
+    orders: 'Pedidos',
+    lastOrder: 'Último pedido',
+    totalOrders: 'Total de pedidos',
+    averageDeliveryTime: 'Tiempo promedio de entrega',
+    reliability: 'Confiabilidad',
+    qualityRating: 'Calificación de calidad',
+    priceCompetitiveness: 'Competitividad de precios',
+    communicationRating: 'Calificación de comunicación',
+    paymentTerms: 'Términos de pago',
+    deliveryTerms: 'Términos de entrega',
+    minimumOrderAmount: 'Cantidad mínima de pedido',
+    leadTime: 'Tiempo de entrega',
+    packSize: 'Tamaño del paquete',
+    availability: 'Disponibilidad',
+    backorderAllowed: 'Pedido pendiente permitido',
+    addSupplier: 'Agregar proveedor',
+    editSupplier: 'Editar proveedor',
+    supplierDetails: 'Detalles del proveedor',
+    supplierCode: 'Código del proveedor',
+    contactPerson: 'Persona de contacto',
+    paymentTermsDetailed: 'Términos de pago',
+    minimumOrder: 'Valor mínimo de pedido',
+    shippingCost: 'Costo de envío',
+    freeShippingThreshold: 'Umbral de envío gratuito',
+    preferredOrderDay: 'Día preferido de pedido',
+    orderCutoffTime: 'Hora límite de pedido',
+    apiIntegration: 'Integración API',
+    syncEnabled: 'Sincronización habilitada',
+    lastSyncTime: 'Última sincronización',
+    supplierProducts: 'Productos del proveedor',
+    supplierSKU: 'SKU del proveedor',
+    supplierName: 'Nombre del proveedor',
+    unitPrice: 'Precio unitario',
+    minimumOrderQty: 'Cantidad mínima de pedido',
+    leadTimeDays: 'Tiempo de entrega (días)',
+  },
+
+  // Admin
+  admin: {
+    title: 'Administración',
+    settings: 'Configuración',
+    audit: 'Registro de auditoría',
+    users: 'Usuarios',
+    locations: 'Ubicaciones',
+    permissions: 'Permisos',
+    analytics: 'Análisis',
+    quickActions: 'Acciones rápidas',
+    
+    stats: {
+      totalUsers: 'Total de usuarios',
+      activeUsers: 'Usuarios activos',
+      activeToday: 'activo hoy',
+      totalLocations: 'Total de ubicaciones',
+      active: 'activo',
+      pendingSync: 'Sincronización pendiente',
+      lastSync: 'Última sincronización',
+      todayEvents: 'Eventos de hoy',
+      fromYesterday: 'desde ayer',
+    },
+
+    userManagement: {
+      title: 'Gestión de usuarios',
+      invite: 'Invitar usuario',
+      email: 'Dirección de email',
+      roles: 'Roles',
+      lastActive: 'Último activo',
+      resetPassword: 'Restablecer contraseña',
+      activate: 'Activar',
+      deactivate: 'Desactivar',
+    },
+
+    errors: {
+      loadUsersFailed: 'Error al cargar usuarios',
+      loadLocationsFailed: 'Error al cargar ubicaciones',
+      loadPermissionsFailed: 'Error al cargar permisos',
+      
+      // Common admin errors
+      noPracticeSelected: 'No hay práctica seleccionada',
+      practiceOrUserNotFound: 'Práctica o usuario no encontrado',
+      userNotFoundInPractice: 'Usuario no encontrado en la práctica',
+      userEmailNotFound: 'Email del usuario no encontrado',
+      cannotDeactivatePracticeOwner: 'No se puede desactivar el propietario de la práctica',
+      cannotDeleteMainLocation: 'No se puede eliminar la ubicación principal',
+      
+      // Permission errors
+      insufficientPermissionsToCreate: 'Permisos insuficientes para crear',
+      insufficientPermissionsToUpdate: 'Permisos insuficientes para actualizar',
+      insufficientPermissionsToDelete: 'Permisos insuficientes para eliminar',
+      insufficientPermissionsToView: 'Permisos insuficientes para ver',
+      insufficientPermissionsToGrant: 'Permisos insuficientes para otorgar permisos',
+      insufficientPermissionsToRevoke: 'Permisos insuficientes para revocar permisos',
+      insufficientPermissionsToReset: 'Permisos insuficientes para resetear',
+      insufficientPermissionsToToggle: 'Permisos insuficientes para cambiar',
+      
+      // Operation errors
+      failedToCreate: 'Error al crear',
+      failedToUpdate: 'Error al actualizar',
+      failedToDelete: 'Error al eliminar',
+      failedToGet: 'Error al obtener',
+      failedToGrant: 'Error al otorgar',
+      failedToRevoke: 'Error al revocar',
+      failedToSend: 'Error al enviar',
+      failedToSet: 'Error al establecer',
+    },
+  },
+
+  // Permissions
+  permissions: {
+    title: 'Permisos y acceso',
+    user: 'Usuario',
+    permissionType: 'Tipo de permiso',
+    resourceType: 'Tipo de recurso',
+    expiresAt: 'Expira en',
+    
+    templates: {
+      title: 'Plantillas de permisos',
+      assistant: 'Asistente',
+      manager: 'Gerente',
+      admin: 'Administrador',
+      owner: 'Propietario',
+      viewer: 'Visualizador',
+    },
+
+    types: {
+      read: 'Leer',
+      write: 'Escribir',
+      delete: 'Eliminar',
+      admin: 'Administrar',
+    },
+
+    notifications: {
+      revoked: 'Permiso revocado',
+      granted: 'Permiso otorgado',
+    },
+
+    errors: {
+      revokeFailed: 'Error al revocar permiso',
+      grantFailed: 'Error al otorgar permiso',
+    },
+  },
+
+  // Locations - Enhanced
+  locationsAdmin: {
+    isMain: 'Ubicación principal',
+    setAsMain: 'Establecer como principal',
+    manageAccess: 'Gestionar acceso',
+    
+    notifications: {
+      mainLocationSet: 'Ubicación principal establecida',
+      accessUpdated: 'Acceso actualizado',
+    },
+
+    errors: {
+      setMainFailed: 'Error al establecer ubicación principal',
+      accessUpdateFailed: 'Error al actualizar acceso',
+    },
   },
 
   // Suppliers Page
   suppliersPage: {
     title: 'Proveedores',
-    subtitle:
-      'Gestione sus relaciones con proveedores e información de vendedores',
+    subtitle: 'Gestiona las relaciones con tus proveedores e información de vendedores',
     searchSuppliers: 'Buscar proveedores...',
     filterByStatus: 'Filtrar por estado',
     importSuppliers: 'Importar proveedores',
@@ -1727,18 +1495,18 @@ export default {
     editSupplier: 'Editar proveedor',
     addNewSupplier: 'Agregar nuevo proveedor',
     supplierName: 'Nombre del proveedor',
-    contactEmail: 'Correo electrónico de contacto',
+    contactEmail: 'Email de contacto',
     contactPhone: 'Teléfono de contacto',
     website: 'Sitio web',
     address: 'Dirección',
     city: 'Ciudad',
     postalCode: 'Código postal',
     country: 'País',
-    magentoVendorId: 'ID de vendedor Magento',
+    magentoVendorId: 'ID de proveedor Magento',
     notes: 'Notas',
     activeSupplier: 'Proveedor activo',
     contactInformation: 'Información de contacto',
-    location: 'Ubicación',
+    locationInfo: 'Ubicación',
     magentoLink: 'Enlace Magento',
     status: 'Estado',
     actions: 'Acciones',
@@ -1752,15 +1520,13 @@ export default {
     save: 'Guardar',
     nameRequired: 'El nombre es requerido',
     linkToMagento: 'Vincular a Magento',
-    linkToMagentoPrompt:
-      'Ingrese el ID de vendedor Magento para vincular este proveedor:',
+    linkToMagentoPrompt: 'Ingresa el ID de proveedor Magento para vincular este proveedor:',
     confirmDelete: 'Confirmar eliminación',
-    confirmDeleteMessage:
-      '¿Está seguro de que desea eliminar "{name}"? Esta acción no se puede deshacer.',
+    confirmDeleteMessage: '¿Estás seguro de que quieres eliminar "{name}"? Esta acción no se puede deshacer.',
     supplierCreated: 'Proveedor creado exitosamente',
     supplierUpdated: 'Proveedor actualizado exitosamente',
     supplierDeleted: 'Proveedor eliminado exitosamente',
-    supplierLinkedToMagento: 'Proveedor vinculado exitosamente a Magento',
+    supplierLinkedToMagento: 'Proveedor vinculado a Magento exitosamente',
     loadSuppliersError: 'Error al cargar proveedores',
     saveSupplierError: 'Error al guardar proveedor',
     deleteSupplierError: 'Error al eliminar proveedor',
@@ -1771,7 +1537,7 @@ export default {
   // Notifications Page
   notificationsPage: {
     title: 'Notificaciones',
-    subtitle: 'Gestione sus notificaciones y preferencias de alertas',
+    subtitle: 'Gestiona tus notificaciones y preferencias de alertas',
     all: 'Todas',
     unread: 'No leídas',
     read: 'Leídas',
@@ -1785,32 +1551,30 @@ export default {
     total: 'Total',
     byCategory: 'Por categoría',
     quickActions: 'Acciones rápidas',
-    testStockAlert: 'Probar alerta de existencias',
+    testStockAlert: 'Probar alerta de stock',
     testOrderUpdate: 'Probar actualización de pedido',
     clearAllNotifications: 'Limpiar todas las notificaciones',
     markAsReadTooltip: 'Marcar como leída',
     deleteTooltip: 'Eliminar',
     clearAllConfirm: 'Limpiar todas las notificaciones',
-    clearAllConfirmMessage:
-      '¿Está seguro de que desea eliminar todas las notificaciones? Esta acción no se puede deshacer.',
+    clearAllConfirmMessage: '¿Estás seguro de que quieres eliminar todas las notificaciones? Esta acción no se puede deshacer.',
     allMarkedAsRead: 'Todas las notificaciones marcadas como leídas',
     notificationDeleted: 'Notificación eliminada',
-    allNotificationsCleared: 'Todas las notificaciones eliminadas',
-    testStockAlertCreated: 'Alerta de existencias de prueba creada',
+    allNotificationsCleared: 'Todas las notificaciones limpiadas',
+    testStockAlertCreated: 'Alerta de stock de prueba creada',
     testOrderUpdateCreated: 'Actualización de pedido de prueba creada',
-    settingsFeatureComingSoon:
-      '¡Función de configuración de notificaciones próximamente!',
+    settingsFeatureComingSoon: '¡Función de configuración de notificaciones próximamente!',
     loadNotificationsError: 'Error al cargar notificaciones',
 
     categories: {
-      stockAlert: 'Alertas de existencias',
+      stockAlert: 'Alertas de stock',
       orderUpdate: 'Actualizaciones de pedidos',
       systemNotification: 'Notificaciones del sistema',
       reminder: 'Recordatorios',
     },
 
     types: {
-      stock_alert: 'alerta de existencias',
+      stock_alert: 'alerta de stock',
       order_update: 'actualización de pedido',
       system_notification: 'notificación del sistema',
       reminder: 'recordatorio',
@@ -1818,87 +1582,27 @@ export default {
 
     testMessages: {
       stockAlert: {
-        title: 'Alerta de existencias de prueba',
-        message: 'Esta es una alerta de existencias bajas de prueba',
+        title: 'Alerta de stock de prueba',
+        message: 'Esta es una notificación de stock bajo de prueba',
       },
       orderUpdate: {
         title: 'Actualización de pedido de prueba',
-        message:
-          'Esta es una notificación de actualización de pedido de prueba',
+        message: 'Esta es una notificación de actualización de pedido de prueba',
       },
-    },
-
-    // Sample notifications
-    sampleNotifications: {
-      lowStockWarning: 'Alerta de existencias bajas',
-      orderConfirmed: 'Pedido confirmado',
-      stockUpdated: 'Existencias actualizadas',
-      systemMaintenance: 'Mantenimiento del sistema',
     },
   },
 
-  // Products Page
-  productsPage: {
-    title: 'Productos',
-    subtitle: 'Gestiona tu resumen de productos y pedidos',
-    searchPlaceholder: 'Buscar productos...',
-    viewCart: 'Ver carrito de compras',
-    filters: {
-      title: 'Filtros',
-      category: 'Categoría',
-      stockStatus: 'Estado de inventario',
-      supplier: 'Proveedor',
-      priceRange: 'Rango de precios',
-      selectCategory: 'Seleccionar categoría',
-      selectStockStatus: 'Seleccionar estado',
-      selectSupplier: 'Seleccionar proveedor',
-      minPrice: 'Precio mín.',
-      maxPrice: 'Precio máx.',
-      remka: 'Remka',
-      external: 'Externo',
-    },
-    clearFilters: 'Limpiar filtros',
-    noProductsFound: 'No se encontraron productos',
-    table: {
-      name: 'Nombre',
-      sku: 'SKU',
-      stockStatus: 'Estado de inventario',
-      price: 'Precio',
-      batchStatus: 'Estado del lote',
-      actions: 'Acciones',
-    },
-    stockStatus: {
-      in_stock: 'En inventario',
-      low_stock: 'Inventario bajo',
-      out_of_stock: 'Sin inventario',
-    },
-    batchStatus: {
-      good: 'Bueno',
-      expiring: 'Por vencer',
-      expired: 'Vencido',
-    },
-    bestPrice: 'Mejor precio',
-    batches: 'lotes',
-    noBatches: 'Sin lotes',
-    viewDetails: 'Ver detalles',
-    addToCart: 'Agregar al carrito',
-    addToOrderList: 'Agregar a lista de pedidos',
-    expandDetails: 'Expandir detalles',
-    productDetails: 'Detalles del producto',
-    description: 'Descripción',
-    category: 'Categoría',
-    unit: 'Unidad',
-    suppliers: 'Proveedores',
-    stockLevels: 'Niveles de inventario',
-    stats: {
-      totalProducts: 'Productos totales',
-      inStockProducts: 'En inventario',
-      lowStockProducts: 'Inventario bajo',
-      outOfStockProducts: 'Sin inventario',
-    },
-    addedToCart: "'{productName}' agregado al carrito",
-    cartAddError: 'Error al agregar al carrito',
-    dataRefreshed: 'Datos de productos actualizados',
-    productLoadError: 'Error al cargar productos',
+  // Messages for user feedback
+  messages: {
+    addToCartComingSoon: 'Función agregar al carrito próximamente',
+    addAllSuggestionsComingSoon: 'Función agregar todas las sugerencias próximamente',
+    cartCleared: 'Carrito limpiado',
+    cartSaved: 'Carrito guardado',
+  },
+
+  // Confirm dialog translations  
+  dialogs: {
+    typeToConfirm: 'Escribe {text} para confirmar',
+    confirmClose: '¿Estás seguro de que quieres cerrar? Los cambios no guardados se perderán.',
   },
 };

@@ -24,6 +24,8 @@ export default {
     add: 'Toevoegen',
     remove: 'Verwijderen',
     moreActions: 'Meer acties',
+    allLocations: 'Alle locaties',
+    allStatuses: 'Alle statussen',
     search: 'Zoeken',
     filter: 'Filter',
     clear: 'Wissen',
@@ -134,7 +136,7 @@ export default {
     shoppingCart: 'Winkelwagen',
     styleGuide: 'Stijlgids',
     designSystem: 'Ontwerp systeem referentie',
-    // Navigation sections
+    
     sections: {
       main: 'Overzicht',
       inventory: 'Voorraadbeheer',
@@ -142,7 +144,7 @@ export default {
       analytics: 'Analyses & Rapporten',
       administration: 'Beheer',
     },
-    // Inventory sub-navigation
+    
     inventoryLevels: 'Voorraadniveaus',
     currentStock: 'Huidige voorraad overzicht',
     locations: 'Locaties',
@@ -176,21 +178,18 @@ export default {
     support: 'Ondersteuning',
     allRightsReserved: 'Alle rechten voorbehouden',
     professionalInventory: 'Professioneel medisch voorraadbeheer',
-    platformDescription:
-      'Stroomlijn je medische voorraadbeheer met ons enterprise-grade platform. Volg voorraad, beheer bestellingen, en zorg voor compliance met gemak.',
+    platformDescription: 'Stroomlijn je medische voorraadbeheer met ons enterprise-grade platform. Volg voorraad, beheer bestellingen, en zorg voor compliance met gemak.',
     realtimeTracking: 'Realtime voorraad tracking',
     automatedAlerts: 'Geautomatiseerde herbestel waarschuwingen',
     complianceReporting: 'Compliance rapportage',
     multilocationSupport: 'Multi-locatie ondersteuning',
-    demoCredentialsFilled:
-      'Demo credentials ingevuld. Klik op Inloggen om door te gaan.',
-    passwordResetComingSoon:
-      'Wachtwoord reset functionaliteit komt binnenkort.',
+    demoCredentialsFilled: 'Demo credentials ingevuld. Klik op Inloggen om door te gaan.',
+    passwordResetComingSoon: 'Wachtwoord reset functionaliteit komt binnenkort.',
     copyright: '© {year} {company}. Alle rechten voorbehouden.',
     passwordHelp: 'Voer je wachtwoord in om veilig in te loggen',
-    demoHelp:
-      'Gebruik demo@medstock-pro.com met wachtwoord demo123 voor demonstratie',
+    demoHelp: 'Gebruik demo@medstock-pro.com met wachtwoord demo123 voor demonstratie',
     signingIn: 'Inloggen...',
+    fullName: 'Volledige naam',
   },
 
   // Demo Account
@@ -202,11 +201,9 @@ export default {
     resetDataSuccess: 'Demo data succesvol gereset',
     resetDataError: 'Fout bij het resetten van demo data',
     limitations: 'Demo beperkingen',
-    limitationsText:
-      'Dit is een demo account. Alle wijzigingen zijn zichtbaar maar kunnen worden gereset.',
+    limitationsText: 'Dit is een demo account. Alle wijzigingen zijn zichtbaar maar kunnen worden gereset.',
     practice: 'Remka demo kliniek',
-    practiceDescription:
-      'Volledig functionele demo omgeving met realistische data',
+    practiceDescription: 'Volledig functionele demo omgeving met realistische data',
     resetInfo: 'Dit zal alle demo data verwijderen en vers opnieuw aanmaken',
     onlyDemoUserCanReset: 'Alleen demo gebruiker kan demo data resetten',
     changesCanBeReset: 'Alle wijzigingen worden opgeslagen maar kunnen worden gereset via de Admin pagina.',
@@ -245,8 +242,7 @@ export default {
     viewAnalytics: 'Analyses bekijken',
     welcomeTitle: 'Welkom bij MedStock Pro',
     welcomeSubtitle: 'Je professionele medische voorraadbeheersysteem',
-    welcomeDescription:
-      'Beheer je voorraad efficiënt met onze geavanceerde tools en realtime tracking.',
+    welcomeDescription: 'Beheer je voorraad efficiënt met onze geavanceerde tools en realtime tracking.',
     systemStatus: 'Systeemstatus',
     systemStatusSubtitle: 'Huidige status van je systeem',
     systemOnline: 'Systeem online',
@@ -283,12 +279,10 @@ export default {
   // Error pages
   error: {
     pageNotFound: 'Pagina niet gevonden',
-    pageNotFoundDescription:
-      'Sorry, de pagina die je zoekt kan niet worden gevonden. Deze is mogelijk verplaatst, verwijderd, of je hebt een verkeerde URL ingevoerd.',
+    pageNotFoundDescription: 'Sorry, de pagina die je zoekt kan niet worden gevonden. Deze is mogelijk verplaatst, verwijderd, of je hebt een verkeerde URL ingevoerd.',
     goHome: 'Naar home',
     goBack: 'Terug',
-    tryThesePages:
-      "Probeer in plaats daarvan een van deze populaire pagina's te bezoeken:",
+    tryThesePages: "Probeer in plaats daarvan een van deze populaire pagina's te bezoeken:",
   },
 
   // Validation
@@ -302,12 +296,44 @@ export default {
     positiveNumber: 'Waarde moet een positief getal zijn',
     integer: 'Alleen hele getallen toegestaan',
     mustBePositive: 'Waarde moet positief zijn',
+    textMustMatch: 'Tekst moet overeenkomen met {text}',
+    formErrors: 'Formulier bevat fouten',
   },
 
   // Product (for form fields and references)
   product: {
     product: 'Product',
     selectProduct: 'Product selecteren',
+    samples: {
+      syringeBD: 'BD Plastipak Spuit',
+      needleBD: 'BD Microlance Naald',
+    },
+  },
+
+  // Location (for form fields and references)
+  location: {
+    location: 'Locatie',
+    selectLocation: 'Locatie selecteren',
+    sampleData: {
+      mainWarehouse: {
+        name: 'Hoofdmagazijn',
+        type: 'Magazijn',
+        description: 'Centraal opslagmagazijn',
+      },
+      pharmacy: {
+        name: 'Apotheek opslag',
+        type: 'Apotheek',
+        description: 'Geneesmiddelen opslag',
+      },
+      treatmentRoom: {
+        name: 'Behandelkamer A',
+        type: 'Behandelkamer',
+        description: 'Voorraad voor behandelkamer A',
+      },
+    },
+    samples: {
+      emergencyStock: 'Spoedkast',
+    },
   },
 
   // Inventory & Stock Management
@@ -319,8 +345,6 @@ export default {
     suppliers: 'Leveranciers',
     orders: 'Bestellingen',
     stockCounting: 'Voorraadtelling',
-
-    // Overview cards
     overview: 'Voorraad overzicht',
     totalProducts: 'Totaal producten',
     totalValue: 'Totale waarde',
@@ -328,13 +352,9 @@ export default {
     outOfStockItems: 'Artikelen zonder voorraad',
     stockAccuracy: 'Voorraadnauwkeurigheid',
     lastFullCount: 'Laatste volledige telling',
-
-    // Location filters
     allLocations: 'Alle locaties',
     currentLocation: 'Huidige locatie',
     switchLocation: 'Locatie wisselen',
-
-    // Actions
     startCounting: 'Telling starten',
     startCountingSession: 'Tellingsessie starten',
     quickAdjustment: 'Snelle aanpassing',
@@ -342,65 +362,45 @@ export default {
     transferStock: 'Voorraad overbrengen',
     viewMovements: 'Mutaties bekijken',
     exportData: 'Gegevens exporteren',
-
-    // Stock status
     inStock: 'Op voorraad',
     lowStock: 'Lage voorraad',
     outOfStock: 'Niet op voorraad',
     overStock: 'Overvoorraad',
-
-    // Recent activity
     recentActivity: 'Recente activiteit',
     recentMovements: 'Recente mutaties',
     noRecentActivity: 'Geen recente activiteit',
-
-    // Stock alerts
     stockAlerts: 'Voorraad waarschuwingen',
     criticalAlerts: 'Kritieke waarschuwingen',
     urgentAttention: 'Vereist urgente aandacht',
     noAlerts: 'Geen waarschuwingen',
-
-    // Counting
     countingStatus: 'Telling status',
     activeSession: 'Actieve sessie',
     noActiveSession: 'Geen actieve telling',
-
-    // Integration status
     syncStatus: 'Sync status',
     lastSync: 'Laatste sync',
     syncNow: 'Nu synchroniseren',
-
-    // Messages
     loadingData: 'Voorraadgegevens laden...',
     refreshingData: 'Gegevens vernieuwen...',
     dataRefreshed: 'Gegevens succesvol vernieuwd',
     refreshFailed: 'Vernieuwen mislukt',
-
-    // Supplier integration
     manualOrder: 'Handmatige bestelling',
     apiOrder: 'API bestelling',
     downloadPdf: 'PDF downloaden',
     placeOrder: 'Bestelling plaatsen',
-
-    // Thresholds and settings
     setMinimum: 'Minimum instellen',
     setMaximum: 'Maximum instellen',
     reorderPoint: 'Herbestelpunt',
-
-    // Units and measurements
     pieces: 'stuks',
     units: 'eenheden',
     quantity: 'Hoeveelheid',
-
-    // Time references
     today: 'vandaag',
     yesterday: 'gisteren',
     thisWeek: 'deze week',
     thisMonth: 'deze maand',
     neverCounted: 'nooit geteld',
-
-    // Dialog specific
+    sessionName: 'Sessienaam',
     sessionNamePlaceholder: 'Voer een naam in voor de tellingsessie',
+    sessionType: 'Sessietype',
     selectLocations: 'Locaties selecteren',
     allowNegativeCounts: 'Negatieve tellingen toestaan',
     requireApproval: 'Goedkeuring vereist',
@@ -417,8 +417,6 @@ export default {
     defaultSessionName: 'Telling {date} {time}',
     sessionCreated: 'Tellingsessie aangemaakt',
     sessionCreationFailed: 'Aanmaken tellingsessie mislukt',
-
-    // Adjustment dialog
     selectLocation: 'Locatie selecteren',
     searchProduct: 'Product zoeken',
     searchProductPlaceholder: 'Typ om te zoeken...',
@@ -427,8 +425,6 @@ export default {
     adjustmentNotesPlaceholder: 'Reden voor aanpassing...',
     stockAdjusted: 'Voorraad aangepast',
     adjustmentFailed: 'Voorraadaanpassing mislukt',
-
-    // Transfer dialog
     fromLocation: 'Van locatie',
     toLocation: 'Naar locatie',
     locationsMustBeDifferent: 'Locaties moeten verschillend zijn',
@@ -436,8 +432,6 @@ export default {
     transferNotesPlaceholder: 'Notities voor overdracht...',
     stockTransferred: 'Voorraad overgebracht',
     transferFailed: 'Voorraadoverdracht mislukt',
-
-    // Stock movements
     movementHistory: 'Mutatiegeschiedenis',
     movementType: 'Mutatietype',
     movementDetails: 'Mutatie details',
@@ -447,8 +441,6 @@ export default {
     reasonCode: 'Redencode',
     loadingMovements: 'Mutaties laden...',
     noMovementsFound: 'Geen mutaties gevonden',
-
-    // Stock levels
     stockFilter: 'Voorraad filter',
     searchProducts: 'Producten zoeken...',
     currentStock: 'Huidige voorraad',
@@ -461,8 +453,10 @@ export default {
     viewHistory: 'Geschiedenis bekijken',
     noProductsFound: 'Geen producten gevonden',
     overStockItems: 'Artikelen met overvoorraad',
+    batchTrackingWarning: 'Dit product vereist batch tracking',
+    cannotAdjustBatchTrackedProduct: 'Kan geen handmatige aanpassing doen voor batch-tracked product',
+    redirectingToBatchManagement: 'Doorverwijzen naar batch beheer',
 
-    // Movement types
     movement: {
       receipt: 'Ontvangst',
       usage: 'Gebruik',
@@ -472,7 +466,6 @@ export default {
       waste: 'Afval',
     },
 
-    // Reason codes
     reason: {
       normal_usage: 'Normaal gebruik',
       expired: 'Verlopen',
@@ -484,6 +477,37 @@ export default {
       adjustment: 'Aanpassing',
       count_correction: 'Telling correctie',
     },
+  },
+
+  // Counting System
+  counting: {
+    title: 'Voorraadtelling',
+    overview: 'Beheer je voorraadtellingsessies en volg voorraadnauwkeurigheid',
+    sessionStatus: 'Sessie status',
+    startSession: 'Tellingsessie starten',
+    activeSession: 'Actieve tellingsessie',
+    progress: 'Voortgang',
+    sessionType: 'Sessietype',
+    discrepancies: 'Discrepanties',
+    continueSession: 'Sessie voortzetten',
+    completeSession: 'Sessie voltooien',
+    sessionsOverview: 'Tellingsessies overzicht',
+    loadingSessions: 'Tellingsessies laden...',
+    noSessionsFound: 'Geen tellingsessies gevonden',
+    sessionName: 'Sessienaam',
+    status: 'Status',
+    sessionSummary: 'Sessie samenvatting',
+    totalProducts: 'Totaal producten',
+    countedProducts: 'Getelde producten',
+    loadingSession: 'Tellingsessie laden...',
+    sessionNotFound: 'Sessie niet gevonden',
+    sessionNotFoundDescription: 'De tellingsessie die je zoekt kon niet worden gevonden',
+    countingResults: 'Tellingsresultaten',
+    viewResults: 'Bekijk tellingsresultaten en discrepanties',
+    noResultsFound: 'Geen tellingsresultaten gevonden',
+    product: 'Product',
+    variance: 'Variantie',
+    approveSession: 'Sessie goedkeuren',
   },
 
   // Batch Management
@@ -512,8 +536,6 @@ export default {
     qualityFailed: 'Kwaliteit afgekeurd',
     qualityNotes: 'Kwaliteitsnotities',
     quarantineUntil: 'Quarantaine tot',
-
-    // Dashboard items
     addBatch: 'Batch toevoegen',
     totalBatches: 'Totaal batches',
     expiringSoon: 'Binnenkort verlopend',
@@ -548,8 +570,6 @@ export default {
     expiresToday: 'Verloopt vandaag',
     expiresTomorrow: 'Verloopt morgen',
     expiresInDays: 'Verloopt over {days} dagen',
-
-    // FIFO management
     fifoSuggestion: 'FIFO Suggestie',
     generateFifoSuggestion: 'Genereer FIFO Suggestie',
     fifoResults: 'FIFO Resultaten',
@@ -557,12 +577,9 @@ export default {
     fifoSuggestionGenerated: 'FIFO suggestie succesvol gegenereerd',
     applyFifoSuggestion: 'FIFO Suggestie Toepassen',
     confirmFifoApplication: 'FIFO Toepassing Bevestigen',
-    confirmFifoMessage:
-      'Weet je zeker dat je deze FIFO suggestie wilt toepassen?',
+    confirmFifoMessage: 'Weet je zeker dat je deze FIFO suggestie wilt toepassen?',
     fifoAppliedSuccessfully: 'FIFO suggestie succesvol toegepast',
     useQuantity: 'Gebruik hoeveelheid',
-
-    // Reports
     selectReport: 'Selecteer rapport',
     generateReport: 'Genereer rapport',
     exportReport: 'Exporteer rapport',
@@ -579,8 +596,6 @@ export default {
     fifoComplianceDesc: 'Controleer FIFO naleving',
     batchCosts: 'Batch kosten',
     batchCostsDesc: 'Analyseer kosten per batch',
-
-    // Batch details and usage
     batchDetails: 'Batch Details',
     batchInformation: 'Batch Informatie',
     quantityStatus: 'Hoeveelheid Status',
@@ -603,25 +618,27 @@ export default {
     purchaseOrderNumber: 'Inkoopordernummer',
     invoiceNumber: 'Factuurnummer',
     currency: 'Valuta',
-
-    // Batch registration and validation
     registerNewBatch: 'Nieuwe batch registreren',
     batchRegisteredSuccessfully: 'Batch succesvol geregistreerd',
-    validation: {
-      expiryDateInPast: 'Vervaldatum kan niet in het verleden liggen',
-      exceededAvailable: 'Overschrijdt beschikbare hoeveelheid',
-      mustBePositive: 'Moet een positieve waarde zijn',
-    },
-
-    // Table and overview
     urgencyLevel: 'Urgentieniveau',
     expiryAlert: 'Vervalwaarschuwing',
     batchesExpiringSoon: '{count} batches verlopen binnenkort',
     noBatchesFound: 'Geen batches gevonden',
     noExpiringBatches: 'Geen verlopende batches',
     daysUntilExpiry: 'Dagen tot verval',
+    filterByStatus: 'Filter op status',
+    filterByExpiry: 'Filter op verval',
+    showExpiring: 'Toon verlopende batches',
+    showExpired: 'Toon verlopen batches',
+    showActive: 'Toon actieve batches',
+    requestedQuantity: 'Gevraagde Hoeveelheid',
 
-    // Urgency levels
+    validation: {
+      expiryDateInPast: 'Vervaldatum kan niet in het verleden liggen',
+      exceededAvailable: 'Overschrijdt beschikbare hoeveelheid',
+      mustBePositive: 'Moet een positieve waarde zijn',
+    },
+
     urgency: {
       expired: 'Verlopen',
       critical: 'Kritiek',
@@ -638,6 +655,15 @@ export default {
       active: 'Actief',
       inactive: 'Inactief',
     },
+
+    usage: {
+      consumption: 'Verbruik',
+      expired: 'Verlopen',
+      damaged: 'Beschadigd',
+      transfer: 'Overdracht',
+      adjustment: 'Aanpassing',
+      other: 'Overig',
+    },
   },
 
   // Products
@@ -652,14 +678,10 @@ export default {
     description: 'Beschrijving',
     unit: 'Eenheid',
     price: 'Prijs',
-
-    // Stock Settings
     minimumStock: 'Minimum Voorraad',
     maximumStock: 'Maximum Voorraad',
     reorderPoint: 'Herbestelpunt',
     preferredSupplier: 'Voorkeursleverancier',
-
-    // Status
     active: 'Actief',
     inactive: 'Inactief',
     discontinued: 'Uitgefaseerd',
@@ -668,10 +690,8 @@ export default {
   // Products Page
   productsPage: {
     title: 'Producten',
-    subtitle:
-      'Overzicht van alle beschikbare producten van Remka en externe leveranciers',
+    subtitle: 'Overzicht van alle beschikbare producten van Remka en externe leveranciers',
 
-    // Table headers
     table: {
       name: 'Naam',
       sku: 'SKU',
@@ -686,7 +706,6 @@ export default {
       batchStatus: 'Batch Status',
     },
 
-    // Search and filters
     searchPlaceholder: 'Zoek op naam of SKU...',
     viewCart: 'Winkelwagen Bekijken',
     filterByCategory: 'Filter op categorie',
@@ -695,7 +714,6 @@ export default {
     sortBy: 'Sorteer op',
     clearFilters: 'Filters wissen',
 
-    // Filter options
     filters: {
       title: 'Filters',
       category: 'Categorie',
@@ -714,7 +732,6 @@ export default {
       external: 'Externe leveranciers',
     },
 
-    // Statistics
     stats: {
       totalProducts: 'Totaal Producten',
       inStockProducts: 'Op Voorraad',
@@ -724,7 +741,6 @@ export default {
       categoriesCount: 'Categorieën',
     },
 
-    // Stock status
     stockStatus: {
       in_stock: 'Op Voorraad',
       low_stock: 'Lage Voorraad',
@@ -732,14 +748,12 @@ export default {
       unavailable: 'Niet Beschikbaar',
     },
 
-    // Batch status
     batchStatus: {
       good: 'Goed',
       expiring: 'Binnenkort Verlopend',
       expired: 'Verlopen',
     },
 
-    // Product details
     productDetails: 'Product Details',
     description: 'Beschrijving',
     category: 'Categorie',
@@ -750,13 +764,11 @@ export default {
     noBatches: 'Geen batches',
     bestPrice: 'Beste prijs',
 
-    // Actions
     viewDetails: 'Details Bekijken',
     addToCart: 'Toevoegen aan Winkelwagen',
     addToOrderList: 'Toevoegen aan Bestellijst',
     expandDetails: 'Details Uitklappen',
 
-    // Messages
     addedToCart: '{productName} toegevoegd aan winkelwagen',
     cartAddError: 'Fout bij toevoegen product aan winkelwagen',
     dataRefreshed: 'Gegevens succesvol vernieuwd',
@@ -765,7 +777,6 @@ export default {
     noProductsForFilter: 'Geen producten gevonden voor huidige filters',
     loadingProducts: 'Producten laden...',
 
-    // Product details dialog
     details: {
       title: 'Product Details',
       basicInfo: 'Basis Informatie',
@@ -834,6 +845,33 @@ export default {
       totalAmount: 'Totaal',
     },
 
+    exportFormat: {
+      csv: 'CSV Formaat',
+      pdf: 'PDF Formaat',
+    },
+
+    exportScope: {
+      all: 'Alle Bestellingen',
+      filtered: 'Gefilterde Bestellingen',
+      selected: 'Geselecteerde Bestellingen',
+    },
+
+    email: {
+      recipient: 'E-mailadres ontvanger',
+      subject: 'Onderwerp',
+      message: 'Bericht',
+      send: 'E-mail Verzenden',
+    },
+
+    analytics: {
+      totalOrders: 'Totaal Bestellingen',
+      totalValue: 'Totale Waarde',
+      avgOrderSize: 'Gemiddelde Bestelgrootte',
+      orderFrequency: 'Bestellingen/Dag',
+      orderTrends: 'Bestel Trends',
+      chartsComingSoon: 'Grafieken en gedetailleerde analyses komen binnenkort!',
+    },
+
     notifications: {
       pdfDownloaded: 'PDF succesvol gedownload',
       csvDownloaded: 'CSV succesvol gedownload',
@@ -841,6 +879,8 @@ export default {
       magentoSubmitted: 'Bestelling verzonden naar Magento: {orderNumber}',
       orderCancelled: 'Bestelling succesvol geannuleerd',
       exportCompleted: 'Export voltooid: {count} bestellingen',
+      pdfBulkNotSupported: 'PDF bulk export nog niet ondersteund',
+      bulkEmailComingSoon: 'Bulk e-mail functie komt binnenkort',
     },
 
     errors: {
@@ -852,7 +892,13 @@ export default {
       cancelFailed: 'Annuleren bestelling mislukt',
       exportFailed: 'Exporteren bestellingen mislukt',
       noOrdersToExport: 'Geen bestellingen om te exporteren',
+      noPracticeSelected: 'Selecteer eerst een praktijk om bestellingen te bekijken',
     },
+
+    exportFilteredNote: 'Exporteer {count} gefilterde bestellingen',
+    exportSelectedNote: 'Exporteer {count} geselecteerde bestellingen',
+    emailRequired: 'E-mail is verplicht',
+    noPracticeSelected: 'Geen praktijk geselecteerd',
   },
 
   // Order Lists
@@ -866,7 +912,6 @@ export default {
     noLists: 'Geen bestellijsten gevonden',
     createNew: 'Maak een nieuwe bestellijst om te beginnen',
 
-    // List details
     name: 'Naam',
     description: 'Beschrijving',
     supplier: 'Leverancier',
@@ -876,7 +921,6 @@ export default {
     createdAt: 'Aangemaakt op',
     updatedAt: 'Bijgewerkt op',
 
-    // Status values
     draft: 'Concept',
     ready: 'Klaar',
     submitted: 'Verzonden',
@@ -884,19 +928,25 @@ export default {
     delivered: 'Geleverd',
     cancelled: 'Geannuleerd',
 
-    // Actions
     addToCart: 'Toevoegen aan winkelwagen',
     processOrder: 'Bestelling verwerken',
     autoFill: 'Automatisch vullen',
     autoFillDescription: 'Automatisch vullen gebaseerd op voorraadniveaus',
 
-    // Form fields
+    createDialog: 'Nieuwe bestellijst aanmaken',
+    editDialog: 'Bestellijst bewerken',
+    details: 'Details',
+    summary: 'Samenvatting',
+    deleteDialog: 'Bestellijst verwijderen',
+    deleteConfirm: 'Weet je zeker dat je deze bestellijst wilt verwijderen?',
+    duplicateDialog: 'Bestellijst dupliceren',
+    duplicateName: 'Kopie van {name}',
+
     nameRequired: 'Naam is verplicht',
     nameMinLength: 'Naam moet minimaal 3 tekens bevatten',
     selectSupplier: 'Leverancier selecteren',
     supplierRequired: 'Leverancier is verplicht',
 
-    // Products
     addProduct: 'Product toevoegen',
     removeProduct: 'Product verwijderen',
     productName: 'Productnaam',
@@ -909,7 +959,6 @@ export default {
     noProducts: 'Geen producten toegevoegd',
     selectProduct: 'Product selecteren',
 
-    // Success messages
     created: 'Bestellijst succesvol aangemaakt',
     updated: 'Bestellijst succesvol bijgewerkt',
     deleted: 'Bestellijst succesvol verwijderd',
@@ -917,7 +966,6 @@ export default {
     addedToCart: 'Producten toegevoegd aan winkelwagen',
     autoFilled: 'Bestellijst automatisch gevuld',
 
-    // Error messages
     loadError: 'Fout bij laden bestellijsten',
     saveError: 'Fout bij opslaan bestellijst',
     deleteError: 'Fout bij verwijderen bestellijst',
@@ -957,18 +1005,11 @@ export default {
     mainLocations: 'Hoofdlocaties',
     allLocations: 'Alle locaties',
     search: 'Locaties zoeken...',
-    comingSoonDescription:
-      'Locatiebeheer functies komen binnenkort beschikbaar. Je zult verschillende opslaggebieden voor je voorraad kunnen aanmaken en beheren.',
+    comingSoonDescription: 'Locatiebeheer functies komen binnenkort beschikbaar. Je zult verschillende opslaggebieden voor je voorraad kunnen aanmaken en beheren.',
     capacityItems: '{count} artikelen',
     samples: {
       emergencyStock: 'Spoedkast',
     },
-  },
-
-  // Location (singular for form fields)
-  location: {
-    location: 'Locatie',
-    selectLocation: 'Locatie selecteren',
   },
 
   // Stock Movements
@@ -981,7 +1022,6 @@ export default {
     performedBy: 'Uitgevoerd door',
     reasonCode: 'Redencode',
 
-    // Movement Types
     count: 'Telling aanpassing',
     receipt: 'Voorraad ontvangst',
     usage: 'Voorraad gebruik',
@@ -989,7 +1029,6 @@ export default {
     adjustment: 'Handmatige aanpassing',
     waste: 'Afval/verwijdering',
 
-    // Reason Codes
     normalUsage: 'Normaal gebruik',
     expired: 'Verlopen',
     damaged: 'Beschadigd',
@@ -1004,8 +1043,7 @@ export default {
     title: 'Analyses',
     subtitle: 'Uitgebreide rapporten en inzichten voor je voorraad',
     comingSoon: 'Binnenkort beschikbaar',
-    comingSoonDescription:
-      'Geavanceerde analyses en rapportage functies worden binnenkort toegevoegd.',
+    comingSoonDescription: 'Geavanceerde analyses en rapportage functies worden binnenkort toegevoegd.',
     overview: 'Overzicht',
     trends: 'Trends',
     reports: 'Rapporten',
@@ -1020,12 +1058,10 @@ export default {
     supplierPerformance: 'Leverancier prestaties',
     costAnalysis: 'Kostenanalyse',
     
-    // Admin analytics
     dashboard: 'Dashboard analyses',
     usage: 'Gebruik statistieken',
     patterns: 'Gebruikspatronen',
     
-    // Events
     events: {
       login: 'Inloggen',
       logout: 'Uitloggen',
@@ -1035,7 +1071,6 @@ export default {
       batch_register: 'Batch geregistreerd',
     },
 
-    // Metrics
     metrics: {
       averageSession: 'Gemiddelde sessietijd',
       peakHours: 'Piekuren',
@@ -1046,7 +1081,6 @@ export default {
   offline: {
     title: 'Offline modus',
     
-    // Data management
     data: {
       download: 'Offline data downloaden',
       downloadDescription: 'Download laatste data voor offline gebruik',
@@ -1054,7 +1088,6 @@ export default {
       dataSize: 'Data grootte',
     },
 
-    // Sync
     sync: {
       forceSync: 'Sync forceren',
       syncNow: 'Nu synchroniseren',
@@ -1064,7 +1097,6 @@ export default {
       pendingActions: 'Acties in afwachting',
     },
 
-    // Messages
     messages: {
       syncCompleted: 'Synchronisatie voltooid',
       syncFailed: 'Synchronisatie mislukt',
@@ -1074,12 +1106,13 @@ export default {
       onlineMode: 'Online modus actief',
     },
 
-    // Errors
     errors: {
       syncFailed: 'Synchronisatie mislukt',
       downloadFailed: 'Download offline data mislukt',
       networkUnavailable: 'Netwerk niet beschikbaar',
     },
+    
+    newVersionAvailable: 'Een nieuwe versie van de app is beschikbaar. Wilt u nu herladen?',
   },
 
   // Exports
@@ -1091,7 +1124,6 @@ export default {
     generateExport: 'Export genereren',
     downloadExport: 'Export downloaden',
     
-    // Formats
     formats: {
       csv: 'CSV bestand',
       pdf: 'PDF document',
@@ -1099,7 +1131,6 @@ export default {
       json: 'JSON data',
     },
 
-    // Data types
     dataTypes: {
       inventory: 'Voorraad data',
       orders: 'Bestellingen',
@@ -1108,7 +1139,6 @@ export default {
       users: 'Gebruikers',
     },
 
-    // Messages
     messages: {
       exportGenerated: 'Export succesvol gegenereerd',
       exportFailed: 'Export genereren mislukt',
@@ -1132,7 +1162,6 @@ export default {
     userActivity: 'Gebruiker activiteit',
     export: 'Exporteren',
     
-    // Periods
     periods: {
       '7d': 'Laatste 7 dagen',
       '30d': 'Laatste 30 dagen', 
@@ -1140,7 +1169,6 @@ export default {
       '1y': 'Laatste jaar',
     },
 
-    // Table columns
     user: 'Gebruiker',
     activityCount: 'Activiteit aantal',
     lastActivity: 'Laatste activiteit',
@@ -1149,7 +1177,6 @@ export default {
     orderCount: 'Aantal bestellingen',
     updates: 'Updates',
 
-    // Messages
     loadError: 'Fout bij laden analyse data',
     exportSuccess: 'Analyses succesvol geëxporteerd',
     exportError: 'Fout bij exporteren analyses',
@@ -1182,7 +1209,6 @@ export default {
     resetToDefaults: 'Herstellen naar standaardwaarden',
     confirmReset: 'Weet je zeker dat je wilt herstellen naar standaardwaarden?',
     
-    // Settings Page specific  
     manageSettingsSubtitle: 'Beheer je systeeminstellingen en voorkeuren voor een optimale ervaring',
     profile: 'Profiel',
     profileSubtitle: 'Jouw persoonlijke gebruikersinformatie',
@@ -1208,8 +1234,17 @@ export default {
     lastUpdateLabel: 'Laatste update',
     supportLabel: 'Ondersteuning',
     languageChanged: 'Taal gewijzigd naar {language}',
+    clinicName: 'Kliniek naam',
+    contactEmail: 'Contact e-mail',
+    phoneNumber: 'Telefoonnummer',
+    address: 'Adres',
+    role: 'Rol',
+    darkModeEnabled: 'Donkere modus is ingeschakeld',
+    lightModeEnabled: 'Lichte modus is ingeschakeld',
+    settingsSaved: 'Instellingen succesvol opgeslagen',
+    settingsSaveError: 'Een fout trad op bij het opslaan',
+    saveSettings: 'Instellingen opslaan',
 
-    // Style Guide translations
     styleGuideTitle: 'MedStock Pro Stijlgids',
     styleGuideSubtitle: 'Complete ontwerpsysteem referentie en component showcase',
     colorsSection: 'Kleuren',
@@ -1223,7 +1258,6 @@ export default {
     iconButtons: 'Icoon knoppen',
     cardsSection: 'Kaarten',
 
-    // Button labels for Style Guide
     primaryButton: 'Primair',
     secondaryButton: 'Secundair',
     successButton: 'Succes',
@@ -1236,7 +1270,6 @@ export default {
     saveButton: 'Opslaan',
     downloadButton: 'Downloaden',
 
-    // Card examples
     cards: {
       defaultCard: {
         title: 'Standaard kaart',
@@ -1308,6 +1341,26 @@ export default {
     packSize: 'Verpakkingsgrootte',
     availability: 'Beschikbaarheid',
     backorderAllowed: 'Nabestelling toegestaan',
+    addSupplier: 'Leverancier toevoegen',
+    editSupplier: 'Leverancier bewerken',
+    supplierDetails: 'Leverancier Details',
+    supplierCode: 'Leverancier Code',
+    contactPerson: 'Contactpersoon',
+    paymentTermsDetailed: 'Betalingsvoorwaarden',
+    minimumOrder: 'Minimum Bestelwaarde',
+    shippingCost: 'Verzendkosten',
+    freeShippingThreshold: 'Gratis verzending drempel',
+    preferredOrderDay: 'Voorkeur besteldatum',
+    orderCutoffTime: 'Bestel deadline',
+    apiIntegration: 'API Integratie',
+    syncEnabled: 'Sync Ingeschakeld',
+    lastSyncTime: 'Laatste Sync',
+    supplierProducts: 'Leverancier Producten',
+    supplierSKU: 'Leverancier SKU',
+    supplierName: 'Leverancier Naam',
+    unitPrice: 'Eenheidsprijs',
+    minimumOrderQty: 'Minimum Bestelhoeveelheid',
+    leadTimeDays: 'Levertijd (dagen)',
   },
 
   // Admin
@@ -1321,7 +1374,6 @@ export default {
     analytics: 'Analyses',
     quickActions: 'Snelle acties',
     
-    // Statistics
     stats: {
       totalUsers: 'Totaal gebruikers',
       activeUsers: 'Actieve gebruikers',
@@ -1334,7 +1386,6 @@ export default {
       fromYesterday: 't.o.v. gisteren',
     },
 
-    // User Management
     userManagement: {
       title: 'Gebruikersbeheer',
       invite: 'Gebruiker uitnodigen',
@@ -1346,11 +1397,38 @@ export default {
       deactivate: 'Deactiveren',
     },
 
-    // Errors
     errors: {
       loadUsersFailed: 'Fout bij laden gebruikers',
       loadLocationsFailed: 'Fout bij laden locaties',
       loadPermissionsFailed: 'Fout bij laden rechten',
+      
+      // Common admin errors
+      noPracticeSelected: 'Geen praktijk geselecteerd',
+      practiceOrUserNotFound: 'Praktijk of gebruiker niet gevonden',
+      userNotFoundInPractice: 'Gebruiker niet gevonden in praktijk',
+      userEmailNotFound: 'Gebruiker e-mail niet gevonden',
+      cannotDeactivatePracticeOwner: 'Kan praktijk eigenaar niet deactiveren',
+      cannotDeleteMainLocation: 'Kan hoofdlocatie niet verwijderen',
+      
+      // Permission errors
+      insufficientPermissionsToCreate: 'Onvoldoende rechten om te maken',
+      insufficientPermissionsToUpdate: 'Onvoldoende rechten om bij te werken',
+      insufficientPermissionsToDelete: 'Onvoldoende rechten om te verwijderen',
+      insufficientPermissionsToView: 'Onvoldoende rechten om te bekijken',
+      insufficientPermissionsToGrant: 'Onvoldoende rechten om rechten toe te kennen',
+      insufficientPermissionsToRevoke: 'Onvoldoende rechten om rechten in te trekken',
+      insufficientPermissionsToReset: 'Onvoldoende rechten om te resetten',
+      insufficientPermissionsToToggle: 'Onvoldoende rechten om te wijzigen',
+      
+      // Operation errors
+      failedToCreate: 'Aanmaken mislukt',
+      failedToUpdate: 'Bijwerken mislukt',
+      failedToDelete: 'Verwijderen mislukt',
+      failedToGet: 'Ophalen mislukt',
+      failedToGrant: 'Toekennen mislukt',
+      failedToRevoke: 'Intrekken mislukt',
+      failedToSend: 'Verzenden mislukt',
+      failedToSet: 'Instellen mislukt',
     },
   },
 
@@ -1362,7 +1440,6 @@ export default {
     resourceType: 'Resource type',
     expiresAt: 'Verloopt op',
     
-    // Templates
     templates: {
       title: 'Rechten sjablonen',
       assistant: 'Assistent',
@@ -1372,7 +1449,6 @@ export default {
       viewer: 'Bekijker',
     },
 
-    // Types
     types: {
       read: 'Lezen',
       write: 'Schrijven',
@@ -1380,13 +1456,11 @@ export default {
       admin: 'Beheer',
     },
 
-    // Notifications
     notifications: {
       revoked: 'Rechten ingetrokken',
       granted: 'Rechten toegekend',
     },
 
-    // Errors
     errors: {
       revokeFailed: 'Fout bij intrekken rechten',
       grantFailed: 'Fout bij toekennen rechten',
@@ -1399,13 +1473,11 @@ export default {
     setAsMain: 'Instellen als hoofdlocatie',
     manageAccess: 'Toegang beheren',
     
-    // Notifications
     notifications: {
       mainLocationSet: 'Hoofdlocatie ingesteld',
       accessUpdated: 'Toegang bijgewerkt',
     },
 
-    // Errors
     errors: {
       setMainFailed: 'Fout bij instellen hoofdlocatie',
       accessUpdateFailed: 'Fout bij bijwerken toegang',
@@ -1448,11 +1520,9 @@ export default {
     save: 'Opslaan',
     nameRequired: 'Naam is verplicht',
     linkToMagento: 'Koppelen aan Magento',
-    linkToMagentoPrompt:
-      'Voer het Magento vendor ID in om deze leverancier te koppelen:',
+    linkToMagentoPrompt: 'Voer het Magento vendor ID in om deze leverancier te koppelen:',
     confirmDelete: 'Verwijderen bevestigen',
-    confirmDeleteMessage:
-      'Weet je zeker dat je "{name}" wilt verwijderen? Deze actie kan niet ongedaan worden gemaakt.',
+    confirmDeleteMessage: 'Weet je zeker dat je "{name}" wilt verwijderen? Deze actie kan niet ongedaan worden gemaakt.',
     supplierCreated: 'Leverancier succesvol aangemaakt',
     supplierUpdated: 'Leverancier succesvol bijgewerkt',
     supplierDeleted: 'Leverancier succesvol verwijderd',
@@ -1487,15 +1557,13 @@ export default {
     markAsReadTooltip: 'Markeren als gelezen',
     deleteTooltip: 'Verwijderen',
     clearAllConfirm: 'Alle meldingen wissen',
-    clearAllConfirmMessage:
-      'Weet je zeker dat je alle meldingen wilt verwijderen? Deze actie kan niet ongedaan worden gemaakt.',
+    clearAllConfirmMessage: 'Weet je zeker dat je alle meldingen wilt verwijderen? Deze actie kan niet ongedaan worden gemaakt.',
     allMarkedAsRead: 'Alle meldingen gemarkeerd als gelezen',
     notificationDeleted: 'Melding verwijderd',
     allNotificationsCleared: 'Alle meldingen gewist',
     testStockAlertCreated: 'Test voorraad waarschuwing aangemaakt',
     testOrderUpdateCreated: 'Test bestel update aangemaakt',
-    settingsFeatureComingSoon:
-      'Meldingen instellingen functie komt binnenkort!',
+    settingsFeatureComingSoon: 'Meldingen instellingen functie komt binnenkort!',
     loadNotificationsError: 'Fout bij laden meldingen',
 
     categories: {
@@ -1522,5 +1590,19 @@ export default {
         message: 'Dit is een test bestel update melding',
       },
     },
+  },
+
+  // Messages for user feedback
+  messages: {
+    addToCartComingSoon: 'Functie toevoegen aan winkelwagen komt binnenkort',
+    addAllSuggestionsComingSoon: 'Functie alle suggesties toevoegen komt binnenkort',
+    cartCleared: 'Winkelwagen geleegd',
+    cartSaved: 'Winkelwagen opgeslagen',
+  },
+
+  // Confirm dialog translations  
+  dialogs: {
+    typeToConfirm: 'Typ {text} om te bevestigen',
+    confirmClose: 'Ben je zeker dat je wilt sluiten? Niet-opgeslagen wijzigingen gaan verloren.',
   },
 };

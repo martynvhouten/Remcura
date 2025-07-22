@@ -250,13 +250,7 @@
   const authStore = useAuthStore();
 
   // Debug i18n
-  console.log('🔧 BatchManagementPage - i18n debug:');
-  console.log('🔧 t function:', t);
-  console.log('🔧 Test translation:', t('batch.batchManagement'));
-  console.log(
-    '🔧 Test with $t:',
-    t.te && t.te('batch.batchManagement') ? 'key exists' : 'key missing'
-  );
+  // i18n debugging removed - translations working correctly
 
   // Also test global $t in mounted
   import { getCurrentInstance } from 'vue';
@@ -441,7 +435,7 @@
 
   const onFifoSuggestion = (suggestion: any) => {
     // Handle FIFO batch suggestion
-    console.log('FIFO suggestion:', suggestion);
+    // FIFO suggestion generated successfully
   };
 
   // Lifecycle

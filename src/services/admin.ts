@@ -13,6 +13,24 @@ import type {
 import { useAuthStore } from '@/stores/auth';
 import { analyticsService } from './analytics';
 
+// Error message constants (to be translated in components)
+const ADMIN_ERRORS = {
+  NO_PRACTICE_SELECTED: 'admin.errors.noPracticeSelected',
+  PRACTICE_OR_USER_NOT_FOUND: 'admin.errors.practiceOrUserNotFound',
+  USER_NOT_FOUND_IN_PRACTICE: 'admin.errors.userNotFoundInPractice',
+  USER_EMAIL_NOT_FOUND: 'admin.errors.userEmailNotFound',
+  CANNOT_DEACTIVATE_PRACTICE_OWNER: 'admin.errors.cannotDeactivatePracticeOwner',
+  CANNOT_DELETE_MAIN_LOCATION: 'admin.errors.cannotDeleteMainLocation',
+  INSUFFICIENT_PERMISSIONS_CREATE: 'admin.errors.insufficientPermissionsToCreate',
+  INSUFFICIENT_PERMISSIONS_UPDATE: 'admin.errors.insufficientPermissionsToUpdate',
+  INSUFFICIENT_PERMISSIONS_DELETE: 'admin.errors.insufficientPermissionsToDelete',
+  INSUFFICIENT_PERMISSIONS_VIEW: 'admin.errors.insufficientPermissionsToView',
+  INSUFFICIENT_PERMISSIONS_GRANT: 'admin.errors.insufficientPermissionsToGrant',
+  INSUFFICIENT_PERMISSIONS_REVOKE: 'admin.errors.insufficientPermissionsToRevoke',
+  INSUFFICIENT_PERMISSIONS_RESET: 'admin.errors.insufficientPermissionsToReset',
+  INSUFFICIENT_PERMISSIONS_TOGGLE: 'admin.errors.insufficientPermissionsToToggle',
+} as const;
+
 export interface AuditLogEntry {
   id: string;
   practice_id: string;
@@ -83,7 +101,7 @@ export class AdminService {
     const practiceId = authStore.selectedPractice?.id;
 
     if (!practiceId) {
-      throw new Error('No practice selected');
+      throw new Error(ADMIN_ERRORS.NO_PRACTICE_SELECTED);
     }
 
     const { data, error } = await supabase
@@ -201,12 +219,12 @@ export class AdminService {
     const grantedBy = authStore.user?.id;
 
     if (!practiceId || !grantedBy) {
-      throw new Error('Practice or user not found');
+      throw new Error(ADMIN_ERRORS.PRACTICE_OR_USER_NOT_FOUND);
     }
 
     // Check admin permissions
     if (!(await this.hasPermission('admin', 'practice'))) {
-      throw new Error('Insufficient permissions to grant permissions');
+      throw new Error(ADMIN_ERRORS.INSUFFICIENT_PERMISSIONS_GRANT);
     }
 
     const permissionData: UserPermissionInsert = {
@@ -215,9 +233,9 @@ export class AdminService {
       location_id: locationId || null,
       permission_type: permissionType,
       resource_type: resourceType,
-      resource_id: resourceId,
+      resource_id: resourceId || null,
       granted_by: grantedBy,
-      expires_at: expiresAt?.toISOString(),
+      expires_at: expiresAt?.toISOString() || null,
     };
 
     const { data, error } = await supabase
@@ -389,12 +407,15 @@ export class AdminService {
     );
 
     if (validPermission) {
-      return {
+      const result: PermissionCheck = {
         hasPermission: true,
-        expires_at: validPermission.expires_at
-          ? new Date(validPermission.expires_at)
-          : undefined,
       };
+      
+      if (validPermission.expires_at) {
+        result.expires_at = new Date(validPermission.expires_at);
+      }
+      
+      return result;
     }
 
     return { hasPermission: false, reason: 'All permissions have expired' };
@@ -518,12 +539,8 @@ export class AdminService {
       throw new Error('Insufficient permissions to view audit log');
     }
 
-    const events = await analyticsService.getUsageStats({
-      event_type: 'admin_activity',
-      date_from: filters?.dateFrom,
-      date_to: filters?.dateTo,
-      user_id: filters?.userId,
-    });
+    // TODO: Implement proper audit log retrieval
+    const events: any[] = await analyticsService.getUsageStats();
 
     const auditEntries: AuditLogEntry[] = events
       .filter(event => {
@@ -688,15 +705,15 @@ export class AdminService {
       throw new Error('User not found in practice');
     }
 
-    // Get user email from profiles
+    // Get user email from user_profiles
     const { data: profile, error: profileError } = await supabase
-      .from('profiles')
+      .from('user_profiles')
       .select('email')
       .eq('id', userId)
       .single();
 
     if (profileError || !profile?.email) {
-      throw new Error('User email not found');
+      throw new Error(ADMIN_ERRORS.USER_EMAIL_NOT_FOUND);
     }
 
     // Use Supabase Auth API to reset password
@@ -744,7 +761,7 @@ export class AdminService {
 
     // Don't allow deactivating practice owner
     if (!activate && currentMember.role === 'owner') {
-      throw new Error('Cannot deactivate practice owner');
+      throw new Error(ADMIN_ERRORS.CANNOT_DEACTIVATE_PRACTICE_OWNER);
     }
 
     // Update user status

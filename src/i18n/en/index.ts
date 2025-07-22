@@ -53,7 +53,10 @@ export default {
     open: 'Open',
     unknownProduct: 'Unknown Product',
     unknownLocation: 'Unknown Location',
+    unknownSupplier: 'Unknown Supplier',
     noSku: 'No SKU',
+    uncategorized: 'Uncategorized',
+    defaultUnit: 'pcs',
     create: 'Create',
     reset: 'Reset',
     export: 'Export',
@@ -76,6 +79,11 @@ export default {
     today: 'Today',
     yesterday: 'Yesterday',
     comingSoon: 'Coming soon',
+    dataRefreshed: 'Data refreshed successfully',
+    clearFilters: 'Clear filters',
+    submit: 'Submit',
+    fromDate: 'From date',
+    toDate: 'To date',
     
     // Accessibility labels
     accessibility: {
@@ -101,7 +109,7 @@ export default {
     settings: 'Settings',
     logout: 'Logout',
     profile: 'Profile',
-    helpSupport: 'Help & Support',
+    helpSupport: 'Help & support',
     navigation: 'Navigation',
     quickStats: 'Quick stats',
     upgradePlan: 'Upgrade plan',
@@ -126,9 +134,9 @@ export default {
     lightMode: 'Light mode',
     userMenu: 'User menu',
     shoppingCart: 'Shopping cart',
-    styleGuide: 'Style Guide',
+    styleGuide: 'Style guide',
     designSystem: 'Design system reference',
-    // Navigation sections
+    
     sections: {
       main: 'Overview',
       inventory: 'Inventory Management',
@@ -136,14 +144,14 @@ export default {
       analytics: 'Analytics & Reports',
       administration: 'Administration',
     },
-    // Inventory sub-navigation
-    inventoryLevels: 'Inventory Levels',
+    
+    inventoryLevels: 'Inventory levels',
     currentStock: 'Current stock overview',
     locations: 'Locations',
     warehouseManagement: 'Warehouse & location management',
-    stockCounting: 'Stock Counting',
+    stockCounting: 'Stock counting',
     physicalCounts: 'Physical counts & audits',
-    movements: 'Stock Movements',
+    movements: 'Stock movements',
     stockMovements: 'Stock ins and outs',
   },
 
@@ -159,19 +167,18 @@ export default {
     showPassword: 'Show password',
     loginError: 'Login failed. Please check your credentials.',
     sessionExpired: 'Your session has expired. Please log in again.',
-    loginSuccess: 'Successfully logged in',
-    logoutSuccess: 'Successfully logged out',
+    loginSuccess: 'Login successful',
+    logoutSuccess: 'Logout successful',
     pleaseLogin: 'Please log in to continue',
     demoAccount: 'Demo account',
     or: 'or',
     secureConnection: 'Secure connection',
-    privacyPolicy: 'Privacy Policy',
-    termsOfService: 'Terms of Service',
+    privacyPolicy: 'Privacy policy',
+    termsOfService: 'Terms of service',
     support: 'Support',
     allRightsReserved: 'All rights reserved',
     professionalInventory: 'Professional medical inventory management',
-    platformDescription:
-      'Streamline your medical inventory management with our enterprise-grade platform. Track stock, manage orders, and ensure compliance with ease.',
+    platformDescription: 'Streamline your medical inventory management with our enterprise-grade platform. Track stock, manage orders, and ensure compliance with ease.',
     realtimeTracking: 'Real-time inventory tracking',
     automatedAlerts: 'Automated reorder alerts',
     complianceReporting: 'Compliance reporting',
@@ -180,28 +187,28 @@ export default {
     passwordResetComingSoon: 'Password reset functionality coming soon.',
     copyright: '© {year} {company}. All rights reserved.',
     passwordHelp: 'Enter your password to securely log in',
-    demoHelp:
-      'Use demo@medstock-pro.com with password demo123 for demonstration',
+    demoHelp: 'Use demo@medstock-pro.com with password demo123 for demonstration',
     signingIn: 'Signing in...',
+    fullName: 'Full name',
   },
 
   // Demo Account
   demo: {
-    title: 'Demo Account',
+    title: 'Demo account',
     subtitle: 'You are logged in with the demo account',
-    resetData: 'Reset Demo Data',
+    resetData: 'Reset demo data',
     resetDataConfirm: 'Are you sure you want to reset all demo data?',
     resetDataSuccess: 'Demo data reset successfully',
     resetDataError: 'Error resetting demo data',
-    limitations: 'Demo Limitations',
-    limitationsText:
-      'This is a demo account. All changes are visible but can be reset.',
-    practice: 'Remka Demo Clinic',
-    practiceDescription:
-      'Fully functional demo environment with realistic data',
-    resetInfo: 'This will delete all demo data and recreate it fresh',
+    limitations: 'Demo limitations',
+    limitationsText: 'This is a demo account. All changes are visible but can be reset.',
+    practice: 'Remka demo clinic',
+    practiceDescription: 'Fully functional demo environment with realistic data',
+    resetInfo: 'This will delete all demo data and create fresh data',
     onlyDemoUserCanReset: 'Only demo user can reset demo data',
     changesCanBeReset: 'All changes are saved but can be reset via the Admin page.',
+    resetInProgress: 'Resetting demo data...',
+    reloadingAfterReset: 'Reloading page with fresh data...',
   },
 
   // Dashboard
@@ -217,7 +224,7 @@ export default {
     outOfStock: 'Out of stock',
     lowStock: 'Low stock',
     inStock: 'In stock',
-    noLowStock: 'All stocked!',
+    noLowStock: 'All stock levels good!',
     viewMore: 'View {count} more',
     quickActions: 'Quick actions',
     manageStock: 'Manage stock',
@@ -225,7 +232,7 @@ export default {
     viewOrders: 'View orders',
     manageOrders: 'Manage orders and order history',
     configureSystem: 'Configure system settings',
-    dataRefreshed: 'Data successfully refreshed',
+    dataRefreshed: 'Data refreshed successfully',
     recentActivity: 'Recent activity',
     itemsRequiringAttention: 'Items requiring attention',
     commonTasks: 'Common tasks',
@@ -233,6 +240,14 @@ export default {
     currentMin: 'Current / min',
     latestUpdates: 'Latest updates',
     viewAnalytics: 'View analytics',
+    welcomeTitle: 'Welcome to MedStock Pro',
+    welcomeSubtitle: 'Your professional medical inventory management system',
+    welcomeDescription: 'Manage your inventory efficiently with our advanced tools and real-time tracking.',
+    systemStatus: 'System status',
+    systemStatusSubtitle: 'Current status of your system',
+    systemOnline: 'System online',
+    dataSynced: 'Data synchronized',
+    secureConnection: 'Secure connection',
     vsLastMonth: 'vs last month',
     summaryOverview: 'Summary overview',
     moreOptions: 'More options',
@@ -243,15 +258,6 @@ export default {
     failedToLoadData: 'Failed to load dashboard data',
     dataRefreshedSuccessfully: 'Data refreshed successfully',
     failedToRefreshData: 'Failed to refresh data',
-    welcomeTitle: 'Welcome to MedStock Pro',
-    welcomeSubtitle: 'Your professional medical inventory management system',
-    welcomeDescription:
-      'Manage your inventory efficiently with our advanced tools and real-time tracking.',
-    systemStatus: 'System status',
-    systemStatusSubtitle: 'Current status of your system',
-    systemOnline: 'System online',
-    dataSynced: 'Data synchronized',
-    secureConnection: 'Secure connection',
   },
 
   // Errors
@@ -262,6 +268,8 @@ export default {
     notFound: 'The requested resource was not found.',
     validation: 'Validation error. Please check the entered data.',
     serverError: 'Server error. Please try again later.',
+    failedToGenerateSuggestion: 'Failed to generate suggestion',
+    failedToRefreshData: 'Failed to refresh data',
     failed: 'Action failed',
     failedToLoadData: 'Failed to load data',
     failedToGenerateReport: 'Failed to generate report',
@@ -271,8 +279,7 @@ export default {
   // Error pages
   error: {
     pageNotFound: 'Page not found',
-    pageNotFoundDescription:
-      'Sorry, the page you are looking for cannot be found. It might have been moved, deleted, or you entered the wrong URL.',
+    pageNotFoundDescription: "Sorry, the page you're looking for can't be found. It may have been moved, deleted, or you entered a wrong URL.",
     goHome: 'Go home',
     goBack: 'Go back',
     tryThesePages: 'Try visiting one of these popular pages instead:',
@@ -288,19 +295,56 @@ export default {
     positive: 'Value must be positive',
     positiveNumber: 'Value must be a positive number',
     integer: 'Only whole numbers allowed',
+    mustBePositive: 'Value must be positive',
+    textMustMatch: 'Text must match {text}',
+    formErrors: 'Form contains errors',
+  },
+
+  // Product (for form fields and references)
+  product: {
+    product: 'Product',
+    selectProduct: 'Select product',
+    samples: {
+      syringeBD: 'BD Plastipak Syringe',
+      needleBD: 'BD Microlance Needle',
+    },
+  },
+
+  // Location (for form fields and references)
+  location: {
+    location: 'Location',
+    selectLocation: 'Select location',
+    sampleData: {
+      mainWarehouse: {
+        name: 'Main Warehouse',
+        type: 'Warehouse',
+        description: 'Central storage warehouse',
+      },
+      pharmacy: {
+        name: 'Pharmacy Storage',
+        type: 'Pharmacy',
+        description: 'Medication storage',
+      },
+      treatmentRoom: {
+        name: 'Treatment Room A',
+        type: 'Treatment Room',
+        description: 'Stock for treatment room A',
+      },
+    },
+    samples: {
+      emergencyStock: 'Emergency Cabinet',
+    },
   },
 
   // Inventory & Stock Management
   inventory: {
     title: 'Inventory',
-    stockLevels: 'Stock Levels',
-    stockMovements: 'Stock Movements',
+    stockLevels: 'Stock levels',
+    stockMovements: 'Stock movements',
     locations: 'Locations',
     suppliers: 'Suppliers',
     orders: 'Orders',
-    stockCounting: 'Stock Counting',
-
-    // Overview cards
+    stockCounting: 'Stock counting',
     overview: 'Inventory overview',
     totalProducts: 'Total products',
     totalValue: 'Total value',
@@ -308,13 +352,9 @@ export default {
     outOfStockItems: 'Out of stock items',
     stockAccuracy: 'Stock accuracy',
     lastFullCount: 'Last full count',
-
-    // Location filters
     allLocations: 'All locations',
     currentLocation: 'Current location',
     switchLocation: 'Switch location',
-
-    // Actions
     startCounting: 'Start counting',
     startCountingSession: 'Start counting session',
     quickAdjustment: 'Quick adjustment',
@@ -322,68 +362,49 @@ export default {
     transferStock: 'Transfer stock',
     viewMovements: 'View movements',
     exportData: 'Export data',
-
-    // Stock status
     inStock: 'In stock',
     lowStock: 'Low stock',
     outOfStock: 'Out of stock',
     overStock: 'Overstock',
-
-    // Recent activity
     recentActivity: 'Recent activity',
     recentMovements: 'Recent movements',
     noRecentActivity: 'No recent activity',
-
-    // Stock alerts
     stockAlerts: 'Stock alerts',
     criticalAlerts: 'Critical alerts',
     urgentAttention: 'Requires urgent attention',
     noAlerts: 'No alerts',
-
-    // Counting
     countingStatus: 'Counting status',
     activeSession: 'Active session',
     noActiveSession: 'No active counting',
-
-    // Integration status
     syncStatus: 'Sync status',
     lastSync: 'Last sync',
     syncNow: 'Sync now',
-
-    // Messages
     loadingData: 'Loading inventory data...',
     refreshingData: 'Refreshing data...',
     dataRefreshed: 'Data refreshed successfully',
     refreshFailed: 'Refresh failed',
-
-    // Supplier integration
     manualOrder: 'Manual order',
     apiOrder: 'API order',
     downloadPdf: 'Download PDF',
     placeOrder: 'Place order',
-
-    // Thresholds and settings
     setMinimum: 'Set minimum',
     setMaximum: 'Set maximum',
     reorderPoint: 'Reorder point',
-
-    // Units and measurements
     pieces: 'pieces',
     units: 'units',
-
-    // Time references
+    quantity: 'Quantity',
     today: 'today',
     yesterday: 'yesterday',
     thisWeek: 'this week',
     thisMonth: 'this month',
     neverCounted: 'never counted',
-
-    // Dialog specific
+    sessionName: 'Session name',
     sessionNamePlaceholder: 'Enter a name for the counting session',
+    sessionType: 'Session type',
     selectLocations: 'Select locations',
     allowNegativeCounts: 'Allow negative counts',
     requireApproval: 'Require approval',
-    autoAdjustStock: 'Auto-adjust stock',
+    autoAdjustStock: 'Auto adjust stock',
     sessionNotesPlaceholder: 'Optional notes for this counting session',
     partialCount: 'Partial count',
     fullCount: 'Full count',
@@ -396,8 +417,6 @@ export default {
     defaultSessionName: 'Count {date} {time}',
     sessionCreated: 'Counting session created',
     sessionCreationFailed: 'Failed to create counting session',
-
-    // Adjustment dialog
     selectLocation: 'Select location',
     searchProduct: 'Search product',
     searchProductPlaceholder: 'Type to search...',
@@ -406,8 +425,6 @@ export default {
     adjustmentNotesPlaceholder: 'Reason for adjustment...',
     stockAdjusted: 'Stock adjusted',
     adjustmentFailed: 'Stock adjustment failed',
-
-    // Transfer dialog
     fromLocation: 'From location',
     toLocation: 'To location',
     locationsMustBeDifferent: 'Locations must be different',
@@ -415,8 +432,6 @@ export default {
     transferNotesPlaceholder: 'Notes for transfer...',
     stockTransferred: 'Stock transferred',
     transferFailed: 'Stock transfer failed',
-
-    // Stock movements
     movementHistory: 'Movement history',
     movementType: 'Movement type',
     movementDetails: 'Movement details',
@@ -426,8 +441,6 @@ export default {
     reasonCode: 'Reason code',
     loadingMovements: 'Loading movements...',
     noMovementsFound: 'No movements found',
-
-    // Stock levels
     stockFilter: 'Stock filter',
     searchProducts: 'Search products...',
     currentStock: 'Current stock',
@@ -439,9 +452,11 @@ export default {
     noMovements: 'No movements',
     viewHistory: 'View history',
     noProductsFound: 'No products found',
-    overStockItems: 'Overstock items',
+    overStockItems: 'Overstocked items',
+    batchTrackingWarning: 'This product requires batch tracking',
+    cannotAdjustBatchTrackedProduct: 'Cannot manually adjust batch-tracked product',
+    redirectingToBatchManagement: 'Redirecting to batch management',
 
-    // Movement types
     movement: {
       receipt: 'Receipt',
       usage: 'Usage',
@@ -451,7 +466,6 @@ export default {
       waste: 'Waste',
     },
 
-    // Reason codes
     reason: {
       normal_usage: 'Normal usage',
       expired: 'Expired',
@@ -467,9 +481,8 @@ export default {
 
   // Counting System
   counting: {
-    title: 'Stock Counting',
-    overview:
-      'Manage your stock counting sessions and track inventory accuracy',
+    title: 'Stock counting',
+    overview: 'Manage your inventory counting sessions and track stock accuracy',
     sessionStatus: 'Session status',
     startSession: 'Start counting session',
     activeSession: 'Active counting session',
@@ -488,8 +501,7 @@ export default {
     countedProducts: 'Counted products',
     loadingSession: 'Loading counting session...',
     sessionNotFound: 'Session not found',
-    sessionNotFoundDescription:
-      'The counting session you are looking for could not be found',
+    sessionNotFoundDescription: 'The counting session you are looking for could not be found',
     countingResults: 'Counting results',
     viewResults: 'View counting results and discrepancies',
     noResultsFound: 'No counting results found',
@@ -498,173 +510,298 @@ export default {
     approveSession: 'Approve session',
   },
 
-  // Suppliers
-  suppliers: {
-    title: 'Suppliers',
-    addSupplier: 'Add Supplier',
-    editSupplier: 'Edit Supplier',
-    supplierDetails: 'Supplier Details',
-    supplierCode: 'Supplier Code',
-    contactPerson: 'Contact Person',
-    paymentTerms: 'Payment Terms',
-    minimumOrder: 'Minimum Order Amount',
-    shippingCost: 'Shipping Cost',
-    freeShippingThreshold: 'Free Shipping Threshold',
-    preferredOrderDay: 'Preferred Order Day',
-    orderCutoffTime: 'Order Cutoff Time',
-    apiIntegration: 'API Integration',
-    syncEnabled: 'Sync Enabled',
-    lastSync: 'Last Sync',
-
-    // Supplier Products
-    supplierProducts: 'Supplier Products',
-    supplierSKU: 'Supplier SKU',
-    supplierName: 'Supplier Name',
-    unitPrice: 'Unit Price',
-    minimumOrderQty: 'Minimum Order Quantity',
-    packSize: 'Pack Size',
-    leadTime: 'Lead Time (days)',
-    availability: 'Availability',
-    backorderAllowed: 'Backorder Allowed',
-  },
-
-  // Admin
-  admin: {
-    title: 'Administration',
-    settings: 'Settings',
-    audit: 'Audit log',
-    users: 'Users',
-    locations: 'Locations',
-    permissions: 'Permissions',
-    analytics: 'Analytics',
+  // Batch Management
+  batch: {
+    batchManagement: 'Batch management',
+    manageBatchesSubtitle: 'Manage your product batches and expiry dates effectively',
+    title: 'Batch management',
+    batchNumber: 'Batch number',
+    lotNumber: 'Lot number',
+    supplierBatchNumber: 'Supplier batch number',
+    supplierBatch: 'Supplier batch',
+    expiryDate: 'Expiry date',
+    houdbaarheidstot: 'Best before',
+    receivedDate: 'Received date',
+    initialQuantity: 'Initial quantity',
+    currentQuantity: 'Current quantity',
+    availableQuantity: 'Available quantity',
+    available: 'Available',
+    reservedQuantity: 'Reserved quantity',
+    batchStatus: 'Batch status',
+    unitCost: 'Unit cost',
+    totalCost: 'Total cost',
+    qualityCheck: 'Quality check',
+    qualityPassed: 'Quality passed',
+    qualityApproved: 'Quality approved',
+    qualityFailed: 'Quality failed',
+    qualityNotes: 'Quality notes',
+    quarantineUntil: 'Quarantine until',
+    addBatch: 'Add batch',
+    totalBatches: 'Total batches',
+    expiringSoon: 'Expiring soon',
+    activeBatches: 'Active batches',
+    totalValue: 'Total value',
     quickActions: 'Quick actions',
-    
-    // Statistics
-    stats: {
-      totalUsers: 'Total users',
-      activeUsers: 'Active users',
-      activeToday: 'active today',
-      totalLocations: 'Total locations',
-      active: 'active',
-      pendingSync: 'Pending sync',
-      lastSync: 'Last sync',
-      todayEvents: 'Today\'s events',
-      fromYesterday: 'vs yesterday',
+    scanBatch: 'Scan batch',
+    viewExpiring: 'View expiring',
+    exportBatches: 'Export batches',
+    criticalAlert: 'Critical alert',
+    nearExpiry: 'Near expiry',
+    criticalExpiryText: 'There are {count} batches expiring within 7 days',
+    criticalBatchesFound: 'There are {count} critical batches found',
+    viewCritical: 'View critical',
+    manageExpiring: 'Manage expiring',
+    fifoManagement: 'FIFO management',
+    fifoSubtitle: 'First In, First Out inventory rotation',
+    useBatch: 'Use batch',
+    registerBatch: 'Register batch',
+    batchOverview: 'Batch overview',
+    overview: 'Overview',
+    expiring: 'Expiring',
+    batchReports: 'Batch reports',
+    reports: 'Reports',
+    expiringBatches: 'Expiring batches',
+    batchHistory: 'Batch history',
+    exportSuccess: 'Batches exported successfully',
+    batchNotFound: 'Batch {batchNumber} not found',
+    quarantine: 'Quarantine',
+    quarantineSuccess: 'Batch quarantined successfully',
+    expiredDaysAgo: 'Expired {days} days ago',
+    expiresToday: 'Expires today',
+    expiresTomorrow: 'Expires tomorrow',
+    expiresInDays: 'Expires in {days} days',
+    fifoSuggestion: 'FIFO suggestion',
+    generateFifoSuggestion: 'Generate FIFO suggestion',
+    fifoResults: 'FIFO results',
+    noFifoResults: 'No FIFO results available',
+    fifoSuggestionGenerated: 'FIFO suggestion generated successfully',
+    applyFifoSuggestion: 'Apply FIFO suggestion',
+    confirmFifoApplication: 'Confirm FIFO application',
+    confirmFifoMessage: 'Are you sure you want to apply this FIFO suggestion?',
+    fifoAppliedSuccessfully: 'FIFO suggestion applied successfully',
+    useQuantity: 'Use quantity',
+    selectReport: 'Select report',
+    generateReport: 'Generate report',
+    exportReport: 'Export report',
+    reportResults: 'Report results',
+    reportConfiguration: 'Report configuration',
+    reportGenerated: 'Report generated successfully',
+    reportExported: 'Report exported successfully',
+    expiredBatches: 'Expired batches',
+    expiryAnalysis: 'Expiry analysis',
+    expiryAnalysisDesc: 'Analyze expiry dates and urgency of batches',
+    batchUsage: 'Batch usage',
+    batchUsageDesc: 'View how batches are used',
+    fifoCompliance: 'FIFO compliance',
+    fifoComplianceDesc: 'Check FIFO compliance',
+    batchCosts: 'Batch costs',
+    batchCostsDesc: 'Analyze costs per batch',
+    batchDetails: 'Batch Details',
+    batchInformation: 'Batch Information',
+    quantityStatus: 'Quantity Status',
+    expiryInformation: 'Expiry Information',
+    statusInformation: 'Status Information',
+    costInformation: 'Cost Information',
+    currentValue: 'Current Value',
+    quantityToUse: 'Quantity to Use',
+    usageReason: 'Usage Reason',
+    usageNotes: 'Usage Notes',
+    usageNotesHint: 'Optional notes for this usage',
+    useAll: 'Use All',
+    usageSummary: 'Usage Summary',
+    quantityUsed: 'Quantity Used',
+    remainingQuantity: 'Remaining Quantity',
+    costImpact: 'Cost Impact',
+    newStatus: 'New Status',
+    confirmUsage: 'Confirm Usage',
+    purchaseInformation: 'Purchase Information',
+    purchaseOrderNumber: 'Purchase order number',
+    invoiceNumber: 'Invoice number',
+    currency: 'Currency',
+    registerNewBatch: 'Register new batch',
+    batchRegisteredSuccessfully: 'Batch registered successfully',
+    urgencyLevel: 'Urgency level',
+    expiryAlert: 'Expiry alert',
+    batchesExpiringSoon: '{count} batches expiring soon',
+    noBatchesFound: 'No batches found',
+    noExpiringBatches: 'No expiring batches',
+    daysUntilExpiry: 'Days until expiry',
+    filterByStatus: 'Filter by status',
+    filterByExpiry: 'Filter by expiry',
+    showExpiring: 'Show expiring batches',
+    showExpired: 'Show expired batches',
+    showActive: 'Show active batches',
+    requestedQuantity: 'Requested Quantity',
+
+    validation: {
+      expiryDateInPast: 'Expiry date cannot be in the past',
+      exceededAvailable: 'Exceeds available quantity',
+      mustBePositive: 'Must be a positive value',
     },
 
-    // User Management
-    userManagement: {
-      title: 'User management',
-      invite: 'Invite user',
-      email: 'Email address',
-      roles: 'Roles',
-      lastActive: 'Last active',
-      resetPassword: 'Reset password',
-      activate: 'Activate',
-      deactivate: 'Deactivate',
+    urgency: {
+      expired: 'Expired',
+      critical: 'Critical',
+      warning: 'Warning',
+      normal: 'Normal',
     },
 
-    // Errors
-    errors: {
-      loadUsersFailed: 'Failed to load users',
-      loadLocationsFailed: 'Failed to load locations',
-      loadPermissionsFailed: 'Failed to load permissions',
+    status: {
+      available: 'Available',
+      reserved: 'Reserved',
+      expired: 'Expired',
+      quarantine: 'Quarantine',
+      used: 'Used',
+      active: 'Active',
+      inactive: 'Inactive',
+    },
+
+    usage: {
+      consumption: 'Consumption',
+      expired: 'Expired',
+      damaged: 'Damaged',
+      transfer: 'Transfer',
+      adjustment: 'Adjustment',
+      other: 'Other',
     },
   },
 
-  // Permissions
-  permissions: {
-    title: 'Permissions and access',
-    user: 'User',
-    permissionType: 'Permission type',
-    resourceType: 'Resource type',
-    expiresAt: 'Expires at',
-    
-    // Templates
-    templates: {
-      title: 'Permission templates',
-      assistant: 'Assistant',
-      manager: 'Manager',
-      admin: 'Administrator',
-      owner: 'Owner',
-      viewer: 'Viewer',
-    },
-
-    // Types
-    types: {
-      read: 'Read',
-      write: 'Write',
-      delete: 'Delete',
-      admin: 'Admin',
-    },
-
-    // Notifications
-    notifications: {
-      revoked: 'Permissions revoked',
-      granted: 'Permissions granted',
-    },
-
-    // Errors
-    errors: {
-      revokeFailed: 'Failed to revoke permissions',
-      grantFailed: 'Failed to grant permissions',
-    },
-  },
-
-  // Locations - Enhanced
-  locationsAdmin: {
-    isMain: 'Main location',
-    setAsMain: 'Set as main location',
-    manageAccess: 'Manage access',
-    
-    // Notifications
-    notifications: {
-      mainLocationSet: 'Main location set',
-      accessUpdated: 'Access updated',
-    },
-
-    // Errors
-    errors: {
-      setMainFailed: 'Failed to set main location',
-      accessUpdateFailed: 'Failed to update access',
-    },
-  },
-
-  // Locations
-  locations: {
-    title: 'Locations',
-    manage: 'Manage storage locations and warehouse areas',
-    add: 'Add location',
-    edit: 'Edit location',
-    delete: 'Delete location',
-    name: 'Location name',
+  // Products
+  products: {
+    title: 'Products',
+    product: 'Product',
+    sku: 'SKU',
+    name: 'Product name',
+    category: 'Category',
+    subcategory: 'Subcategory',
+    brand: 'Brand',
     description: 'Description',
-    type: 'Location type',
-    capacity: 'Capacity',
-    noLocations: 'No locations found',
-    mainLocations: 'Main locations',
-    allLocations: 'All locations',
-    search: 'Search locations...',
-    comingSoonDescription:
-      'Location management features will be available soon. You will be able to create and manage different storage areas for your inventory.',
-    sampleData: {
-      mainWarehouse: {
-        name: 'Main warehouse',
-        type: 'Warehouse',
-        description: 'Central storage warehouse',
-      },
-      pharmacy: {
-        name: 'Pharmacy storage',
-        type: 'Pharmacy',
-        description: 'Medication storage',
-      },
-      treatmentRoom: {
-        name: 'Treatment room A',
-        type: 'Treatment room',
-        description: 'Inventory for treatment room A',
-      },
+    unit: 'Unit',
+    price: 'Price',
+    minimumStock: 'Minimum Stock',
+    maximumStock: 'Maximum Stock',
+    reorderPoint: 'Reorder Point',
+    preferredSupplier: 'Preferred Supplier',
+    active: 'Active',
+    inactive: 'Inactive',
+    discontinued: 'Discontinued',
+  },
+
+  // Products Page
+  productsPage: {
+    title: 'Products',
+    subtitle: 'Overview of all available products from Remka and external suppliers',
+
+    table: {
+      name: 'Name',
+      sku: 'SKU',
+      description: 'Description',
+      stockStatus: 'Stock Status',
+      supplier: 'Supplier',
+      price: 'Price',
+      actions: 'Actions',
+      category: 'Category',
+      currentStock: 'Current Stock',
+      lastUpdated: 'Last Updated',
+      batchStatus: 'Batch Status',
     },
-    capacityItems: '{count} items',
+
+    searchPlaceholder: 'Search by name or SKU...',
+    viewCart: 'View Cart',
+    filterByCategory: 'Filter by category',
+    filterBySupplier: 'Filter by supplier',
+    filterByStockStatus: 'Filter by stock status',
+    sortBy: 'Sort by',
+    clearFilters: 'Clear filters',
+
+    filters: {
+      title: 'Filters',
+      category: 'Category',
+      stockStatus: 'Stock Status',
+      supplier: 'Supplier',
+      priceRange: 'Price Range',
+      selectCategory: 'Select category',
+      selectStockStatus: 'Select stock status',
+      selectSupplier: 'Select supplier',
+      minPrice: 'Min price',
+      maxPrice: 'Max price',
+      all: 'All',
+      allCategories: 'All categories',
+      allSuppliers: 'All suppliers',
+      remka: 'Remka',
+      external: 'External suppliers',
+    },
+
+    stats: {
+      totalProducts: 'Total Products',
+      inStockProducts: 'In Stock',
+      lowStockProducts: 'Low Stock',
+      outOfStockProducts: 'Out of Stock',
+      suppliersCount: 'Suppliers',
+      categoriesCount: 'Categories',
+    },
+
+    stockStatus: {
+      in_stock: 'In Stock',
+      low_stock: 'Low Stock',
+      out_of_stock: 'Out of Stock',
+      unavailable: 'Unavailable',
+    },
+
+    batchStatus: {
+      good: 'Good',
+      expiring: 'Expiring Soon',
+      expired: 'Expired',
+    },
+
+    productDetails: 'Product Details',
+    description: 'Description',
+    category: 'Category',
+    unit: 'Unit',
+    suppliers: 'Suppliers',
+    stockLevels: 'Stock levels',
+    batches: 'batches',
+    noBatches: 'No batches',
+    bestPrice: 'Best price',
+
+    viewDetails: 'View Details',
+    addToCart: 'Add to Cart',
+    addToOrderList: 'Add to Order List',
+    expandDetails: 'Expand Details',
+
+    addedToCart: '{productName} added to cart',
+    cartAddError: 'Error adding product to cart',
+    dataRefreshed: 'Data refreshed successfully',
+    productLoadError: 'Error loading products',
+    noProductsFound: 'No products found',
+    noProductsForFilter: 'No products found for current filters',
+    loadingProducts: 'Loading products...',
+
+    details: {
+      title: 'Product Details',
+      basicInfo: 'Basic Information',
+      stockInfo: 'Stock Information',
+      supplierInfo: 'Supplier Information',
+      orderHistory: 'Order History',
+      sku: 'SKU',
+      name: 'Name',
+      description: 'Description',
+      category: 'Category',
+      brand: 'Brand',
+      unit: 'Unit',
+      price: 'Price',
+      currentStock: 'Current Stock',
+      minimumStock: 'Minimum Stock',
+      locations: 'Stock Locations',
+      suppliers: 'Suppliers',
+      lastOrderDate: 'Last Order Date',
+      averageOrderQuantity: 'Average Order Quantity',
+      totalOrdered: 'Total Ordered',
+      image: 'Product Image',
+      noImage: 'No image available',
+      noDescription: 'No description available',
+      priceNotAvailable: 'Price not available',
+    },
   },
 
   // Orders
@@ -720,7 +857,7 @@ export default {
     },
 
     email: {
-      recipient: 'Recipient Email',
+      recipient: 'Recipient email',
       subject: 'Subject',
       message: 'Message',
       send: 'Send Email',
@@ -760,8 +897,6 @@ export default {
 
     exportFilteredNote: 'Export {count} filtered orders',
     exportSelectedNote: 'Export {count} selected orders',
-
-    // Validation messages
     emailRequired: 'Email is required',
     noPracticeSelected: 'No practice selected',
   },
@@ -777,7 +912,6 @@ export default {
     noLists: 'No order lists found',
     createNew: 'Create a new order list to get started',
 
-    // List details
     name: 'Name',
     description: 'Description',
     supplier: 'Supplier',
@@ -787,7 +921,6 @@ export default {
     createdAt: 'Created at',
     updatedAt: 'Updated at',
 
-    // Status values
     draft: 'Draft',
     ready: 'Ready',
     submitted: 'Submitted',
@@ -795,13 +928,11 @@ export default {
     delivered: 'Delivered',
     cancelled: 'Cancelled',
 
-    // Actions
     addToCart: 'Add to cart',
     processOrder: 'Process order',
-    autoFill: 'Auto-fill',
-    autoFillDescription: 'Automatically fill based on stock levels',
+    autoFill: 'Auto fill',
+    autoFillDescription: 'Auto fill based on stock levels',
 
-    // Dialog
     createDialog: 'Create new order list',
     editDialog: 'Edit order list',
     details: 'Details',
@@ -811,13 +942,11 @@ export default {
     duplicateDialog: 'Duplicate order list',
     duplicateName: 'Copy of {name}',
 
-    // Form fields
     nameRequired: 'Name is required',
     nameMinLength: 'Name must be at least 3 characters',
     selectSupplier: 'Select supplier',
     supplierRequired: 'Supplier is required',
 
-    // Products
     addProduct: 'Add product',
     removeProduct: 'Remove product',
     productName: 'Product name',
@@ -825,18 +954,18 @@ export default {
     unitPrice: 'Unit price',
     totalPrice: 'Total price',
     notes: 'Notes',
+    urgent: 'Urgent',
+    exportOrderList: 'Export order list',
     noProducts: 'No products added',
     selectProduct: 'Select product',
 
-    // Success messages
     created: 'Order list created successfully',
     updated: 'Order list updated successfully',
     deleted: 'Order list deleted successfully',
     duplicated: 'Order list duplicated successfully',
     addedToCart: 'Products added to cart',
-    autoFilled: 'Order list auto-filled successfully',
+    autoFilled: 'Order list auto-filled',
 
-    // Error messages
     loadError: 'Error loading order lists',
     saveError: 'Error saving order list',
     deleteError: 'Error deleting order list',
@@ -844,266 +973,95 @@ export default {
     autoFillError: 'Error auto-filling order list',
   },
 
-  // Batch Management
-  batch: {
-    batchManagement: 'Batch Management',
-    manageBatchesSubtitle:
-      'Manage your product batches and expiry dates effectively',
-    title: 'Batch Management',
-    batchNumber: 'Batch number',
-    lotNumber: 'Lot number',
-    supplierBatchNumber: 'Supplier batch number',
-    expiryDate: 'Expiry date',
-    houdbaarheidstot: 'Best before date',
-    receivedDate: 'Received date',
-    initialQuantity: 'Initial quantity',
-    currentQuantity: 'Current quantity',
-    availableQuantity: 'Available quantity',
-    reservedQuantity: 'Reserved quantity',
-    batchStatus: 'Batch status',
-    unitCost: 'Unit cost',
-    totalCost: 'Total cost',
-    qualityCheck: 'Quality check',
-    qualityPassed: 'Quality passed',
-    qualityFailed: 'Quality failed',
-    qualityNotes: 'Quality notes',
-    quarantineUntil: 'Quarantine until',
-
-    // Dashboard items
-    addBatch: 'Add Batch',
-    totalBatches: 'Total Batches',
-    expiringSoon: 'Expiring Soon',
-    activeBatches: 'Active Batches',
-    totalValue: 'Total Value',
-    quickActions: 'Quick Actions',
-    scanBatch: 'Scan Batch',
-    viewExpiring: 'View Expiring',
-    exportBatches: 'Export Batches',
-    criticalAlert: 'Critical Alert',
-    criticalBatchesFound: '{count} batch(es) require immediate attention',
-    viewCritical: 'View Critical',
-
-    // Tabs
-    overview: 'Overview',
-    expiring: 'Expiring',
-    fifoManagement: 'FIFO Management',
-    reports: 'Reports',
-    expiringBatches: 'Expiring Batches',
-    batchReports: 'Batch Reports',
-
-    // Batch operations
-    registerBatch: 'Register batch',
-    editBatch: 'Edit batch',
-    viewBatch: 'View batch',
-    deleteBatch: 'Delete batch',
-    mergeBatches: 'Merge batches',
-    splitBatch: 'Split batch',
-
-    // FIFO
-    fifo: 'FIFO (First In, First Out)',
-    fifoExplanation: 'Oldest batches are automatically used first',
-    useBatch: 'Use batch',
-    autoSelectBatch: 'Auto-select batch',
-
-    // Expiry management
-    expiryManagement: 'Expiry management',
-    daysUntilExpiry: 'Days until expiry',
-    expiryAlert: 'Expiry alert',
-
-    // Validation messages
-    batchNumberRequired: 'Batch number is required',
-    expiryDateRequired: 'Expiry date is required',
-    invalidExpiryDate: 'Invalid expiry date',
-    expiryInPast: 'Expiry date cannot be in the past',
-    batchAlreadyExists: 'Batch already exists',
-    insufficientBatchStock: 'Insufficient stock in batch',
-
-    // Success messages
-    batchRegistered: 'Batch registered successfully',
-    batchUpdated: 'Batch updated successfully',
-    batchDeleted: 'Batch deleted successfully',
-    stockUsedFromBatch: 'Stock used from batch {batchNumber}',
-    exportSuccess: 'Batches exported successfully',
-    quarantine: 'Quarantine',
-    quarantineSuccess: 'Batch successfully quarantined',
-    expiredDaysAgo: 'Expired {days} days ago',
-    expiresToday: 'Expires today',
-    expiresTomorrow: 'Expires tomorrow',
-    expiresInDays: 'Expires in {days} days',
-    batchNotFound: 'Batch {batchNumber} not found',
-
-    // Reports
-    selectReport: 'Select report',
-    generateReport: 'Generate report',
-    exportReport: 'Export report',
-    reportResults: 'Report results',
-    reportConfiguration: 'Report configuration',
-    reportGenerated: 'Report generated successfully',
-    reportExported: 'Report exported successfully',
-    expiredBatches: 'Expired batches',
-    expiryAnalysis: 'Expiry analysis',
-    expiryAnalysisDesc: 'Analyze batch expiry dates and urgency',
-    batchUsage: 'Batch usage',
-    batchUsageDesc: 'View how batches are being used',
-    fifoCompliance: 'FIFO compliance',
-    fifoComplianceDesc: 'Check FIFO compliance',
-    batchCosts: 'Batch costs',
-    batchCostsDesc: 'Analyze costs per batch',
-
-    // Batch registration and validation
-    registerNewBatch: 'Register new batch',
-    batchRegisteredSuccessfully: 'Batch registered successfully',
-    batchOverview: 'Batch Overview',
-    urgencyLevel: 'Urgency Level',
-    batchesExpiringSoon: '{count} batches expiring soon',
-    noBatchesFound: 'No batches found',
-    noExpiringBatches: 'No expiring batches',
-    available: 'Available',
-    supplierBatch: 'Supplier batch',
-
-    // Filters
-    filterByStatus: 'Filter by status',
-    filterByExpiry: 'Filter by expiry',
-    showExpiring: 'Show expiring batches',
-    showExpired: 'Show expired batches',
-    showActive: 'Show active batches',
-
-    // FIFO functionality
-    fifoSuggestion: 'FIFO Suggestion',
-    requestedQuantity: 'Requested Quantity',
-    generateFifoSuggestion: 'Generate FIFO Suggestion',
-    fifoResults: 'FIFO Results',
-    noFifoResults: 'No FIFO results available',
-    useQuantity: 'Use Quantity',
-    applyFifoSuggestion: 'Apply FIFO Suggestion',
-    fifoSuggestionGenerated: 'FIFO suggestion generated',
-    confirmFifoApplication: 'Confirm FIFO Application',
-    confirmFifoMessage: 'Are you sure you want to apply this FIFO suggestion?',
-    fifoAppliedSuccessfully: 'FIFO applied successfully',
-
-    // Batch details and usage
-    batchDetails: 'Batch Details',
-    batchInformation: 'Batch Information',
-    quantityStatus: 'Quantity Status',
-    expiryInformation: 'Expiry Information',
-    statusInformation: 'Status Information',
-    costInformation: 'Cost Information',
-    currentValue: 'Current Value',
-    quantityToUse: 'Quantity to Use',
-    usageReason: 'Usage Reason',
-    usageNotes: 'Usage Notes',
-    usageNotesHint: 'Optional notes about this usage',
-    useAll: 'Use All',
-    usageSummary: 'Usage Summary',
-    quantityUsed: 'Quantity Used',
-    remainingQuantity: 'Remaining Quantity',
-    costImpact: 'Cost Impact',
-    newStatus: 'New Status',
-    confirmUsage: 'Confirm Usage',
-    purchaseInformation: 'Purchase Information',
-    purchaseOrderNumber: 'Purchase Order Number',
-    invoiceNumber: 'Invoice Number',
-    currency: 'Currency',
-
-    // Urgency levels
-    urgency: {
-      expired: 'Expired',
-      critical: 'Critical',
-      warning: 'Warning',
-      normal: 'Normal',
-    },
-
-    status: {
-      available: 'Available',
-      reserved: 'Reserved',
-      expired: 'Expired',
-      quarantine: 'Quarantine',
-      used: 'Used',
-      active: 'Active',
-      inactive: 'Inactive',
-    },
-  },
-
-  // Products
-  products: {
-    title: 'Products',
-    product: 'Product',
-    sku: 'SKU',
-    name: 'Product Name',
-    category: 'Category',
-    subcategory: 'Subcategory',
-    brand: 'Brand',
+  // Locations
+  locations: {
+    title: 'Locations',
+    manage: 'Manage storage locations and warehouse areas',
+    add: 'Add location',
+    edit: 'Edit location',
+    delete: 'Delete location',
+    name: 'Location name',
     description: 'Description',
-    unit: 'Unit',
-    price: 'Price',
-
-    // Stock Settings
-    minimumStock: 'Minimum Stock',
-    maximumStock: 'Maximum Stock',
-    reorderPoint: 'Reorder Point',
-    preferredSupplier: 'Preferred Supplier',
-
-    // Status
-    active: 'Active',
-    inactive: 'Inactive',
-    discontinued: 'Discontinued',
+    type: 'Location type',
+    capacity: 'Capacity',
+    sampleData: {
+      mainWarehouse: {
+        name: 'Main Warehouse',
+        type: 'Warehouse',
+        description: 'Central storage warehouse',
+      },
+      pharmacy: {
+        name: 'Pharmacy Storage',
+        type: 'Pharmacy',
+        description: 'Medication storage',
+      },
+      treatmentRoom: {
+        name: 'Treatment Room A',
+        type: 'Treatment Room',
+        description: 'Stock for treatment room A',
+      },
+    },
+    noLocations: 'No locations found',
+    mainLocations: 'Main locations',
+    allLocations: 'All locations',
+    search: 'Search locations...',
+    comingSoonDescription: 'Location management features coming soon. You will be able to create and manage different storage areas for your inventory.',
+    capacityItems: '{count} items',
+    samples: {
+      emergencyStock: 'Emergency Cabinet',
+    },
   },
 
   // Stock Movements
   movements: {
-    title: 'Stock Movements',
-    movementType: 'Movement Type',
-    quantityChange: 'Quantity Change',
-    quantityBefore: 'Quantity Before',
-    quantityAfter: 'Quantity After',
-    performedBy: 'Performed By',
-    reasonCode: 'Reason Code',
+    title: 'Stock movements',
+    movementType: 'Movement type',
+    quantityChange: 'Quantity change',
+    quantityBefore: 'Quantity before',
+    quantityAfter: 'Quantity after',
+    performedBy: 'Performed by',
+    reasonCode: 'Reason code',
 
-    // Movement Types
-    count: 'Count Adjustment',
-    receipt: 'Stock Receipt',
-    usage: 'Stock Usage',
-    transfer: 'Stock Transfer',
-    adjustment: 'Manual Adjustment',
-    waste: 'Waste/Disposal',
+    count: 'Count adjustment',
+    receipt: 'Stock receipt',
+    usage: 'Stock usage',
+    transfer: 'Stock transfer',
+    adjustment: 'Manual adjustment',
+    waste: 'Waste/disposal',
 
-    // Reason Codes
-    normalUsage: 'Normal Usage',
+    normalUsage: 'Normal usage',
     expired: 'Expired',
     damaged: 'Damaged',
     lost: 'Lost',
     found: 'Found',
-    transferIn: 'Transfer In',
-    transferOut: 'Transfer Out',
-    countCorrection: 'Count Correction',
+    transferred: 'Transferred',
+    corrected: 'Corrected',
   },
 
   // Analytics
   analytics: {
     title: 'Analytics',
+    subtitle: 'Comprehensive reports and insights for your inventory',
+    comingSoon: 'Coming soon',
+    comingSoonDescription: 'Advanced analytics and reporting features will be added soon.',
     overview: 'Overview',
-    performance: 'Performance',
     trends: 'Trends',
-
-    // KPIs
-    stockTurnover: 'Stock Turnover Rate',
-    stockAccuracy: 'Stock Accuracy',
-    avgDaysToStockout: 'Avg Days to Stockout',
-    topMovingProducts: 'Top Moving Products',
-    lastFullCount: 'Last Full Count',
-
-    // Reports
-    inventoryReport: 'Inventory Report',
-    movementReport: 'Movement Report',
-    varianceReport: 'Variance Report',
-    supplierReport: 'Supplier Report',
-
-    // Admin analytics
+    reports: 'Reports',
+    insights: 'Insights',
+    period: 'Period',
+    lastWeek: 'Last week',
+    lastMonth: 'Last month',
+    lastQuarter: 'Last quarter',
+    lastYear: 'Last year',
+    stockTurnover: 'Stock turnover',
+    orderFrequency: 'Order frequency',
+    supplierPerformance: 'Supplier performance',
+    costAnalysis: 'Cost analysis',
+    
     dashboard: 'Dashboard analytics',
     usage: 'Usage statistics',
     patterns: 'Usage patterns',
     
-    // Events
     events: {
       login: 'Login',
       logout: 'Logout',
@@ -1113,7 +1071,6 @@ export default {
       batch_register: 'Batch registered',
     },
 
-    // Metrics
     metrics: {
       averageSession: 'Average session time',
       peakHours: 'Peak hours',
@@ -1124,7 +1081,6 @@ export default {
   offline: {
     title: 'Offline mode',
     
-    // Data management
     data: {
       download: 'Download offline data',
       downloadDescription: 'Download latest data for offline use',
@@ -1132,7 +1088,6 @@ export default {
       dataSize: 'Data size',
     },
 
-    // Sync
     sync: {
       forceSync: 'Force sync',
       syncNow: 'Sync now',
@@ -1142,7 +1097,6 @@ export default {
       pendingActions: 'Pending actions',
     },
 
-    // Messages
     messages: {
       syncCompleted: 'Sync completed',
       syncFailed: 'Sync failed',
@@ -1152,12 +1106,13 @@ export default {
       onlineMode: 'Online mode active',
     },
 
-    // Errors
     errors: {
       syncFailed: 'Sync failed',
       downloadFailed: 'Failed to download offline data',
       networkUnavailable: 'Network unavailable',
     },
+    
+    newVersionAvailable: 'A new version of the app is available. Would you like to reload now?',
   },
 
   // Exports
@@ -1169,7 +1124,6 @@ export default {
     generateExport: 'Generate export',
     downloadExport: 'Download export',
     
-    // Formats
     formats: {
       csv: 'CSV file',
       pdf: 'PDF document',
@@ -1177,7 +1131,6 @@ export default {
       json: 'JSON data',
     },
 
-    // Data types
     dataTypes: {
       inventory: 'Inventory data',
       orders: 'Orders',
@@ -1186,7 +1139,6 @@ export default {
       users: 'Users',
     },
 
-    // Messages
     messages: {
       exportGenerated: 'Export generated successfully',
       exportFailed: 'Failed to generate export',
@@ -1194,210 +1146,342 @@ export default {
     },
   },
 
-  // Analytics Page  
+  // Analytics Page
   analyticsPage: {
     title: 'Analytics',
     subtitle: 'Comprehensive reports and insights for your inventory',
     period: 'Period',
-    totalEvents: 'Total Events',
-    activeUsers: 'Active Users',
-    totalOrders: 'Total Orders',
-    productUpdates: 'Product Updates',
-    dailyActivity: 'Daily Activity',
-    topEvents: 'Top Events',
-    frequentlyOrderedItems: 'Frequently Ordered Items',
-    mostUpdatedProducts: 'Most Updated Products',
-    userActivity: 'User Activity',
+    totalEvents: 'Total events',
+    activeUsers: 'Active users',
+    totalOrders: 'Total orders',
+    productUpdates: 'Product updates',
+    dailyActivity: 'Daily activity',
+    topEvents: 'Top events',
+    frequentlyOrderedItems: 'Frequently ordered items',
+    mostUpdatedProducts: 'Most updated products',
+    userActivity: 'User activity',
     export: 'Export',
     
-    // Periods
     periods: {
       '7d': 'Last 7 days',
       '30d': 'Last 30 days',
-      '90d': 'Last 90 days', 
+      '90d': 'Last 90 days',
       '1y': 'Last year',
     },
 
-    // Table columns
     user: 'User',
-    activityCount: 'Activity Count',
-    lastActivity: 'Last Activity',
+    activityCount: 'Activity count',
+    lastActivity: 'Last activity',
     product: 'Product',
-    totalQuantity: 'Total Quantity',
-    orderCount: 'Order Count',
+    totalQuantity: 'Total quantity',
+    orderCount: 'Order count',
     updates: 'Updates',
 
-    // Messages
-    loadError: 'Failed to load analytics data',
+    loadError: 'Error loading analytics data',
     exportSuccess: 'Analytics exported successfully',
-    exportError: 'Failed to export analytics',
+    exportError: 'Error exporting analytics',
   },
 
   // Settings
   settings: {
     title: 'Settings',
+    subtitle: 'Configure your system and preferences',
     general: 'General',
-    darkMode: 'Dark mode',
-    language: 'Language',
-    selectLanguage: 'Select your preferred language',
-    languageChanged: 'Language changed to {language}',
     notifications: 'Notifications',
-    clinic: 'Clinic settings',
-    profile: 'Profile settings',
-    profileSubtitle: 'Personal account information',
-    appearanceTitle: 'Appearance',
-    appearanceSubtitle: 'Interface and language settings',
-    darkModeDescription: 'Switch between light and dark mode',
-    colorSchemeTitle: 'Choose color scheme',
-    colorSchemeDescription: 'Change the application color scheme',
-    clinicInfoSubtitle: 'Clinic information and contact details',
-    contactSettingsNotice:
-      'To modify clinic information, please contact the administrator.',
-    notificationSettingsSubtitle: 'Notifications and alerts',
-    stockAlertsLabel: 'Stock alerts',
-    stockAlertsDescription: 'Receive notifications for low stock',
-    emailNotificationsLabel: 'Email notifications',
-    emailNotificationsDescription: 'Receive important updates via email',
-    browserNotificationsLabel: 'Browser notifications',
-    browserNotificationsDescription: 'Allow browser notifications',
-    systemInfoTitle: 'System information',
-    systemInfoSubtitle: 'Version and support',
-    versionLabel: 'Version',
-    lastUpdateLabel: 'Last update',
-    supportLabel: 'Support',
-    manageSettingsSubtitle:
-      'Manage your settings and preferences for an optimal experience',
-
-    darkModeEnabled: 'Dark mode is enabled',
-    lightModeEnabled: 'Light mode is enabled',
-    settingsSaved: 'Settings saved successfully',
-    settingsSaveError: 'An error occurred while saving',
-    saveSettings: 'Save settings',
-    role: 'Role',
+    integrations: 'Integrations',
+    users: 'Users',
+    backup: 'Backup',
+    language: 'Language',
+    theme: 'Theme',
+    timezone: 'Timezone',
+    currency: 'Currency',
+    dateFormat: 'Date format',
+    timeFormat: 'Time format',
+    emailNotifications: 'Email notifications',
+    pushNotifications: 'Push notifications',
+    stockAlerts: 'Stock alerts',
+    orderAlerts: 'Order alerts',
+    systemAlerts: 'System alerts',
+    save: 'Save',
+    saved: 'Settings saved',
+    saveError: 'Error saving settings',
+    reset: 'Reset',
+    resetToDefaults: 'Reset to defaults',
+    confirmReset: 'Are you sure you want to reset to defaults?',
     
-    // Settings Page specific
-    manageSettingsSubtitle: 'Manage your system settings and preferences for an optimal experience',
+    manageSettingsSubtitle: 'Manage your system settings and preferences for optimal experience',
     profile: 'Profile',
     profileSubtitle: 'Your personal user information',
     appearanceTitle: 'Appearance',
     appearanceSubtitle: 'Customize the look and feel of the application',
-    darkModeDescription: 'Switch between light and dark modes for better visibility',
-    selectLanguage: 'Choose your preferred interface language',
-    colorSchemeTitle: 'Color Scheme',
-    colorSchemeDescription: 'Select the color scheme that matches your preference',
+    darkModeDescription: 'Switch between light and dark mode for better visibility',
+    selectLanguage: 'Choose your preferred language for the interface',
+    colorSchemeTitle: 'Color scheme',
+    colorSchemeDescription: 'Select the color scheme that suits your preference',
     clinic: 'Clinic',
     clinicInfoSubtitle: 'Contact details and business information',
-    contactSettingsNotice: 'Contact details can only be changed by an administrator',
-    notificationSettingsSubtitle: 'Manage your notifications and alerts',
-    stockAlertsLabel: 'Stock Alerts',
-    stockAlertsDescription: 'Receive notifications when stock levels are low',
-    emailNotificationsLabel: 'Email Notifications',
+    contactSettingsNotice: 'Contact details can only be modified by an administrator',
+    notificationSettingsSubtitle: 'Manage your alerts and notifications',
+    stockAlertsLabel: 'Stock alerts',
+    stockAlertsDescription: 'Receive notifications when stock is low',
+    emailNotificationsLabel: 'Email notifications',
     emailNotificationsDescription: 'Receive important updates via email',
-    browserNotificationsLabel: 'Browser Notifications',
+    browserNotificationsLabel: 'Browser notifications',
     browserNotificationsDescription: 'Push notifications in your browser',
-    systemInfoTitle: 'System Information',
-    systemInfoSubtitle: 'Version details and support information',
+    systemInfoTitle: 'System information',
+    systemInfoSubtitle: 'Version information and support',
     versionLabel: 'Version',
-    lastUpdateLabel: 'Last Update',
+    lastUpdateLabel: 'Last update',
     supportLabel: 'Support',
     languageChanged: 'Language changed to {language}',
     clinicName: 'Clinic name',
     contactEmail: 'Contact email',
     phoneNumber: 'Phone number',
     address: 'Address',
+    role: 'Role',
+    darkModeEnabled: 'Dark mode is enabled',
+    lightModeEnabled: 'Light mode is enabled',
+    settingsSaved: 'Settings saved successfully',
+    settingsSaveError: 'An error occurred while saving',
+    saveSettings: 'Save settings',
 
-    // Style Guide translations
     styleGuideTitle: 'MedStock Pro Style Guide',
     styleGuideSubtitle: 'Complete design system reference and component showcase',
     colorsSection: 'Colors',
-    primaryColors: 'Primary Colors',
-    neutralColors: 'Neutral Colors',
+    primaryColors: 'Primary colors',
+    neutralColors: 'Neutral colors',
     typographySection: 'Typography',
     buttonsSection: 'Buttons',
-    solidButtons: 'Solid Buttons',
-    outlinedButtons: 'Outlined Buttons',
-    flatButtons: 'Flat Buttons',
-    iconButtons: 'Icon Buttons',
+    solidButtons: 'Solid buttons',
+    outlinedButtons: 'Outlined buttons',
+    flatButtons: 'Flat buttons',
+    iconButtons: 'Icon buttons',
     cardsSection: 'Cards',
 
-    // Card examples
+    primaryButton: 'Primary',
+    secondaryButton: 'Secondary',
+    successButton: 'Success',
+    warningButton: 'Warning',
+    dangerButton: 'Danger',
+    infoButton: 'Info',
+    addProductButton: 'Add product',
+    editButton: 'Edit',
+    deleteButton: 'Delete',
+    saveButton: 'Save',
+    downloadButton: 'Download',
+
     cards: {
       defaultCard: {
-        title: 'Default Card',
+        title: 'Default card',
         subtitle: 'Standard card for general content',
-        description: 'This is the default card variant with standard styling. It uses neutral backgrounds that adapt properly to light and dark modes.',
+        description: 'This is the default card variant with standard styling. It uses neutral backgrounds that adapt well to light and dark modes.',
         action: 'Action',
       },
       modernCard: {
-        title: 'Modern Card',
+        title: 'Modern card',
         subtitle: 'Enhanced modern styling with borders',
         description: 'Modern card variant with enhanced styling and subtle borders for a contemporary look.',
-        action: 'Primary Action',
+        action: 'Primary action',
       },
       elevatedCard: {
-        title: 'Elevated Card',
+        title: 'Elevated card',
         subtitle: 'Card with enhanced shadow for emphasis',
         description: 'This card has elevated styling with enhanced shadows to create depth and hierarchy.',
-        action: 'Elevated Action',
+        action: 'Elevated action',
       },
       glassCard: {
-        title: 'Glass Card',
-        subtitle: 'Glass morphism effect with transparency',
-        description: 'Glass morphism card with backdrop blur and transparency effects for a modern, sophisticated look.',
-        action: 'Glass Action',
+        title: 'Glass card',
+        subtitle: 'Glassmorphism effect with transparency',
+        description: 'Glassmorphism card with backdrop blur and transparency effects for a modern, sleek appearance.',
+        action: 'Glass action',
       },
       outlinedCard: {
-        title: 'Outlined Card',
+        title: 'Outlined card',
         subtitle: 'Card with border emphasis',
         description: 'This card uses borders instead of shadows for definition, perfect for minimal designs.',
-        action: 'Outlined Action',
+        action: 'Outlined action',
       },
       warningCard: {
-        title: 'Warning Card',
+        title: 'Warning card',
         subtitle: 'Card with warning color theme',
-        description: 'Example of using header colors to create themed cards for different types of content.',
-        action: 'Warning Action',
+        description: 'Example of using header colors to create thematic cards for different types of content.',
+        action: 'Warning action',
       },
     },
   },
 
-  // Analytics Page  
-  analyticsPage: {
-    title: 'Analytics',
-    subtitle: 'Comprehensive reports and insights for your inventory',
-    period: 'Period',
-    totalEvents: 'Total Events',
-    activeUsers: 'Active Users',
-    totalOrders: 'Total Orders',
-    productUpdates: 'Product Updates',
-    dailyActivity: 'Daily Activity',
-    topEvents: 'Top Events',
-    frequentlyOrderedItems: 'Frequently Ordered Items',
-    mostUpdatedProducts: 'Most Updated Products',
-    userActivity: 'User Activity',
-    export: 'Export',
+  // Suppliers
+  suppliers: {
+    title: 'Suppliers',
+    name: 'Name',
+    contactEmail: 'Contact email',
+    contactPhone: 'Contact phone',
+    website: 'Website',
+    address: 'Address',
+    city: 'City',
+    postalCode: 'Postal code',
+    country: 'Country',
+    status: 'Status',
+    active: 'Active',
+    inactive: 'Inactive',
+    notes: 'Notes',
+    products: 'Products',
+    orders: 'Orders',
+    lastOrder: 'Last order',
+    totalOrders: 'Total orders',
+    averageDeliveryTime: 'Average delivery time',
+    reliability: 'Reliability',
+    qualityRating: 'Quality rating',
+    priceCompetitiveness: 'Price competitiveness',
+    communicationRating: 'Communication rating',
+    paymentTerms: 'Payment terms',
+    deliveryTerms: 'Delivery terms',
+    minimumOrderAmount: 'Minimum order amount',
+    leadTime: 'Lead time',
+    packSize: 'Pack size',
+    availability: 'Availability',
+    backorderAllowed: 'Backorder allowed',
+    addSupplier: 'Add supplier',
+    editSupplier: 'Edit supplier',
+    supplierDetails: 'Supplier Details',
+    supplierCode: 'Supplier Code',
+    contactPerson: 'Contact Person',
+    paymentTermsDetailed: 'Payment Terms',
+    minimumOrder: 'Minimum Order Value',
+    shippingCost: 'Shipping Cost',
+    freeShippingThreshold: 'Free shipping threshold',
+    preferredOrderDay: 'Preferred order day',
+    orderCutoffTime: 'Order cutoff time',
+    apiIntegration: 'API Integration',
+    syncEnabled: 'Sync Enabled',
+    lastSyncTime: 'Last Sync',
+    supplierProducts: 'Supplier Products',
+    supplierSKU: 'Supplier SKU',
+    supplierName: 'Supplier Name',
+    unitPrice: 'Unit Price',
+    minimumOrderQty: 'Minimum Order Quantity',
+    leadTimeDays: 'Lead Time (days)',
+  },
+
+  // Admin
+  admin: {
+    title: 'Admin',
+    settings: 'Settings',
+    audit: 'Audit log',
+    users: 'Users',
+    locations: 'Locations',
+    permissions: 'Permissions',
+    analytics: 'Analytics',
+    quickActions: 'Quick actions',
     
-    // Periods
-    periods: {
-      '7d': 'Last 7 days',
-      '30d': 'Last 30 days',
-      '90d': 'Last 90 days', 
-      '1y': 'Last year',
+    stats: {
+      totalUsers: 'Total users',
+      activeUsers: 'Active users',
+      activeToday: 'active today',
+      totalLocations: 'Total locations',
+      active: 'active',
+      pendingSync: 'Pending sync',
+      lastSync: 'Last sync',
+      todayEvents: 'Events today',
+      fromYesterday: 'from yesterday',
     },
 
-    // Table columns
-    user: 'User',
-    activityCount: 'Activity Count',
-    lastActivity: 'Last Activity',
-    product: 'Product',
-    totalQuantity: 'Total Quantity',
-    orderCount: 'Order Count',
-    updates: 'Updates',
+    userManagement: {
+      title: 'User management',
+      invite: 'Invite user',
+      email: 'Email address',
+      roles: 'Roles',
+      lastActive: 'Last active',
+      resetPassword: 'Reset password',
+      activate: 'Activate',
+      deactivate: 'Deactivate',
+    },
 
-    // Messages
-    loadError: 'Failed to load analytics data',
-    exportSuccess: 'Analytics exported successfully',
-    exportError: 'Failed to export analytics',
+    errors: {
+      loadUsersFailed: 'Error loading users',
+      loadLocationsFailed: 'Error loading locations',
+      loadPermissionsFailed: 'Error loading permissions',
+      
+      // Common admin errors
+      noPracticeSelected: 'No practice selected',
+      practiceOrUserNotFound: 'Practice or user not found',
+      userNotFoundInPractice: 'User not found in practice',
+      userEmailNotFound: 'User email not found',
+      cannotDeactivatePracticeOwner: 'Cannot deactivate practice owner',
+      cannotDeleteMainLocation: 'Cannot delete the main location',
+      
+      // Permission errors
+      insufficientPermissionsToCreate: 'Insufficient permissions to create',
+      insufficientPermissionsToUpdate: 'Insufficient permissions to update',
+      insufficientPermissionsToDelete: 'Insufficient permissions to delete',
+      insufficientPermissionsToView: 'Insufficient permissions to view',
+      insufficientPermissionsToGrant: 'Insufficient permissions to grant permissions',
+      insufficientPermissionsToRevoke: 'Insufficient permissions to revoke permissions',
+      insufficientPermissionsToReset: 'Insufficient permissions to reset',
+      insufficientPermissionsToToggle: 'Insufficient permissions to toggle',
+      
+      // Operation errors
+      failedToCreate: 'Failed to create',
+      failedToUpdate: 'Failed to update',
+      failedToDelete: 'Failed to delete',
+      failedToGet: 'Failed to get',
+      failedToGrant: 'Failed to grant',
+      failedToRevoke: 'Failed to revoke',
+      failedToSend: 'Failed to send',
+      failedToSet: 'Failed to set',
+    },
+  },
+
+  // Permissions
+  permissions: {
+    title: 'Permissions and access',
+    user: 'User',
+    permissionType: 'Permission type',
+    resourceType: 'Resource type',
+    expiresAt: 'Expires at',
+    
+    templates: {
+      title: 'Permission templates',
+      assistant: 'Assistant',
+      manager: 'Manager',
+      admin: 'Admin',
+      owner: 'Owner',
+      viewer: 'Viewer',
+    },
+
+    types: {
+      read: 'Read',
+      write: 'Write',
+      delete: 'Delete',
+      admin: 'Admin',
+    },
+
+    notifications: {
+      revoked: 'Permission revoked',
+      granted: 'Permission granted',
+    },
+
+    errors: {
+      revokeFailed: 'Error revoking permission',
+      grantFailed: 'Error granting permission',
+    },
+  },
+
+  // Locations - Enhanced
+  locationsAdmin: {
+    isMain: 'Main location',
+    setAsMain: 'Set as main location',
+    manageAccess: 'Manage access',
+    
+    notifications: {
+      mainLocationSet: 'Main location set',
+      accessUpdated: 'Access updated',
+    },
+
+    errors: {
+      setMainFailed: 'Error setting main location',
+      accessUpdateFailed: 'Error updating access',
+    },
   },
 
   // Suppliers Page
@@ -1422,7 +1506,7 @@ export default {
     notes: 'Notes',
     activeSupplier: 'Active supplier',
     contactInformation: 'Contact information',
-    location: 'Location',
+    locationInfo: 'Location',
     magentoLink: 'Magento link',
     status: 'Status',
     actions: 'Actions',
@@ -1438,16 +1522,15 @@ export default {
     linkToMagento: 'Link to Magento',
     linkToMagentoPrompt: 'Enter the Magento vendor ID to link this supplier:',
     confirmDelete: 'Confirm delete',
-    confirmDeleteMessage:
-      'Are you sure you want to delete "{name}"? This action cannot be undone.',
+    confirmDeleteMessage: 'Are you sure you want to delete "{name}"? This action cannot be undone.',
     supplierCreated: 'Supplier created successfully',
     supplierUpdated: 'Supplier updated successfully',
     supplierDeleted: 'Supplier deleted successfully',
     supplierLinkedToMagento: 'Supplier linked to Magento successfully',
-    loadSuppliersError: 'Failed to load suppliers',
-    saveSupplierError: 'Failed to save supplier',
-    deleteSupplierError: 'Failed to delete supplier',
-    linkMagentoError: 'Failed to link supplier to Magento',
+    loadSuppliersError: 'Error loading suppliers',
+    saveSupplierError: 'Error saving supplier',
+    deleteSupplierError: 'Error deleting supplier',
+    linkMagentoError: 'Error linking supplier to Magento',
     importFeatureComingSoon: 'Import feature coming soon!',
   },
 
@@ -1459,7 +1542,7 @@ export default {
     unread: 'Unread',
     read: 'Read',
     filterByCategory: 'Filter by category',
-    markAllRead: 'Mark all as read',
+    markAllRead: 'Mark all read',
     settings: 'Settings',
     noNotifications: 'No notifications',
     allCaughtUp: "You're all caught up!",
@@ -1474,15 +1557,14 @@ export default {
     markAsReadTooltip: 'Mark as read',
     deleteTooltip: 'Delete',
     clearAllConfirm: 'Clear all notifications',
-    clearAllConfirmMessage:
-      'Are you sure you want to delete all notifications? This action cannot be undone.',
+    clearAllConfirmMessage: 'Are you sure you want to delete all notifications? This action cannot be undone.',
     allMarkedAsRead: 'All notifications marked as read',
     notificationDeleted: 'Notification deleted',
     allNotificationsCleared: 'All notifications cleared',
     testStockAlertCreated: 'Test stock alert created',
     testOrderUpdateCreated: 'Test order update created',
     settingsFeatureComingSoon: 'Notification settings feature coming soon!',
-    loadNotificationsError: 'Failed to load notifications',
+    loadNotificationsError: 'Error loading notifications',
 
     categories: {
       stockAlert: 'Stock alerts',
@@ -1510,68 +1592,17 @@ export default {
     },
   },
 
-  // Products Page
-  productsPage: {
-    title: 'Products',
-    subtitle: 'Manage your product overview and orders',
-    searchPlaceholder: 'Search products...',
-    viewCart: 'View shopping cart',
-    filters: {
-      title: 'Filters',
-      category: 'Category',
-      stockStatus: 'Stock status',
-      supplier: 'Supplier',
-      priceRange: 'Price range',
-      selectCategory: 'Select category',
-      selectStockStatus: 'Select status',
-      selectSupplier: 'Select supplier',
-      minPrice: 'Min. price',
-      maxPrice: 'Max. price',
-      remka: 'Remka',
-      external: 'External',
-    },
-    clearFilters: 'Clear filters',
-    noProductsFound: 'No products found',
-    table: {
-      name: 'Name',
-      sku: 'SKU',
-      stockStatus: 'Stock status',
-      price: 'Price',
-      batchStatus: 'Batch status',
-      actions: 'Actions',
-    },
-    stockStatus: {
-      in_stock: 'In stock',
-      low_stock: 'Low stock',
-      out_of_stock: 'Out of stock',
-    },
-    batchStatus: {
-      good: 'Good',
-      expiring: 'Expiring',
-      expired: 'Expired',
-    },
-    bestPrice: 'Best price',
-    batches: 'batches',
-    noBatches: 'No batches',
-    viewDetails: 'View details',
-    addToCart: 'Add to cart',
-    addToOrderList: 'Add to order list',
-    expandDetails: 'Expand details',
-    productDetails: 'Product details',
-    description: 'Description',
-    category: 'Category',
-    unit: 'Unit',
-    suppliers: 'Suppliers',
-    stockLevels: 'Stock levels',
-    stats: {
-      totalProducts: 'Total products',
-      inStockProducts: 'In stock',
-      lowStockProducts: 'Low stock',
-      outOfStockProducts: 'Out of stock',
-    },
-    addedToCart: "'{productName}' added to cart",
-    cartAddError: 'Error adding to cart',
-    dataRefreshed: 'Product data refreshed',
-    productLoadError: 'Error loading products',
+  // Messages for user feedback
+  messages: {
+    addToCartComingSoon: 'Add to cart feature coming soon',
+    addAllSuggestionsComingSoon: 'Add all suggestions feature coming soon',
+    cartCleared: 'Cart cleared',
+    cartSaved: 'Cart saved',
+  },
+
+  // Confirm dialog translations  
+  dialogs: {
+    typeToConfirm: 'Type {text} to confirm',
+    confirmClose: 'Are you sure you want to close? Unsaved changes will be lost.',
   },
 };
