@@ -79,12 +79,16 @@
           icon="check_circle"
           header-color="positive"
         >
-          <div class="kpi-content">
-            <div class="kpi-value">
-              {{ loading ? '...' : '✓' }}
+                      <div class="kpi-content">
+              <div class="kpi-value">
+                {{ loading ? '...' : inventoryStore.realtimeConnected ? '🔄' : '✓' }}
+              </div>
+              <div class="kpi-subtitle">{{ 
+                inventoryStore.realtimeConnected 
+                  ? $t('inventory.realTimeConnected') 
+                  : $t('inventory.status') 
+              }}</div>
             </div>
-            <div class="kpi-subtitle">{{ $t('inventory.status') }}</div>
-          </div>
         </BaseCard>
       </div>
 
@@ -307,6 +311,7 @@
   import { useQuasar } from 'quasar';
   import { useAuthStore } from 'src/stores/auth';
   import { useClinicStore } from 'src/stores/clinic';
+  import { useInventoryStore } from 'src/stores/inventory';
   import { supabase } from 'src/boot/supabase';
   import PageLayout from 'src/components/PageLayout.vue';
   import PageTitle from 'src/components/PageTitle.vue';
@@ -320,6 +325,7 @@
   const $q = useQuasar();
   const authStore = useAuthStore();
   const clinicStore = useClinicStore();
+  const inventoryStore = useInventoryStore();
 
   // State
   const loading = ref(false);
@@ -359,7 +365,10 @@
   });
 
   const selectedLocationObject = computed(() => {
-    if (selectedLocation.value === 'all') return null;
+    if (selectedLocation.value === 'all') {
+      // When "all locations" is selected, use the first available location as fallback
+      return clinicStore.locations.length > 0 ? clinicStore.locations[0] : null;
+    }
     return clinicStore.locations.find(
       loc => loc.id === selectedLocation.value
     ) || null;
@@ -711,6 +720,11 @@
         clinicStore.fetchLocations(demoPracticeId),
         loadStockLevels(),
       ]);
+
+      // 🔄 NEW: Initialize real-time updates
+      inventoryStore.initializeRealtime();
+      
+      console.log('📡 Real-time inventory subscriptions initialized');
     } catch (error) {
       console.error('Error loading inventory data:', error);
       $q.notify({

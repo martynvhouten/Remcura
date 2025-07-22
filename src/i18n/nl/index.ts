@@ -433,6 +433,28 @@ export default {
     barcodeNotFound: 'Geen product gevonden voor barcode: {barcode}',
     searchProduct: 'Product zoeken',
     noProductsFound: 'Geen producten gevonden',
+    
+    // Real-time functionality
+    realTimeConnected: 'Live updates',
+    realTimeDisconnected: 'Offline modus',
+    stockUpdated: 'Voorraad Bijgewerkt',
+    stockUpdatedMessage: '{product}: nieuwe voorraad {quantity}',
+    
+    // Enhanced UX functionality
+    adjustStockLevels: 'Voorraden aanpassen en bijwerken',
+    quickAmounts: 'Snelle hoeveelheden',
+    reasonRequired: 'Reden is verplicht',
+    quantityMustBePositive: 'Hoeveelheid moet positief zijn',
+    completeRequiredFields: 'Vul alle verplichte velden in',
+    selectProductFirst: 'Selecteer eerst een product',
+    selectLocationFirst: 'Selecteer eerst een locatie',
+    selectLocation: 'Selecteer locatie',
+    noLocationSelected: 'Geen locatie geselecteerd',
+    selectReason: 'Kies een reden',
+    adjusting: 'Aanpassen...',
+    adjust: 'Aanpassen',
+    savingChanges: 'Wijzigingen opslaan...',
+    current: 'Huidig',
     barcodeScanned: 'Barcode gescand: {barcode}',
     changeProduct: 'Product wijzigen',
     inStock: 'Op voorraad',
@@ -538,7 +560,6 @@ export default {
     reason: 'Reden',
     notes: 'Notities',
     notesPlaceholder: 'Optionele notities voor deze aanpassing...',
-    stockUpdated: 'Voorraad bijgewerkt',
     errorUpdatingStock: 'Fout bij bijwerken voorraad',
     dataRefreshed: 'Gegevens ververst',
 
@@ -554,12 +575,16 @@ export default {
     reasons: {
       normal_usage: 'Normaal gebruik',
       expired: 'Verlopen',
+      damage: 'Beschadigd',
       damaged: 'Beschadigd',
       lost: 'Verloren',
       found: 'Gevonden',
       transfer_in: 'Overdracht in',
       transfer_out: 'Overdracht uit',
       adjustment: 'Aanpassing',
+      recount: 'Hertelling',
+      correction: 'Correctie',
+      other: 'Anders',
       count_correction: 'Telling correctie',
     },
 

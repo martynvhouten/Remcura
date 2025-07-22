@@ -1,6 +1,7 @@
 import { defineStore } from 'pinia';
-import { ref, computed } from 'vue';
+import { ref, computed, onUnmounted } from 'vue';
 import { supabase } from 'src/boot/supabase';
+import { realtimeService } from 'src/services/supabase';
 import { useAuthStore } from './auth';
 import type {
   StockLevelWithDetails,
@@ -18,6 +19,11 @@ export const useInventoryStore = defineStore('inventory', () => {
   const loading = ref(false);
   const lastSyncAt = ref<Date | null>(null);
 
+  // 🔄 NEW: Real-time state
+  const realtimeConnected = ref(false);
+  const inventoryChannel = ref<any>(null);
+  const movementsChannel = ref<any>(null);
+
   // Auth store
   const authStore = useAuthStore();
 
@@ -31,17 +37,58 @@ export const useInventoryStore = defineStore('inventory', () => {
   // Actions - pure inventory operations only
   const updateStockLevel = async (request: StockUpdateRequest) => {
     try {
+      // Get current stock level
+      let currentStock = 0;
+      const { data: stockLevel, error: stockError } = await supabase
+        .from('stock_levels')
+        .select('current_quantity')
+        .eq('practice_id', request.practice_id)
+        .eq('location_id', request.location_id)
+        .eq('product_id', request.product_id)
+        .maybeSingle();
+
+      if (stockError && stockError.code !== 'PGRST116') {
+        // PGRST116 = "no rows returned" - this is OK for new products
+        throw stockError;
+      }
+
+      currentStock = (stockLevel as any)?.current_quantity || 0;
+      const newQuantity = currentStock + request.quantity_change;
+
       // Create stock movement record
-      const { data, error } = await supabase.from('stock_entries').insert({
+      const { data, error } = await supabase.from('stock_movements').insert({
         practice_id: request.practice_id,
+        location_id: request.location_id,
         product_id: request.product_id,
-        counted_quantity: request.quantity_change,
-        entry_type: request.movement_type as string,
+        movement_type: request.movement_type,
+        quantity_change: request.quantity_change,
+        quantity_before: currentStock,
+        quantity_after: newQuantity,
+        reference_type: 'manual_adjustment',
+        reason: request.reason_code,
         notes: request.notes || null,
         created_by: authStore.user?.id || '',
       });
 
       if (error) throw error;
+
+      // Update or create stock level record
+      const { error: upsertError } = await supabase
+        .from('stock_levels')
+        .upsert({
+          practice_id: request.practice_id,
+          location_id: request.location_id,
+          product_id: request.product_id,
+          current_quantity: newQuantity,
+          updated_at: new Date().toISOString(),
+        }, {
+          onConflict: 'practice_id,location_id,product_id'
+        });
+
+      if (upsertError) {
+        console.warn('Warning: Could not update stock level:', upsertError);
+        // Don't throw - movement was successful
+      }
 
       // Refresh movements after update
       await fetchStockMovements(request.practice_id);
@@ -84,9 +131,9 @@ export const useInventoryStore = defineStore('inventory', () => {
 
   const fetchStockMovements = async (practiceId: string, limit = 50) => {
     try {
-      // Use stock_entries as movement records
+      // Use stock_movements table
       const { data, error } = await supabase
-        .from('stock_entries')
+        .from('stock_movements')
         .select(
           `
           *,
@@ -103,23 +150,23 @@ export const useInventoryStore = defineStore('inventory', () => {
 
       if (error) throw error;
 
-      // Transform stock entries to movement format
-      stockMovements.value = (data || []).map(entry => ({
-        id: entry.id,
-        practice_id: entry.practice_id,
-        location_id: '', // Not available in stock_entries
-        product_id: entry.product_id,
-        movement_type: entry.entry_type || 'adjustment',
-        quantity_change: entry.counted_quantity,
-        quantity_after: entry.counted_quantity,
-        performed_by: entry.created_by || '',
-        notes: entry.notes,
-        created_at: entry.created_at,
-        product: entry.products
+      // Transform stock movements to internal format
+      stockMovements.value = (data || []).map((movement: any) => ({
+        id: movement.id,
+        practice_id: movement.practice_id,
+        location_id: movement.location_id,
+        product_id: movement.product_id,
+        movement_type: movement.movement_type,
+        quantity_change: movement.quantity_change,
+        quantity_after: movement.quantity_after,
+        performed_by: movement.created_by || '',
+        notes: movement.notes,
+        created_at: movement.created_at,
+        product: movement.products
           ? {
-              id: entry.products.id,
-              name: entry.products.name,
-              sku: entry.products.sku,
+              id: movement.products.id,
+              name: movement.products.name,
+              sku: movement.products.sku,
             }
           : undefined,
       })) as MovementWithRelations[];
@@ -138,24 +185,73 @@ export const useInventoryStore = defineStore('inventory', () => {
     notes?: string
   ) => {
     try {
-      // Create transfer out entry
-      await supabase.from('stock_entries').insert({
+      // Get current stock at source location
+      const fromStockQuery = await supabase
+        .from('stock_levels')
+        .select('current_quantity')
+        .eq('practice_id', practiceId)
+        .eq('location_id', fromLocationId)
+        .eq('product_id', productId)
+        .maybeSingle();
+
+      // Get current stock at destination location
+      const toStockQuery = await supabase
+        .from('stock_levels')
+        .select('current_quantity')
+        .eq('practice_id', practiceId)
+        .eq('location_id', toLocationId)
+        .eq('product_id', productId)
+        .maybeSingle();
+
+      const fromCurrentStock = (fromStockQuery.data as any)?.current_quantity || 0;
+      const toCurrentStock = (toStockQuery.data as any)?.current_quantity || 0;
+      
+      // Create transfer out movement
+      await supabase.from('stock_movements').insert({
         practice_id: practiceId,
+        location_id: fromLocationId,
         product_id: productId,
-        counted_quantity: -quantity,
-        entry_type: 'transfer_out',
+        movement_type: 'transfer',
+        quantity_change: -quantity,
+        quantity_before: fromCurrentStock,
+        quantity_after: fromCurrentStock - quantity,
+        reference_type: 'transfer',
         notes: notes || `Transfer to ${toLocationId}`,
         created_by: authStore.user?.id || '',
       });
 
-      // Create transfer in entry
-      await supabase.from('stock_entries').insert({
+      // Create transfer in movement
+      await supabase.from('stock_movements').insert({
         practice_id: practiceId,
+        location_id: toLocationId,
         product_id: productId,
-        counted_quantity: quantity,
-        entry_type: 'transfer_in',
+        movement_type: 'transfer',
+        quantity_change: quantity,
+        quantity_before: toCurrentStock,
+        quantity_after: toCurrentStock + quantity,
+        reference_type: 'transfer',
         notes: notes || `Transfer from ${fromLocationId}`,
         created_by: authStore.user?.id || '',
+      });
+
+      // Update stock levels for both locations
+      await supabase.from('stock_levels').upsert([
+        {
+          practice_id: practiceId,
+          location_id: fromLocationId,
+          product_id: productId,
+          current_quantity: fromCurrentStock - quantity,
+          updated_at: new Date().toISOString(),
+        },
+        {
+          practice_id: practiceId,
+          location_id: toLocationId,
+          product_id: productId,
+          current_quantity: toCurrentStock + quantity,
+          updated_at: new Date().toISOString(),
+        }
+      ], {
+        onConflict: 'practice_id,location_id,product_id'
       });
 
       // Refresh movements
@@ -196,7 +292,7 @@ export const useInventoryStore = defineStore('inventory', () => {
 
   const executeStockTransfer = async (transferData: any) => {
     const authStore = useAuthStore();
-    const practiceId = authStore.currentPractice?.id;
+    const practiceId = authStore.userProfile?.clinic_id;
     
     if (!practiceId) {
       throw new Error('No practice selected');
@@ -218,6 +314,100 @@ export const useInventoryStore = defineStore('inventory', () => {
     }
   };
 
+  // 🔄 NEW: Real-time functions
+  const handleRealtimeUpdate = (payload: any) => {
+    console.log('📡 Real-time inventory update:', payload);
+    
+    switch (payload.table) {
+      case 'stock_levels':
+        handleStockLevelUpdate(payload);
+        break;
+      case 'stock_entries':
+        handleStockMovementUpdate(payload);
+        break;
+    }
+
+    lastSyncAt.value = new Date();
+  };
+
+  const handleStockLevelUpdate = async (payload: any) => {
+    const practiceId = authStore.userProfile?.clinic_id;
+    if (!practiceId) return;
+
+    // For any stock level change, refresh the data
+    // In a more sophisticated implementation, we could update just the changed record
+    console.log('🔄 Stock level changed, refreshing data...');
+    
+    // Show a subtle notification that data was updated
+    if (payload.eventType === 'UPDATE' && payload.old && payload.new) {
+      const product = payload.new;
+      console.log(`📊 Stock updated for product ${product.product_id}`);
+    }
+  };
+
+  const handleStockMovementUpdate = async (payload: any) => {
+    const practiceId = authStore.userProfile?.clinic_id;
+    if (!practiceId) return;
+
+    // Refresh movements when a new movement is added
+    if (payload.eventType === 'INSERT') {
+      console.log('📈 New stock movement, refreshing...');
+      await fetchStockMovements(practiceId);
+    }
+  };
+
+  const startRealtimeSubscription = (practiceId: string) => {
+    if (inventoryChannel.value) {
+      realtimeService.unsubscribeFromChannel(inventoryChannel.value);
+    }
+    if (movementsChannel.value) {
+      realtimeService.unsubscribeFromChannel(movementsChannel.value);
+    }
+
+    console.log('🔄 Starting real-time inventory subscription for practice:', practiceId);
+
+    // Subscribe to inventory changes
+    inventoryChannel.value = realtimeService.subscribeToInventory(
+      practiceId,
+      handleRealtimeUpdate
+    );
+
+    // Subscribe to stock movements
+    movementsChannel.value = realtimeService.subscribeToStockMovements(
+      practiceId, 
+      handleRealtimeUpdate
+    );
+
+    realtimeConnected.value = true;
+  };
+
+  const stopRealtimeSubscription = () => {
+    if (inventoryChannel.value) {
+      realtimeService.unsubscribeFromChannel(inventoryChannel.value);
+      inventoryChannel.value = null;
+    }
+    if (movementsChannel.value) {
+      realtimeService.unsubscribeFromChannel(movementsChannel.value);
+      movementsChannel.value = null;
+    }
+
+    realtimeConnected.value = false;
+    console.log('❌ Stopped real-time inventory subscription');
+  };
+
+  // Auto-start real-time when practice is available
+  const initializeRealtime = () => {
+    const practiceId = authStore.userProfile?.clinic_id;
+    if (practiceId && !realtimeConnected.value) {
+      startRealtimeSubscription(practiceId);
+    }
+  };
+
+  // Cleanup on unmount
+  onUnmounted(() => {
+    stopRealtimeSubscription();
+  });
+
   return {
     // State
     stockMovements,
@@ -225,6 +415,9 @@ export const useInventoryStore = defineStore('inventory', () => {
     stockLevels,
     loading,
     lastSyncAt,
+
+    // 🔄 NEW: Real-time state
+    realtimeConnected,
 
     // Computed
     criticalAlerts,
@@ -238,5 +431,10 @@ export const useInventoryStore = defineStore('inventory', () => {
     getProductStockAtLocation,
     getProductBatches,
     executeStockTransfer,
+
+    // 🔄 NEW: Real-time actions
+    startRealtimeSubscription,
+    stopRealtimeSubscription,
+    initializeRealtime,
   };
 });

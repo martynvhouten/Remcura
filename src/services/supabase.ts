@@ -308,6 +308,84 @@ export const realtimeService = {
       )
       .subscribe();
   },
+
+  // 🔄 NEW: Real-time inventory subscriptions
+  subscribeToInventory(practiceId: string, callback: (payload: any) => void) {
+    return supabase
+      .channel(`inventory:${practiceId}`)
+      .on(
+        'postgres_changes',
+        {
+          event: '*',
+          schema: 'public',
+          table: 'stock_levels',
+          filter: `practice_id=eq.${practiceId}`,
+        },
+        callback
+      )
+      .on(
+        'postgres_changes',
+        {
+          event: '*',
+          schema: 'public',
+          table: 'stock_entries',
+          filter: `practice_id=eq.${practiceId}`,
+        },
+        callback
+      )
+      .subscribe();
+  },
+
+  // 🔄 NEW: Real-time stock movements subscription
+  subscribeToStockMovements(practiceId: string, callback: (payload: any) => void) {
+    return supabase
+      .channel(`stock_movements:${practiceId}`)
+      .on(
+        'postgres_changes',
+        {
+          event: '*',
+          schema: 'public',
+          table: 'stock_entries',
+          filter: `practice_id=eq.${practiceId}`,
+        },
+        callback
+      )
+      .subscribe();
+  },
+
+  // 🔄 NEW: Real-time counting sessions subscription
+  subscribeToCountingSessions(practiceId: string, callback: (payload: any) => void) {
+    return supabase
+      .channel(`counting:${practiceId}`)
+      .on(
+        'postgres_changes',
+        {
+          event: '*',
+          schema: 'public',
+          table: 'counting_sessions',
+          filter: `practice_id=eq.${practiceId}`,
+        },
+        callback
+      )
+      .on(
+        'postgres_changes',
+        {
+          event: '*',
+          schema: 'public',
+          table: 'counting_entries',
+          filter: `practice_id=eq.${practiceId}`,
+        },
+        callback
+      )
+      .subscribe();
+  },
+
+  // 🔄 NEW: Utility method to unsubscribe from channels
+  unsubscribeFromChannel(channel: any) {
+    if (channel) {
+      return supabase.removeChannel(channel);
+    }
+  },
 };
 
 // Utility functions
