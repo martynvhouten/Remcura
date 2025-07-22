@@ -258,6 +258,59 @@ export default {
     failedToLoadData: 'Fout bij laden dashboard data',
     dataRefreshedSuccessfully: 'Gegevens succesvol vernieuwd',
     failedToRefreshData: 'Fout bij vernieuwen gegevens',
+    
+    // Role-based dashboards
+    assistantDashboard: 'Assistent Dashboard',
+    managerDashboard: 'Manager Dashboard', 
+    ownerDashboard: 'Eigenaar Dashboard',
+    
+    // Widget titles
+    stockAlerts: 'Voorraad Waarschuwingen',
+    orderSuggestions: 'Bestel Suggesties',
+    recentOrders: 'Recente Bestellingen',
+    quickScan: 'Snel Scannen',
+    analyticsOverview: 'Analytics Overzicht',
+    businessOverview: 'Business Overzicht',
+    costAnalysis: 'Kosten Analyse',
+    supplierPerformance: 'Leverancier Prestaties',
+    teamActivity: 'Team Activiteit',
+    financialSummary: 'Financieel Overzicht',
+    userManagement: 'Gebruikersbeheer',
+    systemHealth: 'Systeem Gezondheid',
+    
+    // Quick actions
+    scanProduct: 'Scan Product',
+    createOrder: 'Nieuwe Bestelling',
+    updateStock: 'Voorraad Bijwerken',
+    viewLowStock: 'Bekijk Lage Voorraad',
+    manageSuppliers: 'Beheer Leveranciers',
+    approveOrders: 'Keur Bestellingen Goed',
+    exportReports: 'Exporteer Rapporten',
+    manageUsers: 'Beheer Gebruikers',
+    systemSettings: 'Systeeminstellingen',
+    financialReports: 'Financiële Rapporten',
+    backupData: 'Backup Data',
+    
+    // Alerts and messages
+    noAlerts: 'Geen waarschuwingen',
+    allStockLevelsOk: 'Alle voorraadniveaus zijn op orde',
+    lowStockAlert: '{count} producten hebben lage voorraad',
+    viewAllAlerts: 'Bekijk alle waarschuwingen',
+    noOrderSuggestions: 'Geen bestel suggesties',
+    noRecentOrders: 'Geen recente bestellingen',
+    
+    // Loading and error states
+    loadingWidgets: 'Widgets laden...',
+    errorLoadingWidget: 'Fout bij laden widget',
+    tryAgain: 'Probeer opnieuw',
+    
+    // Metrics and analytics
+    totalProducts: 'Totaal Producten',
+    lowStockCount: 'Lage Voorraad',
+    pendingOrders: 'Openstaande Bestellingen',
+    totalValue: 'Totale Waarde',
+    teamSize: 'Team Grootte',
+    practiceHealth: 'Praktijk Gezondheid',
   },
 
   // Errors
