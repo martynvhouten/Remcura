@@ -29,6 +29,14 @@ const ADMIN_ERRORS = {
   INSUFFICIENT_PERMISSIONS_REVOKE: 'admin.errors.insufficientPermissionsToRevoke',
   INSUFFICIENT_PERMISSIONS_RESET: 'admin.errors.insufficientPermissionsToReset',
   INSUFFICIENT_PERMISSIONS_TOGGLE: 'admin.errors.insufficientPermissionsToToggle',
+  FAILED_TO_CREATE: 'admin.errors.failedToCreate',
+  FAILED_TO_UPDATE: 'admin.errors.failedToUpdate',
+  FAILED_TO_DELETE: 'admin.errors.failedToDelete',
+  FAILED_TO_GET: 'admin.errors.failedToGet',
+  FAILED_TO_GRANT: 'admin.errors.failedToGrant',
+  FAILED_TO_REVOKE: 'admin.errors.failedToRevoke',
+  FAILED_TO_SEND: 'admin.errors.failedToSend',
+  FAILED_TO_SET: 'admin.errors.failedToSet',
 } as const;
 
 export interface AuditLogEntry {
@@ -64,12 +72,12 @@ export class AdminService {
     const user = authStore.user;
 
     if (!practiceId || !user) {
-      throw new Error('Practice or user not found');
+      throw new Error(ADMIN_ERRORS.PRACTICE_OR_USER_NOT_FOUND);
     }
 
     // Check admin permissions
     if (!(await this.hasPermission('admin', 'practice', practiceId))) {
-      throw new Error('Insufficient permissions to create locations');
+      throw new Error(ADMIN_ERRORS.INSUFFICIENT_PERMISSIONS_CREATE);
     }
 
     const newLocation: LocationInsert = {
@@ -84,7 +92,7 @@ export class AdminService {
       .single();
 
     if (error) {
-      throw new Error(`Failed to create location: ${error.message}`);
+      throw new Error(ADMIN_ERRORS.FAILED_TO_CREATE);
     }
 
     // Log activity
@@ -112,7 +120,7 @@ export class AdminService {
       .order('name');
 
     if (error) {
-      throw new Error(`Failed to get locations: ${error.message}`);
+      throw new Error(ADMIN_ERRORS.FAILED_TO_GET);
     }
 
     return data || [];
@@ -127,7 +135,7 @@ export class AdminService {
   ): Promise<Location> {
     // Check permissions
     if (!(await this.hasPermission('write', 'practice'))) {
-      throw new Error('Insufficient permissions to update locations');
+      throw new Error(ADMIN_ERRORS.INSUFFICIENT_PERMISSIONS_UPDATE);
     }
 
     // Get current data for audit log
@@ -148,7 +156,7 @@ export class AdminService {
       .single();
 
     if (error) {
-      throw new Error(`Failed to update location: ${error.message}`);
+      throw new Error(ADMIN_ERRORS.FAILED_TO_UPDATE);
     }
 
     // Log activity
@@ -169,7 +177,7 @@ export class AdminService {
   async deleteLocation(locationId: string): Promise<void> {
     // Check permissions
     if (!(await this.hasPermission('admin', 'practice'))) {
-      throw new Error('Insufficient permissions to delete locations');
+      throw new Error(ADMIN_ERRORS.INSUFFICIENT_PERMISSIONS_DELETE);
     }
 
     // Get current data for audit log
@@ -181,7 +189,7 @@ export class AdminService {
 
     // Check if it's the main location
     if (currentData?.is_main) {
-      throw new Error('Cannot delete the main location');
+      throw new Error(ADMIN_ERRORS.CANNOT_DELETE_MAIN_LOCATION);
     }
 
     const { error } = await supabase
@@ -190,7 +198,7 @@ export class AdminService {
       .eq('id', locationId);
 
     if (error) {
-      throw new Error(`Failed to delete location: ${error.message}`);
+      throw new Error(ADMIN_ERRORS.FAILED_TO_DELETE);
     }
 
     // Log activity
@@ -245,7 +253,7 @@ export class AdminService {
       .single();
 
     if (error) {
-      throw new Error(`Failed to grant permission: ${error.message}`);
+      throw new Error(ADMIN_ERRORS.FAILED_TO_GRANT);
     }
 
     // Log activity
@@ -266,7 +274,7 @@ export class AdminService {
   async revokePermission(permissionId: string): Promise<void> {
     // Check admin permissions
     if (!(await this.hasPermission('admin', 'practice'))) {
-      throw new Error('Insufficient permissions to revoke permissions');
+      throw new Error(ADMIN_ERRORS.INSUFFICIENT_PERMISSIONS_REVOKE);
     }
 
     // Get current data for audit log
@@ -282,7 +290,7 @@ export class AdminService {
       .eq('id', permissionId);
 
     if (error) {
-      throw new Error(`Failed to revoke permission: ${error.message}`);
+      throw new Error(ADMIN_ERRORS.FAILED_TO_REVOKE);
     }
 
     // Log activity
@@ -430,7 +438,7 @@ export class AdminService {
     const practiceId = authStore.selectedPractice?.id;
 
     if (!checkUserId || !practiceId) {
-      throw new Error('User or practice not found');
+      throw new Error(ADMIN_ERRORS.PRACTICE_OR_USER_NOT_FOUND);
     }
 
     const { data, error } = await supabase
@@ -441,7 +449,7 @@ export class AdminService {
       .order('created_at', { ascending: false });
 
     if (error) {
-      throw new Error(`Failed to get user permissions: ${error.message}`);
+      throw new Error(ADMIN_ERRORS.FAILED_TO_GET);
     }
 
     return data || [];
@@ -471,7 +479,7 @@ export class AdminService {
       .eq('practice_id', practiceId);
 
     if (error) {
-      throw new Error(`Failed to get practice members: ${error.message}`);
+      throw new Error(ADMIN_ERRORS.FAILED_TO_GET);
     }
 
     // Get permissions for each member
@@ -531,7 +539,7 @@ export class AdminService {
     const practiceId = authStore.selectedPractice?.id;
 
     if (!practiceId) {
-      throw new Error('No practice selected');
+      throw new Error(ADMIN_ERRORS.NO_PRACTICE_SELECTED);
     }
 
     // Check admin permissions
@@ -580,12 +588,12 @@ export class AdminService {
     const practiceId = authStore.selectedPractice?.id;
 
     if (!practiceId) {
-      throw new Error('No practice selected');
+      throw new Error(ADMIN_ERRORS.NO_PRACTICE_SELECTED);
     }
 
     // Check admin permissions
     if (!(await this.hasPermission('admin', 'practice'))) {
-      throw new Error('Insufficient permissions to set main location');
+      throw new Error(ADMIN_ERRORS.INSUFFICIENT_PERMISSIONS_TOGGLE);
     }
 
     // Remove main flag from all locations
@@ -602,7 +610,7 @@ export class AdminService {
       .eq('practice_id', practiceId);
 
     if (error) {
-      throw new Error(`Failed to set main location: ${error.message}`);
+      throw new Error(ADMIN_ERRORS.FAILED_TO_SET);
     }
 
     // Log activity
@@ -685,12 +693,12 @@ export class AdminService {
     const practiceId = authStore.selectedPractice?.id;
 
     if (!practiceId) {
-      throw new Error('No practice selected');
+      throw new Error(ADMIN_ERRORS.NO_PRACTICE_SELECTED);
     }
 
     // Check admin permissions
     if (!(await this.hasPermission('admin', 'practice'))) {
-      throw new Error('Insufficient permissions to reset user passwords');
+      throw new Error(ADMIN_ERRORS.INSUFFICIENT_PERMISSIONS_RESET);
     }
 
     // Get user email from practice members
@@ -702,7 +710,7 @@ export class AdminService {
       .single();
 
     if (memberError || !member) {
-      throw new Error('User not found in practice');
+      throw new Error(ADMIN_ERRORS.USER_NOT_FOUND_IN_PRACTICE);
     }
 
     // Get user email from user_profiles
@@ -722,7 +730,7 @@ export class AdminService {
     });
 
     if (error) {
-      throw new Error(`Failed to send password reset email: ${error.message}`);
+      throw new Error(ADMIN_ERRORS.FAILED_TO_SEND);
     }
 
     // Log activity
@@ -739,12 +747,12 @@ export class AdminService {
     const practiceId = authStore.selectedPractice?.id;
 
     if (!practiceId) {
-      throw new Error('No practice selected');
+      throw new Error(ADMIN_ERRORS.NO_PRACTICE_SELECTED);
     }
 
     // Check admin permissions
     if (!(await this.hasPermission('admin', 'practice'))) {
-      throw new Error('Insufficient permissions to toggle user status');
+      throw new Error(ADMIN_ERRORS.INSUFFICIENT_PERMISSIONS_TOGGLE);
     }
 
     // Get current member data
@@ -756,7 +764,7 @@ export class AdminService {
       .single();
 
     if (getCurrentError || !currentMember) {
-      throw new Error('User not found in practice');
+      throw new Error(ADMIN_ERRORS.USER_NOT_FOUND_IN_PRACTICE);
     }
 
     // Don't allow deactivating practice owner
@@ -781,7 +789,7 @@ export class AdminService {
       .eq('user_id', userId);
 
     if (error) {
-      throw new Error(`Failed to update user status: ${error.message}`);
+      throw new Error(ADMIN_ERRORS.FAILED_TO_UPDATE);
     }
 
     // If deactivating, revoke all active permissions

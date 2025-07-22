@@ -1,8 +1,10 @@
 import { ref, onMounted, onUnmounted, readonly } from 'vue';
 import { useQuasar } from 'quasar';
+import { useI18n } from 'vue-i18n';
 
 export function useOffline() {
   const $q = useQuasar();
+  const { t } = useI18n();
 
   const isOnline = ref(navigator.onLine);
   const hasBeenOffline = ref(false);
@@ -13,7 +15,7 @@ export function useOffline() {
     if (hasBeenOffline.value) {
       $q.notify({
         type: 'positive',
-        message: 'Internetverbinding hersteld',
+        message: t('offline.messages.onlineMode'),
         icon: 'wifi',
         position: 'top',
         timeout: 3000,
@@ -28,8 +30,7 @@ export function useOffline() {
 
     $q.notify({
       type: 'warning',
-      message:
-        'Geen internetverbinding. Sommige functies zijn beperkt beschikbaar.',
+      message: t('offline.messages.offlineMode'),
       icon: 'wifi_off',
       position: 'top',
       timeout: 0, // Persistent until online
@@ -81,7 +82,7 @@ export function registerServiceWorker() {
                 // New content is available
                 if (
                   confirm(
-                    'Een nieuwe versie van de app is beschikbaar. Wilt u nu herladen?'
+                    'A new version of the app is available. Would you like to reload now?'
                   )
                 ) {
                   window.location.reload();

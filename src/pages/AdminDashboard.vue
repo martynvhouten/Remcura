@@ -791,14 +791,14 @@
         await adminService.resetUserPassword(user.user_id);
         $q.notify({
           type: 'positive',
-          message: 'Password reset email sent successfully',
+          message: t('admin.userManagement.resetPassword') + ' - ' + t('common.success'),
         });
       });
     } catch (error) {
       console.error('Failed to reset user password:', error);
       $q.notify({
         type: 'negative',
-        message: 'Failed to reset password',
+        message: t('admin.errors.failedToSet'),
       });
     }
   };
@@ -819,14 +819,14 @@
         await loadUsers();
         $q.notify({
           type: 'positive',
-          message: `User ${action}d successfully`,
+          message: t('admin.userManagement.' + action) + ' - ' + t('common.success'),
         });
       });
     } catch (error) {
       console.error('Failed to toggle user status:', error);
       $q.notify({
         type: 'negative',
-        message: 'Failed to update user status',
+        message: t('admin.errors.failedToUpdate'),
       });
     }
   };
