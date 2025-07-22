@@ -317,11 +317,13 @@ const getInitials = (fullName: string): string => {
 const getAvatarColor = (fullName: string): string => {
   const colors = ['primary', 'secondary', 'accent', 'positive', 'negative', 'info', 'warning'];
   const index = fullName.charCodeAt(0) % colors.length;
-  return colors[index];
+  return colors[index] || 'primary';
 };
 
 const isRecentlyActive = (lastLogin?: string): boolean => {
-  if (!lastLogin) return false;
+  if (!lastLogin) {
+    return false;
+  }
   const lastLoginDate = new Date(lastLogin);
   const now = new Date();
   const diffInMinutes = (now.getTime() - lastLoginDate.getTime()) / (1000 * 60);

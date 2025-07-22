@@ -141,7 +141,7 @@ export class PermanentUserService {
 
         personalMagicCode = await this.generatePersonalMagicCode(
           request.full_name,
-          practice?.name || 'PRACTICE'
+          (practice && practice.name) || 'PRACTICE'
         );
       }
 
@@ -156,7 +156,7 @@ export class PermanentUserService {
         id: uuidv4(),
         practice_id: request.practice_id,
         full_name: request.full_name,
-        email: request.email,
+        email: request.email || null,
         personal_magic_code: personalMagicCode,
         magic_code_enabled: request.login_method === 'magic_code',
         email_login_enabled: request.login_method === 'email_password',
@@ -164,7 +164,7 @@ export class PermanentUserService {
         device_remember_enabled: request.login_method === 'device_remember',
         device_tokens: [],
         role: request.role,
-        department: request.department,
+        department: request.department || null,
         permissions: {},
         is_active: true,
         login_count: 0,
@@ -210,10 +210,10 @@ export class PermanentUserService {
   }
 
   // 🎲 GENERATE PERSONAL MAGIC CODE
-  static async generatePersonalMagicCode(fullName: string, practiceName: string): Promise<string> {
+  static async generatePersonalMagicCode(fullName: string | undefined, practiceName: string): Promise<string> {
     try {
       const { data, error } = await supabase.rpc('generate_personal_magic_code', {
-        user_name: fullName,
+        user_name: fullName || 'USER',
         practice_name: practiceName
       });
 
@@ -222,7 +222,7 @@ export class PermanentUserService {
     } catch (error) {
       console.error('Error generating personal magic code:', error);
       // Fallback generation
-      const cleanName = (fullName || 'USER').split(' ')[0].toUpperCase().replace(/[^A-Z]/g, '');
+      const cleanName = ((fullName && fullName.toString()) || 'USER').split(' ')[0].toUpperCase().replace(/[^A-Z]/g, '');
       const year = new Date().getFullYear();
       return `🏥${cleanName}${year}`;
     }

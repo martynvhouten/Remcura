@@ -291,7 +291,9 @@ const generateInvite = async () => {
 };
 
 const copyCode = () => {
-  if (!generatedInvite.value) return;
+  if (!generatedInvite.value) {
+    return;
+  }
   navigator.clipboard.writeText(generatedInvite.value.magic_code);
   $q.notify({
     type: 'positive',
@@ -301,7 +303,9 @@ const copyCode = () => {
 };
 
 const shareViaWhatsApp = () => {
-  if (!generatedInvite.value) return;
+  if (!generatedInvite.value) {
+    return;
+  }
   const code = generatedInvite.value.magic_code;
   const message = t('magicInvite.whatsappMessage', { 
     code,
@@ -312,7 +316,9 @@ const shareViaWhatsApp = () => {
 };
 
 const shareViaEmail = () => {
-  if (!generatedInvite.value) return;
+  if (!generatedInvite.value) {
+    return;
+  }
   const code = generatedInvite.value.magic_code;
   const subject = t('magicInvite.emailSubject');
   const body = t('magicInvite.emailMessage', { 
