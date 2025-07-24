@@ -42,9 +42,14 @@
     "dev:test": "concurrently \"npm run dev\" \"npm run test:watch\"",
     "reset-demo": "node scripts/reset-demo-data.js",
     "demo:reset": "node scripts/reset-demo-data.js",
+    "translations:status": "node scripts/remcura-translation-manager.js --validate",
+    "translations:critical": "node scripts/remcura-translation-manager.js --critical", 
+    "translations:complete": "node scripts/remcura-translation-manager.js --complete",
+    "translations:help": "node scripts/remcura-translation-manager.js --help",
     "i18n:validate": "node scripts/validate-translations.js",
     "i18n:find-hardcoded": "node scripts/find-hardcoded-text.js",
-    "i18n:check": "npm run i18n:validate && npm run i18n:find-hardcoded"
+    "i18n:check": "npm run translations:status && npm run i18n:find-hardcoded",
+    "quality:i18n": "npm run translations:status && npm run i18n:find-hardcoded"
   },
   "dependencies": {
     "@quasar/extras": "^1.16.4",
