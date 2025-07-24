@@ -76,7 +76,7 @@
   // Methods
   const resetDemoData = async () => {
     // Only allow demo user to reset
-    if (authStore.userEmail !== 'demo@medstock-pro.com') {
+    if (authStore.userEmail !== 'demo@remcura.com') {
       $q.notify({
         type: 'negative',
         message: t('demo.onlyDemoUserCanReset'),

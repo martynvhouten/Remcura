@@ -1,5 +1,5 @@
 -- ============================================================================
--- MedStock Pro - Enhanced Inventory Management Schema
+-- Remcura - Enhanced Inventory Management Schema
 -- Multi-supplier, multi-location inventory system
 -- ============================================================================
 

@@ -1,8 +1,8 @@
-# MedStock Pro i18n System
+# Remcura i18n System
 
 ## 📚 Overzicht
 
-Dit document beschrijft het internationalisatie (i18n) systeem van MedStock Pro en hoe je het kunt gebruiken en onderhouden.
+Dit document beschrijft het internationalisatie (i18n) systeem van Remcura en hoe je het kunt gebruiken en onderhouden.
 
 ## 🌍 Ondersteunde Talen
 
@@ -168,7 +168,7 @@ npm run i18n:check
 
 ### Validatie Script Output
 ```
-🔍 MedStock Pro Vertaling Validator
+🔍 Remcura Vertaling Validator
 
 📂 Laden EN...
    ✅ 847 keys gevonden

@@ -36,7 +36,7 @@
 
   // Computed
   const isDemoUser = computed(() => {
-    return authStore.userEmail === 'demo@medstock-pro.com';
+    return authStore.userEmail === 'demo@remcura.com';
   });
 
   // Methods

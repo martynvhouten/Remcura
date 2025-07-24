@@ -1,7 +1,7 @@
 export default {
   // Brand
   brand: {
-    name: 'MedStock Pro',
+    name: 'Remcura',
     edition: 'Edición profesional',
     tagline: 'Inventario médico profesional',
   },
@@ -43,6 +43,7 @@ export default {
     back: 'Atrás',
     next: 'Siguiente',
     previous: 'Anterior',
+    retry: 'Intentar de nuevo',
     all: 'Todos',
     none: 'Ninguno',
     select: 'Seleccionar',
@@ -187,7 +188,7 @@ export default {
     passwordResetComingSoon: 'La funcionalidad de restablecimiento de contraseña estará disponible pronto.',
     copyright: '© {year} {company}. Todos los derechos reservados.',
     passwordHelp: 'Ingresa tu contraseña para iniciar sesión de forma segura',
-    demoHelp: 'Usa demo@medstock-pro.com con contraseña demo123 para demostración',
+    demoHelp: 'Usa demo@remcura.com con contraseña demo123 para demostración',
     signingIn: 'Iniciando sesión...',
     fullName: 'Nombre completo',
   },
@@ -240,7 +241,7 @@ export default {
     currentMin: 'Actual / mín',
     latestUpdates: 'Últimas actualizaciones',
     viewAnalytics: 'Ver análisis',
-    welcomeTitle: 'Bienvenido a MedStock Pro',
+    welcomeTitle: 'Bienvenido a Remcura',
     welcomeSubtitle: 'Tu sistema profesional de gestión de inventario médico',
     welcomeDescription: 'Gestiona tu inventario eficientemente con nuestras herramientas avanzadas y seguimiento en tiempo real.',
     systemStatus: 'Estado del sistema',
@@ -1257,7 +1258,7 @@ export default {
     settingsSaveError: 'Ocurrió un error al guardar',
     saveSettings: 'Guardar configuración',
 
-    styleGuideTitle: 'Guía de estilo de MedStock Pro',
+    styleGuideTitle: 'Guía de estilo de Remcura',
     styleGuideSubtitle: 'Referencia completa del sistema de diseño y showcase de componentes',
     colorsSection: 'Colores',
     primaryColors: 'Colores primarios',
@@ -1616,5 +1617,52 @@ export default {
   dialogs: {
     typeToConfirm: 'Escribe {text} para confirmar',
     confirmClose: '¿Estás seguro de que quieres cerrar? Los cambios no guardados se perderán.',
+  },
+
+  // === MISSING TRANSLATIONS ADDED ===
+  
+  // Dashboard translations
+  dashboard: {
+    assistantDashboard: 'Panel de asistente',
+    managerDashboard: 'Panel de gerente', 
+    ownerDashboard: 'Panel de propietario',
+    stockAlerts: 'Alertas de inventario',
+    orderSuggestions: 'Sugerencias de pedidos',
+    recentOrders: 'Pedidos recientes',
+    quickScan: 'Escaneo rápido',
+    analyticsOverview: 'Resumen de análisis',
+    businessOverview: 'Resumen del negocio',
+  },
+
+  // Inventory scanning and adjustments
+  inventory: {
+    scanBarcode: 'Escanear código de barras',
+    barcodeFound: 'Código de barras encontrado',
+    barcodeNotFound: 'Código de barras no encontrado',
+    barcodeScanned: 'Código de barras escaneado',
+    changeProduct: 'Cambiar producto',
+    adjustmentType: 'Tipo de ajuste',
+    increase: 'Aumentar',
+    decrease: 'Disminuir',
+    setTo: 'Establecer a',
+    quantityToAdd: 'Cantidad a agregar',
+    quantityToRemove: 'Cantidad a remover',
+    finalQuantity: 'Cantidad final',
+    refreshFailed: 'Error al actualizar',
+    reason: {
+      normal_usage: 'Uso normal',
+      expired: 'Vencido',
+      damaged: 'Dañado',
+      lost: 'Perdido',
+      found: 'Encontrado',
+      transfer_in: 'Transferencia entrante',
+      transfer_out: 'Transferencia saliente',
+      adjustment: 'Ajuste',
+    },
+  },
+
+  // Products page
+  productsPage: {
+    noProductsFound: 'No se encontraron productos',
   },
 };

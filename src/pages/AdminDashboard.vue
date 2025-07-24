@@ -250,7 +250,7 @@
 
         <!-- Demo Reset Card (only for demo user) -->
         <div
-          v-if="authStore.userEmail === 'demo@medstock-pro.com'"
+          v-if="authStore.userEmail === 'demo@remcura.com'"
           class="q-mt-lg"
         >
           <DemoResetCard />

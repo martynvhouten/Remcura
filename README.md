@@ -1,4 +1,4 @@
-# MedStock Pro
+# Remcura
 
 Een moderne, professionele voorraadbeheersysteem voor medische klinieken en zorginstellingen. Beheer
 eenvoudig je medische voorraad, ontvang automatische herbestelmeldingen en optimaliseer je
@@ -63,7 +63,7 @@ src/
 
 ```bash
 git clone <repository-url>
-cd medstock-pro
+cd remcura
 ```
 
 2. Install dependencies
@@ -144,7 +144,7 @@ All tables implement RLS policies to ensure data isolation between clinics.
 
 ## White-label Customization
 
-MedStock Pro is designed to be easily white-labeled for different clients:
+Remcura is designed to be easily white-labeled for different clients:
 
 1. **Branding**: Update logos, colors, and app names in the configuration
 2. **Language**: Add new language files in `src/i18n/`

@@ -1,16 +1,16 @@
-# Demo Account Implementation - MedStock Pro
+# Demo Account Implementation - Remcura
 
 ## 🎯 Overzicht
 
-Het demo account systeem stelt gebruikers in staat om MedStock Pro te testen met realistische data
-zonder impact op productiegegevens. Het demo account (`demo@medstock-pro.com`) heeft volledige
+Het demo account systeem stelt gebruikers in staat om Remcura te testen met realistische data
+zonder impact op productiegegevens. Het demo account (`demo@remcura.com`) heeft volledige
 toegang tot een vooraf geconfigureerde praktijk met realistische medische voorraadgegevens.
 
 ## ✨ Kenmerken
 
 ### 1. Demo Account Gedrag
 
-- **Email**: `demo@medstock-pro.com`
+- **Email**: `demo@remcura.com`
 - **Practice**: Remka Demo Kliniek (ID: `550e8400-e29b-41d4-a716-446655440000`)
 - **Rol**: Owner (volledige toegang)
 - **Gedrag**: Identiek aan normale gebruiker, geen beperkingen in UI
@@ -83,7 +83,7 @@ node scripts/reset-demo-data.js
 
 ### 3. UI Reset (Admin Dashboard)
 
-- Demo Reset Card alleen zichtbaar voor `demo@medstock-pro.com`
+- Demo Reset Card alleen zichtbaar voor `demo@remcura.com`
 - Confirmation dialog voor veiligheid
 - Automatische page refresh na reset
 
@@ -111,7 +111,7 @@ node scripts/reset-demo-data.js
 
 ### Voor Demonstraties
 
-1. **Inloggen**: `demo@medstock-pro.com` / `demo123`
+1. **Inloggen**: `demo@remcura.com` / `demo123`
 2. **Demo banner**: Toont demo status
 3. **Volledige functionaliteit**: Alle features beschikbaar
 4. **Realistische data**: Authentieke medische voorraad scenario's

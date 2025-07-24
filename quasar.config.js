@@ -387,8 +387,8 @@ export default configure(function (ctx) {
       },
 
       manifest: {
-        name: `MedStock Pro`,
-        short_name: `MedStock Pro`,
+        name: `Remcura`,
+        short_name: `Remcura`,
         description: `Professional medical supply inventory management system`,
         display: 'standalone',
         orientation: 'portrait',
@@ -452,7 +452,7 @@ export default configure(function (ctx) {
       builder: {
         // https://www.electron.build/configuration/configuration
 
-        appId: 'medstock-pro',
+        appId: 'remcura',
       },
 
       // "chain" is a webpack-chain object https://github.com/neutrinojs/webpack-chain

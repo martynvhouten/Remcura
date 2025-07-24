@@ -73,9 +73,9 @@ Type: `🏥DEMO✨2024`
 2. Klikt "WhatsApp" 
 3. Systeem opent WhatsApp met:
    ```
-   Hoi! Je bent uitgenodigd voor MedStock Pro.
+   Hoi! Je bent uitgenodigd voor Remcura.
    
-   Ga naar: medstock-pro.com/join
+        Ga naar: remcura.com/join
    Voer deze code in: 🏥AMSTERDAM✨2024
    
    Dan heb je direct toegang! 👍
@@ -90,7 +90,7 @@ Type: `🏥DEMO✨2024`
 5. Klikt "Nu deelnemen" → KLAAR!
 
 ### **Scenario 3: Mondeling**
-Owner: *"Ga naar medstock-pro.com/join en typ: 🏥KLINIEK✨2024"*
+Owner: *"Ga naar remcura.com/join en typ: 🏥KLINIEK✨2024"*
 Collega: *Typt code → KLAAR!*
 
 ---
@@ -120,6 +120,6 @@ Collega: *Typt code → KLAAR!*
 
 **Voor**: *"Stuur een e-mail naar IT, zij maken een account, je krijgt een tijdelijk wachtwoord, moet je wijzigen bij eerste login, etc."*
 
-**Nu**: *"Typ 🏥DEMO✨2024 op medstock-pro.com/join"*
+**Nu**: *"Typ 🏥DEMO✨2024 op remcura.com/join"*
 
 **Van 10 minuten naar 10 seconden!** 🎉 

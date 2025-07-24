@@ -436,7 +436,7 @@ export class OfflineService {
   private saveOfflineData(): void {
     try {
       localStorage.setItem(
-        'medstock_offline_data',
+        'remcura_offline_data',
         JSON.stringify({
           ...this.offlineData,
           last_sync: this.offlineData.last_sync?.toISOString(),
@@ -452,7 +452,7 @@ export class OfflineService {
    */
   private loadOfflineData(): void {
     try {
-      const saved = localStorage.getItem('medstock_offline_data');
+      const saved = localStorage.getItem('remcura_offline_data');
       if (saved) {
         const data = JSON.parse(saved);
         Object.assign(this.offlineData, {
@@ -471,7 +471,7 @@ export class OfflineService {
   private saveOfflineActions(): void {
     try {
       localStorage.setItem(
-        'medstock_offline_actions',
+        'remcura_offline_actions',
         JSON.stringify(
           this.offlineActions.value.map(action => ({
             ...action,
@@ -489,7 +489,7 @@ export class OfflineService {
    */
   private loadOfflineActions(): void {
     try {
-      const saved = localStorage.getItem('medstock_offline_actions');
+      const saved = localStorage.getItem('remcura_offline_actions');
       if (saved) {
         const actions = JSON.parse(saved);
         this.offlineActions.value = actions.map((action: any) => ({
@@ -527,8 +527,8 @@ export class OfflineService {
 
     this.offlineActions.value = [];
 
-    localStorage.removeItem('medstock_offline_data');
-    localStorage.removeItem('medstock_offline_actions');
+    localStorage.removeItem('remcura_offline_data');
+    localStorage.removeItem('remcura_offline_actions');
   }
 
   /**

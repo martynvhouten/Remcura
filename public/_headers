@@ -1,4 +1,4 @@
-# Security headers for MedStock Pro
+# Security headers for Remcura
 /*
   # Content Security Policy - Restrict resource loading
   Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://js.sentry-cdn.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https:; connect-src 'self' https://*.supabase.co https://*.sentry.io https://vitals.vercel-insights.com; object-src 'none'; base-uri 'self'; frame-ancestors 'none';

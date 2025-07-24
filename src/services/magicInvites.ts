@@ -144,7 +144,7 @@ export class MagicInviteService {
         auto_upgrade_to_member: false,
         ai_role_suggestions: {},
         suggested_avatar_style: 'medical',
-        deep_link: `medstock://join/${magicCode}`,
+        deep_link: `remcura://join/${magicCode}`,
         expires_at: request.expires_in_days 
           ? new Date(Date.now() + request.expires_in_days * 24 * 60 * 60 * 1000).toISOString()
           : null,
@@ -181,9 +181,9 @@ export class MagicInviteService {
   // 🔗 UPDATE INVITE LINKS (QR & WhatsApp)
   static async updateInviteLinks(inviteId: string, magicCode: string): Promise<void> {
     try {
-      const qrCodeData = `https://app.medstock-pro.com/join/${magicCode}`;
-      const whatsappLink = `https://wa.me/?text=${encodeURIComponent(
-        `🏥 Je bent uitgenodigd voor MedStock Pro!\n\nGebruik deze magische code: ${magicCode}\n\nDirect toegang: ${qrCodeData}`
+      const qrCodeData = `https://app.remcura.com/join/${magicCode}`;
+              const whatsappLink = `https://wa.me/?text=${encodeURIComponent(
+          `🏥 Je bent uitgenodigd voor Remcura!\n\nGebruik deze magische code: ${magicCode}\n\nDirect toegang: ${qrCodeData}`
       )}`;
 
       await supabase

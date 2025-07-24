@@ -1,7 +1,7 @@
 export default {
   // Brand
   brand: {
-    name: 'MedStock Pro',
+    name: 'Remcura',
     edition: 'Professional Edition',
     tagline: 'Professional Medical Inventory',
   },
@@ -187,7 +187,7 @@ export default {
     passwordResetComingSoon: 'Password reset functionality coming soon.',
     copyright: '© {year} {company}. All rights reserved.',
     passwordHelp: 'Enter your password to securely log in',
-    demoHelp: 'Use demo@medstock-pro.com with password demo123 for demonstration',
+    demoHelp: 'Use demo@remcura.com with password demo123 for demonstration',
     signingIn: 'Signing in...',
     fullName: 'Full name',
   },
@@ -240,7 +240,7 @@ export default {
     currentMin: 'Current / min',
     latestUpdates: 'Latest updates',
     viewAnalytics: 'View analytics',
-    welcomeTitle: 'Welcome to MedStock Pro',
+    welcomeTitle: 'Welcome to Remcura',
     welcomeSubtitle: 'Your professional medical inventory management system',
     welcomeDescription: 'Manage your inventory efficiently with our advanced tools and real-time tracking.',
     systemStatus: 'System status',
@@ -1303,7 +1303,7 @@ export default {
     settingsSaveError: 'An error occurred while saving',
     saveSettings: 'Save settings',
 
-    styleGuideTitle: 'MedStock Pro Style Guide',
+    styleGuideTitle: 'Remcura Style Guide',
     styleGuideSubtitle: 'Complete design system reference and component showcase',
     colorsSection: 'Colors',
     primaryColors: 'Primary colors',
@@ -1714,7 +1714,7 @@ export default {
     stepShare: 'Share the code',
     stepShareDetail: 'Send the code via WhatsApp, email, or just tell them',
     stepJoin: 'Instant access',
-    stepJoinDetail: 'Your colleague goes to medstock-pro.com/join and enters the code',
+    stepJoinDetail: 'Your colleague goes to remcura.com/join and enters the code',
     
     createInvite: 'Create new invitation',
     whoAreYouInviting: 'Who are you inviting?',
@@ -1725,7 +1725,7 @@ export default {
     inviteReady: '✅ Invitation ready!',
     shareThisCode: 'Share this code:',
     tellThem: 'Tell them:',
-    shareMessage: 'Go to medstock-pro.com/join and enter this code: {code}',
+    shareMessage: 'Go to remcura.com/join and enter this code: {code}',
     
     shareWhatsApp: 'WhatsApp',
     showQR: 'QR Code',
@@ -1748,9 +1748,9 @@ export default {
     deleteConfirm: 'Are you sure you want to delete code {code}?',
     inviteDeleted: 'Invitation deleted',
     
-    whatsappMessage: 'Hi! You\'re invited to MedStock Pro.\n\nGo to: {url}\nEnter this code: {code}\n\nYou\'ll have instant access! 👍',
-    emailSubject: 'MedStock Pro Invitation',
-    emailMessage: 'Hi!\n\nYou\'ve been invited to use MedStock Pro.\n\nStep 1: Go to {url}\nStep 2: Enter this code: {code}\n\nYou\'ll have immediate access to the system!\n\nBest regards',
+    whatsappMessage: 'Hi! You\'re invited to Remcura.\n\nGo to: {url}\nEnter this code: {code}\n\nYou\'ll have instant access! 👍',
+    emailSubject: 'Remcura Invitation',
+    emailMessage: 'Hi!\n\nYou\'ve been invited to use Remcura.\n\nStep 1: Go to {url}\nStep 2: Enter this code: {code}\n\nYou\'ll have immediate access to the system!\n\nBest regards',
   },
 
   magicJoin: {

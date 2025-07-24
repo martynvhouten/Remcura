@@ -190,7 +190,7 @@ async function resetDemoData() {
     console.log('   • Sample orders with realistic data');
     console.log('');
     console.log(
-      '🎯 You can now test the demo account at: demo@medstock-pro.com'
+      '🎯 You can now test the demo account at: demo@remcura.com'
     );
   } catch (error) {
     console.error('❌ Error resetting demo data:', error);

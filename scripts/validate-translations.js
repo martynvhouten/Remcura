@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 /**
- * Translation Validation Script voor MedStock Pro
+ * Translation Validation Script voor Remcura
  * Controleert consistentie tussen alle taalbestanden
  */
 
@@ -67,7 +67,7 @@ function loadTranslationFile(lang) {
  * Valideert vertalingen
  */
 function validateTranslations() {
-  console.log('🔍 MedStock Pro Vertaling Validator\n');
+  console.log('🔍 Remcura Vertaling Validator\n');
   
   const languageData = {};
   const allKeys = new Set();

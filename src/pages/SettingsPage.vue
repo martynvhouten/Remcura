@@ -410,10 +410,10 @@
                 <div class="info-label">{{ $t('settings.supportLabel') }}</div>
                 <div class="info-value">
                   <a
-                    href="mailto:support@medstock-pro.com"
+                    href="mailto:support@remcura.com"
                     class="support-link"
                   >
-                    support@medstock-pro.com
+                    support@remcura.com
                   </a>
                 </div>
               </div>

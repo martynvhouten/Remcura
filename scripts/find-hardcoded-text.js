@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 /**
- * Hardcoded Text Detector voor MedStock Pro
+ * Hardcoded Text Detector voor Remcura
  * Vindt hardcoded teksten die vertalingen zouden moeten zijn
  */
 
@@ -137,7 +137,7 @@ function scanFile(filePath) {
  * Scant alle bestanden
  */
 function scanAllFiles() {
-  console.log('🔍 MedStock Pro Hardcoded Text Detector\n');
+  console.log('🔍 Remcura Hardcoded Text Detector\n');
   
   // Vind alle Vue, TS, en JS bestanden
   const filePatterns = [

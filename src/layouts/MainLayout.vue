@@ -342,7 +342,7 @@
     () => clinicStore.clinic?.name || t('clinic.defaultName')
   );
   const isDemoUser = computed(
-    () => authStore.userEmail === 'demo@medstock-pro.com'
+    () => authStore.userEmail === 'demo@remcura.com'
   );
 
   // Check if user has admin permissions

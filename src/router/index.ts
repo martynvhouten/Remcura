@@ -59,7 +59,7 @@ export default route(function (/* { store, ssrContext } */) {
 
       // Store intended destination in sessionStorage for clean URLs
       if (to.fullPath !== '/') {
-        sessionStorage.setItem('medstock_intended_route', to.fullPath);
+        sessionStorage.setItem('remcura_intended_route', to.fullPath);
       }
 
       // Track navigation event
@@ -74,8 +74,8 @@ export default route(function (/* { store, ssrContext } */) {
       routerLogger.info('Authenticated user accessing login page');
 
       // Check for intended route after login
-      const intendedRoute = sessionStorage.getItem('medstock_intended_route');
-      sessionStorage.removeItem('medstock_intended_route');
+        const intendedRoute = sessionStorage.getItem('remcura_intended_route');
+  sessionStorage.removeItem('remcura_intended_route');
 
       if (intendedRoute && intendedRoute !== '/') {
         routerLogger.info('Redirecting to intended route', {

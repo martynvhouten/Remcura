@@ -15,6 +15,17 @@
             <div class="text-subtitle2 opacity-80">{{ $t('inventory.adjustStockLevels') }}</div>
           </div>
           <q-space />
+          <!-- Realtime Indicator -->
+          <q-chip 
+            v-if="realtimeConnected" 
+            size="sm" 
+            icon="wifi" 
+            color="positive" 
+            text-color="white"
+            class="q-mr-sm"
+          >
+            Live
+          </q-chip>
           <q-btn icon="close" flat round size="md" v-close-popup />
         </div>
       </q-card-section>
@@ -41,103 +52,183 @@
                 @filter="filterProducts"
                 @update:model-value="onProductSelected"
                 class="modern-select"
+                :loading="productSearchLoading"
               >
                 <template v-slot:prepend>
                   <q-icon name="inventory_2" />
                 </template>
+                <template v-slot:option="scope">
+                  <q-item v-bind="scope.itemProps">
+                    <q-item-section avatar>
+                      <q-avatar size="40px" class="bg-grey-3">
+                        <q-img 
+                          v-if="scope.opt.image_url" 
+                          :src="scope.opt.image_url"
+                          spinner-color="primary"
+                          style="height: 40px; width: 40px"
+                        />
+                        <q-icon v-else name="inventory_2" color="grey-6" />
+                      </q-avatar>
+                    </q-item-section>
+                    <q-item-section>
+                      <q-item-label>{{ scope.opt.name }}</q-item-label>
+                      <q-item-label caption>
+                        SKU: {{ scope.opt.sku }} • {{ scope.opt.brand }}
+                      </q-item-label>
+                    </q-item-section>
+                    <q-item-section side>
+                      <q-chip 
+                        size="sm" 
+                        :color="getStockStatusColor(scope.opt)" 
+                        text-color="white"
+                      >
+                        {{ scope.opt.total_stock || 0 }} {{ scope.opt.unit }}
+                      </q-chip>
+                    </q-item-section>
+                  </q-item>
+                </template>
                 <template v-slot:no-option>
                   <q-item>
                     <q-item-section class="text-grey">
-                      {{ $t('inventory.noProductsFound') }}
+                      <div class="text-center q-pa-md">
+                        <q-icon name="search_off" size="2rem" color="grey-5" class="q-mb-sm" />
+                        <div class="text-subtitle1">{{ $t('inventory.noProductsFound') }}</div>
+                        <div class="text-caption text-grey-6">{{ $t('inventory.tryDifferentSearchTerm') }}</div>
+                      </div>
                     </q-item-section>
                   </q-item>
                 </template>
               </q-select>
             </div>
             <div class="col-auto">
-                             <q-btn
-                 icon="qr_code_scanner"
-                 color="primary"
-                 :size="$q.screen.xs ? 'md' : 'lg'"
-                 :label="$q.screen.xs ? '' : $t('inventory.scanBarcode')"
-                 @click="showBarcodeScanner = true"
-                 class="scan-button"
-                 :title="$t('inventory.scanBarcode')"
-               />
+              <q-btn
+                icon="qr_code_scanner"
+                color="primary"
+                :size="$q.screen.xs ? 'md' : 'lg'"
+                :label="$q.screen.xs ? '' : $t('inventory.scanBarcode')"
+                @click="showBarcodeScanner = true"
+                class="scan-button"
+                :title="$t('inventory.scanBarcode')"
+              />
             </div>
           </div>
         </div>
       </q-card-section>
 
-             <!-- Product Info Card -->
-       <q-card-section v-if="selectedProduct" class="q-pa-lg">
-         <q-card flat bordered class="product-card bg-grey-1">
-           <q-card-section class="q-pa-md">
-             <div class="row items-center q-gutter-md">
-               <q-avatar size="56px" class="bg-primary text-white">
-                 <q-icon name="inventory_2" size="28px" />
-               </q-avatar>
-               <div class="col">
-                 <div class="text-h6 text-weight-bold text-grey-8">
-                   {{ selectedProduct.product_name || selectedProduct.name }}
-                 </div>
-                 <div class="text-subtitle2 text-grey-6 q-mt-xs">
-                   SKU: {{ selectedProduct.sku || selectedProduct.product_sku }}
-                 </div>
-                 <div class="row items-center q-gutter-md q-mt-sm">
-                   <q-chip 
-                     :color="getStockStatusColor(selectedProduct)" 
-                     text-color="white" 
-                     size="sm"
-                     :icon="getStockStatusIcon(selectedProduct)"
-                   >
-                     {{ getCurrentStock() }} {{ selectedProduct.unit }}
-                   </q-chip>
-                   <div class="text-caption text-grey-6" v-if="selectedLocation">
-                     📍 {{ selectedLocation.name }}
-                   </div>
-                   <q-chip v-else color="orange" text-color="white" size="sm" icon="warning">
-                     {{ $t('inventory.noLocationSelected') }}
-                   </q-chip>
-                 </div>
-               </div>
-               <q-btn 
-                 flat 
-                 round 
-                 icon="edit" 
-                 @click="internalSelectedProduct = null; emit('update:modelValue', true)"
-                 class="text-grey-6"
-                 :title="$t('inventory.changeProduct')"
-               />
-             </div>
-           </q-card-section>
-         </q-card>
-       </q-card-section>
+      <!-- Enhanced Product Info Card -->
+      <q-card-section v-if="selectedProduct" class="q-pa-lg">
+        <q-card flat bordered class="product-card bg-gradient-to-r from-blue-50 to-indigo-50">
+          <q-card-section class="q-pa-lg">
+            <div class="row items-center q-gutter-lg">
+              <!-- Product Image/Icon -->
+              <q-avatar size="80px" class="product-avatar">
+                <q-img 
+                  v-if="selectedProduct.image_url" 
+                  :src="selectedProduct.image_url"
+                  spinner-color="primary"
+                  style="height: 80px; width: 80px"
+                  class="rounded-borders"
+                />
+                <div v-else class="bg-primary text-white flex flex-center" style="height: 80px; width: 80px">
+                  <q-icon name="inventory_2" size="40px" />
+                </div>
+              </q-avatar>
+              
+              <!-- Product Details -->
+              <div class="col">
+                <div class="text-h5 text-weight-bold text-grey-8 q-mb-xs">
+                  {{ selectedProduct.name }}
+                </div>
+                <div class="text-subtitle1 text-grey-6 q-mb-sm">
+                  SKU: {{ selectedProduct.sku }} • {{ selectedProduct.brand || 'Geen merk' }}
+                </div>
+                <div class="text-body2 text-grey-7 q-mb-md" v-if="selectedProduct.description">
+                  {{ selectedProduct.description }}
+                </div>
+                
+                <!-- Stock Status Row -->
+                <div class="row items-center q-gutter-md">
+                  <q-chip 
+                    :color="getStockStatusColor(selectedProduct)" 
+                    text-color="white" 
+                    size="md"
+                    :icon="getStockStatusIcon(selectedProduct)"
+                  >
+                    <span class="text-weight-bold">{{ getCurrentStock() }} {{ selectedProduct.unit }}</span>
+                  </q-chip>
+                  
+                  <div class="text-caption text-grey-6" v-if="selectedLocation">
+                    📍 {{ selectedLocation.name }}
+                  </div>
+                  <q-chip v-else color="orange" text-color="white" size="sm" icon="warning">
+                    {{ $t('inventory.noLocationSelected') }}
+                  </q-chip>
+                  
+                  <div v-if="selectedProduct.price" class="text-caption text-grey-6">
+                    💰 €{{ Number(selectedProduct.price).toFixed(2) }}
+                  </div>
+                </div>
+              </div>
+              
+              <!-- Actions -->
+              <div class="col-auto">
+                <q-btn 
+                  flat 
+                  round 
+                  icon="edit" 
+                  @click="internalSelectedProduct = null"
+                  class="text-grey-6"
+                  :title="$t('inventory.changeProduct')"
+                  size="lg"
+                />
+              </div>
+            </div>
+            
+            <!-- Additional Product Info -->
+            <div v-if="selectedProduct.barcode || selectedProduct.category" class="q-mt-md q-pt-md border-top">
+              <div class="row q-gutter-md">
+                <div v-if="selectedProduct.category" class="col-auto">
+                  <q-chip size="sm" outline color="blue-grey">
+                    <q-icon name="category" size="xs" class="q-mr-xs" />
+                    {{ selectedProduct.category }}
+                  </q-chip>
+                </div>
+                <div v-if="selectedProduct.barcode" class="col-auto">
+                  <q-chip size="sm" outline color="blue-grey">
+                    <q-icon name="qr_code" size="xs" class="q-mr-xs" />
+                    {{ selectedProduct.barcode }}
+                  </q-chip>
+                </div>
+              </div>
+            </div>
+          </q-card-section>
+        </q-card>
+      </q-card-section>
 
-       <!-- Location Selection (if no location provided) -->
-       <q-card-section v-if="selectedProduct && !selectedLocation" class="q-pa-lg">
-         <div class="step-container">
-           <div class="step-header">
-             <q-icon name="place" size="20px" color="orange" />
-             <span class="text-h6 q-ml-sm">{{ $t('inventory.selectLocation') }}</span>
-             <q-chip size="sm" color="orange" text-color="white" class="q-ml-sm">{{ $t('common.required') }}</q-chip>
-           </div>
+      <!-- Location Selection (if no location provided) -->
+      <q-card-section v-if="selectedProduct && !selectedLocation" class="q-pa-lg">
+        <div class="step-container">
+          <div class="step-header">
+            <q-icon name="place" size="20px" color="orange" />
+            <span class="text-h6 q-ml-sm">{{ $t('inventory.selectLocation') }}</span>
+            <q-chip size="sm" color="orange" text-color="white" class="q-ml-sm">{{ $t('common.required') }}</q-chip>
+          </div>
            
-           <q-select
-             v-model="internalSelectedLocation"
-             :options="availableLocations"
-             option-label="name"
-             option-value="id"
-             :label="$t('inventory.selectLocation')"
-             outlined
-             class="modern-select q-mt-md"
-           >
-             <template v-slot:prepend>
-               <q-icon name="place" />
-             </template>
-           </q-select>
-         </div>
-       </q-card-section>
+          <q-select
+            v-model="internalSelectedLocation"
+            :options="availableLocations"
+            option-label="name"
+            option-value="id"
+            :label="$t('inventory.selectLocation')"
+            outlined
+            class="modern-select q-mt-md"
+          >
+            <template v-slot:prepend>
+              <q-icon name="place" />
+            </template>
+          </q-select>
+        </div>
+      </q-card-section>
 
       <!-- Modern Adjustment Form -->
       <q-card-section v-if="selectedProduct" class="q-pa-lg adjustment-section">
@@ -193,16 +284,16 @@
               <div class="quick-amounts q-mt-md">
                 <div class="text-caption text-grey-6 q-mb-sm">{{ $t('inventory.quickAmounts') }}</div>
                 <div class="row q-gutter-xs">
-                                     <q-btn
-                     v-for="amount in quickAmounts"
-                     :key="amount"
-                     :label="amount.toString()"
-                     :size="$q.screen.xs ? 'xs' : 'sm'"
-                     outline
-                     color="primary"
-                     @click="setQuickAmount(amount)"
-                     class="quick-amount-btn"
-                   />
+                  <q-btn
+                    v-for="amount in quickAmounts"
+                    :key="amount"
+                    :label="amount.toString()"
+                    :size="$q.screen.xs ? 'xs' : 'sm'"
+                    outline
+                    color="primary"
+                    @click="setQuickAmount(amount)"
+                    class="quick-amount-btn"
+                  />
                 </div>
               </div>
             </div>
@@ -254,34 +345,40 @@
             </q-input>
           </div>
 
-          <!-- Preview Card -->
-          <q-card v-if="preview && isFormValid" flat bordered class="preview-card bg-blue-1 q-mt-lg">
+          <!-- Enhanced Preview Card -->
+          <q-card v-if="preview && isFormValid" flat bordered class="preview-card bg-gradient-to-r from-blue-50 to-green-50 q-mt-lg">
             <q-card-section class="q-pa-md">
-              <div class="row items-center">
+              <div class="row items-center q-mb-md">
                 <q-icon name="preview" size="24px" color="blue-7" />
                 <span class="text-h6 q-ml-sm text-blue-8">{{ $t('inventory.preview') }}</span>
+                <q-space />
+                <q-chip size="sm" color="blue" text-color="white">
+                  {{ adjustmentType === 'increase' ? 'Verhogen' : adjustmentType === 'decrease' ? 'Verlagen' : 'Instellen' }}
+                </q-chip>
               </div>
-              <div class="preview-content q-mt-md">
-                <div class="row q-gutter-lg">
-                  <div class="col">
+              <div class="preview-content">
+                <div class="row q-gutter-lg items-center">
+                  <div class="col text-center">
                     <div class="text-caption text-grey-6">{{ $t('inventory.current') }}</div>
-                    <div class="text-h6 text-weight-bold">{{ preview.current }} {{ selectedProduct.unit }}</div>
+                    <div class="text-h5 text-weight-bold">{{ preview.current }}</div>
+                    <div class="text-caption">{{ selectedProduct.unit }}</div>
                   </div>
                   <div class="col-auto flex items-center">
                     <q-icon 
                       :name="preview.change >= 0 ? 'arrow_forward' : 'arrow_back'" 
-                      size="20px" 
+                      size="24px" 
                       :color="preview.change >= 0 ? 'positive' : 'negative'"
                     />
-                    <span class="q-mx-sm text-subtitle1" :class="preview.change >= 0 ? 'text-positive' : 'text-negative'">
+                    <span class="q-mx-sm text-h6 text-weight-bold" :class="preview.change >= 0 ? 'text-positive' : 'text-negative'">
                       {{ preview.change >= 0 ? '+' : '' }}{{ preview.change }}
                     </span>
                   </div>
-                  <div class="col">
+                  <div class="col text-center">
                     <div class="text-caption text-grey-6">{{ $t('inventory.newQuantity') }}</div>
-                    <div class="text-h6 text-weight-bold" :class="getStatusTextClass(preview.newStatus)">
-                      {{ preview.newQuantity }} {{ selectedProduct.unit }}
+                    <div class="text-h5 text-weight-bold" :class="getStatusTextClass(preview.newStatus)">
+                      {{ preview.newQuantity }}
                     </div>
+                    <div class="text-caption">{{ selectedProduct.unit }}</div>
                   </div>
                 </div>
               </div>
@@ -318,26 +415,22 @@
         </q-btn>
       </q-card-actions>
 
-             <!-- Validation Summary -->
-       <q-banner v-if="!isFormValid && (quantityInput !== null || selectedReason)" 
-                 rounded 
-                 class="validation-banner q-ma-md"
-                 :class="getValidationBannerClass()">
-         <template v-slot:avatar>
-           <q-icon name="info" />
-         </template>
-         <div class="text-subtitle2">{{ $t('inventory.completeRequiredFields') }}</div>
-         <ul class="q-mt-sm">
-           <li v-if="quantityError">{{ quantityErrorMessage }}</li>
-           <li v-if="reasonError">{{ reasonErrorMessage }}</li>
-           <li v-if="!selectedProduct">{{ $t('inventory.selectProductFirst') }}</li>
-           <li v-if="!selectedLocation">{{ $t('inventory.selectLocationFirst') }}</li>
-         </ul>
-         <!-- Debug Info -->
-         <div class="text-caption q-mt-sm" style="opacity: 0.7;">
-           Debug: Quantity: {{ quantityInput }}, Reason: {{ selectedReason }}, Product: {{ !!selectedProduct }}, Location: {{ !!selectedLocation }}
-         </div>
-       </q-banner>
+      <!-- Validation Summary -->
+      <q-banner v-if="!isFormValid && (quantityInput !== null || selectedReason)" 
+                rounded 
+                class="validation-banner q-ma-md"
+                :class="getValidationBannerClass()">
+        <template v-slot:avatar>
+          <q-icon name="info" />
+        </template>
+        <div class="text-subtitle2">{{ $t('inventory.completeRequiredFields') }}</div>
+        <ul class="q-mt-sm">
+          <li v-if="quantityError">{{ quantityErrorMessage }}</li>
+          <li v-if="reasonError">{{ reasonErrorMessage }}</li>
+          <li v-if="!selectedProduct">{{ $t('inventory.selectProductFirst') }}</li>
+          <li v-if="!selectedLocation">{{ $t('inventory.selectLocationFirst') }}</li>
+        </ul>
+      </q-banner>
     </q-card>
 
     <!-- Barcode Scanner -->
@@ -349,11 +442,14 @@
 </template>
 
 <script setup lang="ts">
-  import { ref, computed, watch } from 'vue';
+  import { ref, computed, watch, onMounted, onUnmounted } from 'vue';
   import { useI18n } from 'vue-i18n';
   import { useQuasar } from 'quasar';
   import { useInventoryStore } from 'src/stores/inventory';
   import { useAuthStore } from 'src/stores/auth';
+  import { useProductsStore } from 'src/stores/products';
+  import { useClinicStore } from 'src/stores/clinic';
+  import { realtimeService } from 'src/services/supabase';
   import BarcodeScanner from 'src/components/BarcodeScanner.vue';
   import type { 
     StockUpdateRequest, 
@@ -384,6 +480,8 @@
   const $q = useQuasar();
   const inventoryStore = useInventoryStore();
   const authStore = useAuthStore();
+  const productsStore = useProductsStore();
+  const clinicStore = useClinicStore();
 
   // State
   const adjustmentType = ref<'increase' | 'decrease' | 'set'>('increase');
@@ -396,14 +494,14 @@
   const internalSelectedProduct = ref<any>(null);
   const availableProducts = ref<any[]>([]);
   const showBarcodeScanner = ref(false);
+  const productSearchLoading = ref(false);
   
   // Location selection state
   const internalSelectedLocation = ref<any>(null);
-  const availableLocations = ref<any[]>([
-    { id: '1', name: 'Hoofdlocatie' },
-    { id: '2', name: 'Opslag' },
-    { id: '3', name: 'Behandelkamer' }
-  ]);
+
+  // Realtime state
+  const realtimeConnected = ref(false);
+  const inventoryChannel = ref<any>(null);
 
   // Quick amount buttons
   const quickAmounts = [1, 5, 10, 25, 50, 100];
@@ -444,8 +542,21 @@
   const selectedProduct = computed(() => props.selectedProduct || internalSelectedProduct.value);
   const selectedLocation = computed(() => props.selectedLocation || internalSelectedLocation.value);
 
+  // Available locations from clinic store
+  const availableLocations = computed(() => {
+    return clinicStore.locations || [
+      { id: '880e8400-e29b-41d4-a716-446655440001', name: 'Hoofdvoorraad' },
+      { id: '880e8400-e29b-41d4-a716-446655440002', name: 'Spoedkast' },
+      { id: '880e8400-e29b-41d4-a716-446655440003', name: 'Behandelkamer 1' }
+    ];
+  });
+
   const getCurrentStock = () => {
-    return selectedProduct.value?.current_quantity || selectedProduct.value?.total_stock || 0;
+    if (!selectedProduct.value) return 0;
+    const product = selectedProduct.value as any;
+    return product?.current_quantity || 
+           product?.total_stock || 
+           product?.available_stock || 0;
   };
 
   const preview = computed(() => {
@@ -556,14 +667,17 @@
   };
 
   const determineStockStatus = (quantity: number): string => {
-    const minStock = selectedProduct.value?.minimum_quantity || 10;
+    if (!selectedProduct.value) return 'in_stock';
+    const product = selectedProduct.value as any;
+    const minStock = product?.minimum_quantity || product?.minimum_stock || 10;
     if (quantity <= 0) return 'out_of_stock';
     if (quantity <= minStock) return 'low_stock';
     return 'in_stock';
   };
 
   const getStockStatusColor = (product: any) => {
-    const status = determineStockStatus(getCurrentStock());
+    const stock = (product as any)?.current_quantity || (product as any)?.total_stock || 0;
+    const status = determineStockStatus(stock);
     switch (status) {
       case 'out_of_stock': return 'negative';
       case 'low_stock': return 'warning';
@@ -572,7 +686,8 @@
   };
 
   const getStockStatusIcon = (product: any) => {
-    const status = determineStockStatus(getCurrentStock());
+    const stock = (product as any)?.current_quantity || (product as any)?.total_stock || 0;
+    const status = determineStockStatus(stock);
     switch (status) {
       case 'out_of_stock': return 'error';
       case 'low_stock': return 'warning';
@@ -592,24 +707,58 @@
     return 'bg-orange-1 text-orange-8';
   };
 
-  const filterProducts = (val: string, update: any) => {
-    // Mock product filtering for demo
-    const mockProducts = [
-      { id: '1', name: 'BD Discardit II Spuit 10ml', sku: 'BD-10ML', unit: 'stuks' },
-      { id: '2', name: 'BD Microlance Naald 23G', sku: 'BD-23G', unit: 'stuks' },
-      { id: '3', name: 'Ansell TouchNTuff Handschoenen', sku: 'ANS-L', unit: 'paar' },
-    ];
+  const filterProducts = async (val: string, update: any) => {
+    if (val.length < 2) {
+      update(() => {
+        availableProducts.value = [];
+      });
+      return;
+    }
 
-    update(() => {
-      if (val === '') {
-        availableProducts.value = mockProducts;
-      } else {
-        const needle = val.toLowerCase();
-        availableProducts.value = mockProducts.filter(
-          product => product.name.toLowerCase().includes(needle)
-        );
+    productSearchLoading.value = true;
+    
+    try {
+      // Load products from store if not loaded
+      if (!productsStore.products.length) {
+        const practiceId = authStore.userProfile?.clinic_id;
+        if (practiceId) {
+          await productsStore.fetchProducts(practiceId);
+        }
       }
-    });
+
+      update(() => {
+        const needle = val.toLowerCase();
+        availableProducts.value = productsStore.products
+          .filter(product => 
+            product.name.toLowerCase().includes(needle) ||
+            product.sku.toLowerCase().includes(needle) ||
+            (product.barcode && product.barcode.toLowerCase().includes(needle))
+          )
+          .slice(0, 10) // Limit to 10 results for performance
+          .map(product => ({
+            id: product.id,
+            name: product.name,
+            sku: product.sku,
+            unit: product.unit || 'stuk',
+            brand: product.brand,
+            image_url: product.image_url,
+            total_stock: product.total_stock,
+            current_quantity: product.current_quantity,
+            minimum_quantity: product.minimum_quantity,
+            price: product.price,
+            description: product.description,
+            barcode: product.barcode,
+            category: product.category
+          }));
+      });
+    } catch (error) {
+      console.error('Error filtering products:', error);
+      update(() => {
+        availableProducts.value = [];
+      });
+    } finally {
+      productSearchLoading.value = false;
+    }
   };
 
   const onProductSelected = (product: any) => {
@@ -618,12 +767,60 @@
     }
   };
 
-  const handleBarcodeScan = (barcode: string) => {
-    // Handle barcode scan logic
-    $q.notify({
-      type: 'info',
-      message: t('inventory.barcodeScanned', { barcode }),
-    });
+  const handleBarcodeScan = async (barcode: string) => {
+    try {
+      // Search for products matching the barcode
+      const practiceId = authStore.userProfile?.clinic_id;
+      if (practiceId && !productsStore.products.length) {
+        await productsStore.fetchProducts(practiceId);
+      }
+
+      const matchingProduct = productsStore.products.find(product => 
+        product.barcode === barcode || 
+        product.sku === barcode ||
+        product.name.toLowerCase().includes(barcode.toLowerCase())
+      );
+
+      if (matchingProduct) {
+        // Set the product as selected
+        internalSelectedProduct.value = {
+          id: matchingProduct.id,
+          name: matchingProduct.name,
+          sku: matchingProduct.sku,
+          unit: matchingProduct.unit || 'stuk',
+          brand: matchingProduct.brand,
+          image_url: matchingProduct.image_url,
+          total_stock: matchingProduct.total_stock,
+          current_quantity: matchingProduct.current_quantity,
+          minimum_quantity: matchingProduct.minimum_quantity,
+          price: matchingProduct.price,
+          description: matchingProduct.description,
+          barcode: matchingProduct.barcode,
+          category: matchingProduct.category
+        };
+
+        emit('product-selected', internalSelectedProduct.value);
+
+        $q.notify({
+          type: 'positive',
+          message: t('inventory.barcodeFound', { product: matchingProduct.name }),
+          icon: 'qr_code_scanner'
+        });
+      } else {
+        $q.notify({
+          type: 'warning',
+          message: t('inventory.barcodeNotFound', { barcode }),
+          icon: 'search_off'
+        });
+      }
+    } catch (error) {
+      console.error('Error processing barcode:', error);
+      $q.notify({
+        type: 'negative',
+        message: t('errors.processingError'),
+        icon: 'error'
+      });
+    }
   };
 
   const performAdjustment = async () => {
@@ -648,14 +845,29 @@
         throw new Error('No reason selected');
       }
 
+      const practiceId = authStore.userProfile?.clinic_id;
+      if (!practiceId) {
+        throw new Error('User not authenticated or no practice selected');
+      }
+
+      const locationId = selectedLocation.value?.id;
+      if (!locationId) {
+        throw new Error('No location selected');
+      }
+
+      const productId = selectedProduct.value?.id || selectedProduct.value?.product_id;
+      if (!productId) {
+        throw new Error('No product selected');
+      }
+
       const request: StockUpdateRequest = {
-        practice_id: authStore.userProfile?.clinic_id || '',
-        location_id: selectedLocation.value?.id || '',
-        product_id: selectedProduct.value.id || selectedProduct.value.product_id,
+        practice_id: practiceId,
+        location_id: locationId,
+        product_id: productId,
         quantity_change: preview.value.change,
         movement_type: movementType,
         reason_code: reasonCode as ReasonCode,
-        notes: notes.value || null,
+        notes: notes.value || '',
       };
 
       await inventoryStore.updateStockLevel(request);
@@ -676,21 +888,117 @@
       notes.value = '';
       adjustmentType.value = 'increase';
 
-    } catch (error) {
+    } catch (error: any) {
       console.error('Error updating stock:', error);
       
-      // Update loading notification to error
-      notif({
-        type: 'negative',
-        message: t('inventory.errorUpdatingStock'),
-        icon: 'error',
-        timeout: 5000,
-      });
+      // Determine user-friendly error message
+      let errorMessage = t('inventory.errorUpdatingStock');
+      let canRetry = true;
       
-      // Reopen dialog on error so user can try again
-      emit('update:modelValue', true);
+      if (error.message) {
+        if (error.message.includes('Insufficient stock')) {
+          errorMessage = error.message;
+          canRetry = false; // No point retrying if there's insufficient stock
+        } else if (error.message.includes('not found')) {
+          errorMessage = t('inventory.errorProductNotFound');
+          canRetry = false;
+        } else if (error.message.includes('Another update is in progress')) {
+          errorMessage = t('inventory.errorUpdateInProgress');
+          canRetry = true;
+        } else if (error.message.includes('Invalid reference')) {
+          errorMessage = t('inventory.errorInvalidData');
+          canRetry = false;
+        } else if (error.message.includes('negative stock not allowed')) {
+          errorMessage = t('inventory.errorNegativeStock');
+          canRetry = false;
+        } else if (error.message.startsWith('Failed to update stock:')) {
+          errorMessage = error.message;
+        }
+      }
+      
+      // Update loading notification to error
+      const notificationOptions: any = {
+        type: 'negative',
+        message: errorMessage,
+        icon: 'error',
+        timeout: canRetry ? 5000 : 8000,
+      };
+
+      if (canRetry) {
+        notificationOptions.actions = [
+          {
+            label: t('common.retry'),
+            color: 'white',
+            handler: () => {
+              emit('update:modelValue', true);
+            }
+          }
+        ];
+      }
+
+      notif(notificationOptions);
+      
+      // Only reopen dialog on error if it's worth retrying
+      if (canRetry) {
+        emit('update:modelValue', true);
+      }
     }
   };
+
+  // Initialize data on mount
+  onMounted(async () => {
+    try {
+      const practiceId = authStore.userProfile?.clinic_id;
+      if (!practiceId) return;
+
+      // Load products and locations if not already loaded
+      if (!productsStore.products.length) {
+        await productsStore.fetchProducts(practiceId);
+      }
+      
+      if (!clinicStore.locations.length) {
+        await clinicStore.fetchLocations(practiceId);
+      }
+
+             // Initialize realtime service
+       if (practiceId) {
+         inventoryChannel.value = realtimeService.subscribeToInventory(practiceId, (payload: any) => {
+           console.log('📡 Realtime inventory update received:', payload);
+           
+           if (payload.new && payload.eventType === 'UPDATE') {
+             // Find the product in availableProducts and update its total_stock
+             const productIndex = availableProducts.value.findIndex(p => p.id === payload.new.product_id);
+             if (productIndex !== -1) {
+               availableProducts.value[productIndex].total_stock = payload.new.current_quantity;
+               availableProducts.value[productIndex].current_quantity = payload.new.current_quantity;
+             }
+             
+             // If this is the currently selected product, show a notification
+             if (selectedProduct.value && selectedProduct.value.id === payload.new.product_id) {
+               $q.notify({
+                 type: 'info',
+                 message: `Stock bijgewerkt: ${selectedProduct.value.name} nu ${payload.new.current_quantity} ${selectedProduct.value.unit}`,
+                 icon: 'update',
+                 timeout: 3000
+               });
+             }
+           }
+         });
+         realtimeConnected.value = true;
+       }
+
+    } catch (error) {
+      console.error('Error loading initial data:', error);
+    }
+  });
+
+     onUnmounted(() => {
+     if (inventoryChannel.value) {
+       realtimeService.unsubscribeFromChannel(inventoryChannel.value);
+       inventoryChannel.value = null;
+       realtimeConnected.value = false;
+     }
+   });
 
   // Watch for product changes
   watch(() => props.selectedProduct, (newProduct) => {
@@ -704,6 +1012,7 @@
 .modern-dialog {
   .dialog-header {
     border-radius: 8px 8px 0 0;
+    background: linear-gradient(135deg, var(--q-primary) 0%, #1976d2 100%);
   }
 
   .step-container, .adjustment-container {
@@ -728,19 +1037,32 @@
 
   .product-card {
     border: 2px solid var(--q-grey-4);
-    border-radius: 12px;
-    transition: all 0.2s ease;
+    border-radius: 16px;
+    transition: all 0.3s ease;
+    overflow: hidden;
 
     &:hover {
       border-color: var(--q-primary);
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+      transform: translateY(-2px);
     }
+  }
+
+  .product-avatar {
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
   }
 
   .modern-toggle {
     .q-btn {
       border-radius: 8px;
       min-height: 48px;
+      transition: all 0.2s ease;
+      
+      &:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      }
       
       @media (max-width: 600px) {
         min-height: 40px;
@@ -756,23 +1078,29 @@
     }
   }
 
-     .quick-amounts {
-     .quick-amount-btn {
-       min-width: 48px;
-       border-radius: 6px;
-       
-       @media (max-width: 600px) {
-         min-width: 36px;
-         font-size: 0.75rem;
-         padding: 4px 8px;
-       }
-     }
-   }
+  .quick-amounts {
+    .quick-amount-btn {
+      min-width: 48px;
+      border-radius: 6px;
+      transition: all 0.2s ease;
+      
+      &:hover {
+        transform: scale(1.05);
+      }
+      
+      @media (max-width: 600px) {
+        min-width: 36px;
+        font-size: 0.75rem;
+        padding: 4px 8px;
+      }
+    }
+  }
 
   .preview-card {
     border: 2px solid var(--q-blue-4);
-    border-radius: 12px;
-    background: linear-gradient(135deg, #f0f8ff 0%, #e6f3ff 100%);
+    border-radius: 16px;
+    background: linear-gradient(135deg, #f0f8ff 0%, #e8f5e8 100%);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
   }
 
   .preview-content {
@@ -782,22 +1110,30 @@
   .modern-actions {
     border-radius: 0 0 8px 8px;
     border-top: 1px solid var(--q-grey-4);
+    background: linear-gradient(180deg, #fafafa 0%, #f5f5f5 100%);
 
-         .save-button {
-       min-width: 140px;
-       border-radius: 8px;
-       font-weight: 600;
-       
-       @media (max-width: 600px) {
-         min-width: 100px;
-         font-size: 0.85rem;
-         padding: 8px 16px;
-       }
-     }
+    .save-button {
+      min-width: 140px;
+      border-radius: 8px;
+      font-weight: 600;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      transition: all 0.2s ease;
+      
+      &:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+      }
+      
+      @media (max-width: 600px) {
+        min-width: 100px;
+        font-size: 0.85rem;
+        padding: 8px 16px;
+      }
+    }
   }
 
   .validation-banner {
-    border-radius: 8px;
+    border-radius: 12px;
     
     ul {
       margin: 0;
@@ -809,16 +1145,81 @@
     }
   }
 
-     .scan-button {
-     min-height: 56px;
-     border-radius: 8px;
-     font-weight: 600;
-     
-     @media (max-width: 600px) {
-       min-height: 48px;
-       min-width: 48px;
-       padding: 8px;
-     }
-   }
+  .scan-button {
+    min-height: 56px;
+    border-radius: 8px;
+    font-weight: 600;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    transition: all 0.2s ease;
+    
+    &:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    }
+    
+    @media (max-width: 600px) {
+      min-height: 48px;
+      min-width: 48px;
+      padding: 8px;
+    }
+  }
+}
+
+// Gradient utilities for better visual appeal
+.bg-gradient-to-r {
+  &.from-blue-50.to-indigo-50 {
+    background: linear-gradient(90deg, #eff6ff 0%, #eef2ff 100%);
+  }
+  
+  &.from-blue-50.to-green-50 {
+    background: linear-gradient(90deg, #eff6ff 0%, #f0fdf4 100%);
+  }
+}
+
+// Animation for realtime indicator
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+.q-chip[color="positive"] {
+  animation: pulse 2s infinite;
+}
+
+// Enhanced mobile responsiveness
+@media (max-width: 600px) {
+  .modern-dialog {
+    .product-card {
+      .q-card-section {
+        padding: 1rem;
+      }
+      
+      .row {
+        .q-gutter-lg > * {
+          margin-right: 0.5rem;
+          margin-bottom: 0.5rem;
+        }
+      }
+    }
+    
+    .adjustment-step {
+      margin-bottom: 24px;
+    }
+    
+    .preview-card {
+      .row.q-gutter-lg {
+        gap: 0.5rem;
+      }
+    }
+  }
+}
+
+// Border utilities
+.border-top {
+  border-top: 1px solid var(--q-grey-4);
 }
 </style>

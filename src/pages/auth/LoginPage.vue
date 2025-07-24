@@ -182,8 +182,8 @@
         });
 
         // Check for intended route from sessionStorage
-        const intendedRoute = sessionStorage.getItem('medstock_intended_route');
-        sessionStorage.removeItem('medstock_intended_route');
+            const intendedRoute = sessionStorage.getItem('remcura_intended_route');
+    sessionStorage.removeItem('remcura_intended_route');
 
         // Redirect to intended page or dashboard
         const redirectPath = intendedRoute || '/';
@@ -205,7 +205,7 @@
   };
 
   const fillDemoCredentials = () => {
-    email.value.value = 'demo@medstock-pro.com';
+    email.value.value = 'demo@remcura.com';
     password.value.value = 'demo123';
 
     $q.notify({

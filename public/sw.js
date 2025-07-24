@@ -1,7 +1,7 @@
 /* eslint-env serviceworker */
 
-const CACHE_NAME = 'medstock-pro-v1.0.0';
-const OFFLINE_CACHE_NAME = 'medstock-offline-v1.0.0';
+const CACHE_NAME = 'remcura-v1.0.0';
+const OFFLINE_CACHE_NAME = 'remcura-offline-v1.0.0';
 
 // Files to cache for offline functionality
 const CACHE_FILES = [
@@ -139,7 +139,7 @@ self.addEventListener('push', event => {
       notificationData = event.data.json();
     } catch (error) {
       notificationData = {
-        title: 'MedStock Pro',
+        title: 'Remcura',
         body: event.data.text() || 'You have a new notification',
         icon: '/icons/icon-192x192.png',
         badge: '/icons/icon-192x192.png',
@@ -151,7 +151,7 @@ self.addEventListener('push', event => {
     body: notificationData.body || 'You have a new notification',
     icon: notificationData.icon || '/icons/icon-192x192.png',
     badge: notificationData.badge || '/icons/icon-192x192.png',
-    tag: notificationData.tag || 'medstock-notification',
+          tag: notificationData.tag || 'remcura-notification',
     data: notificationData.data || {},
     requireInteraction: notificationData.requireInteraction || false,
     actions: notificationData.actions || [
@@ -171,7 +171,7 @@ self.addEventListener('push', event => {
 
   event.waitUntil(
     self.registration.showNotification(
-      notificationData.title || 'MedStock Pro',
+      notificationData.title || 'Remcura',
       options
     )
   );
@@ -235,7 +235,7 @@ self.addEventListener('notificationclick', event => {
 self.addEventListener('sync', event => {
   console.log('Service Worker: Background sync event', event.tag);
 
-  if (event.tag === 'background-sync-medstock') {
+  if (event.tag === 'background-sync-remcura') {
     event.waitUntil(
       syncOfflineData()
         .then(() => {

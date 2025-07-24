@@ -1,7 +1,7 @@
 export default {
   // Brand
   brand: {
-    name: 'MedStock Pro',
+    name: 'Remcura',
     edition: 'Professionele editie',
     tagline: 'Professioneel medisch voorraadbeheer',
   },
@@ -43,6 +43,7 @@ export default {
     back: 'Terug',
     next: 'Volgende',
     previous: 'Vorige',
+    retry: 'Opnieuw proberen',
     all: 'Alle',
     none: 'Geen',
     select: 'Selecteren',
@@ -187,7 +188,7 @@ export default {
     passwordResetComingSoon: 'Wachtwoord reset functionaliteit komt binnenkort.',
     copyright: '© {year} {company}. Alle rechten voorbehouden.',
     passwordHelp: 'Voer je wachtwoord in om veilig in te loggen',
-    demoHelp: 'Gebruik demo@medstock-pro.com met wachtwoord demo123 voor demonstratie',
+    demoHelp: 'Gebruik demo@remcura.com met wachtwoord demo123 voor demonstratie',
     signingIn: 'Inloggen...',
     fullName: 'Volledige naam',
   },
@@ -240,7 +241,7 @@ export default {
     currentMin: 'Huidig / min',
     latestUpdates: 'Laatste updates',
     viewAnalytics: 'Analyses bekijken',
-    welcomeTitle: 'Welkom bij MedStock Pro',
+    welcomeTitle: 'Welkom bij Remcura',
     welcomeSubtitle: 'Je professionele medische voorraadbeheersysteem',
     welcomeDescription: 'Beheer je voorraad efficiënt met onze geavanceerde tools en realtime tracking.',
     systemStatus: 'Systeemstatus',
@@ -433,6 +434,7 @@ export default {
     barcodeNotFound: 'Geen product gevonden voor barcode: {barcode}',
     searchProduct: 'Product zoeken',
     noProductsFound: 'Geen producten gevonden',
+    tryDifferentSearchTerm: 'Probeer een andere zoekterm',
     
     // Real-time functionality
     realTimeConnected: 'Live updates',
@@ -510,7 +512,6 @@ export default {
     defaultSessionName: 'Telling {date} {time}',
     sessionCreated: 'Tellingsessie aangemaakt',
     sessionCreationFailed: 'Aanmaken tellingsessie mislukt',
-    selectLocation: 'Locatie selecteren',
     searchProductPlaceholder: 'Typ om te zoeken...',
     quantityMustNotBeZero: 'Hoeveelheid mag niet nul zijn',
     quantityChangeHint: 'Gebruik + om toe te voegen, - om te verwijderen',
@@ -561,7 +562,22 @@ export default {
     notes: 'Notities',
     notesPlaceholder: 'Optionele notities voor deze aanpassing...',
     errorUpdatingStock: 'Fout bij bijwerken voorraad',
+    errorProductNotFound: 'Product, locatie of praktijk niet gevonden. Ververs de pagina en probeer opnieuw.',
+    errorUpdateInProgress: 'Een andere update is bezig. Wacht even en probeer opnieuw.',
+    errorInvalidData: 'Ongeldige gegevens. Controleer de invoer en probeer opnieuw.',
+    errorNegativeStock: 'Negatieve voorraad is niet toegestaan voor dit product.',
     dataRefreshed: 'Gegevens ververst',
+    stockUpdatedRealtime: 'Voorraad live bijgewerkt voor {product}',
+    productInfoCard: 'Product informatie',
+    productImageAlt: 'Productafbeelding voor {product}',
+    productPrice: 'Prijs',
+    euro: '€',
+    selectProductTitle: 'Selecteer een product om de voorraad aan te passen',
+    scanBarcodeTitle: 'Scan barcode van het product',
+    adjustmentPreviewTitle: 'Bekijk de voorgestelde voorraadaanpassing',
+    currentStockLevel: 'Huidige voorraadniveau',
+    newStockLevel: 'Nieuwe voorraadniveau',
+    stockDifference: 'Voorraadverschil',
 
     movement: {
       receipt: 'Ontvangst',
@@ -1378,7 +1394,7 @@ export default {
     settingsSaveError: 'Een fout trad op bij het opslaan',
     saveSettings: 'Instellingen opslaan',
 
-    styleGuideTitle: 'MedStock Pro Stijlgids',
+    styleGuideTitle: 'Remcura Stijlgids',
     styleGuideSubtitle: 'Complete ontwerpsysteem referentie en component showcase',
     colorsSection: 'Kleuren',
     primaryColors: 'Primaire kleuren',
@@ -1789,7 +1805,7 @@ export default {
     stepShare: 'Deel de code',
     stepShareDetail: 'Stuur de code via WhatsApp, e-mail, of gewoon mondeling',
     stepJoin: 'Direct toegang',
-    stepJoinDetail: 'Je collega gaat naar medstock-pro.com/join en voert de code in',
+    stepJoinDetail: 'Je collega gaat naar remcura.com/join en voert de code in',
     
     createInvite: 'Nieuwe uitnodiging maken',
     whoAreYouInviting: 'Wie nodig je uit?',
@@ -1800,7 +1816,7 @@ export default {
     inviteReady: '✅ Uitnodiging klaar!',
     shareThisCode: 'Deel deze code:',
     tellThem: 'Vertel ze:',
-    shareMessage: 'Ga naar medstock-pro.com/join en voer deze code in: {code}',
+    shareMessage: 'Ga naar remcura.com/join en voer deze code in: {code}',
     
     shareWhatsApp: 'WhatsApp',
     showQR: 'QR Code',
@@ -1823,9 +1839,9 @@ export default {
     deleteConfirm: 'Weet je zeker dat je code {code} wilt verwijderen?',
     inviteDeleted: 'Uitnodiging verwijderd',
     
-    whatsappMessage: 'Hoi! Je bent uitgenodigd voor MedStock Pro.\n\nGa naar: {url}\nVoer deze code in: {code}\n\nDan heb je direct toegang! 👍',
-    emailSubject: 'Uitnodiging MedStock Pro',
-    emailMessage: 'Hoi!\n\nJe bent uitgenodigd om MedStock Pro te gebruiken.\n\nStap 1: Ga naar {url}\nStap 2: Voer deze code in: {code}\n\nDan heb je meteen toegang tot het systeem!\n\nGroet',
+    whatsappMessage: 'Hoi! Je bent uitgenodigd voor Remcura.\n\nGa naar: {url}\nVoer deze code in: {code}\n\nDan heb je direct toegang! 👍',
+    emailSubject: 'Uitnodiging Remcura',
+    emailMessage: 'Hoi!\n\nJe bent uitgenodigd om Remcura te gebruiken.\n\nStap 1: Ga naar {url}\nStap 2: Voer deze code in: {code}\n\nDan heb je meteen toegang tot het systeem!\n\nGroet',
   },
 
   magicJoin: {

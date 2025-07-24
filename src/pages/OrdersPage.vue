@@ -698,7 +698,7 @@
 
   const emailOrder = (order: OrderWithItems) => {
     emailData.orderId = order.id;
-    emailData.subject = `Order ${order.order_number} - MedStock Pro`;
+            emailData.subject = `Order ${order.order_number} - Remcura`;
     emailData.message = `Please find attached the details for order ${order.order_number}.`;
     showEmailDialog.value = true;
   };

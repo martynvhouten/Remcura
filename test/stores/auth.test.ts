@@ -56,11 +56,11 @@ describe('Auth Store', () => {
     it('should login successfully with demo credentials', async () => {
       const authStore = useAuthStore();
 
-      const result = await authStore.login('demo@medstock-pro.com', 'demo123');
+      const result = await authStore.login('demo@remcura.com', 'demo123');
 
       expect(result.success).toBe(true);
       expect(authStore.isAuthenticated).toBe(true);
-      expect(authStore.userEmail).toBe('demo@medstock-pro.com');
+      expect(authStore.userEmail).toBe('demo@remcura.com');
       expect(authStore.clinicId).toBe('550e8400-e29b-41d4-a716-446655440000');
       expect(authStore.userProfile?.full_name).toBe('Demo User');
     });
@@ -116,7 +116,7 @@ describe('Auth Store', () => {
       const authStore = useAuthStore();
 
       // First login with demo account
-      await authStore.login('demo@medstock-pro.com', 'demo123');
+      await authStore.login('demo@remcura.com', 'demo123');
       expect(authStore.isAuthenticated).toBe(true);
 
       // Then logout

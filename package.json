@@ -1,7 +1,7 @@
 {
-  "name": "medstock-pro",
+  "name": "remcura",
   "version": "1.0.0",
-  "description": "MedStock Pro - Professional medical supply inventory management system",
+  "description": "Remcura - Professional medical supply inventory management system",
   "private": true,
   "scripts": {
     "dev": "quasar dev",

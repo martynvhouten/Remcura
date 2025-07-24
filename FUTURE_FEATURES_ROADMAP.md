@@ -92,7 +92,7 @@ Quest: "Pharmacy Explorer"
 
 ### 💬 **Slack/Teams Integration**
 ```
-/medstock invite @sarah pharmacy
+/remcura invite @sarah pharmacy
 → Bot: "Uitnodiging voor Sarah (apotheek) gemaakt: 🏥KLINIEK✨2024"
 → Sarah krijgt DM met directe toegang link
 ```
@@ -129,7 +129,7 @@ const practiceTheme = {
 
 ### 📱 **White-Label Mobile Apps**
 - **Practice-Branded**: App heeft logo/kleuren van de practice
-- **Custom Domain**: medstock.jouwkliniek.nl
+- **Custom Domain**: remcura.jouwkliniek.nl
 - **Practice Store**: Eigen app store pagina
 - **Push Notifications**: Branded notificaties
 
@@ -140,7 +140,7 @@ const practiceTheme = {
 ### 🎙️ **Voice Invitations**
 **Scenario**:
 ```
-Doctor: "Hey Google, invite the new nurse to MedStock"
+Doctor: "Hey Google, invite the new nurse to Remcura"
 Google: "Sure! I've created code 🏥CLINIC✨2024. Should I text it to them?"
 Doctor: "Yes, send to +31612345678"
 Google: "Done! They'll receive an invitation message now."

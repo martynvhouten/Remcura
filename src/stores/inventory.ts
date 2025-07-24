@@ -37,26 +37,58 @@ export const useInventoryStore = defineStore('inventory', () => {
   // Actions - pure inventory operations only
   const updateStockLevel = async (request: StockUpdateRequest) => {
     try {
-      // Get current stock level
-      let currentStock = 0;
-      const { data: stockLevel, error: stockError } = await supabase
-        .from('stock_levels')
-        .select('current_quantity')
-        .eq('practice_id', request.practice_id)
-        .eq('location_id', request.location_id)
-        .eq('product_id', request.product_id)
-        .maybeSingle();
-
-      if (stockError && stockError.code !== 'PGRST116') {
-        // PGRST116 = "no rows returned" - this is OK for new products
-        throw stockError;
+      // Validate required fields
+      if (!request.practice_id || !request.location_id || !request.product_id) {
+        throw new Error('Missing required fields: practice_id, location_id, or product_id');
       }
 
-      currentStock = (stockLevel as any)?.current_quantity || 0;
+      if (request.quantity_change === 0) {
+        throw new Error('Quantity change cannot be zero');
+      }
+
+      // Get current stock level with retry logic for race conditions
+      let currentStock = 0;
+      let retryCount = 0;
+      const maxRetries = 3;
+
+      while (retryCount < maxRetries) {
+        try {
+          const { data: stockLevel, error: stockError } = await supabase
+            .from('stock_levels')
+            .select('current_quantity')
+            .eq('practice_id', request.practice_id)
+            .eq('location_id', request.location_id)
+            .eq('product_id', request.product_id)
+            .maybeSingle();
+
+          if (stockError && stockError.code !== 'PGRST116') {
+            // PGRST116 = "no rows returned" - this is OK for new products
+            throw stockError;
+          }
+
+          currentStock = (stockLevel as any)?.current_quantity || 0;
+          break; // Success, exit retry loop
+
+        } catch (error: any) {
+          retryCount++;
+          if (retryCount >= maxRetries) {
+            console.error('Failed to get current stock after retries:', error);
+            throw new Error(`Unable to get current stock level: ${error.message}`);
+          }
+          // Wait a bit before retrying
+          await new Promise(resolve => setTimeout(resolve, 100 * retryCount));
+        }
+      }
+
       const newQuantity = currentStock + request.quantity_change;
 
-      // Create stock movement record
-      const { data, error } = await supabase.from('stock_movements').insert({
+      // Validate that new quantity is not negative if not allowed
+      if (newQuantity < 0) {
+        throw new Error(`Insufficient stock. Current: ${currentStock}, Attempted change: ${request.quantity_change}`);
+      }
+
+      // Create stock movement record first (this serves as our audit trail)
+      const movementData: any = {
         practice_id: request.practice_id,
         location_id: request.location_id,
         product_id: request.product_id,
@@ -67,36 +99,74 @@ export const useInventoryStore = defineStore('inventory', () => {
         reference_type: 'manual_adjustment',
         reason: request.reason_code,
         notes: request.notes || null,
-        created_by: authStore.user?.id || '',
-      });
+        batch_id: null, // Required for database triggers
+      };
 
-      if (error) throw error;
-
-      // Update or create stock level record
-      const { error: upsertError } = await supabase
-        .from('stock_levels')
-        .upsert({
-          practice_id: request.practice_id,
-          location_id: request.location_id,
-          product_id: request.product_id,
-          current_quantity: newQuantity,
-          updated_at: new Date().toISOString(),
-        }, {
-          onConflict: 'practice_id,location_id,product_id'
-        });
-
-      if (upsertError) {
-        console.warn('Warning: Could not update stock level:', upsertError);
-        // Don't throw - movement was successful
+      // Add created_by only if we have a valid user
+      const userId = authStore.user?.id;
+      if (userId && userId !== '550e8400-e29b-41d4-a716-446655440001') {
+        // Only add created_by for real users, not demo user
+        movementData.created_by = userId;
       }
 
-      // Refresh movements after update
+      const { data: insertedMovement, error: movementError } = await supabase
+        .from('stock_movements')
+        .insert(movementData)
+        .select()
+        .single();
+
+      if (movementError) {
+        console.error('Error creating stock movement:', movementError);
+        
+        // Provide more specific error messages
+        if (movementError.code === '23503') {
+          const detail = movementError.details || movementError.message;
+          if (detail.includes('practice_id')) {
+            throw new Error('Practice not found. Please refresh and try again.');
+          } else if (detail.includes('location_id')) {
+            throw new Error('Location not found. Please refresh and try again.');
+          } else if (detail.includes('product_id')) {
+            throw new Error('Product not found. Please refresh and try again.');
+          } else if (detail.includes('created_by')) {
+            throw new Error('User authentication failed. Please log in again.');
+          } else {
+            throw new Error('Invalid reference: practice, location, or product not found');
+          }
+        } else if (movementError.code === '23505') {
+          throw new Error('Duplicate movement detected. Please try again.');
+        } else if (movementError.code === '23514') {
+          throw new Error('Invalid data: check constraints failed');
+        } else {
+          throw new Error(`Failed to record stock movement: ${movementError.message}`);
+        }
+      }
+
+      // Stock level is automatically updated by database triggers
+      // No need for manual upsert anymore
+      
+      // Refresh data to reflect changes
       await fetchStockMovements(request.practice_id);
 
-      return data;
-    } catch (error) {
-      console.error('Error updating stock level:', error);
-      throw error;
+      return insertedMovement;
+    } catch (error: any) {
+      console.error('Error updating stock level:', {
+        error,
+        request,
+        errorCode: error.code,
+        errorMessage: error.message,
+        errorDetails: error.details
+      });
+      
+      // Rethrow with more user-friendly message
+      if (error.message.includes('Invalid reference')) {
+        throw new Error('Product, location, or practice not found. Please refresh and try again.');
+      } else if (error.message.includes('Insufficient stock')) {
+        throw error; // This error message is already user-friendly
+      } else if (error.code === '23505' || error.message.includes('Duplicate')) {
+        throw new Error('Another update is in progress. Please wait and try again.');
+      } else {
+        throw new Error(`Failed to update stock: ${error.message}`);
+      }
     }
   };
 

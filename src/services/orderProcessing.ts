@@ -340,7 +340,7 @@ export class OrderProcessingService {
       </head>
       <body>
         <div class="header">
-          <h1>MedStock Pro - Bestelling</h1>
+          <h1>Remcura - Bestelling</h1>
           <p><strong>Order Number:</strong> ${order.order_number}</p>
           <p><strong>Order Date:</strong> ${new Date(
             order.order_date
@@ -405,7 +405,7 @@ export class OrderProcessingService {
     }
 
     const emailSubject =
-      subject || `Order ${order.order_number} - MedStock Pro`;
+      subject || `Order ${order.order_number} - Remcura`;
     const emailBody = this.generateOrderHTML(order);
 
     // In a real implementation, you would call your email service here

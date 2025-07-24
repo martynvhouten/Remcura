@@ -1,4 +1,4 @@
-# MedStock Pro - Codebase Cleanup & Design Polish Summary
+# Remcura - Codebase Cleanup & Design Polish Summary
 
 ## ✅ **Completed Cleanup Tasks**
 

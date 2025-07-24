@@ -1,6 +1,6 @@
-# MedStock Pro - Deployment Guide
+# Remcura - Deployment Guide
 
-This guide covers deploying MedStock Pro to production environments.
+This guide covers deploying Remcura to production environments.
 
 ## 📋 Pre-Deployment Checklist
 
@@ -125,7 +125,7 @@ npx serve dist/spa -p 8080
    server {
      listen 80;
      server_name your-domain.com;
-     root /var/www/medstock-pro;
+     root /var/www/remcura;
      index index.html;
 
      location / {
@@ -166,7 +166,7 @@ VITE_GOOGLE_ANALYTICS_ID=GA-XXXXXXXXX
 ### SEO Configuration
 
 1. **Update `public/robots.txt`:**
-   - Replace `medstock-pro.com` with your domain
+   - Replace `remcura.com` with your domain
 2. **Update `public/sitemap.xml`:**
 
    - Replace URLs with your domain

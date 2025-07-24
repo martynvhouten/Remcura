@@ -99,7 +99,7 @@ const invite = await MagicInviteService.createMagicInvite({
 
 **Step 2: Assistant First Login**
 ```typescript
-// medstock-pro.com/join → Enter code: 🏥KLINIEK✨2024
+// remcura.com/join → Enter code: 🏥KLINIEK✨2024
 const result = await PermanentUserService.detectLoginType(code);
 
 if (result.type === 'invite' && isPermanentRole(result.data.role)) {
@@ -152,7 +152,7 @@ const result = await PermanentUserService.createPermanentUser({
 
 **Assistant Daily Routine:**
 ```typescript
-// medstock-pro.com/join → Enter: 🏥SARAH2024
+// remcura.com/join → Enter: 🏥SARAH2024
 const result = await PermanentUserService.detectLoginType('🏥SARAH2024');
 
 if (result.type === 'personal') {

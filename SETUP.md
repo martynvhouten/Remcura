@@ -1,10 +1,10 @@
-# Setup Guide - MedStock Pro
+# Setup Guide - Remcura
 
-Deze handleiding helpt je bij het opzetten van MedStock Pro in je ontwikkelomgeving en productie.
+Deze handleiding helpt je bij het opzetten van Remcura in je ontwikkelomgeving en productie.
 
 ## Overzicht
 
-MedStock Pro is een professioneel voorraadbeheersysteem voor medische klinieken, gebouwd met Vue 3,
+Remcura is een professioneel voorraadbeheersysteem voor medische klinieken, gebouwd met Vue 3,
 Quasar Framework, en Supabase. Het systeem is ontworpen als white-label SaaS oplossing.
 
 ## Vereisten
@@ -161,7 +161,7 @@ VALUES
 
 ```bash
 git clone <repository-url>
-cd medstock-pro
+cd remcura
 ```
 
 ### 2. Dependencies Installeren

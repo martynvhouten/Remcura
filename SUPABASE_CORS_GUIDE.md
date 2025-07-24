@@ -71,9 +71,9 @@ curl -H "Origin: https://your-domain.com" \
 *
 
 # GOOD - Specific domains
-https://medstock-pro.com
-https://www.medstock-pro.com
-https://app.medstock-pro.com
+https://remcura.com
+https://www.remcura.com
+https://app.remcura.com
 ```
 
 ## 🛡️ **Security Best Practices**
@@ -90,8 +90,8 @@ https://app.medstock-pro.com
 // In your application
 const allowedOrigins = {
   development: ['http://localhost:8080', 'http://localhost:3000'],
-  staging: ['https://staging.medstock-pro.com'],
-  production: ['https://medstock-pro.com', 'https://www.medstock-pro.com'],
+  staging: ['https://staging.remcura.com'],
+  production: ['https://remcura.com', 'https://www.remcura.com'],
 };
 ```
 

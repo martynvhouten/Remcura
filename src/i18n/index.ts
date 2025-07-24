@@ -15,7 +15,7 @@ const messages = {
 
 // Get saved locale from localStorage or default to 'nl'
 const getSavedLocale = (): SupportedLocale => {
-  const saved = localStorage.getItem('medstock_locale');
+  const saved = localStorage.getItem('remcura_locale');
   if (saved && ['en', 'nl', 'es'].includes(saved)) {
     return saved as SupportedLocale;
   }
@@ -44,7 +44,7 @@ export const setI18nLanguage = (locale: SupportedLocale) => {
     (i18n.global.locale as any).value = locale;
   }
   document.querySelector('html')?.setAttribute('lang', locale);
-  localStorage.setItem('medstock_locale', locale);
+  localStorage.setItem('remcura_locale', locale);
   return locale;
 };
 

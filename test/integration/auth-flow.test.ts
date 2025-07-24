@@ -54,7 +54,7 @@ describe('Authentication Flow Integration', () => {
         data: {
           user: {
             id: 'demo-user',
-            email: 'demo@medstock-pro.com',
+            email: 'demo@remcura.com',
             app_metadata: {},
             user_metadata: {},
             aud: 'authenticated',
@@ -67,7 +67,7 @@ describe('Authentication Flow Integration', () => {
             token_type: 'bearer',
             user: {
               id: 'demo-user',
-              email: 'demo@medstock-pro.com',
+              email: 'demo@remcura.com',
               app_metadata: {},
               user_metadata: {},
               aud: 'authenticated',
@@ -86,11 +86,11 @@ describe('Authentication Flow Integration', () => {
 
       // Simulate demo login using the correct login method
       const authStore = useAuthStore();
-      await authStore.login('demo@medstock-pro.com', 'demo123');
+      await authStore.login('demo@remcura.com', 'demo123');
 
       // Verify auth store state
       expect(authStore.isAuthenticated).toBe(true);
-      expect(authStore.userEmail).toBe('demo@medstock-pro.com');
+      expect(authStore.userEmail).toBe('demo@remcura.com');
     });
 
     it('should show error message for invalid credentials', async () => {

@@ -2,7 +2,7 @@
 
 ## Overview
 
-This document summarizes all the TypeScript errors that were fixed and the comprehensive linting improvements made to the MedStock Pro project.
+This document summarizes all the TypeScript errors that were fixed and the comprehensive linting improvements made to the Remcura project.
 
 ## Original TypeScript Errors Fixed
 

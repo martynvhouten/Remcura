@@ -267,50 +267,155 @@ export const useProductsStore = defineStore('products', () => {
   const fetchProductsFromSupabase = async (
     practiceId: string
   ): Promise<ProductWithStock[]> => {
-    const { data, error } = await supabase.rpc(
-      'get_products_with_stock' as any,
-      { p_practice_id: practiceId }
-    );
+    try {
+      // First try the RPC function
+      const { data: rpcData, error: rpcError } = await supabase.rpc(
+        'get_products_with_stock' as any,
+        { p_practice_id: practiceId }
+      );
 
-    if (error) throw error;
-    if (!data) return [];
+      if (!rpcError && rpcData) {
+        return rpcData.map(
+          (item: any) =>
+            ({
+              id: item.product_id,
+              sku: item.product_sku || '',
+              name: item.product_name || 'Onbekend product',
+              description: item.product_description,
+              category: item.product_category,
+              brand: item.product_brand,
+              unit: item.product_unit || 'stuk',
+              image_url: item.product_image_url,
+              price: parseFloat(item.product_price || '0'),
+              currency: item.product_currency || 'EUR',
+              active: item.product_is_active !== false,
+              requires_batch_tracking: item.requires_batch_tracking || false,
+              barcode: item.barcode,
+              total_stock: parseInt(item.total_stock || '0'),
+              available_stock: parseInt(item.available_stock || '0'),
+              reserved_stock: parseInt(item.reserved_stock || '0'),
+              minimum_stock: parseInt(item.minimum_stock || '0'),
+              stock_status: item.total_stock > 0 ? 'in_stock' : 'out_of_stock',
+              lowest_price: parseFloat(item.lowest_supplier_price || '0'),
+              cheapest_supplier: item.cheapest_supplier,
+              supplier_products: item.supplier_products || [],
+              stock_levels: item.stock_levels || [],
+              created_at: item.product_created_at,
+              updated_at: item.product_updated_at,
+            } as ProductWithStock)
+        );
+      }
+    } catch (error) {
+      console.warn('RPC function failed, using fallback query:', error);
+    }
 
-    return data.map(
-      (item: any) =>
-        ({
-          id: item.product_id,
-          sku: item.product_sku || '',
-          name: item.product_name || 'Onbekend product',
-          description: item.product_description,
-          category: item.product_category,
-          brand: item.product_brand,
-          unit: item.product_unit,
-          image_url: item.product_image_url,
-          barcode: item.product_barcode,
-          price: item.product_price,
-          currency: item.product_currency || 'EUR',
-          is_active: item.product_is_active !== false,
-          requires_batch_tracking: item.requires_batch_tracking || false,
-          total_stock: item.total_stock || 0,
-          available_stock: item.available_stock || 0,
-          reserved_stock: item.reserved_stock || 0,
-          stock_status: determineStockStatus(
-            item.total_stock,
-            item.minimum_stock
-          ),
-          lowest_price: item.lowest_supplier_price,
-          cheapest_supplier: item.cheapest_supplier
-            ? {
-                id: item.cheapest_supplier.id,
-                name: item.cheapest_supplier.name,
-              }
-            : undefined,
-          supplier_products: item.supplier_products || [],
-          stock_levels: item.stock_levels || [],
-          created_at: item.product_created_at,
-          updated_at: item.product_updated_at,
-        } as ProductWithStock)
-    );
+    // Fallback: Direct query approach
+    const { data: products, error: productsError } = await supabase
+      .from('products')
+      .select(`
+        *,
+        stock_levels!inner(
+          id,
+          current_quantity,
+          available_quantity,
+          reserved_quantity,
+          minimum_quantity,
+          location_id,
+          practice_locations!inner(name)
+        )
+      `)
+      .eq('stock_levels.practice_id', practiceId)
+      .eq('active', true)
+      .order('name');
+
+    if (productsError) {
+      console.error('Fallback query also failed:', productsError);
+      throw productsError;
+    }
+
+    if (!products) return [];
+
+    // Transform the data to match our expected format
+    const productMap = new Map<string, any>();
+    
+    products.forEach((product: any) => {
+      if (!productMap.has(product.id)) {
+        productMap.set(product.id, {
+          id: product.id,
+          sku: product.sku || '',
+          name: product.name || 'Onbekend product',
+          description: product.description,
+          category: product.category,
+          brand: product.brand,
+          unit: product.unit || 'stuk',
+          image_url: product.image_url,
+          price: parseFloat(product.price || '0'),
+          currency: 'EUR',
+          active: product.active !== false,
+          requires_batch_tracking: product.requires_batch_tracking || false,
+          barcode: product.barcode,
+          total_stock: 0,
+          available_stock: 0,
+          reserved_stock: 0,
+          minimum_stock: 0,
+          stock_status: 'out_of_stock' as const,
+          lowest_price: parseFloat(product.price || '0'),
+          cheapest_supplier: null,
+          supplier_products: [],
+          stock_levels: [],
+          created_at: product.created_at,
+          updated_at: product.updated_at,
+        });
+      }
+
+      const productData = productMap.get(product.id);
+      
+      // Aggregate stock from all locations
+      if (product.stock_levels && Array.isArray(product.stock_levels)) {
+        product.stock_levels.forEach((stock: any) => {
+          productData.total_stock += parseInt(stock.current_quantity || '0');
+          productData.available_stock += parseInt(stock.available_quantity || '0');
+          productData.reserved_stock += parseInt(stock.reserved_quantity || '0');
+          if (productData.minimum_stock === 0) {
+            productData.minimum_stock = parseInt(stock.minimum_quantity || '0');
+          }
+          productData.stock_levels.push({
+            id: stock.id,
+            location_id: stock.location_id,
+            current_quantity: parseInt(stock.current_quantity || '0'),
+            available_quantity: parseInt(stock.available_quantity || '0'),
+            reserved_quantity: parseInt(stock.reserved_quantity || '0'),
+            minimum_quantity: parseInt(stock.minimum_quantity || '0'),
+          });
+        });
+      } else if (product.stock_levels) {
+        // Single stock level object
+        const stock = product.stock_levels;
+        productData.total_stock += parseInt(stock.current_quantity || '0');
+        productData.available_stock += parseInt(stock.available_quantity || '0');
+        productData.reserved_stock += parseInt(stock.reserved_quantity || '0');
+        productData.minimum_stock = parseInt(stock.minimum_quantity || '0');
+        productData.stock_levels.push({
+          id: stock.id,
+          location_id: stock.location_id,
+          current_quantity: parseInt(stock.current_quantity || '0'),
+          available_quantity: parseInt(stock.available_quantity || '0'),
+          reserved_quantity: parseInt(stock.reserved_quantity || '0'),
+          minimum_quantity: parseInt(stock.minimum_quantity || '0'),
+        });
+      }
+
+      // Update stock status
+      if (productData.total_stock > 0) {
+        if (productData.total_stock <= productData.minimum_stock) {
+          productData.stock_status = 'low_stock';
+        } else {
+          productData.stock_status = 'in_stock';
+        }
+      }
+    });
+
+    return Array.from(productMap.values()) as ProductWithStock[];
   };
 
   const fetchProductsFromMagento = async (): Promise<ProductWithStock[]> => {

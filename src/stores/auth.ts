@@ -33,7 +33,7 @@ export const useAuthStore = defineStore('auth', () => {
 
   // Helper function to check and clear old demo data
   const checkAndClearOldDemoData = () => {
-    const savedProfile = localStorage.getItem('medstock_auth_profile');
+    const savedProfile = localStorage.getItem('remcura_auth_profile');
     if (savedProfile) {
       try {
         const profile = JSON.parse(savedProfile);
@@ -65,9 +65,9 @@ export const useAuthStore = defineStore('auth', () => {
       const wasOldDataCleared = checkAndClearOldDemoData();
 
       // First check localStorage for persisted session
-      const savedSession = localStorage.getItem('medstock_auth_session');
-      const savedUser = localStorage.getItem('medstock_auth_user');
-      const savedProfile = localStorage.getItem('medstock_auth_profile');
+          const savedSession = localStorage.getItem('remcura_auth_session');
+    const savedUser = localStorage.getItem('remcura_auth_user');
+    const savedProfile = localStorage.getItem('remcura_auth_profile');
 
       if (savedSession && savedUser && !wasOldDataCleared) {
         try {
@@ -145,7 +145,7 @@ export const useAuthStore = defineStore('auth', () => {
       authLogger.info('Starting login process', { email });
 
       // Demo mode - use real Supabase auth for demo account but log it specially
-      if (email === 'demo@medstock-pro.com' && password === 'demo123') {
+      if (email === 'demo@remcura.com' && password === 'demo123') {
         authLogger.info('Demo login detected - using real Supabase auth for RLS compatibility');
       }
 
@@ -228,8 +228,8 @@ export const useAuthStore = defineStore('auth', () => {
     });
 
     // Persist to localStorage for page reload persistence
-    localStorage.setItem('medstock_auth_session', JSON.stringify(newSession));
-    localStorage.setItem('medstock_auth_user', JSON.stringify(newSession.user));
+          localStorage.setItem('remcura_auth_session', JSON.stringify(newSession));
+      localStorage.setItem('remcura_auth_user', JSON.stringify(newSession.user));
 
     // Fetch user profile
     if (newSession.user) {
@@ -243,9 +243,9 @@ export const useAuthStore = defineStore('auth', () => {
     userProfile.value = null;
 
     // Clear localStorage
-    localStorage.removeItem('medstock_auth_session');
-    localStorage.removeItem('medstock_auth_user');
-    localStorage.removeItem('medstock_auth_profile');
+    localStorage.removeItem('remcura_auth_session');
+    localStorage.removeItem('remcura_auth_user');
+    localStorage.removeItem('remcura_auth_profile');
   };
 
   const setDemoAuthData = async () => {
@@ -256,7 +256,7 @@ export const useAuthStore = defineStore('auth', () => {
     // Create mock session for demo
     const mockUser = {
       id: demoUserId,
-      email: 'demo@medstock-pro.com',
+      email: 'demo@remcura.com',
       created_at: new Date().toISOString(),
       updated_at: new Date().toISOString(),
       app_metadata: {},
@@ -295,7 +295,7 @@ export const useAuthStore = defineStore('auth', () => {
     userProfile.value = {
       id: demoUserId,
       clinic_id: demoPracticeId,
-      email: 'demo@medstock-pro.com',
+      email: 'demo@remcura.com',
       full_name: 'Demo User',
       role: 'admin',
       avatar_url: null,
@@ -304,10 +304,10 @@ export const useAuthStore = defineStore('auth', () => {
     };
 
     // Persist demo data to localStorage
-    localStorage.setItem('medstock_auth_session', JSON.stringify(mockSession));
-    localStorage.setItem('medstock_auth_user', JSON.stringify(mockUser));
-    localStorage.setItem(
-      'medstock_auth_profile',
+          localStorage.setItem('remcura_auth_session', JSON.stringify(mockSession));
+            localStorage.setItem('remcura_auth_user', JSON.stringify(mockUser));
+      localStorage.setItem(
+        'remcura_auth_profile',
       JSON.stringify(userProfile.value)
     );
   };
@@ -319,7 +319,7 @@ export const useAuthStore = defineStore('auth', () => {
         userProfile.value = {
           id: userId,
           clinic_id: '550e8400-e29b-41d4-a716-446655440000',
-          email: 'demo@medstock-pro.com',
+          email: 'demo@remcura.com',
           full_name: 'Demo User',
           role: 'owner',
           avatar_url: null,
@@ -327,7 +327,7 @@ export const useAuthStore = defineStore('auth', () => {
           updated_at: new Date().toISOString(),
         };
         localStorage.setItem(
-          'medstock_auth_profile',
+          'remcura_auth_profile',
           JSON.stringify(userProfile.value)
         );
         return;
@@ -362,7 +362,7 @@ export const useAuthStore = defineStore('auth', () => {
           updated_at: new Date().toISOString(),
         };
         localStorage.setItem(
-          'medstock_auth_profile',
+          'remcura_auth_profile',
           JSON.stringify(userProfile.value)
         );
         return;
@@ -382,7 +382,7 @@ export const useAuthStore = defineStore('auth', () => {
 
       // Persist user profile to localStorage
       localStorage.setItem(
-        'medstock_auth_profile',
+        'remcura_auth_profile',
         JSON.stringify(userProfile.value)
       );
     } catch (error) {

@@ -1,4 +1,4 @@
-# 🏗️ **MedStock Pro Inventory System Rebuild - Implementation Roadmap**
+# 🏗️ **Remcura Inventory System Rebuild - Implementation Roadmap**
 
 ## **✅ COMPLETED FOUNDATIONS (Phase 1)**
 
