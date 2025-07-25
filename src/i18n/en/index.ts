@@ -1,4 +1,9 @@
+import filters from '../en-US/filters';
+
 export default {
+  // Filters
+  filters,
+
   // Brand
   brand: {
     name: 'Remcura',
@@ -436,7 +441,6 @@ export default {
     sessionCreated: 'Counting session created',
     sessionCreationFailed: 'Failed to create counting session',
     selectLocation: 'Select location',
-    searchProduct: 'Search product',
     searchProductPlaceholder: 'Type to search...',
     quantityMustNotBeZero: 'Quantity must not be zero',
     quantityChangeHint: 'Use + to add, - to remove',
@@ -468,7 +472,6 @@ export default {
     lastMovement: 'Last movement',
     noMovements: 'No movements',
     viewHistory: 'View history',
-    noProductsFound: 'No products found',
     overStockItems: 'Overstocked items',
     batchTrackingWarning: 'This product requires batch tracking',
     cannotAdjustBatchTrackedProduct: 'Cannot manually adjust batch-tracked product',
@@ -762,15 +765,32 @@ export default {
       currentStock: 'Current Stock',
       lastUpdated: 'Last Updated',
       batchStatus: 'Batch Status',
+      gs1Status: 'GS1 Status',
     },
 
-    searchPlaceholder: 'Search by name or SKU...',
+    searchPlaceholder: 'Search by name, SKU or GTIN...',
     viewCart: 'View Cart',
     filterByCategory: 'Filter by category',
     filterBySupplier: 'Filter by supplier',
     filterByStockStatus: 'Filter by stock status',
     sortBy: 'Sort by',
     clearFilters: 'Clear filters',
+    
+    // GTIN Search
+    gtinDetected: 'GTIN detected',
+    gtinSearchTooltip: 'Searching by GTIN barcode',
+    gtinFound: 'GTIN found: {product}',
+    gtinSearching: 'Searching for GTIN: {gtin}',
+    gtinNotFound: 'GTIN not found: {gtin}',
+    viewProduct: 'View product',
+
+    // GS1 Badges
+    badges: {
+      gtin: 'GTIN',
+      orderable: 'Orderable',
+      despatchable: 'Despatchable',
+      noGS1: 'No GS1',
+    },
 
     filters: {
       title: 'Filters',
@@ -788,6 +808,14 @@ export default {
       allSuppliers: 'All suppliers',
       remka: 'Remka',
       external: 'External suppliers',
+      // GS1 Filters
+      gs1Filters: 'GS1 Filters',
+      gtinPlaceholder: 'Search by GTIN...',
+      selectCountry: 'Select country of origin',
+      selectGpc: 'Select GPC category',
+      selectLifecycle: 'Select lifecycle status',
+      orderableOnly: 'Orderable products only',
+      scanGtin: 'Scan GTIN barcode',
     },
 
     stats: {
@@ -812,6 +840,13 @@ export default {
       expired: 'Expired',
     },
 
+    lifecycleStatus: {
+      active: 'Active',
+      discontinued: 'Discontinued',
+      new: 'New',
+      phase_out: 'Phase Out',
+    },
+
     productDetails: 'Product Details',
     description: 'Description',
     category: 'Category',
@@ -831,9 +866,9 @@ export default {
     cartAddError: 'Error adding product to cart',
     dataRefreshed: 'Data refreshed successfully',
     productLoadError: 'Error loading products',
-    noProductsFound: 'No products found',
     noProductsForFilter: 'No products found for current filters',
     loadingProducts: 'Loading products...',
+    unknownGpc: 'Unknown GPC category',
 
     details: {
       title: 'Product Details',
@@ -859,6 +894,24 @@ export default {
       noImage: 'No image available',
       noDescription: 'No description available',
       priceNotAvailable: 'Price not available',
+      
+      // GS1 Fields
+      gs1Info: 'GS1 Information',
+      gtin: 'GTIN',
+      gpcBrickCode: 'GPC Brick Code',
+      countryOfOrigin: 'Country of Origin',
+      lifecycleStatus: 'Lifecycle Status',
+      netContent: 'Net Content',
+      weight: 'Weight',
+      netWeight: 'Net Weight',
+      grossWeight: 'Gross Weight',
+      validityPeriod: 'Validity Period',
+      from: 'From',
+      to: 'To',
+      unitIndicators: 'Unit Indicators',
+      baseUnit: 'Base Unit',
+      orderable: 'Orderable',
+      despatchable: 'Despatchable',
     },
   },
 
@@ -2005,34 +2058,26 @@ export default {
   'inventory.barcodeFound.barcodeNotFound.orders.notifications.magicInvite.shareMessage.whatsappMessage.inventory.reason.transfer_out': 'inventory',
   'inventory.barcodeFound.barcodeNotFound.orders.notifications.magicInvite.shareMessage.whatsappMessage.common.retry': 'inventory',
 
-
-  // === CRITICAL MISSING TRANSLATIONS ===
-  'assistantDashboard': 'Assistant Dashboard',
-  'managerDashboard': 'Manager Dashboard',
-  'ownerDashboard': 'Owner Dashboard',
-  'orderSuggestions': 'Order Suggestions',
-  'recentOrders': 'Recent Orders',
-  'quickScan': 'Quick Scan',
-  'analyticsOverview': 'Analytics Overview',
-  'businessOverview': 'Business Overview',
-  'teamActivity': 'Team Activity',
-  'financialSummary': 'Financial Summary',
-  'userManagement': 'User Management',
-  'systemHealth': 'System Health',
-  'scanProduct': 'Scan Product',
-  'costAnalysis': 'Cost Analysis',
-  'supplierPerformance': 'Supplier Performance',
-  'createOrder': 'Create Order',
-  'noAlerts': 'No Alerts',
-  'inventory.tryDifferentSearchTerm': 'Try a different search term',
-  'inventory.realTimeConnected': 'Real-time connected',
-  'inventory.realTimeDisconnected': 'Real-time disconnected',
-  'inventory.stockUpdatedMessage': 'Stock updated successfully',
-  'inventory.adjustStockLevels': 'Adjust stock levels',
-  'inventory.quickAmounts': 'Quick amounts',
-  'inventory.reasonRequired': 'Reason is required',
-  'inventory.quantityMustBePositive': 'Quantity must be positive',
-  'inventory.completeRequiredFields': 'Complete all required fields',
-  'inventory.selectProductFirst': 'Select a product first',
+  barcodeScanner: {
+    title: 'Barcode Scanner',
+    subtitle: 'Scan product barcodes or GTINs',
+    cameraPermission: 'Camera Permission Required',
+    permissionDescription: 'Allow camera access to scan barcodes and GTINs',
+    enableCamera: 'Enable Camera',
+    error: 'Scanner Error',
+    scanning: 'Scanning...',
+    instructions: 'Position the barcode within the frame',
+    manualInput: 'Manual Input',
+    enterBarcode: 'Enter barcode or GTIN manually',
+    manualInputHelp: 'Enter 8, 12, 13, or 14 digit GTIN codes',
+    switchCamera: 'Switch Camera',
+    flashOn: 'Flash On',
+    flashOff: 'Flash Off',
+    validGtin: 'Valid GTIN scanned: {gtin}',
+    invalidFormat: 'Invalid barcode format: {code}',
+    permissionDenied: 'Camera permission denied. Please enable camera access in your browser settings.',
+    noCameraFound: 'No camera found. Please ensure a camera is connected.',
+    cameraError: 'Camera error occurred. Please try again.',
+  },
 
 };

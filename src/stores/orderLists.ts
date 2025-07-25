@@ -1,5 +1,6 @@
 import { defineStore } from 'pinia';
 import { ref, computed } from 'vue';
+import { supabase } from 'src/boot/supabase';
 import { useAuthStore } from './auth';
 import { useProductsStore } from './products';
 import { useSuppliersStore } from './suppliers';
@@ -9,6 +10,7 @@ import type {
   Supplier,
   OrderListStatus,
 } from 'src/types/inventory';
+import { ServiceErrorHandler } from 'src/utils/service-error-handler';
 
 export interface OrderListWithItems extends OrderList {
   items: OrderListItem[];
@@ -74,12 +76,12 @@ export const useOrderListsStore = defineStore('orderLists', () => {
     return {
       total: orderLists.value.length,
       draft: orderLists.value.filter(list => list.status === 'draft').length,
-      ready: orderLists.value.filter(list => list.status === 'ready').length,
+      ready: orderLists.value.filter(list => list.status === 'active').length,
       submitted: orderLists.value.filter(list => list.status === 'submitted')
         .length,
-      confirmed: orderLists.value.filter(list => list.status === 'confirmed')
+      confirmed: orderLists.value.filter(list => list.status === 'completed')
         .length,
-      delivered: orderLists.value.filter(list => list.status === 'delivered')
+      delivered: orderLists.value.filter(list => list.status === 'cancelled')
         .length,
     };
   });
@@ -88,12 +90,33 @@ export const useOrderListsStore = defineStore('orderLists', () => {
   const fetchOrderLists = async (practiceId: string) => {
     loading.value = true;
     try {
-      // For now, use mock data since we don't have the database schema yet
-      // This will be replaced with actual Supabase calls when the schema is ready
-      orderLists.value = [];
-    } catch (error) {
-      console.error('Error fetching order lists:', error);
-      throw error;
+      const { data, error } = await supabase
+        .from('order_lists')
+        .select(`
+          *,
+          supplier:suppliers(*),
+          items:order_list_items(
+            *,
+            product:products(*),
+            supplier_product:supplier_products(*)
+          )
+        `)
+        .eq('practice_id', practiceId)
+        .order('created_at', { ascending: false });
+
+      if (error) throw error;
+
+      orderLists.value = (data || []).map(orderList => ({
+        ...orderList,
+        items: orderList.items || []
+      }));
+    } catch (err) {
+      const handledError = ServiceErrorHandler.handle(err, {
+        service: 'OrderListsStore',
+        operation: 'fetchOrderLists'
+      });
+      console.error('Error fetching order lists:', handledError);
+      throw handledError;
     } finally {
       loading.value = false;
     }
@@ -104,34 +127,43 @@ export const useOrderListsStore = defineStore('orderLists', () => {
   ): Promise<OrderListWithItems> => {
     saving.value = true;
     try {
-      // Mock implementation - replace with actual Supabase call
-      const newOrderList: OrderListWithItems = {
-        id: `ol_${Date.now()}`,
+      const orderListData = {
         practice_id: request.practice_id,
         supplier_id: request.supplier_id,
         name: request.name,
         description: request.description,
         status: 'draft' as OrderListStatus,
         total_items: 0,
-        total_amount: 0,
-        currency: 'EUR',
-        created_at: new Date().toISOString(),
-        updated_at: new Date().toISOString(),
-        created_by: authStore.user?.id || '',
-        auto_suggest_quantities: request.auto_suggest_quantities || false,
-        urgent_order: request.urgent_order || false,
-        notes: request.notes,
+        total_value: 0,
+        created_by: authStore.user?.id
+      };
+
+      const { data, error } = await supabase
+        .from('order_lists')
+        .insert(orderListData)
+        .select(`
+          *,
+          supplier:suppliers(*)
+        `)
+        .single();
+
+      if (error) throw error;
+
+      const newOrderList: OrderListWithItems = {
+        ...data,
         items: [],
-        supplier: suppliersStore.suppliers.find(
-          s => s.id === request.supplier_id
-        ) || undefined,
+        supplier: data.supplier
       };
 
       orderLists.value.unshift(newOrderList);
       return newOrderList;
-    } catch (error) {
-      console.error('Error creating order list:', error);
-      throw error;
+    } catch (err) {
+      const handledError = ServiceErrorHandler.handle(err, {
+        service: 'OrderListsStore',
+        operation: 'createOrderList'
+      });
+      console.error('Error creating order list:', handledError);
+      throw handledError;
     } finally {
       saving.value = false;
     }
@@ -142,7 +174,19 @@ export const useOrderListsStore = defineStore('orderLists', () => {
   ): Promise<void> => {
     saving.value = true;
     try {
-      // Mock implementation - replace with actual Supabase call
+      const { error } = await supabase
+        .from('order_lists')
+        .update({
+          ...(request.name && { name: request.name }),
+          ...(request.description && { description: request.description }),
+          ...(request.supplier_id && { supplier_id: request.supplier_id }),
+          updated_at: new Date().toISOString()
+        })
+        .eq('id', request.id);
+
+      if (error) throw error;
+
+      // Update local state
       const index = orderLists.value.findIndex(list => list.id === request.id);
       if (index !== -1) {
         const orderList = orderLists.value[index];
@@ -157,16 +201,15 @@ export const useOrderListsStore = defineStore('orderLists', () => {
             s => s.id === request.supplier_id
           ) || undefined;
         }
-        if (request.auto_suggest_quantities !== undefined)
-          orderList.auto_suggest_quantities = request.auto_suggest_quantities;
-        if (request.urgent_order !== undefined)
-          orderList.urgent_order = request.urgent_order;
-        if (request.notes !== undefined) orderList.notes = request.notes;
         orderList.updated_at = new Date().toISOString();
       }
-    } catch (error) {
-      console.error('Error updating order list:', error);
-      throw error;
+    } catch (err) {
+      const handledError = ServiceErrorHandler.handle(err, {
+        service: 'OrderListsStore',
+        operation: 'updateOrderList'
+      });
+      console.error('Error updating order list:', handledError);
+      throw handledError;
     } finally {
       saving.value = false;
     }
@@ -175,14 +218,25 @@ export const useOrderListsStore = defineStore('orderLists', () => {
   const deleteOrderList = async (id: string): Promise<void> => {
     saving.value = true;
     try {
-      // Mock implementation - replace with actual Supabase call
+      const { error } = await supabase
+        .from('order_lists')
+        .delete()
+        .eq('id', id);
+
+      if (error) throw error;
+
+      // Update local state
       const index = orderLists.value.findIndex(list => list.id === id);
       if (index !== -1) {
         orderLists.value.splice(index, 1);
       }
-    } catch (error) {
-      console.error('Error deleting order list:', error);
-      throw error;
+    } catch (err) {
+      const handledError = ServiceErrorHandler.handle(err, {
+        service: 'OrderListsStore',
+        operation: 'deleteOrderList'
+      });
+      console.error('Error deleting order list:', handledError);
+      throw handledError;
     } finally {
       saving.value = false;
     }
@@ -197,21 +251,61 @@ export const useOrderListsStore = defineStore('orderLists', () => {
       const original = orderLists.value.find(list => list.id === originalId);
       if (!original) throw new Error('Original order list not found');
 
-      const newOrderList: OrderListWithItems = {
-        ...original,
-        id: `ol_${Date.now()}`,
-        name: newName,
-        status: 'draft' as OrderListStatus,
-        created_at: new Date().toISOString(),
-        updated_at: new Date().toISOString(),
-        items: [...original.items], // Copy items
+      // Create new order list
+      const { data: newOrderList, error: orderListError } = await supabase
+        .from('order_lists')
+        .insert({
+          practice_id: original.practice_id,
+          supplier_id: original.supplier_id,
+          name: newName,
+          description: original.description,
+          status: 'draft' as OrderListStatus,
+          total_items: 0,
+          total_value: 0,
+          created_by: authStore.user?.id
+        })
+        .select(`
+          *,
+          supplier:suppliers(*)
+        `)
+        .single();
+
+      if (orderListError) throw orderListError;
+
+      // Duplicate items if any exist
+      if (original.items.length > 0) {
+        const itemsToCreate = original.items.map(item => ({
+          order_list_id: newOrderList.id,
+          product_id: item.product_id,
+          supplier_product_id: item.supplier_product_id,
+          suggested_quantity: item.requested_quantity,
+          ordered_quantity: item.requested_quantity,
+          unit_price: item.unit_price,
+          notes: item.notes
+        }));
+
+        const { error: itemsError } = await supabase
+          .from('order_list_items')
+          .insert(itemsToCreate);
+
+        if (itemsError) throw itemsError;
+      }
+
+      const newOrderListWithItems: OrderListWithItems = {
+        ...newOrderList,
+        items: original.items.map(item => ({ ...item, order_list_id: newOrderList.id })),
+        supplier: newOrderList.supplier
       };
 
-      orderLists.value.unshift(newOrderList);
-      return newOrderList;
-    } catch (error) {
-      console.error('Error duplicating order list:', error);
-      throw error;
+      orderLists.value.unshift(newOrderListWithItems);
+      return newOrderListWithItems;
+    } catch (err) {
+      const handledError = ServiceErrorHandler.handle(err, {
+        service: 'OrderListsStore',
+        operation: 'duplicateOrderList'
+      });
+      console.error('Error duplicating order list:', handledError);
+      throw handledError;
     } finally {
       saving.value = false;
     }
@@ -221,7 +315,6 @@ export const useOrderListsStore = defineStore('orderLists', () => {
     request: AddOrderListItemRequest
   ): Promise<void> => {
     try {
-      // Mock implementation - replace with actual Supabase call
       const product = productsStore.getProductById(request.product_id);
       if (!product) throw new Error('Product not found');
 
@@ -230,40 +323,56 @@ export const useOrderListsStore = defineStore('orderLists', () => {
       );
       if (!supplierProduct) throw new Error('Supplier product not found');
 
-      const newItem: OrderListItem = {
-        id: `oli_${Date.now()}`,
+      const itemData = {
         order_list_id: request.order_list_id,
-        practice_id: authStore.clinicId || '',
         product_id: request.product_id,
         supplier_product_id: request.supplier_product_id,
-        location_id: request.location_id || '',
-        requested_quantity: request.requested_quantity,
+        suggested_quantity: request.requested_quantity,
+        ordered_quantity: request.requested_quantity,
         unit_price: supplierProduct.unit_price,
-        total_price: supplierProduct.unit_price * request.requested_quantity,
-        currency: supplierProduct.currency,
-        suggestion_source: 'manual',
-        status: 'pending',
-        notes: request.notes,
-        created_at: new Date().toISOString(),
-        updated_at: new Date().toISOString(),
+        notes: request.notes
       };
 
+      const { data, error } = await supabase
+        .from('order_list_items')
+        .insert(itemData)
+        .select(`
+          *,
+          product:products(*),
+          supplier_product:supplier_products(*)
+        `)
+        .single();
+
+      if (error) throw error;
+
+      // Update local state
       const orderListIndex = orderLists.value.findIndex(
         list => list.id === request.order_list_id
       );
       if (orderListIndex !== -1) {
-        orderLists.value[orderListIndex].items.push(newItem);
+        orderLists.value[orderListIndex].items.push(data);
         updateOrderListTotals(request.order_list_id);
       }
-    } catch (error) {
-      console.error('Error adding order list item:', error);
-      throw error;
+    } catch (err) {
+      const handledError = ServiceErrorHandler.handle(err, {
+        service: 'OrderListsStore',
+        operation: 'addOrderListItem'
+      });
+      console.error('Error adding order list item:', handledError);
+      throw handledError;
     }
   };
 
   const removeOrderListItem = async (itemId: string): Promise<void> => {
     try {
-      // Mock implementation - replace with actual Supabase call
+      const { error } = await supabase
+        .from('order_list_items')
+        .delete()
+        .eq('id', itemId);
+
+      if (error) throw error;
+
+      // Update local state
       for (const orderList of orderLists.value) {
         const itemIndex = orderList.items.findIndex(item => item.id === itemId);
         if (itemIndex !== -1) {
@@ -272,9 +381,13 @@ export const useOrderListsStore = defineStore('orderLists', () => {
           break;
         }
       }
-    } catch (error) {
-      console.error('Error removing order list item:', error);
-      throw error;
+    } catch (err) {
+      const handledError = ServiceErrorHandler.handle(err, {
+        service: 'OrderListsStore',
+        operation: 'removeOrderListItem'
+      });
+      console.error('Error removing order list item:', handledError);
+      throw handledError;
     }
   };
 
@@ -283,7 +396,22 @@ export const useOrderListsStore = defineStore('orderLists', () => {
     updates: { requested_quantity?: number; notes?: string }
   ): Promise<void> => {
     try {
-      // Mock implementation - replace with actual Supabase call
+      const updateData: any = {};
+      if (updates.requested_quantity !== undefined) {
+        updateData.ordered_quantity = updates.requested_quantity;
+      }
+      if (updates.notes !== undefined) {
+        updateData.notes = updates.notes;
+      }
+
+      const { error } = await supabase
+        .from('order_list_items')
+        .update(updateData)
+        .eq('id', itemId);
+
+      if (error) throw error;
+
+      // Update local state
       for (const orderList of orderLists.value) {
         const item = orderList.items.find(item => item.id === itemId);
         if (item) {
@@ -296,25 +424,48 @@ export const useOrderListsStore = defineStore('orderLists', () => {
           break;
         }
       }
-    } catch (error) {
-      console.error('Error updating order list item:', error);
-      throw error;
+    } catch (err) {
+      const handledError = ServiceErrorHandler.handle(err, {
+        service: 'OrderListsStore',
+        operation: 'updateOrderListItem'
+      });
+      console.error('Error updating order list item:', handledError);
+      throw handledError;
     }
   };
 
-  const updateOrderListTotals = (orderListId: string): void => {
+  const updateOrderListTotals = async (orderListId: string): Promise<void> => {
     const orderList = orderLists.value.find(list => list.id === orderListId);
     if (!orderList) return;
 
-    orderList.total_items = orderList.items.reduce(
+    const totalItems = orderList.items.reduce(
       (sum, item) => sum + item.requested_quantity,
       0
     );
-    orderList.total_amount = orderList.items.reduce(
+    const totalValue = orderList.items.reduce(
       (sum, item) => sum + item.total_price,
       0
     );
-    orderList.updated_at = new Date().toISOString();
+
+    try {
+      const { error } = await supabase
+        .from('order_lists')
+        .update({
+          total_items: totalItems,
+          total_value: totalValue,
+          updated_at: new Date().toISOString()
+        })
+        .eq('id', orderListId);
+
+      if (error) throw error;
+
+      // Update local state
+      orderList.total_items = totalItems;
+      orderList.total_amount = totalValue;
+      orderList.updated_at = new Date().toISOString();
+    } catch (err) {
+      console.error('Error updating order list totals:', err);
+    }
   };
 
   const addToCart = async (orderListId: string): Promise<void> => {
@@ -339,9 +490,13 @@ export const useOrderListsStore = defineStore('orderLists', () => {
           );
         }
       }
-    } catch (error) {
-      console.error('Error adding order list to cart:', error);
-      throw error;
+    } catch (err) {
+      const handledError = ServiceErrorHandler.handle(err, {
+        service: 'OrderListsStore',
+        operation: 'addToCart'
+      });
+      console.error('Error adding order list to cart:', handledError);
+      throw handledError;
     }
   };
 
@@ -350,11 +505,16 @@ export const useOrderListsStore = defineStore('orderLists', () => {
   ): Promise<void> => {
     saving.value = true;
     try {
-      // Mock implementation - replace with actual logic based on stock levels
       // This would implement logic to automatically suggest products based on stock levels
-    } catch (error) {
-      console.error('Error auto-filling order list:', error);
-      throw error;
+      // For now, this is a placeholder for future implementation
+      console.log('Auto-fill from stock levels not yet implemented');
+    } catch (err) {
+      const handledError = ServiceErrorHandler.handle(err, {
+        service: 'OrderListsStore',
+        operation: 'autoFillFromStockLevels'
+      });
+      console.error('Error auto-filling order list:', handledError);
+      throw handledError;
     } finally {
       saving.value = false;
     }
@@ -365,19 +525,42 @@ export const useOrderListsStore = defineStore('orderLists', () => {
     status: OrderListStatus
   ): Promise<void> => {
     try {
-      // Mock implementation - replace with actual Supabase call
+      saving.value = true;
+      
+      // Prepare update data
+      const updateData: any = {
+        status,
+        updated_at: new Date().toISOString(),
+      };
+
+      // Add submission specific fields
+      if (status === 'submitted') {
+        updateData.submitted_at = new Date().toISOString();
+        updateData.submitted_by = authStore.user?.id || '';
+      }
+
+      const { error } = await supabase
+        .from('order_lists')
+        .update(updateData)
+        .eq('id', orderListId);
+
+      if (error) throw error;
+
+      // Update local state
       const orderList = orderLists.value.find(list => list.id === orderListId);
       if (orderList) {
-        orderList.status = status;
-        orderList.updated_at = new Date().toISOString();
-        if (status === 'submitted') {
-          orderList.submitted_at = new Date().toISOString();
-          orderList.submitted_by = authStore.user?.id || '';
-        }
+        Object.assign(orderList, updateData);
       }
-    } catch (error) {
-      console.error('Error changing order list status:', error);
-      throw error;
+
+    } catch (err) {
+      const handledError = ServiceErrorHandler.handle(err, {
+        service: 'OrderListsStore',
+        operation: 'changeOrderListStatus'
+      });
+      console.error('Error changing order list status:', handledError);
+      throw handledError;
+    } finally {
+      saving.value = false;
     }
   };
 

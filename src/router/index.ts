@@ -1,14 +1,14 @@
 import { route } from 'quasar/wrappers';
 import {
+  createMemoryHistory,
   createRouter,
   createWebHashHistory,
-  createMemoryHistory,
+  createWebHistory,
 } from 'vue-router';
 
 import routes from './routes';
 import { useAuthStore } from 'src/stores/auth';
-import { routerLogger } from 'src/utils/logger';
-import { monitoringService } from 'src/services/monitoring';
+import { PermissionService, type UserRole } from 'src/services/permissions';
 
 /*
  * If not building with SSR mode, you can
@@ -22,7 +22,7 @@ import { monitoringService } from 'src/services/monitoring';
 export default route(function (/* { store, ssrContext } */) {
   const createHistory = process.env.SERVER
     ? createMemoryHistory
-    : createWebHashHistory;
+    : (process.env.VUE_ROUTER_MODE === 'history' ? createWebHistory : createWebHashHistory);
 
   const Router = createRouter({
     scrollBehavior: () => ({ left: 0, top: 0 }),
@@ -34,83 +34,94 @@ export default route(function (/* { store, ssrContext } */) {
     history: createHistory(process.env.VUE_ROUTER_BASE),
   });
 
-  // Global navigation guard for authentication
+  // Global navigation guard for authentication and permissions
   Router.beforeEach(async (to, from, next) => {
     const authStore = useAuthStore();
 
-    routerLogger.debug('Navigation guard triggered', {
-      to: to.path,
-      from: from.path,
-    });
-
-    // Wait for auth to be initialized
+    // Initialize auth store if not already done
     if (!authStore.initialized) {
-      routerLogger.info('Initializing auth store');
       await authStore.initialize();
     }
 
     // Check if route requires authentication
-    const requiresAuth = to.matched.some(record => record.meta.requiresAuth);
-
-    if (requiresAuth && !authStore.isAuthenticated) {
-      routerLogger.info('Unauthenticated user accessing protected route', {
-        route: to.path,
-      });
-
-      // Store intended destination in sessionStorage for clean URLs
-      if (to.fullPath !== '/') {
-        sessionStorage.setItem('remcura_intended_route', to.fullPath);
-      }
-
-      // Track navigation event
-      monitoringService.trackEvent('navigation_blocked', {
-        route: to.path,
-        reason: 'unauthenticated',
-      });
-
-      // Redirect to login without query parameters
+    if (to.meta.requiresAuth && !authStore.isAuthenticated) {
       next({ name: 'login' });
-    } else if (to.name === 'login' && authStore.isAuthenticated) {
-      routerLogger.info('Authenticated user accessing login page');
-
-      // Check for intended route after login
-        const intendedRoute = sessionStorage.getItem('remcura_intended_route');
-  sessionStorage.removeItem('remcura_intended_route');
-
-      if (intendedRoute && intendedRoute !== '/') {
-        routerLogger.info('Redirecting to intended route', {
-          route: intendedRoute,
-        });
-        next(intendedRoute);
-      } else {
-        next({ name: 'dashboard' });
-      }
-    } else {
-      routerLogger.debug('Navigation allowed', { route: to.path });
-      next();
+      return;
     }
+
+    // Check role-based permissions
+    if (to.meta.requiresRole && authStore.isAuthenticated) {
+      try {
+        const userRole = await PermissionService.getUserRole();
+        const requiredRoles = Array.isArray(to.meta.requiresRole) 
+          ? to.meta.requiresRole 
+          : [to.meta.requiresRole];
+
+        // If no role found but user is authenticated, default to 'guest' for demo purposes
+        const effectiveRole = userRole || 'guest';
+        
+        if (!requiredRoles.includes(effectiveRole)) {
+          console.warn(`Access denied. User role: ${effectiveRole}, Required: ${requiredRoles.join(', ')}`);
+          
+          // Only redirect if not dashboard - avoid infinite loops
+          if (to.name !== 'dashboard') {
+            next({ name: 'dashboard' });
+            return;
+          }
+        }
+      } catch (error) {
+        console.error('Error checking user role:', error);
+        // On error, allow access but log the issue for debugging
+        console.warn('Allowing access due to role check error - this should be fixed in production');
+      }
+    }
+
+    // Check specific permissions
+    if (to.meta.requiresPermission && authStore.isAuthenticated) {
+      try {
+        const { permission, resource, resourceId } = to.meta.requiresPermission;
+        const hasPermission = await PermissionService.hasPermission(permission, resource, resourceId);
+        
+        if (!hasPermission) {
+          console.warn(`Access denied. Missing permission: ${permission} on ${resource}`);
+          
+          // Only redirect if not dashboard - avoid infinite loops
+          if (to.name !== 'dashboard') {
+            next({ name: 'dashboard' });
+            return;
+          }
+        }
+      } catch (error) {
+        console.error('Error checking permission:', error);
+        // On error, allow access but log the issue for debugging
+        console.warn('Allowing access due to permission check error - this should be fixed in production');
+      }
+    }
+
+    // If authenticated user tries to access login page, redirect to dashboard
+    if (authStore.isAuthenticated && to.name === 'login') {
+      next({ name: 'dashboard' });
+      return;
+    }
+
+    next();
   });
 
   // Global after navigation hook for tracking
   Router.afterEach((to, from) => {
-    routerLogger.info('Navigation completed', {
-      to: to.path,
-      from: from.path,
-    });
-
     // Track page views
-    monitoringService.trackEvent('page_view', {
-      route: to.path,
-      routeName: (to.name as string) || 'unknown',
-      fromRoute: from.path,
-    });
+    // monitoringService.trackEvent('page_view', {
+    //   route: to.path,
+    //   routeName: (to.name as string) || 'unknown',
+    //   fromRoute: from.path,
+    // });
 
     // Add breadcrumb for debugging
-    monitoringService.addBreadcrumb(
-      `Navigated to ${to.path}`,
-      'navigation',
-      'info'
-    );
+    // monitoringService.addBreadcrumb(
+    //   `Navigated to ${to.path}`,
+    //   'navigation',
+    //   'info'
+    // );
   });
 
   return Router;

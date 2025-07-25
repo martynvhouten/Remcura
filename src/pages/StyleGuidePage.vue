@@ -423,26 +423,199 @@
       </div>
     </div>
 
-    <!-- Glass Effects -->
+    <!-- Modern Card Showcase -->
     <div class="style-section">
-      <h2 class="section-title">💎 Glass Morphism Effects</h2>
+      <h2 class="section-title">🎨 Modern Card System</h2>
+      <p class="section-description">
+        Ultra-moderne card variants met de nieuwste design trends: glassmorphism, neumorphism, gradient effecten en micro-interactions.
+      </p>
 
-      <div class="glass-showcase">
-        <div class="glass-demo">
-          <div class="glass-card">
-            <h4>Default Glass</h4>
-            <p>
-              Standard glass morphism effect with backdrop blur and
-              transparency.
-            </p>
+      <!-- Demo Notice -->
+      <div class="demo-notice">
+        <div class="demo-notice-header">
+          <q-icon name="info" size="20px" color="primary" />
+          <span>Live Demo Effects</span>
+        </div>
+        <ul class="demo-effects-list">
+          <li><strong>Glassmorphism:</strong> Backdrop blur met transparantie - hover voor extra effecten</li>
+          <li><strong>Neumorphism:</strong> 3D ingebouwde schaduwen - klik om inset effect te zien</li>
+          <li><strong>Gradient:</strong> Animerende regenboog borders - continu roterende kleuren</li>
+          <li><strong>Quick Actions:</strong> Micro-interactions met progress bars en badges</li>
+        </ul>
+        <div class="demo-note">
+          💡 <em>Als effecten niet zichtbaar zijn, check of je browser backdrop-filter ondersteunt (Chrome/Safari/Firefox 103+)</em>
+        </div>
+      </div>
+
+      <div class="cards-showcase">
+        <div class="card-row">
+          <!-- Glass Modern Card -->
+          <div class="card-demo">
+            <BaseCard 
+              variant="glass-modern" 
+              title="Glass Modern" 
+              subtitle="Enhanced glassmorphism with depth"
+              icon="auto_awesome"
+              icon-color="primary"
+            >
+              <p>Ultra-moderne glassmorphism met backdrop blur, gradients en perfect hover effecten.</p>
+            </BaseCard>
+            <div class="card-label">variant="glass-modern"</div>
           </div>
 
-          <div class="glass-modern">
-            <h4>Modern Glass</h4>
-            <p>
-              Enhanced glass effect with gradient backgrounds for premium feel.
-            </p>
+          <!-- Neumorphism Card -->
+          <div class="card-demo">
+            <BaseCard 
+              variant="neumorph" 
+              title="Neumorphism" 
+              subtitle="Soft 3D embossed effect"
+              icon="3d_rotation"
+              icon-color="secondary"
+            >
+              <p>Zachte 3D effecten die elementen laten lijken alsof ze uit het oppervlak komen.</p>
+            </BaseCard>
+            <div class="card-label">variant="neumorph"</div>
           </div>
+
+          <!-- Gradient Card -->
+          <div class="card-demo">
+            <BaseCard 
+              variant="gradient" 
+              title="Gradient Border" 
+              subtitle="Animated gradient borders"
+              icon="gradient"
+              icon-color="accent"
+            >
+              <p>Prachtige animerende gradient borders die de focus trekken.</p>
+            </BaseCard>
+            <div class="card-label">variant="gradient"</div>
+          </div>
+        </div>
+
+        <div class="card-row">
+          <!-- Premium Card -->
+          <div class="card-demo">
+            <BaseCard 
+              variant="premium" 
+              title="Premium Luxury" 
+              subtitle="High-end feel with subtle effects"
+              icon="diamond"
+              icon-color="warning"
+            >
+              <p>Luxe gevoel met subtiele schaduwen en premium materiaal effecten.</p>
+            </BaseCard>
+            <div class="card-label">variant="premium"</div>
+          </div>
+
+          <!-- Quick Action Card - Blue -->
+          <div class="card-demo">
+            <BaseCard 
+              variant="quick-action" 
+              title="Scan Batch"
+              action-description="Scan barcode om batch te vinden"
+              action-icon="qr_code_scanner"
+              gradient-direction="blue"
+              :action-progress="75"
+            />
+            <div class="card-label">variant="quick-action"</div>
+          </div>
+
+          <!-- Quick Action Card - Orange -->
+          <div class="card-demo">
+            <BaseCard 
+              variant="quick-action" 
+              title="View Expiring"
+              action-description="5 batches verlopen binnenkort"
+              action-icon="warning"
+              gradient-direction="orange"
+              :action-badge="5"
+              :action-progress="60"
+            />
+            <div class="card-label">gradient-direction="orange"</div>
+          </div>
+        </div>
+
+        <div class="card-row">
+          <!-- Stats Cards -->
+          <div class="card-demo">
+            <BaseCard 
+              variant="stats"
+              :value="1234"
+              label="Total Products"
+              icon="inventory"
+              icon-color="primary"
+              trend="+12%"
+              trend-direction="up"
+            />
+            <div class="card-label">variant="stats"</div>
+          </div>
+
+          <!-- Modern Elevated -->
+          <div class="card-demo">
+            <BaseCard 
+              variant="elevated" 
+              title="Modern Elevated" 
+              subtitle="Classic with modern touches"
+              icon="trending_up"
+              icon-color="positive"
+            >
+              <p>Klassieke elevated style met moderne hover effecten en betere schaduwen.</p>
+            </BaseCard>
+            <div class="card-label">variant="elevated"</div>
+          </div>
+
+          <!-- Traditional Glass -->
+          <div class="card-demo">
+            <BaseCard 
+              variant="glass" 
+              title="Traditional Glass" 
+              subtitle="Basic glassmorphism"
+              icon="blur_on"
+              icon-color="info"
+            >
+              <p>Basis glassmorphism effect voor subtiele transparantie.</p>
+            </BaseCard>
+            <div class="card-label">variant="glass"</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Quick Action Variants -->
+      <div class="style-subsection">
+        <h3>Quick Action Color Variants</h3>
+        <div class="quick-actions-demo">
+          <BaseCard 
+            variant="quick-action" 
+            title="Blue Action"
+            action-description="Primary actions"
+            action-icon="star"
+            gradient-direction="blue"
+            size="sm"
+          />
+          <BaseCard 
+            variant="quick-action" 
+            title="Green Action"
+            action-description="Success actions"
+            action-icon="check_circle"
+            gradient-direction="green"
+            size="sm"
+          />
+          <BaseCard 
+            variant="quick-action" 
+            title="Purple Action"
+            action-description="Creative actions"
+            action-icon="palette"
+            gradient-direction="purple"
+            size="sm"
+          />
+          <BaseCard 
+            variant="quick-action" 
+            title="Red Action"
+            action-description="Important actions"
+            action-icon="priority_high"
+            gradient-direction="red"
+            size="sm"
+          />
         </div>
       </div>
     </div>
@@ -955,9 +1128,92 @@
     }
   }
 
+  // Modern Card Showcase Styling
+  .cards-showcase {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-6);
+  }
+
+  .card-row {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: var(--space-4);
+  }
+
+  .card-demo {
+    position: relative;
+  }
+
+  .card-label {
+    margin-top: var(--space-2);
+    padding: var(--space-2) var(--space-3);
+    background: var(--neutral-100);
+    border-radius: var(--radius-sm);
+    font-family: 'SF Mono', 'Monaco', 'Inconsolata', monospace;
+    font-size: var(--text-xs);
+    color: var(--neutral-700);
+    text-align: center;
+    border: 1px solid var(--neutral-200);
+
+    .body--dark & {
+      background: var(--neutral-800);
+      color: var(--neutral-300);
+      border-color: var(--neutral-700);
+    }
+  }
+
+  .style-subsection {
+    margin-top: var(--space-8);
+    
+    h3 {
+      font-size: var(--text-lg);
+      font-weight: var(--font-weight-semibold);
+      color: var(--text-primary);
+      margin-bottom: var(--space-4);
+      display: flex;
+      align-items: center;
+      gap: var(--space-2);
+
+      &::before {
+        content: '';
+        width: 4px;
+        height: 20px;
+        background: var(--brand-primary);
+        border-radius: var(--radius-full);
+      }
+    }
+  }
+
+  .quick-actions-demo {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: var(--space-3);
+
+    .base-card {
+      min-height: 120px;
+    }
+  }
+
+  .section-description {
+    font-size: var(--text-base);
+    color: var(--text-secondary);
+    margin-bottom: var(--space-6);
+    line-height: var(--leading-relaxed);
+    max-width: 600px;
+  }
+
   // Responsive adjustments
   @media (max-width: 768px) {
     .card-showcase {
+      grid-template-columns: 1fr;
+    }
+
+    .card-row {
+      grid-template-columns: 1fr;
+    }
+
+    .quick-actions-demo {
       grid-template-columns: 1fr;
     }
 
@@ -1010,4 +1266,69 @@
       }
     }
   }
+
+  // Demo Notice Styles
+  .demo-notice {
+    margin-bottom: var(--space-6);
+    padding: var(--space-4);
+    background: var(--neutral-50);
+    border-radius: var(--radius-base);
+    border: 1px solid var(--neutral-200);
+    box-shadow: var(--shadow-xs);
+
+    .demo-notice-header {
+      display: flex;
+      align-items: center;
+      gap: var(--space-2);
+      margin-bottom: var(--space-3);
+      color: var(--brand-primary);
+      font-weight: var(--font-weight-semibold);
+      font-size: var(--text-base);
+    }
+
+    .demo-effects-list {
+      list-style: none;
+      padding: 0;
+      margin-bottom: var(--space-2);
+
+      li {
+        margin-bottom: var(--space-1);
+        font-size: var(--text-sm);
+        color: var(--neutral-700);
+        line-height: var(--leading-relaxed);
+
+        strong {
+          color: var(--neutral-900);
+        }
+      }
+    }
+
+         .demo-note {
+       font-size: var(--text-xs);
+       color: var(--neutral-600);
+       font-style: italic;
+     }
+
+     // Dark mode support
+     .body--dark & {
+       background: var(--neutral-800);
+       border-color: var(--neutral-700);
+
+       .demo-notice-header {
+         color: var(--brand-primary-light);
+       }
+
+       .demo-effects-list li {
+         color: var(--neutral-300);
+
+         strong {
+           color: var(--neutral-100);
+         }
+       }
+
+       .demo-note {
+         color: var(--neutral-400);
+       }
+     }
+   }
 </style>

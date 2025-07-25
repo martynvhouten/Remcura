@@ -65,50 +65,61 @@
         </div>
       </div>
 
-      <!-- Quick Actions Bar -->
-      <BaseCard variant="outlined" class="q-mb-lg">
-        <template #header-content>
-          <div class="text-subtitle2">{{ $t('batch.quickActions') }}</div>
-        </template>
-
-        <template #header-actions>
-          <div class="row q-gutter-sm">
-            <q-btn
-              flat
-              icon="qr_code_scanner"
-              :label="$t('batch.scanBatch')"
+      <!-- Quick Actions -->
+      <div class="q-mb-lg">
+        <div class="text-h6 q-mb-md text-grey-8">
+          <q-icon name="flash_on" class="q-mr-sm" />
+          {{ $t('batch.quickActions') }}
+        </div>
+        
+        <div class="row q-gutter-md">
+          <!-- Scan Batch Action -->
+          <div class="col-12 col-sm-6 col-md-3">
+            <BaseCard
+              variant="quick-action"
+              title="Scan Batch"
+              action-description="Scan barcode om batch te vinden"
+              action-icon="qr_code_scanner"
+              gradient-direction="blue"
+              :action-progress="0"
               @click="openBarcodeScanner"
-              size="sm"
-            />
-
-            <q-btn
-              flat
-              icon="warning"
-              :label="$t('batch.viewExpiring')"
-              @click="filterExpiring"
-              :color="showExpiringOnly ? 'orange' : 'grey'"
-              size="sm"
-            />
-
-            <q-btn
-              flat
-              icon="download"
-              :label="$t('batch.exportBatches')"
-              @click="exportBatches"
-              size="sm"
-            />
-
-            <q-btn
-              flat
-              icon="refresh"
-              :label="$t('common.refresh')"
-              @click="refreshData"
-              :loading="refreshing"
-              size="sm"
+              class="cursor-pointer"
             />
           </div>
-        </template>
-      </BaseCard>
+
+          <!-- View Expiring Action -->
+          <div class="col-12 col-sm-6 col-md-3">
+            <BaseCard
+              variant="quick-action"
+              title="View Expiring"
+              :action-description="`${expiringBatches} batches verlopen binnenkort`"
+              action-icon="warning"
+              gradient-direction="orange"
+              :action-badge="expiringBatches > 0 ? expiringBatches : undefined"
+              :action-progress="Math.round((expiringBatches / Math.max(totalBatches, 1)) * 100)"
+              @click="filterExpiring"
+              class="cursor-pointer"
+              :class="showExpiringOnly ? 'expiring-active' : ''"
+            />
+          </div>
+
+          <!-- Export Batches Action -->
+          <div class="col-12 col-sm-6 col-md-3">
+            <BaseCard
+              variant="quick-action"
+              title="Export Batches"
+              action-description="Download batch gegevens"
+              action-icon="download"
+              gradient-direction="green"
+              :action-progress="0"
+              @click="exportBatches"
+              class="cursor-pointer"
+            />
+          </div>
+
+
+        </div>
+      </div>
 
       <!-- Expiry Alerts -->
       <div v-if="criticalBatches.length > 0" class="q-mb-lg">
@@ -485,6 +496,17 @@
       @media (max-width: 640px) {
         padding: 6px;
       }
+    }
+  }
+
+  /* Active state for expiring filter */
+  .expiring-active {
+    border-color: #ff9800 !important;
+    background: linear-gradient(135deg, #fff3e0 0%, #ffebcc 100%) !important;
+
+    .body--dark & {
+      background: linear-gradient(135deg, #2d1b0e 0%, #3d2914 100%) !important;
+      border-color: #ff9800 !important;
     }
   }
 </style>

@@ -4,6 +4,7 @@ import { supabase } from 'src/boot/supabase';
 import { magentoApi } from 'src/services/magento';
 import { useAuthStore } from './auth';
 import { useSuppliersStore } from './suppliers';
+import { productService } from 'src/services/supabase';
 import type {
   Product,
   ProductWithStock,
@@ -48,7 +49,8 @@ export const useProductsStore = defineStore('products', () => {
             product.description.toLowerCase().includes(searchTerm)) ||
           (product.category &&
             product.category.toLowerCase().includes(searchTerm)) ||
-          (product.brand && product.brand.toLowerCase().includes(searchTerm))
+          (product.brand && product.brand.toLowerCase().includes(searchTerm)) ||
+          (product.gtin && product.gtin.toLowerCase().includes(searchTerm))
       );
     }
 
@@ -90,6 +92,39 @@ export const useProductsStore = defineStore('products', () => {
     if (filters.value.stock_status && filters.value.stock_status !== 'all') {
       result = result.filter(
         product => product.stock_status === filters.value.stock_status
+      );
+    }
+
+    // Apply GS1 filters
+    if (filters.value.gtin) {
+      const gtinTerm = filters.value.gtin.toLowerCase();
+      result = result.filter(
+        product => product.gtin && product.gtin.toLowerCase().includes(gtinTerm)
+      );
+    }
+
+    if (filters.value.country_of_origin) {
+      result = result.filter(
+        product => product.country_of_origin === filters.value.country_of_origin
+      );
+    }
+
+    if (filters.value.gpc_brick_code) {
+      const gpcTerm = filters.value.gpc_brick_code.toLowerCase();
+      result = result.filter(
+        product => product.gpc_brick_code && product.gpc_brick_code.toLowerCase().includes(gpcTerm)
+      );
+    }
+
+    if (filters.value.lifecycle_status) {
+      result = result.filter(
+        product => product.product_lifecycle_status === filters.value.lifecycle_status
+      );
+    }
+
+    if (filters.value.orderable_only) {
+      result = result.filter(
+        product => product.orderable_unit_indicator === true
       );
     }
 
@@ -146,6 +181,27 @@ export const useProductsStore = defineStore('products', () => {
       products.value.map(p => p.category).filter(Boolean) as string[]
     );
     return Array.from(productCategories).sort();
+  });
+
+  const availableCountries = computed(() => {
+    const countries = new Set(
+      products.value.map(p => p.country_of_origin).filter(Boolean) as string[]
+    );
+    return Array.from(countries).sort();
+  });
+
+  const availableGpcCodes = computed(() => {
+    const gpcCodes = new Set(
+      products.value.map(p => p.gpc_brick_code).filter(Boolean) as string[]
+    );
+    return Array.from(gpcCodes).sort();
+  });
+
+  const availableLifecycleStatuses = computed(() => {
+    const statuses = new Set(
+      products.value.map(p => p.product_lifecycle_status).filter(Boolean) as string[]
+    );
+    return Array.from(statuses).sort();
   });
 
   const availableSuppliers = computed(() => {
@@ -248,7 +304,7 @@ export const useProductsStore = defineStore('products', () => {
         try {
           magentoProducts = await fetchProductsFromMagento();
         } catch (error) {
-          console.warn('Magento sync failed, using Supabase data only:', error);
+          console.warn('⚠️ Magento sync failed, using Supabase data only:', error);
         }
       }
 
@@ -257,7 +313,7 @@ export const useProductsStore = defineStore('products', () => {
 
       lastSyncAt.value = new Date();
     } catch (error) {
-      console.error('Error fetching products:', error);
+      console.error('❌ Error fetching products:', error);
       throw error;
     } finally {
       loading.value = false;
@@ -304,12 +360,15 @@ export const useProductsStore = defineStore('products', () => {
               updated_at: item.product_updated_at,
             } as ProductWithStock)
         );
+      } else {
+        console.log('⚠️ RPC function failed or returned no data:', rpcError);
       }
     } catch (error) {
-      console.warn('RPC function failed, using fallback query:', error);
+      console.warn('⚠️ RPC function failed, using fallback query:', error);
     }
 
     // Fallback: Direct query approach
+    console.log('🔍 Using fallback direct query...');
     const { data: products, error: productsError } = await supabase
       .from('products')
       .select(`
@@ -329,11 +388,16 @@ export const useProductsStore = defineStore('products', () => {
       .order('name');
 
     if (productsError) {
-      console.error('Fallback query also failed:', productsError);
+      console.error('❌ Fallback query also failed:', productsError);
       throw productsError;
     }
 
-    if (!products) return [];
+    if (!products) {
+      console.log('⚠️ Fallback query returned no products');
+      return [];
+    }
+
+    console.log('✅ Fallback query succeeded, got', products.length, 'products');
 
     // Transform the data to match our expected format
     const productMap = new Map<string, any>();
@@ -651,6 +715,12 @@ export const useProductsStore = defineStore('products', () => {
       stock_status: 'all',
       sort_by: 'name',
       sort_order: 'asc',
+      // Clear GS1 filters
+      gtin: '',
+      country_of_origin: '',
+      gpc_brick_code: '',
+      lifecycle_status: '',
+      orderable_only: false,
     };
   };
 
@@ -680,7 +750,61 @@ export const useProductsStore = defineStore('products', () => {
   });
 
   const refreshData = async (practiceId: string) => {
-    await Promise.all([fetchProducts(practiceId), fetchCategories()]);
+    try {
+      await fetchProducts(practiceId);
+      await fetchCategories();
+      lastSyncAt.value = new Date();
+    } catch (error) {
+      console.error('Error refreshing product data:', error);
+      throw error;
+    }
+  };
+
+  // Product CRUD operations
+  const createProduct = async (productData: any) => {
+    try {
+      const result = await productService.create(productData);
+      if (result) {
+        // Add the new product to the local state
+        products.value.push(result as any);
+      }
+      return result;
+    } catch (error) {
+      console.error('Error creating product:', error);
+      throw error;
+    }
+  };
+
+  const updateProduct = async (productId: string, updates: any) => {
+    try {
+      const result = await productService.update(productId, updates);
+      if (result) {
+        // Update the product in local state
+        const index = products.value.findIndex(p => p.id === productId);
+        if (index !== -1) {
+          products.value[index] = { ...products.value[index], ...result };
+        }
+      }
+      return result;
+    } catch (error) {
+      console.error('Error updating product:', error);
+      throw error;
+    }
+  };
+
+  const deleteProduct = async (productId: string) => {
+    try {
+      await productService.delete(productId);
+      // Remove the product from local state
+      const index = products.value.findIndex(p => p.id === productId);
+      if (index !== -1) {
+        products.value.splice(index, 1);
+      }
+      return true;
+    } catch (error) {
+      console.error('Error deleting product:', error);
+      throw error;
+    }
   };
 
   return {
@@ -698,6 +822,9 @@ export const useProductsStore = defineStore('products', () => {
     cartItemsCount,
     cartTotal,
     availableCategories,
+    availableCountries,
+    availableGpcCodes,
+    availableLifecycleStatuses,
     availableSuppliers,
     productStats,
     batchTrackedProducts,
@@ -712,6 +839,9 @@ export const useProductsStore = defineStore('products', () => {
     fetchProducts,
     fetchCategories,
     refreshData,
+    createProduct,
+    updateProduct,
+    deleteProduct,
 
     // Cart management
     addToCart,

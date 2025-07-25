@@ -416,8 +416,8 @@
           {
             title: t('batch.batchManagement'),
             icon: 'qr_code_scanner',
-            to: '/inventory/batches',
-            routeName: 'inventory-batches',
+            to: '/batch-management',
+            routeName: 'batch-management',
           },
         ],
       },

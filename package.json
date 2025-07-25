@@ -43,13 +43,16 @@
     "reset-demo": "node scripts/reset-demo-data.js",
     "demo:reset": "node scripts/reset-demo-data.js",
     "translations:status": "node scripts/remcura-translation-manager.js --validate",
-    "translations:critical": "node scripts/remcura-translation-manager.js --critical", 
+    "translations:critical": "node scripts/remcura-translation-manager.js --critical",
     "translations:complete": "node scripts/remcura-translation-manager.js --complete",
     "translations:help": "node scripts/remcura-translation-manager.js --help",
     "i18n:validate": "node scripts/validate-translations.js",
     "i18n:find-hardcoded": "node scripts/find-hardcoded-text.js",
     "i18n:check": "npm run translations:status && npm run i18n:find-hardcoded",
-    "quality:i18n": "npm run translations:status && npm run i18n:find-hardcoded"
+    "quality:i18n": "npm run translations:status && npm run i18n:find-hardcoded",
+    "gs1:import": "ts-node scripts/importGs1Excel.ts",
+    "gs1:test": "ts-node scripts/testGs1Import.ts",
+    "gs1:help": "ts-node scripts/importGs1Excel.ts --help"
   },
   "dependencies": {
     "@quasar/extras": "^1.16.4",
@@ -58,13 +61,16 @@
     "@supabase/supabase-js": "^2.39.0",
     "@types/uuid": "^10.0.0",
     "chart.js": "^4.5.0",
+    "dotenv": "^16.6.1",
     "glob": "^11.0.3",
     "pinia": "^2.0.11",
     "quasar": "^2.6.0",
+    "ts-node": "^10.9.2",
     "uuid": "^11.1.0",
     "vue": "^3.5.17",
     "vue-i18n": "^9.2.2",
-    "vue-router": "^4.0.0"
+    "vue-router": "^4.0.0",
+    "xlsx": "^0.18.5"
   },
   "devDependencies": {
     "@fullhuman/postcss-purgecss": "^7.0.2",

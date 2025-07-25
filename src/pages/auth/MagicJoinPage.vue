@@ -311,50 +311,78 @@ const handlePersonalCodeLogin = async (userData: any) => {
 // 📧 Handle Invite Code (Potential Upgrade to Permanent)
 const handleInviteCode = async (inviteData: any) => {
   try {
-    // Validate the invite code using existing service
-    const result = await MagicInviteService.validateMagicCode(magicCode.value);
+    // Validate the invite code using MagicInviteService
+    const validationResult = await MagicInviteService.validateMagicCode(magicCode.value);
     
-    // @ts-ignore - Service returns complex types, functionality works correctly
-    if (result && result.isValid) {
-      // @ts-ignore
-      currentPractice.value = result.practice;
-      currentInvite.value = inviteData;
+    if (!validationResult) {
+      $q.notify({
+        type: 'negative',
+        message: t('magicJoin.invalidCode'),
+        position: 'top-right'
+      });
+      return;
+    }
+
+    // Check if invite is expired
+    if (validationResult.expires_at && new Date(validationResult.expires_at) < new Date()) {
+      $q.notify({
+        type: 'negative',
+        message: t('magicJoin.expiredCode'),
+        position: 'top-right'
+      });
+      return;
+    }
+
+    // Check if invite has reached max uses
+    if (validationResult.current_uses >= validationResult.max_uses) {
+      $q.notify({
+        type: 'negative',
+        message: t('magicJoin.maxUsesReached'),
+        position: 'top-right'
+      });
+      return;
+    }
+
+         // Set current practice and invite data
+     currentPractice.value = (validationResult as any).practices;
+     currentInvite.value = validationResult;
+    
+    // Update last_used_at timestamp and increment usage
+    await MagicInviteService.incrementInviteUsage(validationResult.id);
+    
+    // 🎯 CHECK: Is this a permanent role invite?
+    const permanentRoles = ['assistant', 'admin', 'member', 'manager'];
+    const isPermanentInvite = permanentRoles.includes(validationResult.target_role?.toLowerCase());
+    
+    if (isPermanentInvite) {
+      // 🚀 SHOW UPGRADE DIALOG
+      showUpgradeDialog.value = true;
       
-      // 🎯 CHECK: Is this a permanent role invite?
-      const permanentRoles = ['assistant', 'admin', 'member', 'manager'];
-      const isPermanentInvite = permanentRoles.includes(inviteData.target_role?.toLowerCase());
-      
-      if (isPermanentInvite) {
-        // 🚀 SHOW UPGRADE DIALOG
-        showUpgradeDialog.value = true;
-        
-        $q.notify({
-          type: 'info',
-          message: t('magicJoin.permanentInviteDetected'),
-          position: 'top-right',
-          timeout: 4000
-        });
-      } else {
-        // 👤 REGULAR GUEST ACCESS
-        welcomeMessage.value = t('magicJoin.welcomeMessage', { 
-          practice: currentPractice.value.name 
-        });
-        showWelcome.value = true;
-        
-        $q.notify({
-          type: 'positive',
-          message: t('magicJoin.guestAccessGranted'),
-          position: 'top-right',
-          timeout: 2000
-        });
-      }
+      $q.notify({
+        type: 'info',
+        message: t('magicJoin.permanentInviteDetected'),
+        position: 'top-right',
+        timeout: 4000
+      });
     } else {
-      throw new Error('Invalid invite code');
+      // 👤 REGULAR GUEST ACCESS
+      welcomeMessage.value = t('magicJoin.welcomeMessage', { 
+        practice: currentPractice.value.name 
+      });
+      showWelcome.value = true;
+      
+      $q.notify({
+        type: 'positive',
+        message: t('magicJoin.guestAccessGranted'),
+        position: 'top-right',
+        timeout: 2000
+      });
     }
   } catch (error) {
+    console.error('Error validating invite code:', error);
     $q.notify({
       type: 'negative',
-      message: t('magicJoin.invalidCode'),
+      message: t('magicJoin.validationError'),
       position: 'top-right'
     });
   }

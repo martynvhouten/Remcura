@@ -27,6 +27,10 @@ export interface Supplier {
   is_active: boolean;
   preferred_order_day?: number;
   order_cutoff_time?: string;
+  integration_type: 'manual' | 'email' | 'api' | 'edi' | 'magento';
+  order_method: 'manual' | 'email' | 'api' | 'pdf';
+  auto_sync_enabled: boolean;
+  integration_config: Record<string, any>;
   created_at: string;
   updated_at: string;
   created_by?: string;
@@ -629,6 +633,23 @@ export interface Product {
   currency?: string;
   is_active: boolean;
   requires_batch_tracking: boolean;
+  
+  // GS1 Fields
+  gtin?: string;
+  gpc_brick_code?: string;
+  gln_manufacturer?: string;
+  net_content_value?: number;
+  net_content_uom?: string;
+  gross_weight?: number;
+  net_weight?: number;
+  base_unit_indicator?: boolean;
+  orderable_unit_indicator?: boolean;
+  despatch_unit_indicator?: boolean;
+  country_of_origin?: string;
+  effective_from_date?: string;
+  effective_to_date?: string;
+  product_lifecycle_status?: string;
+  
   supplier_products?: SupplierProduct[];
   stock_levels?: StockLevel[];
   created_at: string;
@@ -663,12 +684,19 @@ export interface ProductCategory {
 }
 
 export interface ProductFilter {
+  search?: string;
   category?: string;
   supplier?: string;
-  stock_status?: 'all' | 'in_stock' | 'low_stock' | 'out_of_stock';
-  search?: string;
+  stock_status?: string;
   sort_by?: 'name' | 'price' | 'stock' | 'category';
   sort_order?: 'asc' | 'desc';
+  
+  // GS1 Filters
+  gtin?: string;
+  country_of_origin?: string;
+  gpc_brick_code?: string;
+  lifecycle_status?: string;
+  orderable_only?: boolean;
 }
 
 export interface CartItem {

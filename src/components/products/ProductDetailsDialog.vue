@@ -156,6 +156,167 @@
             </q-card-section>
           </BaseCard>
 
+          <!-- GS1 Information Card -->
+          <BaseCard v-if="hasGS1Data">
+            <q-card-section>
+              <div class="text-h6 q-mb-md">
+                <q-icon name="qr_code" class="q-mr-sm" />
+                {{ $t('productsPage.details.gs1Info') }}
+              </div>
+
+              <div class="row q-gutter-md">
+                <!-- Left Column: Core Identifiers -->
+                <div class="col-12 col-md-6">
+                  <q-list dense>
+                    <q-item v-if="product.gtin">
+                      <q-item-section>
+                        <q-item-label class="text-caption text-grey-6">
+                          {{ $t('productsPage.details.gtin') }}
+                        </q-item-label>
+                        <q-item-label class="text-weight-medium">
+                          <q-chip
+                            :label="product.gtin"
+                            icon="qr_code_2"
+                            color="primary"
+                            text-color="white"
+                            size="sm"
+                          />
+                        </q-item-label>
+                      </q-item-section>
+                    </q-item>
+
+                    <q-item v-if="product.gpc_brick_code">
+                      <q-item-section>
+                        <q-item-label class="text-caption text-grey-6">
+                          {{ $t('productsPage.details.gpcBrickCode') }}
+                        </q-item-label>
+                        <q-item-label class="text-weight-medium">
+                          {{ product.gpc_brick_code }}
+                        </q-item-label>
+                      </q-item-section>
+                    </q-item>
+
+                    <q-item v-if="product.country_of_origin">
+                      <q-item-section>
+                        <q-item-label class="text-caption text-grey-6">
+                          {{ $t('productsPage.details.countryOfOrigin') }}
+                        </q-item-label>
+                        <q-item-label class="text-weight-medium">
+                          <q-chip
+                            :label="getCountryName(product.country_of_origin)"
+                            :icon="getCountryFlag(product.country_of_origin)"
+                            color="blue-grey-2"
+                            text-color="blue-grey-8"
+                            size="sm"
+                          />
+                        </q-item-label>
+                      </q-item-section>
+                    </q-item>
+
+                    <q-item v-if="product.product_lifecycle_status">
+                      <q-item-section>
+                        <q-item-label class="text-caption text-grey-6">
+                          {{ $t('productsPage.details.lifecycleStatus') }}
+                        </q-item-label>
+                        <q-item-label class="text-weight-medium">
+                          <q-badge
+                            :color="getLifecycleStatusColor(product.product_lifecycle_status)"
+                            :label="$t(`productsPage.lifecycleStatus.${product.product_lifecycle_status}`)"
+                          />
+                        </q-item-label>
+                      </q-item-section>
+                    </q-item>
+                  </q-list>
+                </div>
+
+                <!-- Right Column: Packaging & Regulatory -->
+                <div class="col-12 col-md-6">
+                  <q-list dense>
+                    <q-item v-if="hasPackagingInfo">
+                      <q-item-section>
+                        <q-item-label class="text-caption text-grey-6">
+                          {{ $t('productsPage.details.netContent') }}
+                        </q-item-label>
+                        <q-item-label class="text-weight-medium">
+                          {{ product.net_content_value }} {{ product.net_content_uom }}
+                        </q-item-label>
+                      </q-item-section>
+                    </q-item>
+
+                    <q-item v-if="hasWeightInfo">
+                      <q-item-section>
+                        <q-item-label class="text-caption text-grey-6">
+                          {{ $t('productsPage.details.weight') }}
+                        </q-item-label>
+                        <q-item-label class="text-weight-medium">
+                          <div class="column">
+                            <span v-if="product.net_weight">
+                              {{ $t('productsPage.details.netWeight') }}: {{ product.net_weight }}g
+                            </span>
+                            <span v-if="product.gross_weight">
+                              {{ $t('productsPage.details.grossWeight') }}: {{ product.gross_weight }}g
+                            </span>
+                          </div>
+                        </q-item-label>
+                      </q-item-section>
+                    </q-item>
+
+                    <q-item v-if="hasValidityInfo">
+                      <q-item-section>
+                        <q-item-label class="text-caption text-grey-6">
+                          {{ $t('productsPage.details.validityPeriod') }}
+                        </q-item-label>
+                        <q-item-label class="text-weight-medium">
+                          <div class="column">
+                            <span v-if="product.effective_from_date">
+                              {{ $t('productsPage.details.from') }}: {{ formatDate(product.effective_from_date) }}
+                            </span>
+                            <span v-if="product.effective_to_date">
+                              {{ $t('productsPage.details.to') }}: {{ formatDate(product.effective_to_date) }}
+                            </span>
+                          </div>
+                        </q-item-label>
+                      </q-item-section>
+                    </q-item>
+                  </q-list>
+                </div>
+              </div>
+
+              <!-- Unit Indicators -->
+              <div v-if="hasUnitIndicators" class="q-mt-md">
+                <q-item-label class="text-caption text-grey-6 q-mb-xs">
+                  {{ $t('productsPage.details.unitIndicators') }}
+                </q-item-label>
+                <div class="row q-gutter-sm">
+                  <q-chip
+                    v-if="product.base_unit_indicator"
+                    :label="$t('productsPage.details.baseUnit')"
+                    icon="inventory"
+                    color="green"
+                    text-color="white"
+                    size="sm"
+                  />
+                  <q-chip
+                    v-if="product.orderable_unit_indicator"
+                    :label="$t('productsPage.details.orderable')"
+                    icon="shopping_cart"
+                    color="blue"
+                    text-color="white"
+                    size="sm"
+                  />
+                  <q-chip
+                    v-if="product.despatch_unit_indicator"
+                    :label="$t('productsPage.details.despatchable')"
+                    icon="local_shipping"
+                    color="orange"
+                    text-color="white"
+                    size="sm"
+                  />
+                </div>
+              </div>
+            </q-card-section>
+          </BaseCard>
+
           <!-- Stock Information Card -->
           <BaseCard>
             <q-card-section>
@@ -305,6 +466,98 @@
 
     return pricesWithSupplier[0] || null;
   });
+
+  // GS1 Data Computed Properties
+  const hasGS1Data = computed(() => {
+    if (!props.product) return false;
+    return !!(
+      props.product.gtin ||
+      props.product.gpc_brick_code ||
+      props.product.country_of_origin ||
+      props.product.product_lifecycle_status ||
+      hasPackagingInfo.value ||
+      hasWeightInfo.value ||
+      hasValidityInfo.value ||
+      hasUnitIndicators.value
+    );
+  });
+
+  const hasPackagingInfo = computed(() => {
+    return !!(props.product?.net_content_value && props.product?.net_content_uom);
+  });
+
+  const hasWeightInfo = computed(() => {
+    return !!(props.product?.net_weight || props.product?.gross_weight);
+  });
+
+  const hasValidityInfo = computed(() => {
+    return !!(props.product?.effective_from_date || props.product?.effective_to_date);
+  });
+
+  const hasUnitIndicators = computed(() => {
+    return !!(
+      props.product?.base_unit_indicator ||
+      props.product?.orderable_unit_indicator ||
+      props.product?.despatch_unit_indicator
+    );
+  });
+
+  // Helper Functions
+  const formatDate = (dateString: string): string => {
+    const date = new Date(dateString);
+    return date.toLocaleDateString(locale.value);
+  };
+
+  const getCountryName = (countryCode: string): string => {
+    const countryNames: Record<string, string> = {
+      NLD: 'Nederland',
+      DEU: 'Duitsland',
+      BEL: 'België',
+      FRA: 'Frankrijk',
+      GBR: 'Verenigd Koninkrijk',
+      ITA: 'Italië',
+      ESP: 'Spanje',
+      CHE: 'Zwitserland',
+      AUT: 'Oostenrijk',
+      USA: 'Verenigde Staten',
+      CHN: 'China',
+      JPN: 'Japan',
+    };
+    return countryNames[countryCode] || countryCode;
+  };
+
+  const getCountryFlag = (countryCode: string): string => {
+    const countryFlags: Record<string, string> = {
+      NLD: 'flag',
+      DEU: 'flag',
+      BEL: 'flag',
+      FRA: 'flag',
+      GBR: 'flag',
+      ITA: 'flag',
+      ESP: 'flag',
+      CHE: 'flag',
+      AUT: 'flag',
+      USA: 'flag',
+      CHN: 'flag',
+      JPN: 'flag',
+    };
+    return countryFlags[countryCode] || 'public';
+  };
+
+  const getLifecycleStatusColor = (status: string): string => {
+    switch (status?.toLowerCase()) {
+      case 'active':
+        return 'positive';
+      case 'discontinued':
+        return 'negative';
+      case 'new':
+        return 'info';
+      case 'phase_out':
+        return 'warning';
+      default:
+        return 'grey';
+    }
+  };
 </script>
 
 <style lang="scss" scoped>

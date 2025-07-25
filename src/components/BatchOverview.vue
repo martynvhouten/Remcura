@@ -274,7 +274,7 @@
   import { useI18n } from 'vue-i18n';
   import { useQuasar, date } from 'quasar';
   import { useBatchStore } from 'src/stores/batch';
-  import { useLocationStore } from 'src/stores/location';
+  import { useClinicStore } from 'src/stores/clinic';
   import { useAuthStore } from 'src/stores/auth';
   import BatchRegistrationForm from './BatchRegistrationForm.vue';
   import BatchDetailCard from './BatchDetailCard.vue';
@@ -285,7 +285,7 @@
   const { t } = useI18n();
   const $q = useQuasar();
   const batchStore = useBatchStore();
-  const locationStore = useLocationStore();
+  const clinicStore = useClinicStore();
   const authStore = useAuthStore();
 
   // State
@@ -418,7 +418,10 @@
     return date.formatDate(dateStr, 'DD/MM/YYYY');
   };
 
-  const formatQuantity = (quantity: number) => {
+  const formatQuantity = (quantity: number | null | undefined) => {
+    if (quantity == null || isNaN(quantity)) {
+      return '0';
+    }
     return quantity.toLocaleString(undefined, {
       minimumFractionDigits: 0,
       maximumFractionDigits: 3,

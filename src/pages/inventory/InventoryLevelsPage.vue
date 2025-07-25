@@ -10,19 +10,6 @@
 
     <template #actions>
       <div class="row q-gutter-sm items-center">
-        <!-- Location Filter -->
-        <q-select
-          v-model="selectedLocation"
-          :options="locationOptions"
-          :label="$t('inventory.currentLocation')"
-          outlined
-          dense
-          emit-value
-          map-options
-          style="min-width: 200px"
-          @update:model-value="loadStockLevels"
-        />
-
         <!-- Refresh Button -->
         <q-btn
           icon="refresh"
@@ -47,7 +34,7 @@
         >
           <div class="kpi-content">
             <div class="kpi-value">
-              {{ stockLevels.length }}
+              {{ filteredStockLevels.length }}
             </div>
             <div class="kpi-subtitle">{{ $t('inventory.products') }}</div>
           </div>
@@ -79,16 +66,16 @@
           icon="check_circle"
           header-color="positive"
         >
-                      <div class="kpi-content">
-              <div class="kpi-value">
-                {{ loading ? '...' : inventoryStore.realtimeConnected ? '🔄' : '✓' }}
-              </div>
-              <div class="kpi-subtitle">{{ 
-                inventoryStore.realtimeConnected 
-                  ? $t('inventory.realTimeConnected') 
-                  : $t('inventory.status') 
-              }}</div>
+          <div class="kpi-content">
+            <div class="kpi-value">
+              {{ loading ? '...' : inventoryStore.realtimeConnected ? '🔄' : '✓' }}
             </div>
+            <div class="kpi-subtitle">{{ 
+              inventoryStore.realtimeConnected 
+                ? $t('inventory.realTimeConnected') 
+                : $t('inventory.status') 
+            }}</div>
+          </div>
         </BaseCard>
       </div>
 
@@ -98,701 +85,622 @@
           :title="$t('inventory.lastUpdated')"
           :subtitle="$t('inventory.refreshData')"
           icon="refresh"
-          header-color="secondary"
+          header-color="warning"
         >
           <div class="kpi-content">
             <div class="kpi-value">
-              {{ new Date().getHours() }}:{{ String(new Date().getMinutes()).padStart(2, '0') }}
+              {{ lastUpdated ? formatTime(lastUpdated) : '-' }}
             </div>
-            <div class="kpi-subtitle">{{ $t('inventory.time') }}</div>
+            <div class="kpi-subtitle">{{ $t('inventory.lastSync') }}</div>
           </div>
         </BaseCard>
       </div>
     </div>
 
-    <!-- Filter Bar -->
-    <BaseCard class="q-mb-lg">
-      <q-card-section>
-        <div class="row q-gutter-md items-end">
-          <!-- Search -->
-          <div class="col-12 col-md-4">
-            <q-input
-              v-model="filters.search"
-              :placeholder="$t('inventory.searchProducts')"
-              outlined
-              dense
-              clearable
-            >
-              <template #prepend>
-                <q-icon name="search" />
-              </template>
-            </q-input>
-          </div>
-
-          <!-- Stock Status Filter -->
-          <div class="col-12 col-md-3">
-            <q-select
-              v-model="filters.stockStatus"
-              :options="stockStatusOptions"
-              :label="$t('inventory.stockStatus')"
-              outlined
-              dense
-              emit-value
-              map-options
-              clearable
-            />
-          </div>
-
-          <!-- Category Filter -->
-          <div class="col-12 col-md-3">
-            <q-select
-              v-model="filters.category"
-              :options="categoryOptions"
-              :label="$t('inventory.category')"
-              outlined
-              dense
-              emit-value
-              map-options
-              clearable
-            />
-          </div>
-
-          <!-- Barcode Scanner -->
-          <div class="col-12 col-md-2">
-            <q-btn
-              :label="$t('inventory.scanBarcode')"
-              icon="qr_code_scanner"
-              color="primary"
-              flat
-              @click="showBarcodeScanner = true"
-            />
-          </div>
-
-          <!-- Clear Filters -->
-          <div class="col-12 col-md-2">
-            <q-btn
-              :label="$t('common.clearFilters')"
-              icon="clear"
-              color="grey-7"
-              flat
-              @click="clearFilters"
-            />
-          </div>
-        </div>
-      </q-card-section>
-    </BaseCard>
+    <!-- New FilterPanel Component -->
+    <div class="filters-section q-mb-lg">
+      <FilterPanel
+        :preset="inventoryFilterPreset"
+        v-model="filterValues"
+        @change="handleFilterChange"
+        @reset="handleFilterReset"
+        @clear="handleFilterClear"
+        :loading="loading"
+        collapsible
+        class="inventory-filter-panel"
+      />
+    </div>
 
     <!-- Stock Levels Table -->
-    <BaseCard>
+    <BaseCard
+      variant="outlined"
+      :title="$t('inventory.stockLevels')"
+      icon="table_chart"
+      header-color="primary"
+    >
       <q-table
         :rows="filteredStockLevels"
         :columns="columns"
         :loading="loading"
         row-key="id"
         :pagination="{ rowsPerPage: 25 }"
-        class="stock-levels-table"
+        flat
+        bordered
       >
-        <template v-slot:body-cell-product="props">
+        <template #loading>
+          <q-inner-loading showing color="primary" />
+        </template>
+
+        <template #no-data>
+          <div class="full-width row flex-center q-gutter-sm">
+            <q-icon size="2em" name="sentiment_dissatisfied" />
+            <span>{{ $t('inventory.noStockLevels') }}</span>
+          </div>
+        </template>
+
+        <template #body-cell-product_name="props">
           <q-td :props="props">
             <div class="product-info">
-              <div class="product-name">{{ props.row.products?.name || 'Unknown Product' }}</div>
-              <div class="product-sku text-caption text-grey-6">
-                {{ props.row.products?.sku || 'N/A' }} • {{ props.row.products?.brand || 'N/A' }}
+              <div class="product-name">{{ props.row.product_name }}</div>
+              <div v-if="props.row.product_sku" class="product-sku">
+                SKU: {{ props.row.product_sku }}
               </div>
             </div>
           </q-td>
         </template>
 
-        <template v-slot:body-cell-stock_status="props">
-          <q-td :props="props">
+        <template #body-cell-current_quantity="props">
+          <q-td :props="props" class="text-center">
             <q-chip
-              :color="getStockStatusColor(props.row)"
-              text-color="white"
+              :color="getQuantityColor(props.row)"
+              :text-color="getQuantityTextColor(props.row)"
               size="sm"
-              :icon="getStockStatusIcon(props.row)"
+              dense
             >
-              {{ getStockStatusText(props.row) }}
+              {{ props.row.current_quantity }} {{ props.row.product_unit || 'pcs' }}
             </q-chip>
           </q-td>
         </template>
 
-        <template v-slot:body-cell-current_quantity="props">
+        <template #body-cell-stock_status="props">
+          <q-td :props="props" class="text-center">
+            <q-chip
+              :color="getStockStatusColor(props.row.stock_status)"
+              :text-color="getStockStatusTextColor(props.row.stock_status)"
+              size="sm"
+              dense
+            >
+              {{ $t(`inventory.stockStatus.${props.row.stock_status}`) }}
+            </q-chip>
+          </q-td>
+        </template>
+
+        <template #body-cell-location_name="props">
           <q-td :props="props">
-            <div class="stock-quantity">
-              <span class="current-stock">{{
-                props.row.current_quantity
-              }}</span>
-              <span class="stock-unit text-caption text-grey-6">{{
-                props.row.products?.unit || 'st'
-              }}</span>
+            <div class="location-info">
+              <q-icon name="location_on" size="xs" color="info" class="q-mr-xs" />
+              {{ props.row.location_name }}
             </div>
           </q-td>
         </template>
 
-        <template v-slot:body-cell-levels="props">
+        <template #body-cell-last_counted_at="props">
           <q-td :props="props">
-            <div class="stock-levels">
-              <div class="level-item">
-                <span class="level-label">Min:</span>
-                <span class="level-value">{{ props.row.minimum_stock }}</span>
-              </div>
-              <div class="level-item">
-                <span class="level-label">Max:</span>
-                <span class="level-value">{{ props.row.maximum_stock }}</span>
-              </div>
-              <div class="level-item">
-                <span class="level-label">Bestel:</span>
-                <span class="level-value">{{ props.row.reorder_point }}</span>
-              </div>
-            </div>
+            {{ props.row.last_counted_at ? formatDate(props.row.last_counted_at) : '-' }}
           </q-td>
         </template>
 
-        <template v-slot:body-cell-actions="props">
+        <template #body-cell-actions="props">
           <q-td :props="props">
-            <q-btn-group dense>
-              <q-btn
-                icon="edit"
-                size="sm"
-                flat
-                color="primary"
-                @click="editStockLevel(props.row)"
-                :title="$t('inventory.adjustStock')"
-              />
-              <q-btn
-                icon="swap_horiz"
-                size="sm"
-                flat
-                color="blue-6"
-                @click="transferStock(props.row)"
-                :title="$t('inventory.stockTransfer')"
-              />
-              <q-btn
-                icon="history"
-                size="sm"
-                flat
-                color="grey-6"
-                @click="viewMovements(props.row)"
-                :title="$t('inventory.viewMovements')"
-              />
-            </q-btn-group>
+            <q-btn
+              flat
+              round
+              dense
+              icon="edit"
+              size="sm"
+              @click="adjustStock(props.row)"
+            >
+              <q-tooltip>{{ $t('inventory.adjustStock') }}</q-tooltip>
+            </q-btn>
+            <q-btn
+              flat
+              round
+              dense
+              icon="history"
+              size="sm"
+              @click="viewHistory(props.row)"
+            >
+              <q-tooltip>{{ $t('inventory.viewHistory') }}</q-tooltip>
+            </q-btn>
+            <q-btn
+              flat
+              round
+              dense
+              icon="count"
+              size="sm"
+              @click="countStock(props.row)"
+            >
+              <q-tooltip>{{ $t('inventory.countStock') }}</q-tooltip>
+            </q-btn>
           </q-td>
         </template>
       </q-table>
     </BaseCard>
 
-    <!-- Quick Stock Adjustment Dialog -->
-    <QuickAdjustmentDialog
-      v-model="showAdjustmentDialog"
-      :selected-product="selectedProductForAdjustment"
-      :selected-location="selectedLocationObject"
-      @stock-updated="handleStockUpdated"
-    />
+    <!-- Stock Adjustment Dialog -->
+    <q-dialog v-model="showAdjustDialog">
+      <q-card style="min-width: 400px">
+        <q-card-section>
+          <div class="text-h6">{{ $t('inventory.adjustStock') }}</div>
+        </q-card-section>
 
-    <!-- Barcode Scanner -->
-    <BarcodeScanner
-      v-model="showBarcodeScanner"
-      @scan="handleBarcodeScan"
-    />
+        <q-card-section>
+          <div v-if="selectedStockLevel" class="q-mb-md">
+            <div class="text-subtitle2">{{ selectedStockLevel.product_name }}</div>
+            <div class="text-caption text-grey-7">
+              {{ $t('inventory.currentStock') }}: {{ selectedStockLevel.current_quantity }} {{ selectedStockLevel.product_unit || 'pcs' }}
+            </div>
+          </div>
 
-    <!-- Stock Transfer Dialog -->
-    <StockTransferDialog
-      v-model="showTransferDialog"
-      :selected-product="selectedProductForTransfer"
-      :current-location="selectedLocationObject"
-      @transfer-completed="handleTransferCompleted"
-    />
+          <q-form class="q-gutter-md">
+            <q-select
+              v-model="adjustmentType"
+              :options="adjustmentTypeOptions"
+              :label="$t('inventory.adjustmentType')"
+              outlined
+              emit-value
+              map-options
+            />
+
+            <q-input
+              v-model.number="adjustmentQuantity"
+              :label="$t('inventory.quantity')"
+              type="number"
+              outlined
+              :rules="[val => val !== null && val > 0 || $t('validation.required')]"
+            />
+
+            <q-input
+              v-model="adjustmentReason"
+              :label="$t('inventory.reason')"
+              type="textarea"
+              outlined
+              rows="3"
+            />
+          </q-form>
+        </q-card-section>
+
+        <q-card-actions align="right">
+          <q-btn flat :label="$t('common.cancel')" @click="closeAdjustDialog" />
+          <q-btn
+            color="primary"
+            :label="$t('inventory.adjust')"
+            @click="performAdjustment"
+            :loading="adjusting"
+          />
+        </q-card-actions>
+      </q-card>
+    </q-dialog>
   </PageLayout>
 </template>
 
 <script setup lang="ts">
-  import { ref, computed, onMounted, onBeforeUnmount } from 'vue';
-  import { useI18n } from 'vue-i18n';
-  import { useQuasar } from 'quasar';
-  import { useAuthStore } from 'src/stores/auth';
-  import { useClinicStore } from 'src/stores/clinic';
-  import { useInventoryStore } from 'src/stores/inventory';
-  import { supabase } from 'src/boot/supabase';
-  import PageLayout from 'src/components/PageLayout.vue';
-  import PageTitle from 'src/components/PageTitle.vue';
-  import BaseCard from 'src/components/base/BaseCard.vue';
-  import BarcodeScanner from 'src/components/BarcodeScanner.vue';
-  import QuickAdjustmentDialog from 'src/components/inventory/QuickAdjustmentDialog.vue';
-  import StockTransferDialog from 'src/components/inventory/StockTransferDialog.vue';
+import { ref, computed, onMounted } from 'vue';
+import { useQuasar, date } from 'quasar';
+import { useI18n } from 'vue-i18n';
+import PageTitle from 'src/components/PageTitle.vue';
+import PageLayout from 'src/components/PageLayout.vue';
+import BaseCard from 'src/components/base/BaseCard.vue';
+import FilterPanel from 'src/components/filters/FilterPanel.vue';
+import { inventoryFilterPreset } from '@/presets/filters/inventory';
+import { supabase } from 'src/services/supabase';
+import { useAuthStore } from 'src/stores/auth';
+import { useClinicStore } from 'src/stores/clinic';
+import { useInventoryStore } from 'src/stores/inventory';
+import type { FilterValues, FilterChangeEvent, FilterResetEvent } from '@/types/filters';
 
-  // Composables
-  const { t } = useI18n();
-  const $q = useQuasar();
-  const authStore = useAuthStore();
-  const clinicStore = useClinicStore();
-  const inventoryStore = useInventoryStore();
+const $q = useQuasar();
+const { t } = useI18n();
+const authStore = useAuthStore();
+const clinicStore = useClinicStore();
+const inventoryStore = useInventoryStore();
 
-  // State
-  const loading = ref(false);
-  const stockLevels = ref<any[]>([]); // Properly typed to allow clinic_products data
-  const selectedLocation = ref('all');
-  const isUnmounted = ref(false);
+// Refs
+const loading = ref(false);
+const adjusting = ref(false);
+const showAdjustDialog = ref(false);
+const selectedStockLevel = ref<any>(null);
+const lastUpdated = ref<Date | null>(null);
+
+// New filter state for FilterPanel
+const filterValues = ref<FilterValues>({});
+
+// Adjustment state
+const adjustmentType = ref('add');
+const adjustmentQuantity = ref<number | null>(null);
+const adjustmentReason = ref('');
+
+// Data
+const stockLevels = ref<any[]>([]);
+
+// Filter event handlers
+const handleFilterChange = (event: FilterChangeEvent) => {
+  // Filter logic is handled by computed property
+};
+
+const handleFilterReset = (event: FilterResetEvent) => {
+  filterValues.value = (inventoryFilterPreset.defaultFilters || {}) as any;
+};
+
+const handleFilterClear = () => {
+  filterValues.value = {};
+};
+
+// Computed
+const selectedLocationName = computed(() => {
+  const locationId = filterValues.value.location;
+  if (!locationId) return t('inventory.allLocations');
   
-  // Barcode scanner state
-  const showBarcodeScanner = ref(false);
-  const filters = ref({
-    search: '',
-    stockStatus: '',
-    category: '',
-  });
-  
-  // Dialog state
-  const showAdjustmentDialog = ref(false);
-  const showTransferDialog = ref(false);
-  const selectedProductForAdjustment = ref<any>(null);
-  const selectedProductForTransfer = ref<any>(null);
+  const location = clinicStore.locations.find(l => l.id === locationId);
+  return location?.name || t('inventory.unknownLocation');
+});
 
-  // Computed
-  const locationOptions = computed(() => [
-    { label: t('inventory.allLocations'), value: 'all' },
-    ...clinicStore.locations.map(loc => ({
-      label: loc.name,
-      value: loc.id,
-    })),
-  ]);
+const filteredStockLevels = computed(() => {
+  let filtered = stockLevels.value;
 
-  const selectedLocationName = computed(() => {
-    if (selectedLocation.value === 'all') return t('inventory.allLocations');
-    const location = clinicStore.locations.find(
-      loc => loc.id === selectedLocation.value
+  // Apply search filter
+  const search = filterValues.value.search;
+  if (search) {
+    const searchTerm = String(search).toLowerCase();
+    filtered = filtered.filter(
+      level =>
+        level.product_name?.toLowerCase().includes(searchTerm) ||
+        level.product_sku?.toLowerCase().includes(searchTerm) ||
+        level.product_category?.toLowerCase().includes(searchTerm)
     );
-    return location?.name || t('inventory.allLocations');
-  });
+  }
 
-  const selectedLocationObject = computed(() => {
-    if (selectedLocation.value === 'all') {
-      // When "all locations" is selected, use the first available location as fallback
-      return clinicStore.locations.length > 0 ? clinicStore.locations[0] : null;
-    }
-    return clinicStore.locations.find(
-      loc => loc.id === selectedLocation.value
-    ) || null;
-  });
+  // Apply location filter
+  const location = filterValues.value.location;
+  if (location) {
+    filtered = filtered.filter(level => level.location_id === location);
+  }
 
-  const categoryOptions = computed(() => {
-    const categories = new Set();
-    stockLevels.value.forEach(item => {
-      if (item.products?.category) {
-        categories.add(item.products.category);
-      }
+  // Apply stock status filter
+  const stockStatus = filterValues.value.stock_status;
+  if (stockStatus) {
+    filtered = filtered.filter(level => level.stock_status === stockStatus);
+  }
+
+  // Apply category filter
+  const category = filterValues.value.category;
+  if (category) {
+    filtered = filtered.filter(level => level.product_category === category);
+  }
+
+  // Apply quantity range filter
+  const quantityRange = filterValues.value.quantity_range;
+  if (quantityRange && typeof quantityRange === 'object' && 'min' in quantityRange) {
+    filtered = filtered.filter(level => {
+      const quantity = level.current_quantity || 0;
+      const range = quantityRange as { min?: number; max?: number };
+      if (range.min !== undefined && quantity < range.min) return false;
+      if (range.max !== undefined && quantity > range.max) return false;
+      return true;
     });
-    return Array.from(categories).map(cat => ({
-      label: cat,
-      value: cat,
-    }));
-  });
+  }
 
-  const stockStatusOptions = computed(() => [
-    { label: t('inventory.inStock'), value: 'in_stock' },
-    { label: t('inventory.lowStock'), value: 'low_stock' },
-    { label: t('inventory.outOfStock'), value: 'out_of_stock' },
-  ]);
+  // Apply low stock filter
+  const lowStockOnly = filterValues.value.low_stock_only;
+  if (lowStockOnly) {
+    filtered = filtered.filter(level => level.stock_status === 'low_stock');
+  }
 
-  const filteredStockLevels = computed(() => {
-    let result = [...stockLevels.value];
+  return filtered;
+});
 
-    // Apply search filter
-    if (filters.value.search) {
-      const searchTerm = filters.value.search.toLowerCase();
-      result = result.filter(
-        item =>
-          item.products?.name?.toLowerCase().includes(searchTerm) ||
-          item.products?.sku?.toLowerCase().includes(searchTerm)
-      );
-    }
+// Table columns
+const columns = computed(() => [
+  {
+    name: 'product_name',
+    label: t('inventory.product'),
+    field: 'product_name',
+    align: 'left' as const,
+    sortable: true,
+  },
+  {
+    name: 'location_name',
+    label: t('inventory.location'),
+    field: 'location_name',
+    align: 'left' as const,
+    sortable: true,
+  },
+  {
+    name: 'current_quantity',
+    label: t('inventory.currentStock'),
+    field: 'current_quantity',
+    align: 'center' as const,
+    sortable: true,
+  },
+  {
+    name: 'minimum_quantity',
+    label: t('inventory.minimumStock'),
+    field: 'minimum_quantity',
+    align: 'center' as const,
+    sortable: true,
+  },
+  {
+    name: 'stock_status',
+    label: t('inventory.status'),
+    field: 'stock_status',
+    align: 'center' as const,
+    sortable: true,
+  },
+  {
+    name: 'last_counted_at',
+    label: t('inventory.lastCounted'),
+    field: 'last_counted_at',
+    align: 'left' as const,
+    sortable: true,
+  },
+  {
+    name: 'actions',
+    label: t('inventory.actions'),
+    field: '',
+    align: 'center' as const,
+    sortable: false,
+  },
+]);
 
-    // Apply stock status filter
-    if (filters.value.stockStatus) {
-      const status = filters.value.stockStatus;
-      result = result.filter(item => {
-        const current = item.current_quantity || 0;
-        const minimum = item.minimum_quantity || 0;
-        
-        if (status === 'out_of_stock') return current === 0;
-        if (status === 'low_stock') return current > 0 && current <= minimum;
-        if (status === 'in_stock') return current > minimum;
-        
-        return true;
-      });
-    }
+// Adjustment type options
+const adjustmentTypeOptions = computed(() => [
+  { label: t('inventory.addStock'), value: 'add' },
+  { label: t('inventory.removeStock'), value: 'remove' },
+  { label: t('inventory.setStock'), value: 'set' },
+]);
 
-    // Apply category filter
-    if (filters.value.category) {
-      result = result.filter(
-        item => item.products?.category === filters.value.category
-      );
-    }
+// Helper functions
+const getQuantityColor = (stockLevel: any): string => {
+  const quantity = stockLevel.current_quantity || 0;
+  const minimum = stockLevel.minimum_quantity || 0;
+  
+  if (quantity === 0) return 'negative';
+  if (quantity <= minimum) return 'warning';
+  return 'positive';
+};
 
-    return result;
-  });
+const getQuantityTextColor = (stockLevel: any): string => {
+  const color = getQuantityColor(stockLevel);
+  return color === 'warning' ? 'black' : 'white';
+};
 
-  const statsCards = computed(() => {
-    const stats = {
-      total: stockLevels.value.length,
-      inStock: stockLevels.value.filter(
-        item => (item.current_quantity || 0) > (item.minimum_quantity || 0)
-      ).length,
-      lowStock: stockLevels.value.filter(
-        item => {
-          const current = item.current_quantity || 0;
-          const minimum = item.minimum_quantity || 0;
-          return current > 0 && current <= minimum;
-        }
-      ).length,
-      outOfStock: stockLevels.value.filter(
-        item => (item.current_quantity || 0) === 0
-      ).length,
-    };
+const getStockStatusColor = (status: string): string => {
+  switch (status) {
+    case 'in_stock':
+      return 'positive';
+    case 'low_stock':
+      return 'warning';
+    case 'out_of_stock':
+      return 'negative';
+    default:
+      return 'grey';
+  }
+};
 
-    return [
-      {
-        label: t('inventory.totalProducts'),
-        value: stats.total,
-        icon: 'inventory_2',
-        iconColor: 'primary',
-      },
-      {
-        label: t('inventory.inStock'),
-        value: stats.inStock,
-        icon: 'check_circle',
-        iconColor: 'positive',
-      },
-      {
-        label: t('inventory.lowStock'),
-        value: stats.lowStock,
-        icon: 'warning',
-        iconColor: 'warning',
-      },
-      {
-        label: t('inventory.outOfStock'),
-        value: stats.outOfStock,
-        icon: 'cancel',
-        iconColor: 'negative',
-      },
-    ];
-  });
+const getStockStatusTextColor = (status: string): string => {
+  switch (status) {
+    case 'low_stock':
+      return 'black';
+    default:
+      return 'white';
+  }
+};
 
-  const columns = computed(() => [
-    {
-      name: 'product',
-      label: t('inventory.product'),
-      align: 'left' as const,
-      field: (row: any) => row.products?.name || '',
-      sortable: true,
-    },
-    {
-      name: 'current_quantity',
-      label: t('inventory.currentStock'),
-      align: 'center' as const,
-      field: 'current_quantity',
-      sortable: true,
-    },
-    {
-      name: 'stock_status',
-      label: t('inventory.status'),
-      align: 'center' as const,
-      field: (row: any) => {
-        const current = row.current_quantity || 0;
-        const minimum = row.minimum_quantity || 0;
-        
-        if (current === 0) return 'out_of_stock';
-        if (current <= minimum) return 'low_stock';
-        return 'in_stock';
-      },
-      sortable: true,
-    },
-    {
-      name: 'levels',
-      label: t('inventory.stockLevels'),
-      align: 'center' as const,
-      field: 'levels',
-      sortable: false,
-    },
-    {
-      name: 'actions',
-      label: t('common.actions'),
-      align: 'center' as const,
-      field: 'actions',
-      sortable: false,
-    },
-  ]);
+const formatDate = (dateString: string): string => {
+  if (!dateString) return '-';
+  return date.formatDate(dateString, 'DD/MM/YYYY');
+};
 
-  // Functions
-  const loadStockLevels = async () => {
-    if (isUnmounted.value) return;
-    
+const formatTime = (dateObj: Date): string => {
+  return date.formatDate(dateObj, 'HH:mm');
+};
+
+// Methods
+const loadStockLevels = async () => {
+  try {
     loading.value = true;
-    try {
-      const practiceId = '550e8400-e29b-41d4-a716-446655440000'; // Demo practice ID
-      
-      if (!practiceId) {
-        stockLevels.value = [];
-        return;
-      }
+    const { data, error } = await supabase
+      .from('stock_levels')
+      .select(`
+        *,
+        product:products(name, sku, category, unit),
+        location:practice_locations(name)
+      `)
+      .eq('practice_id', authStore.clinicId)
+      .order('created_at', { ascending: false });
 
-      let query = supabase
-        .from('stock_levels')
-        .select(`
-          *,
-          products (
-            id,
-            name,
-            sku,
-            barcode,
-            category,
-            brand,
-            unit,
-            price
-          ),
-          practice_locations (
-            id,
-            name,
-            code
-          )
-        `)
-        .eq('practice_id', practiceId);
+    if (error) throw error;
 
-      if (selectedLocation.value !== 'all') {
-        query = query.eq('location_id', selectedLocation.value);
-      }
+         stockLevels.value = (data || []).map((level: any) => ({
+       id: level.id,
+       product_id: level.product_id,
+       location_id: level.location_id,
+       current_quantity: level.current_quantity || 0,
+       minimum_quantity: level.minimum_quantity || 0,
+       last_counted_at: level.last_counted_at,
+       product_name: level.product?.name || 'Unknown Product',
+       product_sku: level.product?.sku,
+       product_category: level.product?.category,
+       product_unit: level.product?.unit,
+       location_name: level.location?.name || 'Unknown Location',
+       stock_status: determineStockStatus(level.current_quantity, level.minimum_quantity),
+     }));
 
-      const { data, error } = await query;
+    lastUpdated.value = new Date();
+  } catch (error: any) {
+    console.error('Failed to load stock levels:', error);
+    $q.notify({
+      type: 'negative',
+      message: t('inventory.loadError'),
+    });
+  } finally {
+    loading.value = false;
+  }
+};
 
-      if (error) throw error;
-      
-      if (isUnmounted.value) return; // Check again after async operation
+const determineStockStatus = (current: number, minimum: number): string => {
+  if (current <= 0) return 'out_of_stock';
+  if (current <= minimum) return 'low_stock';
+  return 'in_stock';
+};
 
-      stockLevels.value = data || [];
-      
-    } catch (error) {
-      if (!isUnmounted.value) {
-        console.error('Error loading stock levels:', error);
-        $q.notify({
-          type: 'negative',
-          message: t('errors.failedToLoadData'),
-        });
-      }
-    } finally {
-      if (!isUnmounted.value) {
-        loading.value = false;
-      }
+const refreshData = async () => {
+  await loadStockLevels();
+  $q.notify({
+    type: 'positive',
+    message: t('inventory.dataRefreshed'),
+  });
+};
+
+const adjustStock = (stockLevel: any) => {
+  selectedStockLevel.value = stockLevel;
+  adjustmentType.value = 'add';
+  adjustmentQuantity.value = null;
+  adjustmentReason.value = '';
+  showAdjustDialog.value = true;
+};
+
+const viewHistory = (stockLevel: any) => {
+  $q.notify({
+    type: 'info',
+    message: t('inventory.historyNotImplemented'),
+  });
+};
+
+const countStock = (stockLevel: any) => {
+  $q.notify({
+    type: 'info',
+    message: t('inventory.countingNotImplemented'),
+  });
+};
+
+const closeAdjustDialog = () => {
+  showAdjustDialog.value = false;
+  selectedStockLevel.value = null;
+};
+
+const performAdjustment = async () => {
+  if (!selectedStockLevel.value || !adjustmentQuantity.value) {
+    return;
+  }
+
+  try {
+    adjusting.value = true;
+
+    let newQuantity = selectedStockLevel.value.current_quantity;
+    
+    switch (adjustmentType.value) {
+      case 'add':
+        newQuantity += adjustmentQuantity.value;
+        break;
+      case 'remove':
+        newQuantity = Math.max(0, newQuantity - adjustmentQuantity.value);
+        break;
+      case 'set':
+        newQuantity = adjustmentQuantity.value;
+        break;
     }
-  };
 
-  const determineStockStatus = (current: number, minimum: number): string => {
-    if (current <= 0) return 'out_of_stock';
-    if (current <= minimum) return 'low_stock';
-    return 'in_stock';
-  };
+    const { error } = await supabase
+      .from('stock_levels')
+      .update({
+        current_quantity: newQuantity,
+        available_quantity: newQuantity, // Assuming no reservations for simplicity
+      })
+      .eq('id', selectedStockLevel.value.id);
 
-  const getStockStatusColor = (stockLevel: any): string => {
-    const current = stockLevel.current_quantity || 0;
-    const minimum = stockLevel.minimum_quantity || 0;
+    if (error) throw error;
+
+    // TODO: Record stock movement in stock_movements table
     
-    if (current === 0) return 'negative';
-    if (current <= minimum) return 'warning';
-    return 'positive';
-  };
-
-  const getStockStatusIcon = (stockLevel: any): string => {
-    const current = stockLevel.current_quantity || 0;
-    const minimum = stockLevel.minimum_quantity || 0;
-    
-    if (current === 0) return 'error';
-    if (current <= minimum) return 'warning';
-    return 'check_circle';
-  };
-
-  const getStockStatusText = (stockLevel: any): string => {
-    const current = stockLevel.current_quantity || 0;
-    const minimum = stockLevel.minimum_quantity || 0;
-    
-    if (current === 0) return t('inventory.outOfStock');
-    if (current <= minimum) return t('inventory.lowStock');
-    return t('inventory.inStock');
-  };
-
-  const refreshData = async () => {
-    await Promise.all([
-      clinicStore.fetchLocations('550e8400-e29b-41d4-a716-446655440000'),
-      loadStockLevels(),
-    ]);
     $q.notify({
       type: 'positive',
-      message: t('inventory.dataRefreshed'),
+      message: t('inventory.stockAdjusted'),
     });
-  };
 
-  const clearFilters = () => {
-    filters.value = {
-      search: '',
-      stockStatus: '',
-      category: '',
-    };
-  };
-
-  // Barcode scanning
-  const handleBarcodeScan = async (barcode: string) => {
-    try {
-      // Search for products matching the barcode
-      const matchingProduct = stockLevels.value.find(level => {
-        const product = level.products;
-        if (!product) return false;
-        
-        return product.sku === barcode || 
-               product.barcode === barcode ||
-               product.name?.toLowerCase().includes(barcode.toLowerCase());
-      });
-
-      if (matchingProduct) {
-        // Focus on the found product by filtering
-        filters.value.search = matchingProduct.products.name;
-        
-        $q.notify({
-          type: 'positive',
-          message: t('inventory.barcodeFound', { 
-            product: matchingProduct.products.name 
-          }),
-          icon: 'qr_code_scanner'
-        });
-      } else {
-        $q.notify({
-          type: 'warning',
-          message: t('inventory.barcodeNotFound', { barcode }),
-          icon: 'search_off'
-        });
-      }
-    } catch (error) {
-      console.error('Error processing barcode:', error);
-      $q.notify({
-        type: 'negative',
-        message: t('errors.processingError'),
-        icon: 'error'
-      });
-    }
-  };
-
-  const editStockLevel = (stockLevel: any) => {
-    selectedProductForAdjustment.value = stockLevel;
-    showAdjustmentDialog.value = true;
-  };
-
-  const handleStockUpdated = async (product: any) => {
-    // Refresh the stock levels after an update
+    closeAdjustDialog();
     await loadStockLevels();
+  } catch (error: any) {
+    console.error('Failed to adjust stock:', error);
     $q.notify({
-      type: 'positive', 
-      message: t('inventory.dataRefreshed'),
+      type: 'negative',
+      message: t('inventory.adjustError'),
     });
-  };
+  } finally {
+    adjusting.value = false;
+  }
+};
 
-  const transferStock = (stockLevel: any) => {
-    selectedProductForTransfer.value = stockLevel;
-    showTransferDialog.value = true;
-  };
-
-  const handleTransferCompleted = async (transfer: any) => {
-    // Refresh the stock levels after a transfer
-    await loadStockLevels();
-    showTransferDialog.value = false;
-  };
-
-  const viewMovements = (_stockLevel: any) => {
-    $q.notify({
-      type: 'info',
-      message: t('common.comingSoon'),
-    });
-  };
-
-  // Lifecycle
-  onMounted(async () => {
-    // First ensure we have the demo practice ID set correctly
-    const demoPracticeId = '550e8400-e29b-41d4-a716-446655440000';
-    
-    try {
-      // Load locations and stock levels in parallel
-      await Promise.all([
-        clinicStore.fetchLocations(demoPracticeId),
-        loadStockLevels(),
-      ]);
-
-      // 🔄 NEW: Initialize real-time updates
-      inventoryStore.initializeRealtime();
-      
-      console.log('📡 Real-time inventory subscriptions initialized');
-    } catch (error) {
-      console.error('Error loading inventory data:', error);
-      $q.notify({
-        type: 'negative',
-        message: t('errors.failedToLoadData'),
-      });
-    }
-  });
-
-  onBeforeUnmount(() => {
-    isUnmounted.value = true;
-    loading.value = false;
-  });
+// Lifecycle
+onMounted(async () => {
+  await loadStockLevels();
+  
+  // Initialize filter values with defaults
+  if (inventoryFilterPreset.defaultFilters) {
+    filterValues.value = inventoryFilterPreset.defaultFilters as any;
+  }
+});
 </script>
 
 <style lang="scss" scoped>
-  .stock-levels-table {
-    .product-info {
-      .product-name {
-        font-weight: 500;
-        margin-bottom: 2px;
+.stats-cards-container {
+  .stats-card-col {
+    padding: 0.5rem;
+
+    .kpi-content {
+      text-align: center;
+      padding: 1rem;
+
+      .kpi-value {
+        font-size: 2.5rem;
+        font-weight: 700;
+        line-height: 1;
+        color: var(--q-primary);
+        margin-bottom: 0.5rem;
       }
-    }
 
-    .stock-quantity {
-      display: flex;
-      align-items: center;
-      gap: 4px;
-
-      .current-stock {
-        font-weight: 600;
-        font-size: 1.1em;
-      }
-    }
-
-    .stock-levels {
-      display: flex;
-      flex-direction: column;
-      gap: 2px;
-
-      .level-item {
-        display: flex;
-        justify-content: space-between;
-        min-width: 80px;
-
-        .level-label {
-          font-size: 0.75rem;
-          color: var(--q-grey-6);
-        }
-
-        .level-value {
-          font-weight: 500;
-          font-size: 0.8rem;
-        }
+      .kpi-subtitle {
+        font-size: 0.875rem;
+        color: rgba(0, 0, 0, 0.6);
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
       }
     }
   }
+}
 
-  // Stats cards styling
-  .stats-cards-container {
-    gap: 0;
-
-    .stats-card-col {
-      padding: 8px;
-
-      @media (max-width: 640px) {
-        padding: 6px;
-      }
-    }
+.filters-section {
+  .inventory-filter-panel {
+    // Custom styling for the FilterPanel in inventory page
   }
+}
+
+.product-info {
+  .product-name {
+    font-weight: 500;
+    line-height: 1.2;
+  }
+
+  .product-sku {
+    font-size: 0.75rem;
+    color: rgba(0, 0, 0, 0.6);
+    margin-top: 0.25rem;
+    font-family: monospace;
+  }
+}
+
+.location-info {
+  display: flex;
+  align-items: center;
+}
 </style>

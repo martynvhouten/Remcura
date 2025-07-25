@@ -1,224 +1,249 @@
 import { RouteRecordRaw } from 'vue-router';
+import type { UserRole, PermissionType, ResourceType } from 'src/services/permissions';
+
+// Extend Vue Router meta interface
+declare module 'vue-router' {
+  interface RouteMeta {
+    requiresAuth?: boolean;
+    requiresRole?: UserRole | UserRole[];
+    requiresPermission?: {
+      permission: PermissionType;
+      resource: ResourceType;
+      resourceId?: string;
+    };
+    title?: string;
+    icon?: string;
+  }
+}
 
 const routes: RouteRecordRaw[] = [
-  // Auth pages - uses AuthLayout
-  {
-    path: '/auth',
-    component: () =>
-      import(/* webpackChunkName: "auth-layout" */ 'layouts/AuthLayout.vue'),
-    children: [
-      {
-        path: 'login',
-        name: 'login',
-        component: () =>
-          import(
-            /* webpackChunkName: "auth-login" */ 'pages/auth/LoginPage.vue'
-          ),
-        meta: { requiresAuth: false },
-      },
-      // Future auth pages can be added here:
-      // {
-      //   path: 'register',
-      //   name: 'register',
-      //   component: () => import('pages/auth/RegisterPage.vue'),
-      //   meta: { requiresAuth: false }
-      // }
-    ],
-  },
-
-  // Redirect /login to /auth/login for backwards compatibility
-  {
-    path: '/login',
-    redirect: '/auth/login',
-  },
-
-  // 🎭 REVOLUTIONARY MAGIC INVITE ROUTES - No passwords, instant access!
-  {
-    path: '/join',
-    component: () =>
-      import(/* webpackChunkName: "auth-layout" */ 'layouts/AuthLayout.vue'),
-    children: [
-      {
-        path: '',
-        name: 'magicJoin',
-        component: () =>
-          import(
-            /* webpackChunkName: "magic-join" */ 'pages/auth/MagicJoinPage.vue'
-          ),
-        meta: { requiresAuth: false },
-      },
-      {
-        path: ':code',
-        name: 'magicJoinWithCode',
-        component: () =>
-          import(
-            /* webpackChunkName: "magic-join" */ 'pages/auth/MagicJoinPage.vue'
-          ),
-        meta: { requiresAuth: false },
-        props: true,
-      },
-    ],
-  },
-
-  // Main Layout - for authenticated users
   {
     path: '/',
-    component: () =>
-      import(/* webpackChunkName: "main-layout" */ 'layouts/MainLayout.vue'),
+    component: () => import('layouts/MainLayout.vue'),
     meta: { requiresAuth: true },
     children: [
-      {
-        path: '',
-        name: 'dashboard',
-        component: () =>
-          import(/* webpackChunkName: "dashboard" */ 'pages/DashboardPage.vue'),
-        meta: { requiresAuth: true, preload: true },
+      { 
+        path: '', 
+        redirect: '/dashboard' 
       },
-
-      // Inventory Management Routes - redirect main route to levels
+      { 
+        path: 'dashboard', 
+        name: 'dashboard',
+        component: () => import('pages/DashboardPage.vue'),
+        meta: { 
+          requiresAuth: true, 
+          title: 'Dashboard',
+          icon: 'dashboard'
+        }
+      },
+      { 
+        path: 'products', 
+        name: 'products',
+        component: () => import('pages/ProductsPage.vue'),
+        meta: { 
+          requiresAuth: true,
+          requiresPermission: {
+            permission: 'read',
+            resource: 'products'
+          },
+          title: 'Products',
+          icon: 'inventory_2'
+        }
+      },
       {
         path: 'inventory',
-        redirect: '/inventory/levels'
+        name: 'inventory',
+        meta: { 
+          requiresAuth: true,
+          requiresPermission: {
+            permission: 'read',
+            resource: 'inventory'
+          },
+          title: 'Inventory',
+          icon: 'warehouse'
+        },
+        children: [
+          {
+            path: 'levels',
+            name: 'inventory-levels',
+            component: () => import('pages/inventory/InventoryLevelsPage.vue'),
+            meta: {
+              requiresPermission: {
+                permission: 'read',
+                resource: 'inventory'
+              },
+              title: 'Stock Levels'
+            }
+          },
+          {
+            path: 'counting',
+            name: 'inventory-counting',
+            component: () => import('pages/inventory/CountingPage.vue'),
+            meta: {
+              requiresRole: ['owner', 'manager', 'assistant', 'logistics'],
+              title: 'Stock Counting'
+            }
+          },
+          {
+            path: 'counting/:sessionId',
+            name: 'counting-session',
+            component: () => import('pages/inventory/CountingSessionPage.vue'),
+            meta: {
+              requiresRole: ['owner', 'manager', 'assistant', 'logistics'],
+              title: 'Counting Session'
+            }
+          },
+          {
+            path: 'movements',
+            name: 'inventory-movements',
+            component: () => import('pages/inventory/MovementsPage.vue'),
+            meta: {
+              requiresPermission: {
+                permission: 'read',
+                resource: 'inventory'
+              },
+              title: 'Stock Movements'
+            }
+          },
+          {
+            path: 'locations',
+            name: 'inventory-locations',
+            component: () => import('pages/inventory/LocationsPage.vue'),
+            meta: {
+              requiresRole: ['owner', 'manager', 'assistant'],
+              title: 'Locations'
+            }
+          }
+        ]
       },
-      {
-        path: 'inventory/levels',
-        name: 'inventory-levels',
-        component: () =>
-          import(
-            /* webpackChunkName: "inventory-levels" */ 'pages/inventory/InventoryLevelsPage.vue'
-          ),
-        meta: { requiresAuth: true },
-      },
-      {
-        path: 'inventory/locations',
-        name: 'inventory-locations',
-        component: () =>
-          import(
-            /* webpackChunkName: "inventory-locations" */ 'pages/inventory/LocationsPage.vue'
-          ),
-        meta: { requiresAuth: true },
-      },
-      {
-        path: 'inventory/counting',
-        name: 'inventory-counting',
-        component: () =>
-          import(
-            /* webpackChunkName: "inventory-counting" */ 'pages/inventory/CountingPage.vue'
-          ),
-        meta: { requiresAuth: true },
-      },
-      {
-        path: 'inventory/counting/:sessionId',
-        name: 'inventory-counting-session',
-        component: () =>
-          import(
-            /* webpackChunkName: "inventory-counting-session" */ 'pages/inventory/CountingSessionPage.vue'
-          ),
-        meta: { requiresAuth: true },
-        props: true,
-      },
-      {
-        path: 'inventory/movements',
-        name: 'inventory-movements',
-        component: () =>
-          import(
-            /* webpackChunkName: "inventory-movements" */ 'pages/inventory/MovementsPage.vue'
-          ),
-        meta: { requiresAuth: true },
-      },
-      {
-        path: 'inventory/batches',
-        name: 'inventory-batches',
-        component: () =>
-          import(
-            /* webpackChunkName: "batch-management" */ 'pages/BatchManagementPage.vue'
-          ),
-        meta: { requiresAuth: true },
-      },
-
-      // Products & Orders & Suppliers
-      {
-        path: 'products',
-        name: 'products',
-        component: () =>
-          import(/* webpackChunkName: "products" */ 'pages/ProductsPage.vue'),
-        meta: { requiresAuth: true },
-      },
-      {
-        path: 'order-lists',
-        name: 'order-lists',
-        component: () =>
-          import(
-            /* webpackChunkName: "order-lists" */ 'pages/OrderListsPage.vue'
-          ),
-        meta: { requiresAuth: true },
-      },
-      {
-        path: 'orders',
+      { 
+        path: 'orders', 
         name: 'orders',
-        component: () =>
-          import(/* webpackChunkName: "orders" */ 'pages/OrdersPage.vue'),
-        meta: { requiresAuth: true },
+        component: () => import('pages/OrdersPage.vue'),
+        meta: { 
+          requiresAuth: true,
+          requiresPermission: {
+            permission: 'read',
+            resource: 'orders'
+          },
+          title: 'Orders',
+          icon: 'shopping_cart'
+        }
       },
-      {
-        path: 'analytics',
-        name: 'analytics',
-        component: () =>
-          import(/* webpackChunkName: "analytics" */ 'pages/AnalyticsPage.vue'),
-        meta: { requiresAuth: true },
+      { 
+        path: 'order-lists', 
+        name: 'order-lists',
+        component: () => import('pages/OrderListsPage.vue'),
+        meta: { 
+          requiresAuth: true,
+          requiresPermission: {
+            permission: 'read',
+            resource: 'orders'
+          },
+          title: 'Order Lists',
+          icon: 'list_alt'
+        }
       },
-      {
-        path: 'suppliers',
+      { 
+        path: 'suppliers', 
         name: 'suppliers',
-        component: () =>
-          import(/* webpackChunkName: "suppliers" */ 'pages/SuppliersPage.vue'),
-        meta: { requiresAuth: true },
+        component: () => import('pages/SuppliersPage.vue'),
+        meta: { 
+          requiresAuth: true,
+          requiresRole: ['owner', 'manager', 'assistant'],
+          title: 'Suppliers',
+          icon: 'business'
+        }
       },
-      {
-        path: 'notifications',
+      { 
+        path: 'analytics', 
+        name: 'analytics',
+        component: () => import('pages/AnalyticsPage.vue'),
+        meta: { 
+          requiresAuth: true,
+          requiresPermission: {
+            permission: 'read',
+            resource: 'analytics'
+          },
+          title: 'Analytics',
+          icon: 'analytics'
+        }
+      },
+      { 
+        path: 'notifications', 
         name: 'notifications',
-        component: () =>
-          import(
-            /* webpackChunkName: "notifications" */ 'pages/NotificationsPage.vue'
-          ),
-        meta: { requiresAuth: true },
-      },
-      {
-        path: 'admin',
-        name: 'admin',
-        component: () =>
-          import(/* webpackChunkName: "admin" */ 'pages/AdminDashboard.vue'),
-        meta: {
+        component: () => import('pages/NotificationsPage.vue'),
+        meta: { 
           requiresAuth: true,
-          requiresAdmin: true,
-        },
+          title: 'Notifications',
+          icon: 'notifications'
+        }
       },
-      {
-        path: 'beheer',
-        name: 'beheer',
-        component: () =>
-          import(/* webpackChunkName: "admin" */ 'pages/AdminDashboard.vue'),
-        meta: {
-          requiresAuth: true,
-          requiresAdmin: true,
-        },
-      },
-
-      {
-        path: 'settings',
+      { 
+        path: 'settings', 
         name: 'settings',
-        component: () =>
-          import(/* webpackChunkName: "settings" */ 'pages/SettingsPage.vue'),
-        meta: { requiresAuth: true },
+        component: () => import('pages/SettingsPage.vue'),
+        meta: { 
+          requiresAuth: true,
+          requiresRole: ['owner', 'manager'],
+          title: 'Settings',
+          icon: 'settings'
+        }
       },
-      {
-        path: 'style-guide',
+      { 
+        path: 'admin', 
+        name: 'admin',
+        component: () => import('pages/AdminDashboard.vue'),
+        meta: { 
+          requiresAuth: true,
+          requiresRole: ['owner'],
+          title: 'Admin Dashboard',
+          icon: 'admin_panel_settings'
+        }
+      },
+      { 
+        path: 'batch-management', 
+        name: 'batch-management',
+        component: () => import('pages/BatchManagementPage.vue'),
+        meta: { 
+          requiresAuth: true,
+          requiresPermission: {
+            permission: 'read',
+            resource: 'inventory'
+          },
+          title: 'Batch Management',
+          icon: 'inventory'
+        }
+      },
+      { 
+        path: 'style-guide', 
         name: 'style-guide',
-        component: () =>
-          import(
-            /* webpackChunkName: "style-guide" */ 'pages/StyleGuidePage.vue'
-          ),
-        meta: { requiresAuth: true },
+        component: () => import('pages/StyleGuidePage.vue'),
+        meta: { 
+          requiresAuth: true,
+          requiresRole: ['owner'],
+          title: 'Style Guide'
+        }
+      }
+    ],
+  },
+
+  // Auth routes (no authentication required)
+  {
+    path: '/auth',
+    component: () => import('layouts/AuthLayout.vue'),
+    children: [
+      { 
+        path: 'login', 
+        name: 'login',
+        component: () => import('pages/auth/LoginPage.vue'),
+        meta: { title: 'Login' }
+      },
+      { 
+        path: 'magic-join', 
+        name: 'magic-join',
+        component: () => import('pages/auth/MagicJoinPage.vue'),
+        meta: { title: 'Magic Join' }
       },
     ],
   },
@@ -227,8 +252,7 @@ const routes: RouteRecordRaw[] = [
   // but you can also remove it
   {
     path: '/:catchAll(.*)*',
-    component: () =>
-      import(/* webpackChunkName: "error" */ 'pages/ErrorNotFound.vue'),
+    component: () => import('pages/ErrorNotFound.vue'),
   },
 ];
 

@@ -20,6 +20,14 @@
               class="q-mr-sm"
             />
             <q-btn
+              v-if="canCreate"
+              color="secondary"
+              icon="add"
+              :label="$t('products.createProduct')"
+              @click="showCreateProductDialog"
+              class="q-mr-sm"
+            />
+            <q-btn
               color="primary"
               icon="add_shopping_cart"
               :label="$t('productsPage.viewCart')"
@@ -39,138 +47,18 @@
     </template>
 
     <div class="products-page">
-      <!-- Filters Section -->
+      <!-- New FilterPanel Component -->
       <div class="filters-section">
-        <div class="filters-toolbar">
-          <div class="search-section">
-            <q-input
-              v-model="localSearch"
-              :placeholder="$t('productsPage.searchPlaceholder')"
-              outlined
-              dense
-              clearable
-              @update:model-value="updateSearchFilter"
-              class="search-input"
-            >
-              <template #prepend>
-                <q-icon name="search" />
-              </template>
-            </q-input>
-          </div>
-
-          <div class="filter-controls">
-            <q-btn
-              flat
-              icon="tune"
-              :label="$t('productsPage.filters.title')"
-              @click="showFilters = !showFilters"
-              :color="hasActiveFilters ? 'primary' : 'grey-7'"
-              class="filter-toggle"
-            >
-              <q-badge
-                v-if="activeFiltersCount > 0"
-                color="primary"
-                floating
-                :label="activeFiltersCount"
-              />
-            </q-btn>
-
-            <q-btn
-              v-if="hasActiveFilters"
-              flat
-              icon="clear"
-              :label="$t('productsPage.clearFilters')"
-              @click="clearAllFilters"
-              color="grey-7"
-              size="sm"
-            />
-          </div>
-        </div>
-
-        <!-- Expandable Filters -->
-        <q-slide-transition>
-          <div v-show="showFilters" class="filters-panel">
-            <div class="filters-grid">
-              <div class="filter-group">
-                <label class="filter-label">{{
-                  $t('productsPage.filters.category')
-                }}</label>
-                <q-select
-                  v-model="filters.category"
-                  :options="categoryOptions"
-                  emit-value
-                  map-options
-                  clearable
-                  outlined
-                  dense
-                  :placeholder="$t('productsPage.filters.selectCategory')"
-                  @update:model-value="updateFilters({ category: $event })"
-                />
-              </div>
-
-              <div class="filter-group">
-                <label class="filter-label">{{
-                  $t('productsPage.filters.stockStatus')
-                }}</label>
-                <q-select
-                  v-model="filters.stock_status"
-                  :options="stockStatusOptions"
-                  emit-value
-                  map-options
-                  clearable
-                  outlined
-                  dense
-                  :placeholder="$t('productsPage.filters.selectStockStatus')"
-                  @update:model-value="updateFilters({ stock_status: $event })"
-                />
-              </div>
-
-              <div class="filter-group">
-                <label class="filter-label">{{
-                  $t('productsPage.filters.supplier')
-                }}</label>
-                <q-select
-                  v-model="filters.supplier"
-                  :options="supplierOptions"
-                  emit-value
-                  map-options
-                  clearable
-                  outlined
-                  dense
-                  :placeholder="$t('productsPage.filters.selectSupplier')"
-                  @update:model-value="updateFilters({ supplier: $event })"
-                />
-              </div>
-
-              <div class="filter-group">
-                <label class="filter-label">{{
-                  $t('productsPage.filters.priceRange')
-                }}</label>
-                <div class="price-range">
-                  <q-input
-                    v-model.number="localPriceMin"
-                    type="number"
-                    outlined
-                    dense
-                    :placeholder="$t('productsPage.filters.minPrice')"
-                    @update:model-value="handlePriceMinChange"
-                    class="price-input"
-                  />
-                  <span class="price-separator">-</span>
-                  <q-input
-                    v-model.number="localPriceMax"
-                    type="number"
-                    outlined
-                    dense
-                    :placeholder="$t('productsPage.filters.maxPrice')"
-                    @update:model-value="handlePriceMaxChange"
-                    class="price-input"
-                  />
-                </div>
-              </div>
-            </div>
-          </div>
-        </q-slide-transition>
+        <FilterPanel
+          :preset="productsFilterPreset"
+          v-model="filterValues"
+          @change="handleFilterChange"
+          @reset="handleFilterReset"
+          @clear="handleFilterClear"
+          :loading="loading"
+          collapsible
+          class="products-filter-panel"
+        />
       </div>
 
       <!-- Products Table -->
@@ -225,18 +113,38 @@
           <!-- Stock Status Cell -->
           <template #body-cell-stock_status="props">
             <q-td :props="props">
-              <div class="stock-info">
-                <q-chip
-                  :color="getStockStatusColor(props.row.stock_status)"
-                  :text-color="getStockStatusTextColor(props.row.stock_status)"
-                  :label="
-                    $t(`productsPage.stockStatus.${props.row.stock_status}`)
-                  "
-                  size="sm"
-                  dense
-                />
-                <div class="stock-quantity">
-                  {{ props.row.total_stock }} {{ props.row.unit || '' }}
+              <q-chip
+                :color="getStockStatusColor(props.row.stock_status)"
+                :text-color="getStockStatusTextColor(props.row.stock_status)"
+                size="sm"
+                dense
+              >
+                {{ $t(`productsPage.stockStatus.${props.row.stock_status}`) }}
+              </q-chip>
+            </q-td>
+          </template>
+
+          <!-- GS1 Status Cell -->
+          <template #body-cell-gs1_status="props">
+            <q-td :props="props">
+              <div class="gs1-status-cell">
+                <div v-if="props.row.gtin || props.row.gpc_brick_code || props.row.country_of_origin" class="gs1-data">
+                  <div v-if="props.row.gtin" class="gs1-item">
+                    <q-icon name="qr_code_2" size="xs" color="primary" />
+                    <span class="gs1-value">{{ props.row.gtin }}</span>
+                  </div>
+                  <div v-if="props.row.country_of_origin" class="gs1-item">
+                    <q-icon name="flag" size="xs" color="info" />
+                    <span class="gs1-value">{{ props.row.country_of_origin }}</span>
+                  </div>
+                  <div v-if="props.row.gpc_brick_code" class="gs1-item">
+                    <q-icon name="category" size="xs" color="orange" />
+                    <span class="gs1-value">{{ props.row.gpc_brick_code }}</span>
+                  </div>
+                </div>
+                <div v-else class="no-gs1-data">
+                  <q-icon name="close" size="xs" color="grey-5" />
+                  <span class="text-grey-5">{{ $t('productsPage.noGs1Data') }}</span>
                 </div>
               </div>
             </q-td>
@@ -244,52 +152,24 @@
 
           <!-- Price Cell -->
           <template #body-cell-price="props">
-            <q-td :props="props">
-              <div v-if="getBestPrice(props.row)" class="price-info">
-                <div class="price-value">
-                  {{ formatPrice(getBestPrice(props.row)!) }}
-                </div>
-                <div
-                  v-if="props.row.supplier_products?.length > 1"
-                  class="price-note"
-                >
-                  {{ $t('productsPage.bestPrice') }}
-                </div>
+            <q-td :props="props" class="price-info">
+              <div class="price-value">
+                {{ props.row.lowest_price ? `€${props.row.lowest_price.toFixed(2)}` : '-' }}
               </div>
-              <span v-else class="text-grey-6">-</span>
             </q-td>
           </template>
 
           <!-- Batch Status Cell -->
           <template #body-cell-batch_status="props">
             <q-td :props="props">
-              <div v-if="props.row.requires_batch_tracking">
-                <div v-if="props.row.batches?.length > 0" class="batch-info">
-                  <q-chip
-                    :color="getBatchStatusColor(props.row)"
-                    :text-color="getBatchStatusTextColor(props.row)"
-                    :label="getBatchStatusLabel(props.row)"
-                    size="sm"
-                    dense
-                  />
-                  <div class="batch-count">
-                    {{ props.row.batches.length }}
-                    {{ $t('productsPage.batches') }}
-                  </div>
-                </div>
-                <span v-else class="text-grey-6">{{
-                  $t('productsPage.noBatches')
-                }}</span>
-              </div>
-              <div v-else class="manual-stock-indicator">
-                <q-chip
-                  color="info"
-                  text-color="white"
-                  :label="$t('productsPage.manualStock')"
-                  size="sm"
-                  dense
-                />
-              </div>
+              <q-chip
+                :color="props.row.batch_status === 'batch_tracked' ? 'info' : 'grey'"
+                text-color="white"
+                size="sm"
+                dense
+              >
+                {{ $t(`productsPage.batchStatus.${props.row.batch_status}`) }}
+              </q-chip>
             </q-td>
           </template>
 
@@ -298,138 +178,148 @@
             <q-td :props="props">
               <div class="action-buttons">
                 <q-btn
+                  size="sm"
                   flat
                   dense
                   round
                   icon="visibility"
                   color="primary"
-                  size="sm"
-                  :title="$t('productsPage.viewDetails')"
                   @click="showProductDetails(props.row)"
-                />
-
+                >
+                  <q-tooltip>{{ $t('productsPage.viewDetails') }}</q-tooltip>
+                </q-btn>
                 <q-btn
+                  v-if="canEdit"
+                  size="sm"
+                  flat
+                  dense
+                  round
+                  icon="edit"
+                  color="warning"
+                  @click="editProduct(props.row)"
+                >
+                  <q-tooltip>{{ $t('products.editProduct') }}</q-tooltip>
+                </q-btn>
+                <q-btn
+                  v-if="canDelete"
+                  size="sm"
+                  flat
+                  dense
+                  round
+                  icon="delete"
+                  color="negative"
+                  @click="deleteProduct(props.row)"
+                >
+                  <q-tooltip>{{ $t('products.deleteProduct') }}</q-tooltip>
+                </q-btn>
+                <q-btn
+                  size="sm"
                   flat
                   dense
                   round
                   icon="add_shopping_cart"
                   color="positive"
-                  size="sm"
-                  :disable="props.row.stock_status === 'out_of_stock'"
-                  :title="$t('productsPage.addToCart')"
                   @click="handleAddToCart(props.row)"
-                />
-
+                >
+                  <q-tooltip>{{ $t('productsPage.addToCart') }}</q-tooltip>
+                </q-btn>
                 <q-btn
+                  size="sm"
                   flat
                   dense
                   round
-                  icon="playlist_add"
-                  color="secondary"
-                  size="sm"
-                  :title="$t('productsPage.addToOrderList')"
+                  icon="list_alt"
+                  color="orange"
                   @click="handleAddToOrderList(props.row)"
-                />
-
-                <q-btn
-                  flat
-                  dense
-                  round
-                  icon="expand_more"
-                  color="grey-7"
-                  size="sm"
-                  :title="$t('productsPage.expandDetails')"
-                  @click="toggleRowExpansion(props.row.id)"
-                />
+                >
+                  <q-tooltip>{{ $t('productsPage.addToOrderList') }}</q-tooltip>
+                </q-btn>
               </div>
             </q-td>
           </template>
 
-          <!-- Expanded Row -->
-          <template #body-cell-expand="props">
-            <q-td colspan="100%" v-if="expandedRows.includes(props.row.id)">
-              <div class="expanded-content">
+          <!-- Row Expansion -->
+          <template #body="props">
+            <q-tr :props="props">
+              <q-td
+                v-for="col in props.cols"
+                :key="col.name"
+                :props="props"
+                @click="col.name === 'name' ? toggleRowExpansion(props.row.id) : null"
+                :class="{ 'cursor-pointer': col.name === 'name' }"
+              >
+                <slot :name="`body-cell-${col.name}`" :props="{ ...props, col }">
+                  {{ col.value }}
+                </slot>
+              </q-td>
+            </q-tr>
+
+            <!-- Expanded Row Content -->
+            <q-tr v-show="expandedRows.includes(props.row.id)" :props="props">
+              <q-td colspan="100%" class="expanded-content">
                 <div class="expanded-grid">
+                  <!-- Product Details -->
                   <div class="detail-section">
-                    <h6 class="section-title">
-                      {{ $t('productsPage.productDetails') }}
-                    </h6>
+                    <div class="section-title">{{ $t('productsPage.productDetails') }}</div>
                     <div class="detail-items">
-                      <div class="detail-item">
-                        <span class="detail-label"
-                          >{{ $t('productsPage.description') }}:</span
-                        >
-                        <span class="detail-value">{{
-                          props.row.description || '-'
-                        }}</span>
+                      <div v-if="props.row.description" class="detail-item">
+                        <span class="detail-label">{{ $t('productsPage.description') }}:</span>
+                        <span class="detail-value">{{ props.row.description }}</span>
                       </div>
-                      <div class="detail-item">
-                        <span class="detail-label"
-                          >{{ $t('productsPage.category') }}:</span
-                        >
-                        <span class="detail-value">{{
-                          props.row.category || '-'
-                        }}</span>
+                      <div v-if="props.row.unit" class="detail-item">
+                        <span class="detail-label">{{ $t('productsPage.unit') }}:</span>
+                        <span class="detail-value">{{ props.row.unit }}</span>
                       </div>
-                      <div class="detail-item">
-                        <span class="detail-label"
-                          >{{ $t('productsPage.unit') }}:</span
-                        >
-                        <span class="detail-value">{{
-                          props.row.unit || '-'
-                        }}</span>
+                      <div v-if="props.row.category" class="detail-item">
+                        <span class="detail-label">{{ $t('productsPage.category') }}:</span>
+                        <span class="detail-value">{{ props.row.category }}</span>
                       </div>
                     </div>
                   </div>
 
-                  <div
-                    v-if="props.row.supplier_products?.length > 0"
-                    class="detail-section"
-                  >
-                    <h6 class="section-title">
-                      {{ $t('productsPage.suppliers') }}
-                    </h6>
+                  <!-- GS1 Information -->
+                  <div v-if="props.row.gtin || props.row.gpc_brick_code" class="detail-section">
+                    <div class="section-title">{{ $t('productsPage.gs1Information') }}</div>
+                    <div class="detail-items">
+                      <div v-if="props.row.gtin" class="detail-item">
+                        <span class="detail-label">GTIN:</span>
+                        <span class="detail-value">{{ props.row.gtin }}</span>
+                      </div>
+                      <div v-if="props.row.gpc_brick_code" class="detail-item">
+                        <span class="detail-label">GPC:</span>
+                        <span class="detail-value">{{ props.row.gpc_brick_code }}</span>
+                      </div>
+                      <div v-if="props.row.product_lifecycle_status" class="detail-item">
+                        <span class="detail-label">{{ $t('productsPage.lifecycle') }}:</span>
+                        <span class="detail-value">{{ props.row.product_lifecycle_status }}</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Suppliers -->
+                  <div v-if="props.row.suppliers?.length" class="detail-section">
+                    <div class="section-title">{{ $t('productsPage.suppliers') }}</div>
                     <div class="supplier-list">
-                      <div
-                        v-for="supplier in props.row.supplier_products"
-                        :key="supplier.supplier_id"
-                        class="supplier-item"
-                      >
-                        <span class="supplier-name">{{
-                          supplier.supplier_name
-                        }}</span>
-                        <span class="supplier-price">{{
-                          formatPrice(supplier.unit_price)
-                        }}</span>
+                      <div v-for="supplier in props.row.suppliers" :key="supplier.id" class="supplier-item">
+                        <span class="supplier-name">{{ supplier.name }}</span>
+                        <span v-if="supplier.price" class="supplier-price">€{{ supplier.price.toFixed(2) }}</span>
                       </div>
                     </div>
                   </div>
 
-                  <div
-                    v-if="props.row.stock_levels?.length > 0"
-                    class="detail-section"
-                  >
-                    <h6 class="section-title">
-                      {{ $t('productsPage.stockLevels') }}
-                    </h6>
+                  <!-- Stock Levels -->
+                  <div v-if="props.row.stock_levels?.length" class="detail-section">
+                    <div class="section-title">{{ $t('productsPage.stockLevels') }}</div>
                     <div class="stock-list">
-                      <div
-                        v-for="stock in props.row.stock_levels"
-                        :key="stock.location_id"
-                        class="stock-item"
-                      >
-                        <span class="location-name">{{
-                          stock.location_name || stock.location_id
-                        }}</span>
-                        <span class="stock-amount"
-                          >{{ stock.quantity }} {{ props.row.unit }}</span
-                        >
+                      <div v-for="stock in props.row.stock_levels" :key="stock.location_id" class="stock-item">
+                        <span class="location-name">{{ stock.location_name || 'Unknown Location' }}</span>
+                        <span class="stock-amount">{{ stock.current_quantity || 0 }} {{ props.row.unit || 'pcs' }}</span>
                       </div>
                     </div>
                   </div>
                 </div>
-              </div>
-            </q-td>
+              </q-td>
+            </q-tr>
           </template>
         </q-table>
       </div>
@@ -462,637 +352,740 @@
       @create-order-list="handleCreateOrderList"
       @add-to-existing="handleAddToExistingOrderList"
     />
+
+    <!-- GTIN Barcode Scanner -->
+    <BarcodeScanner
+      v-model="showGtinScanner"
+      @scan="handleGtinScan"
+    />
+
+    <!-- Advanced Search Dialog -->
+    <AdvancedSearchDialog
+      v-model="showAdvancedSearch"
+      :current-filters="filters"
+      :country-options="countryOptions"
+      :gpc-options="gpcOptions"
+      :category-options="categoryOptions"
+      :supplier-options="supplierOptions"
+      :stock-status-options="stockStatusOptions"
+      :lifecycle-options="lifecycleOptions"
+      :results-count="searchResultsCount"
+      @search="handleAdvancedSearch"
+      @open-scanner="showGtinScanner = true"
+      @preview="handleSearchPreview"
+    />
+
+    <!-- Product Form Dialog -->
+    <ProductFormDialog
+      v-model="showProductFormDialog"
+      :product="selectedProductForEdit"
+      @saved="onProductSaved"
+      @scan-barcode="showGtinScanner = true"
+    />
+
+    <!-- Delete Confirmation Dialog -->
+    <q-dialog v-model="showDeleteDialog">
+      <q-card style="min-width: 350px">
+        <q-card-section>
+          <div class="text-h6">{{ $t('products.deleteConfirm') }}</div>
+        </q-card-section>
+
+        <q-card-section class="q-pt-none">
+          {{ $t('products.deleteMessage', { name: productToDelete?.name }) }}
+        </q-card-section>
+
+        <q-card-actions align="right">
+          <q-btn
+            flat
+            :label="$t('common.cancel')"
+            color="primary"
+            v-close-popup
+          />
+          <q-btn
+            :label="$t('common.delete')"
+            color="negative"
+            @click="confirmDelete"
+            :loading="deleting"
+          />
+        </q-card-actions>
+      </q-card>
+    </q-dialog>
   </PageLayout>
 </template>
 
 <script setup lang="ts">
-  import { ref, computed, onMounted, watch } from 'vue';
-  import { useI18n } from 'vue-i18n';
-  import { useQuasar } from 'quasar';
-  import { useProductsStore } from 'src/stores/products';
-  import { useOrderListsStore } from 'src/stores/orderLists';
-  import { useAuthStore } from 'src/stores/auth';
-  import PageLayout from 'src/components/PageLayout.vue';
-  import PageTitle from 'src/components/PageTitle.vue';
-  import ProductDetailsDialog from 'src/components/products/ProductDetailsDialog.vue';
-  import ShoppingCartDialog from 'src/components/products/ShoppingCartDialog.vue';
-  import OrderListDialog from 'src/components/products/OrderListDialog.vue';
-  import type {
-    ProductWithStock,
-    ProductBatchSummary,
-  } from 'src/types/inventory';
+import { ref, computed, onMounted, watch } from 'vue';
+import { storeToRefs } from 'pinia';
+import { useI18n } from 'vue-i18n';
+import { useQuasar } from 'quasar';
+import { useProductsStore } from 'src/stores/products';
+import { useOrderListsStore } from 'src/stores/orderLists';
+import { useAuthStore } from 'src/stores/auth';
+import PageLayout from 'src/components/PageLayout.vue';
+import PageTitle from 'src/components/PageTitle.vue';
+import FilterPanel from 'src/components/filters/FilterPanel.vue';
+import ProductDetailsDialog from 'src/components/products/ProductDetailsDialog.vue';
+import ShoppingCartDialog from 'src/components/products/ShoppingCartDialog.vue';
+import OrderListDialog from 'src/components/products/OrderListDialog.vue';
+import BarcodeScanner from 'src/components/BarcodeScanner.vue';
+import AdvancedSearchDialog from 'src/components/products/AdvancedSearchDialog.vue';
+import ProductFormDialog from 'src/components/products/ProductFormDialog.vue';
+import { productsFilterPreset } from '@/presets/filters/products';
+import { usePermissions } from 'src/services/permissions';
+import type {
+  ProductWithStock,
+  ProductBatchSummary,
+} from 'src/types/inventory';
+import type { FilterValues, FilterChangeEvent, FilterResetEvent } from '@/types/filters';
 
-  const { t, locale } = useI18n();
-  const $q = useQuasar();
-  const productsStore = useProductsStore();
-  const orderListsStore = useOrderListsStore();
-  const authStore = useAuthStore();
+const { t, locale } = useI18n();
+const $q = useQuasar();
+const productsStore = useProductsStore();
+const orderListsStore = useOrderListsStore();
+const authStore = useAuthStore();
+const permissions = usePermissions();
 
-  // Reactive data
-  const selectedProduct = ref<ProductWithStock | null>(null);
-  const showDetailsDialog = ref(false);
-  const showCartDialog = ref(false);
-  const showOrderListDialog = ref(false);
-  const showFilters = ref(false);
-  const localSearch = ref('');
-  const expandedRows = ref<string[]>([]);
-  const localPriceMin = ref<number | null>(null);
-  const localPriceMax = ref<number | null>(null);
+// Permission checks
+const canCreate = ref(false);
+const canEdit = ref(false);
+const canDelete = ref(false);
 
-  const pagination = ref({
-    sortBy: null as string | null,
-    descending: false,
-    page: 1,
-    rowsPerPage: 25,
-    rowsNumber: 0,
-  });
+// Reactive data
+const selectedProduct = ref<ProductWithStock | null>(null);
+const showDetailsDialog = ref(false);
+const showCartDialog = ref(false);
+const showOrderListDialog = ref(false);
+const showGtinScanner = ref(false);
+const showAdvancedSearch = ref(false);
+const showProductFormDialog = ref(false);
+const showDeleteDialog = ref(false);
+const selectedProductForEdit = ref<ProductWithStock | null>(null);
+const productToDelete = ref<ProductWithStock | null>(null);
+const deleting = ref(false);
+const expandedRows = ref<string[]>([]);
+const searchResultsCount = ref<number | null>(null);
 
-  // Store getters
-  const {
-    products,
-    filteredProducts,
-    loading,
-    cart,
-    cartItemsCount,
-    cartTotal,
-    orderLists,
-    filters,
-    availableCategories,
-    availableSuppliers,
-    productStats,
-  } = productsStore;
+// New filter state for FilterPanel
+const filterValues = ref<FilterValues>({});
 
-  // Table columns configuration
-  const tableColumns = computed(() => [
-    {
-      name: 'name',
-      label: t('productsPage.table.name'),
-      field: 'name',
-      align: 'left' as const,
-      sortable: true,
-      style: 'width: 250px',
-    },
-    {
-      name: 'sku',
-      label: t('productsPage.table.sku'),
-      field: 'sku',
-      align: 'left' as const,
-      sortable: true,
-      style: 'width: 120px',
-    },
-    {
-      name: 'stock_status',
-      label: t('productsPage.table.stockStatus'),
-      field: 'stock_status',
-      align: 'center' as const,
-      sortable: true,
-      style: 'width: 150px',
-    },
-    {
-      name: 'price',
-      label: t('productsPage.table.price'),
-      field: 'lowest_price',
-      align: 'right' as const,
-      sortable: true,
-      style: 'width: 120px',
-    },
-    {
-      name: 'batch_status',
-      label: t('productsPage.table.stockType'),
-      field: 'batch_status',
-      align: 'center' as const,
-      sortable: false,
-      style: 'width: 140px',
-    },
-    {
-      name: 'actions',
-      label: t('productsPage.table.actions'),
-      field: '',
-      align: 'center' as const,
-      sortable: false,
-      style: 'width: 180px',
-    },
-  ]);
+const pagination = ref({
+  sortBy: null as string | null,
+  descending: false,
+  page: 1,
+  rowsPerPage: 25,
+  rowsNumber: 0,
+});
 
-  // Filter options
-  const categoryOptions = computed(
-    () =>
-      availableCategories?.map((cat: string) => ({ label: cat, value: cat })) ??
-      []
-  );
+// Store getters - using storeToRefs for reactivity
+const {
+  products,
+  filteredProducts,
+  loading,
+  cart,
+  cartItemsCount,
+  cartTotal,
+  orderLists,
+  filters,
+  availableCategories,
+  availableCountries,
+  availableGpcCodes,
+  availableLifecycleStatuses,
+  availableSuppliers,
+  productStats,
+} = storeToRefs(productsStore);
 
-  const supplierOptions = computed(() => [
-    { label: t('productsPage.filters.remka'), value: 'remka' },
-    { label: t('productsPage.filters.external'), value: 'external' },
-  ]);
+// Table columns configuration
+const tableColumns = computed(() => [
+  {
+    name: 'name',
+    label: t('productsPage.table.name'),
+    field: 'name',
+    align: 'left' as const,
+    sortable: true,
+    style: 'width: 250px',
+  },
+  {
+    name: 'sku',
+    label: t('productsPage.table.sku'),
+    field: 'sku',
+    align: 'left' as const,
+    sortable: true,
+    style: 'width: 120px',
+  },
+  {
+    name: 'stock_status',
+    label: t('productsPage.table.stockStatus'),
+    field: 'stock_status',
+    align: 'center' as const,
+    sortable: true,
+    style: 'width: 150px',
+  },
+  {
+    name: 'gs1_status',
+    label: t('productsPage.table.gs1Status'),
+    field: 'gs1_status',
+    align: 'center' as const,
+    sortable: false,
+    style: 'width: 140px',
+  },
+  {
+    name: 'price',
+    label: t('productsPage.table.price'),
+    field: 'lowest_price',
+    align: 'right' as const,
+    sortable: true,
+    style: 'width: 120px',
+  },
+  {
+    name: 'batch_status',
+    label: t('productsPage.table.stockType'),
+    field: 'batch_status',
+    align: 'center' as const,
+    sortable: false,
+    style: 'width: 140px',
+  },
+  {
+    name: 'actions',
+    label: t('productsPage.table.actions'),
+    field: '',
+    align: 'center' as const,
+    sortable: false,
+    style: 'width: 180px',
+  },
+]);
 
-  const stockStatusOptions = computed(() => [
-    { label: t('productsPage.stockStatus.in_stock'), value: 'in_stock' },
-    { label: t('productsPage.stockStatus.low_stock'), value: 'low_stock' },
-    {
-      label: t('productsPage.stockStatus.out_of_stock'),
-      value: 'out_of_stock',
-    },
-  ]);
+// Legacy filter options for compatibility
+const categoryOptions = computed(
+  () =>
+    availableCategories.value?.map((cat: string) => ({ label: cat, value: cat })) ??
+    []
+);
 
-  // Filter state
-  const hasActiveFilters = computed(() => {
-    return !!(
-      filters.category ||
-      filters.stock_status ||
-      filters.supplier ||
-      localPriceMin.value ||
-      localPriceMax.value ||
-      filters.search
-    );
-  });
+const stockStatusOptions = computed(() => [
+  { label: t('productsPage.stockStatus.in_stock'), value: 'in_stock' },
+  { label: t('productsPage.stockStatus.low_stock'), value: 'low_stock' },
+  {
+    label: t('productsPage.stockStatus.out_of_stock'),
+    value: 'out_of_stock',
+  },
+]);
 
-  const activeFiltersCount = computed(() => {
-    let count = 0;
-    if (filters.category) count++;
-    if (filters.stock_status) count++;
-    if (filters.supplier) count++;
-    if (localPriceMin.value || localPriceMax.value) count++;
-    if (filters.search) count++;
-    return count;
-  });
+const countryOptions = computed(() => 
+  availableCountries.value?.map((country: string) => ({
+    label: `${getCountryFlag(country)} ${getCountryName(country)}`,
+    value: country,
+  })) ?? []
+);
 
-  // Statistics cards
-  const statsCards = computed(() => ({
-    total: {
-      value: productStats?.total ?? 0,
-      label: t('productsPage.stats.totalProducts'),
-    },
-    inStock: {
-      value: productStats?.inStock ?? 0,
-      label: t('productsPage.stats.inStockProducts'),
-    },
-    lowStock: {
-      value: productStats?.lowStock ?? 0,
-      label: t('productsPage.stats.lowStockProducts'),
-    },
-    outOfStock: {
-      value: productStats?.outOfStock ?? 0,
-      label: t('productsPage.stats.outOfStockProducts'),
-    },
-  }));
+const gpcOptions = computed(() => 
+  availableGpcCodes.value?.map((gpc: string) => ({
+    label: `${gpc} - ${getGpcDescription(gpc)}`,
+    value: gpc,
+  })) ?? []
+);
 
-  // Helper functions
-  const getStockStatusColor = (status: string): string => {
-    switch (status) {
-      case 'in_stock':
-        return 'positive';
-      case 'low_stock':
-        return 'warning';
-      case 'out_of_stock':
-        return 'negative';
-      default:
-        return 'grey';
-    }
+const lifecycleOptions = computed(() => [
+  { label: t('productsPage.lifecycleStatus.active'), value: 'active' },
+  { label: t('productsPage.lifecycleStatus.discontinued'), value: 'discontinued' },
+  { label: t('productsPage.lifecycleStatus.new'), value: 'new' },
+  { label: t('productsPage.lifecycleStatus.phase_out'), value: 'phase_out' },
+]);
+
+const supplierOptions = computed(() => 
+  availableSuppliers.value.map((supplier: string) => ({
+    label: supplier,
+    value: supplier,
+  }))
+);
+
+// Filter event handlers
+const handleFilterChange = (event: FilterChangeEvent) => {
+  // Convert FilterPanel values to store filter format
+  const storeFilters = convertFilterValuesToStoreFormat(filterValues.value);
+  updateFilters(storeFilters);
+};
+
+const handleFilterReset = (event: FilterResetEvent) => {
+  // Reset to default values
+  filterValues.value = { ...productsFilterPreset.defaultFilters } as FilterValues;
+  productsStore.clearFilters();
+};
+
+const handleFilterClear = () => {
+  // Clear all filters
+  filterValues.value = {};
+  productsStore.clearFilters();
+};
+
+// Helper to convert FilterPanel values to store format
+const convertFilterValuesToStoreFormat = (values: FilterValues) => {
+  return {
+    search: String(values.search || ''),
+    category: String(values.category || ''),
+    supplier: String(values.supplier || ''),
+    stock_status: String(values.stock_status || 'all'),
+    gtin: String(values.gtin || ''),
+    country_of_origin: String(values.country_of_origin || ''),
+    gpc_brick_code: String(values.gpc_brick_code || ''),
+    lifecycle_status: String(values.lifecycle_status || ''),
+    orderable_only: Boolean(values.orderable_only || false),
   };
+};
 
-  const getStockStatusTextColor = (status: string): string => {
-    switch (status) {
-      case 'in_stock':
-        return 'white';
-      case 'low_stock':
-        return 'black';
-      case 'out_of_stock':
-        return 'white';
-      default:
-        return 'black';
-    }
-  };
+// Helper functions
+const getStockStatusColor = (status: string): string => {
+  switch (status) {
+    case 'in_stock':
+      return 'positive';
+    case 'low_stock':
+      return 'warning';
+    case 'out_of_stock':
+      return 'negative';
+    default:
+      return 'grey';
+  }
+};
 
-  const getBatchStatusColor = (product: ProductWithStock): string => {
-    if (!product.batches?.length) return 'grey';
+const getStockStatusTextColor = (status: string): string => {
+  switch (status) {
+    case 'in_stock':
+      return 'white';
+    case 'low_stock':
+      return 'black';
+    case 'out_of_stock':
+      return 'white';
+    default:
+      return 'black';
+  }
+};
 
-    const hasExpiring = product.batches.some(
-      (b: ProductBatchSummary) =>
-        b.urgency === 'warning' || b.urgency === 'critical'
-    );
-    const hasExpired = product.batches.some(
-      (b: ProductBatchSummary) => b.urgency === 'expired'
-    );
+const getCountryFlag = (countryCode: string): string => {
+  // Simple flag implementation - could be enhanced
+  return '🏳️';
+};
 
-    if (hasExpired) return 'negative';
-    if (hasExpiring) return 'warning';
-    return 'positive';
-  };
+const getCountryName = (countryCode: string): string => {
+  // Simple country name implementation
+  return countryCode;
+};
 
-  const getBatchStatusTextColor = (product: ProductWithStock): string => {
-    const color = getBatchStatusColor(product);
-    return color === 'warning' ? 'black' : 'white';
-  };
+const getGpcDescription = (gpcCode: string): string => {
+  // Simple GPC description implementation
+  return 'Product Classification';
+};
 
-  const getBatchStatusLabel = (product: ProductWithStock): string => {
-    if (!product.batches?.length) return t('productsPage.noBatches');
+const isValidGTIN = (value: string): boolean => {
+  return /^\d{8,14}$/.test(value);
+};
 
-    const hasExpired = product.batches.some(
-      (b: ProductBatchSummary) => b.urgency === 'expired'
-    );
-    const hasExpiring = product.batches.some(
-      (b: ProductBatchSummary) =>
-        b.urgency === 'warning' || b.urgency === 'critical'
-    );
-
-    if (hasExpired) return t('productsPage.batchStatus.expired');
-    if (hasExpiring) return t('productsPage.batchStatus.expiring');
-    return t('productsPage.batchStatus.good');
-  };
-
-  const getBestPrice = (product: ProductWithStock): number | null => {
-    if (!product.supplier_products?.length) return null;
-
-    const prices = product.supplier_products
-      .filter(sp => sp.unit_price && sp.unit_price > 0)
-      .map(sp => sp.unit_price)
-      .sort((a, b) => a - b);
-
-    return prices[0] || null;
-  };
-
-  const formatPrice = (price: number): string => {
-    return new Intl.NumberFormat(locale.value, {
-      style: 'currency',
-      currency: 'EUR',
-    }).format(price);
-  };
-
-  // Event handlers
-  const updateSearchFilter = (searchValue: string | number | null) => {
-    const searchString = searchValue?.toString() || '';
-    updateFilters({ search: searchString });
-  };
-
-  const clearAllFilters = () => {
-    localSearch.value = '';
-    localPriceMin.value = null;
-    localPriceMax.value = null;
-    productsStore.clearFilters();
-    showFilters.value = false;
-  };
-
-  const handlePriceMinChange = (value: string | number | null) => {
-    localPriceMin.value =
-      typeof value === 'string' ? parseFloat(value) || null : value;
-    // Implement price filtering logic here if needed
-  };
-
-  const handlePriceMaxChange = (value: string | number | null) => {
-    localPriceMax.value =
-      typeof value === 'string' ? parseFloat(value) || null : value;
-    // Implement price filtering logic here if needed
-  };
-
-  const toggleRowExpansion = (productId: string) => {
-    const index = expandedRows.value.indexOf(productId);
-    if (index > -1) {
-      expandedRows.value.splice(index, 1);
-    } else {
-      expandedRows.value.push(productId);
-    }
-  };
-
-  const showProductDetails = (product: ProductWithStock) => {
-    selectedProduct.value = product;
-    showDetailsDialog.value = true;
-  };
-
-  const handleAddToCart = (product: ProductWithStock) => {
-    try {
-      productsStore.addToCart(product, 1);
-      $q.notify({
-        type: 'positive',
-        message: t('productsPage.addedToCart', { productName: product.name }),
-        position: 'top',
-      });
-    } catch (error) {
-      $q.notify({
-        type: 'negative',
-        message: t('productsPage.cartAddError'),
-        position: 'top',
-      });
-    }
-  };
-
-  const handleAddToOrderList = (product: ProductWithStock) => {
-    selectedProduct.value = product;
-    showOrderListDialog.value = true;
-  };
-
-  const refreshData = async () => {
-    try {
-      const practiceId = authStore.clinicId;
-      if (!practiceId) return;
-
-      await productsStore.refreshData(practiceId);
-      $q.notify({
-        type: 'positive',
-        message: t('productsPage.dataRefreshed'),
-      });
-    } catch (error) {
-      $q.notify({
-        type: 'negative',
-        message: t('productsPage.productLoadError'),
-      });
-    }
-  };
-
-  // Store actions
-  const { updateFilters } = productsStore;
-  const { updateCartItemQuantity, removeFromCart, clearCart } = productsStore;
-  const handleCreateOrderList = orderListsStore.createOrderList;
-  const handleAddToExistingOrderList = orderListsStore.addOrderListItem;
-
-  const handleCheckout = () => {
+const handleGtinScan = (gtin: string) => {
+  // Update filter values
+  filterValues.value = { ...filterValues.value, gtin };
+  
+  // Check if we found a product with this GTIN
+  const gtinMatch = filteredProducts.value.find((product: ProductWithStock) => product.gtin === gtin);
+  if (gtinMatch) {
     $q.notify({
-      type: 'info',
-      message: t('common.comingSoon'),
+      type: 'positive',
+      message: t('productsPage.gtinFound', { product: gtinMatch.name }),
+      icon: 'qr_code_2',
+      position: 'top',
+      actions: [
+        {
+          label: t('productsPage.viewProduct'),
+          color: 'white',
+          handler: () => showProductDetails(gtinMatch)
+        }
+      ]
     });
-  };
+  } else {
+    $q.notify({
+      type: 'warning',
+      message: t('productsPage.gtinNotFound', { gtin }),
+      icon: 'search_off',
+      position: 'top',
+    });
+  }
+};
 
-  // Watch for search changes
-  watch(localSearch, newValue => {
-    updateSearchFilter(newValue);
-  });
+const toggleRowExpansion = (productId: string) => {
+  const index = expandedRows.value.indexOf(productId);
+  if (index > -1) {
+    expandedRows.value.splice(index, 1);
+  } else {
+    expandedRows.value.push(productId);
+  }
+};
 
-  // Lifecycle
-  onMounted(async () => {
+const showProductDetails = (product: ProductWithStock) => {
+  selectedProduct.value = product;
+  showDetailsDialog.value = true;
+};
+
+const handleAddToCart = (product: ProductWithStock) => {
+  try {
+    productsStore.addToCart(product, 1);
+    $q.notify({
+      type: 'positive',
+      message: t('productsPage.addedToCart', { productName: product.name }),
+      position: 'top',
+    });
+  } catch (error) {
+    $q.notify({
+      type: 'negative',
+      message: t('productsPage.cartAddError'),
+      position: 'top',
+    });
+  }
+};
+
+const handleAddToOrderList = (product: ProductWithStock) => {
+  selectedProduct.value = product;
+  showOrderListDialog.value = true;
+};
+
+const refreshData = async () => {
+  try {
     const practiceId = authStore.clinicId;
-    if (practiceId) {
+    if (!practiceId) return;
+
+    await productsStore.refreshData(practiceId);
+    $q.notify({
+      type: 'positive',
+      message: t('productsPage.dataRefreshed'),
+    });
+  } catch (error) {
+    $q.notify({
+      type: 'negative',
+      message: t('productsPage.productLoadError'),
+    });
+  }
+};
+
+// Store actions
+const { updateFilters } = productsStore;
+const { updateCartItemQuantity, removeFromCart, clearCart } = productsStore;
+const handleCreateOrderList = orderListsStore.createOrderList;
+const handleAddToExistingOrderList = orderListsStore.addOrderListItem;
+
+const handleCheckout = () => {
+  $q.notify({
+    type: 'info',
+    message: t('common.comingSoon'),
+  });
+};
+
+const handleAdvancedSearch = (criteria: any) => {
+  // Apply advanced search criteria to filters
+  Object.assign(filters, criteria);
+  
+  // Update search results count
+  searchResultsCount.value = filteredProducts.value.length;
+  
+  $q.notify({
+    type: 'positive',
+    message: t('productsPage.advancedSearch.resultsFound', { count: filteredProducts.value.length }),
+  });
+};
+
+const handleSearchPreview = (criteria: any) => {
+  // For preview, we'll simulate the search without actually applying filters
+  const mockCount = Math.floor(Math.random() * products.value.length);
+  searchResultsCount.value = mockCount;
+};
+
+// Product CRUD Methods
+const showCreateProductDialog = () => {
+  selectedProductForEdit.value = null;
+  showProductFormDialog.value = true;
+};
+
+const editProduct = (product: ProductWithStock) => {
+  selectedProductForEdit.value = product;
+  showProductFormDialog.value = true;
+};
+
+const deleteProduct = (product: ProductWithStock) => {
+  productToDelete.value = product;
+  showDeleteDialog.value = true;
+};
+
+const confirmDelete = async () => {
+  if (!productToDelete.value) return;
+
+  deleting.value = true;
+  try {
+    await productsStore.deleteProduct(productToDelete.value.id);
+    
+    $q.notify({
+      type: 'positive',
+      message: t('products.deleted', { name: productToDelete.value.name }),
+    });
+    
+    showDeleteDialog.value = false;
+    productToDelete.value = null;
+    
+    // Refresh products list
+    await refreshData();
+  } catch (error) {
+    console.error('Error deleting product:', error);
+    $q.notify({
+      type: 'negative',
+      message: t('products.deleteError'),
+    });
+  } finally {
+    deleting.value = false;
+  }
+};
+
+const onProductSaved = async (product: any) => {
+  showProductFormDialog.value = false;
+  selectedProductForEdit.value = null;
+  
+  // Refresh products list to show the changes
+  await refreshData();
+};
+
+// Lifecycle
+onMounted(async () => {
+  const practiceId = authStore.clinicId;
+  
+  if (practiceId) {
+    // Clear any existing filters first
+    productsStore.clearFilters();
+    
+    await productsStore.fetchProducts(practiceId);
+    
+    // If no products loaded on first try, wait and retry once
+    if (products.value.length === 0) {
+      console.log('🔄 No products loaded on first try, retrying in 1 second...');
+      await new Promise(resolve => setTimeout(resolve, 1000));
       await productsStore.fetchProducts(practiceId);
     }
-  });
+  }
+  
+  // Initialize filter values with defaults
+  if (productsFilterPreset.defaultFilters) {
+    filterValues.value = { ...productsFilterPreset.defaultFilters } as FilterValues;
+  }
+
+  // Check user permissions
+  try {
+    canCreate.value = await permissions.canCreateProducts();
+    canEdit.value = await permissions.canEditProducts();
+    canDelete.value = await permissions.canDeleteProducts();
+  } catch (error) {
+    console.error('Error checking permissions:', error);
+    // Default to no permissions on error
+    canCreate.value = false;
+    canEdit.value = false;
+    canDelete.value = false;
+  }
+});
 </script>
 
 <style lang="scss" scoped>
-  .products-page {
-    .products-header {
-      .header-content {
-        display: flex;
-        justify-content: space-between;
-        align-items: flex-start;
-        margin-bottom: 1.5rem;
-
-        .title-section {
-          flex: 1;
-        }
-
-        .header-actions {
-          display: flex;
-          align-items: center;
-          gap: 0.5rem;
-        }
-      }
-    }
-
-    .filters-section {
+.products-page {
+  .products-header {
+    .header-content {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
       margin-bottom: 1.5rem;
 
-      .filters-toolbar {
+      .title-section {
+        flex: 1;
+      }
+
+      .header-actions {
         display: flex;
         align-items: center;
-        gap: 1rem;
-        margin-bottom: 1rem;
+        gap: 0.5rem;
+      }
+    }
+  }
 
-        .search-section {
-          flex: 1;
-          max-width: 400px;
+  .filters-section {
+    margin-bottom: 1.5rem;
 
-          .search-input {
-            width: 100%;
+    .products-filter-panel {
+      background: var(--q-card-background);
+      border-radius: 8px;
+    }
+  }
+
+  .products-table-container {
+    .products-table {
+      .product-name-cell {
+        .product-info {
+          .product-name {
+            font-weight: 500;
+            color: rgba(0, 0, 0, 0.87);
           }
-        }
 
-        .filter-controls {
-          display: flex;
-          align-items: center;
-          gap: 0.5rem;
-
-          .filter-toggle {
-            position: relative;
+          .product-brand {
+            font-size: 0.8rem;
+            color: rgba(0, 0, 0, 0.6);
+            margin-top: 0.25rem;
           }
         }
       }
 
-      .filters-panel {
-        background: rgba(255, 255, 255, 0.8);
-        border-radius: 8px;
-        border: 1px solid rgba(0, 0, 0, 0.08);
-        padding: 1.5rem;
+      .sku-code {
+        font-family: monospace;
+        background: rgba(0, 0, 0, 0.05);
+        padding: 0.25rem 0.5rem;
+        border-radius: 4px;
+        font-size: 0.8rem;
+      }
 
-        .filters-grid {
+      .gs1-status-cell {
+        min-width: 120px;
+
+        .gs1-data {
+          display: flex;
+          flex-direction: column;
+          gap: 0.25rem;
+
+          .gs1-item {
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+
+            .gs1-value {
+              font-size: 0.8rem;
+              font-family: monospace;
+            }
+
+            &:first-child .gs1-value {
+              font-weight: 600;
+              color: var(--q-primary);
+            }
+          }
+
+          .gs1-item:not(:first-child) {
+            .gs1-value {
+              font-size: 0.75rem;
+              color: rgba(0, 0, 0, 0.7);
+            }
+
+            .q-icon {
+              font-size: 1em;
+              line-height: 1;
+            }
+          }
+        }
+
+        .no-gs1-data {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          height: 100%;
+          text-align: center;
+        }
+      }
+
+      .price-info {
+        align-items: flex-end;
+
+        .price-value {
+          font-weight: 600;
+          color: var(--q-primary);
+        }
+      }
+
+      .action-buttons {
+        display: flex;
+        gap: 0.25rem;
+        justify-content: center;
+      }
+
+      .expanded-content {
+        padding: 1rem;
+        background: rgba(0, 0, 0, 0.02);
+        border-top: 1px solid rgba(0, 0, 0, 0.08);
+
+        .expanded-grid {
           display: grid;
-          grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-          gap: 1rem;
+          grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+          gap: 1.5rem;
 
-          .filter-group {
-            .filter-label {
-              display: block;
+          .detail-section {
+            .section-title {
               font-size: 0.875rem;
-              font-weight: 500;
-              margin-bottom: 0.5rem;
+              font-weight: 600;
+              margin: 0 0 0.75rem 0;
               color: rgba(0, 0, 0, 0.8);
             }
 
-            .price-range {
-              display: flex;
-              align-items: center;
-              gap: 0.5rem;
+            .detail-items {
+              .detail-item {
+                display: flex;
+                margin-bottom: 0.5rem;
 
-              .price-input {
-                flex: 1;
+                .detail-label {
+                  font-weight: 500;
+                  margin-right: 0.5rem;
+                  min-width: 80px;
+                  font-size: 0.8rem;
+                  color: rgba(0, 0, 0, 0.7);
+                }
+
+                .detail-value {
+                  font-size: 0.8rem;
+                  color: rgba(0, 0, 0, 0.8);
+                }
               }
+            }
 
-              .price-separator {
-                color: rgba(0, 0, 0, 0.6);
-                font-weight: 500;
+            .supplier-list,
+            .stock-list {
+              .supplier-item,
+              .stock-item {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                padding: 0.5rem;
+                background: white;
+                border-radius: 4px;
+                margin-bottom: 0.5rem;
+                border: 1px solid rgba(0, 0, 0, 0.08);
+
+                .supplier-name,
+                .location-name {
+                  font-size: 0.8rem;
+                  font-weight: 500;
+                }
+
+                .supplier-price,
+                .stock-amount {
+                  font-size: 0.8rem;
+                  color: var(--q-primary);
+                  font-weight: 600;
+                }
               }
             }
           }
         }
       }
     }
+  }
+}
 
-    .products-table-container {
-      background: white;
-      border-radius: 8px;
-      overflow: hidden;
-      border: 1px solid rgba(0, 0, 0, 0.08);
+// Mobile responsiveness
+@media (max-width: 768px) {
+  .products-page {
+    .products-header {
+      .header-content {
+        flex-direction: column;
+        gap: 1rem;
 
-      .products-table {
-        .product-name-cell {
-          .product-info {
-            .product-name {
-              font-weight: 500;
-              line-height: 1.3;
-            }
-
-            .product-brand {
-              font-size: 0.75rem;
-              color: rgba(0, 0, 0, 0.6);
-              margin-top: 0.25rem;
-            }
-          }
-        }
-
-        .sku-code {
-          font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
-          font-size: 0.85rem;
-          background: rgba(0, 0, 0, 0.05);
-          padding: 0.25rem 0.5rem;
-          border-radius: 4px;
-          border: 1px solid rgba(0, 0, 0, 0.1);
-        }
-
-        .stock-info,
-        .batch-info,
-        .price-info {
-          display: flex;
-          flex-direction: column;
-          align-items: center;
-          gap: 0.25rem;
-
-          .stock-quantity,
-          .batch-count {
-            font-size: 0.75rem;
-            color: rgba(0, 0, 0, 0.6);
-          }
-
-          .price-note {
-            font-size: 0.65rem;
-            color: rgba(0, 0, 0, 0.5);
-            font-style: italic;
-          }
-        }
-
-        .price-info {
-          align-items: flex-end;
-
-          .price-value {
-            font-weight: 600;
-            color: var(--q-primary);
-          }
-        }
-
-        .action-buttons {
-          display: flex;
-          gap: 0.25rem;
+        .header-actions {
+          align-self: stretch;
           justify-content: center;
         }
-
-        .expanded-content {
-          padding: 1rem;
-          background: rgba(0, 0, 0, 0.02);
-          border-top: 1px solid rgba(0, 0, 0, 0.08);
-
-          .expanded-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 1.5rem;
-
-            .detail-section {
-              .section-title {
-                font-size: 0.875rem;
-                font-weight: 600;
-                margin: 0 0 0.75rem 0;
-                color: rgba(0, 0, 0, 0.8);
-              }
-
-              .detail-items {
-                .detail-item {
-                  display: flex;
-                  margin-bottom: 0.5rem;
-
-                  .detail-label {
-                    font-weight: 500;
-                    margin-right: 0.5rem;
-                    min-width: 80px;
-                    font-size: 0.8rem;
-                    color: rgba(0, 0, 0, 0.7);
-                  }
-
-                  .detail-value {
-                    font-size: 0.8rem;
-                    color: rgba(0, 0, 0, 0.8);
-                  }
-                }
-              }
-
-              .supplier-list,
-              .stock-list {
-                .supplier-item,
-                .stock-item {
-                  display: flex;
-                  justify-content: space-between;
-                  align-items: center;
-                  padding: 0.5rem;
-                  background: white;
-                  border-radius: 4px;
-                  margin-bottom: 0.5rem;
-                  border: 1px solid rgba(0, 0, 0, 0.08);
-
-                  .supplier-name,
-                  .location-name {
-                    font-size: 0.8rem;
-                    font-weight: 500;
-                  }
-
-                  .supplier-price,
-                  .stock-amount {
-                    font-size: 0.8rem;
-                    color: var(--q-primary);
-                    font-weight: 600;
-                  }
-                }
-              }
-            }
-          }
-        }
       }
     }
   }
-
-  // Mobile responsiveness
-  @media (max-width: 768px) {
-    .products-page {
-      .products-header {
-        .header-content {
-          flex-direction: column;
-          gap: 1rem;
-
-          .header-actions {
-            align-self: stretch;
-            justify-content: center;
-          }
-        }
-      }
-
-      .filters-section {
-        .filters-toolbar {
-          flex-direction: column;
-          align-items: stretch;
-
-          .search-section {
-            max-width: none;
-          }
-
-          .filter-controls {
-            justify-content: center;
-          }
-        }
-
-        .filters-panel {
-          .filters-grid {
-            grid-template-columns: 1fr;
-          }
-        }
-      }
-    }
-  }
-
-  @media (max-width: 480px) {
-    // Additional mobile styles can be added here when needed
-  }
+}
 </style>

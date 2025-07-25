@@ -15,61 +15,19 @@
       </template>
     </PageTitle>
 
-    <!-- Filters -->
-    <BaseCard class="q-mb-md">
-      <div class="row q-gutter-md items-center">
-        <div class="col-12 col-md-4">
-          <q-input
-            v-model="filters.search"
-            :placeholder="$t('common.search')"
-            outlined
-            dense
-            clearable
-            debounce="300"
-          >
-            <template v-slot:prepend>
-              <q-icon name="search" />
-            </template>
-          </q-input>
-        </div>
-
-        <div class="col-12 col-md-3">
-          <q-select
-            v-model="filters.supplier"
-            :options="supplierOptions"
-            :label="$t('orderLists.supplier')"
-            outlined
-            dense
-            clearable
-            emit-value
-            map-options
-          />
-        </div>
-
-        <div class="col-12 col-md-3">
-          <q-select
-            v-model="filters.status"
-            :options="statusOptions"
-            :label="$t('orderLists.status')"
-            outlined
-            dense
-            clearable
-            emit-value
-            map-options
-          />
-        </div>
-
-        <div class="col-12 col-md-2">
-          <q-btn
-            :label="$t('common.clearFilters')"
-            outline
-            color="primary"
-            @click="clearFilters"
-            size="md"
-          />
-        </div>
-      </div>
-    </BaseCard>
+    <!-- Modern FilterPanel Component -->
+    <div class="filters-section q-mb-lg">
+      <FilterPanel
+        :preset="orderListsFilterPreset"
+        v-model="filterValues"
+        @change="handleFilterChange"
+        @reset="handleFilterReset"
+        @clear="handleFilterClear"
+        :loading="orderListsStore.loading"
+        collapsible
+        class="order-lists-filter-panel"
+      />
+    </div>
 
     <!-- Order Lists Grid -->
     <div v-if="filteredOrderLists.length > 0" class="row q-gutter-md">
@@ -149,6 +107,28 @@
             />
 
             <q-btn
+              v-if="orderList.status === 'ready'"
+              :label="$t('orderLists.submit')"
+              color="positive"
+              unelevated
+              size="sm"
+              @click="submitOrderList(orderList)"
+              class="q-mr-sm"
+              :loading="submittingOrderLists.has(orderList.id)"
+            />
+
+            <q-btn
+              v-if="orderList.status === 'ready' && orderList.supplier_id"
+              :label="$t('orderLists.sendToSupplier')"
+              color="primary"
+              unelevated
+              size="sm"
+              @click="sendToSupplier(orderList)"
+              class="q-mr-sm"
+              :loading="sendingToSupplier[orderList.id]"
+            />
+
+            <q-btn
               :label="$t('orderLists.addToCart')"
               color="secondary"
               outline
@@ -201,6 +181,7 @@
                   v-close-popup
                   @click="deleteOrderList(orderList)"
                   class="text-negative"
+                  :disable="orderList.status === 'submitted' || orderList.status === 'confirmed'"
                 >
                   <q-item-section avatar>
                     <q-icon name="delete" />
@@ -283,8 +264,12 @@
   import PageLayout from 'src/components/PageLayout.vue';
   import PageTitle from 'src/components/PageTitle.vue';
   import BaseCard from 'src/components/base/BaseCard.vue';
+  import FilterPanel from 'src/components/filters/FilterPanel.vue';
   import OrderListDialog from 'src/components/products/OrderListDialog.vue';
   import type { OrderListWithItems } from 'src/stores/orderLists';
+  import type { FilterValues, FilterChangeEvent, FilterResetEvent } from 'src/types/filters';
+  import { orderListsFilterPreset } from 'src/presets/filters/orderLists';
+  import { supabase } from 'src/services/supabase';
 
   const $q = useQuasar();
   const { t } = useI18n();
@@ -300,32 +285,20 @@
   const showDeleteDialog = ref(false);
   const selectedOrderList = ref<OrderListWithItems | null>(null);
   const orderListToDelete = ref<OrderListWithItems | null>(null);
+  const submittingOrderLists = ref<Set<string>>(new Set());
+  const sendingToSupplier = ref<Record<string, boolean>>({});
 
-  // Filters
-  const filters = ref({
-    search: '',
-    supplier: '',
-    status: '',
-  });
+  // Modern Filter System
+  const filterValues = ref<FilterValues>({});
+
+  // Legacy filters computed from FilterPanel values
+  const filters = computed(() => ({
+    search: String(filterValues.value.search || ''),
+    supplier: String(filterValues.value.supplier || ''),
+    status: String(filterValues.value.status || ''),
+  }));
 
   // Computed
-  const supplierOptions = computed(() => [
-    { label: t('common.all'), value: '' },
-    ...suppliersStore.suppliers.map(supplier => ({
-      label: supplier.name,
-      value: supplier.id,
-    })),
-  ]);
-
-  const statusOptions = computed(() => [
-    { label: t('common.all'), value: '' },
-    { label: t('orderLists.draft'), value: 'draft' },
-    { label: t('orderLists.ready'), value: 'ready' },
-    { label: t('orderLists.submitted'), value: 'submitted' },
-    { label: t('orderLists.confirmed'), value: 'confirmed' },
-    { label: t('orderLists.delivered'), value: 'delivered' },
-    { label: t('orderLists.cancelled'), value: 'cancelled' },
-  ]);
 
   const filteredOrderLists = computed(() => {
     let result = [...orderListsStore.orderLists];
@@ -355,16 +328,53 @@
       result = result.filter(list => list.status === filters.value.status);
     }
 
+    // Apply date range filter
+    if (filterValues.value.dateRange) {
+      const dateRange = filterValues.value.dateRange as { start?: string; end?: string };
+      if (dateRange.start) {
+        result = result.filter(list => new Date(list.updated_at) >= new Date(dateRange.start!));
+      }
+      if (dateRange.end) {
+        result = result.filter(list => new Date(list.updated_at) <= new Date(dateRange.end!));
+      }
+    }
+
+    // Apply amount range filter
+    if (filterValues.value.amountRange) {
+      const amountRange = filterValues.value.amountRange as { min?: number; max?: number };
+      if (amountRange.min !== undefined) {
+        result = result.filter(list => list.total_amount >= amountRange.min!);
+      }
+      if (amountRange.max !== undefined) {
+        result = result.filter(list => list.total_amount <= amountRange.max!);
+      }
+    }
+
+    // Apply has items filter
+    if (filterValues.value.hasItems) {
+      result = result.filter(list => list.total_items > 0);
+    }
+
     return result;
   });
 
-  // Methods
+  // Filter Event Handlers
+  const handleFilterChange = (event: FilterChangeEvent) => {
+    // Automatically handled by v-model on FilterPanel
+    console.log('Filter changed:', event);
+  };
+
+  const handleFilterReset = (event: FilterResetEvent) => {
+    filterValues.value = { ...orderListsFilterPreset.defaultFilters } as FilterValues;
+  };
+
+  const handleFilterClear = () => {
+    filterValues.value = {};
+  };
+
+  // Legacy clear filters method for compatibility
   const clearFilters = () => {
-    filters.value = {
-      search: '',
-      supplier: '',
-      status: '',
-    };
+    handleFilterClear();
   };
 
   const getStatusColor = (status: string) => {
@@ -463,6 +473,122 @@
     }
   };
 
+  const submitOrderList = async (orderList: OrderListWithItems) => {
+    // Show confirmation dialog
+    $q.dialog({
+      title: t('orderLists.submitConfirm'),
+      message: t('orderLists.submitMessage', {
+        name: orderList.name,
+        supplier: orderList.supplier?.name || t('common.unknownSupplier'),
+        items: orderList.total_items,
+        amount: `€${orderList.total_amount.toFixed(2)}`
+      }),
+      cancel: true,
+      persistent: true,
+      ok: {
+        label: t('orderLists.confirmSubmit'),
+        color: 'positive'
+      },
+      cancel: {
+        label: t('common.cancel'),
+        color: 'grey',
+        flat: true
+      }
+    }).onOk(async () => {
+      try {
+        // Set submitting state (for loading indicator)
+        submittingOrderLists.value.add(orderList.id);
+        
+        await orderListsStore.changeOrderListStatus(orderList.id, 'submitted');
+        
+        $q.notify({
+          type: 'positive',
+          message: t('orderLists.submitted', { name: orderList.name }),
+          timeout: 3000,
+          actions: [
+            {
+              label: t('orderLists.viewSubmitted'),
+              color: 'white',
+              handler: () => {
+                // Could navigate to submitted orders view
+                console.log('Navigate to submitted orders');
+              }
+            }
+          ]
+        });
+      } catch (error) {
+        console.error('Error submitting order list:', error);
+        $q.notify({
+          type: 'negative',
+          message: t('orderLists.submitError'),
+        });
+      } finally {
+        submittingOrderLists.value.delete(orderList.id);
+      }
+    });
+  };
+
+  const sendToSupplier = async (orderList: OrderListWithItems) => {
+    // Show supplier order method dialog first
+    $q.dialog({
+      title: t('orderLists.sendToSupplierConfirm'),
+      message: t('orderLists.sendToSupplierMessage', {
+        name: orderList.name,
+        supplier: orderList.supplier?.name || t('common.unknownSupplier'),
+        method: orderList.supplier?.order_method || 'manual'
+      }),
+      cancel: true,
+      persistent: true,
+      ok: {
+        label: t('orderLists.confirmSend'),
+        color: 'primary'
+      },
+      cancel: {
+        label: t('common.cancel'),
+        color: 'grey',
+        flat: true
+      }
+    }).onOk(async () => {
+      try {
+        sendingToSupplier.value[orderList.id] = true;
+        
+        // Call the supplier order function we created
+        const { data, error } = await supabase.rpc('send_supplier_order', {
+          order_list_uuid: orderList.id,
+          supplier_uuid: orderList.supplier_id
+        });
+
+        if (error) throw error;
+
+        if (data?.success) {
+          $q.notify({
+            type: 'positive',
+            message: t('orderLists.sentToSupplier', { 
+              name: orderList.name,
+              method: data.order_method 
+            }),
+          });
+          
+          // Reload order lists to get updated status
+          const practiceId = authStore.clinicId;
+          if (practiceId) {
+            await orderListsStore.fetchOrderLists(practiceId);
+          }
+        } else {
+          throw new Error(data?.error || 'Send failed');
+        }
+      } catch (error: any) {
+        console.error('Error sending to supplier:', error);
+        $q.notify({
+          type: 'negative',
+          message: t('orderLists.sendError', { error: error.message }),
+        });
+      } finally {
+        sendingToSupplier.value[orderList.id] = false;
+      }
+    });
+  };
+
   const onOrderListSaved = () => {
     showCreateDialog.value = false;
     selectedOrderList.value = null;
@@ -478,6 +604,11 @@
           suppliersStore.fetchSuppliers(),
           productsStore.fetchProducts(practiceId),
         ]);
+      }
+
+      // Initialize filter values with defaults
+      if (orderListsFilterPreset.defaultFilters) {
+        filterValues.value = { ...orderListsFilterPreset.defaultFilters } as FilterValues;
       }
     } catch (error) {
       console.error(t('orderLists.loadError'), error);

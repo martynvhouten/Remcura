@@ -1,5 +1,5 @@
 <template>
-  <q-card class="batch-detail-card">
+  <q-card class="batch-detail-card glass-card-modern">
     <q-card-section class="row items-center q-pb-none">
       <div class="text-h6">{{ $t('batch.batchDetails') }}</div>
       <q-space />
@@ -10,7 +10,7 @@
       <!-- Batch Header Info -->
       <div class="row q-gutter-md q-mb-lg">
         <div class="col-12 col-md-6">
-          <q-card flat bordered class="q-pa-md">
+          <q-card flat class="info-card">
             <div class="text-subtitle2 text-grey q-mb-sm">
               {{ $t('batch.batchInformation') }}
             </div>
@@ -54,7 +54,7 @@
         </div>
 
         <div class="col-12 col-md-6">
-          <q-card flat bordered class="q-pa-md">
+          <q-card flat class="info-card neumorph-card">
             <div class="text-subtitle2 text-grey q-mb-sm">
               {{ $t('batch.quantityStatus') }}
             </div>
@@ -111,7 +111,7 @@
       <!-- Expiry and Status -->
       <div class="row q-gutter-md q-mb-lg">
         <div class="col-12 col-md-6">
-          <q-card flat bordered class="q-pa-md">
+          <q-card flat class="info-card">
             <div class="text-subtitle2 text-grey q-mb-sm">
               {{ $t('batch.expiryInformation') }}
             </div>
@@ -143,7 +143,7 @@
         </div>
 
         <div class="col-12 col-md-6">
-          <q-card flat bordered class="q-pa-md">
+          <q-card flat class="info-card">
             <div class="text-subtitle2 text-grey q-mb-sm">
               {{ $t('batch.statusInformation') }}
             </div>
@@ -180,7 +180,7 @@
       <!-- Cost Information -->
       <div class="row q-gutter-md q-mb-lg" v-if="batch.unitCost">
         <div class="col-12">
-          <q-card flat bordered class="q-pa-md">
+          <q-card flat class="info-card">
             <div class="text-subtitle2 text-grey q-mb-sm">
               {{ $t('batch.costInformation') }}
             </div>
@@ -225,7 +225,7 @@
         v-if="batch.purchaseOrderNumber || batch.invoiceNumber"
       >
         <div class="col-12">
-          <q-card flat bordered class="q-pa-md">
+          <q-card flat class="info-card">
             <div class="text-subtitle2 text-grey q-mb-sm">
               {{ $t('batch.purchaseInformation') }}
             </div>
@@ -250,7 +250,7 @@
       <!-- Quality Notes -->
       <div class="row q-gutter-md q-mb-lg" v-if="batch.qualityNotes">
         <div class="col-12">
-          <q-card flat bordered class="q-pa-md">
+          <q-card flat class="info-card">
             <div class="text-subtitle2 text-grey q-mb-sm">
               {{ $t('batch.qualityNotes') }}
             </div>
@@ -418,11 +418,135 @@
   .batch-detail-card {
     min-width: 600px;
     max-width: 800px;
+    border-radius: var(--radius-xl);
+    overflow: hidden;
+  }
+
+  .info-card {
+    padding: var(--space-5);
+    border-radius: var(--radius-lg);
+    transition: all var(--transition-base);
+    border: 1px solid rgba(0, 0, 0, 0.05);
+    background: linear-gradient(
+      145deg,
+      rgba(255, 255, 255, 0.98) 0%,
+      rgba(248, 250, 252, 0.95) 100%
+    );
+    box-shadow: 
+      0 4px 16px rgba(0, 0, 0, 0.06),
+      0 2px 8px rgba(0, 0, 0, 0.04),
+      inset 0 1px 0 rgba(255, 255, 255, 0.8);
+
+    &:hover {
+      transform: translateY(-2px);
+      box-shadow: 
+        0 8px 24px rgba(0, 0, 0, 0.1),
+        0 4px 12px rgba(0, 0, 0, 0.06),
+        inset 0 1px 0 rgba(255, 255, 255, 0.9);
+      border-color: rgba(0, 0, 0, 0.08);
+    }
+
+    // Dark mode support
+    .body--dark & {
+      background: linear-gradient(
+        145deg,
+        rgba(30, 30, 30, 0.98) 0%,
+        rgba(45, 45, 45, 0.95) 100%
+      );
+      border-color: rgba(255, 255, 255, 0.1);
+      box-shadow: 
+        0 4px 16px rgba(0, 0, 0, 0.2),
+        0 2px 8px rgba(0, 0, 0, 0.15),
+        inset 0 1px 0 rgba(255, 255, 255, 0.1);
+
+      &:hover {
+        box-shadow: 
+          0 8px 24px rgba(0, 0, 0, 0.3),
+          0 4px 12px rgba(0, 0, 0, 0.2),
+          inset 0 1px 0 rgba(255, 255, 255, 0.15);
+      }
+    }
+  }
+
+  .neumorph-card {
+    background: var(--bg-primary);
+    border: none;
+    box-shadow: 
+      12px 12px 24px rgba(0, 0, 0, 0.08),
+      -12px -12px 24px rgba(255, 255, 255, 0.9),
+      inset 0 1px 0 rgba(255, 255, 255, 0.6);
+
+    &:hover {
+      box-shadow: 
+        6px 6px 16px rgba(0, 0, 0, 0.12),
+        -6px -6px 16px rgba(255, 255, 255, 0.95),
+        inset 0 1px 0 rgba(255, 255, 255, 0.8);
+    }
+
+    // Dark mode support
+    .body--dark & {
+      background: var(--bg-secondary);
+      box-shadow: 
+        12px 12px 24px rgba(0, 0, 0, 0.3),
+        -12px -12px 24px rgba(255, 255, 255, 0.02),
+        inset 0 1px 0 rgba(255, 255, 255, 0.1);
+
+      &:hover {
+        box-shadow: 
+          6px 6px 16px rgba(0, 0, 0, 0.4),
+          -6px -6px 16px rgba(255, 255, 255, 0.03),
+          inset 0 1px 0 rgba(255, 255, 255, 0.15);
+      }
+    }
+  }
+
+  // Enhanced chip styling
+  .q-chip {
+    border-radius: var(--radius-lg);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    transition: all var(--transition-base);
+
+    &:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    }
+  }
+
+  // Enhanced progress bar styling
+  .q-linear-progress {
+    border-radius: var(--radius-full);
+    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.2);
+    background: rgba(0, 0, 0, 0.05);
+
+    .body--dark & {
+      background: rgba(255, 255, 255, 0.05);
+    }
+  }
+
+  // Enhanced button styling
+  .q-btn {
+    border-radius: var(--radius-lg);
+    font-weight: var(--font-weight-semibold);
+    transition: all var(--transition-base);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+
+    &:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+    }
+
+    &:active {
+      transform: translateY(0);
+    }
   }
 
   @media (max-width: 768px) {
     .batch-detail-card {
       min-width: 100%;
+    }
+
+    .info-card {
+      padding: var(--space-4);
     }
   }
 </style>

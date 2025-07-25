@@ -1,25 +1,34 @@
 import { defineStore } from 'pinia';
 import { ref, computed, onUnmounted } from 'vue';
 import { supabase } from 'src/boot/supabase';
-import { realtimeService } from 'src/services/supabase';
 import { useAuthStore } from './auth';
-import type {
-  StockLevelWithDetails,
-  MovementWithRelations,
-  StockUpdateRequest,
-  OrderSuggestion,
+import { realtimeService } from 'src/services/realtime';
+import type { 
+  StockMovement, 
+  OrderSuggestion, 
+  StockLevel,
   StockAlert,
+  StockUpdateRequest
 } from 'src/types/inventory';
 
+// Movement with product data included
+interface MovementWithRelations extends StockMovement {
+  product?: {
+    id: string;
+    name: string;
+    sku: string;
+  };
+}
+
 export const useInventoryStore = defineStore('inventory', () => {
-  // State - focus only on inventory operations, not product data
+  // State
   const stockMovements = ref<MovementWithRelations[]>([]);
   const orderSuggestions = ref<OrderSuggestion[]>([]);
-  const stockLevels = ref<StockLevelWithDetails[]>([]);
+  const stockLevels = ref<StockLevel[]>([]);
   const loading = ref(false);
   const lastSyncAt = ref<Date | null>(null);
 
-  // 🔄 NEW: Real-time state
+  // Real-time state
   const realtimeConnected = ref(false);
   const inventoryChannel = ref<any>(null);
   const movementsChannel = ref<any>(null);
@@ -29,9 +38,47 @@ export const useInventoryStore = defineStore('inventory', () => {
 
   // Computed properties
   const criticalAlerts = computed<StockAlert[]>(() => {
-    // TODO: Implement proper stock alerts based on available data
-    // For now return empty array to prevent runtime errors
-    return [];
+    const alerts: StockAlert[] = [];
+    
+    stockLevels.value.forEach(stockLevel => {
+      // Low stock alerts
+      if (stockLevel.current_quantity <= (stockLevel.minimum_quantity || 10)) {
+        alerts.push({
+          id: `low_stock_${stockLevel.id}`,
+          type: 'low_stock',
+          severity: stockLevel.current_quantity === 0 ? 'critical' : 'warning',
+          product_id: stockLevel.product_id,
+          location_id: stockLevel.location_id,
+          current_quantity: stockLevel.current_quantity,
+          minimum_quantity: stockLevel.minimum_quantity || 10,
+          title: stockLevel.current_quantity === 0 ? 'Out of Stock' : 'Low Stock',
+          message: `Current stock: ${stockLevel.current_quantity}, Minimum: ${stockLevel.minimum_quantity || 10}`,
+          created_at: new Date().toISOString()
+        });
+      }
+
+      // Negative stock alerts (if allowed)
+      if (stockLevel.current_quantity < 0) {
+        alerts.push({
+          id: `negative_stock_${stockLevel.id}`,
+          type: 'negative_stock',
+          severity: 'critical',
+          product_id: stockLevel.product_id,
+          location_id: stockLevel.location_id,
+          current_quantity: stockLevel.current_quantity,
+          title: 'Negative Stock',
+          message: `Stock level is below zero: ${stockLevel.current_quantity}`,
+          created_at: new Date().toISOString()
+        });
+      }
+    });
+
+    return alerts.sort((a, b) => {
+      // Sort by severity: critical first, then warning
+      if (a.severity === 'critical' && b.severity !== 'critical') return -1;
+      if (b.severity === 'critical' && a.severity !== 'critical') return 1;
+      return 0;
+    });
   });
 
   // Actions - pure inventory operations only
@@ -167,6 +214,27 @@ export const useInventoryStore = defineStore('inventory', () => {
       } else {
         throw new Error(`Failed to update stock: ${error.message}`);
       }
+    }
+  };
+
+  const fetchStockLevels = async (practiceId: string) => {
+    try {
+      const { data, error } = await supabase
+        .from('stock_levels')
+        .select(`
+          *,
+          product:products!inner(id, name, sku),
+          location:practice_locations!inner(id, name, code)
+        `)
+        .eq('practice_id', practiceId)
+        .order('updated_at', { ascending: false });
+
+      if (error) throw error;
+
+      stockLevels.value = data || [];
+    } catch (error) {
+      console.error('Error fetching stock levels:', error);
+      throw error;
     }
   };
 
@@ -335,6 +403,7 @@ export const useInventoryStore = defineStore('inventory', () => {
   const refreshData = async (practiceId: string) => {
     try {
       await Promise.all([
+        fetchStockLevels(practiceId),
         fetchOrderSuggestions(practiceId),
         fetchStockMovements(practiceId),
       ]);
@@ -346,8 +415,6 @@ export const useInventoryStore = defineStore('inventory', () => {
 
   // New methods for stock transfer dialog
   const getProductStockAtLocation = (productId: string, locationId: string): number => {
-    // This would typically query the database or local state
-    // For demo purposes, return a placeholder value
     const stockLevel = stockLevels.value.find(sl => 
       sl.product_id === productId && sl.location_id === locationId
     );
@@ -356,7 +423,7 @@ export const useInventoryStore = defineStore('inventory', () => {
 
   const getProductBatches = (productId: string, locationId: string) => {
     // This would query product_batches table
-    // For demo purposes, return empty array
+    // For now, return empty array as this functionality is handled by the batch store
     return [];
   };
 
@@ -384,7 +451,7 @@ export const useInventoryStore = defineStore('inventory', () => {
     }
   };
 
-  // 🔄 NEW: Real-time functions
+  // Real-time functions
   const handleRealtimeUpdate = (payload: any) => {
     console.log('📡 Real-time inventory update:', payload);
     
@@ -486,7 +553,7 @@ export const useInventoryStore = defineStore('inventory', () => {
     loading,
     lastSyncAt,
 
-    // 🔄 NEW: Real-time state
+    // Real-time state
     realtimeConnected,
 
     // Computed
@@ -494,6 +561,7 @@ export const useInventoryStore = defineStore('inventory', () => {
 
     // Actions
     updateStockLevel,
+    fetchStockLevels,
     fetchOrderSuggestions,
     fetchStockMovements,
     transferStock,
@@ -502,7 +570,7 @@ export const useInventoryStore = defineStore('inventory', () => {
     getProductBatches,
     executeStockTransfer,
 
-    // 🔄 NEW: Real-time actions
+    // Real-time actions
     startRealtimeSubscription,
     stopRealtimeSubscription,
     initializeRealtime,

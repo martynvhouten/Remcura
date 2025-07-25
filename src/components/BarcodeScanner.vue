@@ -1,155 +1,181 @@
 <template>
-  <q-dialog v-model="isOpen" persistent>
-    <q-card class="scanner-card" style="min-width: 500px; max-width: 600px;">
-      <q-card-section class="row items-center q-pb-none">
-        <div class="text-h6">
-          <q-icon name="qr_code_scanner" class="q-mr-sm" />
-          {{ $t('inventory.scanBarcode') }}
+  <q-dialog
+    :model-value="modelValue"
+    @update:model-value="$emit('update:modelValue', $event)"
+    position="standard"
+    persistent
+    maximized
+    transition-show="slide-up"
+    transition-hide="slide-down"
+  >
+    <q-card class="scanner-card">
+      <!-- Header -->
+      <q-card-section class="scanner-header">
+        <div class="header-content">
+          <div class="title-section">
+            <q-icon name="qr_code_scanner" size="md" color="white" class="q-mr-sm" />
+            <div>
+              <div class="text-h6 text-white">{{ $t('barcodeScanner.title') }}</div>
+              <div class="text-caption text-white opacity-80">
+                {{ $t('barcodeScanner.subtitle') }}
+              </div>
+            </div>
+          </div>
+          <q-btn
+            flat
+            round
+            dense
+            icon="close"
+            color="white"
+            @click="closeScanner"
+            :title="$t('common.close')"
+          />
         </div>
-        <q-space />
-        <q-btn-group>
-          <q-btn
-            :icon="scanMode === 'manual' ? 'keyboard' : 'qr_code_scanner'"
-            :color="scanMode === 'manual' ? 'primary' : 'grey'"
-            dense
-            flat
-            @click="toggleScanMode"
-          />
-          <q-btn
-            v-if="cameraSupported"
-            :icon="scanMode === 'camera' ? 'videocam' : 'videocam_off'"
-            :color="scanMode === 'camera' ? 'primary' : 'grey'"
-            dense
-            flat
-            @click="toggleCamera"
-          />
-        </q-btn-group>
-        <q-btn icon="close" flat round dense v-close-popup />
       </q-card-section>
 
-      <q-card-section>
-        <!-- Camera Mode -->
-        <div v-if="scanMode === 'camera'" class="camera-section">
-          <div class="camera-container">
+      <!-- Camera Section -->
+      <q-card-section class="scanner-body">
+        <!-- Camera Preview -->
+        <div class="camera-container">
+          <div v-if="!cameraPermission" class="permission-prompt">
+            <q-icon name="camera_alt" size="4rem" color="grey-5" class="q-mb-md" />
+            <div class="text-h6 q-mb-sm">{{ $t('barcodeScanner.cameraPermission') }}</div>
+            <div class="text-body2 text-grey-6 q-mb-lg text-center">
+              {{ $t('barcodeScanner.permissionDescription') }}
+            </div>
+            <q-btn
+              color="primary"
+              icon="camera_alt"
+              :label="$t('barcodeScanner.enableCamera')"
+              @click="initializeCamera"
+              :loading="initializing"
+            />
+          </div>
+
+          <div v-else-if="error" class="error-state">
+            <q-icon name="error" size="4rem" color="negative" class="q-mb-md" />
+            <div class="text-h6 q-mb-sm text-negative">{{ $t('barcodeScanner.error') }}</div>
+            <div class="text-body2 text-grey-6 q-mb-lg text-center">
+              {{ error }}
+            </div>
+            <q-btn
+              color="primary"
+              icon="refresh"
+              :label="$t('common.retry')"
+              @click="initializeCamera"
+              :loading="initializing"
+            />
+          </div>
+
+          <div v-else class="camera-view">
+            <!-- Video Element -->
             <video
               ref="videoElement"
-              class="camera-video"
               autoplay
               playsinline
-            ></video>
-            <div class="camera-overlay">
-              <div class="scan-frame"></div>
+              muted
+              class="camera-video"
+              :class="{ 'camera-active': cameraActive }"
+            />
+            
+            <!-- Scanning Overlay -->
+            <div class="scanning-overlay">
+              <!-- Scanning Frame -->
+              <div class="scan-frame">
+                <div class="scan-corners">
+                  <div class="corner corner-tl"></div>
+                  <div class="corner corner-tr"></div>
+                  <div class="corner corner-bl"></div>
+                  <div class="corner corner-br"></div>
+                </div>
+                <div v-if="scanning" class="scan-line"></div>
+              </div>
+              
+              <!-- Instructions -->
+              <div class="scan-instructions">
+                <div class="instruction-text">
+                  {{ scanning ? $t('barcodeScanner.scanning') : $t('barcodeScanner.instructions') }}
+                </div>
+              </div>
             </div>
-            <div class="camera-controls">
-              <q-btn
-                v-if="torchSupported"
-                :icon="torchEnabled ? 'flash_on' : 'flash_off'"
-                round
-                :color="torchEnabled ? 'amber' : 'grey'"
-                @click="toggleTorch"
-              />
-              <q-btn
-                icon="camera_alt"
-                round
-                color="primary"
-                @click="focusCamera"
-              />
-              <q-btn
-                v-if="availableCameras.length > 1"
-                icon="flip_camera_android"
-                round
-                color="primary"
-                @click="switchCamera"
+
+            <!-- Results -->
+            <div v-if="lastScanResult" class="scan-result">
+              <q-chip
+                :color="lastScanResult.valid ? 'positive' : 'warning'"
+                :text-color="lastScanResult.valid ? 'white' : 'dark'"
+                :icon="lastScanResult.valid ? 'check' : 'warning'"
+                :label="lastScanResult.code"
+                size="lg"
+                class="result-chip"
               />
             </div>
-          </div>
-
-          <q-linear-progress
-            v-if="cameraLoading"
-            indeterminate
-            color="primary"
-            class="q-mt-md"
-          />
-
-          <div v-if="cameraError" class="text-negative q-mt-md">
-            {{ cameraError }}
           </div>
         </div>
 
-        <!-- Manual Mode -->
-        <div v-else class="manual-section">
-          <q-input
-            ref="manualInput"
-            v-model="manualBarcode"
-            :label="$t('bestellijsten.scanner.manualInput')"
-            outlined
-            autofocus
-            @keyup.enter="handleManualScan"
-            @input="onManualInput"
+        <!-- Manual Input Section -->
+        <div class="manual-input-section">
+          <q-expansion-item
+            icon="keyboard"
+            :label="$t('barcodeScanner.manualInput')"
+            class="manual-input-expander"
           >
-            <template v-slot:prepend>
-              <q-icon name="qr_code" />
-            </template>
-            <template v-slot:append>
-              <q-btn
-                icon="send"
-                flat
-                round
+            <div class="manual-input-content">
+              <q-input
+                v-model="manualInput"
+                :placeholder="$t('barcodeScanner.enterBarcode')"
+                outlined
                 dense
-                :disable="!manualBarcode.trim()"
-                @click="handleManualScan"
-              />
-            </template>
-          </q-input>
-        </div>
-
-        <!-- Recent Scans -->
-        <div v-if="recentScans.length > 0" class="q-mt-md">
-          <div class="text-subtitle2 q-mb-sm">
-            {{ $t('bestellijsten.scanner.recentScans') }}
-          </div>
-          <q-list dense>
-            <q-item
-              v-for="scan in recentScans.slice(0, 5)"
-              :key="scan.code + scan.timestamp"
-              clickable
-              @click="selectRecentScan(scan)"
-            >
-              <q-item-section>
-                <q-item-label>{{ scan.code }}</q-item-label>
-                <q-item-label caption>
-                  {{ formatTimestamp(scan.timestamp) }}
-                  {{ scan.format ? `(${scan.format})` : '' }}
-                </q-item-label>
-              </q-item-section>
-              <q-item-section side>
-                <q-chip
-                  v-if="scan.confidence"
-                  :color="scan.confidence > 0.8 ? 'positive' : 'warning'"
-                  text-color="white"
-                  size="sm"
-                >
-                  {{ Math.round(scan.confidence * 100) }}%
-                </q-chip>
-              </q-item-section>
-            </q-item>
-          </q-list>
-        </div>
-
-        <!-- Help Text -->
-        <div class="text-caption text-grey-6 q-mt-md">
-          {{ $t('bestellijsten.scanner.help') }}
+                clearable
+                @keyup.enter="processManualInput"
+                class="q-mb-md"
+              >
+                <template #append>
+                  <q-btn
+                    flat
+                    dense
+                    round
+                    icon="send"
+                    color="primary"
+                    @click="processManualInput"
+                    :disable="!manualInput"
+                  />
+                </template>
+              </q-input>
+              <div class="text-caption text-grey-6">
+                {{ $t('barcodeScanner.manualInputHelp') }}
+              </div>
+            </div>
+          </q-expansion-item>
         </div>
       </q-card-section>
 
-      <q-card-actions align="right">
-        <q-btn flat :label="$t('common.cancel')" v-close-popup />
+      <!-- Footer Actions -->
+      <q-card-actions class="scanner-footer">
         <q-btn
-          v-if="recentScans.length > 0"
           flat
-          color="negative"
-          :label="$t('bestellijsten.scanner.clearHistory')"
-          @click="clearScanHistory"
+          :label="$t('common.cancel')"
+          @click="closeScanner"
+          class="q-mr-auto"
+        />
+        
+        <q-btn
+          v-if="cameraActive"
+          flat
+          icon="flip_camera_android"
+          :label="$t('barcodeScanner.switchCamera')"
+          @click="switchCamera"
+          :disable="!canSwitchCamera"
+          class="q-mr-sm"
+        />
+        
+        <q-btn
+          v-if="cameraActive"
+          flat
+          :icon="flashEnabled ? 'flash_off' : 'flash_on'"
+          :label="flashEnabled ? $t('barcodeScanner.flashOff') : $t('barcodeScanner.flashOn')"
+          @click="toggleFlash"
+          :disable="!hasFlash"
         />
       </q-card-actions>
     </q-card>
@@ -157,399 +183,557 @@
 </template>
 
 <script setup lang="ts">
-  import { ref, computed, onMounted, onUnmounted, nextTick, watch } from 'vue';
-  import { useI18n } from 'vue-i18n';
-  import {
-    cameraScannerService,
-    type ScanResult,
-    type CameraDevice,
-  } from '@/services/cameraScanner';
-  import { notificationService } from '@/services/notifications';
+import { ref, onMounted, onUnmounted, watch, nextTick } from 'vue';
+import { useI18n } from 'vue-i18n';
+import { useQuasar } from 'quasar';
 
-  // Props & Emits
-  interface Props {
-    modelValue: boolean;
+// Types
+interface ScanResult {
+  code: string;
+  valid: boolean;
+  format?: string | undefined;
+}
+
+interface BarcodeDetector {
+  detect(imageSource: ImageBitmapSource): Promise<DetectedBarcode[]>;
+}
+
+interface DetectedBarcode {
+  rawValue: string;
+  format: string;
+  boundingBox: DOMRectReadOnly;
+  cornerPoints: { x: number; y: number }[];
+}
+
+// Props & Emits
+const props = defineProps<{
+  modelValue: boolean;
+}>();
+
+const emit = defineEmits<{
+  'update:modelValue': [value: boolean];
+  'scan': [code: string];
+}>();
+
+// Composables
+const { t } = useI18n();
+const $q = useQuasar();
+
+// State
+const videoElement = ref<HTMLVideoElement | null>(null);
+const cameraPermission = ref(false);
+const cameraActive = ref(false);
+const scanning = ref(false);
+const initializing = ref(false);
+const error = ref<string | null>(null);
+const currentStream = ref<MediaStream | null>(null);
+const scanInterval = ref<number | null>(null);
+const lastScanResult = ref<ScanResult | null>(null);
+const manualInput = ref('');
+
+// Camera capabilities
+const canSwitchCamera = ref(false);
+const hasFlash = ref(false);
+const flashEnabled = ref(false);
+const currentFacingMode = ref<'user' | 'environment'>('environment');
+
+// Barcode detector
+let barcodeDetector: BarcodeDetector | null = null;
+
+// GTIN Validation
+const isValidGTIN = (code: string): boolean => {
+  if (!code) return false;
+  const cleanCode = code.trim().replace(/\D/g, '');
+  
+  // GTIN can be 8, 12, 13, or 14 digits
+  const gtinRegex = /^(\d{8}|\d{12}|\d{13}|\d{14})$/;
+  if (!gtinRegex.test(cleanCode)) return false;
+
+  // Check digit validation for GTIN-13 and GTIN-14
+  if (cleanCode.length === 13 || cleanCode.length === 14) {
+    return validateGTINCheckDigit(cleanCode);
   }
+  
+  return true;
+};
 
-  interface Emits {
-    (e: 'update:modelValue', value: boolean): void;
-    (e: 'scan', code: string): void;
+const validateGTINCheckDigit = (gtin: string): boolean => {
+  const digits = gtin.split('').map(Number);
+  const checkDigit = digits.pop()!;
+  
+  let sum = 0;
+  for (let i = 0; i < digits.length; i++) {
+    const weight = (digits.length - i) % 2 === 0 ? 1 : 3;
+    sum += digits[i] * weight;
   }
+  
+  const calculatedCheckDigit = (10 - (sum % 10)) % 10;
+  return calculatedCheckDigit === checkDigit;
+};
 
-  const props = defineProps<Props>();
-  const emit = defineEmits<Emits>();
+// Camera initialization
+const initializeCamera = async () => {
+  initializing.value = true;
+  error.value = null;
 
-  // Composables
-  const { t } = useI18n();
+  try {
+           // Check if BarcodeDetector is supported
+  if ('BarcodeDetector' in window) {
+    const BarcodeDetectorClass = (window as any).BarcodeDetector;
+    const formats = await BarcodeDetectorClass?.getSupportedFormats();
+       if (formats.includes('ean_13') || formats.includes('code_128')) {
+         barcodeDetector = new BarcodeDetectorClass({
+           formats: ['ean_8', 'ean_13', 'code_128', 'code_39', 'upc_a', 'upc_e']
+         });
+       }
+     }
 
-  // Refs
-  const videoElement = ref<HTMLVideoElement>();
-  const manualInput = ref();
-  const manualBarcode = ref('');
-  const scanMode = ref<'manual' | 'camera'>('manual');
-  const cameraLoading = ref(false);
-  const cameraError = ref('');
-  const torchEnabled = ref(false);
-  const torchSupported = ref(false);
-  const availableCameras = ref<CameraDevice[]>([]);
-  const currentCameraIndex = ref(0);
-  const recentScans = ref<ScanResult[]>([]);
-
-  // Computed
-  const isOpen = computed({
-    get: () => props.modelValue,
-    set: value => emit('update:modelValue', value),
-  });
-
-  const cameraSupported = computed(() =>
-    cameraScannerService.isCameraSupported()
-  );
-
-  // Methods
-  const toggleScanMode = () => {
-    if (scanMode.value === 'manual') {
-      scanMode.value = 'camera';
-      if (cameraSupported.value) {
-        startCamera();
+    // Request camera permission
+    const stream = await navigator.mediaDevices.getUserMedia({
+      video: {
+        facingMode: currentFacingMode.value,
+        width: { ideal: 1280 },
+        height: { ideal: 720 }
       }
-    } else {
-      scanMode.value = 'manual';
-      stopCamera();
-      nextTick(() => {
-        manualInput.value?.focus();
-      });
-    }
-  };
-
-  const toggleCamera = () => {
-    if (scanMode.value === 'camera') {
-      scanMode.value = 'manual';
-      stopCamera();
-    } else {
-      scanMode.value = 'camera';
-      startCamera();
-    }
-  };
-
-  const startCamera = async () => {
-    if (!videoElement.value || !cameraSupported.value) return;
-
-    try {
-      cameraLoading.value = true;
-      cameraError.value = '';
-
-      // Get available cameras
-      availableCameras.value = await cameraScannerService.getAvailableDevices();
-
-      // Set scan result callback
-      cameraScannerService.setOnScanResult(handleCameraScan);
-
-      // Start scanning with current camera
-      const currentCamera = availableCameras.value[currentCameraIndex.value];
-      const scannerOptions: any = {
-        facingMode: 'environment',
-      };
-
-      // Only add deviceId if it exists
-      if (currentCamera?.deviceId) {
-        scannerOptions.deviceId = currentCamera.deviceId;
-      }
-
-      await cameraScannerService.startScanning(
-        videoElement.value,
-        scannerOptions
-      );
-
-      // Check torch support
-      const capabilities = cameraScannerService.getCameraCapabilities();
-      torchSupported.value = capabilities ? 'torch' in capabilities : false;
-    } catch (error) {
-      console.error('Failed to start camera:', error);
-      cameraError.value =
-        error instanceof Error ? error.message : t('camera.errors.cameraError');
-
-      // Show notification
-      notificationService.sendSystemNotification(
-        t('camera.errors.cameraError'),
-        'Failed to start camera. Please check permissions.'
-      );
-    } finally {
-      cameraLoading.value = false;
-    }
-  };
-
-  const stopCamera = () => {
-    cameraScannerService.stopScanning();
-    torchEnabled.value = false;
-  };
-
-  const switchCamera = async () => {
-    if (availableCameras.value.length <= 1) return;
-
-    currentCameraIndex.value =
-      (currentCameraIndex.value + 1) % availableCameras.value.length;
-
-    if (scanMode.value === 'camera' && videoElement.value) {
-      const currentCamera = availableCameras.value[currentCameraIndex.value];
-      if (currentCamera && currentCamera.deviceId) {
-        await cameraScannerService.switchCamera(currentCamera.deviceId);
-      }
-    }
-  };
-
-  const toggleTorch = async () => {
-    if (!torchSupported.value) return;
-
-    try {
-      const newState = await cameraScannerService.toggleTorch();
-      torchEnabled.value = newState;
-    } catch (error) {
-      console.error('Failed to toggle torch:', error);
-    }
-  };
-
-  const focusCamera = async () => {
-    try {
-      await cameraScannerService.focusCamera();
-    } catch (error) {
-      console.error('Failed to focus camera:', error);
-    }
-  };
-
-  const handleCameraScan = (result: ScanResult) => {
-    handleScanResult(result.code, result.format);
-  };
-
-  const handleManualScan = () => {
-    if (!manualBarcode.value.trim()) return;
-
-    handleScanResult(manualBarcode.value.trim());
-    manualBarcode.value = '';
-  };
-
-  const onManualInput = () => {
-    // Auto-scan when barcode looks complete (common barcode lengths)
-    const code = manualBarcode.value.trim();
-    if (
-      code.length === 8 ||
-      code.length === 12 ||
-      code.length === 13 ||
-      code.length === 14
-    ) {
-      // Small delay to allow for more input
-      setTimeout(() => {
-        if (manualBarcode.value.trim() === code) {
-          handleManualScan();
-        }
-      }, 500);
-    }
-  };
-
-  const handleScanResult = (code: string, format?: string) => {
-    // Create scan result
-    const scanResult: ScanResult = {
-      code,
-      format: format || 'Manual',
-      timestamp: new Date(),
-      confidence: format ? 0.95 : 1.0,
-    };
-
-    // Add to recent scans
-    recentScans.value = [
-      scanResult,
-      ...recentScans.value.filter(s => s.code !== code).slice(0, 9),
-    ];
-
-    // Save to camera scanner service
-    if (format) {
-      // This was a camera scan, the service will handle saving
-    } else {
-      // Manual scan, save to localStorage
-      saveScanHistory();
-    }
-
-    // Emit scan event
-    emit('scan', code);
-
-    // Close dialog
-    isOpen.value = false;
-
-    // Show success notification
-    notificationService.showInAppNotification({
-      title: t('camera.scanning.scanSuccessful'),
-      body: `Scanned: ${code}`,
-      type: 'system_notification',
-      icon: '/icons/success.png',
     });
-  };
 
-  const selectRecentScan = (scan: ScanResult) => {
-    handleScanResult(scan.code, scan.format);
-  };
+    currentStream.value = stream;
+    cameraPermission.value = true;
 
-  const clearScanHistory = () => {
-    recentScans.value = [];
-    cameraScannerService.clearScanHistory();
-    saveScanHistory();
-  };
+         // Check camera capabilities
+     const videoTrack = stream.getVideoTracks()[0];
+     if (videoTrack) {
+       const capabilities = videoTrack.getCapabilities();
+       hasFlash.value = !!(capabilities as any).torch;
+     }
+     
+     canSwitchCamera.value = await checkMultipleCameras();
 
-  const formatTimestamp = (timestamp: Date): string => {
-    const now = new Date();
-    const diff = now.getTime() - timestamp.getTime();
-
-    if (diff < 60000) {
-      // Less than 1 minute
-      return t('camera.scanning.justNow');
-    } else if (diff < 3600000) {
-      // Less than 1 hour
-      return `${Math.floor(diff / 60000)}m ago`;
-    } else if (diff < 86400000) {
-      // Less than 1 day
-      return `${Math.floor(diff / 3600000)}h ago`;
-    } else {
-      return timestamp.toLocaleDateString();
+    // Set up video element
+    await nextTick();
+    if (videoElement.value) {
+      videoElement.value.srcObject = stream;
+      await videoElement.value.play();
+      cameraActive.value = true;
+      startScanning();
     }
-  };
+  } catch (err: any) {
+    console.error('Camera initialization failed:', err);
+    error.value = err.name === 'NotAllowedError' 
+      ? t('barcodeScanner.permissionDenied')
+      : err.name === 'NotFoundError'
+      ? t('barcodeScanner.noCameraFound')
+      : t('barcodeScanner.cameraError');
+  } finally {
+    initializing.value = false;
+  }
+};
 
-  const saveScanHistory = () => {
+const checkMultipleCameras = async (): Promise<boolean> => {
+  try {
+    const devices = await navigator.mediaDevices.enumerateDevices();
+    const videoDevices = devices.filter(device => device.kind === 'videoinput');
+    return videoDevices.length > 1;
+  } catch {
+    return false;
+  }
+};
+
+const startScanning = () => {
+  if (!cameraActive.value || scanning.value) return;
+  
+  scanning.value = true;
+  
+  scanInterval.value = window.setInterval(async () => {
+    if (!videoElement.value || !cameraActive.value) return;
+    
     try {
-      localStorage.setItem(
-        'manual_scan_history',
-        JSON.stringify(recentScans.value)
-      );
-    } catch (error) {
-      console.error('Failed to save scan history:', error);
+      await scanFrame();
+    } catch (err) {
+      console.warn('Scan frame error:', err);
     }
-  };
+  }, 250); // Scan every 250ms
+};
 
-  const loadScanHistory = () => {
+const scanFrame = async () => {
+  if (!videoElement.value || !barcodeDetector || !videoElement.value.videoWidth) return;
+
+  try {
+    // Create canvas to capture frame
+    const canvas = document.createElement('canvas');
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+
+    canvas.width = videoElement.value.videoWidth;
+    canvas.height = videoElement.value.videoHeight;
+    ctx.drawImage(videoElement.value, 0, 0);
+
+    // Detect barcodes
+    const barcodes = await barcodeDetector.detect(canvas);
+    
+    if (barcodes.length > 0) {
+      const barcode = barcodes[0];
+      if (barcode) {
+        processScanResult(barcode.rawValue, barcode.format);
+      }
+    }
+  } catch (err) {
+    // Fallback: try image bitmap approach
     try {
-      const saved = localStorage.getItem('manual_scan_history');
-      if (saved) {
-        const history = JSON.parse(saved);
-        recentScans.value = history.map((item: any) => ({
-          ...item,
-          timestamp: new Date(item.timestamp),
-        }));
+      const bitmap = await createImageBitmap(videoElement.value!);
+      const barcodes = await barcodeDetector!.detect(bitmap);
+      
+      if (barcodes.length > 0) {
+        const barcode = barcodes[0];
+        if (barcode) {
+          processScanResult(barcode.rawValue, barcode.format);
+        }
       }
-
-      // Merge with camera scan history
-      const cameraHistory = cameraScannerService.getScanHistory();
-      const allScans = [...recentScans.value, ...cameraHistory]
-        .sort((a, b) => b.timestamp.getTime() - a.timestamp.getTime())
-        .slice(0, 20); // Keep only recent 20
-
-      recentScans.value = allScans;
-    } catch (error) {
-      console.error('Failed to load scan history:', error);
+    } catch (fallbackErr) {
+      console.warn('Barcode detection failed:', fallbackErr);
     }
-  };
+  }
+};
 
-  // Watch for dialog open/close
-  watch(isOpen, newValue => {
-    if (newValue) {
-      loadScanHistory();
-      if (scanMode.value === 'manual') {
-        nextTick(() => {
-          manualInput.value?.focus();
-        });
-      }
-    } else {
-      stopCamera();
-      manualBarcode.value = '';
-    }
-  });
+ const processScanResult = (code: string, format?: string) => {
+   const valid = isValidGTIN(code);
+   
+   lastScanResult.value = { code, valid, format: format || undefined };
+  
+  if (valid) {
+    // Valid GTIN found
+    $q.notify({
+      type: 'positive',
+      message: t('barcodeScanner.validGtin', { gtin: code }),
+      icon: 'check_circle',
+      position: 'top',
+      timeout: 2000
+    });
+    
+    emit('scan', code);
+    closeScanner();
+  } else {
+    // Invalid format
+    $q.notify({
+      type: 'warning',
+      message: t('barcodeScanner.invalidFormat', { code }),
+      icon: 'warning',
+      position: 'top',
+      timeout: 3000
+    });
+  }
+};
 
-  // Lifecycle
-  onMounted(() => {
-    loadScanHistory();
-  });
+const processManualInput = () => {
+  if (!manualInput.value.trim()) return;
+  
+  const code = manualInput.value.trim();
+  processScanResult(code);
+  manualInput.value = '';
+};
 
-  onUnmounted(() => {
-    stopCamera();
-  });
+const switchCamera = async () => {
+  if (!canSwitchCamera.value) return;
+
+  currentFacingMode.value = currentFacingMode.value === 'user' ? 'environment' : 'user';
+  
+  await stopCamera();
+  await initializeCamera();
+};
+
+ const toggleFlash = async () => {
+   if (!hasFlash.value || !currentStream.value) return;
+
+   try {
+     const videoTrack = currentStream.value.getVideoTracks()[0];
+     if (videoTrack) {
+       await videoTrack.applyConstraints({
+         advanced: [{ torch: !flashEnabled.value } as any]
+       });
+       flashEnabled.value = !flashEnabled.value;
+     }
+   } catch (err) {
+     console.warn('Flash toggle failed:', err);
+   }
+ };
+
+const stopCamera = async () => {
+  scanning.value = false;
+  cameraActive.value = false;
+  
+  if (scanInterval.value) {
+    clearInterval(scanInterval.value);
+    scanInterval.value = null;
+  }
+  
+  if (currentStream.value) {
+    currentStream.value.getTracks().forEach(track => track.stop());
+    currentStream.value = null;
+  }
+  
+  if (videoElement.value) {
+    videoElement.value.srcObject = null;
+  }
+};
+
+const closeScanner = async () => {
+  await stopCamera();
+  lastScanResult.value = null;
+  error.value = null;
+  emit('update:modelValue', false);
+};
+
+// Watchers
+watch(() => props.modelValue, async (newVal) => {
+  if (newVal && !cameraActive.value) {
+    await initializeCamera();
+  } else if (!newVal) {
+    await stopCamera();
+  }
+});
+
+// Lifecycle
+onMounted(() => {
+  if (props.modelValue) {
+    initializeCamera();
+  }
+});
+
+onUnmounted(() => {
+  stopCamera();
+});
 </script>
 
-<style scoped>
-  .scanner-card {
-    margin: 0 auto;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-    border-radius: 12px;
-  }
+<style lang="scss" scoped>
+.scanner-card {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background: black;
+}
 
-  .camera-section {
-    position: relative;
-  }
+.scanner-header {
+  background: linear-gradient(135deg, var(--q-primary) 0%, var(--q-secondary) 100%);
+  padding: 1rem;
+  flex-shrink: 0;
 
-  .camera-container {
-    position: relative;
-    background: #000;
-    border-radius: 8px;
-    overflow: hidden;
-    aspect-ratio: 4/3;
-  }
+  .header-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 
-  .camera-video {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
+    .title-section {
+      display: flex;
+      align-items: center;
+    }
   }
+}
 
-  .camera-overlay {
+.scanner-body {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  padding: 0;
+  background: black;
+}
+
+.camera-container {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+.permission-prompt,
+.error-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+  text-align: center;
+  color: white;
+}
+
+.camera-view {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.camera-video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transform: scaleX(-1); // Mirror effect for front camera
+  
+  &.camera-active {
+    opacity: 1;
+  }
+}
+
+.scanning-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+}
+
+.scan-frame {
+  position: relative;
+  width: 280px;
+  height: 280px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-radius: 12px;
+
+  .scan-corners {
     position: absolute;
     top: 0;
     left: 0;
     right: 0;
     bottom: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    pointer-events: none;
+
+    .corner {
+      position: absolute;
+      width: 30px;
+      height: 30px;
+      border: 3px solid var(--q-primary);
+
+      &.corner-tl {
+        top: -3px;
+        left: -3px;
+        border-right: none;
+        border-bottom: none;
+        border-radius: 12px 0 0 0;
+      }
+
+      &.corner-tr {
+        top: -3px;
+        right: -3px;
+        border-left: none;
+        border-bottom: none;
+        border-radius: 0 12px 0 0;
+      }
+
+      &.corner-bl {
+        bottom: -3px;
+        left: -3px;
+        border-right: none;
+        border-top: none;
+        border-radius: 0 0 0 12px;
+      }
+
+      &.corner-br {
+        bottom: -3px;
+        right: -3px;
+        border-left: none;
+        border-top: none;
+        border-radius: 0 0 12px 0;
+      }
+    }
   }
 
+  .scan-line {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, var(--q-primary), transparent);
+    animation: scan-line 2s ease-in-out infinite;
+  }
+}
+
+@keyframes scan-line {
+  0% {
+    top: 0;
+    opacity: 1;
+  }
+  50% {
+    top: calc(100% - 2px);
+    opacity: 0.8;
+  }
+  100% {
+    top: 0;
+    opacity: 1;
+  }
+}
+
+.scan-instructions {
+  margin-top: 2rem;
+  text-align: center;
+  color: white;
+  background: rgba(0, 0, 0, 0.7);
+  padding: 1rem 1.5rem;
+  border-radius: 8px;
+  backdrop-filter: blur(10px);
+
+  .instruction-text {
+    font-size: 1rem;
+    font-weight: 500;
+  }
+}
+
+.scan-result {
+  position: absolute;
+  bottom: 2rem;
+  left: 50%;
+  transform: translateX(-50%);
+
+  .result-chip {
+    font-size: 1.1rem;
+    padding: 0.5rem 1rem;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  }
+}
+
+.manual-input-section {
+  padding: 1rem;
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(10px);
+
+  .manual-input-expander {
+    color: white;
+  }
+
+  .manual-input-content {
+    padding-top: 1rem;
+    color: white;
+  }
+}
+
+.scanner-footer {
+  background: rgba(0, 0, 0, 0.8);
+  backdrop-filter: blur(10px);
+  padding: 1rem;
+  color: white;
+  flex-shrink: 0;
+}
+
+// Mobile optimizations
+@media (max-width: 768px) {
   .scan-frame {
-    width: 200px;
-    height: 200px;
-    border: 2px solid #fff;
-    border-radius: 8px;
-    box-shadow: 0 0 0 2000px rgba(0, 0, 0, 0.5);
-    position: relative;
+    width: 240px;
+    height: 240px;
   }
-
-  .scan-frame::before,
-  .scan-frame::after {
-    content: '';
-    position: absolute;
-    width: 20px;
-    height: 20px;
-    border: 3px solid #4caf50;
+  
+  .scan-instructions {
+    margin-top: 1rem;
+    padding: 0.75rem 1rem;
+    
+    .instruction-text {
+      font-size: 0.9rem;
+    }
   }
-
-  .scan-frame::before {
-    top: -3px;
-    left: -3px;
-    border-right: none;
-    border-bottom: none;
-  }
-
-  .scan-frame::after {
-    bottom: -3px;
-    right: -3px;
-    border-left: none;
-    border-top: none;
-  }
-
-  .camera-controls {
-    position: absolute;
-    bottom: 16px;
-    left: 50%;
-    transform: translateX(-50%);
-    display: flex;
-    gap: 16px;
-    z-index: 1;
-  }
-
-  .manual-section {
-    min-height: 120px;
-  }
+}
 </style>

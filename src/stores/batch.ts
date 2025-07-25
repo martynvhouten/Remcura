@@ -12,8 +12,6 @@ import {
 } from 'src/types/inventory';
 import { ServiceErrorHandler } from 'src/utils/service-error-handler';
 
-// Using ServiceErrorHandler static methods
-
 export const useBatchStore = defineStore('batch', () => {
   // State
   const batches = ref<ProductBatchWithDetails[]>([]);
@@ -60,6 +58,7 @@ export const useBatchStore = defineStore('batch', () => {
 
   // Actions
   const fetchBatches = async (filters?: {
+    practiceId?: string;
     productId?: string;
     locationId?: string;
     includeExpired?: boolean;
@@ -68,54 +67,50 @@ export const useBatchStore = defineStore('batch', () => {
       loading.value = true;
       error.value = null;
 
-      // TODO: Replace with actual database call once product_batches table exists
-      // For now, return mock data
-      const mockBatches: ProductBatchWithDetails[] = [
-        {
-          id: '1',
-          practice_id: 'current-practice',
-          product_id: filters?.productId || 'prod-1',
-          location_id: filters?.locationId || 'loc-1',
-          batch_number: 'B001',
-          supplier_batch_number: 'SUP-B001',
-          expiry_date: '2024-12-31',
-          received_date: '2024-01-01',
-          initial_quantity: 100,
-          current_quantity: 75,
-          reserved_quantity: 0,
-          available_quantity: 75,
-          unit_cost: 10.50,
-          total_cost: 1050,
-          currency: 'EUR',
-          status: 'active',
-          quality_check_passed: true,
-          created_at: '2024-01-01T00:00:00Z',
-          updated_at: '2024-01-01T00:00:00Z',
-          product: {
-            id: 'prod-1',
-            name: 'Sample Product',
-            sku: 'SKU-001',
-            category: 'Medical',
-            brand: 'Sample Brand',
-            unit: 'pieces'
-          },
-          location: {
-            id: 'loc-1',
-            name: 'Main Warehouse',
-            code: 'MW',
-            location_type: 'warehouse'
-          },
-          supplier: {
-            id: 'sup-1',
-            name: 'Sample Supplier',
-            code: 'SS'
-          },
-          days_until_expiry: 30,
-          urgency_level: 'warning'
-        }
-      ];
+      let query = supabase
+        .from('product_batches')
+        .select(`
+          *,
+          product:products!inner(id, name, sku, category, brand, unit),
+          location:practice_locations!inner(id, name, code, location_type),
+          supplier:suppliers(id, name, code)
+        `);
 
-      batches.value = mockBatches;
+      if (filters?.practiceId) {
+        query = query.eq('practice_id', filters.practiceId);
+      }
+
+      if (filters?.productId) {
+        query = query.eq('product_id', filters.productId);
+      }
+
+      if (filters?.locationId) {
+        query = query.eq('location_id', filters.locationId);
+      }
+
+      if (!filters?.includeExpired) {
+        query = query.gte('expiry_date', new Date().toISOString());
+      }
+
+      query = query.eq('status', 'active').order('expiry_date', { ascending: true });
+
+      const { data, error: fetchError } = await query;
+
+      if (fetchError) throw fetchError;
+
+      // Transform data to match expected interface
+      batches.value = (data || []).map(batch => ({
+        ...batch,
+        days_until_expiry: Math.ceil((new Date(batch.expiry_date).getTime() - new Date().getTime()) / (1000 * 60 * 60 * 24)),
+        urgency_level: (() => {
+          const daysUntilExpiry = Math.ceil((new Date(batch.expiry_date).getTime() - new Date().getTime()) / (1000 * 60 * 60 * 24));
+          if (daysUntilExpiry <= 7) return 'critical';
+          if (daysUntilExpiry <= 14) return 'high';
+          if (daysUntilExpiry <= 30) return 'warning';
+          return 'normal';
+        })()
+      }));
+
     } catch (err) {
       const handledError = ServiceErrorHandler.handle(err, {
         service: 'BatchStore',
@@ -128,30 +123,21 @@ export const useBatchStore = defineStore('batch', () => {
     }
   };
 
-  const fetchExpiringBatches = async (daysAhead: number = 30) => {
+  const fetchExpiringBatches = async (practiceId: string, daysAhead: number = 30) => {
     try {
       loading.value = true;
       error.value = null;
 
-      // TODO: Replace with actual RPC call once get_expiring_batches function exists
-      const mockExpiringBatches: ExpiringBatch[] = [
-        {
-          batch_id: '1',
-          product_id: 'prod-1',
-          product_name: 'Sample Product',
-          product_sku: 'SKU-001',
-          location_id: 'loc-1',
-          location_name: 'Main Warehouse',
-          batch_number: 'B001',
-          expiry_date: '2024-12-31',
-          current_quantity: 75,
-          days_until_expiry: 30,
-          urgency_level: 'warning'
-        }
-      ];
+      const { data, error: fetchError } = await supabase
+        .rpc('get_expiring_batches', {
+          p_practice_id: practiceId,
+          p_days_ahead: daysAhead
+        });
 
-      expiringBatches.value = mockExpiringBatches;
-      return mockExpiringBatches;
+      if (fetchError) throw fetchError;
+
+      expiringBatches.value = data || [];
+      return expiringBatches.value;
     } catch (err) {
       const handledError = ServiceErrorHandler.handle(err, {
         service: 'BatchStore',
@@ -164,24 +150,22 @@ export const useBatchStore = defineStore('batch', () => {
     }
   };
 
-  const fetchFifoBatches = async (productId: string, quantity: number) => {
+  const fetchFifoBatches = async (productId: string, locationId: string, quantity: number) => {
     try {
       loading.value = true;
       error.value = null;
 
-      // TODO: Replace with actual RPC call once get_fifo_batches function exists
-      const mockFifoBatches: FifoBatch[] = [
-        {
-          batch_id: '1',
-          batch_number: 'B001',
-          available_quantity: 75,
-          expiry_date: '2024-12-31',
-          use_quantity: Math.min(quantity, 75)
-        }
-      ];
+      const { data, error: fetchError } = await supabase
+        .rpc('get_fifo_batches', {
+          p_product_id: productId,
+          p_location_id: locationId,
+          p_quantity_needed: quantity
+        });
 
-      fifoBatches.value = mockFifoBatches;
-      return mockFifoBatches;
+      if (fetchError) throw fetchError;
+
+      fifoBatches.value = data || [];
+      return fifoBatches.value;
     } catch (err) {
       const handledError = ServiceErrorHandler.handle(err, {
         service: 'BatchStore',
@@ -199,9 +183,7 @@ export const useBatchStore = defineStore('batch', () => {
       loading.value = true;
       error.value = null;
 
-      // TODO: Replace with actual database insert once product_batches table exists
-      const mockBatch: ProductBatch = {
-        id: Date.now().toString(),
+      const batchData = {
         practice_id: request.practice_id,
         product_id: request.product_id,
         location_id: request.location_id,
@@ -211,15 +193,10 @@ export const useBatchStore = defineStore('batch', () => {
         initial_quantity: request.initial_quantity,
         current_quantity: request.initial_quantity,
         reserved_quantity: 0,
-        available_quantity: request.initial_quantity,
-        ...(request.unit_cost !== undefined && { unit_cost: request.unit_cost }),
-        total_cost: (request.unit_cost || 0) * request.initial_quantity,
+        unit_cost: request.unit_cost,
         currency: request.currency || 'EUR',
         status: 'active',
         quality_check_passed: request.quality_check_passed || true,
-        created_at: new Date().toISOString(),
-        updated_at: new Date().toISOString(),
-        created_by: 'current-user', // Should come from auth
         ...(request.supplier_batch_number && { supplier_batch_number: request.supplier_batch_number }),
         ...(request.supplier_id && { supplier_id: request.supplier_id }),
         ...(request.purchase_order_number && { purchase_order_number: request.purchase_order_number }),
@@ -227,7 +204,15 @@ export const useBatchStore = defineStore('batch', () => {
         ...(request.quality_notes && { quality_notes: request.quality_notes }),
       };
 
-      return mockBatch;
+      const { data, error: insertError } = await supabase
+        .from('product_batches')
+        .insert(batchData)
+        .select()
+        .single();
+
+      if (insertError) throw insertError;
+
+      return data;
     } catch (err) {
       const handledError = ServiceErrorHandler.handle(err, {
         service: 'BatchStore',
@@ -245,24 +230,25 @@ export const useBatchStore = defineStore('batch', () => {
       loading.value = true;
       error.value = null;
 
-      // TODO: Replace with actual database update once product_batches table exists
-      const existingBatch = batches.value.find(b => b.id === id);
-      if (!existingBatch) {
-        throw new Error('Batch not found');
-      }
+      const { data, error: updateError } = await supabase
+        .from('product_batches')
+        .update({
+          ...updates,
+          updated_at: new Date().toISOString()
+        })
+        .eq('id', id)
+        .select()
+        .single();
 
-      const updatedBatch = {
-        ...existingBatch,
-        ...updates,
-        updated_at: new Date().toISOString()
-      };
+      if (updateError) throw updateError;
 
+      // Update local state
       const index = batches.value.findIndex(b => b.id === id);
       if (index !== -1) {
-        batches.value[index] = updatedBatch;
+        batches.value[index] = { ...batches.value[index], ...data };
       }
 
-      return updatedBatch;
+      return data;
     } catch (err) {
       const handledError = ServiceErrorHandler.handle(err, {
         service: 'BatchStore',
@@ -280,17 +266,14 @@ export const useBatchStore = defineStore('batch', () => {
       loading.value = true;
       error.value = null;
 
-      // TODO: Replace with actual RPC call once process_batch_stock_movement function exists
-      for (const movement of movements) {
-        const batch = batches.value.find(b => b.id === movement.batch_id);
-        if (batch) {
-          batch.current_quantity -= movement.quantity_used;
-          batch.available_quantity = Math.max(0, batch.current_quantity - batch.reserved_quantity);
-          batch.updated_at = new Date().toISOString();
-        }
-      }
+      const { data, error: rpcError } = await supabase
+        .rpc('process_batch_stock_movement', {
+          p_movements: JSON.stringify(movements)
+        });
 
-      return { success: true };
+      if (rpcError) throw rpcError;
+
+      return data;
     } catch (err) {
       const handledError = ServiceErrorHandler.handle(err, {
         service: 'BatchStore',
@@ -308,7 +291,14 @@ export const useBatchStore = defineStore('batch', () => {
       loading.value = true;
       error.value = null;
 
-      // TODO: Replace with actual database delete once product_batches table exists
+      const { error: deleteError } = await supabase
+        .from('product_batches')
+        .delete()
+        .eq('id', id);
+
+      if (deleteError) throw deleteError;
+
+      // Update local state
       const index = batches.value.findIndex(b => b.id === id);
       if (index !== -1) {
         batches.value.splice(index, 1);
@@ -332,13 +322,20 @@ export const useBatchStore = defineStore('batch', () => {
       loading.value = true;
       error.value = null;
 
-      // TODO: Replace with actual database query once product_batches table exists
-      const batch = batches.value.find(b => b.id === id);
-      if (!batch) {
-        throw new Error('Batch not found');
-      }
+      const { data, error: fetchError } = await supabase
+        .from('product_batches')
+        .select(`
+          *,
+          product:products!inner(id, name, sku, category, brand, unit),
+          location:practice_locations!inner(id, name, code, location_type),
+          supplier:suppliers(id, name, code)
+        `)
+        .eq('id', id)
+        .single();
 
-      return batch;
+      if (fetchError) throw fetchError;
+
+      return data;
     } catch (err) {
       const handledError = ServiceErrorHandler.handle(err, {
         service: 'BatchStore',

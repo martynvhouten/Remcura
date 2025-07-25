@@ -4,9 +4,9 @@
     @update:model-value="$emit('update:modelValue', $event)"
     @hide="onDialogHide"
     persistent
-    maximized
+    :style="{ maxWidth: '95vw', maxHeight: '95vh' }"
   >
-    <q-card class="column">
+    <q-card class="column" style="min-height: 600px; max-height: 85vh; width: 90vw; max-width: 1200px;">
       <q-toolbar class="bg-primary text-white">
         <q-toolbar-title>
           {{

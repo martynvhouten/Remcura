@@ -226,6 +226,27 @@ export class MagicInviteService {
     }
   }
 
+  // 🔄 INCREMENT INVITE USAGE
+  static async incrementInviteUsage(inviteId: string): Promise<void> {
+    try {
+      const { error } = await supabase
+        .from('magic_invites')
+        .update({
+          current_uses: supabase.raw('current_uses + 1'),
+          last_used_at: new Date().toISOString()
+        })
+        .eq('id', inviteId);
+
+      if (error) {
+        console.error('Error incrementing invite usage:', error);
+        throw error;
+      }
+    } catch (error) {
+      console.error('Error updating invite usage:', error);
+      throw error;
+    }
+  }
+
   // 🎮 CREATE GUEST SESSION
   static async createGuestSession(request: CreateGuestSessionRequest): Promise<GuestSession> {
     try {
@@ -312,14 +333,6 @@ export class MagicInviteService {
         }]);
     } catch (error) {
       console.error('Error tracking analytics:', error);
-    }
-  }
-
-  static async incrementInviteUsage(inviteId: string): Promise<void> {
-    try {
-      await supabase.rpc('increment_invite_usage', { invite_id: inviteId });
-    } catch (error) {
-      console.error('Error incrementing invite usage:', error);
     }
   }
 

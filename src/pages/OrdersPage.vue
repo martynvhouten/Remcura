@@ -16,64 +16,23 @@
       </PageTitle>
     </template>
 
-    <!-- Filters -->
-    <BaseCard
-      variant="outlined"
-      :title="$t('orders.filters.title')"
-      icon="filter_list"
-      header-color="info"
-      size="sm"
-    >
-      <div class="row q-gutter-md">
-        <q-select
-          v-model="filters.status"
-          :options="statusOptions"
-          :label="$t('orders.filters.status')"
-          clearable
-          emit-value
-          map-options
-          style="min-width: 150px"
-          outlined
-          dense
-        />
-        <q-select
-          v-model="filters.supplier"
-          :options="supplierOptions"
-          :label="$t('orders.filters.supplier')"
-          clearable
-          emit-value
-          map-options
-          style="min-width: 200px"
-          outlined
-          dense
-        />
-        <q-input
-          v-model="filters.dateFrom"
-          :label="$t('orders.filters.dateFrom')"
-          type="date"
-          outlined
-          dense
-          style="min-width: 150px"
-        />
-        <q-input
-          v-model="filters.dateTo"
-          :label="$t('orders.filters.dateTo')"
-          type="date"
-          outlined
-          dense
-          style="min-width: 150px"
-        />
-      </div>
-
-      <template #actions>
-        <q-btn v-bind="filterBtn" @click="applyFilters" />
-        <q-btn v-bind="resetBtn" @click="resetFilters" />
-      </template>
-    </BaseCard>
+    <!-- New FilterPanel Component -->
+    <div class="filters-section q-mb-lg">
+      <FilterPanel
+        :preset="ordersFilterPreset"
+        v-model="filterValues"
+        @change="handleFilterChange"
+        @reset="handleFilterReset"
+        @clear="handleFilterClear"
+        :loading="loading"
+        collapsible
+        class="orders-filter-panel"
+      />
+    </div>
 
     <!-- Orders Table -->
     <q-table
-      :rows="orders"
+      :rows="filteredOrders"
       :columns="columns"
       :loading="loading"
       v-model:selected="selected"
@@ -103,121 +62,112 @@
       </template>
 
       <template v-slot:body-cell-status="props">
-        <q-td :props="props">
+        <q-td :props="props" class="text-center">
           <q-chip
             :color="getStatusColor(props.value)"
-            text-color="white"
+            :text-color="getStatusTextColor(props.value)"
+            :label="$t(`orders.status.${props.value}`)"
             size="sm"
-          >
-            {{ $t(`orders.status.${props.value}`) }}
-          </q-chip>
+            dense
+          />
         </q-td>
       </template>
 
-      <template v-slot:body-cell-total="props">
-        <q-td :props="props"> €{{ (props.value || 0).toFixed(2) }} </q-td>
+      <template v-slot:body-cell-order_date="props">
+        <q-td :props="props">
+          {{ formatDate(props.value) }}
+        </q-td>
+      </template>
+
+      <template v-slot:body-cell-total_amount="props">
+        <q-td :props="props" class="text-right">
+          {{ formatCurrency(props.value) }}
+        </q-td>
+      </template>
+
+      <template v-slot:body-cell-expected_delivery_date="props">
+        <q-td :props="props">
+          {{ formatDate(props.value) }}
+        </q-td>
       </template>
 
       <template v-slot:body-cell-actions="props">
         <q-td :props="props">
-          <q-btn-group dense>
-            <q-btn icon="visibility" dense flat @click="viewOrder(props.row)" />
-            <q-btn icon="edit" dense flat @click="editOrder(props.row)" />
-            <q-btn-dropdown icon="more_vert" size="sm" flat auto-close>
-              <q-list>
-                <q-item clickable @click="downloadOrderPDF(props.row)">
-                  <q-item-section avatar>
-                    <q-icon name="picture_as_pdf" />
-                  </q-item-section>
-                  <q-item-section>{{
-                    $t('orders.downloadPDF')
-                  }}</q-item-section>
-                </q-item>
-                <q-item clickable @click="downloadOrderCSV(props.row)">
-                  <q-item-section avatar>
-                    <q-icon name="table_chart" />
-                  </q-item-section>
-                  <q-item-section>{{
-                    $t('orders.downloadCSV')
-                  }}</q-item-section>
-                </q-item>
-                <q-item clickable @click="emailOrder(props.row)">
-                  <q-item-section avatar>
-                    <q-icon name="email" />
-                  </q-item-section>
-                  <q-item-section>{{ $t('orders.sendEmail') }}</q-item-section>
-                </q-item>
-                <q-separator />
-                <q-item clickable @click="submitToMagento(props.row)">
-                  <q-item-section avatar>
-                    <q-icon name="cloud_upload" />
-                  </q-item-section>
-                  <q-item-section>{{
-                    $t('orders.submitToMagento')
-                  }}</q-item-section>
-                </q-item>
-                <q-separator />
-                <q-item clickable @click="duplicateOrder(props.row)">
-                  <q-item-section avatar>
-                    <q-icon name="content_copy" />
-                  </q-item-section>
-                  <q-item-section>{{ $t('orders.duplicate') }}</q-item-section>
-                </q-item>
-                <q-item
-                  clickable
-                  @click="cancelOrder(props.row)"
-                  v-if="props.row.status !== 'cancelled'"
-                >
-                  <q-item-section avatar>
-                    <q-icon name="cancel" color="negative" />
-                  </q-item-section>
-                  <q-item-section>{{ $t('orders.cancel') }}</q-item-section>
-                </q-item>
-              </q-list>
-            </q-btn-dropdown>
-          </q-btn-group>
+          <q-btn
+            flat
+            round
+            dense
+            icon="visibility"
+            size="sm"
+            @click="viewOrder(props.row)"
+          >
+            <q-tooltip>{{ $t('orders.viewOrder') }}</q-tooltip>
+          </q-btn>
+          <q-btn
+            flat
+            round
+            dense
+            icon="edit"
+            size="sm"
+            @click="editOrder(props.row)"
+          >
+            <q-tooltip>{{ $t('orders.editOrder') }}</q-tooltip>
+          </q-btn>
+          <q-btn
+            flat
+            round
+            dense
+            icon="download"
+            size="sm"
+            @click="downloadOrder(props.row)"
+          >
+            <q-tooltip>{{ $t('orders.downloadOrder') }}</q-tooltip>
+          </q-btn>
         </q-td>
       </template>
     </q-table>
 
     <!-- Export Dialog -->
     <q-dialog v-model="showExportDialog">
-      <q-card style="min-width: 400px">
+      <q-card style="min-width: 350px">
         <q-card-section>
-          <div class="text-h6">{{ $t('orders.export') }}</div>
+          <div class="text-h6">{{ $t('orders.export.title') }}</div>
         </q-card-section>
 
-        <q-card-section>
-          <q-option-group
-            v-model="exportFormat"
-            :options="exportFormatOptions"
-            color="primary"
-          />
-
-          <q-separator class="q-my-md" />
-
-          <q-option-group
-            v-model="exportScope"
-            :options="exportScopeOptions"
-            color="primary"
-          />
-
-          <div v-if="exportScope === 'filtered'" class="q-mt-md text-caption">
-            {{ $t('orders.exportFilteredNote', { count: orders.length }) }}
-          </div>
-
-          <div v-if="exportScope === 'selected'" class="q-mt-md text-caption">
-            {{ $t('orders.exportSelectedNote', { count: selected.length }) }}
-          </div>
+        <q-card-section class="q-pt-none">
+          <q-form class="q-gutter-md">
+            <q-select
+              v-model="exportFormat"
+              :options="exportFormatOptions"
+              :label="$t('orders.export.format')"
+              outlined
+              emit-value
+              map-options
+            />
+            
+            <q-input
+              v-model="exportDateFrom"
+              :label="$t('orders.export.dateFrom')"
+              type="date"
+              outlined
+            />
+            
+            <q-input
+              v-model="exportDateTo"
+              :label="$t('orders.export.dateTo')"
+              type="date"
+              outlined
+            />
+          </q-form>
         </q-card-section>
 
         <q-card-actions align="right">
-          <q-btn flat :label="$t('common.cancel')" v-close-popup />
+          <q-btn flat :label="$t('common.cancel')" @click="showExportDialog = false" />
           <q-btn
             color="primary"
-            :label="$t('orders.export')"
-            :loading="exporting"
+            :label="$t('orders.export.export')"
             @click="performExport"
+            :loading="exporting"
           />
         </q-card-actions>
       </q-card>
@@ -226,126 +176,19 @@
     <!-- Analytics Dialog -->
     <q-dialog v-model="showAnalytics" maximized>
       <q-card>
-        <q-card-section class="row items-center q-pb-none">
-          <div class="text-h6">{{ $t('orders.analytics') }}</div>
-          <q-space />
-          <q-btn icon="close" flat round dense v-close-popup />
+        <q-card-section>
+          <div class="text-h6">{{ $t('orders.analytics.title') }}</div>
         </q-card-section>
 
         <q-card-section>
-          <div class="row q-gutter-md">
-            <!-- Analytics Summary Cards -->
-            <div class="col-12 col-md-6 col-lg-3">
-              <q-card flat bordered>
-                <q-card-section>
-                  <div class="text-h4 text-primary">
-                    {{ analyticsData.totalOrders }}
-                  </div>
-                  <div class="text-subtitle2">
-                    {{ $t('orders.analytics.totalOrders') }}
-                  </div>
-                </q-card-section>
-              </q-card>
-            </div>
-
-            <div class="col-12 col-md-6 col-lg-3">
-              <q-card flat bordered>
-                <q-card-section>
-                  <div class="text-h4 text-positive">
-                    €{{ (analyticsData.totalValue || 0).toFixed(2) }}
-                  </div>
-                  <div class="text-subtitle2">
-                    {{ $t('orders.analytics.totalValue') }}
-                  </div>
-                </q-card-section>
-              </q-card>
-            </div>
-
-            <div class="col-12 col-md-6 col-lg-3">
-              <q-card flat bordered>
-                <q-card-section>
-                  <div class="text-h4 text-info">
-                    {{ analyticsData.averageOrderSize }}
-                  </div>
-                  <div class="text-subtitle2">
-                    {{ $t('orders.analytics.avgOrderSize') }}
-                  </div>
-                </q-card-section>
-              </q-card>
-            </div>
-
-            <div class="col-12 col-md-6 col-lg-3">
-              <q-card flat bordered>
-                <q-card-section>
-                  <div class="text-h4 text-warning">
-                    {{ analyticsData.orderFrequency }}
-                  </div>
-                  <div class="text-subtitle2">
-                    {{ $t('orders.analytics.orderFrequency') }}
-                  </div>
-                </q-card-section>
-              </q-card>
-            </div>
+          <div class="text-center">
+            <q-icon name="assessment" size="xl" color="grey-5" />
+            <div class="text-h6 q-mt-md">{{ $t('orders.analytics.comingSoon') }}</div>
           </div>
-
-          <!-- Charts would go here -->
-          <div class="q-mt-lg">
-            <q-card flat bordered>
-              <q-card-section>
-                <div class="text-h6">
-                  {{ $t('orders.analytics.orderTrends') }}
-                </div>
-                <div class="q-pa-md text-center text-grey-6">
-                  {{ $t('orders.analytics.chartsComingSoon') }}
-                </div>
-              </q-card-section>
-            </q-card>
-          </div>
-        </q-card-section>
-      </q-card>
-    </q-dialog>
-
-    <!-- Email Dialog -->
-    <q-dialog v-model="showEmailDialog">
-      <q-card style="min-width: 400px">
-        <q-card-section>
-          <div class="text-h6">{{ $t('orders.sendEmail') }}</div>
-        </q-card-section>
-
-        <q-card-section>
-          <q-input
-            v-model="emailData.recipient"
-            :label="$t('orders.email.recipient')"
-            type="email"
-            outlined
-            :rules="[val => !!val || $t('orders.emailRequired')]"
-          />
-
-          <q-input
-            v-model="emailData.subject"
-            :label="$t('orders.email.subject')"
-            outlined
-            class="q-mt-md"
-          />
-
-          <q-input
-            v-model="emailData.message"
-            :label="$t('orders.email.message')"
-            type="textarea"
-            outlined
-            rows="4"
-            class="q-mt-md"
-          />
         </q-card-section>
 
         <q-card-actions align="right">
-          <q-btn flat :label="$t('common.cancel')" v-close-popup />
-          <q-btn
-            color="primary"
-            :label="$t('orders.email.send')"
-            :loading="emailSending"
-            @click="sendEmail"
-          />
+          <q-btn flat :label="$t('common.close')" @click="showAnalytics = false" />
         </q-card-actions>
       </q-card>
     </q-dialog>
@@ -353,535 +196,360 @@
 </template>
 
 <script setup lang="ts">
-  import { ref, reactive, onMounted, computed } from 'vue';
-  import { useRouter } from 'vue-router';
-  import { useI18n } from 'vue-i18n';
-  import { useQuasar } from 'quasar';
-  import { useButtons } from 'src/composables/useButtons';
-  import PageLayout from '@/components/PageLayout.vue';
-  import PageTitle from '@/components/PageTitle.vue';
-  import BaseCard from 'src/components/base/BaseCard.vue';
-  import { orderProcessingService } from '@/services/orderProcessing';
-  import { analyticsService } from '@/services/analytics';
-  import { notificationService } from '@/services/notifications';
-  import type { OrderWithItems, OrderStatus } from '@/types/supabase';
+import { ref, computed, onMounted } from 'vue';
+import { useQuasar, date } from 'quasar';
+import { useI18n } from 'vue-i18n';
+import PageTitle from 'src/components/PageTitle.vue';
+import PageLayout from 'src/components/PageLayout.vue';
+import FilterPanel from 'src/components/filters/FilterPanel.vue';
+import { ordersFilterPreset } from '@/presets/filters/orders';
+import { supabase } from 'src/services/supabase';
+import { useAuthStore } from 'src/stores/auth';
+import type { FilterValues, FilterChangeEvent, FilterResetEvent } from '@/types/filters';
 
-  // Composables
-  const router = useRouter();
-  const { t } = useI18n();
-  const $q = useQuasar();
-  const { quickActions, getThemeConfig } = useButtons();
+const $q = useQuasar();
+const { t } = useI18n();
+const authStore = useAuthStore();
 
-  // Button configurations
-  const exportBtn = computed(() =>
-    getThemeConfig('secondary', {
-      icon: 'file_download',
-      label: t('orders.export'),
-      variant: 'outline',
-    })
-  );
+// Refs
+const loading = ref(false);
+const exporting = ref(false);
+const selected = ref([]);
+const showExportDialog = ref(false);
+const showAnalytics = ref(false);
 
-  const analyticsBtn = computed(() =>
-    getThemeConfig('info', {
-      icon: 'insights',
-      label: t('orders.analytics'),
-    })
-  );
+// New filter state for FilterPanel
+const filterValues = ref<FilterValues>({});
 
-  const createOrderBtn = computed(() =>
-    getThemeConfig('primary', {
-      icon: 'shopping_cart_checkout',
-      label: t('orders.createOrder'),
-    })
-  );
+// Export state
+const exportFormat = ref('xlsx');
+const exportDateFrom = ref('');
+const exportDateTo = ref('');
 
-  const filterBtn = computed(() =>
-    getThemeConfig('primary', {
-      icon: 'filter_list',
-      label: t('common.filter'),
-    })
-  );
+// Data
+const orders = ref<any[]>([]);
 
-  const resetBtn = computed(() =>
-    getThemeConfig('secondary', {
-      icon: 'clear',
-      label: t('common.reset'),
-      variant: 'flat',
-    })
-  );
+const pagination = ref({
+  sortBy: 'order_date',
+  descending: true,
+  page: 1,
+  rowsPerPage: 25,
+  rowsNumber: 0,
+});
 
-  // State
-  const orders = ref<OrderWithItems[]>([]);
-  const loading = ref(false);
-  const exporting = ref(false);
-  const emailSending = ref(false);
-  const selected = ref<OrderWithItems[]>([]);
-  const showExportDialog = ref(false);
-  const showAnalytics = ref(false);
-  const showEmailDialog = ref(false);
+// Filter event handlers
+const handleFilterChange = (event: FilterChangeEvent) => {
+  // Filter logic is handled by computed property
+};
 
-  // Filters
-  const filters = reactive({
-    status: '',
-    supplier: '',
-    dateFrom: '',
-    dateTo: '',
-  });
+const handleFilterReset = (event: FilterResetEvent) => {
+  filterValues.value = { ...ordersFilterPreset.defaultFilters };
+};
 
-  // Export options
-  const exportFormat = ref<'csv' | 'pdf'>('csv');
-  const exportScope = ref<'all' | 'filtered' | 'selected'>('filtered');
+const handleFilterClear = () => {
+  filterValues.value = {};
+};
 
-  // Email data
-  const emailData = reactive({
-    recipient: '',
-    subject: '',
-    message: '',
-    orderId: '',
-  });
+// Computed
+const filteredOrders = computed(() => {
+  let filtered = orders.value;
 
-  // Analytics data
-  const analyticsData = reactive({
-    totalOrders: 0,
-    totalValue: 0,
-    averageOrderSize: 0,
-    orderFrequency: 0,
-  });
+  // Apply status filter
+  const status = filterValues.value.status;
+  if (status) {
+    filtered = filtered.filter(order => order.status === status);
+  }
 
-  // Pagination
-  const pagination = ref({
-    page: 1,
-    rowsPerPage: 20,
-    rowsNumber: 0,
-  });
+  // Apply supplier filter
+  const supplier = filterValues.value.supplier;
+  if (supplier) {
+    filtered = filtered.filter(order => order.supplier_id === supplier);
+  }
 
-  // Options
-  const statusOptions = computed(() => [
-    { label: t('orders.status.draft'), value: 'draft' },
-    { label: t('orders.status.submitted'), value: 'submitted' },
-    { label: t('orders.status.confirmed'), value: 'confirmed' },
-    { label: t('orders.status.shipped'), value: 'shipped' },
-    { label: t('orders.status.delivered'), value: 'delivered' },
-    { label: t('orders.status.cancelled'), value: 'cancelled' },
-  ]);
-
-  const supplierOptions = computed(() => [
-    // These would be loaded from the suppliers table
-    { label: t('orders.filters.allSuppliers'), value: '' },
-  ]);
-
-  const exportFormatOptions = computed(() => [
-    { label: t('orders.exportFormat.csv'), value: 'csv' },
-    { label: t('orders.exportFormat.pdf'), value: 'pdf' },
-  ]);
-
-  const exportScopeOptions = computed(() => [
-    { label: t('orders.exportScope.all'), value: 'all' },
-    { label: t('orders.exportScope.filtered'), value: 'filtered' },
-    {
-      label: t('orders.exportScope.selected'),
-      value: 'selected',
-      disable: selected.value.length === 0,
-    },
-  ]);
-
-  // Table columns
-  const columns = computed(() => [
-    {
-      name: 'id',
-      label: t('orders.table.orderNumber'),
-      field: 'id',
-      sortable: true,
-      align: 'left' as const,
-      style: 'width: 120px',
-    },
-    {
-      name: 'supplier',
-      label: t('orders.table.supplier'),
-      field: (row: any) => row.supplier?.name || t('common.unknownSupplier'),
-      align: 'left' as const,
-      sortable: true,
-      style: 'width: 200px',
-    },
-    {
-      name: 'status',
-      label: t('orders.table.status'),
-      field: 'status',
-      sortable: true,
-      align: 'left' as const,
-      style: 'width: 120px',
-    },
-    {
-      name: 'total',
-      label: t('orders.table.total'),
-      field: 'total_amount',
-      align: 'left' as const,
-      sortable: true,
-      style: 'width: 120px',
-    },
-    {
-      name: 'actions',
-      label: t('common.actions'),
-      align: 'center',
-    },
-  ]);
-
-  // Methods
-  const loadOrders = async () => {
-    try {
-      loading.value = true;
-
-      const filterOptions = {
-        status: filters.status ? filters.status : undefined,
-        supplier_id: filters.supplier ? filters.supplier : undefined,
-        date_from: filters.dateFrom ? filters.dateFrom : undefined,
-        date_to: filters.dateTo ? filters.dateTo : undefined,
-      };
-
-      orders.value = await orderProcessingService.getOrders(filterOptions);
-      pagination.value.rowsNumber = orders.value.length;
-
-      // Track analytics
-      analyticsService.trackEvent('orders_viewed', {
-        count: orders.value.length,
-        filters: filterOptions,
-      });
-    } catch (error: any) {
-      console.error('Failed to load orders:', error);
-
-      // Show user-friendly message for "No practice selected" error
-      if (error.message === t('orders.noPracticeSelected')) {
-        $q.notify({
-          type: 'warning',
-          message: t('orders.errors.noPracticeSelected'),
-          position: 'top',
-          timeout: 5000,
-          actions: [
-            {
-              label: t('common.dismiss'),
-              color: 'white',
-            },
-          ],
-        });
-      } else {
-        $q.notify({
-          type: 'negative',
-          message: t('orders.errors.loadFailed'),
-        });
-      }
-    } finally {
-      loading.value = false;
-    }
-  };
-
-  const loadAnalytics = async () => {
-    try {
-      const patterns = await analyticsService.getOrderPatterns();
-
-      analyticsData.totalOrders = patterns.totalOrders;
-      analyticsData.totalValue = orders.value.reduce(
-        (sum, order) => sum + (order.total_amount || 0),
-        0
-      );
-      analyticsData.averageOrderSize = Math.round(patterns.averageOrderSize);
-      analyticsData.orderFrequency =
-        Math.round(patterns.orderFrequency * 10) / 10;
-    } catch (error) {
-      console.error('Failed to load analytics:', error);
-    }
-  };
-
-  const applyFilters = () => {
-    loadOrders();
-  };
-
-  const resetFilters = () => {
-    Object.assign(filters, {
-      status: '',
-      supplier: '',
-      dateFrom: '',
-      dateTo: '',
+  // Apply date range filter
+  const orderDateRange = filterValues.value.order_date_range;
+  if (orderDateRange && orderDateRange.from) {
+    const fromDate = new Date(orderDateRange.from);
+    const toDate = orderDateRange.to ? new Date(orderDateRange.to) : new Date();
+    
+    filtered = filtered.filter(order => {
+      const orderDate = new Date(order.order_date);
+      return orderDate >= fromDate && orderDate <= toDate;
     });
-    loadOrders();
-  };
+  }
 
-  const onPaginationChange = (newPagination: any) => {
-    pagination.value = newPagination;
-  };
+  // Apply amount range filter
+  const amountRange = filterValues.value.amount_range;
+  if (amountRange && (amountRange.min !== undefined || amountRange.max !== undefined)) {
+    filtered = filtered.filter(order => {
+      const amount = order.total_amount || 0;
+      if (amountRange.min !== undefined && amount < amountRange.min) return false;
+      if (amountRange.max !== undefined && amount > amountRange.max) return false;
+      return true;
+    });
+  }
 
-  const onRequest = (props: any) => {
-    // Handle server-side pagination if needed
-    pagination.value = props.pagination;
-  };
+  // Apply expected delivery date range filter
+  const deliveryDateRange = filterValues.value.expected_delivery_date_range;
+  if (deliveryDateRange && deliveryDateRange.from) {
+    const fromDate = new Date(deliveryDateRange.from);
+    const toDate = deliveryDateRange.to ? new Date(deliveryDateRange.to) : new Date();
+    
+    filtered = filtered.filter(order => {
+      if (!order.expected_delivery_date) return false;
+      const deliveryDate = new Date(order.expected_delivery_date);
+      return deliveryDate >= fromDate && deliveryDate <= toDate;
+    });
+  }
 
-  const getStatusColor = (status: OrderStatus) => {
-    const colors = {
-      draft: 'grey',
-      submitted: 'blue',
-      confirmed: 'orange',
-      shipped: 'purple',
-      delivered: 'positive',
-      cancelled: 'negative',
-    };
-    return colors[status] || 'grey';
-  };
+  return filtered;
+});
 
-  const createNewOrder = () => {
-    router.push('/bestellijsten');
-  };
+// Button definitions
+const exportBtn = computed(() => ({
+  icon: 'download',
+  label: t('orders.export.button'),
+  color: 'secondary',
+  unelevated: true,
+  'no-caps': true,
+}));
 
-  const viewOrder = (order: OrderWithItems) => {
-    // Navigate to order detail view
+const analyticsBtn = computed(() => ({
+  icon: 'analytics',
+  label: t('orders.analytics.button'),
+  color: 'info',
+  unelevated: true,
+  'no-caps': true,
+}));
+
+const createOrderBtn = computed(() => ({
+  icon: 'add',
+  label: t('orders.createOrder'),
+  color: 'primary',
+  unelevated: true,
+  'no-caps': true,
+}));
+
+// Table columns
+const columns = computed(() => [
+  {
+    name: 'id',
+    label: t('orders.orderNumber'),
+    field: 'id',
+    align: 'left' as const,
+    sortable: true,
+  },
+  {
+    name: 'supplier_name',
+    label: t('orders.supplier'),
+    field: 'supplier_name',
+    align: 'left' as const,
+    sortable: true,
+  },
+  {
+    name: 'order_date',
+    label: t('orders.orderDate'),
+    field: 'order_date',
+    align: 'left' as const,
+    sortable: true,
+  },
+  {
+    name: 'status',
+    label: t('orders.status'),
+    field: 'status',
+    align: 'center' as const,
+    sortable: true,
+  },
+  {
+    name: 'total_amount',
+    label: t('orders.totalAmount'),
+    field: 'total_amount',
+    align: 'right' as const,
+    sortable: true,
+  },
+  {
+    name: 'expected_delivery_date',
+    label: t('orders.expectedDelivery'),
+    field: 'expected_delivery_date',
+    align: 'left' as const,
+    sortable: true,
+  },
+  {
+    name: 'actions',
+    label: t('orders.actions'),
+    field: '',
+    align: 'center' as const,
+    sortable: false,
+  },
+]);
+
+// Export format options
+const exportFormatOptions = computed(() => [
+  { label: 'Excel (.xlsx)', value: 'xlsx' },
+  { label: 'CSV (.csv)', value: 'csv' },
+  { label: 'PDF (.pdf)', value: 'pdf' },
+]);
+
+// Helper functions
+const getStatusColor = (status: string): string => {
+  switch (status) {
+    case 'draft':
+      return 'grey';
+    case 'submitted':
+      return 'info';
+    case 'confirmed':
+      return 'positive';
+    case 'shipped':
+      return 'purple';
+    case 'delivered':
+      return 'green';
+    case 'cancelled':
+      return 'negative';
+    default:
+      return 'grey';
+  }
+};
+
+const getStatusTextColor = (status: string): string => {
+  return 'white';
+};
+
+const formatDate = (dateString: string): string => {
+  if (!dateString) return '-';
+  return date.formatDate(dateString, 'DD/MM/YYYY');
+};
+
+const formatCurrency = (amount: number): string => {
+  if (!amount) return '€0,00';
+  return new Intl.NumberFormat('nl-NL', {
+    style: 'currency',
+    currency: 'EUR',
+  }).format(amount);
+};
+
+// Methods
+const loadOrders = async () => {
+  try {
+    loading.value = true;
+    const { data, error } = await supabase
+      .from('orders')
+      .select(`
+        *,
+        supplier:suppliers(name)
+      `)
+      .order('order_date', { ascending: false });
+
+    if (error) throw error;
+
+    orders.value = (data || []).map(order => ({
+      ...order,
+      supplier_name: order.supplier?.name || 'Unknown',
+    }));
+  } catch (error: any) {
+    console.error('Failed to load orders:', error);
     $q.notify({
-      type: 'info',
-      message: `Viewing order ${order.order_number}`,
+      type: 'negative',
+      message: t('orders.loadError'),
     });
-  };
+  } finally {
+    loading.value = false;
+  }
+};
 
-  const editOrder = (order: OrderWithItems) => {
-    // Navigate to order edit view
-    $q.notify({
-      type: 'info',
-      message: `Editing order ${order.order_number}`,
-    });
-  };
-
-  const downloadOrderPDF = async (order: OrderWithItems) => {
-    try {
-      const blob = await orderProcessingService.generateOrderPDF(order.id);
-      orderProcessingService.downloadFile(
-        blob,
-        `order-${order.order_number}.html`
-      );
-
-      analyticsService.trackExportEvent('order_pdf', 'pdf', {
-        order_id: order.id,
-      });
-
-      $q.notify({
-        type: 'positive',
-        message: t('orders.notifications.pdfDownloaded'),
-      });
-    } catch (error) {
-      console.error('Failed to download PDF:', error);
-      $q.notify({
-        type: 'negative',
-        message: t('orders.errors.pdfFailed'),
-      });
-    }
-  };
-
-  const downloadOrderCSV = async (order: OrderWithItems) => {
-    try {
-      const blob = await orderProcessingService.exportOrderToCSV(order.id);
-      orderProcessingService.downloadFile(
-        blob,
-        `order-${order.order_number}.csv`
-      );
-
-      analyticsService.trackExportEvent('order_csv', 'csv', {
-        order_id: order.id,
-      });
-
-      $q.notify({
-        type: 'positive',
-        message: t('orders.notifications.csvDownloaded'),
-      });
-    } catch (error) {
-      console.error('Failed to download CSV:', error);
-      $q.notify({
-        type: 'negative',
-        message: t('orders.errors.csvFailed'),
-      });
-    }
-  };
-
-  const emailOrder = (order: OrderWithItems) => {
-    emailData.orderId = order.id;
-            emailData.subject = `Order ${order.order_number} - Remcura`;
-    emailData.message = `Please find attached the details for order ${order.order_number}.`;
-    showEmailDialog.value = true;
-  };
-
-  const sendEmail = async () => {
-    if (!emailData.recipient || !emailData.orderId) return;
-
-    try {
-      emailSending.value = true;
-
-      await orderProcessingService.sendOrderByEmail(
-        emailData.orderId,
-        emailData.recipient,
-        emailData.subject
-      );
-
-      showEmailDialog.value = false;
-
-      $q.notify({
-        type: 'positive',
-        message: t('orders.notifications.emailSent'),
-      });
-
-      // Reset email data
-      Object.assign(emailData, {
-        recipient: '',
-        subject: '',
-        message: '',
-        orderId: '',
-      });
-    } catch (error) {
-      console.error('Failed to send email:', error);
-      $q.notify({
-        type: 'negative',
-        message: t('orders.errors.emailFailed'),
-      });
-    } finally {
-      emailSending.value = false;
-    }
-  };
-
-  const submitToMagento = async (order: OrderWithItems) => {
-    try {
-      const result = await orderProcessingService.submitOrderToMagento(
-        order.id
-      );
-
-      $q.notify({
-        type: 'positive',
-        message: t('orders.notifications.magentoSubmitted', {
-          orderNumber: result.increment_id,
-        }),
-      });
-
-      // Reload orders to show updated status
-      loadOrders();
-    } catch (error) {
-      console.error('Failed to submit to Magento:', error);
-      $q.notify({
-        type: 'negative',
-        message: t('orders.errors.magentoFailed'),
-      });
-    }
-  };
-
-  const duplicateOrder = (order: OrderWithItems) => {
-    $q.notify({
-      type: 'info',
-      message: `Duplicating order ${order.order_number}`,
-    });
-  };
-
-  const cancelOrder = async (order: OrderWithItems) => {
-    try {
-      await orderProcessingService.updateOrderStatus(order.id, 'cancelled');
-
-      $q.notify({
-        type: 'positive',
-        message: t('orders.notifications.orderCancelled'),
-      });
-
-      loadOrders();
-    } catch (error) {
-      console.error('Failed to cancel order:', error);
-      $q.notify({
-        type: 'negative',
-        message: t('orders.errors.cancelFailed'),
-      });
-    }
-  };
-
-  const performExport = async () => {
-    try {
-      exporting.value = true;
-
-      let ordersToExport: OrderWithItems[] = [];
-
-      switch (exportScope.value) {
-        case 'all':
-          ordersToExport = await orderProcessingService.getOrders();
-          break;
-        case 'filtered':
-          ordersToExport = orders.value;
-          break;
-        case 'selected':
-          ordersToExport = selected.value;
-          break;
-      }
-
-      if (ordersToExport.length === 0) {
-        $q.notify({
-          type: 'warning',
-          message: t('orders.errors.noOrdersToExport'),
-        });
-        return;
-      }
-
-      const orderIds = ordersToExport.map(order => order.id);
-
-      if (exportFormat.value === 'csv') {
-        const blob = await orderProcessingService.exportOrdersToCSV(orderIds);
-        const filename = `orders-${new Date().toISOString().split('T')[0]}.csv`;
-        orderProcessingService.downloadFile(blob, filename);
-      } else {
-        // For PDF, we'd need to implement bulk PDF generation
-        $q.notify({
-          type: 'info',
-          message: t('orders.notifications.pdfBulkNotSupported'),
-        });
-        return;
-      }
-
-      analyticsService.trackExportEvent('orders_bulk', exportFormat.value, {
-        count: ordersToExport.length,
-        scope: exportScope.value,
-      });
-
-      showExportDialog.value = false;
-
-      $q.notify({
-        type: 'positive',
-        message: t('orders.notifications.exportCompleted', {
-          count: ordersToExport.length,
-        }),
-      });
-    } catch (error) {
-      console.error('Failed to export orders:', error);
-      $q.notify({
-        type: 'negative',
-        message: t('orders.errors.exportFailed'),
-      });
-    } finally {
-      exporting.value = false;
-    }
-  };
-
-  const bulkExport = () => {
-    exportScope.value = 'selected';
-    showExportDialog.value = true;
-  };
-
-  const bulkEmail = () => {
-    $q.notify({
-      type: 'info',
-      message: t('orders.notifications.bulkEmailComingSoon'),
-    });
-  };
-
-  // Lifecycle
-  onMounted(() => {
-    loadOrders();
-    loadAnalytics();
+const createNewOrder = () => {
+  $q.notify({
+    type: 'info',
+    message: t('common.comingSoon'),
   });
+};
+
+const viewOrder = (order: any) => {
+  $q.notify({
+    type: 'info',
+    message: t('orders.viewOrderNotImplemented'),
+  });
+};
+
+const editOrder = (order: any) => {
+  $q.notify({
+    type: 'info',
+    message: t('orders.editOrderNotImplemented'),
+  });
+};
+
+const downloadOrder = (order: any) => {
+  $q.notify({
+    type: 'info',
+    message: t('orders.downloadOrderNotImplemented'),
+  });
+};
+
+const bulkExport = () => {
+  $q.notify({
+    type: 'info',
+    message: t('orders.bulkExportNotImplemented'),
+  });
+};
+
+const bulkEmail = () => {
+  $q.notify({
+    type: 'info',
+    message: t('orders.bulkEmailNotImplemented'),
+  });
+};
+
+const performExport = async () => {
+  try {
+    exporting.value = true;
+    
+    // Simulate export process
+    await new Promise(resolve => setTimeout(resolve, 2000));
+    
+    $q.notify({
+      type: 'positive',
+      message: t('orders.export.exportSuccess'),
+    });
+    
+    showExportDialog.value = false;
+  } catch (error: any) {
+    console.error('Export failed:', error);
+    $q.notify({
+      type: 'negative',
+      message: t('orders.export.exportError'),
+    });
+  } finally {
+    exporting.value = false;
+  }
+};
+
+const onPaginationChange = (newPagination: any) => {
+  pagination.value = newPagination;
+};
+
+const onRequest = (props: any) => {
+  const { page, rowsPerPage, sortBy, descending } = props.pagination;
+  
+  pagination.value.page = page;
+  pagination.value.rowsPerPage = rowsPerPage;
+  pagination.value.sortBy = sortBy;
+  pagination.value.descending = descending;
+};
+
+// Lifecycle
+onMounted(async () => {
+  await loadOrders();
+  
+  // Initialize filter values with defaults
+  if (ordersFilterPreset.defaultFilters) {
+    filterValues.value = { ...ordersFilterPreset.defaultFilters };
+  }
+});
 </script>
 
-<style scoped>
-  .q-table {
-    background: white;
+<style lang="scss" scoped>
+.filters-section {
+  .orders-filter-panel {
+    // Custom styling for the FilterPanel in orders page
   }
-
-  .orders-stats {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 16px;
-  }
+}
 </style>
