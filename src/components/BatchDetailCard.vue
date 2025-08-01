@@ -446,7 +446,7 @@
       border-color: rgba(0, 0, 0, 0.08);
     }
 
-    // Dark mode support
+    /* Dark mode support */
     .body--dark & {
       background: linear-gradient(
         145deg,
@@ -483,7 +483,7 @@
         inset 0 1px 0 rgba(255, 255, 255, 0.8);
     }
 
-    // Dark mode support
+    /* Dark mode support */
     .body--dark & {
       background: var(--bg-secondary);
       box-shadow: 
@@ -500,7 +500,7 @@
     }
   }
 
-  // Enhanced chip styling
+  /* Enhanced chip styling */
   .q-chip {
     border-radius: var(--radius-lg);
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
@@ -512,7 +512,7 @@
     }
   }
 
-  // Enhanced progress bar styling
+  /* Enhanced progress bar styling */
   .q-linear-progress {
     border-radius: var(--radius-full);
     box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.2);
@@ -523,7 +523,7 @@
     }
   }
 
-  // Enhanced button styling
+  /* Enhanced button styling */
   .q-btn {
     border-radius: var(--radius-lg);
     font-weight: var(--font-weight-semibold);

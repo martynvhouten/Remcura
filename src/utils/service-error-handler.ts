@@ -1,12 +1,15 @@
-import { monitoringService } from 'src/services/monitoring';
+import { monitoringService } from '@/services/monitoring';
 import { apiLogger } from './logger';
+
+// Type for error objects that can come from various sources
+export type ErrorLike = Error | { message?: string; code?: string; status?: number } | string | unknown;
 
 export interface ServiceErrorContext {
   service: string;
   operation: string;
   userId?: string;
   practiceId?: string;
-  metadata?: Record<string, any>;
+  metadata?: Record<string, unknown>;
 }
 
 export class ServiceError extends Error {
@@ -42,7 +45,7 @@ export class ServiceErrorHandler {
    * Handle and enhance service errors with consistent logging and monitoring
    */
   static handle(
-    error: any,
+    error: ErrorLike,
     context: ServiceErrorContext,
     options: {
       rethrow?: boolean;
@@ -77,7 +80,7 @@ export class ServiceErrorHandler {
    * Handle Supabase errors specifically
    */
   static handleSupabaseError(
-    error: any,
+    error: ErrorLike,
     context: ServiceErrorContext,
     customMessage?: string
   ): never {
@@ -101,7 +104,7 @@ export class ServiceErrorHandler {
    * Handle API errors (fetch, axios, etc.)
    */
   static handleApiError(
-    error: any,
+    error: ErrorLike,
     context: ServiceErrorContext,
     customMessage?: string
   ): never {
@@ -163,7 +166,7 @@ export class ServiceErrorHandler {
    * Create a ServiceError from any error type
    */
   private static createServiceError(
-    error: any,
+    error: ErrorLike,
     context: ServiceErrorContext
   ): ServiceError {
     if (error instanceof ServiceError) {
@@ -179,7 +182,7 @@ export class ServiceErrorHandler {
   /**
    * Extract meaningful error message from various error types
    */
-  private static extractErrorMessage(error: any): string {
+  private static extractErrorMessage(error: ErrorLike): string {
     if (typeof error === 'string') return error;
     if (error?.message) return error.message;
     if (error?.error?.message) return error.error.message;
@@ -190,7 +193,7 @@ export class ServiceErrorHandler {
   /**
    * Extract error code from various error types
    */
-  private static extractErrorCode(error: any): string {
+  private static extractErrorCode(error: ErrorLike): string {
     if (error?.code) return error.code;
     if (error?.error?.code) return error.error.code;
     if (error?.status) return `HTTP_${error.status}`;
@@ -201,7 +204,7 @@ export class ServiceErrorHandler {
   /**
    * Get user-friendly message from Supabase errors
    */
-  private static getSupabaseErrorMessage(error: any): string {
+  private static getSupabaseErrorMessage(error: ErrorLike): string {
     const message = error?.message || 'Database operation failed';
     
     // Common Supabase error translations
@@ -227,7 +230,7 @@ export class ServiceErrorHandler {
   /**
    * Get error code from Supabase errors
    */
-  private static getSupabaseErrorCode(error: any): string {
+  private static getSupabaseErrorCode(error: ErrorLike): string {
     if (error?.code) return `SUPABASE_${error.code}`;
     if (error?.error?.code) return `SUPABASE_${error.error.code}`;
     return 'SUPABASE_ERROR';
@@ -236,7 +239,7 @@ export class ServiceErrorHandler {
   /**
    * Get user-friendly message from API errors
    */
-  private static getApiErrorMessage(error: any): string {
+  private static getApiErrorMessage(error: ErrorLike): string {
     if (error?.response?.data?.message) {
       return error.response.data.message;
     }
@@ -252,7 +255,7 @@ export class ServiceErrorHandler {
   /**
    * Get error code from API errors
    */
-  private static getApiErrorCode(error: any): string {
+  private static getApiErrorCode(error: ErrorLike): string {
     if (error?.response?.status) {
       return `API_${error.response.status}`;
     }
@@ -326,4 +329,275 @@ export const wrapServiceCall = ServiceErrorHandler.wrap.bind(
 
 export const validateRequired = ServiceErrorHandler.validateRequired.bind(
   ServiceErrorHandler
-); 
+);
+
+// Error Categories for better handling
+export enum ErrorCategory {
+  VALIDATION = 'validation',
+  NETWORK = 'network',
+  AUTHENTICATION = 'authentication',
+  AUTHORIZATION = 'authorization',
+  NOT_FOUND = 'not_found',
+  SERVER_ERROR = 'server_error',
+  CLIENT_ERROR = 'client_error',
+  SUPABASE = 'supabase',
+  UNEXPECTED = 'unexpected'
+}
+
+// User-friendly error messages
+export const ERROR_MESSAGES: Record<string, string> = {
+  // Network errors
+  NETWORK_ERROR: 'Er is een netwerkfout opgetreden. Controleer je internetverbinding.',
+  TIMEOUT_ERROR: 'De aanvraag duurde te lang. Probeer het opnieuw.',
+  
+  // Authentication errors
+  AUTH_INVALID_CREDENTIALS: 'Onjuiste inloggegevens. Controleer je e-mailadres en wachtwoord.',
+  AUTH_SESSION_EXPIRED: 'Je sessie is verlopen. Log opnieuw in.',
+  AUTH_UNAUTHORIZED: 'Je hebt geen toegang tot deze functie.',
+  
+  // Validation errors
+  VALIDATION_REQUIRED: 'Dit veld is verplicht.',
+  VALIDATION_INVALID_EMAIL: 'Voer een geldig e-mailadres in.',
+  VALIDATION_INVALID_FORMAT: 'Ongeldige invoer. Controleer het formaat.',
+  
+  // Supabase errors
+  SUPABASE_CONNECTION: 'Kan geen verbinding maken met de database.',
+  SUPABASE_TIMEOUT: 'Database timeout. Probeer het opnieuw.',
+  SUPABASE_POLICY: 'Je hebt geen toegang tot deze gegevens.',
+  
+  // Generic fallbacks
+  SERVER_ERROR: 'Er is een serverfout opgetreden. Probeer het later opnieuw.',
+  CLIENT_ERROR: 'Er is een fout opgetreden. Ververs de pagina en probeer opnieuw.',
+  UNEXPECTED_ERROR: 'Er is een onverwachte fout opgetreden. Neem contact op met support als dit probleem aanhoudt.'
+};
+
+/**
+ * Enhanced error handler with categorization and user-friendly messages
+ */
+export class ErrorHandler {
+  /**
+   * Categorize error based on error properties
+   */
+  static categorizeError(error: ErrorLike): ErrorCategory {
+    if (typeof error === 'string') {
+      return ErrorCategory.CLIENT_ERROR;
+    }
+
+    if (error instanceof ServiceError) {
+      const code = error.code.toLowerCase();
+      
+      if (code.includes('auth') || code.includes('unauthorized') || code.includes('401')) {
+        return ErrorCategory.AUTHENTICATION;
+      }
+      if (code.includes('forbidden') || code.includes('403')) {
+        return ErrorCategory.AUTHORIZATION;
+      }
+      if (code.includes('not_found') || code.includes('404')) {
+        return ErrorCategory.NOT_FOUND;
+      }
+      if (code.includes('validation') || code.includes('invalid')) {
+        return ErrorCategory.VALIDATION;
+      }
+      if (code.includes('network') || code.includes('timeout')) {
+        return ErrorCategory.NETWORK;
+      }
+      if (code.includes('supabase') || code.includes('42P17')) {
+        return ErrorCategory.SUPABASE;
+      }
+    }
+
+    // Check for network/connection errors
+    if (error?.code === 'NETWORK_ERROR' || error?.message?.includes('network') || error?.message?.includes('fetch')) {
+      return ErrorCategory.NETWORK;
+    }
+
+    // Check HTTP status codes
+    const status = error?.status || error?.response?.status;
+    if (status) {
+      if (status === 401) return ErrorCategory.AUTHENTICATION;
+      if (status === 403) return ErrorCategory.AUTHORIZATION;
+      if (status === 404) return ErrorCategory.NOT_FOUND;
+      if (status >= 400 && status < 500) return ErrorCategory.CLIENT_ERROR;
+      if (status >= 500) return ErrorCategory.SERVER_ERROR;
+    }
+
+    return ErrorCategory.UNEXPECTED;
+  }
+
+  /**
+   * Get user-friendly error message
+   */
+  static getUserMessage(error: ErrorLike, category?: ErrorCategory): string {
+    const errorCategory = category || this.categorizeError(error);
+    
+    // Try to get specific error message first
+    if (error instanceof ServiceError) {
+      const specificMessage = ERROR_MESSAGES[error.code];
+      if (specificMessage) return specificMessage;
+    }
+
+    // Fall back to category-based messages
+    switch (errorCategory) {
+      case ErrorCategory.VALIDATION:
+        return ERROR_MESSAGES.VALIDATION_INVALID_FORMAT;
+      case ErrorCategory.NETWORK:
+        return ERROR_MESSAGES.NETWORK_ERROR;
+      case ErrorCategory.AUTHENTICATION:
+        return ERROR_MESSAGES.AUTH_SESSION_EXPIRED;
+      case ErrorCategory.AUTHORIZATION:
+        return ERROR_MESSAGES.AUTH_UNAUTHORIZED;
+      case ErrorCategory.NOT_FOUND:
+        return 'De gevraagde gegevens konden niet worden gevonden.';
+      case ErrorCategory.SUPABASE:
+        return ERROR_MESSAGES.SUPABASE_CONNECTION;
+      case ErrorCategory.SERVER_ERROR:
+        return ERROR_MESSAGES.SERVER_ERROR;
+      case ErrorCategory.CLIENT_ERROR:
+        return ERROR_MESSAGES.CLIENT_ERROR;
+      default:
+        return ERROR_MESSAGES.UNEXPECTED_ERROR;
+    }
+  }
+
+  /**
+   * Handle error with full processing (logging, categorization, user message)
+   */
+  static async handleError(
+    error: ErrorLike,
+    context: ServiceErrorContext,
+    options: {
+      showToUser?: boolean;
+      logLevel?: 'error' | 'warn' | 'info';
+      includeStack?: boolean;
+    } = {}
+  ): Promise<{
+    category: ErrorCategory;
+    userMessage: string;
+    serviceError: ServiceError;
+  }> {
+    const { showToUser = false, logLevel = 'error', includeStack = true } = options;
+
+    // Create or enhance service error
+    let serviceError: ServiceError;
+    if (error instanceof ServiceError) {
+      serviceError = error;
+    } else {
+      serviceError = ServiceErrorHandler.createServiceError(
+        error,
+        context.service,
+        context.operation,
+        context
+      );
+    }
+
+    // Categorize the error
+    const category = this.categorizeError(serviceError);
+    
+    // Get user-friendly message
+    const userMessage = this.getUserMessage(serviceError, category);
+
+    // Log the error using ServiceErrorHandler
+    ServiceErrorHandler.logError(serviceError, logLevel, includeStack);
+
+    // Capture for monitoring
+    ServiceErrorHandler.captureError(serviceError, context);
+
+    // Show notification to user if requested
+    if (showToUser) {
+      this.showErrorNotification(userMessage, category);
+    }
+
+    return {
+      category,
+      userMessage,
+      serviceError
+    };
+  }
+
+  /**
+   * Show error notification to user (can be extended with toast/notification library)
+   */
+  private static showErrorNotification(message: string, category: ErrorCategory): void {
+    // For now, use console.warn as a placeholder
+    // In a real app, you'd integrate with your notification system (Quasar Notify, etc.)
+    console.warn(`[${category.toUpperCase()}] ${message}`);
+    
+    // Example with Quasar Notify (if available):
+    // if (window.$q?.notify) {
+    //   window.$q.notify({
+    //     type: category === ErrorCategory.VALIDATION ? 'warning' : 'negative',
+    //     message: message,
+    //     position: 'top-right',
+    //     timeout: category === ErrorCategory.NETWORK ? 0 : 5000, // Network errors stay until dismissed
+    //     actions: [{ icon: 'close', color: 'white' }]
+    //   });
+    // }
+  }
+
+  /**
+   * Wrap async function calls with automatic error handling
+   */
+  static async wrapCall<T>(
+    fn: () => Promise<T>,
+    context: ServiceErrorContext,
+    options?: {
+      showToUser?: boolean;
+      logLevel?: 'error' | 'warn' | 'info';
+      includeStack?: boolean;
+      fallbackValue?: T;
+    }
+  ): Promise<T | undefined> {
+    try {
+      return await fn();
+    } catch (error) {
+      const result = await this.handleError(error, context, options);
+      
+      // Return fallback value if provided
+      if (options?.fallbackValue !== undefined) {
+        return options.fallbackValue;
+      }
+      
+      // Re-throw for caller to handle if needed
+      throw result.serviceError;
+    }
+  }
+
+  /**
+   * Global error handler for unhandled promise rejections
+   */
+  static setupGlobalHandlers(): void {
+    // Handle unhandled promise rejections
+    window.addEventListener('unhandledrejection', (event) => {
+      const error = event.reason;
+      this.handleError(error, {
+        service: 'global',
+        operation: 'unhandled_rejection',
+        metadata: {
+          url: window.location.href,
+          timestamp: new Date().toISOString()
+        }
+      }, {
+        showToUser: true,
+        logLevel: 'error'
+      });
+    });
+
+    // Handle general JavaScript errors
+    window.addEventListener('error', (event) => {
+      this.handleError(event.error || event.message, {
+        service: 'global',
+        operation: 'javascript_error',
+        metadata: {
+          url: window.location.href,
+          filename: event.filename,
+          lineno: event.lineno,
+          colno: event.colno,
+          timestamp: new Date().toISOString()
+        }
+      }, {
+        showToUser: false, // Don't show JS errors to users
+        logLevel: 'error'
+      });
+    });
+  }
+} 

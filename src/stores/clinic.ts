@@ -1,8 +1,9 @@
 import { defineStore } from 'pinia';
 import { ref, computed } from 'vue';
-import { supabase } from 'src/boot/supabase';
-import type { Practice, Location } from 'src/types/supabase';
-import type { PracticeLocation } from 'src/types/inventory';
+import { supabase } from '@/boot/supabase';
+import { clinicLogger } from '@/utils/logger';
+import type { Practice, Location } from '@/types/supabase';
+import type { PracticeLocation } from '@/types/inventory';
 
 export const useClinicStore = defineStore('clinic', () => {
   // State
@@ -53,7 +54,7 @@ export const useClinicStore = defineStore('clinic', () => {
 
       clinic.value = data;
     } catch (error) {
-      console.error('Error fetching practice:', error);
+      clinicLogger.error('Error fetching practice:', error);
     } finally {
       loading.value = false;
     }
@@ -74,7 +75,7 @@ export const useClinicStore = defineStore('clinic', () => {
 
       locations.value = data || [];
     } catch (error) {
-      console.error('Error fetching locations:', error);
+      clinicLogger.error('Error fetching locations:', error);
       throw error;
     } finally {
       locationsLoading.value = false;

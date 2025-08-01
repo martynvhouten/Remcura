@@ -1,7 +1,8 @@
-import { supabase } from 'src/boot/supabase';
-import { useAuthStore } from 'src/stores/auth';
-import { handleSupabaseError, ServiceErrorHandler } from 'src/utils/service-error-handler';
-import type { AnalyticsEvent } from 'src/types/supabase';
+import { supabase } from '@/boot/supabase';
+import { useAuthStore } from '@/stores/auth';
+import { analyticsLogger } from '@/utils/logger';
+import { handleSupabaseError, ServiceErrorHandler } from '@/utils/service-error-handler';
+import type { AnalyticsEvent } from '@/types/supabase';
 
 export interface AnalyticsDateRange {
   startDate: string;
@@ -221,7 +222,7 @@ export class AnalyticsService {
         dailyActivity,
       };
     } catch (error) {
-      console.error('Error getting analytics summary:', error);
+      analyticsLogger.error('Error getting analytics summary:', error);
       return {
         totalEvents: 0,
         activeUsers: 0,
@@ -328,7 +329,7 @@ export class AnalyticsService {
         orderTrends,
       };
     } catch (error) {
-      console.error('Error getting order metrics:', error);
+      analyticsLogger.error('Error getting order metrics:', error);
       return {
         totalOrders: 0,
         totalOrderValue: 0,
@@ -425,7 +426,7 @@ export class AnalyticsService {
         mostUpdatedProducts,
       };
     } catch (error) {
-      console.error('Error getting product metrics:', error);
+      analyticsLogger.error('Error getting product metrics:', error);
       return {
         totalUpdates: 0,
         productsScanned: 0,
@@ -520,7 +521,7 @@ export class AnalyticsService {
         userList,
       };
     } catch (error) {
-      console.error('Error getting user activity metrics:', error);
+      analyticsLogger.error('Error getting user activity metrics:', error);
       return {
         activeUsers: 0,
         totalSessions: 0,
@@ -551,7 +552,7 @@ export class AnalyticsService {
 
       return products || [];
     } catch (error) {
-      console.error('Error fetching low stock items:', error);
+      analyticsLogger.error('Error fetching low stock items:', error);
       throw error;
     }
   }
@@ -612,7 +613,7 @@ export class AnalyticsService {
         turnoverRate: metric.avg_stock > 0 ? metric.total_used / metric.avg_stock : 0
       }));
     } catch (error) {
-      console.error('Error calculating stock turnover rates:', error);
+      analyticsLogger.error('Error calculating stock turnover rates:', error);
       throw error;
     }
   }
@@ -649,7 +650,7 @@ export class AnalyticsService {
 
       return monthlyData;
     } catch (error) {
-      console.error('Error getting monthly usage trends:', error);
+      analyticsLogger.error('Error getting monthly usage trends:', error);
       throw error;
     }
   }
@@ -686,7 +687,7 @@ export class AnalyticsService {
         })) || []
       );
     } catch (error) {
-      console.error('Error getting top used products:', error);
+      analyticsLogger.error('Error getting top used products:', error);
       throw error;
     }
   }
@@ -750,7 +751,7 @@ export class AnalyticsService {
         cost_per_unit_improvement: totalUsage > 0 ? (totalValue / totalUsage) * 0.1 : 0,
       };
     } catch (error) {
-      console.error('Error calculating cost savings:', error);
+      analyticsLogger.error('Error calculating cost savings:', error);
       throw error;
     }
   }
@@ -791,7 +792,7 @@ export class AnalyticsService {
         trend_data: [{ date: new Date().toISOString(), value: totalValue }],
       };
     } catch (error) {
-      console.error('Error getting inventory value trends:', error);
+      analyticsLogger.error('Error getting inventory value trends:', error);
       throw error;
     }
   }
@@ -829,7 +830,7 @@ export class AnalyticsService {
         }) || []
       );
     } catch (error) {
-      console.error('Error predicting stock needs:', error);
+      analyticsLogger.error('Error predicting stock needs:', error);
       throw error;
     }
   }
@@ -916,7 +917,7 @@ export class AnalyticsService {
         trend: overallAccuracy > 75 ? 'improving' : overallAccuracy > 50 ? 'stable' : 'needs_attention',
       };
     } catch (error) {
-      console.error('Error calculating forecast accuracy:', error);
+      analyticsLogger.error('Error calculating forecast accuracy:', error);
       throw error;
     }
   }
@@ -932,7 +933,7 @@ export class AnalyticsService {
         .limit(100);
       return events || [];
     } catch (error) {
-      console.error('Error getting usage stats:', error);
+      analyticsLogger.error('Error getting usage stats:', error);
       return [];
     }
   }

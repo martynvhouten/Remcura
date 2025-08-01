@@ -1,5 +1,6 @@
 import { supabase } from './supabase';
 import { useAuthStore } from '@/stores/auth';
+import { dashboardLogger } from '@/utils/logger';
 
 export interface DashboardWidget {
   id: string;
@@ -79,7 +80,7 @@ class DashboardService {
     const practiceId = authStore.clinicId || authStore.selectedPractice?.id;
 
     // Use real data with mock fallback for widgets
-    console.log(`🎯 Loading dashboard for role: "${userRole}"`);
+    dashboardLogger.info(`🎯 Loading dashboard for role: "${userRole}"`);
     
     const config = this.roleConfigs[userRole] || this.roleConfigs.assistant;
     
@@ -156,7 +157,7 @@ class DashboardService {
         recentActivity: this.calculateRecentActivity(orders, stockLevels)
       };
     } catch (error) {
-      console.error('Error loading metrics:', error);
+      dashboardLogger.error('Error loading metrics:', error);
       // Return fallback metrics if there's an error
       return {
         totalProducts: 245,
@@ -173,7 +174,7 @@ class DashboardService {
     practiceId: string, 
     userRole: string
   ): Promise<DashboardWidget[]> {
-    console.log(`🔧 Loading widgets for ${userRole}:`, widgetIds);
+    dashboardLogger.info(`🔧 Loading widgets for ${userRole}:`, widgetIds);
     
             // Try real widgets first, fallback to mock for role-specific content
     const widgets: DashboardWidget[] = [];
@@ -183,23 +184,23 @@ class DashboardService {
         // Try real widget first
         const widget = await this.createWidget(widgetId, practiceId, userRole);
         if (widget) {
-          console.log(`✅ Real widget loaded: ${widgetId}`);
+          dashboardLogger.info(`✅ Real widget loaded: ${widgetId}`);
           widgets.push(widget);
         } else {
           throw new Error('Widget creation returned null');
         }
       } catch (error) {
-        console.log(`⚠️ Real widget failed for ${widgetId}, using mock:`, error.message);
+        dashboardLogger.info(`⚠️ Real widget failed for ${widgetId}, using mock:`, error.message);
         // Always create mock widget on error - this ensures role-specific content
         const mockWidget = this.createMockWidget(widgetId, index);
         if (mockWidget) {
-          console.log(`📋 Mock widget created: ${mockWidget.title}`);
+          dashboardLogger.info(`📋 Mock widget created: ${mockWidget.title}`);
           widgets.push(mockWidget);
         }
       }
     }
 
-    console.log(`🎯 Final widget titles for ${userRole}:`, widgets.map(w => w.title));
+    dashboardLogger.info(`🎯 Final widget titles for ${userRole}:`, widgets.map(w => w.title));
     return widgets;
   }
 
@@ -240,11 +241,11 @@ class DashboardService {
       case 'financial-summary':
       case 'user-management':
       case 'system-health':
-        console.log(`🎨 Using mock for widget: ${widgetId}`);
+        dashboardLogger.info(`🎨 Using mock for widget: ${widgetId}`);
         return null;
         
       default:
-        console.log(`❌ Unknown widget type: ${widgetId}`);
+        dashboardLogger.info(`❌ Unknown widget type: ${widgetId}`);
         return null;
     }
   }
@@ -484,7 +485,7 @@ class DashboardService {
 
       return alerts;
     } catch (error) {
-      console.error('Error loading alerts:', error);
+      dashboardLogger.error('Error loading alerts:', error);
       // Return mock alerts if there's an error
       return [
         {
@@ -505,7 +506,7 @@ class DashboardService {
   getMockDashboardData(userRole: string): DashboardData {
     const config = this.roleConfigs[userRole] || this.roleConfigs.assistant;
     
-    console.log(`🎯 Building ${userRole} dashboard with widgets:`, config.widgets);
+    dashboardLogger.info(`🎯 Building ${userRole} dashboard with widgets:`, config.widgets);
     
     // Create mock widgets based on role - MUST be role specific
     const mockWidgets = config.widgets.map((widgetId, index) => {
@@ -513,7 +514,7 @@ class DashboardService {
       return widget;
     }).filter(widget => widget !== null) as DashboardWidget[];
 
-    console.log(`✅ Created ${mockWidgets.length} widgets for ${userRole}:`, mockWidgets.map(w => w.title));
+    dashboardLogger.info(`✅ Created ${mockWidgets.length} widgets for ${userRole}:`, mockWidgets.map(w => w.title));
 
     // Role-specific metrics
     const metrics = this.getMockMetrics(userRole);

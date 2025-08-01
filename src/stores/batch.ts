@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia';
 import { ref, computed } from 'vue';
-import { supabase } from 'src/boot/supabase';
+import { supabase } from '@/boot/supabase';
 import {
   type ProductBatch,
   type ProductBatchWithDetails,
@@ -9,8 +9,8 @@ import {
   type ExpiringBatch,
   type FifoBatch,
   type BatchMovement,
-} from 'src/types/inventory';
-import { ServiceErrorHandler } from 'src/utils/service-error-handler';
+} from '@/types/inventory';
+import { ServiceErrorHandler } from '@/utils/service-error-handler';
 
 export const useBatchStore = defineStore('batch', () => {
   // State

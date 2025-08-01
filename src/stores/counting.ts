@@ -1,14 +1,15 @@
 import { defineStore } from 'pinia';
 import { ref, computed } from 'vue';
-import { supabase } from 'src/boot/supabase';
+import { supabase } from '@/boot/supabase';
 import { useAuthStore } from './auth';
+import { countingLogger } from '@/utils/logger';
 import type {
   CountingSession,
   CountingEntry,
   CountingProduct,
   CountingStats,
   StartCountingSessionRequest,
-} from 'src/types/inventory';
+} from '@/types/inventory';
 
 export const useCountingStore = defineStore('counting', () => {
   // State
@@ -97,7 +98,7 @@ export const useCountingStore = defineStore('counting', () => {
 
       return session;
     } catch (error) {
-      console.error('Error starting counting session:', error);
+      countingLogger.error('Error starting counting session', error);
       throw error;
     } finally {
       loading.value = false;
@@ -155,7 +156,7 @@ export const useCountingStore = defineStore('counting', () => {
         });
       }
     } catch (error) {
-      console.error('Error fetching products for session:', error);
+      countingLogger.error('Error fetching products for session', error);
       throw error;
     }
   };
@@ -232,7 +233,7 @@ export const useCountingStore = defineStore('counting', () => {
 
       return entry;
     } catch (error) {
-      console.error('Error counting product:', error);
+      countingLogger.error('Error counting product:', error);
       throw error;
     }
   };
@@ -260,7 +261,7 @@ export const useCountingStore = defineStore('counting', () => {
 
       return data;
     } catch (error) {
-      console.error('Error updating counting entry:', error);
+      countingLogger.error('Error updating counting entry:', error);
       throw error;
     }
   };
@@ -278,7 +279,7 @@ export const useCountingStore = defineStore('counting', () => {
       isCountingMode.value = false;
       return true;
     } catch (error) {
-      console.error('Error completing counting session:', error);
+      countingLogger.error('Error completing counting session:', error);
       throw error;
     }
   };
@@ -299,7 +300,7 @@ export const useCountingStore = defineStore('counting', () => {
 
       return true;
     } catch (error) {
-      console.error('Error approving counting session:', error);
+      countingLogger.error('Error approving counting session:', error);
       throw error;
     }
   };
@@ -336,7 +337,7 @@ export const useCountingStore = defineStore('counting', () => {
 
       return true;
     } catch (error) {
-      console.error('Error applying count adjustments:', error);
+      countingLogger.error('Error applying count adjustments:', error);
       throw error;
     }
   };
@@ -366,7 +367,7 @@ export const useCountingStore = defineStore('counting', () => {
 
       return data;
     } catch (error) {
-      console.error('Error updating session:', error);
+      countingLogger.error('Error updating session:', error);
       throw error;
     }
   };
@@ -383,7 +384,7 @@ export const useCountingStore = defineStore('counting', () => {
 
       sessions.value = data || [];
     } catch (error) {
-      console.error('Error fetching counting sessions:', error);
+      countingLogger.error('Error fetching counting sessions:', error);
       throw error;
     }
   };
@@ -407,7 +408,7 @@ export const useCountingStore = defineStore('counting', () => {
 
       countingEntries.value = data || [];
     } catch (error) {
-      console.error('Error fetching counting entries:', error);
+      countingLogger.error('Error fetching counting entries:', error);
       throw error;
     }
   };
@@ -427,7 +428,7 @@ export const useCountingStore = defineStore('counting', () => {
 
       return true;
     } catch (error) {
-      console.error('Error canceling counting session:', error);
+      countingLogger.error('Error canceling counting session:', error);
       throw error;
     }
   };

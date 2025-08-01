@@ -342,13 +342,13 @@ export class MagicInviteService {
     eventData: any = {}
   ): Promise<void> {
     try {
+      // Invite analytics now handled by usage_analytics table
       await supabase
-        .from('invite_analytics')
+        .from('usage_analytics')
         .insert([{
           practice_id: practiceId,
-          magic_invite_id: inviteId,
-          event_type: eventType,
-          event_data: eventData,
+          event_type: `invite_${eventType}`,
+          event_data: { magic_invite_id: inviteId, ...eventData },
           user_agent: navigator.userAgent,
           device_type: this.getDeviceType(),
           created_at: new Date().toISOString()

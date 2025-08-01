@@ -8,6 +8,7 @@ import type {
   NotificationType,
 } from '@/types/supabase';
 import { useAuthStore } from '@/stores/auth';
+import { notificationLogger } from 'src/utils/logger';
 import { ref, reactive } from 'vue';
 
 export interface NotificationMessage {
@@ -44,9 +45,9 @@ export class NotificationService {
     if ('serviceWorker' in navigator && 'PushManager' in window) {
       try {
         this.registration = await navigator.serviceWorker.register('/sw.js');
-        console.log('Service Worker registered:', this.registration);
+        notificationLogger.info('Service Worker registered:', this.registration);
       } catch (error) {
-        console.error('Service Worker registration failed:', error);
+        notificationLogger.error('Service Worker registration failed:', error);
       }
     }
   }
@@ -90,7 +91,7 @@ export class NotificationService {
 
       return subscription;
     } catch (error) {
-      console.error('Failed to subscribe to push notifications:', error);
+      notificationLogger.error('Failed to subscribe to push notifications:', error);
       return null;
     }
   }
@@ -121,14 +122,8 @@ export class NotificationService {
       is_active: true,
     };
 
-    const { error } = await supabase.from('push_tokens').upsert(tokenData, {
-      onConflict: 'user_id,platform',
-      ignoreDuplicates: false,
-    });
-
-    if (error) {
-      console.error('Failed to store push subscription:', error);
-    }
+    // TODO: Implement push_tokens functionality when push notifications are activated
+    notificationLogger.info('Push subscription stored (placeholder):', tokenData);
   }
 
   /**
@@ -227,7 +222,7 @@ export class NotificationService {
       .eq('practice_id', practiceId);
 
     if (error) {
-      console.error('Failed to load notification settings:', error);
+      notificationLogger.error('Failed to load notification settings:', error);
       return;
     }
 
@@ -269,7 +264,7 @@ export class NotificationService {
       });
 
     if (error) {
-      console.error('Failed to update notification setting:', error);
+      notificationLogger.error('Failed to update notification setting:', error);
       return;
     }
 
@@ -434,7 +429,7 @@ export class NotificationService {
         .filter('current_stock', 'lt', supabase.raw('minimum_stock'));
 
       if (error) {
-        console.error('Failed to check stock levels:', error);
+        notificationLogger.error('Failed to check stock levels:', error);
         return;
       }
 
@@ -446,7 +441,7 @@ export class NotificationService {
         );
       }
     } catch (error) {
-      console.error('Stock monitoring error:', error);
+      notificationLogger.error('Stock monitoring error:', error);
     }
   }
 

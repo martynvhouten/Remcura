@@ -5,11 +5,22 @@
 
 export type LogLevel = 'debug' | 'info' | 'warn' | 'error';
 
+// Type for log data - allows common log data types while maintaining type safety
+export type LogData = 
+  | string 
+  | number 
+  | boolean 
+  | Error 
+  | Record<string, unknown> 
+  | Array<unknown> 
+  | null 
+  | undefined;
+
 export interface LogEntry {
   level: LogLevel;
   message: string;
   context?: string;
-  data?: any;
+  data?: LogData;
   timestamp: string;
 }
 
@@ -20,7 +31,7 @@ class Logger {
   /**
    * Log debug information (only in development)
    */
-  debug(message: string, context?: string, data?: any): void {
+  debug(message: string, context?: string, data?: LogData): void {
     if (this.isDevelopment) {
       console.debug(
         `[DEBUG${context ? ` ${context}` : ''}]`,
@@ -33,7 +44,7 @@ class Logger {
   /**
    * Log general information
    */
-  info(message: string, context?: string, data?: any): void {
+  info(message: string, context?: string, data?: LogData): void {
     if (this.isDevelopment) {
       console.info(
         `[INFO${context ? ` ${context}` : ''}]`,
@@ -49,7 +60,7 @@ class Logger {
   /**
    * Log warnings (always logged)
    */
-  warn(message: string, context?: string, data?: any): void {
+  warn(message: string, context?: string, data?: LogData): void {
     console.warn(`[WARN${context ? ` ${context}` : ''}]`, message, data || '');
     this.sendToMonitoring('warn', message, context, data);
   }
@@ -73,7 +84,7 @@ class Logger {
     _level: LogLevel,
     _message: string,
     _context?: string,
-    _data?: any
+    _data?: LogData
   ): void {
     if (!this.isProduction) return;
 
@@ -94,11 +105,11 @@ class Logger {
    */
   createContext(context: string) {
     return {
-      debug: (message: string, data?: any) =>
+      debug: (message: string, data?: LogData) =>
         this.debug(message, context, data),
-      info: (message: string, data?: any) => this.info(message, context, data),
-      warn: (message: string, data?: any) => this.warn(message, context, data),
-      error: (message: string, error?: Error | any) =>
+      info: (message: string, data?: LogData) => this.info(message, context, data),
+      warn: (message: string, data?: LogData) => this.warn(message, context, data),
+      error: (message: string, error?: Error | LogData) =>
         this.error(message, context, error),
     };
   }
@@ -112,3 +123,19 @@ export const authLogger = logger.createContext('AUTH');
 export const apiLogger = logger.createContext('API');
 export const routerLogger = logger.createContext('ROUTER');
 export const serviceWorkerLogger = logger.createContext('SW');
+
+// Store loggers
+export const productLogger = logger.createContext('PRODUCTS');
+export const inventoryLogger = logger.createContext('INVENTORY');
+export const orderLogger = logger.createContext('ORDERS');
+export const supplierLogger = logger.createContext('SUPPLIERS');
+export const countingLogger = logger.createContext('COUNTING');
+export const batchLogger = logger.createContext('BATCH');
+export const clinicLogger = logger.createContext('CLINIC');
+
+// Service loggers
+export const analyticsLogger = logger.createContext('ANALYTICS');
+export const dashboardLogger = logger.createContext('DASHBOARD');
+export const magentoLogger = logger.createContext('MAGENTO');
+export const offlineLogger = logger.createContext('OFFLINE');
+export const notificationLogger = logger.createContext('NOTIFICATIONS');

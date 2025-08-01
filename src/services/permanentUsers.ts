@@ -162,7 +162,7 @@ export class PermanentUserService {
         email_login_enabled: request.login_method === 'email_password',
         password_hash: passwordHash,
         device_remember_enabled: request.login_method === 'device_remember',
-        device_tokens: [],
+        device_tokens: [], // JSON field for device authentication
         role: request.role,
         department: request.department || null,
         permissions: {},
@@ -242,85 +242,8 @@ export class PermanentUserService {
     return btoa(password) === hash;
   }
 
-  // 📱 DEVICE TOKEN MANAGEMENT
-  static async createDeviceToken(userId: string, deviceFingerprint: string): Promise<DeviceToken> {
-    try {
-      const tokenData = {
-        id: uuidv4(),
-        user_id: userId,
-        device_fingerprint: deviceFingerprint,
-        device_name: this.getDeviceName(),
-        user_agent: navigator.userAgent,
-        ip_address: await this.getClientIP(),
-        token_hash: this.generateTokenHash(),
-        expires_at: new Date(Date.now() + 90 * 24 * 60 * 60 * 1000).toISOString(), // 90 days
-        is_active: true,
-        login_count: 0
-      };
-
-      const { data, error } = await supabase
-        .from('device_tokens')
-        .insert([tokenData])
-        .select()
-        .single();
-
-      if (error) throw error;
-      return data;
-    } catch (error) {
-      console.error('Error creating device token:', error);
-      throw error;
-    }
-  }
-
-  static async validateDeviceToken(deviceFingerprint: string): Promise<LoginResult> {
-    try {
-      const { data: deviceToken, error } = await supabase
-        .from('device_tokens')
-        .select('*')
-        .eq('device_fingerprint', deviceFingerprint)
-        .eq('is_active', true)
-        .gt('expires_at', new Date().toISOString())
-        .single();
-
-      if (error || !deviceToken) {
-        return { success: false, error: 'Invalid or expired device token' };
-      }
-
-      // Get user data
-      const { data: user } = await supabase
-        .from('permanent_users')
-        .select('*')
-        .eq('id', deviceToken.user_id)
-        .single();
-
-      if (!user) {
-        return { success: false, error: 'User not found' };
-      }
-
-      // Update device token usage
-      await supabase
-        .from('device_tokens')
-        .update({
-          last_used_at: new Date().toISOString(),
-          login_count: (deviceToken.login_count || 0) + 1
-        })
-        .eq('id', deviceToken.id);
-
-      // Create session
-      const sessionToken = this.generateSessionToken();
-      await this.createUserSession(deviceToken.user_id, 'device_token', sessionToken);
-
-      return {
-        success: true,
-        user: user as PermanentUser,
-        session_token: sessionToken,
-        login_method: 'device_token'
-      };
-    } catch (error) {
-      console.error('Error validating device token:', error);
-      return { success: false, error: 'Device validation failed' };
-    }
-  }
+    // 📱 DEVICE TOKEN MANAGEMENT - Now handled via permanent_users.device_tokens JSON field
+  // Legacy device_tokens table has been removed - functionality moved to user JSON field
 
   // 🎫 SESSION MANAGEMENT
   static generateSessionToken(): string {

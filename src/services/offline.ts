@@ -8,6 +8,7 @@ import type {
   ShoppingCartItem,
 } from '@/types/supabase';
 import { useAuthStore } from '@/stores/auth';
+import { offlineLogger } from 'src/utils/logger';
 import { analyticsService } from './analytics';
 
 export interface OfflineAction {
@@ -179,7 +180,7 @@ export class OfflineService {
         products_count: this.offlineData.products.length,
       });
     } catch (error) {
-      console.error('Failed to download offline data:', error);
+      offlineLogger.error('Failed to download offline data:', error);
       throw error;
     }
   }
@@ -204,7 +205,7 @@ export class OfflineService {
     const userId = authStore.user?.id;
 
     if (!practiceId || !userId) {
-      console.error('Cannot add offline action - no practice or user');
+      offlineLogger.error('Cannot add offline action - no practice or user');
       return;
     }
 
@@ -243,7 +244,7 @@ export class OfflineService {
     this.syncInProgress.value = true;
 
     try {
-      console.log(
+      offlineLogger.info(
         `Syncing ${this.offlineActions.value.length} offline actions...`
       );
 
@@ -256,13 +257,13 @@ export class OfflineService {
           await this.syncSingleAction(action);
           syncedActions.push(action.id);
         } catch (error) {
-          console.error('Failed to sync action:', action, error);
+          offlineLogger.error('Failed to sync action:', action, error);
 
           // Increment retry count
           action.retry_count++;
 
           if (action.retry_count >= this.maxRetries) {
-            console.error('Max retries reached for action:', action);
+            offlineLogger.error('Max retries reached for action:', action);
             // Remove from queue after max retries
             syncedActions.push(action.id);
           } else {
@@ -288,7 +289,7 @@ export class OfflineService {
 
       this.saveOfflineActions();
 
-      console.log(
+      offlineLogger.info(
         `Sync completed. Synced: ${syncedActions.length}, Failed: ${failedActions.length}`
       );
 
@@ -299,7 +300,7 @@ export class OfflineService {
         remaining_count: this.offlineActions.value.length,
       });
     } catch (error) {
-      console.error('Sync process failed:', error);
+      offlineLogger.error('Sync process failed:', error);
     } finally {
       this.syncInProgress.value = false;
     }
@@ -443,7 +444,7 @@ export class OfflineService {
         })
       );
     } catch (error) {
-      console.error('Failed to save offline data:', error);
+      offlineLogger.error('Failed to save offline data:', error);
     }
   }
 
@@ -461,7 +462,7 @@ export class OfflineService {
         });
       }
     } catch (error) {
-      console.error('Failed to load offline data:', error);
+      offlineLogger.error('Failed to load offline data:', error);
     }
   }
 
@@ -480,7 +481,7 @@ export class OfflineService {
         )
       );
     } catch (error) {
-      console.error('Failed to save offline actions:', error);
+      offlineLogger.error('Failed to save offline actions:', error);
     }
   }
 
@@ -498,7 +499,7 @@ export class OfflineService {
         }));
       }
     } catch (error) {
-      console.error('Failed to load offline actions:', error);
+      offlineLogger.error('Failed to load offline actions:', error);
     }
   }
 

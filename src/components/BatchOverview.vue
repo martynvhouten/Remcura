@@ -273,13 +273,13 @@
   import { ref, computed, onMounted } from 'vue';
   import { useI18n } from 'vue-i18n';
   import { useQuasar, date } from 'quasar';
-  import { useBatchStore } from 'src/stores/batch';
-  import { useClinicStore } from 'src/stores/clinic';
-  import { useAuthStore } from 'src/stores/auth';
+  import { useBatchStore } from '@/stores/batch';
+  import { useClinicStore } from '@/stores/clinic';
+  import { useAuthStore } from '@/stores/auth';
   import BatchRegistrationForm from './BatchRegistrationForm.vue';
   import BatchDetailCard from './BatchDetailCard.vue';
   import UseBatchDialog from './UseBatchDialog.vue';
-  import type { ProductBatchWithDetails } from 'src/types/inventory';
+  import type { ProductBatchWithDetails } from '@/types/inventory';
 
   // Composables
   const { t } = useI18n();
@@ -356,7 +356,7 @@
 
   const locationOptions = computed(() => [
     { label: t('common.all'), value: null },
-    ...locationStore.locations.map(location => ({
+    ...clinicStore.locations.map(location => ({
       label: location.name,
       value: location.id,
     })),
@@ -578,7 +578,7 @@
 
   // Lifecycle
   onMounted(async () => {
-    await Promise.all([loadBatches(), locationStore.fetchLocations()]);
+    await Promise.all([loadBatches(), clinicStore.fetchLocations()]);
   });
 </script>
 

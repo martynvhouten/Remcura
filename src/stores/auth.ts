@@ -1,13 +1,17 @@
 import { defineStore } from 'pinia';
 import { ref, computed, readonly } from 'vue';
-import { supabase } from 'src/boot/supabase';
+import { supabase } from '@/boot/supabase';
 import type { User, Session } from '@supabase/supabase-js';
-import type { UserProfile } from 'src/types/supabase';
-import { ErrorHandler } from 'src/utils/error-handler';
-import { authLogger } from 'src/utils/logger';
-import { monitoringService } from 'src/services/monitoring';
+import type { UserProfile } from '@/types/supabase';
+import { ErrorHandler } from '@/utils/service-error-handler';
+import { authLogger } from '@/utils/logger';
+import { monitoringService } from '@/services/monitoring';
+import { createEventEmitter, StoreEvents } from '@/utils/eventBus';
 
 export const useAuthStore = defineStore('auth', () => {
+  // Event emitter for store communication
+  const eventEmitter = createEventEmitter('auth-store');
+
   // State
   const user = ref<User | null>(null);
   const session = ref<Session | null>(null);
@@ -71,18 +75,43 @@ export const useAuthStore = defineStore('auth', () => {
 
       if (savedSession && savedUser && !wasOldDataCleared) {
         try {
-          session.value = JSON.parse(savedSession);
-          user.value = JSON.parse(savedUser);
-          if (savedProfile) {
-            userProfile.value = JSON.parse(savedProfile);
-          }
-          authLogger.info('Restored session from localStorage');
+          const parsedSession = JSON.parse(savedSession);
+          
+          // CRITICAL: Set the session in Supabase client first
+          // This ensures RLS policies work correctly
+          const { error: sessionError } = await supabase.auth.setSession({
+            access_token: parsedSession.access_token,
+            refresh_token: parsedSession.refresh_token
+          });
+          
+          if (sessionError) {
+            authLogger.warn('Failed to restore session in Supabase client:', sessionError);
+            clearAuthData();
+          } else {
+            // Only set local state if Supabase session was successful
+            session.value = parsedSession;
+            user.value = JSON.parse(savedUser);
+            if (savedProfile) {
+              userProfile.value = JSON.parse(savedProfile);
+            }
+            authLogger.info('Restored session from localStorage and updated Supabase client');
 
-          // Set user context for monitoring
-          if (user.value) {
-            monitoringService.setUserContext({
-              id: user.value.id,
-              ...(user.value.email && { email: user.value.email }),
+            // CRITICAL: Fetch profile AFTER setting Supabase session
+            if (user.value) {
+              await fetchUserProfile(user.value.id);
+              
+              // Set user context for monitoring
+              monitoringService.setUserContext({
+                id: user.value.id,
+                ...(user.value.email && { email: user.value.email }),
+              });
+            }
+            
+            // Emit login event after everything is properly configured
+            await eventEmitter.emit(StoreEvents.USER_LOGGED_IN, {
+              user: user.value,
+              profile: userProfile.value,
+              clinicId: clinicId.value,
             });
           }
         } catch (e) {
@@ -101,7 +130,7 @@ export const useAuthStore = defineStore('auth', () => {
 
         if (initialSession) {
           authLogger.info('Found Supabase session');
-          await setAuthData(initialSession);
+          await setAuthData(initialSession); // This will emit the event normally
         } else {
           authLogger.info('No active session found');
         }
@@ -111,7 +140,8 @@ export const useAuthStore = defineStore('auth', () => {
       supabase.auth.onAuthStateChange(async (event, newSession) => {
         authLogger.info('Auth state changed', { event });
 
-        if (event === 'SIGNED_IN' && newSession) {
+        if (event === 'SIGNED_IN' && newSession && !session.value) {
+          // Only set auth data if we don't already have a session to prevent duplicates
           await setAuthData(newSession);
           monitoringService.trackEvent('auth_state_change', {
             event: 'signed_in',
@@ -172,15 +202,19 @@ export const useAuthStore = defineStore('auth', () => {
 
       return { success: true };
     } catch (error: any) {
-      authLogger.error('Login error', error);
-      monitoringService.captureError(error, {
-        url: window.location.href,
-        userAgent: navigator.userAgent,
-        timestamp: new Date().toISOString(),
+      const result = await ErrorHandler.handleError(error, {
+        service: 'auth',
+        operation: 'login',
+        userId: email, // Using email as identifier for failed login
+        metadata: { email }
+      }, {
+        showToUser: false, // Let the UI handle showing login errors
+        logLevel: 'error'
       });
+
       return {
         success: false,
-        error: ErrorHandler.getErrorMessage(error),
+        error: result.userMessage,
       };
     } finally {
       loading.value = false;
@@ -202,22 +236,26 @@ export const useAuthStore = defineStore('auth', () => {
       monitoringService.trackEvent('logout_success');
       return { success: true };
     } catch (error: any) {
-      authLogger.error('Logout failed', error);
-      monitoringService.captureError(error, {
-        url: window.location.href,
-        userAgent: navigator.userAgent,
-        timestamp: new Date().toISOString(),
+      const result = await ErrorHandler.handleError(error, {
+        service: 'auth',
+        operation: 'logout',
+        userId: user.value?.id,
+        metadata: {}
+      }, {
+        showToUser: false, // Let the UI handle logout errors
+        logLevel: 'warn' // Logout errors are less critical
       });
+
       return {
         success: false,
-        error: ErrorHandler.getErrorMessage(error),
+        error: result.userMessage,
       };
     } finally {
       loading.value = false;
     }
   };
 
-  const setAuthData = async (newSession: Session) => {
+  const setAuthData = async (newSession: Session, skipEvent = false) => {
     session.value = newSession;
     user.value = newSession.user;
 
@@ -235,9 +273,20 @@ export const useAuthStore = defineStore('auth', () => {
     if (newSession.user) {
       await fetchUserProfile(newSession.user.id);
     }
+
+    // Only emit login event if not skipped (to prevent duplicate events)
+    if (!skipEvent) {
+      await eventEmitter.emit(StoreEvents.USER_LOGGED_IN, {
+        user: newSession.user,
+        profile: userProfile.value,
+        clinicId: clinicId.value,
+      });
+    }
   };
 
   const clearAuthData = () => {
+    const wasAuthenticated = !!user.value;
+    
     user.value = null;
     session.value = null;
     userProfile.value = null;
@@ -246,6 +295,13 @@ export const useAuthStore = defineStore('auth', () => {
     localStorage.removeItem('remcura_auth_session');
     localStorage.removeItem('remcura_auth_user');
     localStorage.removeItem('remcura_auth_profile');
+
+    // Emit logout event only if user was previously authenticated
+    if (wasAuthenticated) {
+      eventEmitter.emit(StoreEvents.USER_LOGGED_OUT, {
+        timestamp: new Date().toISOString(),
+      });
+    }
   };
 
   const setDemoAuthData = async () => {

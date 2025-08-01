@@ -559,7 +559,10 @@ const loadSelectOptions = async () => {
       const { data, error } = await query
 
       if (error) {
-        console.error('Error loading select options:', error)
+        // Gracefully handle RLS policy errors - don't crash the app
+console.warn('Failed to load select options (likely RLS policy issue):', error)
+// Set empty options to prevent UI crashes
+options.value = []
         return
       }
 
@@ -582,7 +585,10 @@ const loadSelectOptions = async () => {
         selectOptions.value = options
       }
     } catch (error) {
-      console.error('Error loading select options:', error)
+      // Gracefully handle RLS policy errors - don't crash the app
+console.warn('Failed to load select options (likely RLS policy issue):', error)
+// Set empty options to prevent UI crashes
+options.value = []
     } finally {
       optionsLoading.value = false
     }

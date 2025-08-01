@@ -1,5 +1,5 @@
 import { RouteRecordRaw } from 'vue-router';
-import type { UserRole, PermissionType, ResourceType } from 'src/services/permissions';
+import type { UserRole, PermissionType, ResourceType } from '@/services/permissions';
 
 // Extend Vue Router meta interface
 declare module 'vue-router' {

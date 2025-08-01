@@ -1,11 +1,12 @@
 import { defineStore } from 'pinia';
 import { ref, computed } from 'vue';
-import { supabase } from 'src/boot/supabase';
+import { supabase } from '@/boot/supabase';
+import { supplierLogger } from '@/utils/logger';
 import type {
   Supplier,
   SupplierProduct,
   CreateSupplierRequest,
-} from 'src/types/inventory';
+} from '@/types/inventory';
 
 export const useSuppliersStore = defineStore('suppliers', () => {
   // State
@@ -51,7 +52,7 @@ export const useSuppliersStore = defineStore('suppliers', () => {
       suppliers.value = data || [];
       lastSyncAt.value = new Date();
     } catch (error) {
-      console.error('Error fetching suppliers:', error);
+      supplierLogger.error('Error fetching suppliers:', error);
       throw error;
     } finally {
       loading.value = false;
@@ -81,7 +82,7 @@ export const useSuppliersStore = defineStore('suppliers', () => {
       suppliers.value.push(data);
       return data;
     } catch (error) {
-      console.error('Error creating supplier:', error);
+      supplierLogger.error('Error creating supplier:', error);
       throw error;
     }
   };
@@ -104,7 +105,7 @@ export const useSuppliersStore = defineStore('suppliers', () => {
 
       return data;
     } catch (error) {
-      console.error('Error updating supplier:', error);
+      supplierLogger.error('Error updating supplier:', error);
       throw error;
     }
   };
@@ -117,7 +118,7 @@ export const useSuppliersStore = defineStore('suppliers', () => {
 
       suppliers.value = suppliers.value.filter(s => s.id !== id);
     } catch (error) {
-      console.error('Error deleting supplier:', error);
+      supplierLogger.error('Error deleting supplier:', error);
       throw error;
     }
   };
@@ -145,7 +146,7 @@ export const useSuppliersStore = defineStore('suppliers', () => {
 
       supplierProducts.value = data || [];
     } catch (error) {
-      console.error('Error fetching supplier products:', error);
+      supplierLogger.error('Error fetching supplier products:', error);
       throw error;
     }
   };
@@ -181,7 +182,7 @@ export const useSuppliersStore = defineStore('suppliers', () => {
       supplierProducts.value.push(data);
       return data;
     } catch (error) {
-      console.error('Error creating supplier product:', error);
+      supplierLogger.error('Error creating supplier product:', error);
       throw error;
     }
   };
@@ -213,7 +214,7 @@ export const useSuppliersStore = defineStore('suppliers', () => {
 
       return data;
     } catch (error) {
-      console.error('Error updating supplier product:', error);
+      supplierLogger.error('Error updating supplier product:', error);
       throw error;
     }
   };
@@ -231,7 +232,7 @@ export const useSuppliersStore = defineStore('suppliers', () => {
         sp => sp.id !== id
       );
     } catch (error) {
-      console.error('Error deleting supplier product:', error);
+      supplierLogger.error('Error deleting supplier product:', error);
       throw error;
     }
   };
@@ -270,7 +271,7 @@ export const useSuppliersStore = defineStore('suppliers', () => {
 
       return { success: true, message: 'Supplier data synced successfully' };
     } catch (error) {
-      console.error('Error syncing supplier data:', error);
+      supplierLogger.error('Error syncing supplier data:', error);
       throw error;
     }
   };

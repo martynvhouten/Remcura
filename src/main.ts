@@ -11,6 +11,9 @@ import 'quasar/src/css/index.sass';
 // Import monitoring service
 import { initializeMonitoring, monitoringService } from './services/monitoring';
 
+// Import centralized error handling
+import { ErrorHandler } from '@/utils/service-error-handler';
+
 // Assumes your root component is App.vue
 // and placed in same folder as main.js
 import App from './App.vue';
@@ -19,16 +22,20 @@ import { createPinia } from 'pinia';
 
 const myApp = createApp(App);
 
-// Global error handler
+// Enhanced global error handler using centralized error handling
 myApp.config.errorHandler = (error, instance, info) => {
-  console.error('Global error handler:', error, info);
-
-  // Send to monitoring service
-  monitoringService.captureError(error as Error, {
-    url: window.location.href,
-    userAgent: navigator.userAgent,
-    timestamp: new Date().toISOString(),
-    sessionId: sessionStorage.getItem('sessionId') || 'unknown',
+  ErrorHandler.handleError(error, {
+    service: 'vue',
+    operation: 'vue_error_handler',
+    metadata: {
+      info,
+      componentName: instance?.$options.name || 'unknown',
+      url: window.location.href,
+      timestamp: new Date().toISOString(),
+    }
+  }, {
+    showToUser: false, // Don't show Vue errors to users by default
+    logLevel: 'error'
   });
 };
 
@@ -36,6 +43,9 @@ myApp.config.errorHandler = (error, instance, info) => {
 initializeMonitoring(router).catch(error => {
   console.error('Failed to initialize monitoring:', error);
 });
+
+// Setup global error handlers for unhandled promises and JS errors
+ErrorHandler.setupGlobalHandlers();
 
 myApp.use(Quasar, {
   plugins: {}, // import Quasar plugins and add here

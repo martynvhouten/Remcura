@@ -7,8 +7,8 @@ import {
 } from 'vue-router';
 
 import routes from './routes';
-import { useAuthStore } from 'src/stores/auth';
-import { PermissionService, type UserRole } from 'src/services/permissions';
+import { useAuthStore } from '@/stores/auth';
+import { PermissionService, type UserRole } from '@/services/permissions';
 
 /*
  * If not building with SSR mode, you can
