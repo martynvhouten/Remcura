@@ -1,4 +1,4 @@
-import type { FilterPreset } from '@/types/filters'
+import type { FilterPreset } from 'src/types/filters'
 
 /**
  * InventoryLevelsPage Filter Preset

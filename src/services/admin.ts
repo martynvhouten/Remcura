@@ -713,19 +713,15 @@ export class AdminService {
       throw new Error(ADMIN_ERRORS.USER_NOT_FOUND_IN_PRACTICE);
     }
 
-    // Get user email from user_profiles
-    const { data: profile, error: profileError } = await supabase
-      .from('user_profiles')
-      .select('email')
-      .eq('id', userId)
-      .single();
+    // Get user email from auth.users
+    const { data: userData, error: userError } = await supabase.auth.admin.getUserById(userId);
 
-    if (profileError || !profile?.email) {
+    if (userError || !userData?.user?.email) {
       throw new Error(ADMIN_ERRORS.USER_EMAIL_NOT_FOUND);
     }
 
     // Use Supabase Auth API to reset password
-    const { error } = await supabase.auth.resetPasswordForEmail(profile.email, {
+    const { error } = await supabase.auth.resetPasswordForEmail(userData.user.email, {
       redirectTo: `${window.location.origin}/auth/reset-password`,
     });
 

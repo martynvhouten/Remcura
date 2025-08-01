@@ -1,8 +1,7 @@
 import { defineStore } from 'pinia';
 import { ref, computed, onUnmounted } from 'vue';
-import { supabase } from 'src/boot/supabase';
+import { supabase, realtimeService } from 'src/boot/supabase';
 import { useAuthStore } from './auth';
-import { realtimeService } from 'src/services/realtime';
 import type { 
   StockMovement, 
   OrderSuggestion, 
@@ -13,6 +12,7 @@ import type {
 
 // Movement with product data included
 interface MovementWithRelations extends StockMovement {
+  quantity_before?: number; // Add missing property
   product?: {
     id: string;
     name: string;
@@ -41,18 +41,17 @@ export const useInventoryStore = defineStore('inventory', () => {
     const alerts: StockAlert[] = [];
     
     stockLevels.value.forEach(stockLevel => {
-      // Low stock alerts
-      if (stockLevel.current_quantity <= (stockLevel.minimum_quantity || 10)) {
+      // Low stock alerts - using minimum_stock instead of minimum_quantity
+      const minimumStock = (stockLevel as any).minimum_stock || (stockLevel as any).minimum_quantity || 10;
+      if (stockLevel.current_quantity <= minimumStock) {
         alerts.push({
-          id: `low_stock_${stockLevel.id}`,
-          type: 'low_stock',
-          severity: stockLevel.current_quantity === 0 ? 'critical' : 'warning',
           product_id: stockLevel.product_id,
           location_id: stockLevel.location_id,
+          type: 'low_stock',
           current_quantity: stockLevel.current_quantity,
-          minimum_quantity: stockLevel.minimum_quantity || 10,
+          threshold_quantity: minimumStock,
           title: stockLevel.current_quantity === 0 ? 'Out of Stock' : 'Low Stock',
-          message: `Current stock: ${stockLevel.current_quantity}, Minimum: ${stockLevel.minimum_quantity || 10}`,
+          message: `Current stock: ${stockLevel.current_quantity}, Minimum: ${minimumStock}`,
           created_at: new Date().toISOString()
         });
       }
@@ -60,12 +59,11 @@ export const useInventoryStore = defineStore('inventory', () => {
       // Negative stock alerts (if allowed)
       if (stockLevel.current_quantity < 0) {
         alerts.push({
-          id: `negative_stock_${stockLevel.id}`,
-          type: 'negative_stock',
-          severity: 'critical',
           product_id: stockLevel.product_id,
           location_id: stockLevel.location_id,
+          type: 'out_of_stock',
           current_quantity: stockLevel.current_quantity,
+          threshold_quantity: 0,
           title: 'Negative Stock',
           message: `Stock level is below zero: ${stockLevel.current_quantity}`,
           created_at: new Date().toISOString()
@@ -74,9 +72,9 @@ export const useInventoryStore = defineStore('inventory', () => {
     });
 
     return alerts.sort((a, b) => {
-      // Sort by severity: critical first, then warning
-      if (a.severity === 'critical' && b.severity !== 'critical') return -1;
-      if (b.severity === 'critical' && a.severity !== 'critical') return 1;
+      // Sort by severity: out_of_stock first, then low_stock
+      if (a.type === 'out_of_stock' && b.type !== 'out_of_stock') return -1;
+      if (b.type === 'out_of_stock' && a.type !== 'out_of_stock') return 1;
       return 0;
     });
   });
@@ -221,11 +219,7 @@ export const useInventoryStore = defineStore('inventory', () => {
     try {
       const { data, error } = await supabase
         .from('stock_levels')
-        .select(`
-          *,
-          product:products!inner(id, name, sku),
-          location:practice_locations!inner(id, name, code)
-        `)
+        .select('*')
         .eq('practice_id', practiceId)
         .order('updated_at', { ascending: false });
 
@@ -269,19 +263,10 @@ export const useInventoryStore = defineStore('inventory', () => {
 
   const fetchStockMovements = async (practiceId: string, limit = 50) => {
     try {
-      // Use stock_movements table
+      // Use stock_movements table with simplified query
       const { data, error } = await supabase
         .from('stock_movements')
-        .select(
-          `
-          *,
-          products:product_id (
-            id,
-            name,
-            sku
-          )
-        `
-        )
+        .select('*')
         .eq('practice_id', practiceId)
         .order('created_at', { ascending: false })
         .limit(limit);
@@ -296,17 +281,12 @@ export const useInventoryStore = defineStore('inventory', () => {
         product_id: movement.product_id,
         movement_type: movement.movement_type,
         quantity_change: movement.quantity_change,
+        quantity_before: movement.quantity_before || 0,
         quantity_after: movement.quantity_after,
         performed_by: movement.created_by || '',
         notes: movement.notes,
         created_at: movement.created_at,
-        product: movement.products
-          ? {
-              id: movement.products.id,
-              name: movement.products.name,
-              sku: movement.products.sku,
-            }
-          : undefined,
+        product: undefined, // Will be populated separately if needed
       })) as MovementWithRelations[];
     } catch (error) {
       console.error('Error fetching stock movements:', error);

@@ -78,10 +78,9 @@ class DashboardService {
     const authStore = useAuthStore();
     const practiceId = authStore.clinicId || authStore.selectedPractice?.id;
 
-    // For demo purposes, always use mock data to ensure role switching works
+    // Use real data with mock fallback for widgets
     console.log(`🎯 Loading dashboard for role: "${userRole}"`);
-    return this.getMockDashboardData(userRole);
-
+    
     const config = this.roleConfigs[userRole] || this.roleConfigs.assistant;
     
     // Load base metrics
@@ -124,6 +123,7 @@ class DashboardService {
       const { data: products } = await supabase
         .from('products')
         .select('id')
+        .eq('practice_id', practiceId)
         .eq('active', true);
 
       // Calculate metrics
@@ -135,8 +135,17 @@ class DashboardService {
         ['draft', 'submitted', 'confirmed'].includes(order.status)
       ).length || 0;
 
-      const totalValue = stockLevels?.reduce((sum, stock) => 
-        sum + (stock.current_quantity * 10), 0 // Simplified calculation
+      // Get products with prices for total value calculation
+      const { data: productsWithPrices } = await supabase
+        .from('stock_levels')
+        .select(`
+          current_quantity,
+          products!inner(price)
+        `)
+        .eq('practice_id', practiceId);
+      
+      const totalValue = productsWithPrices?.reduce((sum, stock) => 
+        sum + (stock.current_quantity * (stock.products.price || 0)), 0
       ) || 0;
 
       return {
@@ -144,11 +153,11 @@ class DashboardService {
         lowStockCount,
         pendingOrders,
         totalValue,
-        recentActivity: orders?.length || 0
+        recentActivity: this.calculateRecentActivity(orders, stockLevels)
       };
     } catch (error) {
       console.error('Error loading metrics:', error);
-      // Return mock metrics if there's an error
+      // Return fallback metrics if there's an error
       return {
         totalProducts: 245,
         lowStockCount: 12,
@@ -166,7 +175,7 @@ class DashboardService {
   ): Promise<DashboardWidget[]> {
     console.log(`🔧 Loading widgets for ${userRole}:`, widgetIds);
     
-    // For demo purposes, always use mock widgets to ensure role-specific content
+            // Try real widgets first, fallback to mock for role-specific content
     const widgets: DashboardWidget[] = [];
 
     for (const [index, widgetId] of widgetIds.entries()) {
@@ -821,6 +830,33 @@ class DashboardService {
       default:
         return null;
     }
+  }
+
+  /**
+   * Calculate recent activity score based on recent orders and stock movements
+   */
+  private calculateRecentActivity(orders: any[], stockLevels: any[]): number {
+    if (!orders || !stockLevels) return 0;
+    
+    const now = new Date();
+    const last24Hours = new Date(now.getTime() - 24 * 60 * 60 * 1000);
+    const lastWeek = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
+    
+    // Count recent orders (last 24 hours)
+    const recentOrders = orders.filter(order => 
+      new Date(order.created_at) > last24Hours
+    ).length;
+    
+    // Count orders from last week for trending
+    const weeklyOrders = orders.filter(order => 
+      new Date(order.created_at) > lastWeek
+    ).length;
+    
+    // Calculate activity score: recent orders get higher weight
+    const activityScore = (recentOrders * 3) + Math.min(weeklyOrders, 50);
+    
+    // Return a normalized score (cap at reasonable number for display)
+    return Math.min(activityScore, 99);
   }
 }
 

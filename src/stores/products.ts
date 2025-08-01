@@ -326,7 +326,7 @@ export const useProductsStore = defineStore('products', () => {
     try {
       // First try the RPC function
       const { data: rpcData, error: rpcError } = await supabase.rpc(
-        'get_products_with_stock' as any,
+        'get_products_with_stock',
         { p_practice_id: practiceId }
       );
 

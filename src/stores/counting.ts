@@ -329,8 +329,8 @@ export const useCountingStore = defineStore('counting', () => {
           p_performed_by: authStore.user?.id,
           p_reference_type: 'counting_session',
           p_reference_id: sessionId,
-          p_reason_code: 'count_correction',
-          p_notes: `Count adjustment from session: ${session.name}`,
+          p_reason_code: 'inventory_count',
+          p_notes: `Stock count adjustment: ${entry.variance > 0 ? '+' : ''}${entry.variance}`,
         });
       }
 

@@ -1,7 +1,7 @@
 import { boot } from 'quasar/wrappers';
-import { supabase } from 'src/services/supabase';
+import { supabase, realtimeService } from 'src/services/supabase';
 
-export { supabase };
+export { supabase, realtimeService };
 
 export default boot(({ app }) => {
   // Make supabase available globally

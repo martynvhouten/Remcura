@@ -90,13 +90,20 @@ export const practiceService = {
   },
 };
 
-// User profile operations
+// User profile operations - now using auth.users and practice_members
 export const userProfileService = {
   async getById(id: string): Promise<UserProfile | null> {
     const { data, error } = await supabase
-      .from('user_profiles')
-      .select('*')
-      .eq('id', id)
+      .from('practice_members')
+      .select(`
+        *,
+        practices:practice_id (
+          id,
+          name,
+          settings
+        )
+      `)
+      .eq('user_id', id)
       .single();
 
     if (error) {
@@ -110,10 +117,59 @@ export const userProfileService = {
     return data;
   },
 
+  async getByIdWithUserData(id: string): Promise<UserProfile | null> {
+    // Get practice member data with user auth data
+    const { data: memberData, error: memberError } = await supabase
+      .from('practice_members')
+      .select(`
+        *,
+        practices:practice_id (
+          id,
+          name,
+          settings
+        )
+      `)
+      .eq('user_id', id)
+      .single();
+
+    if (memberError) {
+      handleSupabaseError(memberError, {
+        service: 'userProfileService',
+        operation: 'getByIdWithUserData',
+        metadata: { userId: id },
+      }, 'Failed to fetch user profile');
+      return null;
+    }
+
+    // Get user auth data
+    const { data: userData, error: userError } = await supabase.auth.admin.getUserById(id);
+    
+    if (userError) {
+      handleSupabaseError(userError, {
+        service: 'userProfileService',
+        operation: 'getByIdWithUserData',
+        metadata: { userId: id },
+      }, 'Failed to fetch user auth data');
+      return null;
+    }
+
+    // Combine the data
+    return {
+      ...memberData,
+      email: userData.user?.email,
+      user_metadata: userData.user?.user_metadata,
+    } as UserProfile;
+  },
+
   async create(profile: UserProfileInsert): Promise<UserProfile | null> {
     const { data, error } = await supabase
-      .from('user_profiles')
-      .insert([profile])
+      .from('practice_members')
+      .insert([{
+        user_id: profile.id,
+        practice_id: profile.practice_id,
+        role: profile.role || 'guest',
+        joined_at: new Date().toISOString(),
+      }])
       .select()
       .single();
 
@@ -132,9 +188,12 @@ export const userProfileService = {
     updates: UserProfileUpdate
   ): Promise<UserProfile | null> {
     const { data, error } = await supabase
-      .from('user_profiles')
-      .update(updates)
-      .eq('id', id)
+      .from('practice_members')
+      .update({
+        role: updates.role,
+        updated_at: new Date().toISOString(),
+      })
+      .eq('user_id', id)
       .select()
       .single();
 
@@ -155,8 +214,11 @@ export const productService = {
   async getAll(practiceId: string): Promise<ProductListItem[]> {
     const { data, error } = await supabase
       .from('products')
-      .select('id, name, sku, category, brand, unit, price, image_url')
-      .eq('practice_id', practiceId)
+      .select(`
+        id, name, sku, category, brand, unit, price, image_url,
+        stock_levels!inner(practice_id)
+      `)
+      .eq('stock_levels.practice_id', practiceId)
       .eq('active', true)
       .order('name');
 
@@ -164,7 +226,7 @@ export const productService = {
       handleSupabaseError(error, {
         service: 'productService',
         operation: 'getAll',
-        practiceId,
+        metadata: { practiceId },
       }, 'Failed to fetch products');
     }
 
@@ -200,7 +262,7 @@ export const productService = {
       handleSupabaseError(error, {
         service: 'productService',
         operation: 'create',
-        practiceId: product.practice_id,
+        metadata: { productSku: product.sku },
       }, 'Failed to create product');
     }
 
@@ -301,8 +363,8 @@ export const realtimeService = {
         {
           event: '*',
           schema: 'public',
-          table: 'user_profiles',
-          filter: `id=eq.${userId}`,
+          table: 'practice_members',
+          filter: `user_id=eq.${userId}`,
         },
         callback
       )
@@ -404,7 +466,3 @@ export const utils = {
     return crypto.randomUUID();
   },
 };
-
-// Legacy exports for backward compatibility
-export const clinicService = practiceService;
-export const clinicProductService = productService;

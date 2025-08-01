@@ -14,241 +14,53 @@ export type Database = {
   }
   public: {
     Tables: {
-      // 🚀 NEW AUTO-UPGRADE TABLES
-      permanent_users: {
+      activity_log: {
         Row: {
-          avatar_url: string | null
+          activity_type: string
           created_at: string | null
-          created_from_invite_id: string | null
-          department: string | null
-          device_remember_enabled: boolean | null
-          device_tokens: Json | null
-          email: string | null
-          email_login_enabled: boolean | null
-          full_name: string
+          description: string | null
           id: string
-          invited_by: string | null
-          is_active: boolean | null
-          language: string | null
-          last_login_at: string | null
-          login_count: number | null
-          magic_code_enabled: boolean | null
-          password_hash: string | null
-          permissions: Json | null
-          personal_magic_code: string | null
-          phone: string | null
-          practice_id: string
-          preferred_login_method: string | null
-          role: string
-          timezone: string | null
-          updated_at: string | null
-          upgraded_at: string | null
-        }
-        Insert: {
-          avatar_url?: string | null
-          created_at?: string | null
-          created_from_invite_id?: string | null
-          department?: string | null
-          device_remember_enabled?: boolean | null
-          device_tokens?: Json | null
-          email?: string | null
-          email_login_enabled?: boolean | null
-          full_name: string
-          id?: string
-          invited_by?: string | null
-          is_active?: boolean | null
-          language?: string | null
-          last_login_at?: string | null
-          login_count?: number | null
-          magic_code_enabled?: boolean | null
-          password_hash?: string | null
-          permissions?: Json | null
-          personal_magic_code?: string | null
-          phone?: string | null
-          practice_id: string
-          preferred_login_method?: string | null
-          role?: string
-          timezone?: string | null
-          updated_at?: string | null
-          upgraded_at?: string | null
-        }
-        Update: {
-          avatar_url?: string | null
-          created_at?: string | null
-          created_from_invite_id?: string | null
-          department?: string | null
-          device_remember_enabled?: boolean | null
-          device_tokens?: Json | null
-          email?: string | null
-          email_login_enabled?: boolean | null
-          full_name?: string
-          id?: string
-          invited_by?: string | null
-          is_active?: boolean | null
-          language?: string | null
-          last_login_at?: string | null
-          login_count?: number | null
-          magic_code_enabled?: boolean | null
-          password_hash?: string | null
-          permissions?: Json | null
-          personal_magic_code?: string | null
-          phone?: string | null
-          practice_id?: string
-          preferred_login_method?: string | null
-          role?: string
-          timezone?: string | null
-          updated_at?: string | null
-          upgraded_at?: string | null
-        }
-        Relationships: [
-          {
-            foreignKeyName: "permanent_users_created_from_invite_id_fkey"
-            columns: ["created_from_invite_id"]
-            isOneToOne: false
-            referencedRelation: "magic_invites"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "permanent_users_practice_id_fkey"
-            columns: ["practice_id"]
-            isOneToOne: false
-            referencedRelation: "practices"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      device_tokens: {
-        Row: {
-          created_at: string | null
-          device_fingerprint: string
-          device_name: string | null
-          expires_at: string
-          id: string
-          ip_address: unknown | null
-          is_active: boolean | null
-          last_used_at: string | null
-          login_count: number | null
-          token_hash: string
-          user_agent: string | null
-          user_id: string
-        }
-        Insert: {
-          created_at?: string | null
-          device_fingerprint: string
-          device_name?: string | null
-          expires_at: string
-          id?: string
-          ip_address?: unknown | null
-          is_active?: boolean | null
-          last_used_at?: string | null
-          login_count?: number | null
-          token_hash: string
-          user_agent?: string | null
-          user_id: string
-        }
-        Update: {
-          created_at?: string | null
-          device_fingerprint?: string
-          device_name?: string | null
-          expires_at?: string
-          id?: string
-          ip_address?: unknown | null
-          is_active?: boolean | null
-          last_used_at?: string | null
-          login_count?: number | null
-          token_hash?: string
-          user_agent?: string | null
-          user_id?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "device_tokens_user_id_fkey"
-            columns: ["user_id"]
-            isOneToOne: false
-            referencedRelation: "permanent_users"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      user_sessions: {
-        Row: {
-          actions_performed: number | null
-          device_fingerprint: string | null
-          ended_at: string | null
-          expires_at: string | null
-          features_used: string[] | null
-          id: string
-          ip_address: unknown | null
-          is_active: boolean | null
-          last_activity_at: string | null
-          location_city: string | null
-          location_country: string | null
-          login_method: string
-          page_views: number | null
-          practice_id: string
-          session_token: string
-          started_at: string | null
-          user_agent: string | null
+          new_values: Json | null
+          old_values: Json | null
+          practice_id: string | null
+          record_id: string | null
+          table_name: string | null
           user_id: string | null
         }
         Insert: {
-          actions_performed?: number | null
-          device_fingerprint?: string | null
-          ended_at?: string | null
-          expires_at?: string | null
-          features_used?: string[] | null
+          activity_type: string
+          created_at?: string | null
+          description?: string | null
           id?: string
-          ip_address?: unknown | null
-          is_active?: boolean | null
-          last_activity_at?: string | null
-          location_city?: string | null
-          location_country?: string | null
-          login_method: string
-          page_views?: number | null
-          practice_id: string
-          session_token: string
-          started_at?: string | null
-          user_agent?: string | null
+          new_values?: Json | null
+          old_values?: Json | null
+          practice_id?: string | null
+          record_id?: string | null
+          table_name?: string | null
           user_id?: string | null
         }
         Update: {
-          actions_performed?: number | null
-          device_fingerprint?: string | null
-          ended_at?: string | null
-          expires_at?: string | null
-          features_used?: string[] | null
+          activity_type?: string
+          created_at?: string | null
+          description?: string | null
           id?: string
-          ip_address?: unknown | null
-          is_active?: boolean | null
-          last_activity_at?: string | null
-          location_city?: string | null
-          location_country?: string | null
-          login_method?: string
-          page_views?: number | null
-          practice_id?: string
-          session_token?: string
-          started_at?: string | null
-          user_agent?: string | null
+          new_values?: Json | null
+          old_values?: Json | null
+          practice_id?: string | null
+          record_id?: string | null
+          table_name?: string | null
           user_id?: string | null
         }
         Relationships: [
           {
-            foreignKeyName: "user_sessions_practice_id_fkey"
+            foreignKeyName: "activity_log_practice_id_fkey"
             columns: ["practice_id"]
             isOneToOne: false
             referencedRelation: "practices"
             referencedColumns: ["id"]
           },
-          {
-            foreignKeyName: "user_sessions_user_id_fkey"
-            columns: ["user_id"]
-            isOneToOne: false
-            referencedRelation: "permanent_users"
-            referencedColumns: ["id"]
-          },
         ]
       }
-      // UPDATED MAGIC INVITES
       magic_invites: {
         Row: {
           ai_role_suggestions: Json | null
@@ -381,89 +193,101 @@ export type Database = {
           },
         ]
       }
-      // EXISTING TABLES (key ones)
-      practices: {
+      guest_sessions: {
         Row: {
-          address: string | null
-          city: string | null
-          country: string | null
+          accessible_locations: string[] | null
+          achievements_unlocked: string[] | null
+          actions_performed: Json | null
+          can_extend: boolean | null
+          converted_to_user_id: string | null
           created_at: string | null
-          created_by: string | null
-          email: string | null
+          device_fingerprint: string | null
+          display_emoji: string | null
+          expires_at: string
+          granted_permissions: Json | null
+          guest_name: string
           id: string
-          name: string
-          phone: string | null
-          postal_code: string | null
-          settings: Json | null
+          ip_address: unknown | null
+          is_active: boolean | null
+          last_activity_at: string | null
+          magic_invite_id: string
+          practice_id: string
+          restricted_features: string[] | null
+          session_color: string | null
+          session_token: string
+          showed_upgrade_interest: boolean | null
+          timezone: string | null
           updated_at: string | null
-          updated_by: string | null
+          upgrade_prompts_shown: number | null
+          upgrade_trigger_action: string | null
+          user_agent: string | null
         }
         Insert: {
-          address?: string | null
-          city?: string | null
-          country?: string | null
+          accessible_locations?: string[] | null
+          achievements_unlocked?: string[] | null
+          actions_performed?: Json | null
+          can_extend?: boolean | null
+          converted_to_user_id?: string | null
           created_at?: string | null
-          created_by?: string | null
-          email?: string | null
+          device_fingerprint?: string | null
+          display_emoji?: string | null
+          expires_at: string
+          granted_permissions?: Json | null
+          guest_name: string
           id?: string
-          name: string
-          phone?: string | null
-          postal_code?: string | null
-          settings?: Json | null
+          ip_address?: unknown | null
+          is_active?: boolean | null
+          last_activity_at?: string | null
+          magic_invite_id: string
+          practice_id: string
+          restricted_features?: string[] | null
+          session_color?: string | null
+          session_token: string
+          showed_upgrade_interest?: boolean | null
+          timezone?: string | null
           updated_at?: string | null
-          updated_by?: string | null
+          upgrade_prompts_shown?: number | null
+          upgrade_trigger_action?: string | null
+          user_agent?: string | null
         }
         Update: {
-          address?: string | null
-          city?: string | null
-          country?: string | null
+          accessible_locations?: string[] | null
+          achievements_unlocked?: string[] | null
+          actions_performed?: Json | null
+          can_extend?: boolean | null
+          converted_to_user_id?: string | null
           created_at?: string | null
-          created_by?: string | null
-          email?: string | null
+          device_fingerprint?: string | null
+          display_emoji?: string | null
+          expires_at?: string
+          granted_permissions?: Json | null
+          guest_name?: string
           id?: string
-          name?: string
-          phone?: string | null
-          postal_code?: string | null
-          settings?: Json | null
-          updated_at?: string | null
-          updated_by?: string | null
-        }
-        Relationships: []
-      }
-      practice_members: {
-        Row: {
-          created_at: string | null
-          id: string
-          invited_by: string | null
-          joined_at: string | null
-          practice_id: string
-          role: string
-          updated_at: string | null
-          user_id: string
-        }
-        Insert: {
-          created_at?: string | null
-          id?: string
-          invited_by?: string | null
-          joined_at?: string | null
-          practice_id: string
-          role: string
-          updated_at?: string | null
-          user_id: string
-        }
-        Update: {
-          created_at?: string | null
-          id?: string
-          invited_by?: string | null
-          joined_at?: string | null
+          ip_address?: unknown | null
+          is_active?: boolean | null
+          last_activity_at?: string | null
+          magic_invite_id?: string
           practice_id?: string
-          role?: string
+          restricted_features?: string[] | null
+          session_color?: string | null
+          session_token?: string
+          showed_upgrade_interest?: boolean | null
+          timezone?: string | null
           updated_at?: string | null
-          user_id?: string
+          upgrade_prompts_shown?: number | null
+          upgrade_trigger_action?: string | null
+          user_agent?: string | null
         }
         Relationships: [
           {
-            foreignKeyName: "practice_members_practice_id_fkey"
+            foreignKeyName: "guest_sessions_magic_invite_id_fkey"
+            columns: ["magic_invite_id"]
+            isOneToOne: false
+            referencedRelation: "magic_invites"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "guest_sessions_practice_id_fkey"
             columns: ["practice_id"]
             isOneToOne: false
             referencedRelation: "practices"
@@ -471,66 +295,88 @@ export type Database = {
           },
         ]
       }
-      // Add other important tables as needed...
-      [key: string]: any
+      invite_analytics: {
+        Row: {
+          browser: string | null
+          created_at: string | null
+          device_type: string | null
+          event_data: Json | null
+          event_type: string
+          id: string
+          interaction_depth: number | null
+          ip_address: unknown | null
+          load_time_ms: number | null
+          magic_invite_id: string
+          platform: string | null
+          practice_id: string
+          referrer_url: string | null
+          share_method: string | null
+          shared_by_user_id: string | null
+          user_agent: string | null
+        }
+        Insert: {
+          browser?: string | null
+          created_at?: string | null
+          device_type?: string | null
+          event_data?: Json | null
+          event_type: string
+          id?: string
+          interaction_depth?: number | null
+          ip_address?: unknown | null
+          load_time_ms?: number | null
+          magic_invite_id: string
+          platform?: string | null
+          practice_id: string
+          referrer_url?: string | null
+          share_method?: string | null
+          shared_by_user_id?: string | null
+          user_agent?: string | null
+        }
+        Update: {
+          browser?: string | null
+          created_at?: string | null
+          device_type?: string | null
+          event_data?: Json | null
+          event_type?: string
+          id?: string
+          interaction_depth?: number | null
+          ip_address?: unknown | null
+          load_time_ms?: number | null
+          magic_invite_id?: string
+          platform?: string | null
+          practice_id?: string
+          referrer_url?: string | null
+          share_method?: string | null
+          shared_by_user_id?: string | null
+          user_agent?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "invite_analytics_magic_invite_id_fkey"
+            columns: ["magic_invite_id"]
+            isOneToOne: false
+            referencedRelation: "magic_invites"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "invite_analytics_practice_id_fkey"
+            columns: ["practice_id"]
+            isOneToOne: false
+            referencedRelation: "practices"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
-    Views: {
-      [key: string]: any
-    }
+    Views: {}
     Functions: {
-      // 🚀 NEW AUTO-UPGRADE FUNCTIONS
-      generate_personal_magic_code: {
-        Args: { user_name: string; practice_name: string }
-        Returns: string
-      }
-      validate_personal_magic_code: {
-        Args: { magic_code: string }
-        Returns: Json
-      }
       generate_magic_code: {
         Args: { practice_name: string; department?: string; style?: string }
         Returns: string
       }
-      get_order_advice: {
-        Args: { practice_uuid: string }
-        Returns: {
-          product_id: string
-          product_name: string
-          product_sku: string
-          current_stock: number
-          minimum_stock: number
-          maximum_stock: number
-          suggested_quantity: number
-          urgency_level: string
-          last_stock_entry: string
-        }[]
-      }
-      test_demo_data: {
-        Args: Record<PropertyKey, never>
-        Returns: {
-          section: string
-          data_type: string
-          count_value: number
-          description: string
-        }[]
-      }
-      update_product_stock: {
-        Args: {
-          practice_uuid: string
-          product_uuid: string
-          new_quantity: number
-          entry_notes?: string
-        }
-        Returns: undefined
-      }
-      [key: string]: any
     }
-    Enums: {
-      [key: string]: any
-    }
-    CompositeTypes: {
-      [key: string]: any
-    }
+    Enums: {}
+    CompositeTypes: {}
   }
 }
 
@@ -617,23 +463,36 @@ export type TablesUpdate<
       : never
     : never
 
-// Additional type exports for Auto-Upgrade System
-export type PermanentUser = Tables<"permanent_users">
-export type DeviceToken = Tables<"device_tokens">
-export type UserSession = Tables<"user_sessions">
-export type MagicInvite = Tables<"magic_invites">
-export type Practice = Tables<"practices">
+export type Enums<
+  DefaultSchemaEnumNameOrOptions extends
+    | keyof DefaultSchema["Enums"]
+    | { schema: keyof DatabaseWithoutInternals },
+  EnumName extends DefaultSchemaEnumNameOrOptions extends {
+    schema: keyof DatabaseWithoutInternals
+  }
+    ? keyof DatabaseWithoutInternals[DefaultSchemaEnumNameOrOptions["schema"]]["Enums"]
+    : never = never,
+> = DefaultSchemaEnumNameOrOptions extends {
+  schema: keyof DatabaseWithoutInternals
+}
+  ? DatabaseWithoutInternals[DefaultSchemaEnumNameOrOptions["schema"]]["Enums"][EnumName]
+  : DefaultSchemaEnumNameOrOptions extends keyof DefaultSchema["Enums"]
+    ? DefaultSchema["Enums"][DefaultSchemaEnumNameOrOptions]
+    : never
 
-// Legacy types for backward compatibility
-export type Clinic = Practice
-export type ClinicProduct = any // Define as needed
-export type PracticeMember = Tables<"practice_members">
-export type UserProfile = any // Define as needed
-export type Location = any // Define as needed
-export type UserPermission = any // Define as needed
-export type AnalyticsEventData = Json
-
-// Practice settings type
-export interface PracticeSettings {
-  [key: string]: any
-} 
+export type CompositeTypes<
+  PublicCompositeTypeNameOrOptions extends
+    | keyof DefaultSchema["CompositeTypes"]
+    | { schema: keyof DatabaseWithoutInternals },
+  CompositeTypeName extends PublicCompositeTypeNameOrOptions extends {
+    schema: keyof DatabaseWithoutInternals
+  }
+    ? keyof DatabaseWithoutInternals[PublicCompositeTypeNameOrOptions["schema"]]["CompositeTypes"]
+    : never = never,
+> = PublicCompositeTypeNameOrOptions extends {
+  schema: keyof DatabaseWithoutInternals
+}
+  ? DatabaseWithoutInternals[PublicCompositeTypeNameOrOptions["schema"]]["CompositeTypes"][CompositeTypeName]
+  : PublicCompositeTypeNameOrOptions extends keyof DefaultSchema["CompositeTypes"]
+    ? DefaultSchema["CompositeTypes"][PublicCompositeTypeNameOrOptions]
+    : never

@@ -292,12 +292,12 @@ import PageTitle from 'src/components/PageTitle.vue';
 import PageLayout from 'src/components/PageLayout.vue';
 import BaseCard from 'src/components/base/BaseCard.vue';
 import FilterPanel from 'src/components/filters/FilterPanel.vue';
-import { inventoryFilterPreset } from '@/presets/filters/inventory';
-import { supabase } from 'src/services/supabase';
+import { inventoryFilterPreset } from 'src/presets/filters/inventory';
+import { supabase } from 'src/boot/supabase';
 import { useAuthStore } from 'src/stores/auth';
 import { useClinicStore } from 'src/stores/clinic';
 import { useInventoryStore } from 'src/stores/inventory';
-import type { FilterValues, FilterChangeEvent, FilterResetEvent } from '@/types/filters';
+import type { FilterValues, FilterChangeEvent, FilterResetEvent } from 'src/types/filters';
 
 const $q = useQuasar();
 const { t } = useI18n();
@@ -526,14 +526,14 @@ const loadStockLevels = async () => {
        product_id: level.product_id,
        location_id: level.location_id,
        current_quantity: level.current_quantity || 0,
-       minimum_quantity: level.minimum_quantity || 0,
+       minimum_quantity: level.minimum_stock || 0, // Use minimum_stock from database
        last_counted_at: level.last_counted_at,
-       product_name: level.product?.name || 'Unknown Product',
-       product_sku: level.product?.sku,
-       product_category: level.product?.category,
-       product_unit: level.product?.unit,
-       location_name: level.location?.name || 'Unknown Location',
-       stock_status: determineStockStatus(level.current_quantity, level.minimum_quantity),
+       product_name: 'Product ' + level.product_id, // Simplified until we fix relations
+       product_sku: null,
+       product_category: null,
+       product_unit: 'pcs',
+       location_name: 'Location ' + level.location_id, // Simplified until we fix relations
+       stock_status: determineStockStatus(level.current_quantity, level.minimum_stock || 0),
      }));
 
     lastUpdated.value = new Date();

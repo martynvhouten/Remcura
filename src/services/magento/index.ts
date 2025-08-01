@@ -1,5 +1,7 @@
 // Enhanced Magento API service with full implementation
 import { handleApiError, ServiceErrorHandler, validateRequired } from 'src/utils/service-error-handler';
+import { supabase } from 'src/services/supabase';
+import { useAuthStore } from 'src/stores/auth';
 
 export interface MagentoConfig {
   baseUrl: string;
@@ -348,28 +350,79 @@ class MagentoApiService {
 
   // Product management
   async getProducts(searchCriteria?: MagentoSearchCriteria): Promise<MagentoProduct[]> {
-    const endpoint = '/products';
-    const params: string[] = [];
-    if (searchCriteria) {
-      if (searchCriteria.filterGroups && searchCriteria.filterGroups.length > 0) {
-        params.push(`searchCriteria[filter_groups]=${JSON.stringify(searchCriteria.filterGroups)}`);
-      }
-      if (searchCriteria.sortOrders && searchCriteria.sortOrders.length > 0) {
-        params.push(`searchCriteria[sort_orders]=${JSON.stringify(searchCriteria.sortOrders)}`);
-      }
-      if (searchCriteria.pageSize) {
-        params.push(`searchCriteria[page_size]=${searchCriteria.pageSize}`);
-      }
-      if (searchCriteria.currentPage) {
-        params.push(`searchCriteria[current_page]=${searchCriteria.currentPage}`);
+    // If Magento API is configured, try to use it first
+    if (this.isConfigured()) {
+      try {
+        const endpoint = '/products';
+        const params: string[] = [];
+        if (searchCriteria) {
+          if (searchCriteria.filterGroups && searchCriteria.filterGroups.length > 0) {
+            params.push(`searchCriteria[filter_groups]=${JSON.stringify(searchCriteria.filterGroups)}`);
+          }
+          if (searchCriteria.sortOrders && searchCriteria.sortOrders.length > 0) {
+            params.push(`searchCriteria[sort_orders]=${JSON.stringify(searchCriteria.sortOrders)}`);
+          }
+          if (searchCriteria.pageSize) {
+            params.push(`searchCriteria[page_size]=${searchCriteria.pageSize}`);
+          }
+          if (searchCriteria.currentPage) {
+            params.push(`searchCriteria[current_page]=${searchCriteria.currentPage}`);
+          }
+        }
+        const queryString = params.length > 0 ? `?${params.join('&')}` : '';
+        return this.makeRequest(`${endpoint}${queryString}`);
+      } catch (error) {
+        console.warn('Magento API failed, falling back to Supabase data:', error);
       }
     }
-    const queryString = params.length > 0 ? `?${params.join('&')}` : '';
-    return this.makeRequest(`${endpoint}${queryString}`);
+    
+    // Fallback to Supabase data
+    return magentoDataService.getProducts();
   }
 
   async getProduct(sku: string): Promise<MagentoProduct | null> {
-    return this.makeRequest(`/products/${encodeURIComponent(sku)}`);
+    // Try Magento API first, fallback to Supabase
+    if (this.isConfigured()) {
+      try {
+        return this.makeRequest(`/products/${encodeURIComponent(sku)}`);
+      } catch (error) {
+        console.warn('Magento API failed for single product, checking Supabase:', error);
+      }
+    }
+    
+    // Fallback: search in Supabase products
+    const products = await magentoDataService.getProducts();
+    return products.find(p => p.sku === sku) || null;
+  }
+
+  // Order management with Supabase fallback
+  async getOrders(): Promise<MagentoOrder[]> {
+    // If Magento API is configured, try to use it first
+    if (this.isConfigured()) {
+      try {
+        return this.makeRequest('/orders');
+      } catch (error) {
+        console.warn('Magento API failed, falling back to Supabase data:', error);
+      }
+    }
+    
+    // Fallback to Supabase data
+    return magentoDataService.getOrders();
+  }
+
+  // Invoice management with Supabase fallback
+  async getInvoices(): Promise<MagentoInvoice[]> {
+    // If Magento API is configured, try to use it first
+    if (this.isConfigured()) {
+      try {
+        return this.makeRequest('/invoices');
+      } catch (error) {
+        console.warn('Magento API failed, falling back to Supabase data:', error);
+      }
+    }
+    
+    // Fallback to Supabase data
+    return magentoDataService.getInvoices();
   }
 
   // Utility methods
@@ -408,63 +461,149 @@ export const magentoUtils = {
   },
 };
 
-// Mock data for development and testing
-export const mockMagentoData = {
-  orders: [
-    {
-      id: 1,
-      increment_id: '000000001',
-      status: 'complete',
-      created_at: '2024-01-15T10:30:00Z',
-      updated_at: '2024-01-16T14:20:00Z',
-      grand_total: 125.5,
-      items: [
-        {
-          id: 1,
-          product_id: 101,
-          name: 'Disposable Gloves - Box of 100',
-          sku: 'GLV-DISP-100',
-          qty_ordered: 2,
-          price: 45.0,
-        },
-        {
-          id: 2,
-          product_id: 102,
-          name: 'Face Masks - Pack of 50',
-          sku: 'MSK-FACE-50',
-          qty_ordered: 1,
-          price: 35.5,
-        },
-      ],
-    },
-  ] as MagentoOrder[],
+// Real data service for Magento-compatible queries
+export const magentoDataService = {
+  /**
+   * Get orders from Supabase in Magento-compatible format
+   */
+  async getOrders(practiceId?: string): Promise<MagentoOrder[]> {
+    const authStore = useAuthStore();
+    const currentPracticeId = practiceId || authStore.clinicId;
+    
+    if (!currentPracticeId) {
+      throw new Error('No practice ID available');
+    }
 
-  invoices: [
-    {
-      id: 1,
-      order_id: 1,
-      increment_id: 'INV-000000001',
-      created_at: '2024-01-16T14:20:00Z',
-      grand_total: 125.5,
-    },
-  ] as MagentoInvoice[],
+    try {
+      const { data: orders, error } = await supabase
+        .from('orders')
+        .select(`
+          *,
+          order_items (
+            *,
+            products (*)
+          )
+        `)
+        .eq('practice_id', currentPracticeId)
+        .order('created_at', { ascending: false });
 
-  products: [
-    {
-      id: 101,
-      sku: 'GLV-DISP-100',
-      name: 'Disposable Gloves - Box of 100',
-      price: 45.0,
-      status: 1,
-      type_id: 'simple',
-    },
-    {
-      id: 102,
-      sku: 'MSK-FACE-50',
-      name: 'Face Masks - Pack of 50',
-      price: 35.5,
-      status: 1,
-      type_id: 'simple',
-    },
-  ] as MagentoProduct[],
+      if (error) throw error;
+
+      return orders?.map(order => ({
+        id: parseInt(order.id) || 0,
+        increment_id: order.order_number || `ORD-${order.id}`,
+        status: this.mapOrderStatus(order.status),
+        created_at: order.created_at,
+        updated_at: order.updated_at,
+        grand_total: order.order_items?.reduce((sum, item) => 
+          sum + (item.total_price || 0), 0
+        ) || 0,
+        items: order.order_items?.map(item => ({
+          id: parseInt(item.id) || 0,
+          product_id: parseInt(item.product_id) || 0,
+          name: item.products?.name || '',
+          sku: item.products?.sku || '',
+          qty_ordered: item.quantity,
+          price: item.unit_price || 0,
+          product_type: 'simple'
+        })) || []
+      })) || [];
+    } catch (error) {
+      console.error('Error fetching orders for Magento:', error);
+      return [];
+    }
+  },
+
+  /**
+   * Get products from Supabase in Magento-compatible format
+   */
+  async getProducts(practiceId?: string): Promise<MagentoProduct[]> {
+    const authStore = useAuthStore();
+    const currentPracticeId = practiceId || authStore.clinicId;
+    
+    if (!currentPracticeId) {
+      throw new Error('No practice ID available');
+    }
+
+    try {
+      const { data: products, error } = await supabase
+        .from('products')
+        .select('*')
+        .eq('practice_id', currentPracticeId)
+        .eq('is_active', true)
+        .order('name');
+
+      if (error) throw error;
+
+      return products?.map(product => ({
+        id: parseInt(product.id) || 0,
+        sku: product.sku || '',
+        name: product.name || '',
+        price: parseFloat(product.price || '0'),
+        status: product.is_active ? 1 : 0,
+        type_id: 'simple'
+      })) || [];
+    } catch (error) {
+      console.error('Error fetching products for Magento:', error);
+      return [];
+    }
+  },
+
+  /**
+   * Get invoices from order_items joined with orders in Magento-compatible format
+   */
+  async getInvoices(practiceId?: string): Promise<MagentoInvoice[]> {
+    const authStore = useAuthStore();
+    const currentPracticeId = practiceId || authStore.clinicId;
+    
+    if (!currentPracticeId) {
+      throw new Error('No practice ID available');
+    }
+
+    try {
+      const { data: orders, error } = await supabase
+        .from('orders')
+        .select(`
+          *,
+          order_items (
+            *
+          )
+        `)
+        .eq('practice_id', currentPracticeId)
+        .in('status', ['completed', 'delivered', 'invoiced'])
+        .order('created_at', { ascending: false });
+
+      if (error) throw error;
+
+      return orders?.map(order => ({
+        id: parseInt(order.id) || 0,
+        order_id: parseInt(order.id) || 0,
+        increment_id: `INV-${order.order_number || order.id}`,
+        created_at: order.updated_at || order.created_at,
+        grand_total: order.order_items?.reduce((sum, item) => 
+          sum + (item.total_price || 0), 0
+        ) || 0
+      })) || [];
+    } catch (error) {
+      console.error('Error fetching invoices for Magento:', error);
+      return [];
+    }
+  },
+
+  /**
+   * Map internal order status to Magento-compatible status
+   */
+  mapOrderStatus(status: string): string {
+    const statusMap: Record<string, string> = {
+      'draft': 'pending',
+      'submitted': 'processing',
+      'confirmed': 'processing',
+      'shipped': 'shipped',
+      'delivered': 'complete',
+      'completed': 'complete',
+      'cancelled': 'canceled',
+      'refunded': 'refunded'
+    };
+    return statusMap[status] || 'pending';
+  }
 };

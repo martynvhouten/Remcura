@@ -414,18 +414,19 @@ export interface StockAlert {
     | 'overstock'
     | 'expired'
     | 'expiring_soon';
-  urgency: UrgencyLevel;
+  urgency?: UrgencyLevel;
   product_id: string;
-  product_name: string;
-  product_sku: string;
+  product_name?: string;
+  product_sku?: string;
   location_id: string;
-  location_name: string;
+  location_name?: string;
   current_quantity: number;
   threshold_quantity?: number;
   batch_number?: string;
   expiry_date?: string;
   days_until_expiry?: number;
   message: string;
+  title?: string; // Add missing title property
   suggested_action?: string;
   created_at: string;
 }
