@@ -264,6 +264,95 @@ export default {
     failedToLoadData: 'Error al cargar datos del panel',
     dataRefreshedSuccessfully: 'Datos actualizados exitosamente',
     failedToRefreshData: 'Error al actualizar datos',
+
+    // Empty state
+    empty: {
+      title: 'Configurar panel',
+      subtitle: 'Añade widgets para personalizar tu panel',
+      addWidgets: 'Añadir widgets',
+    },
+
+    // Customize dialog
+    customize: {
+      title: 'Personalizar panel',
+      comingSoon: 'Opciones de personalización próximamente',
+    },
+
+    // Role titles
+    titles: {
+      assistant: 'Panel de asistente',
+      manager: 'Panel de gerente', 
+      owner: 'Panel de propietario',
+      default: 'Panel de control',
+    },
+
+    // Actions
+    actions: {
+      refresh: 'Actualizar panel',
+      customize: 'Personalizar panel',
+      refreshed: 'Panel actualizado',
+    },
+
+    // Role switching
+    roleSwitch: {
+      success: 'Rol cambiado exitosamente',
+      caption: 'El panel se ha adaptado a tu nuevo rol',
+    },
+
+    // Error messages
+    errors: {
+      loadFailed: 'Error al cargar panel',
+      tryRefresh: 'Intenta refrescar la página',
+      switchFailed: 'Error al cambiar rol',
+      tryAgain: 'Por favor intenta de nuevo',
+    },
+
+    // Roles
+    roles: {
+      assistant: '🩺 Asistente - Inventario y pedidos',
+      manager: '📊 Gerente - Análisis y resúmenes',
+      owner: '👑 Propietario - Control total',
+    },
+
+    // Service layer translations
+    service: {
+      subtitles: {
+        assistant: 'Gestionar pedidos y actualizaciones de inventario',
+        manager: 'Resúmenes y análisis para mejor toma de decisiones',
+        owner: 'Control total y administración de tu práctica',
+      },
+      widgets: {
+        stockAlerts: 'Alertas de stock',
+        orderSuggestions: 'Sugerencias de pedido',
+        recentOrders: 'Pedidos recientes',
+        quickScan: 'Escaneo rápido',
+        quickScanDescription: 'Escanea un código de barras de producto para actualizaciones rápidas de inventario',
+        analyticsOverview: 'Resumen de análisis',
+        businessOverview: 'Resumen de negocio',
+      },
+      quickActions: {
+        scanProduct: 'Escanear producto',
+        createOrder: 'Nuevo pedido',
+        updateStock: 'Actualizar stock',
+        viewLowStock: 'Stock bajo',
+        viewAnalytics: 'Ver análisis',
+        manageSuppliers: 'Gestionar proveedores',
+        approveOrders: 'Aprobar pedidos',
+        exportReports: 'Exportar reportes',
+        manageUsers: 'Gestionar usuarios',
+        systemSettings: 'Configuración del sistema',
+        financialReports: 'Reportes financieros',
+        backupData: 'Respaldo de datos',
+      },
+      alerts: {
+        viewStock: 'Ver stock',
+        viewReport: 'Ver reporte',
+        updateNow: 'Actualizar ahora',
+        lowStockMessage: '{count} productos tienen stock bajo',
+        monthlyReportAvailable: 'Reporte de análisis mensual disponible',
+        systemUpdateAvailable: 'Actualización del sistema disponible',
+      },
+    },
   },
 
   // Errors

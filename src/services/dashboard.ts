@@ -1,6 +1,7 @@
 import { supabase } from './supabase';
 import { useAuthStore } from '@/stores/auth';
 import { dashboardLogger } from '@/utils/logger';
+import { t } from '@/utils/i18n-service';
 
 export interface DashboardWidget {
   id: string;
@@ -48,32 +49,34 @@ export interface RoleDashboardConfig {
 }
 
 class DashboardService {
-  private roleConfigs: Record<string, RoleDashboardConfig> = {
-    assistant: {
-      role: 'assistant',
-      title: 'Assistent Dashboard',
-      subtitle: 'Beheer bestellingen en voorraad updates',
-      primaryColor: 'blue',
-      widgets: ['stock-alerts', 'order-suggestions', 'recent-orders', 'quick-scan'],
-      quickActions: ['scan-product', 'create-order', 'update-stock', 'view-low-stock']
-    },
-    manager: {
-      role: 'manager', 
-      title: 'Manager Dashboard',
-      subtitle: 'Overzichten en analyses voor betere besluitvorming',
-      primaryColor: 'purple',
-      widgets: ['analytics-overview', 'cost-analysis', 'supplier-performance', 'team-activity'],
-      quickActions: ['view-analytics', 'manage-suppliers', 'approve-orders', 'export-reports']
-    },
-    owner: {
-      role: 'owner',
-      title: 'Eigenaar Dashboard', 
-      subtitle: 'Volledige controle en administratie van uw praktijk',
-      primaryColor: 'green',
-      widgets: ['business-overview', 'financial-summary', 'user-management', 'system-health'],
-      quickActions: ['manage-users', 'system-settings', 'financial-reports', 'backup-data']
-    }
-  };
+  private getRoleConfigs(): Record<string, RoleDashboardConfig> {
+    return {
+      assistant: {
+        role: 'assistant',
+        title: t('dashboard.titles.assistant'),
+        subtitle: t('dashboard.service.subtitles.assistant'),
+        primaryColor: 'blue',
+        widgets: ['stock-alerts', 'order-suggestions', 'recent-orders', 'quick-scan'],
+        quickActions: ['scan-product', 'create-order', 'update-stock', 'view-low-stock']
+      },
+      manager: {
+        role: 'manager', 
+        title: t('dashboard.titles.manager'),
+        subtitle: t('dashboard.service.subtitles.manager'),
+        primaryColor: 'purple',
+        widgets: ['analytics-overview', 'cost-analysis', 'supplier-performance', 'team-activity'],
+        quickActions: ['view-analytics', 'manage-suppliers', 'approve-orders', 'export-reports']
+      },
+      owner: {
+        role: 'owner',
+        title: t('dashboard.titles.owner'), 
+        subtitle: t('dashboard.service.subtitles.owner'),
+        primaryColor: 'green',
+        widgets: ['business-overview', 'financial-summary', 'user-management', 'system-health'],
+        quickActions: ['manage-users', 'system-settings', 'financial-reports', 'backup-data']
+      }
+    };
+  }
 
   async getDashboardData(userRole: string): Promise<DashboardData> {
     const authStore = useAuthStore();
@@ -82,7 +85,8 @@ class DashboardService {
     // Use real data with mock fallback for widgets
     dashboardLogger.info(`🎯 Loading dashboard for role: "${userRole}"`);
     
-    const config = this.roleConfigs[userRole] || this.roleConfigs.assistant;
+    const roleConfigs = this.getRoleConfigs();
+    const config = roleConfigs[userRole] || roleConfigs.assistant;
     
     // Load base metrics
     const metrics = await this.loadMetrics(practiceId);
@@ -265,7 +269,7 @@ class DashboardService {
 
     return {
       id: 'stock-alerts',
-      title: 'Voorraad Waarschuwingen',
+      title: t('dashboard.service.widgets.stockAlerts'),
       type: 'alert',
       data: { items: lowStock || [] },
       size: 'medium',
@@ -287,7 +291,7 @@ class DashboardService {
 
     return {
       id: 'order-suggestions',
-      title: 'Bestel Suggesties',
+      title: t('dashboard.service.widgets.orderSuggestions'),
       type: 'list',
       data: { suggestions: suggestions || [] },
       size: 'large',
@@ -306,7 +310,7 @@ class DashboardService {
 
     return {
       id: 'recent-orders',
-      title: 'Recente Bestellingen',
+      title: t('dashboard.service.widgets.recentOrders'),
       type: 'list',
       data: { orders: orders || [] },
       size: 'medium',
@@ -318,11 +322,11 @@ class DashboardService {
   private createQuickScanWidget(): DashboardWidget {
     return {
       id: 'quick-scan',
-      title: 'Snel Scannen',
+      title: t('dashboard.service.widgets.quickScan'),
       type: 'quickAction',
       data: { 
         action: 'scan',
-        description: 'Scan een product barcode voor snelle voorraad updates'
+        description: t('dashboard.service.widgets.quickScanDescription')
       },
       size: 'small',
       position: 4,
@@ -341,7 +345,7 @@ class DashboardService {
 
     return {
       id: 'analytics-overview',
-      title: 'Analytics Overzicht',
+      title: t('dashboard.service.widgets.analyticsOverview'),
       type: 'chart',
       data: { analytics: analytics || [] },
       size: 'large',
@@ -359,7 +363,7 @@ class DashboardService {
 
     return {
       id: 'business-overview',
-      title: 'Business Overzicht',
+      title: t('dashboard.service.widgets.businessOverview'),
       type: 'metric',
       data: { 
         teamSize: members?.length || 0,
@@ -375,84 +379,84 @@ class DashboardService {
     const allActions = {
       'scan-product': {
         id: 'scan-product',
-        label: 'Scan Product',
+        label: t('dashboard.service.quickActions.scanProduct'),
         icon: 'qr_code_scanner',
         route: '/scan',
         color: 'primary'
       },
       'create-order': {
         id: 'create-order',
-        label: 'Nieuwe Bestelling',
+        label: t('dashboard.service.quickActions.createOrder'),
         icon: 'add_shopping_cart',
         route: '/orders/new',
         color: 'positive'
       },
       'update-stock': {
         id: 'update-stock',
-        label: 'Voorraad Bijwerken',
+        label: t('dashboard.service.quickActions.updateStock'),
         icon: 'inventory',
         route: '/inventory/levels',
         color: 'info'
       },
       'view-low-stock': {
         id: 'view-low-stock',
-        label: 'Lage Voorraad',
+        label: t('dashboard.service.quickActions.viewLowStock'),
         icon: 'warning',
         route: '/inventory/levels?filter=low-stock',
         color: 'warning'
       },
       'view-analytics': {
         id: 'view-analytics',
-        label: 'Analytics Bekijken',
+        label: t('dashboard.service.quickActions.viewAnalytics'),
         icon: 'analytics',
         route: '/analytics',
         color: 'purple'
       },
       'manage-suppliers': {
         id: 'manage-suppliers',
-        label: 'Leveranciers Beheren',
+        label: t('dashboard.service.quickActions.manageSuppliers'),
         icon: 'business',
         route: '/suppliers',
         color: 'indigo'
       },
       'approve-orders': {
         id: 'approve-orders',
-        label: 'Bestellingen Goedkeuren',
+        label: t('dashboard.service.quickActions.approveOrders'),
         icon: 'task_alt',
         route: '/orders?status=pending',
         color: 'orange'
       },
       'export-reports': {
         id: 'export-reports',
-        label: 'Rapporten Exporteren',
+        label: t('dashboard.service.quickActions.exportReports'),
         icon: 'download',
         route: '/reports',
         color: 'blue-grey'
       },
       'manage-users': {
         id: 'manage-users',
-        label: 'Gebruikers Beheren',
+        label: t('dashboard.service.quickActions.manageUsers'),
         icon: 'people',
         route: '/admin/users',
         color: 'red'
       },
       'system-settings': {
         id: 'system-settings',
-        label: 'Systeeminstellingen',
+        label: t('dashboard.service.quickActions.systemSettings'),
         icon: 'settings',
         route: '/admin/settings',
         color: 'grey'
       },
       'financial-reports': {
         id: 'financial-reports',
-        label: 'Financiële Rapporten',
+        label: t('dashboard.service.quickActions.financialReports'),
         icon: 'account_balance',
         route: '/reports/financial',
         color: 'green'
       },
       'backup-data': {
         id: 'backup-data',
-        label: 'Data Backup',
+        label: t('dashboard.service.quickActions.backupData'),
         icon: 'backup',
         route: '/admin/backup',
         color: 'blue'
@@ -477,9 +481,9 @@ class DashboardService {
         alerts.push({
           id: 'low-stock',
           type: 'warning' as const,
-          message: `${lowStock.length} producten hebben lage voorraad`,
+          message: t('dashboard.service.alerts.lowStockMessage', { count: lowStock.length }),
           action: '/inventory/levels',
-          actionLabel: 'Bekijk voorraad'
+          actionLabel: t('dashboard.service.alerts.viewStock')
         });
       }
 
@@ -491,20 +495,22 @@ class DashboardService {
         {
           id: 'demo-alert-1',
           type: 'warning' as const,
-          message: '12 producten hebben lage voorraad',
+          message: t('dashboard.service.alerts.lowStockMessage', { count: 12 }),
           action: '/inventory/levels',
-          actionLabel: 'Bekijk voorraad'
+          actionLabel: t('dashboard.service.alerts.viewStock')
         }
       ];
     }
   }
 
   getRoleConfig(userRole: string): RoleDashboardConfig {
-    return this.roleConfigs[userRole] || this.roleConfigs.assistant;
+    const roleConfigs = this.getRoleConfigs();
+    return roleConfigs[userRole] || roleConfigs.assistant;
   }
 
   getMockDashboardData(userRole: string): DashboardData {
-    const config = this.roleConfigs[userRole] || this.roleConfigs.assistant;
+    const roleConfigs = this.getRoleConfigs();
+    const config = roleConfigs[userRole] || roleConfigs.assistant;
     
     dashboardLogger.info(`🎯 Building ${userRole} dashboard with widgets:`, config.widgets);
     
@@ -564,9 +570,9 @@ class DashboardService {
           {
             id: 'manager-alert-1',
             type: 'info' as const,
-            message: 'Maandelijkse analyse rapport beschikbaar',
+            message: t('dashboard.service.alerts.monthlyReportAvailable'),
             action: '/analytics',
-            actionLabel: 'Bekijk rapport'
+            actionLabel: t('dashboard.service.alerts.viewReport')
           }
         ];
       case 'owner':
@@ -574,9 +580,9 @@ class DashboardService {
           {
             id: 'owner-alert-1',
             type: 'warning' as const,
-            message: 'Systeemupdate beschikbaar',
+            message: t('dashboard.service.alerts.systemUpdateAvailable'),
             action: '/admin/updates',
-            actionLabel: 'Update nu'
+            actionLabel: t('dashboard.service.alerts.updateNow')
           }
         ];
       default: // assistant
@@ -584,9 +590,9 @@ class DashboardService {
           {
             id: 'assistant-alert-1',
             type: 'warning' as const,
-            message: '12 producten hebben lage voorraad',
+            message: t('dashboard.service.alerts.lowStockMessage', { count: 12 }),
             action: '/inventory/levels',
-            actionLabel: 'Bekijk voorraad'
+            actionLabel: t('dashboard.service.alerts.viewStock')
           }
         ];
     }
@@ -597,7 +603,7 @@ class DashboardService {
       case 'stock-alerts':
         return {
           id: 'stock-alerts',
-          title: 'Voorraad Waarschuwingen',
+          title: t('dashboard.service.widgets.stockAlerts'),
           type: 'alert',
           data: { 
             items: [
@@ -625,7 +631,7 @@ class DashboardService {
       case 'order-suggestions':
         return {
           id: 'order-suggestions',
-          title: 'Bestel Suggesties',
+          title: t('dashboard.service.widgets.orderSuggestions'),
           type: 'list',
           data: { 
             suggestions: [

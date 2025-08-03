@@ -263,6 +263,95 @@ export default {
     failedToLoadData: 'Failed to load dashboard data',
     dataRefreshedSuccessfully: 'Data refreshed successfully',
     failedToRefreshData: 'Failed to refresh data',
+
+    // Empty state
+    empty: {
+      title: 'Configure dashboard',
+      subtitle: 'Add widgets to personalize your dashboard',
+      addWidgets: 'Add widgets',
+    },
+
+    // Customize dialog
+    customize: {
+      title: 'Customize dashboard',
+      comingSoon: 'Personalization options coming soon',
+    },
+
+    // Role titles
+    titles: {
+      assistant: 'Assistant dashboard',
+      manager: 'Manager dashboard', 
+      owner: 'Owner dashboard',
+      default: 'Dashboard',
+    },
+
+    // Actions
+    actions: {
+      refresh: 'Refresh dashboard',
+      customize: 'Customize dashboard',
+      refreshed: 'Dashboard refreshed',
+    },
+
+    // Role switching
+    roleSwitch: {
+      success: 'Role changed successfully',
+      caption: 'Dashboard has been adapted to your new role',
+    },
+
+    // Error messages
+    errors: {
+      loadFailed: 'Failed to load dashboard',
+      tryRefresh: 'Try refreshing the page',
+      switchFailed: 'Failed to switch role',
+      tryAgain: 'Please try again',
+    },
+
+    // Roles
+    roles: {
+      assistant: '🩺 Assistant - Inventory & orders',
+      manager: '📊 Manager - Analytics & overviews',
+      owner: '👑 Owner - Full control',
+    },
+
+    // Service layer translations
+    service: {
+      subtitles: {
+        assistant: 'Manage orders and inventory updates',
+        manager: 'Overviews and analytics for better decision making',
+        owner: 'Full control and administration of your practice',
+      },
+      widgets: {
+        stockAlerts: 'Stock alerts',
+        orderSuggestions: 'Order suggestions',
+        recentOrders: 'Recent orders',
+        quickScan: 'Quick scan',
+        quickScanDescription: 'Scan a product barcode for quick inventory updates',
+        analyticsOverview: 'Analytics overview',
+        businessOverview: 'Business overview',
+      },
+      quickActions: {
+        scanProduct: 'Scan product',
+        createOrder: 'New order',
+        updateStock: 'Update stock',
+        viewLowStock: 'Low stock',
+        viewAnalytics: 'View analytics',
+        manageSuppliers: 'Manage suppliers',
+        approveOrders: 'Approve orders',
+        exportReports: 'Export reports',
+        manageUsers: 'Manage users',
+        systemSettings: 'System settings',
+        financialReports: 'Financial reports',
+        backupData: 'Data backup',
+      },
+      alerts: {
+        viewStock: 'View stock',
+        viewReport: 'View report',
+        updateNow: 'Update now',
+        lowStockMessage: '{count} products have low stock',
+        monthlyReportAvailable: 'Monthly analysis report available',
+        systemUpdateAvailable: 'System update available',
+      },
+    },
   },
 
   // Errors
