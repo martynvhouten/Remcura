@@ -253,16 +253,38 @@ export default {
     actions: {
       refresh: 'Dashboard vernieuwen',
       customize: 'Dashboard aanpassen',
+      refreshed: 'Dashboard vernieuwd',
+    },
+
+    // Empty state
+    empty: {
+      title: 'Dashboard configureren',
+      subtitle: 'Voeg widgets toe om uw dashboard te personaliseren',
+      addWidgets: 'Widgets toevoegen',
+    },
+
+    // Customize dialog
+    customize: {
+      title: 'Dashboard aanpassen',
+      comingSoon: 'Personalisatie opties komen binnenkort beschikbaar',
+    },
+
+    // Role titles
+    titles: {
+      assistant: 'Assistent dashboard',
+      manager: 'Manager dashboard', 
+      owner: 'Eigenaar dashboard',
+      default: 'Dashboard',
     },
     
     demoRoleSwitch: {
-      label: 'Switch Demo Rol',
+      label: 'Switch demo rol',
     },
     
     roles: {
-      assistant: '🩺 Assistent - Voorraad & Bestellingen',
-      manager: '📊 Manager - Analytics & Overzichten',
-      owner: '👑 Eigenaar - Volledige Controle',
+      assistant: '🩺 Assistent - Voorraad & bestellingen',
+      manager: '📊 Manager - Analytics & overzichten',
+      owner: '👑 Eigenaar - Volledige controle',
     },
     
     quickActionLabels: {
@@ -278,8 +300,18 @@ export default {
       allStockLevelsOk: 'Alle voorraadniveaus zijn op orde',
     },
     
-    notifications: {
-      roleSwitch: 'Dashboard is aangepast aan je nieuwe rol',
+    // Role switching
+    roleSwitch: {
+      success: 'Rol succesvol gewijzigd',
+      caption: 'Dashboard is aangepast aan je nieuwe rol',
+    },
+
+    // Error messages
+    errors: {
+      loadFailed: 'Laden dashboard mislukt',
+      tryRefresh: 'Probeer de pagina te vernieuwen',
+      switchFailed: 'Wisselen van rol mislukt',
+      tryAgain: 'Probeer het opnieuw',
     },
     welcomeTitle: 'Welkom bij Remcura',
     welcomeSubtitle: 'Je professionele medische voorraadbeheersysteem',
@@ -323,7 +355,7 @@ export default {
     scanProduct: 'Scan product',
     createOrder: 'Nieuwe bestelling',
     updateStock: 'Voorraad bijwerken',
-    viewLowStock: 'Lage Voorraad Bekijken',
+    viewLowStock: 'Lage voorraad bekijken',
     manageSuppliers: 'Leveranciers beheren',
     approveOrders: 'Bestellingen goedkeuren',
     exportReports: 'Rapporten exporteren',
@@ -760,13 +792,13 @@ export default {
     expiresToday: 'Verloopt vandaag',
     expiresTomorrow: 'Verloopt morgen',
     expiresInDays: 'Verloopt over {days} dagen',
-    fifoSuggestion: 'FIFO Suggestie',
-    generateFifoSuggestion: 'Genereer FIFO Suggestie',
+    fifoSuggestion: 'FIFO suggestie',
+    generateFifoSuggestion: 'Genereer FIFO suggestie',
     fifoResults: 'FIFO Resultaten',
     noFifoResults: 'Geen FIFO resultaten beschikbaar',
     fifoSuggestionGenerated: 'FIFO suggestie succesvol gegenereerd',
-    applyFifoSuggestion: 'FIFO Suggestie Toepassen',
-    confirmFifoApplication: 'FIFO Toepassing Bevestigen',
+    applyFifoSuggestion: 'FIFO suggestie toepassen',
+    confirmFifoApplication: 'FIFO toepassing bevestigen',
     confirmFifoMessage: 'Weet je zeker dat je deze FIFO suggestie wilt toepassen?',
     fifoAppliedSuccessfully: 'FIFO suggestie succesvol toegepast',
     useQuantity: 'Gebruik hoeveelheid',
@@ -793,7 +825,7 @@ export default {
     statusInformation: 'Status Informatie',
     costInformation: 'Kosten Informatie',
     currentValue: 'Huidige Waarde',
-    quantityToUse: 'Te Gebruiken Hoeveelheid',
+    quantityToUse: 'Te gebruiken hoeveelheid',
     usageReason: 'Gebruiksreden',
     usageNotes: 'Gebruiksnotities',
     usageNotesHint: 'Optionele notities voor dit gebruik',
@@ -981,7 +1013,7 @@ export default {
       totalProducts: 'Totaal producten',
       inStockProducts: 'Op Voorraad',
       lowStockProducts: 'Lage Voorraad',
-      outOfStockProducts: 'Niet Op Voorraad',
+      outOfStockProducts: 'Niet op voorraad',
       suppliersCount: 'Leveranciers',
       categoriesCount: 'Categorieën',
     },
@@ -989,7 +1021,7 @@ export default {
     stockStatus: {
       in_stock: 'Op Voorraad',
       low_stock: 'Lage Voorraad',
-      out_of_stock: 'Niet Op Voorraad',
+      out_of_stock: 'Niet op voorraad',
       unavailable: 'Niet Beschikbaar',
     },
 
@@ -1055,8 +1087,8 @@ export default {
       // GS1 Fields
       gs1Info: 'GS1 informatie',
       gtin: 'GTIN',
-      gpcBrickCode: 'GPC Brick Code',
-      countryOfOrigin: 'Land van Herkomst',
+      gpcBrickCode: 'GPC brick code',
+      countryOfOrigin: 'Land van herkomst',
       lifecycleStatus: 'Levenscyclus Status',
       netContent: 'Netto Inhoud',
       weight: 'Gewicht',

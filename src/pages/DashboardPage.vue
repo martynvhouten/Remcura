@@ -133,11 +133,11 @@
       <!-- Empty State -->
       <div v-if="!widgets.length && !loading" class="empty-dashboard">
         <q-icon name="widgets" size="4rem" color="grey-5" />
-        <h5>Dashboard configureren</h5>
-        <p>Voeg widgets toe om uw dashboard te personaliseren</p>
+        <h5>{{ $t('dashboard.empty.title') }}</h5>
+        <p>{{ $t('dashboard.empty.subtitle') }}</p>
         <q-btn
           color="primary"
-          label="Widgets toevoegen"
+          :label="$t('dashboard.empty.addWidgets')"
           @click="showCustomizeDialog = true"
         />
       </div>
@@ -147,13 +147,13 @@
     <q-dialog v-model="showCustomizeDialog">
       <q-card style="min-width: 400px">
         <q-card-section>
-          <div class="text-h6">Dashboard aanpassen</div>
+          <div class="text-h6">{{ $t('dashboard.customize.title') }}</div>
         </q-card-section>
         <q-card-section>
-          <p>Personalisatie opties komen binnenkort beschikbaar.</p>
+          <p>{{ $t('dashboard.customize.comingSoon') }}</p>
         </q-card-section>
         <q-card-actions align="right">
-          <q-btn flat label="Sluiten" color="primary" v-close-popup />
+          <q-btn flat :label="$t('common.close')" color="primary" v-close-popup />
         </q-card-actions>
       </q-card>
     </q-dialog>
@@ -194,17 +194,17 @@
   
   const demoRoleOptions = computed(() => [
     { 
-      label: '🩺 Assistent - Voorraad & Bestellingen', 
+      label: t('dashboard.roles.assistant'), 
       value: 'assistant',
       icon: 'medical_services'
     },
     { 
-      label: '📊 Manager - Analytics & Overzichten', 
+      label: t('dashboard.roles.manager'), 
       value: 'manager',
       icon: 'analytics'
     },
     { 
-      label: '👑 Eigenaar - Volledige Controle', 
+      label: t('dashboard.roles.owner'), 
       value: 'owner',
       icon: 'admin_panel_settings'
     }
@@ -237,8 +237,8 @@
       console.error('Failed to load dashboard:', error);
       $q.notify({
         type: 'negative',
-        message: $t('dashboardp.negative'),
-        caption: 'Probeer de pagina te vernieuwen'
+        message: t('dashboard.errors.loadFailed'),
+        caption: t('dashboard.errors.tryRefresh')
       });
     } finally {
       loading.value = false;
@@ -249,7 +249,7 @@
     await loadDashboard();
     $q.notify({
       type: 'positive',
-      message: $t('dashboardp.positive'),
+      message: t('dashboard.actions.refreshed'),
       timeout: 1000
     });
   }
@@ -279,8 +279,8 @@
       
       $q.notify({
         type: 'positive',
-        message: $t('dashboardp.positive'),
-                  caption: 'Dashboard is aangepast aan je nieuwe rol',
+        message: t('dashboard.roleSwitch.success'),
+        caption: t('dashboard.roleSwitch.caption'),
         timeout: 2500,
         icon: 'swap_horiz'
       });
@@ -288,8 +288,8 @@
       console.error('Failed to switch demo role:', error);
       $q.notify({
         type: 'negative',
-        message: $t('dashboardp.negative'),
-        caption: 'Probeer het opnieuw'
+        message: t('dashboard.errors.switchFailed'),
+        caption: t('dashboard.errors.tryAgain')
       });
     } finally {
       loading.value = false;
@@ -298,10 +298,10 @@
 
   function getDemoRoleLabel(role: string): string {
     switch (role) {
-      case 'assistant': return 'Assistent Dashboard';
-      case 'manager': return 'Manager Dashboard';
-      case 'owner': return 'Eigenaar Dashboard';
-      default: return 'Dashboard';
+      case 'assistant': return t('dashboard.titles.assistant');
+      case 'manager': return t('dashboard.titles.manager');
+      case 'owner': return t('dashboard.titles.owner');
+      default: return t('dashboard.titles.default');
     }
   }
 
