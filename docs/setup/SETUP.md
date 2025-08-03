@@ -1,290 +1,385 @@
 # Setup Guide - Remcura
 
-Deze handleiding helpt je bij het opzetten van Remcura in je ontwikkelomgeving en productie.
+This guide helps you set up Remcura in your development environment and production.
 
-## Overzicht
+## Overview
 
-Remcura is een professioneel voorraadbeheersysteem voor medische klinieken, gebouwd met Vue 3,
-Quasar Framework, en Supabase. Het systeem is ontworpen als white-label SaaS oplossing.
+Remcura is a professional inventory management system for medical clinics, built with Vue 3,
+Quasar Framework, and Supabase. The system is designed as a white-label SaaS solution.
 
-## Vereisten
+## Requirements
 
 ### Development
 
-- **Node.js**: versie 16 of hoger
-- **npm** of **yarn**: voor package management
-- **Git**: voor version control
+- **Node.js**: version 16 or higher
+- **npm** or **yarn**: for package management
+- **Git**: for version control
 
 ### Production
 
-- **Supabase account**: voor backend services
-- **Web hosting**: voor frontend deployment
-- **Custom domain**: (optioneel) voor white-label deployment
+- **Supabase account**: for backend services
+- **Web hosting**: for frontend deployment
+- **Custom domain**: (optional) for white-label deployment
 
 ## Database Setup
 
-### 1. Supabase Project Aanmaken
+### 1. Create Supabase Project
 
-1. Ga naar [supabase.com](https://supabase.com)
-2. Maak een nieuw project aan
-3. Noteer je Project URL en anon key
+1. Go to [supabase.com](https://supabase.com)
+2. Create a new project
+3. Note your Project URL and anon key
 
 ### 2. Database Schema
 
-Voer de volgende SQL commands uit in de Supabase SQL editor:
+Execute the following SQL commands in the Supabase SQL editor:
 
 ```sql
 -- Enable RLS
 ALTER DATABASE postgres SET "app.settings.jwt_secret" TO 'your-jwt-secret';
 
--- Create clinics table
-CREATE TABLE public.clinics (
-    id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
-    name TEXT NOT NULL,
-    address TEXT,
-    contact_email TEXT,
-    contact_phone TEXT,
-    created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
-    updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+-- Create practices table
+CREATE TABLE practices (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  name VARCHAR(100) NOT NULL,
+  email VARCHAR(255),
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+  updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
 );
 
--- Create user_profiles table
-CREATE TABLE public.user_profiles (
-    id UUID REFERENCES auth.users ON DELETE CASCADE PRIMARY KEY,
-    clinic_id UUID REFERENCES public.clinics(id) ON DELETE CASCADE NOT NULL,
-    email TEXT NOT NULL,
-    full_name TEXT,
-    role TEXT DEFAULT 'user',
-    created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
-    updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+-- Enable RLS
+ALTER TABLE practices ENABLE ROW LEVEL SECURITY;
+
+-- Create practice members table
+CREATE TABLE practice_members (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  practice_id UUID NOT NULL REFERENCES practices(id) ON DELETE CASCADE,
+  user_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
+  role VARCHAR(50) NOT NULL DEFAULT 'member',
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+  UNIQUE(practice_id, user_id)
 );
 
--- Create clinic_products table
-CREATE TABLE public.clinic_products (
-    id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
-    clinic_id UUID REFERENCES public.clinics(id) ON DELETE CASCADE NOT NULL,
-    product_name TEXT NOT NULL,
-    product_sku TEXT,
-    product_description TEXT,
-    current_stock INTEGER DEFAULT 0,
-    minimum_stock INTEGER DEFAULT 0,
-    maximum_stock INTEGER DEFAULT 100,
-    reorder_enabled BOOLEAN DEFAULT true,
-    low_stock_alert_enabled BOOLEAN DEFAULT true,
-    created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
-    updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+-- Enable RLS
+ALTER TABLE practice_members ENABLE ROW LEVEL SECURITY;
+
+-- Create locations table
+CREATE TABLE practice_locations (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  practice_id UUID NOT NULL REFERENCES practices(id) ON DELETE CASCADE,
+  name VARCHAR(100) NOT NULL,
+  description TEXT,
+  is_active BOOLEAN DEFAULT true,
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+  updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
 );
 
--- Enable RLS on all tables
-ALTER TABLE public.clinics ENABLE ROW LEVEL SECURITY;
-ALTER TABLE public.user_profiles ENABLE ROW LEVEL SECURITY;
-ALTER TABLE public.clinic_products ENABLE ROW LEVEL SECURITY;
+-- Enable RLS and create policies
+ALTER TABLE practice_locations ENABLE ROW LEVEL SECURITY;
 
--- RLS Policies for clinics
-CREATE POLICY "Users can view their own clinic" ON public.clinics
-    FOR SELECT USING (id IN (
-        SELECT clinic_id FROM public.user_profiles WHERE id = auth.uid()
-    ));
+-- Products table with GS1 compliance
+CREATE TABLE products (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  practice_id UUID NOT NULL REFERENCES practices(id) ON DELETE CASCADE,
+  
+  -- Basic Information
+  name VARCHAR(200) NOT NULL,
+  description TEXT,
+  brand VARCHAR(100),
+  category VARCHAR(100),
+  
+  -- GS1 Compliance Fields
+  gtin VARCHAR(14) UNIQUE, -- Global Trade Item Number
+  gpc_brick_code VARCHAR(20), -- GS1 Global Product Classification
+  gln_manufacturer VARCHAR(13), -- Global Location Number
+  
+  -- Pricing
+  cost_price DECIMAL(10,2),
+  selling_price DECIMAL(10,2),
+  
+  -- Packaging & Measurements
+  net_content_value DECIMAL(10,3),
+  net_content_uom VARCHAR(10), -- Unit of measure
+  gross_weight DECIMAL(10,3),
+  net_weight DECIMAL(10,3),
+  
+  -- GS1 Indicators
+  base_unit_indicator BOOLEAN DEFAULT false,
+  orderable_unit_indicator BOOLEAN DEFAULT true,
+  despatch_unit_indicator BOOLEAN DEFAULT false,
+  
+  -- Regulatory
+  country_of_origin VARCHAR(3), -- ISO 3166-1 alpha-3
+  effective_from_date DATE,
+  effective_to_date DATE,
+  product_lifecycle_status VARCHAR(20) DEFAULT 'Active',
+  
+  -- System Fields
+  is_active BOOLEAN DEFAULT true,
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+  updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+  created_by UUID REFERENCES auth.users(id),
+  updated_by UUID REFERENCES auth.users(id)
+);
 
-CREATE POLICY "Users can update their own clinic" ON public.clinics
-    FOR UPDATE USING (id IN (
-        SELECT clinic_id FROM public.user_profiles WHERE id = auth.uid()
-    ));
+-- Enable RLS
+ALTER TABLE products ENABLE ROW LEVEL SECURITY;
 
--- RLS Policies for user_profiles
-CREATE POLICY "Users can view profiles from their clinic" ON public.user_profiles
-    FOR SELECT USING (clinic_id IN (
-        SELECT clinic_id FROM public.user_profiles WHERE id = auth.uid()
-    ));
+-- Suppliers table
+CREATE TABLE suppliers (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  practice_id UUID NOT NULL REFERENCES practices(id) ON DELETE CASCADE,
+  name VARCHAR(200) NOT NULL,
+  email VARCHAR(255),
+  phone VARCHAR(50),
+  website VARCHAR(255),
+  
+  -- Integration settings
+  integration_type VARCHAR(50) DEFAULT 'manual', -- manual, magento, api
+  api_endpoint VARCHAR(500),
+  api_key VARCHAR(255),
+  
+  is_active BOOLEAN DEFAULT true,
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+  updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
 
-CREATE POLICY "Users can update their own profile" ON public.user_profiles
-    FOR UPDATE USING (id = auth.uid());
+ALTER TABLE suppliers ENABLE ROW LEVEL SECURITY;
 
--- RLS Policies for clinic_products
-CREATE POLICY "Users can view products from their clinic" ON public.clinic_products
-    FOR SELECT USING (clinic_id IN (
-        SELECT clinic_id FROM public.user_profiles WHERE id = auth.uid()
-    ));
+-- Stock levels table
+CREATE TABLE stock_levels (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  practice_id UUID NOT NULL REFERENCES practices(id) ON DELETE CASCADE,
+  product_id UUID NOT NULL REFERENCES products(id) ON DELETE CASCADE,
+  location_id UUID NOT NULL REFERENCES practice_locations(id) ON DELETE CASCADE,
+  
+  current_quantity INTEGER NOT NULL DEFAULT 0,
+  minimum_quantity INTEGER DEFAULT 0,
+  maximum_quantity INTEGER DEFAULT 100,
+  
+  -- Batch tracking
+  batch_number VARCHAR(100),
+  expiry_date DATE,
+  
+  last_counted_at TIMESTAMP WITH TIME ZONE,
+  last_counted_by UUID REFERENCES auth.users(id),
+  
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+  updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+  
+  UNIQUE(product_id, location_id, batch_number)
+);
 
-CREATE POLICY "Users can manage products from their clinic" ON public.clinic_products
-    FOR ALL USING (clinic_id IN (
-        SELECT clinic_id FROM public.user_profiles WHERE id = auth.uid()
-    ));
-
--- Create updated_at trigger function
-CREATE OR REPLACE FUNCTION update_updated_at_column()
-RETURNS TRIGGER AS $$
-BEGIN
-    NEW.updated_at = NOW();
-    RETURN NEW;
-END;
-$$ language 'plpgsql';
-
--- Add triggers
-CREATE TRIGGER update_clinics_updated_at BEFORE UPDATE ON public.clinics
-    FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
-
-CREATE TRIGGER update_user_profiles_updated_at BEFORE UPDATE ON public.user_profiles
-    FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
-
-CREATE TRIGGER update_clinic_products_updated_at BEFORE UPDATE ON public.clinic_products
-    FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
+ALTER TABLE stock_levels ENABLE ROW LEVEL SECURITY;
 ```
 
-### 3. Test Data (Optioneel)
+### 3. Row Level Security (RLS) Policies
 
-Voor development kun je test data toevoegen:
+Create security policies for data isolation:
 
 ```sql
--- Insert test clinic
-INSERT INTO public.clinics (id, name, address, contact_email, contact_phone)
-VALUES (
-    '123e4567-e89b-12d3-a456-426614174000',
-    'Test Medisch Centrum',
-    'Teststraat 123, 1234 AB Amsterdam',
-    'info@testclinic.nl',
-    '+31 20 123 4567'
-);
+-- Practice isolation policy for products
+CREATE POLICY "products_tenant_isolation" ON products
+  FOR ALL USING (
+    practice_id IN (
+      SELECT practice_id FROM practice_members 
+      WHERE user_id = auth.uid()
+    )
+  );
 
--- Note: User profiles worden automatisch aangemaakt na registratie
--- Insert test products
-INSERT INTO public.clinic_products (clinic_id, product_name, product_sku, current_stock, minimum_stock, maximum_stock)
-VALUES
-    ('123e4567-e89b-12d3-a456-426614174000', 'Wegwerpspuiten 5ml', 'SPR-5ML-001', 45, 50, 200),
-    ('123e4567-e89b-12d3-a456-426614174000', 'Steriele handschoenen M', 'GLV-M-001', 120, 100, 500),
-    ('123e4567-e89b-12d3-a456-426614174000', 'Bloeddrukmeter', 'BPM-DIG-001', 2, 5, 10);
+-- Apply similar policies to all tables
+CREATE POLICY "suppliers_tenant_isolation" ON suppliers
+  FOR ALL USING (
+    practice_id IN (
+      SELECT practice_id FROM practice_members 
+      WHERE user_id = auth.uid()
+    )
+  );
+
+CREATE POLICY "stock_levels_tenant_isolation" ON stock_levels
+  FOR ALL USING (
+    practice_id IN (
+      SELECT practice_id FROM practice_members 
+      WHERE user_id = auth.uid()
+    )
+  );
+
+CREATE POLICY "practice_locations_tenant_isolation" ON practice_locations
+  FOR ALL USING (
+    practice_id IN (
+      SELECT practice_id FROM practice_members 
+      WHERE user_id = auth.uid()
+    )
+  );
 ```
 
-## Development Setup
+## Environment Configuration
 
-### 1. Project Clonen
+### 1. Environment Variables
+
+Create a `.env` file in the project root:
 
 ```bash
-git clone <repository-url>
+# Supabase Configuration
+VITE_SUPABASE_URL=https://your-project.supabase.co
+VITE_SUPABASE_ANON_KEY=your-anon-key
+VITE_SUPABASE_SERVICE_ROLE_KEY=your-service-role-key
+
+# Application Settings
+VITE_APP_NAME=Remcura
+VITE_APP_VERSION=1.0.0
+VITE_APP_ENVIRONMENT=development
+
+# Optional: Analytics and Monitoring
+VITE_SENTRY_DSN=your-sentry-dsn
+VITE_GA_TRACKING_ID=your-google-analytics-id
+```
+
+### 2. Supabase Configuration
+
+Update your Supabase project settings:
+
+1. **Authentication**: Enable email/password authentication
+2. **CORS**: Add your domain to allowed origins
+3. **RLS**: Ensure Row Level Security is enabled on all tables
+4. **API**: Configure API rate limiting
+
+## Installation
+
+### 1. Clone Repository
+
+```bash
+git clone https://github.com/your-org/remcura.git
 cd remcura
 ```
 
-### 2. Dependencies Installeren
+### 2. Install Dependencies
 
 ```bash
 npm install
 ```
 
-### 3. Environment Configureren
+### 3. Configure Environment
 
 ```bash
 cp .env.example .env
+# Edit .env with your Supabase credentials
 ```
 
-Vul `.env` in met je Supabase credentials:
-
-```env
-SUPABASE_URL=https://your-project.supabase.co
-SUPABASE_ANON_KEY=your-anon-key-here
-```
-
-### 4. Development Server Starten
+### 4. Start Development Server
 
 ```bash
 npm run dev
 ```
 
-### 5. Eerste Gebruiker Aanmaken
+The application will be available at `http://localhost:9000`
 
-1. Ga naar `http://localhost:9000`
-2. Klik op registreren (of voeg handmatig toe via Supabase dashboard)
-3. Maak een user_profile record aan die linkt naar je test clinic
+## Development Commands
+
+```bash
+# Development server
+npm run dev
+
+# Type checking
+npm run type-check
+
+# Linting
+npm run lint
+npm run lint:fix
+
+# Testing
+npm run test
+npm run test:coverage
+
+# Build for production
+npm run build
+
+# Preview production build
+npm run preview
+```
 
 ## Production Deployment
 
-### 1. Build voor Productie
+### 1. Build Application
 
 ```bash
 npm run build
 ```
 
-### 2. Deploy naar Hosting Platform
+### 2. Deploy to Hosting Platform
 
-#### Netlify
+#### Netlify Deployment
+
+1. Connect your repository to Netlify
+2. Set build command: `npm run build`
+3. Set publish directory: `dist/spa`
+4. Add environment variables in Netlify dashboard
+
+#### Vercel Deployment
+
+1. Connect repository to Vercel
+2. Framework preset: Vue.js
+3. Build command: `npm run build`
+4. Output directory: `dist/spa`
+
+#### Self-hosted Deployment
 
 ```bash
-# Connect to git and auto-deploy
-npm run build
-# Upload dist/ folder
+# Serve static files with any web server
+npx serve dist/spa -p 3000
+
+# Or use nginx/apache configuration
 ```
 
-#### Vercel
+### 3. Configure Domain
 
-```bash
-npm i -g vercel
-vercel --prod
-```
-
-### 3. Environment Variables Instellen
-
-Zorg ervoor dat je production environment variables hebt ingesteld:
-
-- `SUPABASE_URL`
-- `SUPABASE_ANON_KEY`
-
-## White-label Configuratie
-
-Voor white-label deployment:
-
-### 1. Branding Aanpassen
-
-- Update `src/layouts/MainLayout.vue` - app titel
-- Update `src/layouts/AuthLayout.vue` - login scherm branding
-- Vervang logo's in `public/icons/`
-- Pas kleuren aan in `src/css/app.scss`
-
-### 2. Domain & DNS
-
-- Stel custom domain in bij je hosting provider
-- Configureer DNS records
-- Zet SSL certificaat op
-
-### 3. Client Specifieke Features
-
-- Pas features aan in store/router configuratie
-- Voeg client-specifieke styling toe
-- Configureer integraties (indien nodig)
+1. Add custom domain in hosting platform
+2. Update CORS settings in Supabase
+3. Update redirect URLs for authentication
 
 ## Troubleshooting
 
-### Veelvoorkomende Problemen
+### Common Issues
 
-1. **Database connectie issues**
+#### 1. Supabase Connection Issues
+- Check environment variables
+- Verify project URL and API keys
+- Check CORS configuration
 
-   - Controleer SUPABASE_URL en SUPABASE_ANON_KEY
-   - Zorg dat RLS policies correct zijn ingesteld
+#### 2. Authentication Problems
+- Ensure RLS policies are correctly configured
+- Check redirect URLs
+- Verify email settings in Supabase
 
-2. **Authenticatie problemen**
+#### 3. Build Errors
+- Clear node_modules and reinstall
+- Check TypeScript errors
+- Verify environment variables
 
-   - Verificeer email confirmatie instellingen in Supabase
-   - Check redirect URLs in Supabase Auth settings
+#### 4. Performance Issues
+- Enable compression in hosting platform
+- Optimize images and assets
+- Check network requests
 
-3. **Build errors**
+### Support
 
-   - Run `npm run lint` voor code issues
-   - Controleer TypeScript errors
+For technical support:
+- Check documentation in `docs/` directory
+- Review error logs in Supabase dashboard
+- Contact development team
 
-4. **Performance issues**
-   - Implementeer database indexes voor grote datasets
-   - Optimaliseer queries in stores
+## Next Steps
 
-## Support
+1. **Configure Demo Data**: Run demo data scripts
+2. **Set Up Monitoring**: Configure error tracking
+3. **User Training**: Create user accounts and train staff
+4. **Backup Strategy**: Set up automated backups
+5. **Security Review**: Perform security audit
 
-Voor technische ondersteuning of vragen over de implementatie, neem contact op met het development
-team.
+---
 
-## Security Checklist
+**🚀 Your Remcura installation is now ready for use!**
 
-Voor production deployment:
-
-- [ ] RLS policies geïmplementeerd en getest
-- [ ] Environment variables beveiligd
-- [ ] HTTPS geconfigureerd
-- [ ] Database backups ingesteld
-- [ ] Error monitoring geïmplementeerd (optioneel)
-- [ ] Rate limiting ingesteld (optioneel)
+For additional configuration options, see:
+- [Deployment Guide](./DEPLOYMENT.md)
+- [Testing Guide](./TESTING.md)
+- [Production Readiness Audit](../reports/PRODUCTION_READINESS_AUDIT.md)

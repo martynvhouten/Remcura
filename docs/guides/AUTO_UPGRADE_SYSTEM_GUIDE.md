@@ -33,7 +33,7 @@ CREATE TABLE permanent_users (
   -- Personal Identity
   full_name VARCHAR(100) NOT NULL,
   email VARCHAR(255), -- Optional
-  personal_magic_code VARCHAR(50) UNIQUE, -- 🏥SARAH2024
+  personal_magic_code VARCHAR(50) UNIQUE, -- 🏥SARAH2025
   
   -- Login Methods (at least one required)
   magic_code_enabled BOOLEAN DEFAULT false,
@@ -94,7 +94,7 @@ const invite = await MagicInviteService.createMagicInvite({
   department: 'Front Office',
   isPermanent: true // Triggers upgrade flow
 });
-// Generated: 🏥KLINIEK✨2024
+// Generated: 🏥KLINIEK✨2025
 ```
 
 **Step 2: Assistant First Login**
@@ -295,7 +295,7 @@ BEGIN
   clean_name := UPPER(REGEXP_REPLACE(SPLIT_PART(user_name, ' ', 1), '[^A-Za-z]', '', 'g'));
   clean_name := SUBSTRING(clean_name FROM 1 FOR 8);
   
-  -- Current year: "2024"
+  -- Current year: "2025"
   year_part := EXTRACT(YEAR FROM NOW())::TEXT;
   
   -- Generate: "🏥SARAH2024"
