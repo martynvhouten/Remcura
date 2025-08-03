@@ -1,25 +1,23 @@
-<template>
-  <div class="filter-field" :class="fieldClasses">
-    <!-- Text Input -->
+<template>  
+  <div ref="fieldWrapper" class="filter-field-wrapper">
+    <!-- Text Input - Only placeholder, no label -->
     <q-input
       v-if="field.type === 'text'"
       :model-value="modelValue as string"
       @update:model-value="handleChange"
-      :label="$t(field.label)"
-      :placeholder="$t(field.placeholder || '')"
-      :outlined="true"
-      :dense="true"
+      :placeholder="field.placeholder ? $t(field.placeholder as string) : ''"
+      outlined
+      dense
       :clearable="field.clearable"
       :debounce="field.debounce || 300"
       :disable="disabled"
       :readonly="readonly"
       :loading="loading"
-      class="filter-input"
-      filled
-      label-color="grey-7"
+      class="filter-input filter-input--text"
+      hide-bottom-space
     >
       <template v-if="field.icon" v-slot:prepend>
-        <q-icon :name="field.icon" size="18px" />
+        <q-icon :name="field.icon" size="14px" class="text-gray-500" />
       </template>
       <template v-if="field.scannerButton" v-slot:append>
         <q-btn 
@@ -29,86 +27,88 @@
           icon="qr_code_scanner" 
           @click="handleScan"
           :disable="disabled"
-          size="sm"
-        >
-          <q-tooltip>{{ $t('common.scanBarcode') }}</q-tooltip>
-        </q-btn>
+          size="xs"
+          class="text-gray-500 hover:text-primary"
+        />
       </template>
     </q-input>
 
     <!-- Select Dropdown -->
-    <q-select
-      v-else-if="field.type === 'select'"
-      :model-value="modelValue"
-      @update:model-value="handleChange"
-      :options="selectOptions"
-      :label="$t(field.label)"
-      :placeholder="$t(field.placeholder)"
-      :outlined="true"
-      :dense="true"
-      :clearable="field.clearable"
-      :disable="disabled || loading"
-      :readonly="readonly"
-      :loading="optionsLoading"
-      option-value="value"
-      option-label="label"
-      emit-value
-      map-options
-      class="filter-select"
-      filled
-      label-color="grey-7"
-      max-height="300px"
-      behavior="menu"
-    >
+    <div v-else-if="field.type === 'select'" class="field-with-label">
+      <label v-if="field.label" class="field-label">
+        {{ $t(field.label as string) }}
+      </label>
+      <q-select
+        :model-value="modelValue"
+        @update:model-value="handleChange"
+        :options="selectOptions"
+        :placeholder="field.placeholder ? $t(field.placeholder as string) : ''"
+        outlined
+        dense
+        :clearable="field.clearable"
+        :disable="disabled || loading"
+        :readonly="readonly"
+        :loading="optionsLoading"
+        option-value="value"
+        option-label="label"
+        emit-value
+        map-options
+        class="filter-input filter-input--select"
+        hide-bottom-space
+        max-height="200px"
+        behavior="menu"
+      >
       <template v-if="field.icon" v-slot:prepend>
-        <q-icon :name="field.icon" size="18px" />
+        <q-icon :name="field.icon" size="14px" class="text-gray-500" />
       </template>
       <template v-slot:option="scope">
-        <q-item v-bind="scope.itemProps" class="filter-option-item">
+        <q-item v-bind="scope.itemProps" dense>
           <q-item-section v-if="scope.opt.icon" avatar>
-            <q-icon :name="scope.opt.icon" :color="scope.opt.color" size="16px" />
+            <q-icon :name="scope.opt.icon" :color="scope.opt.color" size="14px" />
           </q-item-section>
           <q-item-section>
-            <q-item-label class="filter-option-label">{{ scope.opt.label }}</q-item-label>
+            <q-item-label class="text-sm">{{ scope.opt.label }}</q-item-label>
           </q-item-section>
-          <q-item-section v-if="field.flagIcons && field.type === 'country'" side>
+          <q-item-section v-if="field.flagIcons" side>
             <country-flag :country="scope.opt.value" size="small" />
           </q-item-section>
         </q-item>
       </template>
     </q-select>
+    </div>
 
     <!-- Multi Select -->
-    <q-select
-      v-else-if="field.type === 'multi_select'"
-      :model-value="modelValue"
-      @update:model-value="handleChange"
-      :options="selectOptions"
-      :label="$t(field.label)"
-      :placeholder="$t(field.placeholder)"
-      :outlined="true"
-      :dense="true"
-      :clearable="field.clearable"
-      :disable="disabled || loading"
-      :readonly="readonly"
-      :loading="optionsLoading"
-      option-value="value"
-      option-label="label"
-      emit-value
-      map-options
-      multiple
-      use-chips
-      class="filter-multi-select"
-      filled
-      label-color="grey-7"
-      max-height="300px"
-      behavior="menu"
-    >
+    <div v-else-if="field.type === 'multi_select'" class="field-with-label">
+      <label v-if="field.label" class="field-label">
+        {{ $t(field.label as string) }}
+      </label>
+      <q-select
+        :model-value="modelValue"
+        @update:model-value="handleChange"
+        :options="selectOptions"
+        :placeholder="field.placeholder ? $t(field.placeholder as string) : ''"
+        outlined
+        dense
+        :clearable="field.clearable"
+        :disable="disabled || loading"
+        :readonly="readonly"
+        :loading="optionsLoading"
+        option-value="value"
+        option-label="label"
+        emit-value
+        map-options
+        multiple
+        use-chips
+        class="filter-input filter-input--multi-select"
+        hide-bottom-space
+        max-height="200px"
+        behavior="menu"
+      >
       <template v-if="field.icon" v-slot:prepend>
-        <q-icon :name="field.icon" size="18px" />
+        <q-icon :name="field.icon" size="14px" class="text-gray-500" />
       </template>
       <template v-slot:selected>
-        <div class="filter-chips-container">
+        <div class="flex flex-wrap gap-1">
           <q-chip
             v-for="value in (Array.isArray(modelValue) ? modelValue : [])"
             :key="value"
@@ -117,106 +117,102 @@
             color="primary"
             text-color="white"
             @remove="removeMultiSelectValue(value)"
-            class="filter-chip"
+            size="xs"
+            class="text-xs"
           >
             {{ getOptionLabel(value) }}
           </q-chip>
         </div>
       </template>
     </q-select>
+    </div>
 
     <!-- Boolean Toggle/Switch -->
-    <div v-else-if="field.type === 'boolean'" class="filter-boolean">
-      <div class="boolean-wrapper">
-        <q-icon v-if="field.icon" :name="field.icon" size="18px" class="boolean-icon" />
-        <q-toggle
-          v-if="field.variant === 'toggle'"
-          :model-value="modelValue"
-          @update:model-value="handleChange"
-          :label="$t(field.label)"
-          :color="field.color || 'primary'"
-          :disable="disabled"
-          :readonly="readonly"
-          class="boolean-toggle"
-          size="sm"
-          dense
-        />
-        <q-checkbox
-          v-else
-          :model-value="modelValue"
-          @update:model-value="handleChange"
-          :label="$t(field.label)"
-          :color="field.color || 'primary'"
-          :disable="disabled"
-          :readonly="readonly"
-          class="boolean-checkbox"
-          size="sm"
-          dense
-        />
-      </div>
+    <div v-else-if="field.type === 'boolean'" class="boolean-field-container">
+      <q-icon v-if="field.icon" :name="field.icon" class="boolean-field-icon" />
+      <q-toggle
+        v-if="field.variant === 'toggle'"
+        :model-value="modelValue"
+        @update:model-value="handleChange"
+        :label="field.label ? $t(field.label as string) : ''"
+        :color="field.color || 'primary'"
+        :disable="disabled"
+        :readonly="readonly"
+        size="sm"
+        class="boolean-field-input"
+      />
+      <q-checkbox
+        v-else
+        :model-value="modelValue"
+        @update:model-value="handleChange"
+        :label="field.label ? $t(field.label as string) : ''"
+        :color="field.color || 'primary'"
+        :disable="disabled"
+        :readonly="readonly"
+        size="sm"
+        class="boolean-field-input"
+      />
     </div>
 
     <!-- Number Input -->
-    <q-input
-      v-else-if="field.type === 'number'"
-      :model-value="modelValue"
-      @update:model-value="handleChange"
-      :label="$t(field.label)"
-      :placeholder="$t(field.placeholder)"
-      :outlined="true"
-      :dense="true"
-      :clearable="field.clearable"
-      :disable="disabled"
-      :readonly="readonly"
-      :loading="loading"
-      type="number"
-      :step="field.step || 1"
-      class="filter-number"
-      filled
-      label-color="grey-7"
-    >
+    <div v-else-if="field.type === 'number'" class="field-with-label">
+      <label v-if="field.label" class="field-label">
+        {{ $t(field.label as string) }}
+      </label>
+      <q-input
+        :model-value="String(modelValue || '')"
+        @update:model-value="handleChange"
+        :placeholder="field.placeholder ? $t(field.placeholder as string) : ''"
+        outlined
+        dense
+        :clearable="field.clearable"
+        :disable="disabled"
+        :readonly="readonly"
+        :loading="loading"
+        type="number"
+        :step="field.step || 1"
+        class="filter-input filter-input--number"
+        hide-bottom-space
+      >
       <template v-if="field.icon" v-slot:prepend>
-        <q-icon :name="field.icon" size="18px" />
+        <q-icon :name="field.icon" size="14px" class="text-gray-500" />
       </template>
       <template v-if="field.currency" v-slot:append>
-        <span class="currency-symbol">{{ field.currency }}</span>
+        <span class="text-xs text-gray-500">{{ field.currency }}</span>
       </template>
     </q-input>
+    </div>
 
     <!-- Number Range -->
-    <div v-else-if="field.type === 'number_range'" class="filter-number-range">
-      <div class="range-header">
-        <q-icon v-if="field.icon" :name="field.icon" size="18px" class="range-icon" />
-        <span class="range-label">{{ $t(field.label) }}</span>
+    <div v-else-if="field.type === 'number_range'" class="range-field">
+      <div class="range-label" v-if="field.label">
+        {{ $t(field.label as string) }}
       </div>
       <div class="range-inputs">
         <q-input
-          :model-value="rangeValue.min"
+          :model-value="rangeValue.min || ''"
           @update:model-value="(value) => handleRangeChange('min', value)"
-          :placeholder="$t(field.placeholder?.min || 'filters.common.min')"
+          label="Van"
           type="number"
           :step="field.step || 1"
           outlined
           dense
-          class="range-input range-min"
-          filled
+          class="range-input filter-input"
           hide-bottom-space
         >
           <template v-if="field.currency" v-slot:append>
             <span class="currency-symbol">{{ field.currency }}</span>
           </template>
         </q-input>
-        <div class="range-separator">-</div>
         <q-input
-          :model-value="rangeValue.max"
+          :model-value="rangeValue.max || ''"
           @update:model-value="(value) => handleRangeChange('max', value)"
-          :placeholder="$t(field.placeholder?.max || 'filters.common.max')"
+          label="Tot"
           type="number"
           :step="field.step || 1"
           outlined
           dense
-          class="range-input range-max"
-          filled
+          class="range-input filter-input"
           hide-bottom-space
         >
           <template v-if="field.currency" v-slot:append>
@@ -227,27 +223,28 @@
     </div>
 
     <!-- Date Input -->
-    <q-input
-      v-else-if="field.type === 'date'"
-      :model-value="modelValue"
-      @update:model-value="handleChange"
-      :label="$t(field.label)"
-      :placeholder="$t(field.placeholder)"
-      :outlined="true"
-      :dense="true"
-      :clearable="field.clearable"
-      :disable="disabled"
-      :readonly="readonly"
-      :loading="loading"
-      class="filter-date"
-      filled
-      label-color="grey-7"
-    >
+    <div v-else-if="field.type === 'date'" class="field-with-label">
+      <label v-if="field.label" class="field-label">
+        {{ $t(field.label as string) }}
+      </label>
+      <q-input
+        :model-value="String(modelValue || '')"
+        @update:model-value="handleChange"
+        :placeholder="field.placeholder ? $t(field.placeholder as string) : ''"
+        outlined
+        dense
+        :clearable="field.clearable"
+        :disable="disabled"
+        :readonly="readonly"
+        :loading="loading"
+        class="filter-input filter-input--date"
+        hide-bottom-space
+      >
       <template v-if="field.icon" v-slot:prepend>
-        <q-icon :name="field.icon" size="18px" />
+        <q-icon :name="field.icon" size="14px" class="text-gray-500" />
       </template>
       <template v-slot:append>
-        <q-icon name="event" class="cursor-pointer" size="18px">
+        <q-icon name="event" class="cursor-pointer text-gray-500 hover:text-primary" size="14px">
           <q-popup-proxy cover transition-show="scale" transition-hide="scale">
             <q-date
               :model-value="modelValue"
@@ -255,33 +252,32 @@
               mask="YYYY-MM-DD"
             >
               <div class="row items-center justify-end">
-                <q-btn v-close-popup label="Sluiten" color="primary" flat />
+                <q-btn v-close-popup label="Sluiten" color="primary" flat size="sm" />
               </div>
             </q-date>
           </q-popup-proxy>
         </q-icon>
       </template>
     </q-input>
+    </div>
 
     <!-- Date Range -->
-    <div v-else-if="field.type === 'date_range'" class="filter-date-range">
-      <div class="range-header">
-        <q-icon v-if="field.icon" :name="field.icon" size="18px" class="range-icon" />
-        <span class="range-label">{{ $t(field.label) }}</span>
+    <div v-else-if="field.type === 'date_range'" class="range-field">
+      <div class="range-label" v-if="field.label">
+        {{ $t(field.label as string) }}
       </div>
       <div class="range-inputs">
         <q-input
-          :model-value="dateRangeValue.start"
+          :model-value="dateRangeValue.start || ''"
           @update:model-value="(value) => handleDateRangeChange('start', value)"
-          :placeholder="$t(field.placeholder?.start || 'filters.common.from')"
+          label="Van"
           outlined
           dense
-          class="range-input range-start"
-          filled
+          class="range-input filter-input"
           hide-bottom-space
         >
           <template v-slot:append>
-            <q-icon name="event" class="cursor-pointer" size="18px">
+            <q-icon name="event" class="date-picker-icon">
               <q-popup-proxy cover transition-show="scale" transition-hide="scale">
                 <q-date
                   :model-value="dateRangeValue.start"
@@ -289,26 +285,24 @@
                   mask="YYYY-MM-DD"
                 >
                   <div class="row items-center justify-end">
-                    <q-btn v-close-popup label="Sluiten" color="primary" flat />
+                    <q-btn v-close-popup label="Sluiten" color="primary" flat size="sm" />
                   </div>
                 </q-date>
               </q-popup-proxy>
             </q-icon>
           </template>
         </q-input>
-        <div class="range-separator">-</div>
         <q-input
-          :model-value="dateRangeValue.end"
+          :model-value="dateRangeValue.end || ''"
           @update:model-value="(value) => handleDateRangeChange('end', value)"
-          :placeholder="$t(field.placeholder?.end || 'filters.common.to')"
+          label="Tot"
           outlined
           dense
-          class="range-input range-end"
-          filled
+          class="range-input filter-input"
           hide-bottom-space
         >
           <template v-slot:append>
-            <q-icon name="event" class="cursor-pointer" size="18px">
+            <q-icon name="event" class="date-picker-icon">
               <q-popup-proxy cover transition-show="scale" transition-hide="scale">
                 <q-date
                   :model-value="dateRangeValue.end"
@@ -316,7 +310,7 @@
                   mask="YYYY-MM-DD"
                 >
                   <div class="row items-center justify-end">
-                    <q-btn v-close-popup label="Sluiten" color="primary" flat />
+                    <q-btn v-close-popup label="Sluiten" color="primary" flat size="sm" />
                   </div>
                 </q-date>
               </q-popup-proxy>
@@ -327,64 +321,64 @@
     </div>
 
     <!-- Country Select -->
-    <q-select
-      v-else-if="field.type === 'country'"
-      :model-value="modelValue"
-      @update:model-value="handleChange"
-      :options="selectOptions"
-      :label="$t(field.label)"
-      :placeholder="$t(field.placeholder)"
-      :outlined="true"
-      :dense="true"
-      :clearable="field.clearable"
-      :disable="disabled || loading"
-      :readonly="readonly"
-      :loading="optionsLoading"
-      option-value="value"
-      option-label="label"
-      emit-value
-      map-options
-      class="filter-country-select"
-      filled
-      label-color="grey-7"
-      max-height="300px"
-      behavior="menu"
-    >
+    <div v-else-if="field.type === 'country'" class="field-with-label">
+      <label v-if="field.label" class="field-label">
+        {{ $t(field.label as string) }}
+      </label>
+      <q-select
+        :model-value="modelValue"
+        @update:model-value="handleChange"
+        :options="selectOptions"
+        :placeholder="field.placeholder ? $t(field.placeholder as string) : ''"
+        outlined
+        dense
+        :clearable="field.clearable"
+        :disable="disabled || loading"
+        :readonly="readonly"
+        :loading="optionsLoading"
+        option-value="value"
+        option-label="label"
+        emit-value
+        map-options
+        class="filter-input filter-input--country"
+        hide-bottom-space
+        max-height="200px"
+        behavior="menu"
+      >
       <template v-if="field.icon" v-slot:prepend>
-        <q-icon :name="field.icon" size="18px" />
+        <q-icon :name="field.icon" size="14px" class="text-gray-500" />
       </template>
       <template v-slot:option="scope">
-        <q-item v-bind="scope.itemProps" class="filter-option-item">
+        <q-item v-bind="scope.itemProps" dense>
           <q-item-section side>
             <country-flag :country="scope.opt.value" size="small" />
           </q-item-section>
           <q-item-section>
-            <q-item-label class="filter-option-label">{{ scope.opt.label }}</q-item-label>
+            <q-item-label class="text-sm">{{ scope.opt.label }}</q-item-label>
           </q-item-section>
         </q-item>
       </template>
       <template v-slot:selected>
-        <div v-if="modelValue" class="country-selected">
-          <country-flag :country="modelValue" size="small" />
-          <span class="country-name">{{ getSelectedCountryLabel() }}</span>
+        <div v-if="modelValue" class="flex items-center gap-2">
+          <country-flag :country="String(modelValue)" size="small" />
+          <span class="text-sm">{{ getSelectedCountryLabel() }}</span>
         </div>
       </template>
     </q-select>
+    </div>
 
     <!-- Fallback for unknown types -->
-    <div v-else class="filter-unknown">
-      <q-banner class="bg-warning text-dark">
-        <template v-slot:avatar>
-          <q-icon name="warning" />
-        </template>
-        Unknown filter type: {{ field.type }}
-      </q-banner>
+    <div v-else class="unknown-field-container">
+      <div class="unknown-field-content">
+        <q-icon name="warning" class="unknown-field-icon" />
+        <span class="unknown-field-message">Unknown filter type: {{ field.type }}</span>
+      </div>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { computed, ref, watch, onMounted } from 'vue'
+import { computed, ref, watch, onMounted, nextTick } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { supabase } from '@/services/supabase'
 import CountryFlag from '@/components/CountryFlag.vue'
@@ -421,31 +415,31 @@ const optionsLoading = ref(false)
 
 // Computed
 const fieldClasses = computed(() => {
-  const classes = [`filter-field--${props.field.type}`]
+  const classes = [`filter-input--${props.field.type}`]
   
   if (props.field.size) {
-    classes.push(`filter-field--${props.field.size}`)
+    classes.push(`filter-input--${props.field.size}`)
   }
   
   if (props.field.dense) {
-    classes.push('filter-field--dense')
+    classes.push('filter-input--dense')
   }
   
   return classes
 })
 
 const rangeValue = computed(() => {
-  if (props.field.type === 'number_range') {
-    return (props.modelValue as { min?: number; max?: number }) || {}
+  if (props.field.type === 'number_range' && typeof props.modelValue === 'object' && props.modelValue !== null) {
+    return (props.modelValue as { min?: number; max?: number })
   }
-  return {}
+  return { min: undefined, max: undefined }
 })
 
 const dateRangeValue = computed(() => {
-  if (props.field.type === 'date_range') {
-    return (props.modelValue as { start?: string; end?: string }) || {}
+  if (props.field.type === 'date_range' && typeof props.modelValue === 'object' && props.modelValue !== null) {
+    return (props.modelValue as { start?: string; end?: string })
   }
-  return {}
+  return { start: undefined, end: undefined }
 })
 
 // Methods
@@ -455,23 +449,30 @@ const handleChange = (value: FilterValue) => {
   emit('change', value, oldValue)
 }
 
+const isEmptyValue = (value: any): boolean => {
+  if (value === null || value === undefined || value === '') { return true; }
+  if (typeof value === 'string' && value.trim() === '') { return true; }
+  if (typeof value === 'number' && value === 0) { return true; }
+  return false
+}
+
 const handleRangeChange = (key: 'min' | 'max', value: any) => {
-  const currentRange = rangeValue.value || { min: null, max: null }
+  const currentRange = rangeValue.value
   const newRange = { ...currentRange, [key]: value }
   
   // Clean up null/undefined values
-  if (newRange.min === null || newRange.min === undefined || newRange.min === '') {
+  if (isEmptyValue(newRange.min)) {
     delete newRange.min
   }
-  if (newRange.max === null || newRange.max === undefined || newRange.max === '') {
+  if (isEmptyValue(newRange.max)) {
     delete newRange.max
   }
   
-  handleChange(Object.keys(newRange).length > 0 ? newRange : null)
+  handleChange(Object.keys(newRange).length > 0 ? newRange as any : null)
 }
 
 const handleDateRangeChange = (key: 'start' | 'end', value: any) => {
-  const currentRange = dateRangeValue.value || { start: null, end: null }
+  const currentRange = dateRangeValue.value
   const newRange = { ...currentRange, [key]: value }
   
   // Clean up null/undefined values
@@ -482,7 +483,7 @@ const handleDateRangeChange = (key: 'start' | 'end', value: any) => {
     delete newRange.end
   }
   
-  handleChange(Object.keys(newRange).length > 0 ? newRange : null)
+  handleChange(Object.keys(newRange).length > 0 ? newRange as any : null)
 }
 
 const removeMultiSelectValue = (valueToRemove: any) => {
@@ -510,7 +511,7 @@ const getSelectedCountryLabel = () => {
 
 // Load select options based on data source
 const loadSelectOptions = async () => {
-  if (!props.field.dataSource) return
+  if (!props.field.dataSource) { return; }
 
   const dataSource = props.field.dataSource as FilterDataSource
 
@@ -559,10 +560,8 @@ const loadSelectOptions = async () => {
       const { data, error } = await query
 
       if (error) {
-        // Gracefully handle RLS policy errors - don't crash the app
-console.warn('Failed to load select options (likely RLS policy issue):', error)
-// Set empty options to prevent UI crashes
-options.value = []
+        console.warn('Failed to load select options (likely RLS policy issue):', error)
+        selectOptions.value = []
         return
       }
 
@@ -576,7 +575,7 @@ options.value = []
         if (dataSource.distinct) {
           const seen = new Set()
           options = options.filter(opt => {
-            if (seen.has(opt.value)) return false
+            if (seen.has(opt.value)) { return false; }
             seen.add(opt.value)
             return true
           })
@@ -585,10 +584,8 @@ options.value = []
         selectOptions.value = options
       }
     } catch (error) {
-      // Gracefully handle RLS policy errors - don't crash the app
-console.warn('Failed to load select options (likely RLS policy issue):', error)
-// Set empty options to prevent UI crashes
-options.value = []
+      console.warn('Failed to load select options (likely RLS policy issue):', error)
+      selectOptions.value = []
     } finally {
       optionsLoading.value = false
     }
@@ -598,789 +595,403 @@ options.value = []
 // Watch for data source changes
 watch(() => props.field.dataSource, loadSelectOptions, { immediate: true })
 
+// Watch for model value changes to ensure proper label positioning
+const hasValue = computed(() => {
+  const value = props.modelValue
+  
+  // Null, undefined, empty string
+  if (value === null || value === undefined || value === '') { return false; }
+  
+  // Empty arrays
+  if (Array.isArray(value) && value.length === 0) return false
+  
+  // For objects (ranges), check if they have meaningful values
+  if (typeof value === 'object' && value !== null) {
+    // Empty object
+    if (Object.keys(value).length === 0) return false
+    
+    // Cast to any for flexible property access
+    const objValue = value as any
+    
+    // For range objects with min/max, only consider it "has value" if at least one meaningful value exists
+    if ('min' in objValue || 'max' in objValue) {
+      const hasMin = objValue.min !== null && objValue.min !== undefined && objValue.min !== '' && objValue.min !== 0
+      const hasMax = objValue.max !== null && objValue.max !== undefined && objValue.max !== '' && objValue.max !== 0
+      return hasMin || hasMax
+    }
+    
+    // For date range objects with start/end
+    if ('start' in objValue || 'end' in objValue) {
+      const hasStart = objValue.start !== null && objValue.start !== undefined && objValue.start !== ''
+      const hasEnd = objValue.end !== null && objValue.end !== undefined && objValue.end !== ''
+      return hasStart || hasEnd
+    }
+    
+    // For other objects, check if any values are meaningful
+    return Object.values(objValue).some(v => v !== null && v !== undefined && v !== '')
+  }
+  
+  // For numbers, any number including 0 is valid
+  if (typeof value === 'number') return true
+  
+  // For booleans, both true and false are valid values
+  if (typeof value === 'boolean') return true
+  
+  // For strings, check if not empty after trim
+  if (typeof value === 'string') return value.trim() !== ''
+  
+  // Default: if we have any other value, consider it "has value"
+  return Boolean(value)
+})
+
+// Template ref for field wrapper
+const fieldWrapper = ref(null)
+
+// Enhanced label positioning that actually works
+const updateFieldValueClass = () => {
+  nextTick(() => {
+    if (!fieldWrapper.value) return
+    
+    const fieldElements = fieldWrapper.value.querySelectorAll('.q-field')
+    fieldElements.forEach(fieldElement => {
+      // Force proper classes based on value state
+      if (hasValue.value) {
+        fieldElement.classList.add('q-field--has-value')
+        fieldElement.classList.add('q-field--float')
+      } else {
+        fieldElement.classList.remove('q-field--has-value')
+        fieldElement.classList.remove('q-field--float')
+      }
+    })
+  })
+}
+
+// More aggressive watching to ensure labels stay positioned
+watch(hasValue, updateFieldValueClass, { immediate: true, flush: 'post' })
+watch(() => props.modelValue, updateFieldValueClass, { immediate: true, flush: 'post' })
+
+// Additional watch for string/array values to catch all cases
+watch(() => props.modelValue, (newVal) => {
+  // Extra check for edge cases
+  setTimeout(updateFieldValueClass, 50)
+}, { immediate: true, deep: true })
+
+// Initialize on mount and after DOM updates
 onMounted(() => {
   loadSelectOptions()
+  updateFieldValueClass()
+  // Additional timeout to ensure DOM is fully rendered
+  setTimeout(updateFieldValueClass, 100)
 })
+
+// Force update after any interaction
+const forceUpdateLabels = () => {
+  setTimeout(updateFieldValueClass, 10)
+}
 </script>
 
 <style lang="scss" scoped>
-// =============================================
-// MODERN FILTER FIELD DESIGN SYSTEM
-// Revolutionary UI with enhanced UX patterns
-// =============================================
-
-.filter-field {
+.filter-field-wrapper {
   width: 100%;
-  position: relative;
-
-  // =============================================
-  // ENHANCED FIELD STYLING WITH MODERN DEPTH
-  // =============================================
+  min-width: 0; // Allow shrinking
+  display: flex;
+  flex-direction: column;
   
-  :deep(.q-field) {
-    .q-field__control {
-      min-height: 48px;
-      height: 48px;
-      font-size: 15px;
-      background: linear-gradient(135deg, 
-        rgba(255, 255, 255, 0.9) 0%, 
-        rgba(248, 250, 252, 0.95) 100%);
-      border-radius: 12px;
-      border: 1.5px solid rgba(226, 232, 240, 0.6);
-      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-      position: relative;
-      overflow: hidden;
-      backdrop-filter: blur(10px);
-      
-      // Subtle inner shadow for depth
-      box-shadow: 
-        inset 0 1px 2px rgba(0, 0, 0, 0.02),
-        0 1px 3px rgba(0, 0, 0, 0.02);
-      
-      .body--dark & {
-        background: linear-gradient(135deg, 
-          rgba(30, 41, 59, 0.9) 0%, 
-          rgba(15, 23, 42, 0.95) 100%);
-        border-color: rgba(71, 85, 105, 0.4);
-        box-shadow: 
-          inset 0 1px 2px rgba(0, 0, 0, 0.1),
-          0 1px 3px rgba(0, 0, 0, 0.1);
-      }
-      
-      // Elegant hover state
-      &:hover {
-        border-color: rgba(59, 130, 246, 0.4);
-        background: linear-gradient(135deg, 
-          rgba(255, 255, 255, 0.98) 0%, 
-          rgba(248, 250, 252, 1) 100%);
-        box-shadow: 
-          inset 0 1px 2px rgba(59, 130, 246, 0.03),
-          0 2px 8px rgba(59, 130, 246, 0.06);
-        transform: translateY(-1px);
-        
-        .body--dark & {
-          border-color: rgba(96, 165, 250, 0.5);
-          background: linear-gradient(135deg, 
-            rgba(30, 41, 59, 0.98) 0%, 
-            rgba(15, 23, 42, 1) 100%);
-          box-shadow: 
-            inset 0 1px 2px rgba(59, 130, 246, 0.08),
-            0 2px 8px rgba(59, 130, 246, 0.12);
-        }
-      }
-    }
-    
-    // =============================================
-    // ENHANCED LABEL SYSTEM
-    // =============================================
-    
-    .q-field__label {
-      font-size: 13px;
-      font-weight: 600;
-      color: rgba(71, 85, 105, 0.8);
-      top: 14px;
-      left: 16px;
-      transform: none;
-      position: absolute;
-      background: transparent;
-      padding: 0 6px;
-      z-index: 2;
-      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-      letter-spacing: 0.025em;
-      
-      .body--dark & {
-        color: rgba(148, 163, 184, 0.9);
-      }
-    }
-    
-    // =============================================
-    // ADVANCED INPUT STYLING
-    // =============================================
-    
-    .q-field__native {
-      font-size: 15px;
-      font-weight: 500;
-      color: rgba(15, 23, 42, 0.95);
-      min-height: 48px;
-      padding: 16px 16px 8px 16px;
-      background: transparent;
-      
-      .body--dark & {
-        color: rgba(248, 250, 252, 0.95);
-      }
-      
-      // Placeholder styling
-      &::placeholder {
-        color: rgba(71, 85, 105, 0.4);
-        font-weight: 400;
-        
-        .body--dark & {
-          color: rgba(148, 163, 184, 0.5);
-        }
-      }
-    }
-    
-    // =============================================
-    // FLOATING LABEL ANIMATION
-    // =============================================
-    
-    &.q-field--focused .q-field__label,
-    &.q-field--float .q-field__label {
-      top: -8px;
-      left: 12px;
-      font-size: 11px;
-      font-weight: 700;
-      background: linear-gradient(135deg, 
-        rgba(255, 255, 255, 0.95) 0%, 
-        rgba(248, 250, 252, 1) 100%);
-      color: rgba(59, 130, 246, 0.9);
-      border-radius: 6px;
-      padding: 2px 8px;
-      
-      .body--dark & {
-        background: linear-gradient(135deg, 
-          rgba(30, 41, 59, 0.95) 0%, 
-          rgba(15, 23, 42, 1) 100%);
-        color: rgba(96, 165, 250, 1);
-      }
-    }
-    
-    // =============================================
-    // FOCUS STATE ENHANCEMENT
-    // =============================================
-    
-    &.q-field--focused .q-field__control {
-      border-color: rgba(59, 130, 246, 0.8);
-      box-shadow: 
-        0 0 0 3px rgba(59, 130, 246, 0.1),
-        inset 0 1px 2px rgba(59, 130, 246, 0.05),
-        0 4px 12px rgba(59, 130, 246, 0.1);
-      background: linear-gradient(135deg, 
-        rgba(255, 255, 255, 1) 0%, 
-        rgba(248, 250, 252, 1) 100%);
-      transform: translateY(-1px);
-      
-      .body--dark & {
-        border-color: rgba(96, 165, 250, 0.9);
-        box-shadow: 
-          0 0 0 3px rgba(59, 130, 246, 0.15),
-          inset 0 1px 2px rgba(59, 130, 246, 0.1),
-          0 4px 12px rgba(59, 130, 246, 0.2);
-        background: linear-gradient(135deg, 
-          rgba(30, 41, 59, 1) 0%, 
-          rgba(15, 23, 42, 1) 100%);
-      }
-    }
-  }
-
-  // =============================================
-  // SELECT DROPDOWN ENHANCEMENTS
-  // =============================================
-  
-  :deep(.q-select) {
-    .q-field__append {
-      padding: 0 16px;
-    }
-    
-    .q-select__dropdown-icon {
-      font-size: 18px;
-      color: rgba(71, 85, 105, 0.6);
-      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-      
-      .body--dark & {
-        color: rgba(148, 163, 184, 0.7);
-      }
-    }
-    
-    &.q-field--focused .q-select__dropdown-icon {
-      color: rgba(59, 130, 246, 0.8);
-      transform: rotate(180deg) scale(1.1);
-      
-      .body--dark & {
-        color: rgba(96, 165, 250, 0.9);
-      }
-    }
-    
-    // Enhanced selected value display
-    .q-field__native {
-      font-weight: 600;
-    }
-  }
-
-  // =============================================
-  // BEAUTIFUL OPTION ITEMS
-  // =============================================
-  
-  .filter-option-item {
-    min-height: 44px;
-    padding: 12px 20px;
-    transition: all 0.2s ease;
-    border-radius: 8px;
-    margin: 2px 8px;
-    
-    .filter-option-label {
-      font-size: 14px;
-      font-weight: 500;
-      line-height: 1.4;
-      color: rgba(15, 23, 42, 0.9);
-      
-      .body--dark & {
-        color: rgba(248, 250, 252, 0.9);
-      }
-    }
-    
-    &:hover {
-      background: linear-gradient(135deg, 
-        rgba(59, 130, 246, 0.08) 0%, 
-        rgba(139, 92, 246, 0.08) 100%);
-      transform: translateX(4px);
-      
-      .filter-option-label {
-        color: rgba(59, 130, 246, 0.9);
-        font-weight: 600;
-        
-        .body--dark & {
-          color: rgba(96, 165, 250, 1);
-        }
-      }
-    }
-  }
-
-  // =============================================
-  // ADVANCED MULTI-SELECT CHIPS
-  // =============================================
-  
-  :deep(.q-field--auto-height) {
-    .q-field__control {
-      min-height: 48px;
-      height: auto;
-      max-height: 140px;
-      overflow-y: auto;
-      padding: 8px 16px;
-      
-      // Custom scrollbar
-      &::-webkit-scrollbar {
-        width: 4px;
-      }
-      
-      &::-webkit-scrollbar-track {
-        background: rgba(226, 232, 240, 0.3);
-        border-radius: 2px;
-      }
-      
-      &::-webkit-scrollbar-thumb {
-        background: rgba(59, 130, 246, 0.4);
-        border-radius: 2px;
-        
-        &:hover {
-          background: rgba(59, 130, 246, 0.6);
-        }
-      }
-    }
-  }
-  
-  .filter-chips-container {
+  // Clean structure with consistent spacing
+  .field-with-label {
     display: flex;
-    flex-wrap: wrap;
+    flex-direction: column;
+    gap: 4px;
+  }
+  
+  .field-label {
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: var(--text-primary);
+    line-height: 1.2;
+    margin-bottom: 0;
+    padding-left: 2px; // Slight alignment with input content
+  }
+  
+  .boolean-field-container {
+    display: flex;
+    align-items: center;
     gap: 8px;
-    padding: 4px 0;
-    max-width: 100%;
+    padding: 8px 0; // Consistent spacing with other fields
   }
   
-  .filter-chip {
-    font-size: 12px;
-    font-weight: 600;
-    height: 32px;
-    border-radius: 16px;
-    background: linear-gradient(135deg, 
-      rgba(59, 130, 246, 0.1) 0%, 
-      rgba(139, 92, 246, 0.1) 100%);
-    color: rgba(59, 130, 246, 0.9);
-    border: 1.5px solid rgba(59, 130, 246, 0.2);
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    
-    .body--dark & {
-      background: linear-gradient(135deg, 
-        rgba(59, 130, 246, 0.15) 0%, 
-        rgba(139, 92, 246, 0.15) 100%);
-      color: rgba(96, 165, 250, 1);
-      border-color: rgba(96, 165, 250, 0.3);
+  .range-field {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+}
+
+.filter-input {
+  width: 100%;
+  min-width: 0;
+  
+  // Remove default Quasar focus styling
+  :deep(.q-field--focused) {
+    .q-field__control::before {
+      border-color: var(--brand-primary) !important;
+      border-width: 1px !important;
     }
     
-    :deep(.q-chip__content) {
-      padding: 0 14px;
-      font-weight: 600;
-    }
-    
-    :deep(.q-chip__icon--remove) {
-      font-size: 16px;
-      margin-left: 8px;
-      color: rgba(59, 130, 246, 0.7);
-      transition: all 0.2s ease;
-      
-      &:hover {
-        color: rgba(239, 68, 68, 0.8);
-        transform: scale(1.2);
-      }
-      
-      .body--dark & {
-        color: rgba(96, 165, 250, 0.8);
-        
-        &:hover {
-          color: rgba(248, 113, 113, 0.9);
-        }
-      }
-    }
-    
-    &:hover {
-      transform: translateY(-2px) scale(1.02);
-      box-shadow: 0 4px 12px rgba(59, 130, 246, 0.2);
-      border-color: rgba(59, 130, 246, 0.4);
-      
-      .body--dark & {
-        box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
-        border-color: rgba(96, 165, 250, 0.5);
-      }
+    .q-field__control::after {
+      display: none !important; // Remove the extra focus border
     }
   }
-
-  // =============================================
-  // SOPHISTICATED RANGE FIELDS
-  // =============================================
   
-  .filter-number-range,
-  .filter-date-range {
-    position: relative;
-
-    .range-inputs {
-      display: flex;
-      align-items: stretch;
-      gap: 12px;
-      position: relative;
-
-      .range-input {
-        flex: 1;
-        
-        :deep(.q-field__control) {
-          min-height: 48px;
-          height: 48px;
-        }
-        
-        :deep(.q-field__native) {
-          font-size: 15px;
-          font-weight: 500;
-          padding: 16px 16px 8px 16px;
-        }
-        
-        :deep(.q-field__label) {
-          font-size: 13px;
-          font-weight: 600;
-          top: 14px;
-        }
-        
-        :deep(.q-field--focused .q-field__label),
-        :deep(.q-field--float .q-field__label) {
-          top: -8px;
-          font-size: 11px;
-          font-weight: 700;
-          background: linear-gradient(135deg, 
-            rgba(255, 255, 255, 0.95) 0%, 
-            rgba(248, 250, 252, 1) 100%);
-          color: rgba(59, 130, 246, 0.9);
-          padding: 2px 8px;
-          border-radius: 6px;
-          
-          .body--dark & {
-            background: linear-gradient(135deg, 
-              rgba(30, 41, 59, 0.95) 0%, 
-              rgba(15, 23, 42, 1) 100%);
-            color: rgba(96, 165, 250, 1);
-          }
-        }
-      }
-
-      .range-separator {
-        color: rgba(71, 85, 105, 0.6);
-        font-weight: 700;
-        font-size: 18px;
-        padding: 0 6px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        min-width: 24px;
-        height: 48px;
-        
-        .body--dark & {
-          color: rgba(148, 163, 184, 0.7);
-        }
-      }
-    }
-    
-    // Floating label for entire range
-    &::before {
-      content: attr(data-range-label);
-      position: absolute;
-      top: -8px;
-      left: 12px;
-      background: linear-gradient(135deg, 
-        rgba(255, 255, 255, 0.95) 0%, 
-        rgba(248, 250, 252, 1) 100%);
-      padding: 2px 8px;
-      font-size: 11px;
-      font-weight: 700;
-      color: rgba(59, 130, 246, 0.9);
-      z-index: 2;
-      border-radius: 6px;
-      
-      .body--dark & {
-        background: linear-gradient(135deg, 
-          rgba(30, 41, 59, 0.95) 0%, 
-          rgba(15, 23, 42, 1) 100%);
-        color: rgba(96, 165, 250, 1);
-      }
+  // Clean field without floating labels
+  :deep(.q-field__control) {
+    min-width: 0;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    min-height: 40px;
+  }
+  
+  // Better text vertical alignment
+  :deep(.q-field__native) {
+    min-width: 0;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    line-height: 1.4;
+  }
+  
+  // Ensure input text is not cut off
+  :deep(.q-field__input) {
+    min-width: 0;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    line-height: 1.4;
+  }
+  
+  // Fix for long placeholder text
+  :deep(.q-placeholder) {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    line-height: 1.4;
+  }
+  
+  // Better text alignment for inputs
+  :deep(input) {
+    line-height: 1.4 !important;
+    vertical-align: middle;
+  }
+  
+  // Fix select dropdown text alignment
+  :deep(.q-field__selected) {
+    display: flex;
+    align-items: center;
+    line-height: 1.4;
+    min-height: 24px;
+  }
+  
+  // Better hover state
+  :deep(.q-field--outlined) {
+    .q-field__control:hover::before {
+      border-color: var(--brand-primary);
     }
   }
-
-  // =============================================
-  // ENHANCED BOOLEAN FIELDS
-  // =============================================
   
-  .filter-boolean {
-    min-height: 48px;
-    padding: 0;
+  // Special styling for text inputs (search fields)
+  &.filter-input--text {
+    :deep(.q-field__control) {
+      background: var(--bg-secondary);
+      border-radius: var(--radius-base);
+    }
     
-    .boolean-wrapper {
+    :deep(.q-placeholder) {
+      font-style: italic;
+      color: var(--text-tertiary);
+    }
+  }
+  
+  // Better responsiveness for smaller screens
+  @media (max-width: 768px) {
+    :deep(.q-field__input) {
+      font-size: 0.875rem;
+    }
+  }
+}
+
+// Boolean field container styling
+.boolean-field-container {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  min-width: 0;
+  padding: 8px 0;
+  
+  .boolean-field-icon {
+    flex-shrink: 0;
+    color: var(--text-tertiary);
+    order: 1; // Icon first
+  }
+  
+  .boolean-field-input {
+    order: 2; // Input second
+    
+    // Better vertical alignment for checkboxes and toggles
+    :deep(.q-checkbox__inner),
+    :deep(.q-toggle__inner) {
       display: flex;
       align-items: center;
-      gap: 16px;
-      min-height: 48px;
-      padding: 0 20px;
-      background: linear-gradient(135deg, 
-        rgba(255, 255, 255, 0.9) 0%, 
-        rgba(248, 250, 252, 0.95) 100%);
-      border-radius: 12px;
-      border: 1.5px solid rgba(226, 232, 240, 0.6);
-      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    
+    // Label to the right of the control
+    :deep(.q-checkbox),
+    :deep(.q-toggle) {
+      display: flex;
+      align-items: center;
+      gap: 8px;
       
-      .body--dark & {
-        background: linear-gradient(135deg, 
-          rgba(30, 41, 59, 0.9) 0%, 
-          rgba(15, 23, 42, 0.95) 100%);
-        border-color: rgba(71, 85, 105, 0.4);
+      .q-checkbox__label,
+      .q-toggle__label {
+        order: 2;
+        margin-left: 8px;
       }
+      
+      .q-checkbox__inner,
+      .q-toggle__inner {
+        order: 1;
+      }
+    }
+    
+    // Remove focus border on boolean fields too
+    :deep(.q-checkbox.q-checkbox--focused),
+    :deep(.q-toggle.q-toggle--focused) {
+      .q-checkbox__inner::after,
+      .q-toggle__track::after {
+        display: none !important;
+      }
+    }
+  }
+}
+
+// Range field styling  
+.range-field {
+  width: 100%;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  
+  .range-label {
+    margin-bottom: 2px;
+    font-size: 0.75rem; // Smaller label  
+    font-weight: 500;
+    color: var(--text-secondary);
+    line-height: 1.2;
+    min-height: 14px; // Reserve space for label
+    flex-shrink: 0;
+    padding-left: 4px; // Align with input padding
+  }
+  
+  .range-inputs {
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+    width: 100%;
+    min-width: 0;
+    flex: 1; // Take remaining space to align with other inputs
+    
+    .range-input {
+      flex: 1;
+      min-width: 0;
+      width: 50%;
+      
+      // Apply same focus styling as other inputs
+      :deep(.q-field--focused) {
+        .q-field__control::before {
+          border-color: var(--brand-primary) !important;
+          border-width: 1px !important;
+        }
+        
+        .q-field__control::after {
+          display: none !important;
+        }
+      }
+      
+      // Ensure range inputs align with single inputs
+      :deep(.q-field__control) {
+        min-height: 40px; // Match standard input height
+        padding-top: 4px; // Match other fields
+      }
+      
+      // Better hover state
+      :deep(.q-field--outlined) {
+        .q-field__control:hover::before {
+          border-color: var(--brand-primary);
+        }
+      }
+    }
+    
+    .currency-symbol {
+      flex-shrink: 0;
+      font-size: 0.875rem;
+      color: var(--text-secondary);
+    }
+    
+    .date-picker-icon {
+      cursor: pointer;
+      color: var(--text-tertiary);
+      transition: color 0.2s ease;
       
       &:hover {
-        border-color: rgba(59, 130, 246, 0.4);
-        background: linear-gradient(135deg, 
-          rgba(255, 255, 255, 0.98) 0%, 
-          rgba(248, 250, 252, 1) 100%);
-        transform: translateY(-1px);
-        
-        .body--dark & {
-          border-color: rgba(96, 165, 250, 0.5);
-          background: linear-gradient(135deg, 
-            rgba(30, 41, 59, 0.98) 0%, 
-            rgba(15, 23, 42, 1) 100%);
-        }
-      }
-    }
-    
-    .boolean-icon {
-      color: rgba(59, 130, 246, 0.7);
-      font-size: 20px;
-      
-      .body--dark & {
-        color: rgba(96, 165, 250, 0.8);
-      }
-    }
-    
-    .boolean-toggle,
-    .boolean-checkbox {
-      flex: 1;
-      
-      :deep(.q-toggle__inner),
-      :deep(.q-checkbox__inner) {
-        font-size: 15px;
-      }
-      
-      :deep(.q-toggle__label),
-      :deep(.q-checkbox__label) {
-        font-size: 15px;
-        font-weight: 600;
-        color: rgba(15, 23, 42, 0.9);
-        margin-left: 12px;
-        
-        .body--dark & {
-          color: rgba(248, 250, 252, 0.95);
-        }
+        color: var(--brand-primary);
       }
     }
   }
+}
 
-  // =============================================
-  // ELEGANT COUNTRY SELECT
-  // =============================================
+// Unknown field styling
+.unknown-field-container {
+  padding: 12px;
+  border: 1px solid var(--border-primary);
+  border-radius: 6px;
+  background: var(--bg-secondary);
   
-  .country-selected {
+  .unknown-field-content {
     display: flex;
     align-items: center;
-    gap: 12px;
-    min-height: 32px;
-    padding: 4px 0;
+    gap: 8px;
     
-    .country-name {
-      font-size: 15px;
-      font-weight: 600;
-      color: rgba(15, 23, 42, 0.9);
-      
-      .body--dark & {
-        color: rgba(248, 250, 252, 0.95);
-      }
+    .unknown-field-icon {
+      color: var(--brand-warning);
+    }
+    
+    .unknown-field-message {
+      font-size: 0.875rem;
+      color: var(--text-secondary);
     }
   }
+}
 
-  // =============================================
-  // REFINED CURRENCY SYMBOL
-  // =============================================
-  
-  .currency-symbol {
-    font-size: 14px;
-    font-weight: 700;
-    color: rgba(71, 85, 105, 0.7);
-    padding: 0 6px;
-    
-    .body--dark & {
-      color: rgba(148, 163, 184, 0.8);
-    }
-  }
-
-  // =============================================
-  // FIELD SIZE VARIANTS
-  // =============================================
-  
-  &.filter-field--small {
-    :deep(.q-field__control) {
-      min-height: 40px;
-      height: 40px;
-    }
-    
-    :deep(.q-field__native) {
-      min-height: 40px;
-      padding: 12px 14px 6px 14px;
-      font-size: 14px;
-    }
-    
-    :deep(.q-field__label) {
-      font-size: 12px;
-      top: 12px;
-    }
-  }
-  
-  &.filter-field--large {
-    :deep(.q-field__control) {
-      min-height: 56px;
-      height: 56px;
-    }
-    
-    :deep(.q-field__native) {
-      min-height: 56px;
-      padding: 20px 20px 10px 20px;
-      font-size: 16px;
-    }
-    
-    :deep(.q-field__label) {
-      font-size: 14px;
-      top: 16px;
-    }
-  }
-  
-  // =============================================
-  // DENSE VARIANT
-  // =============================================
-  
-  &.filter-field--dense {
-    :deep(.q-field__control) {
-      min-height: 40px;
-      height: 40px;
-      
-      .q-field__native {
-        padding: 12px 14px 6px 14px;
-        font-size: 14px;
-        min-height: 40px;
-      }
-      
-      .q-field__label {
-        font-size: 12px;
-        top: 12px;
-      }
-      
-      &.q-field--focused .q-field__label,
-      &.q-field--float .q-field__label {
-        top: -6px;
-        font-size: 10px;
-      }
-    }
-  }
-
-  // =============================================
-  // ERROR HANDLING
-  // =============================================
-  
-  .filter-unknown {
-    min-height: 48px;
+// Country select specific styling
+.filter-input.country-select {
+  :deep(.q-field__selected) {
     display: flex;
     align-items: center;
-    padding: 12px;
+    gap: 8px;
+    min-width: 0;
     
-    .q-banner {
-      border-radius: 8px;
-      font-size: 14px;
+    span {
       flex: 1;
-    }
-  }
-
-  // =============================================
-  // ENHANCED ACCESSIBILITY
-  // =============================================
-  
-  :deep(.q-field--focused) {
-    .q-field__control {
-      outline: none; // We handle focus with box-shadow
-    }
-  }
-
-  // =============================================
-  // LOADING STATES
-  // =============================================
-  
-  :deep(.q-field--loading) {
-    .q-field__control {
-      opacity: 0.8;
-      
-      &::after {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        background: linear-gradient(90deg, 
-          transparent 0%, 
-          rgba(59, 130, 246, 0.1) 50%, 
-          transparent 100%);
-        animation: loading-shimmer 1.5s infinite;
-      }
-    }
-  }
-  
-  @keyframes loading-shimmer {
-    0% { transform: translateX(-100%); }
-    100% { transform: translateX(100%); }
-  }
-}
-
-// =============================================
-// RESPONSIVE MOBILE OPTIMIZATIONS
-// =============================================
-
-@media (max-width: 640px) {
-  .filter-field {
-    // Enhanced mobile sizing
-    :deep(.q-field__control) {
-      min-height: 52px;
-      height: 52px;
-    }
-    
-    :deep(.q-field__native) {
-      font-size: 16px; // Prevents zoom on iOS
-      min-height: 52px;
-      padding: 18px 16px 8px 16px;
-    }
-    
-    :deep(.q-field__label) {
-      font-size: 13px;
-      top: 16px;
-    }
-    
-    // Stack range inputs vertically on mobile
-    .filter-number-range,
-    .filter-date-range {
-      .range-inputs {
-        flex-direction: column;
-        gap: 12px;
-        
-        .range-separator {
-          display: none;
-        }
-      }
-    }
-    
-    // Enhanced mobile boolean styling
-    .filter-boolean {
-      .boolean-wrapper {
-        min-height: 52px;
-        padding: 0 20px;
-      }
-    }
-    
-    // Better mobile chips
-    .filter-chip {
-      height: 36px;
-      font-size: 13px;
-      
-      :deep(.q-chip__content) {
-        padding: 0 16px;
-      }
+      min-width: 0;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
   }
 }
-
-// =============================================
-// REDUCED MOTION SUPPORT
-// =============================================
-
-@media (prefers-reduced-motion: reduce) {
-  .filter-field {
-    *, *::before, *::after {
-      animation-duration: 0.01ms !important;
-      animation-iteration-count: 1 !important;
-      transition-duration: 0.01ms !important;
-    }
-  }
-}
-
-// =============================================
-// DARK MODE ENHANCEMENTS
-// =============================================
-
-.body--dark .filter-field {
-  .currency-symbol {
-    color: rgba(148, 163, 184, 0.8);
-  }
-  
-  .range-separator {
-    color: rgba(148, 163, 184, 0.7);
-  }
-  
-  .country-name {
-    color: rgba(248, 250, 252, 0.95);
-  }
-  
-  // Enhanced dark mode scrollbar
-  :deep(.q-field--auto-height) {
-    .q-field__control {
-      &::-webkit-scrollbar-track {
-        background: rgba(71, 85, 105, 0.3);
-      }
-      
-      &::-webkit-scrollbar-thumb {
-        background: rgba(96, 165, 250, 0.5);
-        
-        &:hover {
-          background: rgba(96, 165, 250, 0.7);
-        }
-      }
-    }
-  }
-}
-</style> 
+</style>

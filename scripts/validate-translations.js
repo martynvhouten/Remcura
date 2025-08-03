@@ -45,6 +45,21 @@ function loadTranslationFile(lang) {
   }
   
   try {
+    // Load filters first if they exist
+    let filters = {};
+    const filtersPath = path.join(I18N_DIR, lang, 'filters.ts');
+    if (fs.existsSync(filtersPath)) {
+      try {
+        const filtersContent = fs.readFileSync(filtersPath, 'utf8');
+        const filtersMatch = filtersContent.match(/export default\s*({[\s\S]*});?\s*$/);
+        if (filtersMatch) {
+          filters = eval(`(${filtersMatch[1]})`);
+        }
+      } catch (filtersError) {
+        console.warn(`⚠️ Kon filters niet laden voor ${lang}:`, filtersError.message);
+      }
+    }
+    
     // Dynamically import en eval de TS export 
     const content = fs.readFileSync(filePath, 'utf8');
     const exportMatch = content.match(/export default\s*({[\s\S]*});?\s*$/);
@@ -55,6 +70,7 @@ function loadTranslationFile(lang) {
     }
     
     // Eval is not ideal but for this script it works
+    // Make filters available in eval context
     const translations = eval(`(${exportMatch[1]})`);
     return translations;
   } catch (error) {

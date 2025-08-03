@@ -6,7 +6,11 @@ export default {
     showLess: 'Show fewer filters',
     resetAll: 'Reset all filters',
     clearAll: 'Clear all filters',
+    clearAllFilters: 'Clear All Filters',
     apply: 'Apply',
+    applyFilters: 'Apply Filters',
+    cancel: 'Cancel',
+    filtersButton: 'Filters',
     noFiltersActive: 'No active filters',
     filtersActive: '{count} filter(s) active',
   },
@@ -192,6 +196,78 @@ export default {
       lowStockOnly: {
         label: 'Low stock only',
         tooltip: 'Show only products with low stock',
+      },
+    },
+  },
+
+  // Order Lists filters
+  orderLists: {
+    title: 'Order Lists Filters',
+    description: 'Filter order lists by name, supplier and status',
+    fields: {
+      search: {
+        label: 'Search Order Lists',
+        placeholder: 'Search by name, description...',
+      },
+      supplier: {
+        label: 'Supplier',
+        placeholder: 'Select supplier',
+      },
+      status: {
+        label: 'Status',
+        placeholder: 'Select status',
+        options: {
+          draft: 'Draft',
+          active: 'Active',
+          submitted: 'Submitted',
+          archived: 'Archived',
+        },
+      },
+    },
+  },
+
+  // Stock Movements filters
+  movements: {
+    title: 'Stock Movements Filters',
+    description: 'Filter stock movements by type, location, date and product',
+    fields: {
+      movementType: {
+        label: 'Movement Type',
+        placeholder: 'Select type',
+      },
+      location: {
+        label: 'Location',
+        placeholder: 'Select location',
+      },
+      dateRange: {
+        label: 'Date Range',
+        placeholder: {
+          from: 'From date',
+          to: 'To date',
+        },
+      },
+      productSearch: {
+        label: 'Search Products',
+        placeholder: 'Search by product name or SKU...',
+      },
+    },
+  },
+
+  // Locations filters
+  locations: {
+    title: 'Locations Filters',
+    description: 'Filter locations by name, type and properties',
+    fields: {
+      search: {
+        label: 'Search Locations',
+        placeholder: 'Search by name, type, description...',
+      },
+      type: {
+        label: 'Location Type',
+        placeholder: 'Select type',
+      },
+      isMain: {
+        label: 'Main Location',
       },
     },
   },

@@ -246,14 +246,14 @@
   import PageTitle from 'src/components/PageTitle.vue';
   import PageLayout from 'src/components/PageLayout.vue';
   import BaseCard from 'src/components/base/BaseCard.vue';
-  import { AnalyticsService } from 'src/services/analytics';
-  import { monitoringService } from 'src/services/monitoring';
-  import type {
-    AnalyticsSummary,
-    OrderMetrics,
-    ProductMetrics,
-    UserActivityMetrics,
+  import { 
+    AnalyticsService,
+    type AnalyticsSummary,
+    type OrderMetrics,
+    type ProductMetrics,
+    type UserActivityMetrics,
   } from 'src/services/analytics';
+  import { monitoringService } from 'src/services/monitoring';
 
   const $q = useQuasar();
   const { t } = useI18n();
@@ -344,7 +344,7 @@
       field: 'last_activity',
       sortable: true,
       format: (val: string) => {
-        if (!val) return '-';
+        if (!val) { return '-'; }
         return new Date(val).toLocaleDateString();
       },
     },

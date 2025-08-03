@@ -48,8 +48,12 @@
     "translations:help": "node scripts/remcura-translation-manager.js --help",
     "i18n:validate": "node scripts/validate-translations.js",
     "i18n:find-hardcoded": "node scripts/find-hardcoded-text.js",
+    "i18n:fix-hardcoded-dry": "node scripts/find-hardcoded-text.js --dry-run",
+    "i18n:fix-hardcoded": "node scripts/find-hardcoded-text.js --fix",
     "i18n:check": "npm run translations:status && npm run i18n:find-hardcoded",
+    "i18n:sync": "node scripts/remcura-translation-manager.js --sync",
     "quality:i18n": "npm run translations:status && npm run i18n:find-hardcoded",
+    "prepare": "husky install",
     "gs1:import": "ts-node scripts/importGs1Excel.ts",
     "gs1:test": "ts-node scripts/testGs1Import.ts",
     "gs1:help": "ts-node scripts/importGs1Excel.ts --help"
@@ -92,7 +96,9 @@
     "eslint-plugin-vue": "^9.33.0",
     "eslint-webpack-plugin": "^5.0.2",
     "happy-dom": "^18.0.1",
+    "husky": "^9.0.11",
     "jsdom": "^26.1.0",
+    "lint-staged": "^15.2.2",
     "playwright": "^1.53.2",
     "postcss-import": "^16.1.1",
     "prettier": "^2.5.1",
@@ -102,6 +108,16 @@
     "vitest": "^3.2.4",
     "vitest-canvas-mock": "^0.3.3",
     "webpack-bundle-analyzer": "^4.10.2"
+  },
+  "lint-staged": {
+    "src/i18n/**/*.{ts,js}": [
+      "npm run i18n:validate",
+      "npm run i18n:find-hardcoded"
+    ],
+    "src/**/*.{vue,ts,js}": [
+      "npm run lint -- --fix",
+      "npm run format"
+    ]
   },
   "engines": {
     "node": "^18 || ^16 || ^14.19",

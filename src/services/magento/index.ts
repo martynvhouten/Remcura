@@ -86,7 +86,7 @@ export interface MagentoProduct {
 
 export interface MagentoCustomAttribute {
   attribute_code: string;
-  value: any;
+  value: string | number | boolean;
 }
 
 export interface MagentoSearchCriteria {
@@ -139,7 +139,7 @@ class MagentoApiService {
     options: RequestInit = {}
   ): Promise<any> {
     if (!this.config) {
-      throw new Error('Magento API configuration is missing. Call configure() first.');
+      throw new Error($t('index.magentoapiconfigurationis'));
     }
 
     const url = `${this.config.baseUrl}/rest/V1${endpoint}`;
@@ -164,7 +164,7 @@ class MagentoApiService {
       if (!response.ok) {
         const errorBody = await response.text();
         handleApiError(
-          new Error(`HTTP ${response.status}: ${response.statusText} - ${errorBody}`),
+          new Error($t('index.httpresponsestatusresponsestatuste')),
           {
             service: 'MagentoApiService',
             operation: 'makeRequest',
@@ -177,7 +177,7 @@ class MagentoApiService {
     } catch (error) {
       if (error.name === 'AbortError') {
         handleApiError(
-          new Error('Request timeout'),
+          new Error($t('index.requesttimeout')),
           {
             service: 'MagentoApiService',
             operation: 'makeRequest',
@@ -315,7 +315,7 @@ class MagentoApiService {
     return this.makeRequest(`/orders/${orderId}`);
   }
 
-  async createOrder(orderData: any): Promise<MagentoOrder> {
+  async createOrder(orderData: MagentoOrder): Promise<MagentoOrder> {
     return this.makeRequest('/orders', {
       method: 'POST',
       body: JSON.stringify({ entity: orderData })
@@ -471,7 +471,7 @@ export const magentoDataService = {
     const currentPracticeId = practiceId || authStore.clinicId;
     
     if (!currentPracticeId) {
-      throw new Error('No practice ID available');
+      throw new Error($t('index.nopracticeidavailable'));
     }
 
     try {
@@ -522,7 +522,7 @@ export const magentoDataService = {
     const currentPracticeId = practiceId || authStore.clinicId;
     
     if (!currentPracticeId) {
-      throw new Error('No practice ID available');
+      throw new Error($t('index.nopracticeidavailable'));
     }
 
     try {
@@ -557,7 +557,7 @@ export const magentoDataService = {
     const currentPracticeId = practiceId || authStore.clinicId;
     
     if (!currentPracticeId) {
-      throw new Error('No practice ID available');
+      throw new Error($t('index.nopracticeidavailable'));
     }
 
     try {

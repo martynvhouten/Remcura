@@ -68,7 +68,7 @@ export class ActionQueue {
     this.sortActionsByPriority();
     this.saveToStorage();
 
-    console.log('Added offline action:', action);
+    // Offline action added - debug logging removed
     return action.id;
   }
 
@@ -129,7 +129,7 @@ export class ActionQueue {
     const executor = this.executors.get(action.table);
     
     if (!executor) {
-      const error = new Error(`No executor registered for table: ${action.table}`);
+      const error = new Error($t('actionqueu.noexecutorregisteredfor'));
       ServiceErrorHandler.handle(error, {
         service: 'ActionQueue',
         operation: 'executeAction',
@@ -193,7 +193,7 @@ export class ActionQueue {
       if (action.retry_count >= this.maxRetries) {
         console.error('Max retries reached for action:', action);
         ServiceErrorHandler.handle(
-          new Error(`Action failed after ${this.maxRetries} attempts`),
+          new Error($t('actionqueu.actionfailedafterthismaxretri')),
           {
             service: 'ActionQueue',
             operation: 'incrementRetryCount',

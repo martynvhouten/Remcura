@@ -81,19 +81,19 @@ const actionColor = computed(() => {
 });
 
 const actionTitle = computed(() => {
-  if (props.data.title) return props.data.title;
+  if (props.data.title) { return props.data.title; }
   
   switch (props.data.action) {
     case 'scan':
-      return 'Snel Scannen';
+      return this.$t('dashboard.quickActionLabels.scan');
     case 'order':
-      return 'Nieuwe Bestelling';
+      return this.$t('dashboard.quickActionLabels.order');
     case 'update':
-      return 'Voorraad Bijwerken';
+      return this.$t('dashboard.quickActionLabels.update');
     case 'export':
-      return 'Export Data';
+      return this.$t('dashboard.quickActionLabels.export');
     default:
-      return 'Actie';
+      return this.$t('dashboard.quickActionLabels.default');
   }
 });
 
@@ -146,7 +146,7 @@ function handleScanAction() {
   } else {
     $q.notify({
       type: 'warning',
-      message: 'Camera niet beschikbaar',
+      message: $t('quickactio.warning'),
       caption: 'Probeer handmatig een product toe te voegen'
     });
   }

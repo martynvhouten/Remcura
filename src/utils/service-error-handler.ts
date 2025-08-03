@@ -183,10 +183,10 @@ export class ServiceErrorHandler {
    * Extract meaningful error message from various error types
    */
   private static extractErrorMessage(error: ErrorLike): string {
-    if (typeof error === 'string') return error;
-    if (error?.message) return error.message;
-    if (error?.error?.message) return error.error.message;
-    if (error?.details) return error.details;
+      if (typeof error === 'string') { return error; }
+  if (error?.message) { return error.message; }
+  if (error?.error?.message) { return error.error.message; }
+  if (error?.details) { return error.details; }
     return 'An unknown error occurred';
   }
 
@@ -194,10 +194,10 @@ export class ServiceErrorHandler {
    * Extract error code from various error types
    */
   private static extractErrorCode(error: ErrorLike): string {
-    if (error?.code) return error.code;
-    if (error?.error?.code) return error.error.code;
-    if (error?.status) return `HTTP_${error.status}`;
-    if (error?.statusCode) return `HTTP_${error.statusCode}`;
+      if (error?.code) { return error.code; }
+  if (error?.error?.code) { return error.error.code; }
+  if (error?.status) { return `HTTP_${error.status}`; }
+  if (error?.statusCode) { return `HTTP_${error.statusCode}`; }
     return 'UNKNOWN_ERROR';
   }
 
@@ -231,8 +231,8 @@ export class ServiceErrorHandler {
    * Get error code from Supabase errors
    */
   private static getSupabaseErrorCode(error: ErrorLike): string {
-    if (error?.code) return `SUPABASE_${error.code}`;
-    if (error?.error?.code) return `SUPABASE_${error.error.code}`;
+      if (error?.code) { return `SUPABASE_${error.code}`; }
+  if (error?.error?.code) { return `SUPABASE_${error.error.code}`; }
     return 'SUPABASE_ERROR';
   }
 
@@ -414,11 +414,11 @@ export class ErrorHandler {
     // Check HTTP status codes
     const status = error?.status || error?.response?.status;
     if (status) {
-      if (status === 401) return ErrorCategory.AUTHENTICATION;
-      if (status === 403) return ErrorCategory.AUTHORIZATION;
-      if (status === 404) return ErrorCategory.NOT_FOUND;
-      if (status >= 400 && status < 500) return ErrorCategory.CLIENT_ERROR;
-      if (status >= 500) return ErrorCategory.SERVER_ERROR;
+        if (status === 401) { return ErrorCategory.AUTHENTICATION; }
+  if (status === 403) { return ErrorCategory.AUTHORIZATION; }
+  if (status === 404) { return ErrorCategory.NOT_FOUND; }
+  if (status >= 400 && status < 500) { return ErrorCategory.CLIENT_ERROR; }
+  if (status >= 500) { return ErrorCategory.SERVER_ERROR; }
     }
 
     return ErrorCategory.UNEXPECTED;
@@ -433,7 +433,7 @@ export class ErrorHandler {
     // Try to get specific error message first
     if (error instanceof ServiceError) {
       const specificMessage = ERROR_MESSAGES[error.code];
-      if (specificMessage) return specificMessage;
+      if (specificMessage) { return specificMessage; }
     }
 
     // Fall back to category-based messages

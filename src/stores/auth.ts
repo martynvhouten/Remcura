@@ -28,7 +28,7 @@ export const useAuthStore = defineStore('auth', () => {
   });
 
   const selectedPractice = computed(() => {
-    if (!userProfile.value?.clinic_id) return null;
+    if (!userProfile.value?.clinic_id) { return null; }
     return {
       id: userProfile.value.clinic_id,
       name: userProfile.value.full_name || 'Practice',
@@ -59,7 +59,7 @@ export const useAuthStore = defineStore('auth', () => {
 
   // Actions
   const initialize = async () => {
-    if (initialized.value) return;
+    if (initialized.value) { return; }
 
     loading.value = true;
     try {
@@ -201,7 +201,7 @@ export const useAuthStore = defineStore('auth', () => {
       }
 
       return { success: true };
-    } catch (error: any) {
+    } catch (error: unknown) {
       const result = await ErrorHandler.handleError(error, {
         service: 'auth',
         operation: 'login',
@@ -235,7 +235,7 @@ export const useAuthStore = defineStore('auth', () => {
       clearAuthData();
       monitoringService.trackEvent('logout_success');
       return { success: true };
-    } catch (error: any) {
+    } catch (error: unknown) {
       const result = await ErrorHandler.handleError(error, {
         service: 'auth',
         operation: 'logout',

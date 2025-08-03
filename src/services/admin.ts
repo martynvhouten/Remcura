@@ -46,9 +46,9 @@ export interface AuditLogEntry {
   action: string;
   resource_type: string;
   resource_id: string | null;
-  old_values: any;
-  new_values: any;
-  metadata: any;
+  old_values: Record<string, any>;
+  new_values: Record<string, any>;
+  metadata: Record<string, any>;
   timestamp: Date;
   ip_address?: string;
   user_agent?: string;
@@ -465,12 +465,12 @@ export class AdminService {
     const practiceId = authStore.selectedPractice?.id;
 
     if (!practiceId) {
-      throw new Error('No practice selected');
+      throw new Error($t('admin.nopracticeselected'));
     }
 
     // Check admin permissions
     if (!(await this.hasPermission('read', 'practice'))) {
-      throw new Error('Insufficient permissions to view practice members');
+      throw new Error($t('admin.insufficientpermissionstoview'));
     }
 
     const { data: members, error } = await supabase
@@ -500,15 +500,15 @@ export class AdminService {
     action: string,
     resourceType: string,
     resourceId: string | null,
-    oldValues: any = null,
-    newValues: any = null,
-    metadata: any = {}
+    oldValues: Record<string, any> | null = null,
+    newValues: Record<string, any> | null = null,
+    metadata: Record<string, any> = {}
   ): Promise<void> {
     const authStore = useAuthStore();
     const practiceId = authStore.selectedPractice?.id;
     const userId = authStore.user?.id;
 
-    if (!practiceId) return;
+    if (!practiceId) { return; }
 
     try {
       await analyticsService.trackEvent('admin_activity', {
@@ -544,11 +544,11 @@ export class AdminService {
 
     // Check admin permissions
     if (!(await this.hasPermission('admin', 'practice'))) {
-      throw new Error('Insufficient permissions to view audit log');
+      throw new Error($t('admin.insufficientpermissionstoview'));
     }
 
     // TODO: Implement proper audit log retrieval
-    const events: any[] = await analyticsService.getUsageStats();
+    const events: UsageAnalytics[] = await analyticsService.getUsageStats();
 
     const auditEntries: AuditLogEntry[] = events
       .filter(event => {
@@ -820,7 +820,7 @@ export class AdminService {
     // Check admin permissions
     if (!(await this.hasPermission('admin', 'practice'))) {
       throw new Error(
-        'Insufficient permissions to bulk update location access'
+        $t('admin.insufficientpermissionstobulk')
       );
     }
 

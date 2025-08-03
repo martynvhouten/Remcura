@@ -300,17 +300,17 @@
   import { ref, computed, watch, nextTick, onMounted } from 'vue';
   import { useQuasar } from 'quasar';
   import { useI18n } from 'vue-i18n';
-  import { useOrderListsStore } from 'src/stores/orderLists';
+  import { 
+    useOrderListsStore, 
+    type OrderListWithItems,
+    type CreateOrderListRequest,
+    type UpdateOrderListRequest,
+    type AddOrderListItemRequest,
+  } from 'src/stores/orderLists';
   import { useSuppliersStore } from 'src/stores/suppliers';
   import { useProductsStore } from 'src/stores/products';
   import { useAuthStore } from 'src/stores/auth';
   import BaseCard from 'src/components/base/BaseCard.vue';
-  import type {
-    OrderListWithItems,
-    CreateOrderListRequest,
-    UpdateOrderListRequest,
-    AddOrderListItemRequest,
-  } from 'src/stores/orderLists';
   import type { OrderListItem, ProductWithStock } from 'src/types/inventory';
 
   interface Props {
@@ -510,7 +510,7 @@
 
       const practiceId = authStore.clinicId;
       if (!practiceId) {
-        throw new Error('No practice selected');
+        throw new Error($t('orderlistd.nopracticeselected'));
       }
 
       if (isEditing.value && props.orderList) {

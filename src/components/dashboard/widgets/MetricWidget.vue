@@ -126,8 +126,8 @@ const metricIcon = computed(() => {
 const metricColor = computed(() => {
   if (props.data.practiceHealth !== undefined) {
     const health = props.data.practiceHealth;
-    if (health >= 90) return 'positive';
-    if (health >= 70) return 'warning';
+    if (health >= 90) { return 'positive'; }
+    if (health >= 70) { return 'warning'; }
     return 'negative';
   }
   return props.data.color || 'primary';
@@ -136,7 +136,7 @@ const metricColor = computed(() => {
 const trend = computed(() => props.data.trend);
 
 const trendIcon = computed(() => {
-  if (!trend.value) return '';
+  if (!trend.value) { return ''; }
   switch (trend.value.direction) {
     case 'up': return 'trending_up';
     case 'down': return 'trending_down';
@@ -145,7 +145,7 @@ const trendIcon = computed(() => {
 });
 
 const metrics = computed(() => {
-  if (props.data.metrics) return props.data.metrics;
+  if (props.data.metrics) { return props.data.metrics; }
   
   // Create metrics for business overview
   if (props.data.teamSize !== undefined) {
@@ -153,14 +153,14 @@ const metrics = computed(() => {
       {
         key: 'team',
         value: props.data.teamSize,
-        label: 'Team Leden',
+        label: t('dashboard.widgets.teamMembers'),
         icon: 'people',
         color: 'primary'
       },
       {
         key: 'health',
         value: `${props.data.practiceHealth || 0}%`,
-        label: 'Systeem Status',
+        label: t('dashboard.widgets.systemStatus'),
         icon: 'health_and_safety',
         color: 'positive'
       }
@@ -178,14 +178,14 @@ const progressLabel = computed(() => 'Systeem Gezondheid');
 const progressValue = computed(() => props.data.practiceHealth || 0);
 const progressColor = computed(() => {
   const value = progressValue.value;
-  if (value >= 90) return 'positive';
-  if (value >= 70) return 'warning';
+  if (value >= 90) { return 'positive'; }
+  if (value >= 70) { return 'warning'; }
   return 'negative';
 });
 
 function formatValue(value: number | string | undefined): string {
-  if (value === undefined) return '0';
-  if (typeof value === 'string') return value;
+  if (value === undefined) { return '0'; }
+  if (typeof value === 'string') { return value; }
   
   // Format large numbers with K/M suffixes
   if (value >= 1000000) {

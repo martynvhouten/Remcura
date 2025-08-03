@@ -198,7 +198,7 @@ const detectedLoginType = ref<'invite' | 'personal' | 'invalid' | null>(null);
 
 // Computed
 const codePreview = computed(() => {
-  if (magicCode.value.length < 5) return null;
+      if (magicCode.value.length < 5) { return null; }
   
   // Demo examples
   if (magicCode.value.toLowerCase().includes('demo')) {

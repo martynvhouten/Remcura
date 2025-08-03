@@ -24,7 +24,7 @@
             text-color="white"
             class="q-mr-sm"
           >
-            Live
+            {{ $t("common.live") }}
           </q-chip>
           <q-btn icon="close" flat round size="md" v-close-popup />
         </div>
@@ -140,7 +140,7 @@
                   {{ selectedProduct.name }}
                 </div>
                 <div class="text-subtitle1 text-grey-6 q-mb-sm">
-                  SKU: {{ selectedProduct.sku }} • {{ selectedProduct.brand || 'Geen merk' }}
+                  SKU: {{ selectedProduct.sku }} • {{ selectedProduct.brand || $t('quickAdjustment.noProduct') }}
                 </div>
                 <div class="text-body2 text-grey-7 q-mb-md" v-if="selectedProduct.description">
                   {{ selectedProduct.description }}
@@ -842,22 +842,22 @@
       
       const reasonCode = selectedReason.value;
       if (!reasonCode) {
-        throw new Error('No reason selected');
+        throw new Error($t('quickadjus.noreasonselected'));
       }
 
       const practiceId = authStore.userProfile?.clinic_id;
       if (!practiceId) {
-        throw new Error('User not authenticated or no practice selected');
+        throw new Error($t('quickadjus.usernotauthenticatedor'));
       }
 
       const locationId = selectedLocation.value?.id;
       if (!locationId) {
-        throw new Error('No location selected');
+        throw new Error($t('quickadjus.nolocationselected'));
       }
 
       const productId = selectedProduct.value?.id || selectedProduct.value?.product_id;
       if (!productId) {
-        throw new Error('No product selected');
+        throw new Error($t('quickadjus.noproductselected'));
       }
 
       const request: StockUpdateRequest = {
@@ -963,7 +963,7 @@
              // Initialize realtime service
        if (practiceId) {
          inventoryChannel.value = realtimeService.subscribeToInventory(practiceId, (payload: any) => {
-           console.log('📡 Realtime inventory update received:', payload);
+           // Realtime inventory update received
            
            if (payload.new && payload.eventType === 'UPDATE') {
              // Find the product in availableProducts and update its total_stock

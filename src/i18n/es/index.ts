@@ -1,4 +1,4 @@
-import filters from '../es-ES/filters';
+import filters from './filters';
 
 export default {
   // Filters
@@ -1627,49 +1627,10 @@ export default {
   // === MISSING TRANSLATIONS ADDED ===
   
   // Dashboard translations
-  dashboard: {
-    assistantDashboard: 'Panel de asistente',
-    managerDashboard: 'Panel de gerente', 
-    ownerDashboard: 'Panel de propietario',
-    stockAlerts: 'Alertas de inventario',
-    orderSuggestions: 'Sugerencias de pedidos',
-    recentOrders: 'Pedidos recientes',
-    quickScan: 'Escaneo rápido',
-    analyticsOverview: 'Resumen de análisis',
-    businessOverview: 'Resumen del negocio',
-  },
 
   // Inventory scanning and adjustments
-  inventory: {
-    scanBarcode: 'Escanear código de barras',
-    barcodeFound: 'Código de barras encontrado',
-    barcodeNotFound: 'Código de barras no encontrado',
-    barcodeScanned: 'Código de barras escaneado',
-    changeProduct: 'Cambiar producto',
-    adjustmentType: 'Tipo de ajuste',
-    increase: 'Aumentar',
-    decrease: 'Disminuir',
-    setTo: 'Establecer a',
-    quantityToAdd: 'Cantidad a agregar',
-    quantityToRemove: 'Cantidad a remover',
-    finalQuantity: 'Cantidad final',
-    refreshFailed: 'Error al actualizar',
-    reason: {
-      normal_usage: 'Uso normal',
-      expired: 'Vencido',
-      damaged: 'Dañado',
-      lost: 'Perdido',
-      found: 'Encontrado',
-      transfer_in: 'Transferencia entrante',
-      transfer_out: 'Transferencia saliente',
-      adjustment: 'Ajuste',
-    },
-  },
 
   // Products page
-  productsPage: {
-    noProductsFound: 'No se encontraron productos',
-  },
 
   // === CRITICAL MISSING TRANSLATIONS ===
   'retry': 'Intentar de nuevo',
@@ -3169,36 +3130,7 @@ export default {
   'inventory.barcodeFound.barcodeNotFound.orders.notifications.magicInvite.shareMessage.whatsappMessage.scanProduct': 'inventario',
   'inventory.barcodeFound.barcodeNotFound.orders.notifications.magicInvite.shareMessage.whatsappMessage.costAnalysis': 'inventario',
   'inventory.barcodeFound.barcodeNotFound.orders.notifications.magicInvite.shareMessage.whatsappMessage.supplierPerformance': 'inventario',
-  // === CRITICAL MISSING TRANSLATIONS ===
-  retry: 'Intentar de nuevo',
-  assistantDashboard: 'Panel de Asistente',
-  managerDashboard: 'Panel de Gerente',
-  ownerDashboard: 'Panel de Propietario',
-  orderSuggestions: 'Sugerencias de Pedidos',
-  recentOrders: 'Pedidos Recientes',
-  quickScan: 'Escaneo Rápido',
-  analyticsOverview: 'Resumen de Análisis',
-  businessOverview: 'Resumen del Negocio',
-  teamActivity: 'Actividad del Equipo',
-  financialSummary: 'Resumen Financiero',
-  userManagement: 'Gestión de Usuarios',
-  systemHealth: 'Salud del Sistema',
-  scanProduct: 'Escanear Producto',
-  costAnalysis: 'Análisis de Costos',
-  supplierPerformance: 'Rendimiento de Proveedores',
-  createOrder: 'Crear Pedido',
-  noAlerts: 'Sin Alertas',
-  
-  updateStock: 'Actualizar Inventario',
-  viewLowStock: 'Ver Inventario Bajo',
-  manageSuppliers: 'Gestionar Proveedores',
-  approveOrders: 'Aprobar Pedidos',
-  exportReports: 'Exportar Reportes',
-  manageUsers: 'Gestionar Usuarios',
-  systemSettings: 'Configuración del Sistema',
-  financialReports: 'Reportes Financieros',
-  backupData: 'Respaldar Datos',
-  allStockLevelsOk: 'Todos los niveles de inventario están bien',
+
   
   // Inventory specific
   'inventory.tryDifferentSearchTerm': 'Intenta un término de búsqueda diferente',
@@ -3221,7 +3153,6 @@ export default {
   'inventory.errorProductNotFound': 'Producto no encontrado',
   'inventory.errorUpdateInProgress': 'Actualización en progreso',
   'inventory.errorInvalidData': 'Datos inválidos proporcionados',
-  'inventory.finalQuantity': 'Cantidad final',
   'inventory.refreshFailed': 'Fallo al actualizar',
   'inventory.reason.normal_usage': 'Uso normal',
   'inventory.reason.expired': 'Vencido',
@@ -3233,5 +3164,374 @@ export default {
   
   // Products page
   'productsPage.noProductsFound': 'No se encontraron productos',
+
+    'batch.batchManagement': 'Gestión de lotes',
+
+    'orderLists.title': 'Listas de pedidos',
+
+    'dashboard.actions.refresh': 'Actualizar dashboard',
+
+    'dashboard.actions.customize': 'Personalizar dashboard',
+
+    'dashboard.demoRoleSwitch.label': 'Cambiar rol de demo',
+
+    'dashboard.roles.assistant': '🩺 Asistente - inventario y pedidos',
+
+    'dashboard.roles.manager': '📊 Gerente - análisis e informes',
+
+    'dashboard.roles.owner': '👑 Propietario - control total',
+
+    'dashboard.quickActionLabels.scan': 'Escaneo rápido',
+
+    'dashboard.quickActionLabels.order': 'Nuevo pedido',
+
+    'dashboard.quickActionLabels.update': 'Actualizar inventario',
+
+    'dashboard.quickActionLabels.export': 'Exportar datos',
+
+    'dashboard.quickActionLabels.default': 'Acción',
+
+    'dashboard.alerts.noWarnings': 'Sin advertencias',
+
+    'dashboard.alerts.allStockLevelsOk': 'Todos los niveles de stock están bien',
+
+    'dashboard.notifications.roleSwitch': 'El dashboard se ha adaptado a tu nuevo rol',
+  'quickAdjustment.noProduct': 'Sin producto',
+
+    'common.live': 'En vivo',
+
+    'app.name': 'Remcura',
+
+    'barcodeScanner.scanLabel': 'Escanear producto',
+
+    'nav.dashboard': 'Panel',
+
+    'nav.products': 'Productos',
+
+    'nav.orders': 'Pedidos',
+
+    'barcodeScanner.enterBarcode': 'Ingrese código de barras',
+
+    'exports.formats.excel': 'Excel (.xlsx)',
+
+    'exports.formats.csv': 'CSV (.csv)',
+
+    'exports.formats.pdf': 'PDF (.pdf)',
+
+    'settings.languages.dutch': 'Neerlandés',
+
+    'settings.languages.english': 'Inglés',
+
+    'settings.languages.spanish': 'Español',
+
+    'dashboard.widgets.teamMembers': 'Miembros del equipo',
+
+    'dashboard.widgets.systemStatus': 'Estado del sistema',
+
+      'currencies.eur': 'EUR (€)',
+  'currencies.usd': 'USD ($)',
+  'currencies.gbp': 'GBP (£)',
+
+    'productsPage.title': 'Productos',
+
+    'productsPage.subtitle': 'Gestiona tu catálogo de productos e inventario',
+
+    'common.refresh': 'Actualizar',
+
+    'products.createProduct': 'Crear producto',
+
+    'productsPage.viewCart': 'Ver carrito',
+
+    'productsPage.noGs1Data': 'Datos GS1 no disponibles',
+
+    'productsPage.viewDetails': 'Ver detalles',
+
+    'products.editProduct': 'Editar producto',
+
+    'products.deleteProduct': 'Eliminar producto',
+
+    'productsPage.addToCart': 'Agregar al carrito',
+
+    'productsPage.addToOrderList': 'Agregar a lista de pedidos',
+
+    'productsPage.productDetails': 'Detalles del producto',
+
+    'productsPage.description': 'Descripción',
+
+    'productsPage.unit': 'Unidad',
+
+    'productsPage.category': 'Categoría',
+
+    'productsPage.gs1Information': 'Información GS1',
+
+    'productsPage.lifecycle': 'Ciclo de vida',
+
+    'productsPage.suppliers': 'Proveedores',
+
+    'productsPage.stockLevels': 'Niveles de inventario',
+
+    'products.deleteConfirm': 'Eliminar producto',
+
+    'common.cancel': 'Cancelar',
+
+    'common.delete': 'Eliminar',
+
+    'orders.title': 'Title',
+
+    'orders.bulkExport': 'BulkExport',
+
+    'orders.bulkEmail': 'BulkEmail',
+
+    'orders.viewOrder': 'ViewOrder',
+
+    'orders.editOrder': 'EditOrder',
+
+    'orders.downloadOrder': 'DownloadOrder',
+
+    'orders.export.title': 'Title',
+
+    'orders.export.format': 'Format',
+
+    'orders.export.dateFrom': 'DateFrom',
+
+    'orders.export.dateTo': 'DateTo',
+
+    'orders.export.export': 'Export',
+
+    'orders.analytics.title': 'Title',
+
+    'orders.analytics.comingSoon': 'ComingSoon',
+
+    'common.close': 'Close',
+
+    'orderLists.subtitle': 'Gestiona tus listas de pedidos y envía a proveedores',
+
+    'orderLists.create': 'Crear lista de pedidos',
+
+    'orderLists.supplier': 'Proveedor',
+
+    'orderLists.totalItems': 'Total artículos',
+
+    'orderLists.totalAmount': 'Monto total',
+
+    'orderLists.updatedAt': 'Actualizado en',
+
+    'orderLists.edit': 'Editar',
+
+    'orderLists.submit': 'Enviar',
+
+    'orderLists.sendToSupplier': 'Enviar al proveedor',
+
+    'orderLists.addToCart': 'Agregar al carrito',
+
+    'orderLists.duplicate': 'Duplicar',
+
+    'orderLists.autoFill': 'Llenar automáticamente',
+
+    'orderLists.delete': 'Eliminar',
+
+    'orderLists.noLists': 'No se encontraron listas de pedidos',
+
+    'orderLists.createNew': 'Crea tu primera lista de pedidos',
+
+    'orderLists.deleteDialog': 'Eliminar lista de pedidos',
+
+    'orderLists.deleteConfirm': '¿Estás seguro de que quieres eliminar esta lista de pedidos?',
+
+    'inventory.stockLevels': 'Niveles de inventario',
+
+    'inventory.overview': 'Resumen',
+
+    'inventory.totalProducts': 'Total productos',
+
+    'inventory.products': 'Productos',
+
+    'inventory.stockLocations': 'Ubicaciones de inventario',
+
+    'inventory.activeLocations': 'Ubicaciones activas',
+
+    'inventory.locations': 'Ubicaciones',
+
+    'inventory.dataLoaded': 'Datos cargados',
+
+    'inventory.upToDate': 'Actualizado',
+
+    'inventory.status': 'Estado',
+
+    'inventory.lastUpdated': 'Última actualización',
+
+    'inventory.refreshData': 'Actualizar datos',
+
+    'inventory.lastSync': 'Última sincronización',
+
+    'inventory.noStockLevels': 'No se encontraron niveles de inventario',
+
+    'inventory.adjustStock': 'Ajustar inventario',
+
+    'inventory.viewHistory': 'Ver historial',
+
+    'inventory.countStock': 'Contar inventario',
+
+    'inventory.currentStock': 'Inventario actual',
+
+    'inventory.adjustmentType': 'Tipo de ajuste',
+
+    'inventory.quantity': 'Cantidad',
+
+    'validation.required': 'Este campo es obligatorio',
+
+    'inventory.reason': 'Razón',
+
+    'counting.title': 'Conteo de inventario',
+
+    'counting.overview': 'Resumen de sesiones de conteo',
+
+    'counting.sessionStatus': 'Estado de sesión',
+
+    'counting.startSession': 'Iniciar nueva sesión',
+
+    'counting.activeSession': 'Sesión activa',
+
+    'counting.progress': 'Progreso',
+
+    'counting.sessionType': 'Tipo de sesión',
+
+    'common.startedAt': 'Iniciado en',
+
+    'counting.discrepancies': 'Discrepancias',
+
+    'counting.continueSession': 'Continuar sesión',
+
+    'counting.completeSession': 'Completar sesión',
+
+    'counting.sessionsOverview': 'Resumen de sesiones',
+
+    'counting.loadingSessions': 'Cargando sesiones...',
+
+    'counting.noSessionsFound': 'No se encontraron sesiones',
+
+    'common.view': 'Ver',
+
+    'counting.approveSession': 'Aprobar sesión',
+
+    'counting.loadingSession': 'Cargando sesión...',
+
+    'counting.sessionNotFound': 'Sesión no encontrada',
+
+    'counting.sessionNotFoundDescription': 'La sesión solicitada no existe o ha sido eliminada',
+
+    'common.goBack': 'Volver',
+
+    'counting.sessionSummary': 'Resumen de sesión',
+
+    'counting.totalProducts': 'Total productos',
+
+    'counting.countedProducts': 'Productos contados',
+
+    'common.completedAt': 'Completado en',
+
+    'counting.countingResults': 'Resultados del conteo',
+
+    'counting.viewResults': 'Ver los resultados de este conteo',
+
+    'counting.noResultsFound': 'No se encontraron resultados',
+
+    'locations.title': 'Ubicaciones',
+
+    'locations.manage': 'Gestionar ubicaciones',
+
+    'locations.allLocations': 'Todas las ubicaciones',
+
+    'locations.mainLocations': 'Ubicaciones principales',
+
+    'locations.comingSoonDescription': 'Gestión de ubicaciones próximamente',
+
+    'locations.add': 'Agregar ubicación',
+
+    'locations.noLocations': 'No se encontraron ubicaciones',
+
+    'inventory.stockMovements': 'Movimientos de inventario',
+
+    'inventory.movementHistory': 'Historial de movimientos',
+
+    'common.export': 'Exportar',
+
+    'inventory.loadingMovements': 'Cargando movimientos...',
+
+    'inventory.noMovementsFound': 'No se encontraron movimientos',
+
+    'common.unknownProduct': 'Producto desconocido',
+
+    'common.unknownLocation': 'Ubicación desconocida',
+
+    'inventory.movementDetails': 'Detalles del movimiento',
+
+    'inventory.movementType': 'Tipo de movimiento',
+
+    'inventory.product': 'Producto',
+
+    'common.noSku': 'Sin SKU',
+
+    'inventory.location': 'Ubicación',
+
+    'inventory.quantityChange': 'Cambio de cantidad',
+
+    'inventory.quantityBefore': 'Cantidad antes',
+
+    'inventory.quantityAfter': 'Cantidad después',
+
+    'inventory.reasonCode': 'Código de razón',
+
+    'common.notes': 'Notas',
+
+    'common.date': 'Fecha',
+
+    'inventory.minimumStock': 'Stock mínimo',
+
+    'productsPage.table.stockType': 'Tipo de stock',
+
+    'orderLists.searchPlaceholder': 'Buscar listas de pedidos...',
+
+    'orderLists.dateRange': 'Rango de fechas',
+
+    'orderLists.amountRange': 'Rango de monto',
+
+    'orderLists.onlyWithItems': 'Solo con artículos',
+
+    'filters.search.placeholder': 'Buscar...',
+
+    'filters.location.label': 'Ubicación',
+
+    'filters.category.label': 'Categoría',
+
+    'filters.status.label': 'Estado',
+
+    'orders.status.draft': 'Borrador',
+
+    'orders.status.pending': 'Pendiente',
+
+    'orders.status.confirmed': 'Confirmado',
+
+    'orders.status.shipped': 'Enviado',
+
+    'orders.status.delivered': 'Entregado',
+
+    'orders.status.cancelled': 'Cancelado',
+
+    'orders.status.returned': 'Devuelto',
+
+    'orders.table.orderNumber': 'Número de pedido',
+
+    'orders.table.supplier': 'Proveedor',
+
+    'orders.table.orderDate': 'Fecha del pedido',
+
+    'orders.table.status': 'Estado',
+
+    'orders.table.totalAmount': 'Monto total',
+
+    'orders.table.expectedDelivery': 'Entrega esperada',
+
+    'orders.table.actions': 'Acciones',
 
 };

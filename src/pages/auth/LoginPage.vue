@@ -243,48 +243,58 @@
       position: relative;
     }
 
-    // Enhanced input styling
+    // Consistent sizing for login input fields - preserve floating label functionality
     .input-modern {
-      :deep(.q-field__control) {
-        border-radius: var(--radius-lg);
-        min-height: 64px;
-        background: var(--neutral-50);
-        transition: all var(--transition-base);
+      // Force consistent dimensions with high specificity but preserve label behavior
+      &.q-field {
+        :deep(.q-field__control) {
+          min-height: 64px;
+          // Remove explicit height to let floating labels work properly
+          width: 100%;
+          box-sizing: border-box;
+          // Let global CSS handle colors/borders, we just ensure size consistency
+        }
+        
+        // Ensure label positioning works correctly
+        :deep(.q-field__label) {
+          // Let Quasar handle label positioning - don't interfere
+        }
+        
+        // Ensure native input has correct padding for floating label
+        :deep(.q-field__native) {
+          padding-top: 16px; // Space for floating label
+          padding-bottom: 8px;
+        }
       }
 
-      :deep(.q-field--outlined .q-field__control:before) {
-        border-color: var(--neutral-300);
-        border-width: 1px;
+      // Ensure focus state maintains exact same dimensions with even higher specificity
+      &.q-field.q-field--focused {
+        :deep(.q-field__control) {
+          min-height: 64px; // Size lock but no explicit height
+          width: 100%;
+          box-sizing: border-box;
+        }
+        
+        // Ensure label stays in floating position
+        :deep(.q-field__label) {
+          // Let Quasar handle floating behavior
+        }
       }
 
-      :deep(.q-field--focused .q-field__control:before) {
-        border-color: var(--brand-primary);
-        border-width: 2px;
-        box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+      // Remove any browser default focus styling that might interfere
+      :deep(.q-field__native:focus) {
+        outline: none;
       }
 
-      :deep(.q-field--error .q-field__control:before) {
-        border-color: var(--brand-danger);
-        box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.1);
+      :deep(.q-field__control:focus-within) {
+        outline: none;
       }
 
-      :deep(.q-field__label) {
-        font-weight: var(--font-weight-medium);
-        color: var(--neutral-600);
-      }
-
-      :deep(.q-field__input) {
-        font-size: var(--text-base);
-        padding: var(--space-4) var(--space-4);
-      }
-
-      :deep(.q-field__prepend) {
-        color: var(--neutral-500);
-        padding-left: var(--space-4);
-      }
-
+      // Let global CSS handle all visual styling
+      :deep(.q-field__label),
+      :deep(.q-field__prepend),
       :deep(.q-field__append) {
-        padding-right: var(--space-2);
+        // Global styling handles these
       }
     }
 
@@ -421,7 +431,7 @@
         }
 
         :deep(.q-field__label) {
-          color: var(--neutral-400);
+          // Color handled by global dark mode styles to prevent conflicts
         }
 
         :deep(.q-field__prepend) {
@@ -481,12 +491,9 @@
     }
   }
 
-  // Focus states for accessibility
+  // Remove duplicate focus styling - handled by global styles
   .input-modern:focus-within {
-    :deep(.q-field__control) {
-      outline: 2px solid var(--brand-primary);
-      outline-offset: 2px;
-    }
+    // Styling handled by global .q-field styles
   }
 
   // Screen reader only content

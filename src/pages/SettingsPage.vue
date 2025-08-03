@@ -479,9 +479,9 @@
   });
 
   const languageOptions = [
-    { label: 'Nederlands', value: 'nl' },
-    { label: 'English', value: 'en' },
-    { label: 'Español', value: 'es' },
+    { label: t('settings.languages.dutch'), value: 'nl' },
+    { label: t('settings.languages.english'), value: 'en' },
+    { label: t('settings.languages.spanish'), value: 'es' },
   ];
 
   // Methods
@@ -507,7 +507,7 @@
       themeName;
     $q.notify({
       type: 'positive',
-      message: `Kleurenschema "${themeLabel}" toegepast`,
+              message: `${$t('settingspa.positive')} ${themeLabel} toegepast`,
       position: 'top-right',
       timeout: 2000,
     });

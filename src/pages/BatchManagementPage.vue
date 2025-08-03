@@ -235,7 +235,7 @@
 </template>
 
 <script setup lang="ts">
-  import { ref, computed, onMounted } from 'vue';
+  import { ref, computed, onMounted, getCurrentInstance } from 'vue';
   import { useI18n } from 'vue-i18n';
   import { useQuasar } from 'quasar';
   import { useBatchStore } from 'src/stores/batch';
@@ -259,12 +259,6 @@
   const batchStore = useBatchStore();
   const inventoryStore = useInventoryStore();
   const authStore = useAuthStore();
-
-  // Debug i18n
-  // i18n debugging removed - translations working correctly
-
-  // Also test global $t in mounted
-  import { getCurrentInstance } from 'vue';
 
   // State
   const activeTab = ref('overview');
@@ -319,7 +313,7 @@
     try {
       refreshing.value = true;
       const practiceId = authStore.clinicId;
-      if (!practiceId) return;
+      if (!practiceId) { return; }
 
       await Promise.all([
         batchStore.fetchBatches(practiceId),
@@ -377,7 +371,7 @@
   };
 
   const convertToCSV = (data: any[]) => {
-    if (!data.length) return '';
+    if (!data.length) { return ''; }
 
     const headers = Object.keys(data[0]);
     const csvHeaders = headers.join(',');

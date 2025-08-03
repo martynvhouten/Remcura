@@ -242,7 +242,7 @@ export const useSuppliersStore = defineStore('suppliers', () => {
       sp => sp.product_id === productId && sp.is_available
     );
 
-    if (productSuppliers.length === 0) return null;
+    if (productSuppliers.length === 0) { return null; }
 
     // Sort by price (lowest first), then by lead time
     return productSuppliers.sort((a, b) => {
@@ -257,7 +257,7 @@ export const useSuppliersStore = defineStore('suppliers', () => {
     try {
       const supplier = suppliers.value.find(s => s.id === supplierId);
       if (!supplier || !supplier.sync_enabled) {
-        throw new Error('Supplier sync not enabled');
+        throw new Error($t('suppliers.suppliersyncnotenabled'));
       }
 
       // This would implement actual API sync based on supplier.api_type

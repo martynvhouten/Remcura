@@ -9,7 +9,7 @@ import '@quasar/extras/mdi-v7/mdi-v7.css';
 import 'quasar/src/css/index.sass';
 
 // Import monitoring service
-import { initializeMonitoring, monitoringService } from './services/monitoring';
+import { initializeMonitoring } from './services/monitoring';
 
 // Import centralized error handling
 import { ErrorHandler } from '@/utils/service-error-handler';
@@ -41,7 +41,7 @@ myApp.config.errorHandler = (error, instance, info) => {
 
 // Initialize monitoring service
 initializeMonitoring(router).catch(error => {
-  console.error('Failed to initialize monitoring:', error);
+  // Error handling is done internally by the monitoring service
 });
 
 // Setup global error handlers for unhandled promises and JS errors

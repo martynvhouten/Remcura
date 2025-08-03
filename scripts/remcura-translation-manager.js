@@ -23,6 +23,8 @@ const path = require('path');
  *   --validate    Validate current translation status
  *   --complete    Complete all missing translations
  *   --critical    Add only critical missing translations
+ *   --sync        Sync all languages with Dutch as master
+ *   --cleanup     Remove unused keys from all languages
  *   --help        Show this help
  */
 
@@ -440,6 +442,110 @@ function completeTranslations(criticalOnly = false) {
   console.log('🔍 Run --validate to check final status');
 }
 
+// Advanced sync function: Use Dutch as master and sync all languages
+function syncAllLanguages() {
+  console.log('🔄 Synchronizing all languages with Dutch as master...\n');
+  
+  const nlFile = path.join(__dirname, '..', 'src', 'i18n', 'nl', 'index.ts');
+  const enFile = path.join(__dirname, '..', 'src', 'i18n', 'en', 'index.ts');
+  const esFile = path.join(__dirname, '..', 'src', 'i18n', 'es', 'index.ts');
+  
+  // Parse all files
+  const nl = parseTranslationFile(nlFile);
+  const en = parseTranslationFile(enFile);
+  const es = parseTranslationFile(esFile);
+  
+  console.log('📊 Current status:');
+  console.log(`   NL (master): ${nl.keys.length} keys`);
+  console.log(`   EN: ${en.keys.length} keys`);
+  console.log(`   ES: ${es.keys.length} keys\n`);
+  
+  // Nederlands is de master - sync anderen hierop
+  let totalSynced = 0;
+  
+  ['en', 'es'].forEach(lang => {
+    const targetFile = lang === 'en' ? enFile : esFile;
+    const target = lang === 'en' ? en : es;
+    
+    console.log(`🔧 Syncing ${lang.toUpperCase()} with Dutch master...`);
+    
+    // Find missing keys
+    const missingKeys = nl.keys.filter(key => !target.keys.includes(key));
+    const extraKeys = target.keys.filter(key => !nl.keys.includes(key));
+    
+    console.log(`   ➕ Missing keys: ${missingKeys.length}`);
+    console.log(`   ➖ Extra keys: ${extraKeys.length}`);
+    
+    if (missingKeys.length > 0) {
+      // Extract original values from Dutch
+      const referenceTranslations = {};
+      missingKeys.forEach(key => {
+        const regex = new RegExp(`^\\s*'?${key.replace(/\./g, '\\.')}'?\\s*:\\s*['"\`]([^'"\`]*?)['"\`]`, 'm');
+        const match = nl.content.match(regex);
+        if (match) {
+          referenceTranslations[key] = match[1];
+        } else {
+          referenceTranslations[key] = key.split('.').pop();
+        }
+      });
+      
+      // Add translations
+      let content = target.content;
+      const lastBraceIndex = content.lastIndexOf('};');
+      
+      if (lastBraceIndex !== -1) {
+        let newTranslations = `\n  // === AUTO-SYNCED FROM DUTCH ===\n`;
+        
+        missingKeys.forEach(key => {
+          const originalValue = referenceTranslations[key];
+          const translatedValue = intelligentTranslate(key, originalValue, lang);
+          newTranslations += `  '${key}': '${translatedValue}',\n`;
+        });
+        
+        newTranslations += '\n';
+        
+        const beforeBrace = content.substring(0, lastBraceIndex);
+        const afterBrace = content.substring(lastBraceIndex);
+        content = beforeBrace + newTranslations + afterBrace;
+        
+        fs.writeFileSync(targetFile, content, 'utf8');
+        totalSynced += missingKeys.length;
+        
+        console.log(`   ✅ Added ${missingKeys.length} missing keys`);
+      }
+    }
+    
+    if (extraKeys.length > 0) {
+      console.log(`   ⚠️  ${extraKeys.length} extra keys found (not in Dutch master)`);
+      console.log(`      Consider reviewing: ${extraKeys.slice(0, 5).join(', ')}`);
+      if (extraKeys.length > 5) {
+        console.log(`      ... and ${extraKeys.length - 5} more`);
+      }
+    }
+    
+    console.log('');
+  });
+  
+  console.log(`🎉 Sync completed! ${totalSynced} keys synchronized.`);
+  console.log('🔍 Run --validate to check final status');
+}
+
+// Cleanup function: Remove unused keys
+function cleanupUnusedKeys() {
+  console.log('🧹 Cleaning up unused translation keys...\n');
+  
+  // This is a placeholder for cleanup functionality
+  // In a real implementation, you would:
+  // 1. Scan all Vue/TS files for $t() usage
+  // 2. Extract all used keys
+  // 3. Compare with translation files
+  // 4. Remove unused keys
+  
+  console.log('⚠️  Cleanup functionality is not yet implemented.');
+  console.log('    This would require scanning the entire codebase for $t() usage.');
+  console.log('    Consider implementing this as a separate, more sophisticated tool.');
+}
+
 // Show help
 function showHelp() {
   console.log(`
@@ -452,6 +558,8 @@ function showHelp() {
   --validate     Check current translation status and completeness
   --complete     Complete ALL missing translations intelligently  
   --critical     Add only CRITICAL missing translations
+  --sync         Sync all languages with Dutch as master (recommended)
+  --cleanup      Remove unused translation keys (placeholder)
   --help         Show this help message
 
 📊 EXAMPLES:
@@ -463,6 +571,9 @@ function showHelp() {
   
   # Complete all missing translations
   npm run translations:complete
+  
+  # Sync all languages with Dutch master (recommended)
+  npm run i18n:sync
 
 🔧 FEATURES:
   ✅ Intelligent translation parsing
@@ -494,6 +605,14 @@ function main() {
       
     case '--critical':
       completeTranslations(true);
+      break;
+      
+    case '--sync':
+      syncAllLanguages();
+      break;
+      
+    case '--cleanup':
+      cleanupUnusedKeys();
       break;
       
     case '--help':

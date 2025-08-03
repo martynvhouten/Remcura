@@ -22,7 +22,7 @@ export class OrderProcessingService {
     const practiceId = authStore.clinicId;
 
     if (!user || !practiceId) {
-      throw new Error('User not authenticated or no practice selected');
+      throw new Error($t('orderproce.usernotauthenticatedor'));
     }
 
     // Get cart details
@@ -41,7 +41,7 @@ export class OrderProcessingService {
       .single();
 
     if (cartError || !cart) {
-      throw new Error('Shopping cart not found');
+      throw new Error($t('orderproce.shoppingcartnotfound'));
     }
 
     // Generate order number
@@ -51,7 +51,7 @@ export class OrderProcessingService {
     );
 
     if (numberError || !orderNumber) {
-      throw new Error('Failed to generate order number');
+      throw new Error($t('orderproce.failedtogenerateorder'));
     }
 
     // Create order
@@ -71,7 +71,7 @@ export class OrderProcessingService {
       .single();
 
     if (orderError || !order) {
-      throw new Error('Failed to create order');
+      throw new Error($t('orderproce.failedtocreateorder'));
     }
 
     // Create order items from cart items
@@ -92,7 +92,7 @@ export class OrderProcessingService {
         .insert(orderItems);
 
       if (itemsError) {
-        throw new Error('Failed to create order items');
+        throw new Error($t('orderproce.failedtocreateorder'));
       }
     }
 
@@ -118,7 +118,7 @@ export class OrderProcessingService {
     const practiceId = authStore.clinicId;
 
     if (!practiceId) {
-      throw new Error('No practice selected');
+      throw new Error($t('orderproce.nopracticeselected'));
     }
 
     let query = supabase
@@ -152,7 +152,7 @@ export class OrderProcessingService {
     const { data, error } = await query;
 
     if (error) {
-      throw new Error(`Failed to get orders: ${error.message}`);
+      throw new Error($t('orderproce.failedtogetorders'));
     }
 
     return data || [];
@@ -166,7 +166,7 @@ export class OrderProcessingService {
     status: string,
     notes?: string
   ): Promise<void> {
-    const updateData: any = { status, updated_at: new Date().toISOString() };
+    const updateData: Partial<Order> = { status, updated_at: new Date().toISOString() };
     if (notes) {
       updateData.notes = notes;
     }
@@ -177,7 +177,7 @@ export class OrderProcessingService {
       .eq('id', orderId);
 
     if (error) {
-      throw new Error(`Failed to update order status: ${error.message}`);
+      throw new Error($t('orderproce.failedtoupdateorder'));
     }
   }
 
@@ -189,7 +189,7 @@ export class OrderProcessingService {
     const order = orders.find(o => o.id === orderId);
 
     if (!order) {
-      throw new Error('Order not found');
+      throw new Error($t('orderproce.ordernotfound'));
     }
 
     const csvHeaders = [
@@ -296,7 +296,7 @@ export class OrderProcessingService {
     const order = orders.find(o => o.id === orderId);
 
     if (!order) {
-      throw new Error('Order not found');
+      throw new Error($t('orderproce.ordernotfound'));
     }
 
     const htmlContent = this.generateOrderHTML(order);
@@ -401,7 +401,7 @@ export class OrderProcessingService {
     const order = orders.find(o => o.id === orderId);
 
     if (!order) {
-      throw new Error('Order not found');
+      throw new Error($t('orderproce.ordernotfound'));
     }
 
     const emailSubject =
@@ -409,11 +409,7 @@ export class OrderProcessingService {
     const emailBody = this.generateOrderHTML(order);
 
     // In a real implementation, you would call your email service here
-    console.log('Sending email:', {
-      to: recipientEmail,
-      subject: emailSubject,
-      html: emailBody,
-    });
+    // Debug email logging removed for production
 
     // Log the activity
     await this.logActivity('order_emailed', {
@@ -431,7 +427,7 @@ export class OrderProcessingService {
     const order = orders.find(o => o.id === orderId);
 
     if (!order) {
-      throw new Error('Order not found');
+      throw new Error($t('orderproce.ordernotfound'));
     }
 
     // Convert to Magento format
@@ -489,7 +485,7 @@ export class OrderProcessingService {
   /**
    * Log activity
    */
-  private async logActivity(activityType: string, data: any): Promise<void> {
+  private async logActivity(activityType: string, data: Record<string, any>): Promise<void> {
     const authStore = useAuthStore();
     const practiceId = authStore.clinicId;
     const userId = authStore.user?.id;

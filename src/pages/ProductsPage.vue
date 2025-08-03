@@ -47,8 +47,8 @@
     </template>
 
     <div class="products-page">
-      <!-- New FilterPanel Component -->
-      <div class="filters-section">
+      <!-- Modern FilterPanel Component -->
+      <div class="filters-section q-mb-lg">
         <FilterPanel
           :preset="productsFilterPreset"
           v-model="filterValues"
@@ -747,7 +747,7 @@ const handleAddToOrderList = (product: ProductWithStock) => {
 const refreshData = async () => {
   try {
     const practiceId = authStore.clinicId;
-    if (!practiceId) return;
+    if (!practiceId) { return; }
 
     await productsStore.refreshData(practiceId);
     $q.notify({
@@ -775,7 +775,7 @@ const handleCheckout = () => {
   });
 };
 
-const handleAdvancedSearch = (criteria: any) => {
+const handleAdvancedSearch = (criteria: ProductSearchCriteria) => {
   // Apply advanced search criteria to filters
   Object.assign(filters, criteria);
   
@@ -811,7 +811,7 @@ const deleteProduct = (product: ProductWithStock) => {
 };
 
 const confirmDelete = async () => {
-  if (!productToDelete.value) return;
+      if (!productToDelete.value) { return; }
 
   deleting.value = true;
   try {
@@ -858,7 +858,7 @@ onMounted(async () => {
     
     // If no products loaded on first try, wait and retry once
     if (products.value.length === 0) {
-      console.log('🔄 No products loaded on first try, retrying in 1 second...');
+              // Retrying product loading...
       await new Promise(resolve => setTimeout(resolve, 1000));
       await productsStore.fetchProducts(practiceId);
     }

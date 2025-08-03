@@ -21,12 +21,12 @@ export interface ErrorContext {
 class MonitoringService {
   private config: MonitoringConfig | null = null;
   private isInitialized = false;
-  private router: any = null;
+  private router: Router | null = null;
 
   /**
    * Initialize monitoring service
    */
-  async initialize(config: MonitoringConfig, router?: any): Promise<void> {
+  async initialize(config: MonitoringConfig, router?: Router): Promise<void> {
     this.config = config;
     this.router = router;
 
@@ -99,7 +99,7 @@ class MonitoringService {
    * Track custom events/metrics
    */
   trackEvent(eventName: string, properties?: Record<string, any>): void {
-    if (!this.isInitialized || !this.config) return;
+    if (!this.isInitialized || !this.config) { return; }
 
     // TODO: Send to analytics service
     // Example:
@@ -110,7 +110,7 @@ class MonitoringService {
    * Set user context for error tracking
    */
   setUserContext(user: { id: string; email?: string; role?: string }): void {
-    if (!this.isInitialized) return;
+    if (!this.isInitialized) { return; }
 
     // Update Sentry user context in production
     if (this.config?.environment === 'production') {
@@ -150,7 +150,7 @@ class MonitoringService {
     category?: string,
     level?: 'info' | 'warning' | 'error'
   ): void {
-    if (!this.isInitialized) return;
+    if (!this.isInitialized) { return; }
 
     if (this.config?.environment === 'production') {
       this.addSentryBreadcrumb(message, category, level);
@@ -181,7 +181,7 @@ class MonitoringService {
    * Track performance metrics
    */
   trackPerformance(metric: string, value: number, unit?: string): void {
-    if (!this.isInitialized) return;
+    if (!this.isInitialized) { return; }
 
     // TODO: Send performance data
     // Example:
@@ -202,7 +202,7 @@ class MonitoringService {
         const Sentry = await import('@sentry/vue');
 
         // Create integrations array
-        const integrations: any[] = [];
+        const integrations: Integration[] = [];
 
         // Add browser tracing if available
         try {
@@ -259,7 +259,7 @@ class MonitoringService {
 export const monitoringService = new MonitoringService();
 
 // Helper function to initialize monitoring in main.ts
-export async function initializeMonitoring(router?: any): Promise<void> {
+export async function initializeMonitoring(router?: Router): Promise<void> {
   const config: MonitoringConfig = {
     environment: import.meta.env.PROD ? 'production' : 'development',
     version: '1.0.0', // TODO: Get from package.json

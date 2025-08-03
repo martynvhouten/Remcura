@@ -6,7 +6,11 @@ export default {
     showLess: 'Mostrar menos filtros',
     resetAll: 'Restablecer todos los filtros',
     clearAll: 'Limpiar todos los filtros',
+    clearAllFilters: 'Limpiar Todos los Filtros',
     apply: 'Aplicar',
+    applyFilters: 'Aplicar Filtros',
+    cancel: 'Cancelar',
+    filtersButton: 'Filtros',
     noFiltersActive: 'No hay filtros activos',
     filtersActive: '{count} filtro(s) activo(s)',
   },
@@ -192,6 +196,78 @@ export default {
       lowStockOnly: {
         label: 'Solo stock bajo',
         tooltip: 'Mostrar solo productos con stock bajo',
+      },
+    },
+  },
+
+  // Order Lists filters
+  orderLists: {
+    title: 'Filtros de Listas de Pedidos',
+    description: 'Filtrar listas de pedidos por nombre, proveedor y estado',
+    fields: {
+      search: {
+        label: 'Buscar Listas de Pedidos',
+        placeholder: 'Buscar por nombre, descripción...',
+      },
+      supplier: {
+        label: 'Proveedor',
+        placeholder: 'Seleccionar proveedor',
+      },
+      status: {
+        label: 'Estado',
+        placeholder: 'Seleccionar estado',
+        options: {
+          draft: 'Borrador',
+          active: 'Activo',
+          submitted: 'Enviado',
+          archived: 'Archivado',
+        },
+      },
+    },
+  },
+
+  // Stock Movements filters
+  movements: {
+    title: 'Filtros de Movimientos de Stock',
+    description: 'Filtrar movimientos de stock por tipo, ubicación, fecha y producto',
+    fields: {
+      movementType: {
+        label: 'Tipo de Movimiento',
+        placeholder: 'Seleccionar tipo',
+      },
+      location: {
+        label: 'Ubicación',
+        placeholder: 'Seleccionar ubicación',
+      },
+      dateRange: {
+        label: 'Rango de Fechas',
+        placeholder: {
+          from: 'Desde fecha',
+          to: 'Hasta fecha',
+        },
+      },
+      productSearch: {
+        label: 'Buscar Productos',
+        placeholder: 'Buscar por nombre o SKU...',
+      },
+    },
+  },
+
+  // Locations filters
+  locations: {
+    title: 'Filtros de Ubicaciones',
+    description: 'Filtrar ubicaciones por nombre, tipo y propiedades',
+    fields: {
+      search: {
+        label: 'Buscar Ubicaciones',
+        placeholder: 'Buscar por nombre, tipo, descripción...',
+      },
+      type: {
+        label: 'Tipo de Ubicación',
+        placeholder: 'Seleccionar tipo',
+      },
+      isMain: {
+        label: 'Ubicación Principal',
       },
     },
   },

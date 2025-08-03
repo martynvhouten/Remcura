@@ -8,7 +8,7 @@ import {
 
 import routes from './routes';
 import { useAuthStore } from '@/stores/auth';
-import { PermissionService, type UserRole } from '@/services/permissions';
+import { PermissionService } from '@/services/permissions';
 
 /*
  * If not building with SSR mode, you can

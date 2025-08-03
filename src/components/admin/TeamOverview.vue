@@ -362,12 +362,12 @@ const formatLastLogin = (lastLogin?: string): string => {
 
 // Actions
 const viewMember = (member: EnhancedPermanentUser) => {
-  console.log('View member:', member);
+        // Viewing member details
   // TODO: Implement member profile view
 };
 
 const editMember = (member: EnhancedPermanentUser) => {
-  console.log('Edit member:', member);
+  // Editing member
   // TODO: Implement member editing
 };
 
@@ -426,22 +426,22 @@ const copyMagicCode = async (member: EnhancedPermanentUser | null) => {
 };
 
 const resetPassword = (member: EnhancedPermanentUser) => {
-  console.log('Reset password for:', member);
+        // Reset password for member
   // TODO: Implement password reset
 };
 
 const manageDevices = (member: EnhancedPermanentUser) => {
-  console.log('Manage devices for:', member);
+        // Manage devices for member
   // TODO: Implement device management
 };
 
 const sendMessage = (member: EnhancedPermanentUser) => {
-  console.log('Send message to:', member);
+        // Send message to member
   // TODO: Implement messaging
 };
 
 const viewSessions = (member: EnhancedPermanentUser) => {
-  console.log('View sessions for:', member);
+  // View sessions for member
   // TODO: Implement session history
 };
 

@@ -57,7 +57,7 @@ export class NotificationService {
    */
   async requestNotificationPermission(): Promise<NotificationPermission> {
     if (!('Notification' in window)) {
-      throw new Error('This browser does not support notifications');
+      throw new Error($t('notificati.thisbrowserdoesnot'));
     }
 
     const permission = await Notification.requestPermission();
@@ -74,7 +74,7 @@ export class NotificationService {
    */
   async subscribeToPushNotifications(): Promise<PushSubscription | null> {
     if (!this.registration) {
-      throw new Error('Service Worker not registered');
+      throw new Error($t('notificati.serviceworkernotregistered'));
     }
 
     try {
@@ -105,7 +105,7 @@ export class NotificationService {
     const authStore = useAuthStore();
     const user = authStore.user;
 
-    if (!user) return;
+    if (!user) { return; }
 
     const endpoint = subscription.endpoint;
     const keys = subscription.getKey
@@ -213,7 +213,7 @@ export class NotificationService {
     const user = authStore.user;
     const practiceId = authStore.selectedPractice?.id;
 
-    if (!user || !practiceId) return;
+    if (!user || !practiceId) { return; }
 
     const { data, error } = await supabase
       .from('notification_settings')
@@ -245,7 +245,7 @@ export class NotificationService {
     const user = authStore.user;
     const practiceId = authStore.selectedPractice?.id;
 
-    if (!user || !practiceId) return;
+    if (!user || !practiceId) { return; }
 
     const settingData: NotificationSettingsInsert = {
       user_id: user.id,
@@ -413,7 +413,7 @@ export class NotificationService {
     const authStore = useAuthStore();
     const practiceId = authStore.selectedPractice?.id;
 
-    if (!practiceId) return;
+    if (!practiceId) { return; }
 
     try {
       const { data: lowStockItems, error } = await supabase
@@ -462,7 +462,7 @@ export class NotificationService {
   }
 
   private arrayBufferToBase64(buffer: ArrayBuffer | null): string {
-    if (!buffer) return '';
+    if (!buffer) { return ''; }
     const bytes = new Uint8Array(buffer);
     let binary = '';
     for (let i = 0; i < bytes.byteLength; i++) {

@@ -758,7 +758,7 @@
 
   // Helper methods
   const formatDate = (date: string | Date | null): string => {
-    if (!date) return '-';
+    if (!date) { return '-'; }
     return new Date(date).toLocaleDateString();
   };
 
@@ -783,7 +783,7 @@
   };
 
   const isExpiringSoon = (expiryDate: string): boolean => {
-    if (!expiryDate) return false;
+    if (!expiryDate) { return false; }
     const expiry = new Date(expiryDate);
     const now = new Date();
     const daysUntilExpiry =

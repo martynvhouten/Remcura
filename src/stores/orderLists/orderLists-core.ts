@@ -12,7 +12,7 @@ import { ServiceErrorHandler } from '@/utils/service-error-handler';
 
 export interface OrderListWithItems extends OrderList {
   items: OrderListItem[];
-  supplier?: any;
+  supplier?: Supplier;
 }
 
 export interface CreateOrderListRequest {
@@ -178,7 +178,7 @@ export function useOrderListsCore() {
       const index = orderLists.value.findIndex(list => list.id === request.id);
       if (index !== -1) {
         const orderList = orderLists.value[index];
-        if (!orderList) return;
+        if (!orderList) { return; }
         
         if (request.name !== undefined) orderList.name = request.name;
         if (request.description !== undefined)
@@ -238,7 +238,7 @@ export function useOrderListsCore() {
       saving.value = true;
       
       // Prepare update data
-      const updateData: any = {
+      const updateData: Partial<OrderList> = {
         status,
         updated_at: new Date().toISOString(),
       };

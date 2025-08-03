@@ -568,7 +568,7 @@
 
   // Check if parent item should be highlighted (when child is active)
   const isParentActive = (item: NavigationItem) => {
-    if (!item.submenu) return false;
+    if (!item.submenu) { return false; }
     const currentRoute = router.currentRoute.value.name as string;
     return item.submenu.some(
       (subItem: NavigationItem) => subItem.routeName === currentRoute

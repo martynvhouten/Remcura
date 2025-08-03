@@ -1,10 +1,14 @@
 import { ref, onMounted, onUnmounted, readonly } from 'vue';
 import { useQuasar } from 'quasar';
-import { useI18n } from 'vue-i18n';
 
 export function useOffline() {
   const $q = useQuasar();
-  const { t } = useI18n();
+  
+  // Use hardcoded fallbacks to avoid i18n dependency issues during boot
+  const translations = {
+    onlineMode: 'Je bent weer online',
+    offlineMode: 'Je werkt nu offline. Sommige functies zijn mogelijk beperkt.',
+  };
 
   const isOnline = ref(navigator.onLine);
   const hasBeenOffline = ref(false);
@@ -15,7 +19,7 @@ export function useOffline() {
     if (hasBeenOffline.value) {
       $q.notify({
         type: 'positive',
-        message: t('offline.messages.onlineMode'),
+        message: translations.onlineMode,
         icon: 'wifi',
         position: 'top',
         timeout: 3000,
@@ -29,8 +33,8 @@ export function useOffline() {
     hasBeenOffline.value = true;
 
     $q.notify({
-      type: 'warning',
-      message: t('offline.messages.offlineMode'),
+      type: 'warning',  
+      message: translations.offlineMode,
       icon: 'wifi_off',
       position: 'top',
       timeout: 0, // Persistent until online

@@ -1,25 +1,6 @@
 import { createClient } from '@supabase/supabase-js';
-import type { Database } from 'src/types/supabase';
-import { handleSupabaseError } from 'src/utils/service-error-handler';
-
-// Create and configure Supabase client centrally
-const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
-const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
-
-if (!supabaseUrl || !supabaseAnonKey) {
-  throw new Error('Missing Supabase environment variables');
-}
-
-export const supabase = createClient<Database>(supabaseUrl, supabaseAnonKey, {
-  auth: {
-    autoRefreshToken: true,
-    persistSession: true,
-    detectSessionInUrl: true,
-  },
-});
-
-// Export supabase client for use in other services
-import type {
+import type { 
+  Database,
   Practice,
   UserProfile,
   Product,
@@ -32,6 +13,23 @@ import type {
   ProductUpdate,
   ProductWithItems,
 } from 'src/types/supabase';
+import { handleSupabaseError } from 'src/utils/service-error-handler';
+
+// Create and configure Supabase client centrally
+const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
+const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
+
+if (!supabaseUrl || !supabaseAnonKey) {
+  throw new Error($t('supabase.missingsupabaseenvironmentvaria'));
+}
+
+export const supabase = createClient<Database>(supabaseUrl, supabaseAnonKey, {
+  auth: {
+    autoRefreshToken: true,
+    persistSession: true,
+    detectSessionInUrl: true,
+  },
+});
 
 // Practice operations
 export const practiceService = {
@@ -292,7 +290,7 @@ export const productService = {
     const { error } = await supabase.from('products').delete().eq('id', id);
 
     if (error) {
-      throw new Error(`Failed to delete product: ${error.message}`);
+      throw new Error($t('supabase.failedtodeleteproduct'));
     }
 
     return true;
@@ -305,7 +303,7 @@ export const productService = {
     });
 
     if (error) {
-      throw new Error(`Failed to fetch low stock products: ${error.message}`);
+      throw new Error($t('supabase.failedtofetchlow'));
     }
 
     return data || [];
@@ -325,13 +323,13 @@ export const productService = {
       }, 'Failed to fetch out of stock products');
     }
 
-    return (data || []).filter((item: any) => item.current_stock === 0);
+    return (data || []).filter((item: StockLevel) => item.current_stock === 0);
   },
 };
 
 // Real-time subscriptions
 export const realtimeService = {
-  subscribeToProducts(practiceId: string, callback: (payload: any) => void) {
+  subscribeToProducts(practiceId: string, callback: (payload: RealtimePayload) => void) {
     return supabase
       .channel(`products:${practiceId}`)
       .on(
@@ -355,7 +353,7 @@ export const realtimeService = {
       .subscribe();
   },
 
-  subscribeToUserProfile(userId: string, callback: (payload: any) => void) {
+  subscribeToUserProfile(userId: string, callback: (payload: RealtimePayload) => void) {
     return supabase
       .channel(`user_profile:${userId}`)
       .on(
@@ -372,7 +370,7 @@ export const realtimeService = {
   },
 
   // 🔄 NEW: Real-time inventory subscriptions
-  subscribeToInventory(practiceId: string, callback: (payload: any) => void) {
+  subscribeToInventory(practiceId: string, callback: (payload: RealtimePayload) => void) {
     return supabase
       .channel(`inventory:${practiceId}`)
       .on(
@@ -399,7 +397,7 @@ export const realtimeService = {
   },
 
   // 🔄 NEW: Real-time stock movements subscription
-  subscribeToStockMovements(practiceId: string, callback: (payload: any) => void) {
+  subscribeToStockMovements(practiceId: string, callback: (payload: RealtimePayload) => void) {
     return supabase
       .channel(`stock_movements:${practiceId}`)
       .on(
@@ -416,7 +414,7 @@ export const realtimeService = {
   },
 
   // 🔄 NEW: Real-time counting sessions subscription
-  subscribeToCountingSessions(practiceId: string, callback: (payload: any) => void) {
+  subscribeToCountingSessions(practiceId: string, callback: (payload: RealtimePayload) => void) {
     return supabase
       .channel(`counting:${practiceId}`)
       .on(
@@ -443,7 +441,7 @@ export const realtimeService = {
   },
 
   // 🔄 NEW: Utility method to unsubscribe from channels
-  unsubscribeFromChannel(channel: any) {
+  unsubscribeFromChannel(channel: RealtimeChannel) {
     if (channel) {
       return supabase.removeChannel(channel);
     }

@@ -1,4 +1,4 @@
-import type { FilterPreset, FilterField } from '@/types/filters'
+import type { FilterPreset } from '@/types/filters'
 
 /**
  * ProductsPage Filter Preset

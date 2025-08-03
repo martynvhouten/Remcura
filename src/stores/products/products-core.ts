@@ -109,7 +109,7 @@ export function useProductsCore() {
 
   // Core actions
   const fetchProducts = async (practiceId: string) => {
-    if (loading.value) return;
+    if (loading.value) { return; }
     loading.value = true;
     
     try {
@@ -205,7 +205,7 @@ export function useProductsCore() {
       const productsWithStock: ProductWithStock[] = [];
       products.forEach((product: Product) => {
         const stockLevels = product.stock_levels || [];
-        const totalStock = stockLevels.reduce((sum: number, level: any) => 
+        const totalStock = stockLevels.reduce((sum: number, level: StockLevel) => 
           sum + (level.current_quantity || 0), 0
         );
 
@@ -216,7 +216,7 @@ export function useProductsCore() {
         };
 
         // Add stock levels for each location if practice has multiple locations
-        product.stock_levels.forEach((stock: any) => {
+        product.stock_levels.forEach((stock: StockLevel) => {
           stock.practice_id = practiceId;
           stock.product_id = product.id;
           stock.available_quantity = Math.max(0, 
@@ -277,8 +277,8 @@ export function useProductsCore() {
     currentStock: number,
     minimumStock: number
   ): 'in_stock' | 'low_stock' | 'out_of_stock' => {
-    if (currentStock <= 0) return 'out_of_stock';
-    if (currentStock <= minimumStock) return 'low_stock';
+    if (currentStock <= 0) { return 'out_of_stock'; }
+    if (currentStock <= minimumStock) { return 'low_stock'; }
     return 'in_stock';
   };
 
@@ -318,7 +318,7 @@ export function useProductsCore() {
   };
 
   // CRUD operations
-  const createProduct = async (productData: any) => {
+  const createProduct = async (productData: ProductInsert) => {
     try {
       const { data, error } = await supabase
         .from('products')
@@ -334,7 +334,7 @@ export function useProductsCore() {
     }
   };
 
-  const updateProduct = async (productId: string, updates: any) => {
+  const updateProduct = async (productId: string, updates: ProductUpdate) => {
     try {
       const { data, error } = await supabase
         .from('products')

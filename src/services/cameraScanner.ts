@@ -54,7 +54,7 @@ export class CameraScannerService {
       return this.availableDevices.value;
     } catch (error) {
       console.error('Failed to get camera devices:', error);
-      throw new Error('Unable to access camera devices');
+      throw new Error($t('camerascan.unabletoaccesscamera'));
     }
   }
 
@@ -88,7 +88,7 @@ export class CameraScannerService {
       this.scanLoop();
     } catch (error) {
       console.error('Failed to start camera:', error);
-      throw new Error('Unable to start camera scanning');
+      throw new Error($t('camerascan.unabletostartcamera'));
     }
   }
 
@@ -116,7 +116,7 @@ export class CameraScannerService {
       d => d.deviceId === deviceId
     );
     if (!device) {
-      throw new Error('Camera device not found');
+      throw new Error($t('camerascan.cameradevicenotfound'));
     }
 
     this.currentDevice.value = device;
@@ -132,7 +132,7 @@ export class CameraScannerService {
    */
   async toggleTorch(): Promise<boolean> {
     if (!this.stream) {
-      throw new Error('Camera not started');
+      throw new Error($t('camerascan.cameranotstarted'));
     }
 
     try {
@@ -149,7 +149,7 @@ export class CameraScannerService {
 
         return newTorchState;
       } else {
-        throw new Error('Torch not supported on this device');
+        throw new Error($t('camerascan.torchnotsupportedon'));
       }
     } catch (error) {
       console.error('Failed to toggle torch:', error);
@@ -350,7 +350,7 @@ export class CameraScannerService {
    */
   async focusCamera(): Promise<void> {
     if (!this.stream) {
-      throw new Error('Camera not started');
+      throw new Error($t('camerascan.cameranotstarted'));
     }
 
     try {
@@ -371,7 +371,7 @@ export class CameraScannerService {
    * Get camera capabilities
    */
   getCameraCapabilities(): MediaTrackCapabilities | null {
-    if (!this.stream) return null;
+    if (!this.stream) { return null; }
 
     const videoTrack = this.stream.getVideoTracks()[0];
     return videoTrack.getCapabilities();
@@ -381,7 +381,7 @@ export class CameraScannerService {
    * Get camera settings
    */
   getCameraSettings(): MediaTrackSettings | null {
-    if (!this.stream) return null;
+    if (!this.stream) { return null; }
 
     const videoTrack = this.stream.getVideoTracks()[0];
     return videoTrack.getSettings();

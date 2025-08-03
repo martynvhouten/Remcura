@@ -7,7 +7,7 @@ import type { OrderListStatus } from '@/types/inventory';
 import { ServiceErrorHandler } from '@/utils/service-error-handler';
 import type { OrderListWithItems } from './orderLists-core';
 
-export function useOrderListsIntegration(orderLists: any) {
+export function useOrderListsIntegration(orderLists: Ref<OrderListWithItems[]>) {
   // State
   const saving = ref(false);
 
@@ -22,7 +22,7 @@ export function useOrderListsIntegration(orderLists: any) {
     saving.value = true;
     try {
       const original = orderLists.value.find((list: OrderListWithItems) => list.id === originalId);
-      if (!original) throw new Error('Original order list not found');
+      if (!original) throw new Error($t('orderlists.originalorderlistnot'));
 
       // Create new order list
       const { data: newOrderList, error: orderListError } = await supabase
@@ -87,7 +87,7 @@ export function useOrderListsIntegration(orderLists: any) {
   const addToCart = async (orderListId: string): Promise<void> => {
     try {
       const orderList = orderLists.value.find((list: OrderListWithItems) => list.id === orderListId);
-      if (!orderList) throw new Error('Order list not found');
+      if (!orderList) throw new Error($t('orderlists.orderlistnotfound'));
 
       // Clear existing cart
       productsStore.clearCart();

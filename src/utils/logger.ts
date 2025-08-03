@@ -86,7 +86,7 @@ class Logger {
     _context?: string,
     _data?: LogData
   ): void {
-    if (!this.isProduction) return;
+    if (!this.isProduction) { return; }
 
     // TODO: Integrate with monitoring service (Sentry, LogRocket, etc.)
     // Example:

@@ -3,8 +3,8 @@
     <!-- Empty State -->
     <div v-if="!items.length" class="empty-state">
       <q-icon name="check_circle" color="positive" size="3rem" />
-      <p class="empty-message">Geen waarschuwingen</p>
-      <p class="empty-subtitle">Alle voorraadniveaus zijn op orde</p>
+      <p class="empty-message">{{ $t('dashboard.alerts.noWarnings') }}</p>
+      <p class="empty-subtitle">{{ $t('dashboard.alerts.allStockLevelsOk') }}</p>
     </div>
 
     <!-- Alert Items -->

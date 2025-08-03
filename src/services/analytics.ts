@@ -72,7 +72,7 @@ export class AnalyticsService {
    */
   async trackEvent(
     eventType: string,
-    eventData?: any,
+    eventData?: Record<string, any>,
     location_id?: string
   ): Promise<void> {
     const authStore = useAuthStore();
@@ -80,7 +80,7 @@ export class AnalyticsService {
 
     if (!practiceId) {
       ServiceErrorHandler.handle(
-        new Error('No practice ID available for tracking'),
+        new Error($t('analytics.nopracticeidavailable')),
         {
           service: 'AnalyticsService',
           operation: 'trackEvent',
@@ -180,7 +180,7 @@ export class AnalyticsService {
       const dailyActivity: Record<string, number> = {};
 
       events?.forEach(event => {
-        if (!event || !event.event_type || !event.created_at) return;
+        if (!event || !event.event_type || !event.created_at) { return; }
 
         // Count event types
         eventCounts[event.event_type] =
@@ -299,7 +299,7 @@ export class AnalyticsService {
         orderTrends[date] = (orderTrends[date] || 0) + 1;
 
         // Count item frequencies
-        order.order_items?.forEach((item: any) => {
+        order.order_items?.forEach((item: OrderItem) => {
           const key = item.product_id;
           const existing = itemCounts.get(key);
           if (existing) {
@@ -396,7 +396,7 @@ export class AnalyticsService {
       >();
       const stockEntryTrends: Record<string, number> = {};
 
-      stockEntries?.forEach((entry: any) => {
+      stockEntries?.forEach((entry: StockLevel) => {
         const key = entry.product_id;
         const existing = productUpdateCounts.get(key);
         if (existing) {
@@ -476,7 +476,7 @@ export class AnalyticsService {
       >();
 
       analytics?.forEach(event => {
-        if (!event.user_id) return;
+        if (!event.user_id) { return; }
 
         const existing = userMap.get(event.user_id);
         if (existing) {
@@ -536,7 +536,7 @@ export class AnalyticsService {
    */
   static async getLowStockItems(clinicId: string): Promise<any[]> {
     if (!clinicId) {
-      throw new Error('Clinic ID is required');
+      throw new Error($t('analytics.clinicidisrequired'));
     }
 
     try {
@@ -566,7 +566,7 @@ export class AnalyticsService {
     endDate: Date
   ): Promise<any[]> {
     if (!clinicId) {
-      throw new Error('Clinic ID is required');
+      throw new Error($t('analytics.clinicidisrequired'));
     }
 
     try {
@@ -580,7 +580,7 @@ export class AnalyticsService {
         `)
         .eq('practice_id', clinicId);
 
-      if (!stockData) return [];
+      if (!stockData) { return []; }
 
       // Group by product and calculate real metrics
       const productMetrics = new Map();
@@ -627,7 +627,7 @@ export class AnalyticsService {
     endDate: Date
   ): Promise<any> {
     if (!clinicId) {
-      throw new Error('Clinic ID is required');
+      throw new Error($t('analytics.clinicidisrequired'));
     }
 
     try {
@@ -665,7 +665,7 @@ export class AnalyticsService {
     limit = 10
   ): Promise<any[]> {
     if (!clinicId) {
-      throw new Error('Clinic ID is required');
+      throw new Error($t('analytics.clinicidisrequired'));
     }
 
     try {
@@ -701,7 +701,7 @@ export class AnalyticsService {
     endDate: Date
   ): Promise<any> {
     if (!clinicId) {
-      throw new Error('Clinic ID is required');
+      throw new Error($t('analytics.clinicidisrequired'));
     }
 
     try {
@@ -765,7 +765,7 @@ export class AnalyticsService {
     endDate: Date
   ): Promise<any> {
     if (!clinicId) {
-      throw new Error('Clinic ID is required');
+      throw new Error($t('analytics.clinicidisrequired'));
     }
 
     try {
@@ -805,7 +805,7 @@ export class AnalyticsService {
     daysAhead: number
   ): Promise<any[]> {
     if (!clinicId) {
-      throw new Error('Clinic ID is required');
+      throw new Error($t('analytics.clinicidisrequired'));
     }
 
     try {
@@ -844,7 +844,7 @@ export class AnalyticsService {
     endDate: Date
   ): Promise<any> {
     if (!clinicId) {
-      throw new Error('Clinic ID is required');
+      throw new Error($t('analytics.clinicidisrequired'));
     }
 
     try {
@@ -938,7 +938,7 @@ export class AnalyticsService {
     }
   }
 
-  async trackScanEvent(productId: string, scanType: string, metadata?: any) {
+  async trackScanEvent(productId: string, scanType: string, metadata?: Record<string, any>) {
     // Used by cameraScanner.ts - implement with real event tracking
     return this.trackEvent('scan_event', {
       product_id: productId,

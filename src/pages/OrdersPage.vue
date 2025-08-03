@@ -16,7 +16,7 @@
       </PageTitle>
     </template>
 
-    <!-- New FilterPanel Component -->
+    <!-- Modern FilterPanel Component -->
     <div class="filters-section q-mb-lg">
       <FilterPanel
         :preset="ordersFilterPreset"
@@ -283,8 +283,8 @@ const filteredOrders = computed(() => {
   if (amountRange && (amountRange.min !== undefined || amountRange.max !== undefined)) {
     filtered = filtered.filter(order => {
       const amount = order.total_amount || 0;
-      if (amountRange.min !== undefined && amount < amountRange.min) return false;
-      if (amountRange.max !== undefined && amount > amountRange.max) return false;
+          if (amountRange.min !== undefined && amount < amountRange.min) { return false; }
+    if (amountRange.max !== undefined && amount > amountRange.max) { return false; }
       return true;
     });
   }
@@ -296,7 +296,7 @@ const filteredOrders = computed(() => {
     const toDate = deliveryDateRange.to ? new Date(deliveryDateRange.to) : new Date();
     
     filtered = filtered.filter(order => {
-      if (!order.expected_delivery_date) return false;
+      if (!order.expected_delivery_date) { return false; }
       const deliveryDate = new Date(order.expected_delivery_date);
       return deliveryDate >= fromDate && deliveryDate <= toDate;
     });
@@ -385,9 +385,9 @@ const columns = computed(() => [
 
 // Export format options
 const exportFormatOptions = computed(() => [
-  { label: 'Excel (.xlsx)', value: 'xlsx' },
-  { label: 'CSV (.csv)', value: 'csv' },
-  { label: 'PDF (.pdf)', value: 'pdf' },
+  { label: t('exports.formats.excel'), value: 'xlsx' },
+  { label: t('exports.formats.csv'), value: 'csv' },
+  { label: t('exports.formats.pdf'), value: 'pdf' },
 ]);
 
 // Helper functions
@@ -415,12 +415,12 @@ const getStatusTextColor = (status: string): string => {
 };
 
 const formatDate = (dateString: string): string => {
-  if (!dateString) return '-';
+      if (!dateString) { return '-'; }
   return date.formatDate(dateString, 'DD/MM/YYYY');
 };
 
 const formatCurrency = (amount: number): string => {
-  if (!amount) return '€0,00';
+      if (!amount) { return '€0,00'; }
   return new Intl.NumberFormat('nl-NL', {
     style: 'currency',
     currency: 'EUR',

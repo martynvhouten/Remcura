@@ -3,8 +3,8 @@ import { realtimeService } from '@/boot/supabase';
 import { inventoryLogger } from '@/utils/logger';
 
 export function useInventoryRealtime(
-  currentPracticeId: any,
-  lastSyncAt: any,
+  currentPracticeId: Ref<string | null>,
+  lastSyncAt: Ref<Date | null>,
   fetchStockMovements: (practiceId: string) => Promise<void>
 ) {
   // Real-time state
@@ -13,7 +13,7 @@ export function useInventoryRealtime(
   const movementsChannel = ref<any>(null);
 
   // Real-time functions
-  const handleRealtimeUpdate = (payload: any) => {
+  const handleRealtimeUpdate = (payload: { eventType: string; new: Record<string, any>; old: Record<string, any> }) => {
     inventoryLogger.info('📡 Real-time inventory update:', payload);
     
     switch (payload.table) {
@@ -28,9 +28,9 @@ export function useInventoryRealtime(
     lastSyncAt.value = new Date();
   };
 
-  const handleStockLevelUpdate = async (payload: any) => {
+  const handleStockLevelUpdate = async (payload: { eventType: string; new: StockLevel; old: StockLevel }) => {
     const practiceId = currentPracticeId.value;
-    if (!practiceId) return;
+    if (!practiceId) { return; }
 
     // For any stock level change, refresh the data
     // In a more sophisticated implementation, we could update just the changed record
@@ -43,9 +43,9 @@ export function useInventoryRealtime(
     }
   };
 
-  const handleStockMovementUpdate = async (payload: any) => {
+  const handleStockMovementUpdate = async (payload: { eventType: string; new: StockMovement; old: StockMovement }) => {
     const practiceId = currentPracticeId.value;
-    if (!practiceId) return;
+    if (!practiceId) { return; }
 
     // Refresh movements when a new movement is added
     if (payload.eventType === 'INSERT') {

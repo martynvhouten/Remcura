@@ -321,7 +321,7 @@ export class OfflineService {
         await this.syncDeleteAction(action);
         break;
       default:
-        throw new Error(`Unknown action type: ${action.type}`);
+        throw new Error($t('offline.unknownactiontypeactiontype'));
     }
   }
 
@@ -332,7 +332,7 @@ export class OfflineService {
     const { error } = await supabase.from(action.table).insert(action.data);
 
     if (error) {
-      throw new Error(`Failed to sync create action: ${error.message}`);
+      throw new Error($t('offline.failedtosynccreate'));
     }
   }
 
@@ -348,7 +348,7 @@ export class OfflineService {
       .eq('id', id);
 
     if (error) {
-      throw new Error(`Failed to sync update action: ${error.message}`);
+      throw new Error($t('offline.failedtosyncupdate'));
     }
   }
 
@@ -362,7 +362,7 @@ export class OfflineService {
       .eq('id', action.data.id);
 
     if (error) {
-      throw new Error(`Failed to sync delete action: ${error.message}`);
+      throw new Error($t('offline.failedtosyncdelete'));
     }
   }
 
@@ -559,7 +559,7 @@ export class OfflineService {
       await this.syncToServer();
       await this.downloadLatestData();
     } else {
-      throw new Error('Cannot sync while offline');
+      throw new Error($t('offline.cannotsyncwhileoffline'));
     }
   }
 

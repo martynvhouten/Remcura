@@ -277,9 +277,9 @@
   ]);
 
   const currencyOptions = computed(() => [
-    { label: 'EUR (€)', value: 'EUR' },
-    { label: 'USD ($)', value: 'USD' },
-    { label: 'GBP (£)', value: 'GBP' },
+    { label: t('currencies.eur'), value: 'EUR' },
+    { label: t('currencies.usd'), value: 'USD' },
+    { label: t('currencies.gbp'), value: 'GBP' },
   ]);
 
   // Methods

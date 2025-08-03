@@ -46,7 +46,7 @@
             <q-btn
               color="primary"
               icon="camera_alt"
-              :label="$t('barcodeScanner.enableCamera')"
+              ::label="$t('barcodeScanner.scanLabel')"
               @click="initializeCamera"
               :loading="initializing"
             />
@@ -105,7 +105,7 @@
                 :color="lastScanResult.valid ? 'positive' : 'warning'"
                 :text-color="lastScanResult.valid ? 'white' : 'dark'"
                 :icon="lastScanResult.valid ? 'check' : 'warning'"
-                :label="lastScanResult.code"
+                ::label="$t('barcodeScanner.scanLabel')"
                 size="lg"
                 class="result-chip"
               />
@@ -117,7 +117,7 @@
         <div class="manual-input-section">
           <q-expansion-item
             icon="keyboard"
-            :label="$t('barcodeScanner.manualInput')"
+            ::label="$t('barcodeScanner.scanLabel')"
             class="manual-input-expander"
           >
             <div class="manual-input-content">
@@ -163,7 +163,7 @@
           v-if="cameraActive"
           flat
           icon="flip_camera_android"
-          :label="$t('barcodeScanner.switchCamera')"
+          ::label="$t('barcodeScanner.scanLabel')"
           @click="switchCamera"
           :disable="!canSwitchCamera"
           class="q-mr-sm"
@@ -173,7 +173,7 @@
           v-if="cameraActive"
           flat
           :icon="flashEnabled ? 'flash_off' : 'flash_on'"
-          :label="flashEnabled ? $t('barcodeScanner.flashOff') : $t('barcodeScanner.flashOn')"
+          ::label="$t('barcodeScanner.scanLabel')"
           @click="toggleFlash"
           :disable="!hasFlash"
         />

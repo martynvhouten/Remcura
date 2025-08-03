@@ -60,7 +60,7 @@ export const useCountingStore = defineStore('counting', () => {
   );
 
   const nextProductToCount = computed(() => {
-    if (!availableProducts.value.length) return null;
+    if (!availableProducts.value.length) { return null; }
 
     const countedProductIds = countingEntries.value.map(
       entry => entry.product_id
@@ -109,7 +109,7 @@ export const useCountingStore = defineStore('counting', () => {
     try {
       const session =
         currentSession.value || sessions.value.find(s => s.id === sessionId);
-      if (!session) throw new Error('Session not found');
+      if (!session) throw new Error($t('counting.sessionnotfound'));
 
       // Build query to get products for counting
       let query = supabase
@@ -136,7 +136,7 @@ export const useCountingStore = defineStore('counting', () => {
       if (error) throw error;
 
       // Transform to CountingProduct format
-      availableProducts.value = (data || []).map((item: any) => ({
+      availableProducts.value = (data || []).map((item: Product & { stock_levels?: StockLevel[] }) => ({
         id: item.product.id,
         name: item.product.name,
         sku: item.product.sku,
@@ -175,7 +175,7 @@ export const useCountingStore = defineStore('counting', () => {
     } = {}
   ) => {
     try {
-      if (!currentSession.value) throw new Error('No active counting session');
+      if (!currentSession.value) throw new Error($t('counting.noactivecountingsession'));
 
       // Get current system quantity
       const { data: stockLevel, error: stockError } = await supabase
@@ -268,7 +268,7 @@ export const useCountingStore = defineStore('counting', () => {
 
   const completeCountingSession = async () => {
     try {
-      if (!currentSession.value) throw new Error('No active counting session');
+      if (!currentSession.value) throw new Error($t('counting.noactivecountingsession'));
 
       await updateSession(currentSession.value.id, {
         status: 'completed',
@@ -308,7 +308,7 @@ export const useCountingStore = defineStore('counting', () => {
   const applyCountAdjustments = async (sessionId: string) => {
     try {
       const session = sessions.value.find(s => s.id === sessionId);
-      if (!session) throw new Error('Session not found');
+      if (!session) throw new Error($t('counting.sessionnotfound'));
 
       // Get all entries with variances
       const { data: entries, error } = await supabase
@@ -415,7 +415,7 @@ export const useCountingStore = defineStore('counting', () => {
 
   const cancelCountingSession = async () => {
     try {
-      if (!currentSession.value) throw new Error('No active counting session');
+      if (!currentSession.value) throw new Error($t('counting.noactivecountingsession'));
 
       await updateSession(currentSession.value.id, {
         status: 'cancelled',

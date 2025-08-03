@@ -97,7 +97,7 @@
       </div>
     </div>
 
-    <!-- New FilterPanel Component -->
+    <!-- Modern FilterPanel Component -->
     <div class="filters-section q-mb-lg">
       <FilterPanel
         :preset="inventoryFilterPreset"
@@ -653,54 +653,125 @@ onMounted(async () => {
 </script>
 
 <style lang="scss" scoped>
+// ===================================================================
+// INVENTORY LEVELS PAGE - CONSISTENT MODERN STYLING
+// ===================================================================
+
 .stats-cards-container {
   .stats-card-col {
-    padding: 0.5rem;
+    padding: var(--space-2);
 
     .kpi-content {
       text-align: center;
-      padding: 1rem;
+      padding: var(--space-4);
 
       .kpi-value {
-        font-size: 2.5rem;
-        font-weight: 700;
-        line-height: 1;
-        color: var(--q-primary);
-        margin-bottom: 0.5rem;
+        font-family: var(--font-family-primary);
+        font-size: var(--text-4xl);
+        font-weight: var(--font-weight-bold);
+        line-height: var(--leading-tight);
+        color: var(--brand-primary);
+        margin-bottom: var(--space-2);
+        font-variant-numeric: tabular-nums;
       }
 
       .kpi-subtitle {
-        font-size: 0.875rem;
-        color: rgba(0, 0, 0, 0.6);
+        font-family: var(--font-family-primary);
+        font-size: var(--text-xs);
+        font-weight: var(--font-weight-semibold);
+        color: var(--text-secondary);
         text-transform: uppercase;
-        letter-spacing: 0.5px;
+        letter-spacing: 0.05em;
+        line-height: var(--leading-normal);
       }
     }
   }
 }
 
 .filters-section {
+  margin-bottom: var(--space-6);
+  
   .inventory-filter-panel {
-    // Custom styling for the FilterPanel in inventory page
+    // FilterPanel already has its own modern styling
+    // No additional customization needed
   }
 }
 
 .product-info {
   .product-name {
-    font-weight: 500;
-    line-height: 1.2;
+    font-family: var(--font-family-primary);
+    font-weight: var(--font-weight-semibold);
+    font-size: var(--text-base);
+    color: var(--text-primary);
+    line-height: var(--leading-tight);
   }
 
   .product-sku {
-    font-size: 0.75rem;
-    color: rgba(0, 0, 0, 0.6);
-    margin-top: 0.25rem;
-    font-family: monospace;
+    font-family: var(--font-family-mono);
+    font-size: var(--text-xs);
+    font-weight: var(--font-weight-medium);
+    color: var(--text-tertiary);
+    margin-top: var(--space-1);
+    background: var(--bg-tertiary);
+    padding: var(--space-1) var(--space-2);
+    border-radius: var(--radius-sm);
+    display: inline-block;
   }
 }
 
 .location-info {
   display: flex;
   align-items: center;
+  gap: var(--space-2);
+  
+  .location-name {
+    font-family: var(--font-family-primary);
+    font-weight: var(--font-weight-medium);
+    color: var(--text-primary);
+  }
+  
+  .location-type {
+    font-size: var(--text-xs);
+    color: var(--text-secondary);
+  }
+}
+
+// ===================================================================
+// DARK MODE SUPPORT
+// ===================================================================
+
+body.body--dark {
+  .stats-cards-container {
+    .kpi-content {
+      .kpi-value {
+        color: var(--brand-primary-light);
+      }
+      
+      .kpi-subtitle {
+        color: var(--text-secondary);
+      }
+    }
+  }
+  
+  .product-info {
+    .product-name {
+      color: var(--text-primary);
+    }
+    
+    .product-sku {
+      color: var(--text-tertiary);
+      background: var(--bg-tertiary);
+    }
+  }
+  
+  .location-info {
+    .location-name {
+      color: var(--text-primary);
+    }
+    
+    .location-type {
+      color: var(--text-secondary);
+    }
+  }
 }
 </style>

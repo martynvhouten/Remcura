@@ -1,4 +1,4 @@
-import filters from '../en-US/filters';
+import filters from './filters';
 
 export default {
   // Filters
@@ -2079,5 +2079,378 @@ export default {
     noCameraFound: 'No camera found. Please ensure a camera is connected.',
     cameraError: 'Camera error occurred. Please try again.',
   },
+
+    'batch.batchManagement': 'Batch management',
+
+    'orderLists.title': 'Order lists',
+
+    'dashboard.actions.refresh': 'Refresh dashboard',
+
+    'dashboard.actions.customize': 'Customize dashboard',
+
+    'dashboard.demoRoleSwitch.label': 'Switch demo role',
+
+    'dashboard.roles.assistant': '🩺 Assistant - inventory & orders',
+
+    'dashboard.roles.manager': '📊 Manager - analytics & reports',
+
+    'dashboard.roles.owner': '👑 Owner - full control',
+
+    'dashboard.quickActionLabels.scan': 'Quick scan',
+
+    'dashboard.quickActionLabels.order': 'New order',
+
+    'dashboard.quickActionLabels.update': 'Update inventory',
+
+    'dashboard.quickActionLabels.export': 'Export data',
+
+    'dashboard.quickActionLabels.default': 'Action',
+
+    'dashboard.alerts.noWarnings': 'No warnings',
+
+    'dashboard.alerts.allStockLevelsOk': 'All stock levels are ok',
+
+    'dashboard.notifications.roleSwitch': 'Dashboard has been adapted to your new role',
+  'quickAdjustment.noProduct': 'No product',
+
+    'common.live': 'Live',
+
+    'app.name': 'Remcura',
+
+    'barcodeScanner.scanLabel': 'Scan product',
+
+    'nav.dashboard': 'Dashboard',
+
+    'nav.products': 'Products',
+
+    'nav.orders': 'Orders',
+
+    'barcodeScanner.enterBarcode': 'Enter barcode',
+
+    'exports.formats.excel': 'Excel (.xlsx)',
+
+    'exports.formats.csv': 'CSV (.csv)',
+
+    'exports.formats.pdf': 'PDF (.pdf)',
+
+    'settings.languages.dutch': 'Dutch',
+
+    'settings.languages.english': 'English',
+
+    'settings.languages.spanish': 'Spanish',
+
+    'dashboard.widgets.teamMembers': 'Team members',
+
+    'dashboard.widgets.systemStatus': 'System status',
+
+      'currencies.eur': 'EUR (€)',
+  'currencies.usd': 'USD ($)',
+  'currencies.gbp': 'GBP (£)',
+
+    'productsPage.title': 'Products',
+
+    'productsPage.subtitle': 'Manage your product catalog and inventory',
+
+    'common.refresh': 'Refresh',
+
+    'products.createProduct': 'Create product',
+
+    'productsPage.viewCart': 'View cart',
+
+    'productsPage.noGs1Data': 'No GS1 data available',
+
+    'productsPage.viewDetails': 'View details',
+
+    'products.editProduct': 'Edit product',
+
+    'products.deleteProduct': 'Delete product',
+
+    'productsPage.addToCart': 'Add to cart',
+
+    'productsPage.addToOrderList': 'Add to order list',
+
+    'productsPage.productDetails': 'Product details',
+
+    'productsPage.description': 'Description',
+
+    'productsPage.unit': 'Unit',
+
+    'productsPage.category': 'Category',
+
+    'productsPage.gs1Information': 'GS1 information',
+
+    'productsPage.lifecycle': 'Lifecycle',
+
+    'productsPage.suppliers': 'Suppliers',
+
+    'productsPage.stockLevels': 'Stock levels',
+
+    'products.deleteConfirm': 'Delete product',
+
+    'common.cancel': 'Cancel',
+
+    'common.delete': 'Delete',
+
+    'orders.title': 'Title',
+
+    'orders.bulkExport': 'BulkExport',
+
+    'orders.bulkEmail': 'BulkEmail',
+
+    'orders.viewOrder': 'ViewOrder',
+
+    'orders.editOrder': 'EditOrder',
+
+    'orders.downloadOrder': 'DownloadOrder',
+
+    'orders.export.title': 'Title',
+
+    'orders.export.format': 'Format',
+
+    'orders.export.dateFrom': 'DateFrom',
+
+    'orders.export.dateTo': 'DateTo',
+
+    'orders.export.export': 'Export',
+
+    'orders.analytics.title': 'Title',
+
+    'orders.analytics.comingSoon': 'ComingSoon',
+
+    'common.close': 'Close',
+
+    'orderLists.subtitle': 'Manage your order lists and send to suppliers',
+
+    'orderLists.create': 'Create order list',
+
+    'orderLists.supplier': 'Supplier',
+
+    'orderLists.totalItems': 'Total items',
+
+    'orderLists.totalAmount': 'Total amount',
+
+    'orderLists.updatedAt': 'Updated at',
+
+    'orderLists.edit': 'Edit',
+
+    'orderLists.submit': 'Submit',
+
+    'orderLists.sendToSupplier': 'Send to supplier',
+
+    'orderLists.addToCart': 'Add to cart',
+
+    'orderLists.duplicate': 'Duplicate',
+
+    'orderLists.autoFill': 'Auto fill',
+
+    'orderLists.delete': 'Delete',
+
+    'orderLists.noLists': 'No order lists found',
+
+    'orderLists.createNew': 'Create your first order list',
+
+    'orderLists.deleteDialog': 'Delete order list',
+
+    'orderLists.deleteConfirm': 'Are you sure you want to delete this order list?',
+
+    'inventory.stockLevels': 'Stock levels',
+
+    'inventory.overview': 'Overview',
+
+    'inventory.totalProducts': 'Total products',
+
+    'inventory.products': 'Products',
+
+    'inventory.stockLocations': 'Stock locations',
+
+    'inventory.activeLocations': 'Active locations',
+
+    'inventory.locations': 'Locations',
+
+    'inventory.dataLoaded': 'Data loaded',
+
+    'inventory.upToDate': 'Up to date',
+
+    'inventory.realTimeConnected': 'Real-time connected',
+
+    'inventory.status': 'Status',
+
+    'inventory.lastUpdated': 'Last updated',
+
+    'inventory.refreshData': 'Refresh data',
+
+    'inventory.lastSync': 'Last sync',
+
+    'inventory.noStockLevels': 'No stock levels found',
+
+    'inventory.adjustStock': 'Adjust stock',
+
+    'inventory.viewHistory': 'View history',
+
+    'inventory.countStock': 'Count stock',
+
+    'inventory.currentStock': 'Current stock',
+
+    'inventory.adjustmentType': 'Adjustment type',
+
+    'inventory.quantity': 'Quantity',
+
+    'validation.required': 'This field is required',
+
+    'inventory.reason': 'Reason',
+
+    'inventory.adjust': 'Adjust',
+
+    'counting.title': 'Stock counting',
+
+    'counting.overview': 'Counting sessions overview',
+
+    'counting.sessionStatus': 'Session status',
+
+    'counting.startSession': 'Start new session',
+
+    'counting.activeSession': 'Active session',
+
+    'counting.progress': 'Progress',
+
+    'counting.sessionType': 'Session type',
+
+    'common.startedAt': 'Started at',
+
+    'counting.discrepancies': 'Discrepancies',
+
+    'counting.continueSession': 'Continue session',
+
+    'counting.completeSession': 'Complete session',
+
+    'counting.sessionsOverview': 'Sessions overview',
+
+    'counting.loadingSessions': 'Loading sessions...',
+
+    'counting.noSessionsFound': 'No sessions found',
+
+    'common.view': 'View',
+
+    'counting.approveSession': 'Approve session',
+
+    'counting.loadingSession': 'Loading session...',
+
+    'counting.sessionNotFound': 'Session not found',
+
+    'counting.sessionNotFoundDescription': 'The requested session does not exist or has been deleted',
+
+    'common.goBack': 'Go back',
+
+    'counting.sessionSummary': 'Session summary',
+
+    'counting.totalProducts': 'Total products',
+
+    'counting.countedProducts': 'Counted products',
+
+    'common.completedAt': 'Completed at',
+
+    'counting.countingResults': 'Counting results',
+
+    'counting.viewResults': 'View the results of this count',
+
+    'counting.noResultsFound': 'No results found',
+
+    'locations.title': 'Locations',
+
+    'locations.manage': 'Manage locations',
+
+    'locations.allLocations': 'All locations',
+
+    'locations.mainLocations': 'Main locations',
+
+    'locations.comingSoonDescription': 'Location management coming soon',
+
+    'locations.add': 'Add location',
+
+    'locations.noLocations': 'No locations found',
+
+    'inventory.stockMovements': 'Stock movements',
+
+    'inventory.movementHistory': 'Movement history',
+
+    'common.export': 'Export',
+
+    'inventory.loadingMovements': 'Loading movements...',
+
+    'inventory.noMovementsFound': 'No movements found',
+
+    'common.unknownProduct': 'Unknown product',
+
+    'common.unknownLocation': 'Unknown location',
+
+    'inventory.movementDetails': 'Movement details',
+
+    'inventory.movementType': 'Movement type',
+
+    'inventory.product': 'Product',
+
+    'common.noSku': 'No SKU',
+
+    'inventory.location': 'Location',
+
+    'inventory.quantityChange': 'Quantity change',
+
+    'inventory.quantityBefore': 'Quantity before',
+
+    'inventory.quantityAfter': 'Quantity after',
+
+    'inventory.reasonCode': 'Reason code',
+
+    'common.notes': 'Notes',
+
+    'common.date': 'Date',
+
+    'inventory.minimumStock': 'Minimum stock',
+
+    'productsPage.table.stockType': 'Stock type',
+
+    'orderLists.searchPlaceholder': 'Search order lists...',
+
+    'orderLists.dateRange': 'Date range',
+
+    'orderLists.amountRange': 'Amount range',
+
+    'orderLists.onlyWithItems': 'Only with items',
+
+    'filters.search.placeholder': 'Search...',
+
+    'filters.location.label': 'Location',
+
+    'filters.category.label': 'Category',
+
+    'filters.status.label': 'Status',
+
+    'orders.status.draft': 'Draft',
+
+    'orders.status.pending': 'Pending',
+
+    'orders.status.confirmed': 'Confirmed',
+
+    'orders.status.shipped': 'Shipped',
+
+    'orders.status.delivered': 'Delivered',
+
+    'orders.status.cancelled': 'Cancelled',
+
+    'orders.status.returned': 'Returned',
+
+    'orders.table.orderNumber': 'Order number',
+
+    'orders.table.supplier': 'Supplier',
+
+    'orders.table.orderDate': 'Order date',
+
+    'orders.table.status': 'Status',
+
+    'orders.table.totalAmount': 'Total amount',
+
+    'orders.table.expectedDelivery': 'Expected delivery',
+
+    'orders.table.actions': 'Actions',
 
 };

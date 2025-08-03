@@ -1,5 +1,4 @@
-import { computed } from 'vue';
-import type { Ref } from 'vue';
+import { computed, type Ref } from 'vue';
 import { productLogger } from '@/utils/logger';
 import type {
   ProductWithStock,
@@ -55,7 +54,7 @@ export function useProductsFilters(
     // Apply sorting
     if (filters.value.sort_by) {
       result.sort((a, b) => {
-        let aValue: any, bValue: any;
+        let aValue: string | number | boolean, bValue: string | number | boolean;
 
         switch (filters.value.sort_by) {
           case 'name':

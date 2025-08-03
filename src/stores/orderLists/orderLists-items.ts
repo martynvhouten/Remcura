@@ -14,7 +14,7 @@ export interface AddOrderListItemRequest {
   notes?: string;
 }
 
-export function useOrderListsItems(orderLists: any) {
+export function useOrderListsItems(orderLists: Ref<OrderListWithItems[]>) {
   // Dependencies
   const productsStore = useProductsStore();
 
@@ -23,12 +23,12 @@ export function useOrderListsItems(orderLists: any) {
   ): Promise<void> => {
     try {
       const product = productsStore.getProductById(request.product_id);
-      if (!product) throw new Error('Product not found');
+      if (!product) throw new Error($t('orderlists.productnotfound'));
 
       const supplierProduct = product.supplier_products?.find(
         sp => sp.id === request.supplier_product_id
       );
-      if (!supplierProduct) throw new Error('Supplier product not found');
+      if (!supplierProduct) throw new Error($t('orderlists.supplierproductnotfound'));
 
       const itemData = {
         order_list_id: request.order_list_id,
@@ -103,7 +103,7 @@ export function useOrderListsItems(orderLists: any) {
     updates: { requested_quantity?: number; notes?: string }
   ): Promise<void> => {
     try {
-      const updateData: any = {};
+      const updateData: Partial<OrderListItem> = {};
       if (updates.requested_quantity !== undefined) {
         updateData.ordered_quantity = updates.requested_quantity;
       }
@@ -143,7 +143,7 @@ export function useOrderListsItems(orderLists: any) {
 
   const updateOrderListTotals = async (orderListId: string): Promise<void> => {
     const orderList = orderLists.value.find((list: OrderListWithItems) => list.id === orderListId);
-    if (!orderList) return;
+    if (!orderList) { return; }
 
     const totalItems = orderList.items.reduce(
       (sum: number, item: OrderListItem) => sum + item.requested_quantity,

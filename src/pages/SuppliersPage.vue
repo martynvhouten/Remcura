@@ -28,7 +28,7 @@
       </PageTitle>
     </template>
 
-    <!-- New FilterPanel Component -->
+    <!-- Modern FilterPanel Component -->
     <div class="filters-section q-mb-lg">
       <FilterPanel
         :preset="suppliersFilterPreset"
@@ -545,7 +545,7 @@ const formatDate = (dateString: string) => {
   return new Date(dateString).toLocaleString();
 };
 
-const canSync = (supplier: any) => {
+const canSync = (supplier: Supplier) => {
   return supplier.integration_type !== 'manual' && supplier.auto_sync_enabled;
 };
 
@@ -698,7 +698,7 @@ const loadSuppliers = async () => {
     if (error) throw error;
 
     suppliers.value = data || [];
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Failed to load suppliers:', error);
     $q.notify({
       type: 'negative',
@@ -734,7 +734,7 @@ const openAddDialog = () => {
   showDialog.value = true;
 };
 
-const editSupplier = (supplier: any) => {
+const editSupplier = (supplier: Supplier) => {
   editingSupplier.value = supplier;
   supplierForm.value = { ...supplier };
   integrationConfig.value = supplier.integration_config || {};
@@ -780,7 +780,7 @@ const saveSupplier = async () => {
 
     showDialog.value = false;
     await loadSuppliers();
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Failed to save supplier:', error);
     $q.notify({
       type: 'negative',
@@ -791,7 +791,7 @@ const saveSupplier = async () => {
   }
 };
 
-const deleteSupplier = async (supplier: any) => {
+const deleteSupplier = async (supplier: Supplier) => {
   try {
     const confirmed = await new Promise((resolve) => {
       $q.dialog({
@@ -803,7 +803,7 @@ const deleteSupplier = async (supplier: any) => {
         .onCancel(() => resolve(false));
     });
 
-    if (!confirmed) return;
+    if (!confirmed) { return; }
 
     const { error } = await supabase
       .from('suppliers')
@@ -818,7 +818,7 @@ const deleteSupplier = async (supplier: any) => {
     });
 
     await loadSuppliers();
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Failed to delete supplier:', error);
     $q.notify({
       type: 'negative',
@@ -839,7 +839,7 @@ const importSuppliers = () => {
   });
 };
 
-const configureIntegration = (supplier: any) => {
+const configureIntegration = (supplier: Supplier) => {
   selectedSupplier.value = supplier;
   showIntegrationDialog.value = true;
 };
@@ -868,7 +868,7 @@ const testConnection = async () => {
       type: 'positive',
       message: t('suppliersPage.connectionSuccessful'),
     });
-  } catch (error: any) {
+  } catch (error: unknown) {
     $q.notify({
       type: 'negative',
       message: t('suppliersPage.connectionFailed', { error: error.message }),
@@ -876,7 +876,7 @@ const testConnection = async () => {
   }
 };
 
-const syncSupplierProducts = async (supplier: any) => {
+const syncSupplierProducts = async (supplier: Supplier) => {
   if (!canSync(supplier)) {
     $q.notify({
       type: 'warning',
@@ -907,7 +907,7 @@ const syncSupplierProducts = async (supplier: any) => {
     } else {
       throw new Error(data?.error || 'Sync failed');
     }
-  } catch (error: any) {
+  } catch (error: unknown) {
     $q.notify({
       type: 'negative',
       message: t('suppliersPage.syncFailed', { name: supplier.name, error: error.message }),

@@ -1,8 +1,9 @@
 #!/usr/bin/env node
 
 /**
- * Hardcoded Text Detector voor Remcura
+ * Hardcoded Text Detector & Auto-fixer voor Remcura
  * Vindt hardcoded teksten die vertalingen zouden moeten zijn
+ * Kan automatisch keys genereren en $t() replacements uitvoeren
  */
 
 const fs = require('fs');
@@ -257,6 +258,256 @@ function scanAllFiles() {
   };
 }
 
+/**
+ * Genereert een translation key van een tekst
+ */
+function generateKey(text, context = '') {
+  // Maak een key gebaseerd op de tekst en context
+  let key = text
+    .toLowerCase()
+    .replace(/[^a-z0-9\s]/g, '') // Verwijder speciale tekens
+    .replace(/\s+/g, ' ') // Normaliseer spaties
+    .trim()
+    .split(' ')
+    .slice(0, 4) // Max 4 woorden
+    .join('');
+  
+  // Voeg context toe als beschikbaar
+  if (context) {
+    const contextKey = context
+      .toLowerCase()
+      .replace(/[^a-z0-9]/g, '')
+      .slice(0, 10);
+    key = `${contextKey}.${key}`;
+  }
+  
+  // Zorg dat key niet te lang is
+  if (key.length > 40) {
+    key = key.substring(0, 40);
+  }
+  
+  return key;
+}
+
+/**
+ * Helper to set a nested property in an object
+ * @param {object} obj - The object to modify
+ * @param {string} path - The dot-separated path to the property
+ * @param {string} value - The value to set
+ */
+function setNestedProperty(obj, path, value) {
+  const parts = path.split('.');
+  let current = obj;
+  for (let i = 0; i < parts.length; i++) {
+    const part = parts[i];
+    if (i === parts.length - 1) {
+      current[part] = value;
+    } else {
+      if (!current[part] || typeof current[part] !== 'object' || Array.isArray(current[part])) {
+        current[part] = {};
+      }
+      current = current[part];
+    }
+  }
+}
+
+/**
+ * Helper to convert a JavaScript object to a formatted TypeScript string for translation files.
+ * Handles nested objects and ensures proper indentation and quoting.
+ * @param {object} obj - The object to convert.
+ * @param {number} indentLevel - Current indentation level.
+ * @returns {string} The formatted string.
+ */
+function formatObjectToTsString(obj, indentLevel = 0) {
+  const currentIndent = '  '.repeat(indentLevel);
+  const nextIndent = '  '.repeat(indentLevel + 1);
+  let lines = [];
+  const keys = Object.keys(obj);
+
+  for (let i = 0; i < keys.length; i++) {
+    const key = keys[i];
+    const value = obj[key];
+    const isLast = (i === keys.length - 1);
+
+    if (typeof value === 'object' && value !== null && !Array.isArray(value)) {
+      // Nested object
+      lines.push(`${nextIndent}${key}: ${formatObjectToTsString(value, indentLevel + 1).trim()}${isLast ? '' : ','}`);
+    } else {
+      // Primitive value
+      lines.push(`${nextIndent}${key}: '${String(value).replace(/'/g, "\\'")}'${isLast ? '' : ','}`);
+    }
+  }
+  return `{\n${lines.join('\n')}\n${currentIndent}}`;
+}
+
+/**
+ * Voegt een key toe aan het Nederlandse vertaalbestand
+ * @param {string} key - De dot-separated key (e.g., 'common.save', 'newFeature.title')
+ * @param {string} text - De vertaalde tekst
+ * @returns {boolean} True if added, false otherwise
+ */
+function addKeyToTranslations(key, text) {
+  const nlFile = path.join(__dirname, '../src/i18n/nl/index.ts');
+  
+  try {
+    let content = fs.readFileSync(nlFile, 'utf8');
+    
+    // Extract the current export default object content
+    const exportMatch = content.match(/export default\s*({[\s\S]*?});?\s*$/);
+    if (!exportMatch) {
+      console.error(`❌ Kan 'export default {}' blok niet vinden in ${nlFile}`);
+      return false;
+    }
+    
+    const existingObjectString = exportMatch[1];
+    const preExportContent = content.substring(0, exportMatch.index);
+    const postExportContent = content.substring(exportMatch.index + exportMatch[0].length);
+
+    // Use eval to parse the existing object. This is risky but necessary given the current script architecture.
+    let currentTranslations;
+    try {
+      // Temporarily wrap in parentheses to make it a valid expression for eval
+      currentTranslations = eval(`(${existingObjectString})`);
+    } catch (evalError) {
+      console.error(`❌ Fout bij evalueren van bestaande vertalingen in ${nlFile}:`, evalError.message);
+      console.error(`   Controleer de syntax van het bestand: ${nlFile}`);
+      return false;
+    }
+
+    // Check if key already exists to avoid duplicates
+    // This requires a proper way to check nested keys, which extractKeys does
+    const allExistingKeys = new Set(extractKeys(currentTranslations));
+    if (allExistingKeys.has(key)) {
+        // console.log(`   ⚠️ Key '${key}' bestaat al, overslaan.`); // Suppress this for cleaner output during autofix
+        return false; // Key already exists
+    }
+
+    // Add the new key using the helper
+    setNestedProperty(currentTranslations, key, text);
+
+    // Format the updated object back to a string
+    // Start with indentLevel 0 for the root object, then add 2 spaces for the 'export default ' part
+    const newObjectString = formatObjectToTsString(currentTranslations, 0); 
+
+    // Reconstruct the file content
+    // The `export default ` part needs to be handled carefully to maintain original formatting
+    const finalContent = `${preExportContent}export default ${newObjectString};${postExportContent}`;
+    
+    fs.writeFileSync(nlFile, finalContent, 'utf8');
+    return true;
+  } catch (error) {
+    console.error(`❌ Fout bij toevoegen van key '${key}' aan ${nlFile}:`, error.message);
+    return false;
+  }
+}
+
+/**
+ * Vervangt hardcoded tekst met $t() call
+ */
+function replaceWithTranslation(filePath, match, key) {
+  try {
+    let content = fs.readFileSync(filePath, 'utf8');
+    
+    // Verschillende replacement patronen afhankelijk van context
+    let replacement;
+    
+    if (match.fullMatch.includes('$q.notify')) {
+      // Quasar notify replacement
+      replacement = match.fullMatch.replace(
+        /message:\s*["'`][^"'`]*["'`]/,
+        `message: $t('${key}')`
+      );
+    } else if (match.context.includes('<template>') || match.context.includes('{{')) {
+      // Vue template replacement
+      replacement = `{{ $t('${key}') }}`;
+    } else if (match.fullMatch.startsWith('"') || match.fullMatch.startsWith("'")) {
+      // Simple string replacement
+      replacement = `$t('${key}')`;
+    } else {
+      // Default replacement
+      replacement = match.fullMatch.replace(
+        /["'`][^"'`]*["'`]/,
+        `$t('${key}')`
+      );
+    }
+    
+    content = content.replace(match.fullMatch, replacement);
+    fs.writeFileSync(filePath, content, 'utf8');
+    
+    return true;
+  } catch (error) {
+    console.error(`❌ Fout bij vervangen in ${filePath}:`, error.message);
+    return false;
+  }
+}
+
+/**
+ * Automatische mode: vindt hardcoded tekst en voegt automatisch keys toe
+ */
+function autoFixHardcodedText(dryRun = true) {
+  console.log(`🔧 Auto-fix modus ${dryRun ? '(DRY RUN)' : '(LIVE)'}\n`);
+  
+  const results = scanAllFiles();
+  
+  if (results.highPriority.length === 0) {
+    console.log('✅ Geen high-priority hardcoded tekst gevonden!');
+    return;
+  }
+  
+  console.log(`🎯 Verwerken van ${results.highPriority.length} high-priority items...\n`);
+  
+  let processed = 0;
+  let successful = 0;
+  
+  results.highPriority.forEach(result => {
+    processed++;
+    
+    // Genereer key
+    const contextHint = path.basename(result.file, path.extname(result.file));
+    const key = generateKey(result.text, contextHint);
+    
+    console.log(`📝 [${processed}/${results.highPriority.length}] ${result.file}:${result.line}`);
+    console.log(`   💬 "${result.text}"`);
+    console.log(`   🔑 Generated key: ${key}`);
+    
+    if (!dryRun) {
+      // Voeg key toe aan vertalingen
+      if (addKeyToTranslations(key, result.text)) {
+        console.log(`   ✅ Key toegevoegd aan NL vertalingen`);
+        
+        // Vervang in bronbestand
+        if (replaceWithTranslation(result.file, result, key)) {
+          console.log(`   ✅ Vervangen met $t() call`);
+          successful++;
+        } else {
+          console.log(`   ❌ Vervanging mislukt`);
+        }
+      } else {
+        console.log(`   ❌ Key toevoegen mislukt`);
+      }
+    } else {
+      console.log(`   💡 Would add key and replace (dry run)`);
+    }
+    
+    console.log('');
+  });
+  
+  if (dryRun) {
+    console.log(`\n📊 DRY RUN SAMENVATTING:`);
+    console.log(`   ${processed} items zouden verwerkt worden`);
+    console.log(`\n💡 Run met '--fix' om daadwerkelijk aan te passen`);
+  } else {
+    console.log(`\n📊 SAMENVATTING:`);
+    console.log(`   ${processed} items verwerkt`);
+    console.log(`   ${successful} succesvol vervangen`);
+    console.log(`\n🎉 Auto-fix voltooid! Run de validatie tools om resultaat te controleren.`);
+  }
+}
+
+// Command line argument parsing
+const args = process.argv.slice(2);
+const mode = args[0];
+
 // Run scan
 if (require.main === module) {
   // Check if glob is available
@@ -267,7 +518,29 @@ if (require.main === module) {
     process.exit(1);
   }
   
-  scanAllFiles();
+  if (mode === '--fix') {
+    autoFixHardcodedText(false);
+  } else if (mode === '--dry-run') {
+    autoFixHardcodedText(true);
+  } else if (mode === '--help') {
+    console.log(`
+🔧 Remcura Hardcoded Text Detector & Auto-fixer
+
+📋 GEBRUIK:
+  node scripts/find-hardcoded-text.js [mode]
+
+🎯 MODES:
+  (geen)      Scan en rapporteer hardcoded tekst
+  --dry-run   Toon wat er aangepast zou worden
+  --fix       Voer automatische replacements uit
+  --help      Toon deze help
+
+⚠️  WAARSCHUWING:
+  --fix mode wijzigt bestanden! Maak eerst een backup.
+    `);
+  } else {
+    scanAllFiles();
+  }
 }
 
-module.exports = { scanAllFiles }; 
+module.exports = { scanAllFiles, autoFixHardcodedText }; 

@@ -3,7 +3,7 @@ import { supabase } from '@/boot/supabase';
 import { inventoryLogger } from '@/utils/logger';
 import type { OrderSuggestion, StockAlert } from '@/types/inventory';
 
-export function useInventoryAlerts(stockLevels: any) {
+export function useInventoryAlerts(stockLevels: Ref<StockLevel[]>) {
   // State
   const orderSuggestions = ref<OrderSuggestion[]>([]);
 
@@ -11,7 +11,7 @@ export function useInventoryAlerts(stockLevels: any) {
   const criticalAlerts = computed<StockAlert[]>(() => {
     const alerts: StockAlert[] = [];
     
-    stockLevels.value.forEach((stockLevel: any) => {
+    stockLevels.value.forEach((stockLevel: StockLevel) => {
       // Low stock alerts - using minimum_stock instead of minimum_quantity
       const minimumStock = (stockLevel as any).minimum_stock || (stockLevel as any).minimum_quantity || 10;
       if (stockLevel.current_quantity <= minimumStock) {
@@ -44,8 +44,8 @@ export function useInventoryAlerts(stockLevels: any) {
 
     return alerts.sort((a, b) => {
       // Sort by severity: out_of_stock first, then low_stock
-      if (a.type === 'out_of_stock' && b.type !== 'out_of_stock') return -1;
-      if (b.type === 'out_of_stock' && a.type !== 'out_of_stock') return 1;
+          if (a.type === 'out_of_stock' && b.type !== 'out_of_stock') { return -1; }
+    if (b.type === 'out_of_stock' && a.type !== 'out_of_stock') { return 1; }
       return 0;
     });
   });
@@ -59,7 +59,7 @@ export function useInventoryAlerts(stockLevels: any) {
 
       if (error) throw error;
 
-      orderSuggestions.value = (data || []).map((item: any) => ({
+      orderSuggestions.value = (data || []).map((item: StockLevel) => ({
         product_id: item.product_id,
         product_name: item.product_name,
         product_sku: item.product_sku,
@@ -80,7 +80,7 @@ export function useInventoryAlerts(stockLevels: any) {
   };
 
   const getProductStockAtLocation = (productId: string, locationId: string): number => {
-    const stockLevel = stockLevels.value.find((sl: any) => 
+    const stockLevel = stockLevels.value.find((sl: StockLevel) => 
       sl.product_id === productId && sl.location_id === locationId
     );
     return stockLevel?.current_quantity || 0;

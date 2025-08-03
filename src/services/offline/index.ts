@@ -105,7 +105,7 @@ export class OfflineService {
     const userId = authStore.user?.id;
 
     if (!practiceId || !userId) {
-      throw new Error('Cannot add offline action - no practice or user available');
+      throw new Error($t('index.cannotaddofflineaction'));
     }
 
     const actionId = actionQueue.addAction(type, table, data, practiceId, userId, priority);
@@ -126,11 +126,11 @@ export class OfflineService {
     const practiceId = authStore.selectedPractice?.id;
 
     if (!practiceId) {
-      throw new Error('No practice selected for offline data download');
+      throw new Error($t('index.nopracticeselectedfor'));
     }
 
     if (!this.isOnline) {
-      throw new Error('Cannot download data - device is offline');
+      throw new Error($t('index.cannotdownloaddatadevice'));
     }
 
     await dataSyncManager.downloadData(practiceId, onProgress);
@@ -149,7 +149,7 @@ export class OfflineService {
       const successCount = results.filter(r => r.success).length;
       const failureCount = results.filter(r => !r.success).length;
 
-      console.log(`Sync completed: ${successCount} succeeded, ${failureCount} failed`);
+              // Sync completed - debug logging removed
       
       return failureCount === 0;
     } catch (error) {
@@ -163,7 +163,7 @@ export class OfflineService {
    */
   async fullSync(onProgress?: SyncProgressCallback): Promise<void> {
     if (!this.isOnline) {
-      throw new Error('Cannot sync - device is offline');
+      throw new Error($t('index.cannotsyncdeviceis'));
     }
 
     // First sync actions
@@ -216,7 +216,7 @@ export class OfflineService {
    * Handle network status changes
    */
   private handleNetworkChange(status: NetworkStatus): void {
-    console.log(`Network status changed to: ${status}`);
+            // Network status change handled
 
     if (status === 'online') {
       // When coming back online, sync actions and optionally refresh data
@@ -304,7 +304,7 @@ export class OfflineService {
     
     this.periodicSyncTimer = setInterval(() => {
       if (this.isOnline && actionQueue.count > 0) {
-        console.log('Periodic sync triggered');
+        // Periodic sync triggered
         this.syncActions();
       }
     }, intervalMs);

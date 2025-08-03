@@ -6,14 +6,18 @@ export default {
     showLess: 'Toon minder filters',
     resetAll: 'Reset alle filters',
     clearAll: 'Wis alle filters',
+    clearAllFilters: 'Alle filters wissen',
     apply: 'Toepassen',
+    applyFilters: 'Filters toepassen',
+    cancel: 'Annuleren',
+    filtersButton: 'Filters',
     noFiltersActive: 'Geen actieve filters',
     filtersActive: '{count} filter(s) actief',
   },
 
   // Product filters
   products: {
-    title: 'Product Filters',
+    title: 'Productfilters',
     description: 'Filter producten op categorieën, leveranciers, GS1 gegevens en voorraadstatus',
     groups: {
       search: {
@@ -35,8 +39,8 @@ export default {
     },
     fields: {
       search: {
-        label: 'Zoek Producten',
-        placeholder: 'Zoek op naam, SKU, merk...',
+        label: 'Zoek producten',
+        placeholder: 'Naam, SKU, merk...',
       },
       category: {
         label: 'Categorie',
@@ -64,19 +68,19 @@ export default {
       },
       gtin: {
         label: 'GTIN/Barcode',
-        placeholder: 'Voer GTIN of barcode in',
+        placeholder: 'GTIN of barcode',
         tooltip: 'Global Trade Item Number scannen',
       },
       countryOfOrigin: {
-        label: 'Land van Herkomst',
+        label: 'Land van herkomst',
         placeholder: 'Selecteer land',
       },
       gpcBrickCode: {
         label: 'GPC Categorie',
-        placeholder: 'Selecteer GPC classificatie',
+        placeholder: 'GPC classificatie',
       },
       lifecycleStatus: {
-        label: 'Levenscyclus Status',
+        label: 'Levenscyclus status',
         placeholder: 'Selecteer status',
         options: {
           active: 'Actief',
@@ -94,11 +98,11 @@ export default {
 
   // Supplier filters
   suppliers: {
-    title: 'Leverancier Filters',
+    title: 'Leverancierfilters',
     description: 'Filter leveranciers op naam, contactgegevens, locatie en status',
     fields: {
       search: {
-        label: 'Zoek Leveranciers',
+        label: 'Zoek leveranciers',
         placeholder: 'Zoek op naam, email, telefoon...',
       },
       status: {
@@ -110,7 +114,7 @@ export default {
         },
       },
       integrationType: {
-        label: 'Integratie Type',
+        label: 'Integratie type',
         placeholder: 'Selecteer type',
         options: {
           manual: 'Handmatig',
@@ -131,11 +135,11 @@ export default {
 
   // Order filters
   orders: {
-    title: 'Bestelling Filters',
+    title: 'Bestellingfilters',
     description: 'Filter bestellingen op status, leverancier, datumbereik en bedrag',
     fields: {
       status: {
-        label: 'Bestelling Status',
+        label: 'Bestelling status',
         placeholder: 'Selecteer status',
         options: {
           draft: 'Concept',
@@ -151,21 +155,21 @@ export default {
         placeholder: 'Selecteer leverancier',
       },
       orderDateRange: {
-        label: 'Besteldatum Bereik',
+        label: 'Besteldatum bereik',
         placeholder: {
           from: 'Van datum',
           to: 'Tot datum',
         },
       },
       amountRange: {
-        label: 'Bedrag Bereik',
+        label: 'Bedrag bereik',
         placeholder: {
           min: 'Min bedrag',
           max: 'Max bedrag',
         },
       },
       expectedDeliveryRange: {
-        label: 'Verwachte Levering',
+        label: 'Verwachte levering',
         placeholder: {
           from: 'Van datum',
           to: 'Tot datum',
@@ -176,7 +180,7 @@ export default {
 
   // Inventory filters
   inventory: {
-    title: 'Voorraad Filters',
+    title: 'Voorraadfilters',
     description: 'Filter voorraad op locatie, product, categorie en voorraadstatus',
     fields: {
       search: {
@@ -201,7 +205,7 @@ export default {
         placeholder: 'Selecteer categorie',
       },
       quantityRange: {
-        label: 'Hoeveelheid Bereik',
+        label: 'Hoeveelheid bereik',
         placeholder: {
           min: 'Min aantal',
           max: 'Max aantal',
@@ -210,6 +214,79 @@ export default {
       lowStockOnly: {
         label: 'Alleen lage voorraad',
         tooltip: 'Toon alleen producten met lage voorraad',
+      },
+    },
+  },
+
+  // Order Lists filters
+  orderLists: {
+    title: 'Bestellijstfilters',
+    description: 'Filter bestellijsten op naam, leverancier en status',
+    fields: {
+      search: {
+        label: 'Zoek bestellijsten',
+        placeholder: 'Zoek op naam, beschrijving...',
+      },
+      supplier: {
+        label: 'Leverancier',
+        placeholder: 'Selecteer leverancier',
+      },
+      status: {
+        label: 'Status',
+        placeholder: 'Selecteer status',
+        options: {
+          draft: 'Concept',
+          active: 'Actief',
+          submitted: 'Ingediend',
+          archived: 'Gearchiveerd',
+        },
+      },
+    },
+  },
+
+  // Stock Movements filters
+  movements: {
+    title: 'Voorraadmutatiefilters',
+    description: 'Filter voorraadmutaties op type, locatie, datum en product',
+    fields: {
+      movementType: {
+        label: 'Mutatie type',
+        placeholder: 'Selecteer type',
+      },
+      location: {
+        label: 'Locatie',
+        placeholder: 'Selecteer locatie',
+      },
+      dateRange: {
+        label: 'Datum bereik',
+        placeholder: {
+          from: 'Van datum',
+          to: 'Tot datum',
+        },
+      },
+      productSearch: {
+        label: 'Product zoeken',
+        placeholder: 'Zoek op productnaam of SKU...',
+      },
+    },
+  },
+
+  // Locations filters
+  locations: {
+    title: 'Locatiefilters',
+    description: 'Filter locaties op naam, type en eigenschappen',
+    fields: {
+      search: {
+        label: 'Zoek locaties',
+        placeholder: 'Zoek op naam, type, beschrijving...',
+      },
+      type: {
+        label: 'Locatie type',
+        placeholder: 'Selecteer type',
+      },
+      isMain: {
+        label: 'Hoofdlocatie',
+        tooltip: 'Toon alleen hoofdlocaties',
       },
     },
   },

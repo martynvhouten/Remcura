@@ -18,8 +18,8 @@ interface MovementWithRelations extends StockMovement {
 }
 
 export function useInventoryMovements(
-  currentPracticeId: any,
-  currentUserId: any,
+  currentPracticeId: Ref<string | null>,
+  currentUserId: Ref<string | null>,
   fetchStockLevels: (practiceId: string) => Promise<void>
 ) {
   // State
@@ -30,11 +30,11 @@ export function useInventoryMovements(
     try {
       // Validate required fields
       if (!request.practice_id || !request.location_id || !request.product_id) {
-        throw new Error('Missing required fields: practice_id, location_id, or product_id');
+        throw new Error($t('inventorym.missingrequiredfieldspractice'));
       }
 
       if (request.quantity_change === 0) {
-        throw new Error('Quantity change cannot be zero');
+        throw new Error($t('inventorym.quantitychangecannotbe'));
       }
 
       // Get current stock level with retry logic for race conditions
@@ -60,11 +60,11 @@ export function useInventoryMovements(
           currentStock = (stockLevel as any)?.current_quantity || 0;
           break; // Success, exit retry loop
 
-        } catch (error: any) {
+        } catch (error: unknown) {
           retryCount++;
           if (retryCount >= maxRetries) {
             inventoryLogger.error('Failed to get current stock after retries:', error);
-            throw new Error(`Unable to get current stock level: ${error.message}`);
+            throw new Error($t('inventorym.unabletogetcurrent'));
           }
           // Wait a bit before retrying
           await new Promise(resolve => setTimeout(resolve, 100 * retryCount));
@@ -75,11 +75,11 @@ export function useInventoryMovements(
 
       // Validate that new quantity is not negative if not allowed
       if (newQuantity < 0) {
-        throw new Error(`Insufficient stock. Current: ${currentStock}, Attempted change: ${request.quantity_change}`);
+        throw new Error($t('inventorym.insufficientstockcurrentcurre'));
       }
 
       // Create stock movement record first (this serves as our audit trail)
-      const movementData: any = {
+      const movementData: Partial<StockMovement> = {
         practice_id: request.practice_id,
         location_id: request.location_id,
         product_id: request.product_id,
@@ -113,22 +113,22 @@ export function useInventoryMovements(
         if (movementError.code === '23503') {
           const detail = movementError.details || movementError.message;
           if (detail.includes('practice_id')) {
-            throw new Error('Practice not found. Please refresh and try again.');
+            throw new Error($t('inventorym.practicenotfoundplease'));
           } else if (detail.includes('location_id')) {
-            throw new Error('Location not found. Please refresh and try again.');
+            throw new Error($t('inventorym.locationnotfoundplease'));
           } else if (detail.includes('product_id')) {
-            throw new Error('Product not found. Please refresh and try again.');
+            throw new Error($t('inventorym.productnotfoundplease'));
           } else if (detail.includes('created_by')) {
-            throw new Error('User authentication failed. Please log in again.');
+            throw new Error($t('inventorym.userauthenticationfailedpleas'));
           } else {
-            throw new Error('Invalid reference: practice, location, or product not found');
+            throw new Error($t('inventorym.invalidreferencepracticelocat'));
           }
         } else if (movementError.code === '23505') {
-          throw new Error('Duplicate movement detected. Please try again.');
+          throw new Error($t('inventorym.duplicatemovementdetectedplea'));
         } else if (movementError.code === '23514') {
-          throw new Error('Invalid data: check constraints failed');
+          throw new Error($t('inventorym.invaliddatacheckconstraints'));
         } else {
-          throw new Error(`Failed to record stock movement: ${movementError.message}`);
+          throw new Error($t('inventorym.failedtorecordstock'));
         }
       }
 
@@ -139,7 +139,7 @@ export function useInventoryMovements(
       await fetchStockMovements(request.practice_id);
 
       return insertedMovement;
-    } catch (error: any) {
+    } catch (error: unknown) {
       const result = await ErrorHandler.handleError(error, {
         service: 'inventory',
         operation: 'updateStockLevel',
@@ -157,11 +157,11 @@ export function useInventoryMovements(
 
       // Provide specific error messages for common cases
       if (error.message?.includes('Invalid reference')) {
-        throw new Error('Product, location, or practice niet gevonden. Ververs de pagina en probeer opnieuw.');
+        throw new Error($t('inventorym.productlocationorpractice'));
       } else if (error.message?.includes('Insufficient stock')) {
         throw error; // This error message is already user-friendly
       } else if (error.code === '23505' || error.message?.includes('Duplicate')) {
-        throw new Error('Een andere update is bezig. Wacht even en probeer opnieuw.');
+        throw new Error($t('inventorym.eenandereupdateis'));
       } else {
         // Use the centralized error handler's user message
         throw new Error(result.userMessage);
@@ -182,7 +182,7 @@ export function useInventoryMovements(
       if (error) throw error;
 
       // Transform stock movements to internal format
-      stockMovements.value = (data || []).map((movement: any) => ({
+      stockMovements.value = (data || []).map((movement: StockMovement & { products?: Product; locations?: Location }) => ({
         id: movement.id,
         practice_id: movement.practice_id,
         location_id: movement.location_id,
@@ -288,11 +288,11 @@ export function useInventoryMovements(
     }
   };
 
-  const executeStockTransfer = async (transferData: any) => {
+  const executeStockTransfer = async (transferData: { from_location_id: string; to_location_id: string; product_id: string; quantity: number; reason?: string }) => {
     const practiceId = currentPracticeId.value;
     
     if (!practiceId) {
-      throw new Error('No practice selected');
+      throw new Error($t('inventorym.nopracticeselected'));
     }
 
     try {

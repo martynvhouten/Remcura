@@ -18,7 +18,7 @@ const props = withDefaults(defineProps<Props>(), {
 
 // Country code to flag emoji mapping (basic implementation)
 const countryToFlag = (countryCode: string): string => {
-  if (!countryCode || countryCode.length !== 2) return '🏳️'
+      if (!countryCode || countryCode.length !== 2) { return '🏳️'; }
   
   const codePoints = countryCode
     .toUpperCase()
@@ -30,7 +30,7 @@ const countryToFlag = (countryCode: string): string => {
 
 // Computed
 const flagEmoji = computed(() => {
-  if (!props.country) return '🏳️'
+      if (!props.country) { return '🏳️'; }
   
   // Handle common country name to code conversions
   const countryNameToCode: Record<string, string> = {

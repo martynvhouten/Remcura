@@ -74,13 +74,13 @@ export class DataSyncManager {
     onProgress?: SyncProgressCallback
   ): Promise<void> {
     if (this.syncInProgress) {
-      throw new Error('Sync already in progress');
+      throw new Error($t('datasync.syncalreadyinprogress'));
     }
 
     this.syncInProgress = true;
 
     try {
-      console.log('Downloading latest data for offline use...');
+      // Downloading latest data for offline use
 
       // Phase 1: Download bestellijsten
       onProgress?.({
@@ -150,7 +150,7 @@ export class DataSyncManager {
         message: 'Sync complete',
       });
 
-      console.log('Offline data downloaded successfully');
+      // Offline data downloaded successfully
 
       // Track analytics
       analyticsService.trackEvent('offline_data_downloaded', {

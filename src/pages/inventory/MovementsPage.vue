@@ -8,59 +8,6 @@
       >
         <template #actions>
           <div class="header-actions">
-            <!-- Filters -->
-            <q-select
-              v-model="selectedMovementType"
-              :options="movementTypeOptions"
-              :label="$t('inventory.movementType')"
-              emit-value
-              map-options
-              outlined
-              dense
-              clearable
-              class="filter-select"
-            >
-              <template v-slot:prepend>
-                <q-icon name="filter_list" />
-              </template>
-            </q-select>
-
-            <q-select
-              v-model="selectedLocationId"
-              :options="locationOptions"
-              :label="$t('inventory.location')"
-              emit-value
-              map-options
-              outlined
-              dense
-              clearable
-              class="filter-select"
-            >
-              <template v-slot:prepend>
-                <q-icon name="place" />
-              </template>
-            </q-select>
-
-            <!-- Date Range -->
-            <q-input
-              v-model="dateRange"
-              :label="$t('common.dateRange')"
-              outlined
-              dense
-              readonly
-              class="date-input"
-            >
-              <template v-slot:prepend>
-                <q-icon name="date_range" />
-              </template>
-              <template v-slot:append>
-                <q-icon name="arrow_drop_down" />
-              </template>
-              <q-popup-proxy>
-                <q-date v-model="dateRange" range :options="dateOptions" />
-              </q-popup-proxy>
-            </q-input>
-
             <!-- Refresh Button -->
             <q-btn
               color="primary"
@@ -83,6 +30,20 @@
         </template>
       </PageTitle>
     </template>
+
+    <!-- Modern FilterPanel Component -->
+    <div class="filters-section q-mb-lg">
+      <FilterPanel
+        :preset="movementsFilterPreset"
+        v-model="filterValues"
+        @change="handleFilterChange"
+        @reset="handleFilterReset"
+        @clear="handleFilterClear"
+        :loading="inventoryStore.loading"
+        collapsible
+        class="movements-filter-panel"
+      />
+    </div>
 
     <!-- Main Content -->
     <div class="movements-content">
@@ -293,9 +254,12 @@
     MovementType,
     ReasonCode,
   } from 'src/types/inventory';
+  import type { FilterValues, FilterChangeEvent, FilterResetEvent } from 'src/types/filters';
   import PageLayout from 'src/components/PageLayout.vue';
   import PageTitle from 'src/components/PageTitle.vue';
   import BaseCard from 'src/components/base/BaseCard.vue';
+  import FilterPanel from 'src/components/filters/FilterPanel.vue';
+  import { movementsFilterPreset } from 'src/presets/filters/movements';
 
   // Composables
   const { t } = useI18n();
@@ -305,12 +269,12 @@
   const clinicStore = useClinicStore();
 
   // Reactive state
-  const selectedMovementType = ref<MovementType | null>(null);
-  const selectedLocationId = ref<string | null>(null);
-  const dateRange = ref<string>('');
   const showMovementDetails = ref(false);
   const selectedMovement = ref<MovementWithRelations | null>(null);
   const isUnmounted = ref(false);
+
+  // Modern Filter System
+  const filterValues = ref<FilterValues>({});
 
   // Pagination
   const pagination = ref({
@@ -323,51 +287,44 @@
   // Computed properties
   const practiceId = computed(() => authStore.userProfile?.clinic_id || '');
 
-  const movementTypeOptions = computed(() => [
-    { label: t('inventory.movement.receipt'), value: 'receipt' },
-    { label: t('inventory.movement.usage'), value: 'usage' },
-    { label: t('inventory.movement.transfer'), value: 'transfer' },
-    { label: t('inventory.movement.adjustment'), value: 'adjustment' },
-    { label: t('inventory.movement.count'), value: 'count' },
-    { label: t('inventory.movement.waste'), value: 'waste' },
-  ]);
-
-  const locationOptions = computed(() =>
-    clinicStore.activeLocations.map(location => ({
-      label: location.name,
-      value: location.id,
-    }))
-  );
-
   const filteredMovements = computed(() => {
     let movements = [...inventoryStore.stockMovements];
 
     // Filter by movement type
-    if (selectedMovementType.value) {
+    if (filterValues.value.movement_type) {
       movements = movements.filter(
-        m => m.movement_type === selectedMovementType.value
+        m => m.movement_type === filterValues.value.movement_type
       );
     }
 
     // Filter by location
-    if (selectedLocationId.value) {
+    if (filterValues.value.location_id) {
       movements = movements.filter(
-        m => m.location_id === selectedLocationId.value
+        m => m.location_id === filterValues.value.location_id
       );
     }
 
     // Filter by date range
-    if (dateRange.value) {
-      const [startDate, endDate] = dateRange.value.split(' - ');
-      if (startDate && endDate) {
+    if (filterValues.value.date_range && typeof filterValues.value.date_range === 'object') {
+      const dateRange = filterValues.value.date_range as { start?: string; end?: string };
+      if (dateRange.start && dateRange.end) {
         movements = movements.filter(m => {
           const movementDate = new Date(m.created_at);
           return (
-            movementDate >= new Date(startDate) &&
-            movementDate <= new Date(endDate)
+            movementDate >= new Date(dateRange.start!) &&
+            movementDate <= new Date(dateRange.end!)
           );
         });
       }
+    }
+
+    // Filter by product search
+    if (filterValues.value.product_search) {
+      const searchTerm = String(filterValues.value.product_search).toLowerCase();
+      movements = movements.filter(m => 
+        m.product?.name?.toLowerCase().includes(searchTerm) ||
+        m.product?.sku?.toLowerCase().includes(searchTerm)
+      );
     }
 
     return movements;
@@ -459,8 +416,20 @@
     showMovementDetails.value = true;
   };
 
-  const dateOptions = (date: string) => {
-    return new Date(date) <= new Date();
+  // Filter event handlers
+  const handleFilterChange = (event: FilterChangeEvent) => {
+    // Handle individual filter changes if needed
+    // Could add specific logic here for real-time filtering
+  };
+
+  const handleFilterReset = (event: FilterResetEvent) => {
+    // Handle filter reset - refresh data to show all movements
+    refreshData();
+  };
+
+  const handleFilterClear = () => {
+    // Handle all filters cleared - refresh data to show all movements
+    refreshData();
   };
 
   // Formatting helpers
@@ -560,22 +529,9 @@
     align-items: center;
     gap: var(--space-4);
 
-    .filter-select {
-      min-width: 150px;
-    }
-
-    .date-input {
-      min-width: 200px;
-    }
-
     @media (max-width: 768px) {
       flex-direction: column;
       gap: var(--space-3);
-
-      .filter-select,
-      .date-input {
-        min-width: 100%;
-      }
     }
   }
 

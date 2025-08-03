@@ -56,22 +56,22 @@
       </div>
     </q-banner>
 
-    <!-- Search and Actions -->
-    <div class="row q-gutter-md items-center q-mb-lg">
-      <div class="col-12 col-md-4">
-        <q-input
-          v-model="searchQuery"
-          :placeholder="$t('locations.search')"
-          outlined
-          dense
-          clearable
-        >
-          <template v-slot:prepend>
-            <q-icon name="search" />
-          </template>
-        </q-input>
-      </div>
+    <!-- Modern FilterPanel Component -->
+    <div class="filters-section q-mb-lg">
+      <FilterPanel
+        :preset="locationsFilterPreset"
+        v-model="filterValues"
+        @change="handleFilterChange"
+        @reset="handleFilterReset"
+        @clear="handleFilterClear"
+        :loading="loading"
+        collapsible
+        class="locations-filter-panel"
+      />
+    </div>
 
+    <!-- Actions -->
+    <div class="row q-gutter-md items-center q-mb-lg">
       <div class="col-auto">
         <q-btn
           :label="$t('locations.add')"
@@ -116,7 +116,10 @@
   import { useQuasar } from 'quasar';
   import PageTitle from '@/components/PageTitle.vue';
   import PageLayout from '@/components/PageLayout.vue';
+  import FilterPanel from 'src/components/filters/FilterPanel.vue';
   import { useAuthStore } from 'src/stores/auth';
+  import { locationsFilterPreset } from 'src/presets/filters/locations';
+  import type { FilterValues, FilterChangeEvent, FilterResetEvent } from 'src/types/filters';
 
   const { t } = useI18n();
   const $q = useQuasar();
@@ -127,7 +130,9 @@
 
   // Data
   const loading = ref(false);
-  const searchQuery = ref('');
+
+  // Modern Filter System
+  const filterValues = ref<FilterValues>({});
 
   // Sample data for demonstration
   const locations = ref([
@@ -159,15 +164,31 @@
 
   // Computed
   const filteredLocations = computed(() => {
-    if (!searchQuery.value) return locations.value;
+    let filtered = [...locations.value];
 
-    const query = searchQuery.value.toLowerCase();
-    return locations.value.filter(
-      location =>
-        location.name.toLowerCase().includes(query) ||
-        location.type.toLowerCase().includes(query) ||
-        location.description.toLowerCase().includes(query)
-    );
+    // Apply search filter
+    if (filterValues.value.search) {
+      const searchTerm = String(filterValues.value.search).toLowerCase();
+      filtered = filtered.filter(location =>
+        location.name.toLowerCase().includes(searchTerm) ||
+        location.type.toLowerCase().includes(searchTerm) ||
+        location.description.toLowerCase().includes(searchTerm)
+      );
+    }
+
+    // Apply type filter
+    if (filterValues.value.type) {
+      filtered = filtered.filter(location => 
+        location.type.toLowerCase() === String(filterValues.value.type).toLowerCase()
+      );
+    }
+
+    // Apply main location filter
+    if (filterValues.value.is_main === true) {
+      filtered = filtered.filter(location => location.isMain === true);
+    }
+
+    return filtered;
   });
 
   const mainLocationsCount = computed(() => {
@@ -211,6 +232,20 @@
       sortable: false,
     },
   ]);
+
+  // Filter event handlers
+  const handleFilterChange = (event: FilterChangeEvent) => {
+    // Handle individual filter changes if needed
+    // Filters are applied automatically via computed properties
+  };
+
+  const handleFilterReset = (event: FilterResetEvent) => {
+    // Handle filter reset - filters automatically reset via v-model
+  };
+
+  const handleFilterClear = () => {
+    // Handle all filters cleared - filters automatically cleared via v-model
+  };
 
   // Methods
   const showComingSoon = () => {

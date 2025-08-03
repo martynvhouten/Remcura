@@ -419,7 +419,7 @@
   };
 
   const formatQuantity = (quantity: number | null | undefined) => {
-    if (quantity == null || isNaN(quantity)) {
+    if (quantity === null || quantity === undefined || isNaN(quantity)) {
       return '0';
     }
     return quantity.toLocaleString(undefined, {
@@ -439,8 +439,8 @@
   };
 
   const getQuantityColor = (ratio: number) => {
-    if (ratio > 0.5) return 'green';
-    if (ratio > 0.2) return 'orange';
+    if (ratio > 0.5) { return 'green'; }
+    if (ratio > 0.2) { return 'orange'; }
     return 'red';
   };
 
@@ -515,7 +515,7 @@
     try {
       const clinicId = authStore.clinicId;
       if (!clinicId) {
-        throw new Error('No clinic ID available');
+        throw new Error($t('batchoverv.noclinicidavailable'));
       }
       await batchStore.updateBatch({
         id: batch.id,
@@ -559,7 +559,7 @@
       loading.value = true;
       const clinicId = authStore.clinicId;
       if (!clinicId) {
-        throw new Error('No clinic ID available');
+        throw new Error($t('batchoverv.noclinicidavailable'));
       }
       await Promise.all([
         batchStore.fetchBatches(clinicId),

@@ -381,7 +381,7 @@
   };
 
   const convertToCSV = (data: any[]) => {
-    if (!data.length) return '';
+    if (!data.length) { return ''; }
 
     const headers = Object.keys(data[0]);
     const csvHeaders = headers.join(',');

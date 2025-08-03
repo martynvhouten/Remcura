@@ -13,7 +13,7 @@ export function useCurrency() {
     currency = 'EUR',
     options?: Intl.NumberFormatOptions
   ): string => {
-    if (amount == null || isNaN(amount)) return '€0,00';
+    if (amount === null || amount === undefined || isNaN(amount)) { return '€0,00'; }
 
     return new Intl.NumberFormat(locale.value || 'nl-NL', {
       style: 'currency',
@@ -35,7 +35,7 @@ export function useCurrency() {
     value: number | null | undefined,
     options?: Intl.NumberFormatOptions
   ): string => {
-    if (value == null || isNaN(value)) return '0';
+    if (value === null || value === undefined || isNaN(value)) { return '0'; }
 
     return new Intl.NumberFormat(locale.value || 'nl-NL', {
       minimumFractionDigits: 0,
@@ -59,11 +59,11 @@ export function useDate() {
     dateString: string | Date | null | undefined,
     format = 'DD/MM/YYYY'
   ): string => {
-    if (!dateString) return '-';
+    if (!dateString) { return '-'; }
 
     try {
       const dateObj = typeof dateString === 'string' ? new Date(dateString) : dateString;
-      if (isNaN(dateObj.getTime())) return '-';
+      if (isNaN(dateObj.getTime())) { return '-'; }
       
       return date.formatDate(dateObj, format);
     } catch {
@@ -81,7 +81,7 @@ export function useDate() {
   const formatRelativeTime = (
     dateString: string | Date | null | undefined
   ): string => {
-    if (!dateString) return '-';
+    if (!dateString) { return '-'; }
 
     try {
       const dateObj = typeof dateString === 'string' ? new Date(dateString) : dateString;
@@ -123,7 +123,7 @@ export function useNumber() {
     unit?: string,
     decimals = 0
   ): string => {
-    if (quantity == null) return '0';
+    if (quantity === null || quantity === undefined) { return '0'; }
 
     const formatted = new Intl.NumberFormat(locale.value || 'nl-NL', {
       minimumFractionDigits: decimals,
@@ -137,7 +137,7 @@ export function useNumber() {
     value: number | null | undefined,
     decimals = 1
   ): string => {
-    if (value == null) return '0%';
+    if (value === null || value === undefined) { return '0%'; }
 
     return new Intl.NumberFormat(locale.value || 'nl-NL', {
       style: 'percent',
@@ -149,7 +149,7 @@ export function useNumber() {
   const formatCompactNumber = (
     value: number | null | undefined
   ): string => {
-    if (value == null) return '0';
+    if (value === null || value === undefined) { return '0'; }
 
     return new Intl.NumberFormat(locale.value || 'nl-NL', {
       notation: 'compact',

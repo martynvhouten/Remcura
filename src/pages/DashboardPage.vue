@@ -16,7 +16,7 @@
             dense
             outlined
             style="min-width: 250px; margin-right: 12px;"
-            label="Switch Demo Rol"
+            :label="$t('dashboard.demoRoleSwitch.label')"
             @update:model-value="switchDemoRole"
             color="primary"
             :loading="loading"
@@ -53,7 +53,7 @@
             @click="refreshDashboard"
             :loading="loading"
           >
-            <q-tooltip>Dashboard vernieuwen</q-tooltip>
+            <q-tooltip>{{ $t('dashboard.actions.refresh') }}</q-tooltip>
           </q-btn>
           <q-btn
             flat
@@ -62,7 +62,7 @@
             icon="tune"
             @click="showCustomizeDialog = true"
           >
-            <q-tooltip>Dashboard aanpassen</q-tooltip>
+            <q-tooltip>{{ $t('dashboard.actions.customize') }}</q-tooltip>
           </q-btn>
         </template>
       </PageTitle>
@@ -165,8 +165,7 @@
   import { useI18n } from 'vue-i18n';
   import { useQuasar } from 'quasar';
   import { useAuthStore } from 'src/stores/auth';
-  import { dashboardService } from 'src/services/dashboard';
-  import type { DashboardData, DashboardWidget as DashboardWidgetType } from 'src/services/dashboard';
+  import { dashboardService, type DashboardData, type DashboardWidget as DashboardWidgetType } from 'src/services/dashboard';
   import PageLayout from 'src/components/PageLayout.vue';
   import PageTitle from 'src/components/PageTitle.vue';
   import DashboardWidget from 'src/components/dashboard/DashboardWidget.vue';
@@ -231,14 +230,14 @@
   async function loadDashboard() {
     try {
       loading.value = true;
-      console.log('📊 Loading dashboard for role:', selectedDemoRole.value);
+      // Loading dashboard data for selected role
       dashboardData.value = await dashboardService.getDashboardData(selectedDemoRole.value);
-      console.log('✅ Dashboard loaded:', dashboardData.value?.widgets?.length, 'widgets');
+      // Dashboard loaded successfully
     } catch (error) {
       console.error('Failed to load dashboard:', error);
       $q.notify({
         type: 'negative',
-        message: 'Fout bij laden dashboard',
+        message: $t('dashboardp.negative'),
         caption: 'Probeer de pagina te vernieuwen'
       });
     } finally {
@@ -250,7 +249,7 @@
     await loadDashboard();
     $q.notify({
       type: 'positive',
-      message: 'Dashboard vernieuwd',
+      message: $t('dashboardp.positive'),
       timeout: 1000
     });
   }
@@ -259,9 +258,9 @@
     // Extract string value if object is passed
     const roleValue = typeof newRole === 'object' ? newRole.value : newRole;
     
-    console.log('🔄 Switching role from', selectedDemoRole.value, 'to', roleValue);
+    // Switching demo role
     
-    if (roleValue === selectedDemoRole.value) return;
+    if (roleValue === selectedDemoRole.value) { return; }
     
     selectedDemoRole.value = roleValue;
     
@@ -280,8 +279,8 @@
       
       $q.notify({
         type: 'positive',
-        message: `Omgeschakeld naar ${getDemoRoleLabel(roleValue)}`,
-        caption: 'Dashboard is aangepast aan je nieuwe rol',
+        message: $t('dashboardp.positive'),
+                  caption: 'Dashboard is aangepast aan je nieuwe rol',
         timeout: 2500,
         icon: 'swap_horiz'
       });
@@ -289,7 +288,7 @@
       console.error('Failed to switch demo role:', error);
       $q.notify({
         type: 'negative',
-        message: 'Fout bij wisselen van rol',
+        message: $t('dashboardp.negative'),
         caption: 'Probeer het opnieuw'
       });
     } finally {

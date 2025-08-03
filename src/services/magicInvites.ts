@@ -175,7 +175,7 @@ export class MagicInviteService {
       return data;
     } catch (error) {
       console.error('Error creating magic invite:', error);
-      throw new Error('Failed to create magic invite');
+      throw new Error($t('magicinvit.failedtocreatemagic'));
     }
   }
 
@@ -204,7 +204,7 @@ export class MagicInviteService {
   static async validateMagicCode(magicCode: string): Promise<MagicInvite | null> {
     try {
       // Alternative approach: use any to completely bypass TypeScript issues
-      const query: any = supabase.from('magic_invites');
+      const query = supabase.from('magic_invites');
       const result = await query
         .select('*')
         .eq('magic_code', magicCode)
@@ -213,14 +213,14 @@ export class MagicInviteService {
       
       const { data, error } = result;
 
-      if (error || !data) return null;
+      if (error || !data) { return null; }
 
       // Manual validation of complex conditions that were causing TypeScript issues
       const currentTime = new Date();
       const isNotExpired = !data.expires_at || new Date(data.expires_at) > currentTime;
       const hasUsesLeft = (data.max_uses || 0) > (data.current_uses || 0);
       
-      if (!isNotExpired || !hasUsesLeft) return null;
+      if (!isNotExpired || !hasUsesLeft) { return null; }
 
       // Track view
       await this.trackInviteView(data.id);
@@ -274,7 +274,7 @@ export class MagicInviteService {
         .select('*')
         .eq('id', request.magic_invite_id)
         .single();
-      if (!invite) throw new Error('Invalid invite');
+      if (!invite) throw new Error($t('magicinvit.invalidinvite'));
 
       const sessionData = {
         id: uuidv4(),
@@ -321,7 +321,7 @@ export class MagicInviteService {
       return data;
     } catch (error) {
       console.error('Error creating guest session:', error);
-      throw new Error('Failed to create guest session');
+      throw new Error($t('magicinvit.failedtocreateguest'));
     }
   }
 
@@ -329,7 +329,7 @@ export class MagicInviteService {
   static async trackInviteView(inviteId: string): Promise<void> {
     try {
       // TODO: Implement analytics tracking when the increment_invite_views RPC function is created
-      console.log('Tracking invite view for:', inviteId);
+      // Tracking invite view
     } catch (error) {
       console.error('Error tracking invite view:', error);
     }
@@ -339,7 +339,7 @@ export class MagicInviteService {
         inviteId: string,
     practiceId: string,
     eventType: string,
-    eventData: any = {}
+    eventData: Record<string, any> = {}
   ): Promise<void> {
     try {
       // Invite analytics now handled by usage_analytics table
@@ -405,8 +405,8 @@ export class MagicInviteService {
 
   static getDeviceType(): string {
     const userAgent = navigator.userAgent.toLowerCase();
-    if (userAgent.includes('mobile')) return 'mobile';
-    if (userAgent.includes('tablet')) return 'tablet';
+    if (userAgent.includes('mobile')) { return 'mobile'; }
+    if (userAgent.includes('tablet')) { return 'tablet'; }
     return 'desktop';
   }
 
@@ -443,7 +443,7 @@ export class MagicInviteService {
         .eq('id', sessionId);
     } catch (error) {
       console.error('Error extending guest session:', error);
-      throw new Error('Failed to extend session');
+      throw new Error($t('magicinvit.failedtoextendsession'));
     }
   }
 

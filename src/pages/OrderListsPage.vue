@@ -257,7 +257,7 @@
   import { ref, computed, onMounted, watch } from 'vue';
   import { useQuasar } from 'quasar';
   import { useI18n } from 'vue-i18n';
-  import { useOrderListsStore } from 'src/stores/orderLists';
+  import { useOrderListsStore, type OrderListWithItems } from 'src/stores/orderLists';
   import { useSuppliersStore } from 'src/stores/suppliers';
   import { useProductsStore } from 'src/stores/products';
   import { useAuthStore } from 'src/stores/auth';
@@ -266,7 +266,6 @@
   import BaseCard from 'src/components/base/BaseCard.vue';
   import FilterPanel from 'src/components/filters/FilterPanel.vue';
   import OrderListDialog from 'src/components/products/OrderListDialog.vue';
-  import type { OrderListWithItems } from 'src/stores/orderLists';
   import type { FilterValues, FilterChangeEvent, FilterResetEvent } from 'src/types/filters';
   import { orderListsFilterPreset } from 'src/presets/filters/orderLists';
   import { supabase } from 'src/services/supabase';
@@ -360,8 +359,7 @@
 
   // Filter Event Handlers
   const handleFilterChange = (event: FilterChangeEvent) => {
-    // Automatically handled by v-model on FilterPanel
-    console.log('Filter changed:', event);
+    // Handle individual filter changes - filters applied automatically via computed properties
   };
 
   const handleFilterReset = (event: FilterResetEvent) => {
@@ -422,7 +420,7 @@
   };
 
   const confirmDelete = async () => {
-    if (!orderListToDelete.value) return;
+    if (!orderListToDelete.value) { return; }
 
     try {
       await orderListsStore.deleteOrderList(orderListToDelete.value.id);
@@ -511,7 +509,7 @@
               color: 'white',
               handler: () => {
                 // Could navigate to submitted orders view
-                console.log('Navigate to submitted orders');
+                // Navigate to submitted orders
               }
             }
           ]

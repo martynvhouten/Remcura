@@ -6,7 +6,7 @@ export interface DashboardWidget {
   id: string;
   title: string;
   type: 'metric' | 'chart' | 'list' | 'alert' | 'quickAction';
-  data: any;
+  data: Record<string, any>;
   size: 'small' | 'medium' | 'large';
   position: number;
   visible: boolean;
@@ -187,7 +187,7 @@ class DashboardService {
           dashboardLogger.info(`✅ Real widget loaded: ${widgetId}`);
           widgets.push(widget);
         } else {
-          throw new Error('Widget creation returned null');
+          throw new Error($t('dashboard.widgetcreationreturnednull'));
         }
       } catch (error) {
         dashboardLogger.info(`⚠️ Real widget failed for ${widgetId}, using mock:`, error.message);
@@ -836,8 +836,8 @@ class DashboardService {
   /**
    * Calculate recent activity score based on recent orders and stock movements
    */
-  private calculateRecentActivity(orders: any[], stockLevels: any[]): number {
-    if (!orders || !stockLevels) return 0;
+  private calculateRecentActivity(orders: Order[], stockLevels: StockLevel[]): number {
+    if (!orders || !stockLevels) { return 0; }
     
     const now = new Date();
     const last24Hours = new Date(now.getTime() - 24 * 60 * 60 * 1000);

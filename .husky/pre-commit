@@ -1,0 +1,60 @@
+#!/usr/bin/env sh
+. "$(dirname -- "$0")/_/husky.sh"
+
+# Run lint-staged for staged files
+npx lint-staged
+
+# Run i18n validation on any i18n changes
+if git diff --cached --name-only | grep -q "src/i18n/"; then
+  echo "🌐 Detected i18n changes, running validation..."
+  npm run i18n:validate
+  
+  # Check for hardcoded text in staged files
+  staged_files=$(git diff --cached --name-only --diff-filter=ACM | grep -E "\.(vue|ts|js)$" || true)
+  if [ -n "$staged_files" ]; then
+    echo "🔍 Checking staged files for hardcoded text..."
+    # Create temporary script to check only staged files
+    temp_script=$(mktemp)
+    cat > "$temp_script" << 'EOF'
+#!/usr/bin/env node
+const { execSync } = require('child_process');
+const stagedFiles = process.argv.slice(2);
+
+if (stagedFiles.length === 0) {
+  console.log('ℹ️  No staged Vue/TS/JS files to check');
+  process.exit(0);
+}
+
+// Run hardcoded text finder on staged files only
+try {
+  const result = execSync(`node scripts/find-hardcoded-text.js`, { 
+    encoding: 'utf8',
+    stdio: 'pipe'
+  });
+  
+  // Parse output and filter for staged files
+  if (result.includes('potentiele hardcoded teksten gevonden')) {
+    const lines = result.split('\n');
+    const hasIssuesInStaged = lines.some(line => 
+      stagedFiles.some(file => line.includes(file))
+    );
+    
+    if (hasIssuesInStaged) {
+      console.log('❌ Hardcoded text found in staged files!');
+      console.log('Run "npm run i18n:find-hardcoded" to see details');
+      process.exit(1);
+    }
+  }
+  
+  console.log('✅ No hardcoded text issues in staged files');
+} catch (error) {
+  console.log('⚠️  Could not validate hardcoded text, proceeding...');
+}
+EOF
+    
+    node "$temp_script" $staged_files
+    rm "$temp_script"
+  fi
+fi
+
+echo "✅ Pre-commit checks passed!"

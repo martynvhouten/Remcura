@@ -104,9 +104,9 @@ export const useBatchStore = defineStore('batch', () => {
         days_until_expiry: Math.ceil((new Date(batch.expiry_date).getTime() - new Date().getTime()) / (1000 * 60 * 60 * 24)),
         urgency_level: (() => {
           const daysUntilExpiry = Math.ceil((new Date(batch.expiry_date).getTime() - new Date().getTime()) / (1000 * 60 * 60 * 24));
-          if (daysUntilExpiry <= 7) return 'critical';
-          if (daysUntilExpiry <= 14) return 'high';
-          if (daysUntilExpiry <= 30) return 'warning';
+              if (daysUntilExpiry <= 7) { return 'critical'; }
+    if (daysUntilExpiry <= 14) { return 'high'; }
+    if (daysUntilExpiry <= 30) { return 'warning'; }
           return 'normal';
         })()
       }));

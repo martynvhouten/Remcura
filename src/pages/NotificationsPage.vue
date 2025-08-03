@@ -362,7 +362,7 @@
         .filter(n => !n.is_read)
         .map(n => n.id);
 
-      if (unreadIds.length === 0) return;
+      if (unreadIds.length === 0) { return; }
 
       mockNotifications.value.forEach(n => {
         if (unreadIds.includes(n.id)) {
