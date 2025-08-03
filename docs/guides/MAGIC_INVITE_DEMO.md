@@ -12,20 +12,20 @@ The Magic Invite system is Remcura's innovative authentication solution that rep
 - Owner navigates to Team Management
 - Clicks "Invite New Member"
 - Enters: `Sarah - Pharmacy Assistant`
-- System generates: `🏥DEMO✨2025`
+- System generates: `🏥DEMO✨2026`
 
 ### 2. Easy Sharing
 **Owner shares the code through any channel:**
 
-- WhatsApp: "Hi Sarah! Join our inventory system with code: 🏥DEMO✨2025"
-- Email: "Your access code is 🏥DEMO✨2025"  
-- Verbal: "Hospital-Demo-Sparkles-2025"
+- WhatsApp: "Hi Sarah! Join our inventory system with code: 🏥DEMO✨2026"
+- Email: "Your access code is 🏥DEMO✨2026"  
+- Verbal: "Hospital-Demo-Sparkles-2026"
 
 ### 3. Simple Access
 **New user joins instantly:**
 
 1. User visits: `remcura.com/join`
-2. Types: `🏥DEMO✨2025`
+2. Types: `🏥DEMO✨2026`
 3. Gets immediate access - no email verification needed!
 
 ## 🏥 Practice Scenarios
@@ -33,29 +33,29 @@ The Magic Invite system is Remcura's innovative authentication solution that rep
 ### Scenario A: Small Clinic
 **Practice**: Amsterdam Family Clinic
 
-1. Owner creates code: `🏥AMSTERDAM✨2025`
+1. Owner creates code: `🏥AMSTERDAM✨2026`
 2. Shares with nurse via WhatsApp
 3. Nurse uses code immediately
 4. Instant access to clinic's inventory
 
 **Sharing message:**
    Welcome to our team! Access our inventory system at:
-   Enter this code: 🏥AMSTERDAM✨2025
+   Enter this code: 🏥AMSTERDAM✨2026
 
 ### Scenario B: Hospital Department
 **Practice**: City Hospital - Emergency Department
 
-Owner: *"Go to remcura.com/join and type: 🏥CLINIC✨2025"*
+Owner: *"Go to remcura.com/join and type: 🏥CLINIC✨2026"*
 Staff member types the code and gets immediate access to emergency supply inventory.
 
 ## 🎪 Demo Account
 **For testing and demonstrations:**
 
 - **Website**: remcura.com/join
-- **Demo Code**: `🏥DEMO✨2025`
+- **Demo Code**: `🏥DEMO✨2026`
 - **Access**: Immediate demo environment
 
-**Current approach**: *"Type 🏥DEMO✨2025 at remcura.com/join"*
+**Current approach**: *"Type 🏥DEMO✨2026 at remcura.com/join"*
 
 ## 🔧 Technical Features
 
@@ -63,7 +63,7 @@ Staff member types the code and gets immediate access to emergency supply invent
 - **🏥** = Hospital/Medical identifier
 - **DEMO** = Practice identifier  
 - **✨** = Visual separator
-- **2025** = Current year
+- **2026** = Current year
 
 ### Security Features
 - **Time-limited**: Codes expire after set period
@@ -82,7 +82,7 @@ Staff member types the code and gets immediate access to emergency supply invent
 ### Quick Demo Steps
 1. Open any mobile browser
 2. Navigate to remcura.com/join
-3. Type or paste: `🏥DEMO✨2025`
+3. Type or paste: `🏥DEMO✨2026`
 4. Instant access to mobile-optimized interface
 
 ### Features Showcased

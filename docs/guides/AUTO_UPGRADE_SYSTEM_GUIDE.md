@@ -33,7 +33,7 @@ CREATE TABLE permanent_users (
   -- Personal Identity
   full_name VARCHAR(100) NOT NULL,
   email VARCHAR(255), -- Optional
-  personal_magic_code VARCHAR(50) UNIQUE, -- 🏥SARAH2025
+  personal_magic_code VARCHAR(50) UNIQUE, -- 🏥SARAH2026
   
   -- Login Methods (at least one required)
   magic_code_enabled BOOLEAN DEFAULT false,
@@ -94,12 +94,12 @@ const invite = await MagicInviteService.createMagicInvite({
   department: 'Front Office',
   isPermanent: true // Triggers upgrade flow
 });
-// Generated: 🏥KLINIEK✨2025
+// Generated: 🏥KLINIEK✨2026
 ```
 
 **Step 2: Assistant First Login**
 ```typescript
-// remcura.com/join → Enter code: 🏥KLINIEK✨2024
+// remcura.com/join → Enter code: 🏥KLINIEK✨2026
 const result = await PermanentUserService.detectLoginType(code);
 
 if (result.type === 'invite' && isPermanentRole(result.data.role)) {
@@ -112,7 +112,7 @@ if (result.type === 'invite' && isPermanentRole(result.data.role)) {
 ```
 ┌─────────────────────────────────────┐
 │ ⚡ PERSONAL MAGIC CODE             │
-│   🏥SARAH2024                      │
+│   🏥SARAH2026                      │
 │   ✅ Super fast login              │
 │   ✅ Easy to remember              │
 │   ✅ Works on any device           │
@@ -145,15 +145,15 @@ const result = await PermanentUserService.createPermanentUser({
   login_method: 'magic_code' // Selected option
 });
 
-// Result: { success: true, personal_code: '🏥SARAH2024' }
+// Result: { success: true, personal_code: '🏥SARAH2026' }
 ```
 
 ### **Flow 2: Daily Login (Existing Team Member)**
 
 **Assistant Daily Routine:**
 ```typescript
-// remcura.com/join → Enter: 🏥SARAH2024
-const result = await PermanentUserService.detectLoginType('🏥SARAH2024');
+// remcura.com/join → Enter: 🏥SARAH2026
+const result = await PermanentUserService.detectLoginType('🏥SARAH2026');
 
 if (result.type === 'personal') {
   // Direct login - no upgrade dialog
@@ -236,7 +236,7 @@ if (isPermanentInvite) {
 
 **Key Features:**
 - 🎨 Modern card-based design
-- ⚡ Real-time code preview (`🏥SARAH2024`)
+- ⚡ Real-time code preview (`🏥SARAH2026`)
 - 📱 Automatic device detection
 - 🌍 Full internationalization support
 - ✅ Form validation and error handling
@@ -295,10 +295,10 @@ BEGIN
   clean_name := UPPER(REGEXP_REPLACE(SPLIT_PART(user_name, ' ', 1), '[^A-Za-z]', '', 'g'));
   clean_name := SUBSTRING(clean_name FROM 1 FOR 8);
   
-  -- Current year: "2025"
+  -- Current year: "2026"
   year_part := EXTRACT(YEAR FROM NOW())::TEXT;
   
-  -- Generate: "🏥SARAH2024"
+  -- Generate: "🏥SARAH2026"
   result := '🏥' || clean_name || year_part;
   
   -- Ensure uniqueness

@@ -169,7 +169,7 @@ export async function resetDemoData() {
 1. **Access demo account**:
    ```
    Email: demo@remcura.com
-   Magic Code: 🏥DEMO2025
+   Magic Code: 🏥DEMO2026
    ```
 
 2. **Test scenarios**:

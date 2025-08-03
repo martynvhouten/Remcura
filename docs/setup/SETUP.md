@@ -5,7 +5,7 @@ This guide helps you set up Remcura in your development environment and producti
 ## Overview
 
 Remcura is a professional inventory management system for medical clinics, built with Vue 3,
-Quasar Framework, and Supabase. The system is designed as a white-label SaaS solution.
+Quasar Framework, and Supabase. The system is designed as a comprehensive standalone application.
 
 ## Requirements
 
@@ -19,7 +19,7 @@ Quasar Framework, and Supabase. The system is designed as a white-label SaaS sol
 
 - **Supabase account**: for backend services
 - **Web hosting**: for frontend deployment
-- **Custom domain**: (optional) for white-label deployment
+- **Custom domain**: (optional) for professional deployment
 
 ## Database Setup
 

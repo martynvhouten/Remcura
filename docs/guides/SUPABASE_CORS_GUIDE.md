@@ -205,5 +205,5 @@ monitoringService.captureError(new Error('CORS blocked'), {
 
 ---
 
-**Last Updated**: January 2025 **Security Note**: Always prioritize security over convenience when
+**Last Updated**: October 2025 **Security Note**: Always prioritize security over convenience when
 configuring CORS.

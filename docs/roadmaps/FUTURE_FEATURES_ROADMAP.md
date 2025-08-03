@@ -93,7 +93,7 @@ Quest: "Pharmacy Explorer"
 ### 💬 **Slack/Teams Integration**
 ```
 /remcura invite @sarah pharmacy
-→ Bot: "Uitnodiging voor Sarah (apotheek) gemaakt: 🏥KLINIEK✨2024"
+→ Bot: "Uitnodiging voor Sarah (apotheek) gemaakt: 🏥KLINIEK✨2026"
 → Sarah krijgt DM met directe toegang link
 ```
 
@@ -141,7 +141,7 @@ const practiceTheme = {
 **Scenario**:
 ```
 Doctor: "Hey Google, invite the new nurse to Remcura"
-Google: "Sure! I've created code 🏥CLINIC✨2024. Should I text it to them?"
+Google: "Sure! I've created code 🏥CLINIC✨2026. Should I text it to them?"
 Doctor: "Yes, send to +31612345678"
 Google: "Done! They'll receive an invitation message now."
 ```
