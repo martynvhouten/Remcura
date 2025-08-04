@@ -586,6 +586,14 @@ export default {
     lowStock: 'Lage voorraad',
     outOfStock: 'Niet op voorraad',
     overStock: 'Overvoorraad',
+    
+    // Table column headers
+    product: 'Product',
+    location: 'Locatie',
+    currentStock: 'Huidige voorraad',
+    minimumStock: 'Minimum voorraad',
+    lastCounted: 'Laatst geteld',
+    actions: 'Acties',
     recentActivity: 'Recente activiteit',
     recentMovements: 'Recente mutaties',
     noRecentActivity: 'Geen recente activiteit',
@@ -658,7 +666,6 @@ export default {
     loadingMovements: 'Mutaties laden...',
     noMovementsFound: 'Geen mutaties gevonden',
     stockFilter: 'Voorraad filter',
-    currentStock: 'Huidige voorraad',
     thresholds: 'Drempelwaarden',
     min: 'Min',
     max: 'Max',
@@ -1167,13 +1174,21 @@ export default {
     createOrder: 'Bestelling aanmaken',
     analytics: 'Analyses',
     bulkExport: 'Geselecteerde exporteren',
-    bulkEmail: 'Geselecteerde E-mailen',
+    bulkEmail: 'Geselecteerde e-mailen',
     downloadPDF: 'PDF downloaden',
     downloadCSV: 'CSV downloaden',
     sendEmail: 'E-mail verzenden',
     submitToMagento: 'Verzenden naar Magento',
     duplicate: 'Dupliceren',
     cancel: 'Bestelling annuleren',
+    
+    // Table column headers
+    orderNumber: 'Bestelnummer',
+    orderDate: 'Besteldatum',
+    supplier: 'Leverancier',
+    totalAmount: 'Totaalbedrag',
+    expectedDelivery: 'Verwachte levering',
+    actions: 'Acties',
 
     status: {
       draft: 'Concept',
@@ -1188,8 +1203,8 @@ export default {
       title: 'Filters',
       status: 'Status',
       supplier: 'Leverancier',
-      dateFrom: 'Vanaf Datum',
-      dateTo: 'Tot Datum',
+      dateFrom: 'Vanaf datum',
+      dateTo: 'Tot datum',
       allSuppliers: 'Alle leveranciers',
     },
 
@@ -1203,13 +1218,13 @@ export default {
     },
 
     exportFormat: {
-      csv: 'CSV Formaat',
-      pdf: 'PDF Formaat',
+      csv: 'CSV formaat',
+      pdf: 'PDF formaat',
     },
 
     exportScope: {
       all: 'Alle bestellingen',
-      filtered: 'Gefilterde Bestellingen',
+      filtered: 'Gefilterde bestellingen',
       selected: 'Geselecteerde bestellingen',
     },
 
