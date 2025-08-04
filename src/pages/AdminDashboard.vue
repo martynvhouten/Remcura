@@ -30,7 +30,7 @@
       <div class="col-12 col-sm-6 col-md-3 stats-card-col">
         <BaseCard
           
-          :title="$t('admin.stats.totalUsers')>
+          :title="$t('admin.stats.totalUsers')"
             <div class="stat-display">
               <div class="stat-value">{{ stats.totalUsers }}</div>
             </div>
