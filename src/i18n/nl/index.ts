@@ -1190,7 +1190,6 @@ export default {
     expectedDelivery: 'Verwachte levering',
     actions: 'Acties',
 
-    status: 'Status',
     status: {
       draft: 'Concept',
       submitted: 'Verzonden',
@@ -1898,9 +1897,6 @@ export default {
     email: 'E-mail',
     phone: 'Telefoon',
     city: 'Stad',
-    lastSync: 'Laatste sync',
-    integrationStatus: 'Integratie status',
-    orderMethod: 'Bestelmethode',
     supplierName: 'Leverancier naam',
     contactEmail: 'Contact e-mail',
     contactPhone: 'Contact telefoon',
@@ -1982,11 +1978,7 @@ export default {
       email: 'E-mail',
       api: 'API',
       pdf: 'PDF'
-    },
-    
-    // MISSING TABLE HEADERS (UNIQUE KEYS ONLY):
-    name: 'Naam',
-    phone: 'Telefoon'
+    }
   },
 
   // Notifications Page
@@ -2580,8 +2572,6 @@ export default {
     'common.date': 'Datum',
 
     'inventory.minimumStock': 'Minimum voorraad',
-
-    'productsPage.table.stockType': 'Voorraadtype',
 
     'orderLists.searchPlaceholder': 'Zoek bestellijsten...',
 
@@ -3496,8 +3486,6 @@ export default {
     'productsPage.details.stockInfo': 'StockInfo',
 
     'productsPage.details.currentStock': 'CurrentStock',
-
-    'productsPage.table.stockStatus': 'StockStatus',
 
     'products.name': 'Naam',
 
@@ -4662,16 +4650,6 @@ export default {
     'orders.export.exportSuccess': 'ExportSuccess',
 
     'orders.export.exportError': 'ExportError',
-
-    'productsPage.table.name': 'Naam',
-
-    'productsPage.table.sku': 'SKU',
-
-    'productsPage.table.gs1Status': 'Gs1Status',
-
-    'productsPage.table.price': 'Prijs',
-
-    'productsPage.table.actions': 'Actions',
 
     'productsPage.stockStatus.in_stock': 'In_stock',
 
