@@ -62,7 +62,7 @@
   import { ref } from 'vue';
   import { useI18n } from 'vue-i18n';
   import { useQuasar } from 'quasar';
-  import BaseCard from '../base/BaseCard.vue';
+  import { BaseCard } from '../cards';
   import { useAuthStore } from '../../stores/auth';
 
   // Composables

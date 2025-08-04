@@ -150,6 +150,22 @@ const cardClasses = computed(() => {
       0 1px 3px rgba(0, 0, 0, 0.3),
       0 1px 2px rgba(0, 0, 0, 0.2);
   }
+
+  // Disable hover effects on form elements within cards
+  .q-field,
+  .q-input,
+  .q-select,
+  .q-btn-dropdown,
+  .q-toggle,
+  .q-checkbox,
+  .q-radio,
+  .q-slider {
+    transition: none !important;
+    
+    &:hover {
+      transform: none !important;
+    }
+  }
 }
 
 // Card header

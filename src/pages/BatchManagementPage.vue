@@ -223,13 +223,42 @@
 
     <!-- Batch Detail Dialog -->
     <q-dialog v-model="showBatchDetailDialog" max-width="800px">
-      <BatchDetailCard
+      <BaseCard
         v-if="selectedBatch"
-        :batch="selectedBatch"
-        @close="showBatchDetailDialog = false"
-        @updated="onBatchUpdated"
-        @use-batch="onUseBatch"
-      />
+        :title="`Batch: ${selectedBatch.batchNumber}`"
+        :subtitle="selectedBatch.productName"
+        icon="inventory"
+        icon-color="primary"
+      >
+        <div class="batch-details">
+          <div class="detail-row">
+            <span class="label">{{ $t('batch.expiryDate') }}:</span>
+            <span>{{ formatDate(selectedBatch.expiryDate) }}</span>
+          </div>
+          <div class="detail-row">
+            <span class="label">{{ $t('batch.currentQuantity') }}:</span>
+            <span>{{ selectedBatch.currentQuantity }}</span>
+          </div>
+          <div class="detail-row">
+            <span class="label">{{ $t('batch.status') }}:</span>
+            <q-chip 
+              :color="getStatusColor(selectedBatch.status)"
+              text-color="white"
+              size="sm"
+            >
+              {{ $t(`batch.status.${selectedBatch.status}`) }}
+            </q-chip>
+          </div>
+        </div>
+        
+        <template #actions>
+          <q-btn 
+            flat 
+            :label="$t('common.close')" 
+            @click="showBatchDetailDialog = false" 
+          />
+        </template>
+      </BaseCard>
     </q-dialog>
 
     <!-- Barcode Scanner Dialog -->
@@ -248,16 +277,17 @@
   import { useAuthStore } from 'src/stores/auth';
   import PageLayout from 'src/components/PageLayout.vue';
   import PageTitle from 'src/components/PageTitle.vue';
-  import BaseCard from 'src/components/base/BaseCard.vue';
+  import { BaseCard } from 'src/components/cards';
 import { InteractiveCard } from 'src/components/cards';
   import BatchOverview from 'src/components/BatchOverview.vue';
   import BatchRegistrationForm from 'src/components/BatchRegistrationForm.vue';
-  import BatchDetailCard from 'src/components/BatchDetailCard.vue';
+
   import BarcodeScanner from 'src/components/BarcodeScanner.vue';
   import ExpiringBatchesList from 'src/components/ExpiringBatchesList.vue';
   import FifoBatchManager from 'src/components/FifoBatchManager.vue';
   import BatchReports from 'src/components/BatchReports.vue';
   import type { ProductBatchWithDetails } from 'src/types/inventory';
+  import { useFormatting } from 'src/composables/useFormatting';
 
   // Composables
   const { t } = useI18n();
@@ -265,6 +295,18 @@ import { InteractiveCard } from 'src/components/cards';
   const batchStore = useBatchStore();
   const inventoryStore = useInventoryStore();
   const authStore = useAuthStore();
+  const { formatDate } = useFormatting();
+
+  const getStatusColor = (status: string) => {
+    const colors = {
+      active: 'positive',
+      expired: 'negative',
+      depleted: 'grey',
+      recalled: 'deep-orange',
+      quarantine: 'warning',
+    };
+    return colors[status] || 'grey';
+  };
 
   // State
   const activeTab = ref('overview');
@@ -514,11 +556,34 @@ import { InteractiveCard } from 'src/components/cards';
   .stat-display {
     text-align: center;
     
-    .stat-value {
-      font-size: 28px;
-      font-weight: 700;
+      .stat-value {
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--text-primary);
+    line-height: 1.2;
+  }
+}
+
+.batch-details {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+
+  .detail-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 0;
+    border-bottom: 1px solid var(--card-border, rgba(0, 0, 0, 0.08));
+
+    &:last-child {
+      border-bottom: none;
+    }
+
+    .label {
+      font-weight: 600;
       color: var(--text-primary);
-      line-height: 1.2;
     }
   }
+}
 </style>

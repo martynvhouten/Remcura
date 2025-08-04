@@ -263,7 +263,7 @@
   import { useAuthStore } from 'src/stores/auth';
   import PageLayout from 'src/components/PageLayout.vue';
   import PageTitle from 'src/components/PageTitle.vue';
-  import BaseCard from 'src/components/base/BaseCard.vue';
+  import { BaseCard } from 'src/components/cards';
   import FilterPanel from 'src/components/filters/FilterPanel.vue';
   import OrderListDialog from 'src/components/products/OrderListDialog.vue';
   import type { FilterValues, FilterChangeEvent, FilterResetEvent } from 'src/types/filters';
