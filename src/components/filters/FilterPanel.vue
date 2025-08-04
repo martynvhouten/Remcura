@@ -225,7 +225,7 @@ const handleFieldChange = (fieldId: string, value: any) => {
   
   // Use debounced update for text/search fields to improve performance
   const field = allFields.value.find(f => f.id === fieldId)
-  const shouldDebounce = field?.type === 'text' || field?.debounce !== false
+  const shouldDebounce = field?.type === 'text' || (field?.debounce !== undefined && field?.debounce !== false)
   
   if (shouldDebounce) {
     debouncedEmitUpdate(newValues)
@@ -294,9 +294,6 @@ onMounted(() => {
   margin-bottom: 16px;
   
   // Filter toggle button styling is now handled by app-btn-filter class in app.scss
-  .filter-toggle-btn {
-    // All styling moved to global app-btn-filter class for consistency
-  }
 }
 
 // Premium smooth filter slide transition - Optimized for performance
@@ -445,9 +442,7 @@ onMounted(() => {
   margin-top: 20px; // Increased margin
   
   // Filter action button styling is now handled by app-btn-primary and app-btn-secondary classes
-  .filter-btn {
-    // All styling moved to global button classes for consistency
-  }
+  // Filter button styling moved to global button classes for consistency
 }
 
 // Mobile responsiveness

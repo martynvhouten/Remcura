@@ -10,6 +10,9 @@ import type {
   ProductWithStock,
   ProductCategory,
   ProductFilter,
+  ProductInsert,
+  ProductUpdate,
+  StockLevel,
 } from '@/types/inventory';
 
 // RPC response interface for get_products_with_stock_levels

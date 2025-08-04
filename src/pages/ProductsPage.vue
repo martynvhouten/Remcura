@@ -77,36 +77,36 @@
           class="products-virtualized-table"
         >
           <!-- Product Name Cell for Virtualized Table -->
-          <template #body-cell-name="props">
+          <template #body-cell-name="slotProps">
             <div class="product-info">
-              <div class="product-name">{{ props.row.name }}</div>
-              <div v-if="props.row.brand" class="product-brand">
-                {{ props.row.brand }}
+              <div class="product-name">{{ slotProps.props.row.name }}</div>
+              <div v-if="slotProps.props.row.brand" class="product-brand">
+                {{ slotProps.props.row.brand }}
               </div>
             </div>
           </template>
 
           <!-- Stock Status Cell for Virtualized Table -->
-          <template #body-cell-stock_status="props">
+          <template #body-cell-stock_status="slotProps">
             <q-chip
-              :color="getStockStatusColor(props.row.stock_status)"
-              :text-color="getStockStatusTextColor(props.row.stock_status)"
+              :color="getStockStatusColor(slotProps.props.row.stock_status)"
+              :text-color="getStockStatusTextColor(slotProps.props.row.stock_status)"
               size="sm"
               class="stock-status-chip"
             >
-              {{ getStockStatusLabel(props.row.stock_status) }}
+              {{ getStockStatusLabel(slotProps.props.row.stock_status) }}
             </q-chip>
           </template>
 
           <!-- Actions Cell for Virtualized Table -->
-          <template #body-cell-actions="props">
+          <template #body-cell-actions="slotProps">
             <div class="table-actions">
               <q-btn
                 flat
                 round
                 dense
                 icon="visibility"
-                @click="openProductDetails(props.row)"
+                @click="showProductDetails(slotProps.props.row)"
                 class="action-btn"
               />
               <q-btn
@@ -114,9 +114,9 @@
                 round
                 dense
                 icon="add_shopping_cart"
-                @click="addToCart(props.row)"
+                @click="handleAddToCart(slotProps.props.row)"
                 class="action-btn"
-                :color="cartItems[props.row.id] ? 'green' : 'primary'"
+                :color="cart[slotProps.props.row.id] ? 'green' : 'primary'"
               />
             </div>
           </template>
@@ -840,7 +840,7 @@ const handleCheckout = () => {
   });
 };
 
-const handleAdvancedSearch = (criteria: ProductSearchCriteria) => {
+const handleAdvancedSearch = (criteria: any) => {
   // Apply advanced search criteria to filters
   Object.assign(filters, criteria);
   
@@ -922,8 +922,8 @@ const handleTableSort = (column: string, direction: 'asc' | 'desc') => {
   
   // Apply sorting via store (this will trigger reactive updates)
   productsStore.updateFilters({
-    sortBy: column,
-    sortOrder: direction
+    sort_by: column,
+    sort_order: direction
   });
   
   pagination.value = newPagination;
