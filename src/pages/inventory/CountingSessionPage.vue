@@ -4,7 +4,7 @@
       <PageTitle
         :title="sessionName"
         :subtitle="sessionType"
-        icon="checklist"
+          icon="checklist"
         :back-button="true"
         @back="handleBack"
       >
@@ -40,7 +40,7 @@
             <q-btn
               v-if="session?.status === 'active'"
               color="positive"
-              icon="check"
+          icon="check"
               :label="$t('counting.completeSession')"
               @click="completeSession"
               :disable="!canComplete"
@@ -50,7 +50,7 @@
             <q-btn
               v-if="session?.status === 'completed'"
               color="info"
-              icon="verified"
+          icon="verified"
               :label="$t('counting.approveSession')"
               @click="approveSession"
               unelevated
@@ -69,7 +69,7 @@
       </div>
 
       <!-- Session Not Found -->
-      <BaseCard v-else-if="!session"  header-color="negative">
+      <BaseCard v-else-if="!session"  icon-color="negative">
         <q-card-section class="text-center">
           <q-icon name="error_outline" size="xl" color="negative" />
           <div class="text-h6 q-mt-md">

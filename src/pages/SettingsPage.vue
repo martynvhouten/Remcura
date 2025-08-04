@@ -4,7 +4,7 @@
       <PageTitle
         :title="$t('settings.title')"
         :subtitle="$t('settings.manageSettingsSubtitle')"
-        icon="tune"
+          icon="tune"
         :meta="[
           { icon: 'person', text: userProfile?.full_name || 'User' },
           { icon: 'domain', text: clinicName },
@@ -13,7 +13,7 @@
         <template #actions>
           <q-btn
             color="primary"
-            icon="save"
+          icon="save"
             :label="$t('settings.saveSettings')"
             @click="saveSettings"
             :loading="saving"
@@ -34,7 +34,7 @@
           :title="$t('settings.profile')"
           :subtitle="$t('settings.profileSubtitle')"
           icon="person"
-          header-color="primary"
+          icon-color="primary"
         >
           <div class="form-grid" role="group" aria-labelledby="profile-title">
             <q-input
@@ -86,7 +86,7 @@
           :title="$t('settings.appearanceTitle')"
           :subtitle="$t('settings.appearanceSubtitle')"
           icon="palette"
-          header-color="secondary"
+          icon-color="secondary"
         >
           <div
             class="settings-items"

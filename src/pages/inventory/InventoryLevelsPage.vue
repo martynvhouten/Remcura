@@ -4,7 +4,7 @@
       <PageTitle
         :title="$t('inventory.stockLevels')"
         :subtitle="$t('inventory.overview')"
-        icon="inventory_2"
+          icon="inventory_2"
       />
     </template>
 
@@ -30,7 +30,7 @@
           :title="$t('inventory.totalProducts')"
           :subtitle="selectedLocationName"
           icon="inventory_2"
-          header-color="primary"
+          icon-color="primary"
         >
           <div class="kpi-content">
             <div class="kpi-value">
@@ -47,7 +47,7 @@
           :title="$t('inventory.stockLocations')"
           :subtitle="$t('inventory.activeLocations')"
           icon="location_on"
-          header-color="info"
+          icon-color="info"
         >
           <div class="kpi-content">
             <div class="kpi-value">
@@ -64,7 +64,7 @@
           :title="$t('inventory.dataLoaded')"
           :subtitle="$t('inventory.upToDate')"
           icon="check_circle"
-          header-color="positive"
+          icon-color="positive"
         >
           <div class="kpi-content">
             <div class="kpi-value">
@@ -85,7 +85,7 @@
           :title="$t('inventory.lastUpdated')"
           :subtitle="$t('inventory.refreshData')"
           icon="refresh"
-          header-color="warning"
+          icon-color="warning"
         >
           <div class="kpi-content">
             <div class="kpi-value">
@@ -115,8 +115,8 @@
     <BaseCard
       
       :title="$t('inventory.stockLevels')"
-      icon="table_chart"
-      header-color="primary"
+          icon="table_chart"
+          icon-color="primary"
     >
       <q-table
         :rows="filteredStockLevels"
@@ -196,7 +196,7 @@
               flat
               round
               dense
-              icon="edit"
+          icon="edit"
               size="sm"
               @click="adjustStock(props.row)"
             >
@@ -206,7 +206,7 @@
               flat
               round
               dense
-              icon="history"
+          icon="history"
               size="sm"
               @click="viewHistory(props.row)"
             >
@@ -216,7 +216,7 @@
               flat
               round
               dense
-              icon="count"
+          icon="count"
               size="sm"
               @click="countStock(props.row)"
             >

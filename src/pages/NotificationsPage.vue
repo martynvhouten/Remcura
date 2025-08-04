@@ -3,7 +3,7 @@
     <PageTitle
       :title="$t('notificationsPage.title')"
       :subtitle="$t('notificationsPage.subtitle')"
-      icon="campaign"
+          icon="campaign"
     />
 
     <div class="row q-gutter-md">
@@ -64,10 +64,9 @@
       <!-- Quick Actions -->
       <div class="col-12">
         <BaseCard
-          
           :title="$t('notificationsPage.quickActions')"
           icon="flash_on"
-          header-color="warning"
+          icon-color="warning"
         >
           <div class="row q-gutter-sm">
             <q-btn
@@ -91,9 +90,8 @@
       <!-- Notifications List -->
       <div class="col-12">
         <BaseCard
-          
           icon="notifications"
-          header-color="info"
+          icon-color="info"
           :title="`${
             filter === 'all'
               ? $t('notificationsPage.all')
@@ -173,7 +171,7 @@
                     flat
                     round
                     dense
-                    icon="mark_email_read"
+          icon="mark_email_read"
                     :tooltip="$t('notificationsPage.markAsReadTooltip')"
                     @click.stop="markAsRead(notification.id)"
                   />
@@ -181,7 +179,7 @@
                     flat
                     round
                     dense
-                    icon="delete"
+          icon="delete"
                     color="negative"
                     :tooltip="$t('notificationsPage.deleteTooltip')"
                     @click.stop="deleteNotification(notification.id)"

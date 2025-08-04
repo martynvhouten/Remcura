@@ -4,7 +4,7 @@
       <PageTitle
         :title="$t('counting.title')"
         :subtitle="$t('counting.overview')"
-        icon="checklist"
+          icon="checklist"
       >
         <template #actions>
           <div class="header-actions">
@@ -28,7 +28,7 @@
             <!-- Refresh Button -->
             <q-btn
               color="primary"
-              icon="refresh"
+          icon="refresh"
               :label="$t('common.refresh')"
               @click="refreshData"
               :loading="countingStore.loading"
@@ -38,7 +38,7 @@
             <!-- Start New Session Button -->
             <q-btn
               color="secondary"
-              icon="add"
+          icon="add"
               :label="$t('counting.startSession')"
               @click="showStartSessionDialog"
               unelevated
@@ -53,8 +53,7 @@
       <!-- Active Session Alert -->
       <BaseCard
         v-if="activeSession"
-        
-        header-color="info"
+          icon-color="info"
         class="active-session-card"
       >
         <template #header>
@@ -219,7 +218,7 @@
                   v-if="props.row.status === 'active'"
                   flat
                   round
-                  icon="play_arrow"
+          icon="play_arrow"
                   size="sm"
                   color="primary"
                   @click="continueSession(props.row)"
@@ -228,7 +227,7 @@
                 <q-btn
                   flat
                   round
-                  icon="visibility"
+          icon="visibility"
                   size="sm"
                   color="info"
                   @click="viewSession(props.row)"
@@ -238,7 +237,7 @@
                   v-if="props.row.status === 'active'"
                   flat
                   round
-                  icon="check"
+          icon="check"
                   size="sm"
                   color="positive"
                   @click="completeSession(props.row)"

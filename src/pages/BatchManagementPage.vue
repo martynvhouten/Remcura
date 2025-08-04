@@ -4,12 +4,12 @@
       <PageTitle
         :title="$t('batch.batchManagement')"
         :subtitle="$t('batch.manageBatchesSubtitle')"
-        icon="qr_code_scanner"
+          icon="qr_code_scanner"
       >
         <template #actions>
           <q-btn
             color="primary"
-            icon="add"
+          icon="add"
             :label="$t('batch.addBatch')"
             @click="showAddBatchDialog = true"
           />
@@ -24,8 +24,8 @@
         <div class="col-12 col-sm-6 col-md-3 stats-card-col">
           <BaseCard
             :title="$t('batch.totalBatches')"
-            icon="inventory"
-            icon-color="primary"
+          icon="inventory"
+          icon-color="primary"
           >
             <div class="stat-display">
               <div class="stat-value">{{ totalBatches }}</div>
@@ -37,7 +37,7 @@
         <div class="col-12 col-sm-6 col-md-3 stats-card-col">
           <BaseCard
             :title="$t('batch.expiringSoon')"
-            icon="warning"
+          icon="warning"
             :icon-color="expiringBatches > 0 ? 'warning' : 'info'"
           >
             <div class="stat-display">
@@ -50,8 +50,8 @@
         <div class="col-12 col-sm-6 col-md-3 stats-card-col">
           <BaseCard
             :title="$t('batch.activeBatches')"
-            icon="check_circle"
-            icon-color="positive"
+          icon="check_circle"
+          icon-color="positive"
           >
             <div class="stat-display">
               <div class="stat-value">{{ activeBatches }}</div>
@@ -63,8 +63,8 @@
         <div class="col-12 col-sm-6 col-md-3 stats-card-col">
           <BaseCard
             :title="$t('batch.totalValue')"
-            icon="euro"
-            icon-color="primary"
+          icon="euro"
+          icon-color="primary"
           >
             <div class="stat-display">
               <div class="stat-value">{{ formatCurrency(totalValue, 'EUR') }}</div>
@@ -84,10 +84,9 @@
           <!-- Scan Batch Action -->
           <div class="col-12 col-sm-6 col-md-3">
             <BaseCard
-              
-              title="Scan Batch"
+          :title="Scan Batch"
               subtitle="Scan barcode om batch te vinden"
-              icon="qr_code_scanner"
+          icon="qr_code_scanner"
               
               
               @click="openBarcodeScanner"
@@ -98,10 +97,9 @@
           <!-- View Expiring Action -->
           <div class="col-12 col-sm-6 col-md-3">
             <BaseCard
-              
-              title="View Expiring"
+          :title="View Expiring"
               :subtitle="`${expiringBatches} batches verlopen binnenkort`"
-              icon="warning"
+          icon="warning"
               
               
               
@@ -114,10 +112,9 @@
           <!-- Export Batches Action -->
           <div class="col-12 col-sm-6 col-md-3">
             <BaseCard
-              
-              title="Export Batches"
+          :title="Export Batches"
               subtitle="Download batch gegevens"
-              icon="download"
+          icon="download"
               
               
               @click="exportBatches"
@@ -170,12 +167,12 @@
           <q-tab
             name="expiring"
             :label="$t('batch.expiring')"
-            icon="schedule"
+          icon="schedule"
           />
           <q-tab
             name="fifo"
             :label="$t('batch.fifoManagement')"
-            icon="trending_up"
+          icon="trending_up"
           />
           <q-tab name="reports" :label="$t('batch.reports')" icon="analytics" />
         </q-tabs>

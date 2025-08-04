@@ -6,7 +6,7 @@
           <q-btn-group>
             <q-btn
               :label="$t('admin.settings')"
-              icon="tune"
+          icon="tune"
               color="grey-8"
               @click="showSettings = true"
               no-caps
@@ -14,7 +14,7 @@
             />
             <q-btn
               :label="$t('admin.audit')"
-              icon="manage_search"
+          icon="manage_search"
               color="info"
               @click="showAuditLog = true"
               no-caps
@@ -30,11 +30,10 @@
       <div class="col-12 col-sm-6 col-md-3 stats-card-col">
         <BaseCard
           
-          title=$t('admin.stats.totalUsers')>
+          :title="$t('admin.stats.totalUsers')>
             <div class="stat-display">
               <div class="stat-value">{{ stats.totalUsers }}</div>
             </div>
-          
           icon="people"
           icon-color="primary"
           :trend="`${stats.activeUsers} ${$t('admin.stats.activeToday')}`"
@@ -45,11 +44,10 @@
       <div class="col-12 col-sm-6 col-md-3 stats-card-col">
         <BaseCard
           
-          title=$t('admin.stats.totalLocations')>
+          :title="$t('admin.stats.totalLocations')>
             <div class="stat-display">
               <div class="stat-value">{{ stats.totalLocations }}</div>
             </div>
-          
           icon="place"
           icon-color="positive"
           :trend="`${stats.activeLocations} ${$t('admin.stats.active')}`"
@@ -60,11 +58,10 @@
       <div class="col-12 col-sm-6 col-md-3 stats-card-col">
         <BaseCard
           
-          title=$t('admin.stats.pendingSync')>
+          :title="$t('admin.stats.pendingSync')>
             <div class="stat-display">
               <div class="stat-value">{{ stats.pendingSync }}</div>
             </div>
-          
           icon="sync_problem"
           icon-color="warning"
           :trend="`${$t('admin.stats.lastSync')}: ${formatDate(
@@ -77,11 +74,10 @@
       <div class="col-12 col-sm-6 col-md-3 stats-card-col">
         <BaseCard
           
-          title=$t('admin.stats.todayEvents')>
+          :title="$t('admin.stats.todayEvents')>
             <div class="stat-display">
               <div class="stat-value">{{ stats.todayEvents }}</div>
             </div>
-          
           icon="event"
           icon-color="info"
           :trend="`+${stats.eventsGrowth}% ${$t('admin.stats.fromYesterday')}`"
@@ -95,8 +91,8 @@
     <BaseCard
       
       :title="$t('admin.quickActions')"
-      icon="admin_panel_settings"
-      header-color="primary"
+          icon="admin_panel_settings"
+          icon-color="primary"
       class="q-mb-lg"
     >
       <div class="row q-gutter-md">
@@ -148,8 +144,8 @@
     <BaseCard
       
       :title="$t('magicInvite.revolutionaryUserSystem')"
-      icon="auto_awesome"
-      header-color="secondary"
+          icon="auto_awesome"
+          icon-color="secondary"
       class="q-mb-lg"
     >
       <MagicInviteManager />
@@ -159,8 +155,8 @@
     <BaseCard
       
       :title="$t('admin.teamOverview')"
-      icon="group"
-      header-color="primary"
+          icon="group"
+          icon-color="primary"
       class="q-mb-lg"
     >
       <TeamOverview />
@@ -179,12 +175,12 @@
       <q-tab
         name="locations"
         :label="$t('admin.locations')"
-        icon="location_on"
+          icon="location_on"
       />
       <q-tab
         name="permissions"
         :label="$t('admin.permissions')"
-        icon="security"
+          icon="security"
       />
       <q-tab name="analytics" :label="$t('admin.analytics')" icon="analytics" />
     </q-tabs>
@@ -228,7 +224,7 @@
               <q-btn-group dense>
                 <q-btn icon="edit" dense flat @click="editUser(props.row)" />
                 <q-btn
-                  icon="security"
+          icon="security"
                   dense
                   flat
                   @click="manageUserPermissions(props.row)"
@@ -287,7 +283,7 @@
                 color="primary"
                 text-color="white"
                 size="sm"
-                icon="star"
+          icon="star"
               >
                 {{ $t('locations.isMain') }}
               </q-chip>
@@ -310,20 +306,20 @@
             <q-td :props="props">
               <q-btn-group dense>
                 <q-btn
-                  icon="edit"
+          icon="edit"
                   size="sm"
                   flat
                   @click="editLocation(props.row)"
                 />
                 <q-btn
                   v-if="!props.row.is_main"
-                  icon="star"
+          icon="star"
                   size="sm"
                   flat
                   @click="setMainLocation(props.row)"
                 />
                 <q-btn
-                  icon="people"
+          icon="people"
                   size="sm"
                   flat
                   @click="manageLocationAccess(props.row)"
@@ -380,7 +376,7 @@
                   color="warning"
                   text-color="white"
                   size="sm"
-                  icon="warning"
+          icon="warning"
                 >
                   Expiring Soon
                 </q-chip>
@@ -392,7 +388,7 @@
           <template v-slot:body-cell-actions="props">
             <q-td :props="props">
               <q-btn
-                icon="delete"
+          icon="delete"
                 size="sm"
                 flat
                 color="negative"

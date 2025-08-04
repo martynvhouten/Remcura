@@ -4,14 +4,14 @@
       <PageTitle
         :title="$t('inventory.stockMovements')"
         :subtitle="$t('inventory.movementHistory')"
-        icon="timeline"
+          icon="timeline"
       >
         <template #actions>
           <div class="header-actions">
             <!-- Refresh Button -->
             <q-btn
               color="primary"
-              icon="refresh"
+          icon="refresh"
               :label="$t('common.refresh')"
               @click="refreshData"
               :loading="inventoryStore.loading"
@@ -21,7 +21,7 @@
             <!-- Export Button -->
             <q-btn
               color="secondary"
-              icon="file_download"
+          icon="file_download"
               :label="$t('common.export')"
               @click="exportMovements"
               unelevated
@@ -141,7 +141,7 @@
               <q-btn
                 flat
                 round
-                icon="visibility"
+          icon="visibility"
                 size="sm"
                 @click="viewMovementDetails(props.row)"
                 :title="$t('common.view')"
