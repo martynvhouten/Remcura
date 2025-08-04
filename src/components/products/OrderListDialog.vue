@@ -310,7 +310,7 @@
   import { useSuppliersStore } from 'src/stores/suppliers';
   import { useProductsStore } from 'src/stores/products';
   import { useAuthStore } from 'src/stores/auth';
-  import BaseCard from 'src/components/base/BaseCard.vue';
+  import { BaseCard } from 'src/components/cards';
   import type { OrderListItem, ProductWithStock } from 'src/types/inventory';
 
   interface Props {

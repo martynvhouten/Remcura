@@ -464,7 +464,7 @@
   import { useAuthStore } from '@/stores/auth';
   import PageLayout from '@/components/PageLayout.vue';
   import PageTitle from '@/components/PageTitle.vue';
-  import BaseCard from '@/components/base/BaseCard.vue';
+  import { BaseCard } from 'src/components/cards';
   import DemoResetCard from '@/components/admin/DemoResetCard.vue';
   import MagicInviteManager from '@/components/admin/MagicInviteManager.vue';
   import TeamOverview from '@/components/admin/TeamOverview.vue';

@@ -121,7 +121,7 @@
                   }}
                 </div>
               </div>
-            </div>
+            </div></BaseCard>
 
             <!-- Language Setting -->
             <BaseCard>
@@ -149,7 +149,7 @@
                   :aria-labelledby="'language-label'"
                 />
               </div>
-            </div>
+            </div></BaseCard>
 
             <!-- Theme Setting -->
             <BaseCard>
@@ -327,7 +327,7 @@
                     class="toggle-modern"
                   />
                 </div>
-              </div>
+              </div></BaseCard>
 
               <!-- Email Notifications -->
               <BaseCard>
@@ -346,7 +346,7 @@
                     class="toggle-modern"
                   />
                 </div>
-              </div>
+              </div></BaseCard>
 
               <!-- Browser Notifications -->
               <BaseCard>
