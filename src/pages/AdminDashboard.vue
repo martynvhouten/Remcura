@@ -3,24 +3,33 @@
     <template #header>
       <PageTitle :title="$t('admin.title')" icon="supervisor_account">
         <template #actions>
-          <q-btn-group>
-            <q-btn
-              :label="$t('admin.settings')"
-          icon="tune"
-              color="grey-8"
-              @click="showSettings = true"
-              no-caps
-              class="btn-modern"
-            />
-            <q-btn
-              :label="$t('admin.audit')"
-          icon="manage_search"
-              color="info"
-              @click="showAuditLog = true"
-              no-caps
-              class="btn-modern"
-            />
-          </q-btn-group>
+          <q-btn
+            flat
+            round
+            icon="refresh"
+            size="md"
+            @click="refreshData"
+            :loading="loading"
+            class="app-btn-refresh"
+          >
+            <q-tooltip>{{ $t('common.refresh') }}</q-tooltip>
+          </q-btn>
+          <q-btn
+            icon="tune"
+            :label="$t('admin.settings')"
+            @click="showSettings = true"
+            unelevated
+            no-caps
+            class="app-btn-secondary"
+          />
+          <q-btn
+            icon="manage_search"
+            :label="$t('admin.audit')"
+            @click="showAuditLog = true"
+            unelevated
+            no-caps
+            class="app-btn-info"
+          />
         </template>
       </PageTitle>
     </template>
@@ -92,43 +101,43 @@
         <q-btn
           :label="$t('admin.userManagement.invite')"
           icon="person_add"
-          color="primary"
           @click="showInviteUser = true"
+          unelevated
           no-caps
-          class="btn-modern"
+          class="app-btn-success"
         />
         <q-btn
           :label="$t('locations.add')"
           icon="add_location"
-          color="secondary"
           @click="showAddLocation = true"
+          unelevated
           no-caps
-          class="btn-modern"
+          class="app-btn-success"
         />
         <q-btn
           :label="$t('offline.data.download')"
           icon="download"
-          color="info"
           @click="downloadOfflineData"
+          unelevated
           no-caps
-          class="btn-modern"
+          class="app-btn-info"
         />
         <q-btn
           :label="$t('offline.sync.forceSync')"
           icon="sync"
-          color="warning"
           :loading="syncing"
           @click="forceSync"
+          unelevated
           no-caps
-          class="btn-modern"
+          class="app-btn-secondary"
         />
         <q-btn
           :label="$t('exports.title')"
           icon="table_chart"
-          color="positive"
           @click="showExportDialog = true"
+          unelevated
           no-caps
-          class="btn-modern"
+          class="app-btn-secondary"
         />
       </div>
     </BaseCard>

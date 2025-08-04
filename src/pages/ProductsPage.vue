@@ -1,49 +1,50 @@
 <template>
   <PageLayout>
     <template #header>
-      <div class="products-header">
-        <div class="header-content">
-          <div class="title-section">
-            <PageTitle
-              :title="$t('productsPage.title')"
-              :subtitle="$t('productsPage.subtitle')"
-              icon="inventory_2"
+      <PageTitle
+        :title="$t('productsPage.title')"
+        :subtitle="$t('productsPage.subtitle')"
+        icon="inventory_2"
+      >
+        <template #actions>
+          <q-btn
+            flat
+            round
+            icon="refresh"
+            size="md"
+            @click="refreshData"
+            :loading="loading"
+            class="app-btn-refresh"
+          >
+            <q-tooltip>{{ $t('common.refresh') }}</q-tooltip>
+          </q-btn>
+          <q-btn
+            v-if="canCreate"
+            icon="add"
+            :label="$t('products.createProduct')"
+            @click="showCreateProductDialog"
+            unelevated
+            no-caps
+            class="app-btn-secondary"
+          />
+          <q-btn
+            icon="add_shopping_cart"
+            :label="$t('productsPage.viewCart')"
+            @click="showCartDialog = true"
+            :disable="cartItemsCount === 0"
+            unelevated
+            no-caps
+            class="app-btn-primary"
+          >
+            <q-badge
+              v-if="cartItemsCount > 0"
+              color="red"
+              floating
+              :label="cartItemsCount"
             />
-          </div>
-          <div class="header-actions">
-            <q-btn
-              flat
-              icon="refresh"
-              :label="$t('common.refresh')"
-              @click="refreshData"
-              :loading="loading"
-              class="q-mr-sm"
-            />
-            <q-btn
-              v-if="canCreate"
-              color="secondary"
-              icon="add"
-              :label="$t('products.createProduct')"
-              @click="showCreateProductDialog"
-              class="q-mr-sm"
-            />
-            <q-btn
-              color="primary"
-              icon="add_shopping_cart"
-              :label="$t('productsPage.viewCart')"
-              @click="showCartDialog = true"
-              :disable="cartItemsCount === 0"
-            >
-              <q-badge
-                v-if="cartItemsCount > 0"
-                color="red"
-                floating
-                :label="cartItemsCount"
-              />
-            </q-btn>
-          </div>
-        </div>
-      </div>
+          </q-btn>
+        </template>
+      </PageTitle>
     </template>
 
     <div class="products-page">
@@ -886,24 +887,6 @@ onMounted(async () => {
 
 <style lang="scss" scoped>
 .products-page {
-  .products-header {
-    .header-content {
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-start;
-      margin-bottom: 1.5rem;
-
-      .title-section {
-        flex: 1;
-      }
-
-      .header-actions {
-        display: flex;
-        align-items: center;
-        gap: 0.5rem;
-      }
-    }
-  }
 
   .filters-section {
     margin-bottom: 1.5rem;
@@ -1075,16 +1058,8 @@ onMounted(async () => {
 // Mobile responsiveness
 @media (max-width: 768px) {
   .products-page {
-    .products-header {
-      .header-content {
-        flex-direction: column;
-        gap: 1rem;
-
-        .header-actions {
-          align-self: stretch;
-          justify-content: center;
-        }
-      }
+    .products-table-container {
+      overflow-x: auto;
     }
   }
 }

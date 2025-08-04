@@ -125,9 +125,7 @@ export const orderListsFilterPreset: FilterPreset = {
     clearAllButton: true,
     compactMode: false,
     spacing: 'md'
-  },
-
-  defaultFilters: {
-    status: 'draft'
   }
+
+  // No default filters - all fields start empty
 } 

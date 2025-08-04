@@ -6,11 +6,24 @@
     >
       <template #actions>
         <q-btn
-          :label="$t('orderLists.create')"
-          color="primary"
+          flat
+          round
+          icon="refresh"
+          size="md"
+          @click="refreshOrderLists"
+          :loading="loading"
+          class="app-btn-refresh"
+        >
+          <q-tooltip>{{ $t('common.refresh') }}</q-tooltip>
+        </q-btn>
+        <q-btn
           icon="add"
+          :label="$t('orderLists.create')"
           @click="showCreateDialog = true"
           :loading="orderListsStore.saving"
+          unelevated
+          no-caps
+          class="app-btn-success"
         />
       </template>
     </PageTitle>

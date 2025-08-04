@@ -119,7 +119,7 @@ export const suppliersFilterPreset: FilterPreset = {
 
   // === Default State ===
   defaultFilters: {
-    status: true // Default to active suppliers
+    status: null // No default - let users choose
   },
 
   // === Validation ===

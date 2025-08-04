@@ -48,19 +48,21 @@
           <q-btn
             flat
             round
-            dense
             icon="refresh"
+            size="md"
             @click="refreshDashboard"
             :loading="loading"
+            class="app-btn-refresh"
           >
             <q-tooltip>{{ $t('dashboard.actions.refresh') }}</q-tooltip>
           </q-btn>
           <q-btn
             flat
             round
-            dense
             icon="tune"
+            size="md"
             @click="showCustomizeDialog = true"
+            class="app-btn-refresh"
           >
             <q-tooltip>{{ $t('dashboard.actions.customize') }}</q-tooltip>
           </q-btn>
@@ -76,13 +78,12 @@
           <q-btn
             v-for="action in quickActions"
             :key="action.id"
-            :color="action.color"
             :icon="action.icon"
             :label="action.label"
             @click="$router.push(action.route)"
             unelevated
             no-caps
-            class="quick-action-btn"
+            :class="getActionButtonClass(action.type)"
           />
         </div>
       </div>
@@ -136,9 +137,11 @@
         <h5>{{ $t('dashboard.empty.title') }}</h5>
         <p>{{ $t('dashboard.empty.subtitle') }}</p>
         <q-btn
-          color="primary"
           :label="$t('dashboard.empty.addWidgets')"
           @click="showCustomizeDialog = true"
+          unelevated
+          no-caps
+          class="app-btn-primary"
         />
       </div>
     </div>
@@ -153,7 +156,7 @@
           <p>{{ $t('dashboard.customize.comingSoon') }}</p>
         </q-card-section>
         <q-card-actions align="right">
-          <q-btn flat :label="$t('common.close')" color="primary" v-close-popup />
+          <q-btn flat :label="$t('common.close')" class="app-btn-secondary" v-close-popup />
         </q-card-actions>
       </q-card>
     </q-dialog>
@@ -314,6 +317,20 @@
   }, { immediate: true });
 
   // Lifecycle
+  // Get button class based on action type
+  const getActionButtonClass = (type: string) => {
+    const classMap: Record<string, string> = {
+      'create': 'app-btn-success',
+      'view': 'app-btn-primary',
+      'manage': 'app-btn-secondary',
+      'analyze': 'app-btn-info',
+      'export': 'app-btn-secondary',
+      'settings': 'app-btn-secondary',
+      'default': 'app-btn-secondary'
+    };
+    return classMap[type] || classMap.default;
+  };
+
   onMounted(() => {
     loadDashboard();
   });

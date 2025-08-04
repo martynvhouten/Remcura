@@ -3,15 +3,42 @@
     <template #header>
       <PageTitle :title="$t('orders.title')" icon="assignment">
         <template #actions>
-          <q-btn-group>
-            <q-btn
-              v-bind="exportBtn"
-              :loading="exporting"
-              @click="showExportDialog = true"
-            />
-            <q-btn v-bind="analyticsBtn" @click="showAnalytics = true" />
-            <q-btn v-bind="createOrderBtn" @click="createNewOrder" />
-          </q-btn-group>
+          <q-btn
+            flat
+            round
+            icon="refresh"
+            size="md"
+            @click="refreshOrders"
+            :loading="loading"
+            class="app-btn-refresh"
+          >
+            <q-tooltip>{{ $t('common.refresh') }}</q-tooltip>
+          </q-btn>
+          <q-btn
+            icon="file_download"
+            :label="$t('common.export')"
+            @click="showExportDialog = true"
+            :loading="exporting"
+            unelevated
+            no-caps
+            class="app-btn-secondary"
+          />
+          <q-btn
+            icon="analytics"
+            :label="$t('orders.analytics')"
+            @click="showAnalytics = true"
+            unelevated
+            no-caps
+            class="app-btn-info"
+          />
+          <q-btn
+            icon="add"
+            :label="$t('orders.createOrder')"
+            @click="createNewOrder"
+            unelevated
+            no-caps
+            class="app-btn-primary"
+          />
         </template>
       </PageTitle>
     </template>

@@ -1,50 +1,56 @@
 <template>  
-  <div ref="fieldWrapper" class="filter-field-wrapper">
-    <!-- Text Input - Only placeholder, no label -->
-    <q-input
-      v-if="field.type === 'text'"
-      :model-value="modelValue as string"
-      @update:model-value="handleChange"
-      :placeholder="field.placeholder ? $t(field.placeholder as string) : ''"
-      outlined
-      dense
-      :clearable="field.clearable"
-      :debounce="field.debounce || 300"
-      :disable="disabled"
-      :readonly="readonly"
-      :loading="loading"
-      class="filter-input filter-input--text"
-      hide-bottom-space
-    >
-      <template v-if="field.icon" v-slot:prepend>
-        <q-icon :name="field.icon" size="14px" class="text-gray-500" />
-      </template>
-      <template v-if="field.scannerButton" v-slot:append>
-        <q-btn 
-          flat 
-          round 
-          dense 
-          icon="qr_code_scanner" 
-          @click="handleScan"
-          :disable="disabled"
-          size="xs"
-          class="text-gray-500 hover:text-primary"
-        />
-      </template>
-    </q-input>
-
-    <!-- Select Dropdown -->
-    <div v-else-if="field.type === 'select'" class="field-with-label">
-      <label v-if="field.label" class="field-label">
+  <div ref="fieldWrapper" class="filter-field-magento-wrapper">
+    <!-- Text Input with label above -->
+    <div v-if="field.type === 'text'" class="filter-field-container">
+      <label v-if="field.label" class="filter-field-label">
         {{ $t(field.label as string) }}
       </label>
+      <div v-else class="filter-field-label-spacer"></div>
+      
+      <q-input
+        :model-value="modelValue as string"
+        @update:model-value="handleChange"
+        :placeholder="field.placeholder ? $t(field.placeholder as string) : ''"
+        outlined
+        :clearable="field.clearable"
+        :debounce="field.debounce || 300"
+        :disable="disabled"
+        :readonly="readonly"
+        :loading="loading"
+        class="filter-input-magento filter-input--text"
+        hide-bottom-space
+      >
+        <template v-if="field.icon" v-slot:prepend>
+          <q-icon :name="field.icon" size="16px" class="filter-icon" />
+        </template>
+        <template v-if="field.scannerButton" v-slot:append>
+          <q-btn 
+            flat 
+            round 
+            dense 
+            icon="qr_code_scanner" 
+            @click="handleScan"
+            :disable="disabled"
+            size="sm"
+            class="filter-scanner-btn"
+          />
+        </template>
+      </q-input>
+    </div>
+
+    <!-- Select Dropdown with label above -->
+    <div v-else-if="field.type === 'select'" class="filter-field-container">
+      <label v-if="field.label" class="filter-field-label">
+        {{ $t(field.label as string) }}
+      </label>
+      <div v-else class="filter-field-label-spacer"></div>
+      
       <q-select
         :model-value="modelValue"
         @update:model-value="handleChange"
         :options="selectOptions"
         :placeholder="field.placeholder ? $t(field.placeholder as string) : ''"
         outlined
-        dense
         :clearable="field.clearable"
         :disable="disabled || loading"
         :readonly="readonly"
@@ -53,13 +59,13 @@
         option-label="label"
         emit-value
         map-options
-        class="filter-input filter-input--select"
+        class="filter-input-magento filter-input--select"
         hide-bottom-space
         max-height="200px"
         behavior="menu"
       >
       <template v-if="field.icon" v-slot:prepend>
-        <q-icon :name="field.icon" size="14px" class="text-gray-500" />
+        <q-icon :name="field.icon" size="16px" class="filter-icon" />
       </template>
       <template v-slot:option="scope">
         <q-item v-bind="scope.itemProps" dense>
@@ -77,18 +83,19 @@
     </q-select>
     </div>
 
-    <!-- Multi Select -->
-    <div v-else-if="field.type === 'multi_select'" class="field-with-label">
-      <label v-if="field.label" class="field-label">
+    <!-- Multi Select with label above -->
+    <div v-else-if="field.type === 'multi_select'" class="filter-field-container">
+      <label v-if="field.label" class="filter-field-label">
         {{ $t(field.label as string) }}
       </label>
+      <div v-else class="filter-field-label-spacer"></div>
+      
       <q-select
         :model-value="modelValue"
         @update:model-value="handleChange"
         :options="selectOptions"
         :placeholder="field.placeholder ? $t(field.placeholder as string) : ''"
         outlined
-        dense
         :clearable="field.clearable"
         :disable="disabled || loading"
         :readonly="readonly"
@@ -99,13 +106,13 @@
         map-options
         multiple
         use-chips
-        class="filter-input filter-input--multi-select"
+        class="filter-input-magento filter-input--multi-select"
         hide-bottom-space
         max-height="200px"
         behavior="menu"
       >
       <template v-if="field.icon" v-slot:prepend>
-        <q-icon :name="field.icon" size="14px" class="text-gray-500" />
+        <q-icon :name="field.icon" size="16px" class="filter-icon" />
       </template>
       <template v-slot:selected>
         <div class="flex flex-wrap gap-1">
@@ -127,68 +134,65 @@
     </q-select>
     </div>
 
-    <!-- Boolean Toggle/Switch -->
-    <div v-else-if="field.type === 'boolean'" class="boolean-field-container">
-      <q-icon v-if="field.icon" :name="field.icon" class="boolean-field-icon" />
-      <q-toggle
-        v-if="field.variant === 'toggle'"
-        :model-value="modelValue"
-        @update:model-value="handleChange"
-        :label="field.label ? $t(field.label as string) : ''"
-        :color="field.color || 'primary'"
-        :disable="disabled"
-        :readonly="readonly"
-        size="sm"
-        class="boolean-field-input"
-      />
-      <q-checkbox
-        v-else
-        :model-value="modelValue"
-        @update:model-value="handleChange"
-        :label="field.label ? $t(field.label as string) : ''"
-        :color="field.color || 'primary'"
-        :disable="disabled"
-        :readonly="readonly"
-        size="sm"
-        class="boolean-field-input"
-      />
+    <!-- Boolean Checkbox with inline label -->
+    <div v-else-if="field.type === 'boolean'" class="filter-field-container filter-field-container--checkbox">
+      <div class="filter-field-label-spacer"></div>
+      
+      <div class="filter-checkbox-container">
+        <q-checkbox
+          :model-value="modelValue"
+          @update:model-value="handleChange"
+          :color="field.color || 'primary'"
+          :disable="disabled"
+          :readonly="readonly"
+          size="sm"
+          class="filter-checkbox-magento"
+        />
+        <label v-if="field.label" class="filter-checkbox-label">
+          <q-icon v-if="field.icon" :name="field.icon" size="16px" class="filter-icon q-mr-xs" />
+          {{ $t(field.label as string) }}
+        </label>
+      </div>
     </div>
 
-    <!-- Number Input -->
-    <div v-else-if="field.type === 'number'" class="field-with-label">
-      <label v-if="field.label" class="field-label">
+    <!-- Number Input with label above -->
+    <div v-else-if="field.type === 'number'" class="filter-field-container">
+      <label v-if="field.label" class="filter-field-label">
         {{ $t(field.label as string) }}
       </label>
+      <div v-else class="filter-field-label-spacer"></div>
+      
       <q-input
         :model-value="String(modelValue || '')"
         @update:model-value="handleChange"
         :placeholder="field.placeholder ? $t(field.placeholder as string) : ''"
         outlined
-        dense
         :clearable="field.clearable"
         :disable="disabled"
         :readonly="readonly"
         :loading="loading"
         type="number"
         :step="field.step || 1"
-        class="filter-input filter-input--number"
+        class="filter-input-magento filter-input--number"
         hide-bottom-space
       >
       <template v-if="field.icon" v-slot:prepend>
-        <q-icon :name="field.icon" size="14px" class="text-gray-500" />
+        <q-icon :name="field.icon" size="16px" class="filter-icon" />
       </template>
       <template v-if="field.currency" v-slot:append>
-        <span class="text-xs text-gray-500">{{ field.currency }}</span>
+        <span class="filter-currency">{{ field.currency }}</span>
       </template>
     </q-input>
     </div>
 
-    <!-- Number Range -->
-    <div v-else-if="field.type === 'number_range'" class="range-field">
-      <div class="range-label" v-if="field.label">
+    <!-- Number Range with label above (Van - Tot format) -->
+    <div v-else-if="field.type === 'number_range'" class="filter-field-container">
+      <label v-if="field.label" class="filter-field-label">
         {{ $t(field.label as string) }}
-      </div>
-      <div class="range-inputs">
+      </label>
+      <div v-else class="filter-field-label-spacer"></div>
+      
+      <div class="filter-range-container">
         <q-input
           :model-value="rangeValue.min || ''"
           @update:model-value="(value) => handleRangeChange('min', value)"
@@ -196,14 +200,16 @@
           type="number"
           :step="field.step || 1"
           outlined
-          dense
-          class="range-input filter-input"
+          class="filter-range-input filter-input-magento"
           hide-bottom-space
         >
           <template v-if="field.currency" v-slot:append>
-            <span class="currency-symbol">{{ field.currency }}</span>
+            <span class="filter-currency">{{ field.currency }}</span>
           </template>
         </q-input>
+        
+        <span class="filter-range-separator">–</span>
+        
         <q-input
           :model-value="rangeValue.max || ''"
           @update:model-value="(value) => handleRangeChange('max', value)"
@@ -211,40 +217,40 @@
           type="number"
           :step="field.step || 1"
           outlined
-          dense
-          class="range-input filter-input"
+          class="filter-range-input filter-input-magento"
           hide-bottom-space
         >
           <template v-if="field.currency" v-slot:append>
-            <span class="currency-symbol">{{ field.currency }}</span>
+            <span class="filter-currency">{{ field.currency }}</span>
           </template>
         </q-input>
       </div>
     </div>
 
-    <!-- Date Input -->
-    <div v-else-if="field.type === 'date'" class="field-with-label">
-      <label v-if="field.label" class="field-label">
+    <!-- Date Input with label above -->
+    <div v-else-if="field.type === 'date'" class="filter-field-container">
+      <label v-if="field.label" class="filter-field-label">
         {{ $t(field.label as string) }}
       </label>
+      <div v-else class="filter-field-label-spacer"></div>
+      
       <q-input
         :model-value="String(modelValue || '')"
         @update:model-value="handleChange"
         :placeholder="field.placeholder ? $t(field.placeholder as string) : ''"
         outlined
-        dense
         :clearable="field.clearable"
         :disable="disabled"
         :readonly="readonly"
         :loading="loading"
-        class="filter-input filter-input--date"
+        class="filter-input-magento filter-input--date"
         hide-bottom-space
       >
       <template v-if="field.icon" v-slot:prepend>
-        <q-icon :name="field.icon" size="14px" class="text-gray-500" />
+        <q-icon :name="field.icon" size="16px" class="filter-icon" />
       </template>
       <template v-slot:append>
-        <q-icon name="event" class="cursor-pointer text-gray-500 hover:text-primary" size="14px">
+        <q-icon name="event" class="filter-date-icon" size="16px">
           <q-popup-proxy cover transition-show="scale" transition-hide="scale">
             <q-date
               :model-value="modelValue"
@@ -261,23 +267,24 @@
     </q-input>
     </div>
 
-    <!-- Date Range -->
-    <div v-else-if="field.type === 'date_range'" class="range-field">
-      <div class="range-label" v-if="field.label">
+    <!-- Date Range with label above (Van - Tot format) -->
+    <div v-else-if="field.type === 'date_range'" class="filter-field-container">
+      <label v-if="field.label" class="filter-field-label">
         {{ $t(field.label as string) }}
-      </div>
-      <div class="range-inputs">
+      </label>
+      <div v-else class="filter-field-label-spacer"></div>
+      
+      <div class="filter-range-container">
         <q-input
           :model-value="dateRangeValue.start || ''"
           @update:model-value="(value) => handleDateRangeChange('start', value)"
           label="Van"
           outlined
-          dense
-          class="range-input filter-input"
+          class="filter-range-input filter-input-magento"
           hide-bottom-space
         >
           <template v-slot:append>
-            <q-icon name="event" class="date-picker-icon">
+            <q-icon name="event" class="filter-date-icon" size="16px">
               <q-popup-proxy cover transition-show="scale" transition-hide="scale">
                 <q-date
                   :model-value="dateRangeValue.start"
@@ -292,17 +299,19 @@
             </q-icon>
           </template>
         </q-input>
+        
+        <span class="filter-range-separator">–</span>
+        
         <q-input
           :model-value="dateRangeValue.end || ''"
           @update:model-value="(value) => handleDateRangeChange('end', value)"
           label="Tot"
           outlined
-          dense
-          class="range-input filter-input"
+          class="filter-range-input filter-input-magento"
           hide-bottom-space
         >
           <template v-slot:append>
-            <q-icon name="event" class="date-picker-icon">
+            <q-icon name="event" class="filter-date-icon" size="16px">
               <q-popup-proxy cover transition-show="scale" transition-hide="scale">
                 <q-date
                   :model-value="dateRangeValue.end"
@@ -320,18 +329,18 @@
       </div>
     </div>
 
-    <!-- Country Select -->
-    <div v-else-if="field.type === 'country'" class="field-with-label">
-      <label v-if="field.label" class="field-label">
+    <!-- Country Select with label above -->
+    <div v-else-if="field.type === 'country'" class="filter-field-container">
+      <label v-if="field.label" class="filter-field-label">
         {{ $t(field.label as string) }}
       </label>
+      <div v-else class="filter-field-label-spacer"></div>
       <q-select
         :model-value="modelValue"
         @update:model-value="handleChange"
         :options="selectOptions"
         :placeholder="field.placeholder ? $t(field.placeholder as string) : ''"
         outlined
-        dense
         :clearable="field.clearable"
         :disable="disabled || loading"
         :readonly="readonly"
@@ -340,13 +349,13 @@
         option-label="label"
         emit-value
         map-options
-        class="filter-input filter-input--country"
+        class="filter-input-magento filter-input--country"
         hide-bottom-space
         max-height="200px"
         behavior="menu"
       >
       <template v-if="field.icon" v-slot:prepend>
-        <q-icon :name="field.icon" size="14px" class="text-gray-500" />
+        <q-icon :name="field.icon" size="16px" class="filter-icon" />
       </template>
       <template v-slot:option="scope">
         <q-item v-bind="scope.itemProps" dense>
@@ -691,288 +700,279 @@ const forceUpdateLabels = () => {
 </script>
 
 <style lang="scss" scoped>
-.filter-field-wrapper {
+// ===================================================================
+// MAGENTO-STYLE FILTER FIELDS - CLEAN & CONSISTENT
+// ===================================================================
+
+.filter-field-magento-wrapper {
   width: 100%;
-  min-width: 0; // Allow shrinking
+  min-width: 0;
   display: flex;
   flex-direction: column;
+}
+
+// Compact field container with proper proportions
+.filter-field-container {
+  display: flex;
+  flex-direction: column;
+  gap: 4px; // Proper gap for good visual spacing
+  min-height: 68px; // Proper height: 18px label + 4px gap + 42px field + 4px margin
   
-  // Clean structure with consistent spacing
-  .field-with-label {
-    display: flex;
-    flex-direction: column;
-    gap: 4px;
-  }
-  
-  .field-label {
-    font-size: 0.875rem;
-    font-weight: 500;
-    color: var(--text-primary);
-    line-height: 1.2;
-    margin-bottom: 0;
-    padding-left: 2px; // Slight alignment with input content
-  }
-  
-  .boolean-field-container {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    padding: 8px 0; // Consistent spacing with other fields
-  }
-  
-  .range-field {
-    display: flex;
-    flex-direction: column;
-    gap: 4px;
+  &--checkbox {
+    align-items: flex-start;
+    min-height: 46px; // Proper height for checkboxes
   }
 }
 
-.filter-input {
+// Well-proportioned labels above fields
+.filter-field-label {
+  font-size: 13px; // Good readable size
+  font-weight: 500;
+  color: #333;
+  line-height: 1.2; // Balanced line height
+  margin-bottom: 0; // No margin - gap handles spacing
+  min-height: 18px; // Proper label height
+  display: flex;
+  align-items: flex-end; // Align text to bottom of label area
+}
+
+// Empty spacer to maintain alignment when no label
+.filter-field-label-spacer {
+  min-height: 18px; // Match label height exactly
+}
+
+// Compact Magento-style input styling 
+.filter-input-magento {
   width: 100%;
   min-width: 0;
   
-  // Clean focus styling using new field system
-  :deep(.q-field--focused) {
-    .q-field__control {
-      border-color: var(--brand-primary);
-      box-shadow: 0 0 0 3px rgba(30, 58, 138, 0.1);
-    }
-  }
-  
-  // Clean field without floating labels
+  // Compact Magento-style field control with perfect centering
   :deep(.q-field__control) {
-    min-width: 0;
-    width: 100%;
-    display: flex;
-    align-items: center;
-    min-height: 40px;
-  }
-  
-  // Better text vertical alignment
-  :deep(.q-field__native) {
-    min-width: 0;
-    width: 100%;
-    display: flex;
-    align-items: center;
-    line-height: 1.4;
-  }
-  
-  // Ensure input text is not cut off
-  :deep(.q-field__input) {
-    min-width: 0;
-    width: 100%;
-    display: flex;
-    align-items: center;
-    line-height: 1.4;
-  }
-  
-  // Fix for long placeholder text
-  :deep(.q-placeholder) {
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    width: 100%;
-    display: flex;
-    align-items: center;
-    line-height: 1.4;
-  }
-  
-  // Better text alignment for inputs
-  :deep(input) {
-    line-height: 1.4;
-    vertical-align: middle;
-  }
-  
-  // Fix select dropdown text alignment
-  :deep(.q-field__selected) {
-    display: flex;
-    align-items: center;
-    line-height: 1.4;
-    min-height: 24px;
-  }
-  
-  // Hover styling handled by global field system
-  
-  // Special styling for text inputs (search fields)
-  &.filter-input--text {
-    :deep(.q-field__control) {
-      background: var(--bg-secondary);
-      border-radius: var(--radius-base);
-    }
+    background-color: #ffffff;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    min-height: 42px; // Restored to proper height for good centering
+    height: 42px; // Fixed height for perfect consistency
+    padding: 0 12px; // Restored padding for proper spacing
+    transition: border-color 0.2s ease;
+    display: flex; // Enable flex for proper centering
+    align-items: center; // Perfect vertical centering
     
-    :deep(.q-placeholder) {
-      font-style: italic;
-      color: var(--text-tertiary);
+    &:hover {
+      border-color: #999;
     }
   }
   
-  // Better responsiveness for smaller screens
-  @media (max-width: 768px) {
-    :deep(.q-field__input) {
-      font-size: 0.875rem;
-    }
+  // Focus state
+  :deep(.q-field--focused .q-field__control) {
+    border-color: #2196f3;
+    box-shadow: 0 0 0 2px rgba(33, 150, 243, 0.2);
+  }
+  
+  // Native input styling with perfect vertical centering
+  :deep(.q-field__native) {
+    font-size: 14px;
+    color: #333;
+    line-height: 1.4;
+    padding: 0;
+    height: 100%; // Take full height of parent
+    display: flex;
+    align-items: center; // Perfect vertical centering
+  }
+  
+  // Placeholder styling - normal text, #666 color, perfect centering
+  :deep(.q-placeholder) {
+    color: #666;
+    font-style: normal;
+    font-size: 14px;
+    line-height: 1.4;
+    height: 100%; // Take full height
+    display: flex;
+    align-items: center; // Perfect vertical centering
+  }
+  
+  // Selected value styling with perfect centering
+  :deep(.q-field__selected) {
+    color: #333;
+    font-size: 14px;
+    line-height: 1.4;
+    height: 100%; // Take full height
+    display: flex;
+    align-items: center; // Perfect vertical centering
+    min-height: 40px; // Ensure minimum height for centering
+  }
+  
+  // Fix Quasar label positioning for all inputs
+  :deep(.q-field__label) {
+    position: absolute;
+    top: 50%; // Center vertically
+    transform: translateY(-50%); // Perfect center
+    left: 12px;
+    font-size: 14px;
+    color: #666;
+    pointer-events: none;
+    transition: all 0.2s ease;
+    line-height: 1;
+  }
+  
+  // When field has value or is focused, move label up
+  :deep(.q-field--float .q-field__label) {
+    top: -6px;
+    font-size: 12px;
+    color: #2196f3;
+    background: white;
+    padding: 0 4px;
+    transform: none;
   }
 }
 
-// Boolean field container styling
-.boolean-field-container {
+// Icon styling - consistent positioning, size and perfect centering
+.filter-icon {
+  color: #666;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center; // Perfect vertical centering
+  justify-content: center; // Perfect horizontal centering
+}
+
+// Scanner button styling with perfect centering
+.filter-scanner-btn {
+  color: #666;
+  display: flex;
+  align-items: center; // Perfect vertical centering
+  justify-content: center; // Perfect horizontal centering
+  
+  &:hover {
+    color: #2196f3;
+  }
+}
+
+// Date picker icon styling with perfect centering
+.filter-date-icon {
+  color: #666;
+  cursor: pointer;
+  display: flex;
+  align-items: center; // Perfect vertical centering
+  justify-content: center; // Perfect horizontal centering
+  
+  &:hover {
+    color: #2196f3;
+  }
+}
+
+// Currency display styling
+.filter-currency {
+  font-size: 14px;
+  color: #666;
+  font-weight: normal;
+}
+
+// Checkbox container and styling
+.filter-checkbox-container {
   display: flex;
   align-items: center;
   gap: 8px;
-  width: 100%;
-  min-width: 0;
-  padding: 8px 0;
-  
-  .boolean-field-icon {
-    flex-shrink: 0;
-    color: var(--text-tertiary);
-    order: 1; // Icon first
+  min-height: 40px;
+}
+
+.filter-checkbox-magento {
+  :deep(.q-checkbox__inner) {
+    border: 1px solid #ccc;
+    border-radius: 3px;
+    background: #ffffff;
   }
   
-  .boolean-field-input {
-    order: 2; // Input second
-    
-    // Better vertical alignment for checkboxes and toggles
-    :deep(.q-checkbox__inner),
-    :deep(.q-toggle__inner) {
-      display: flex;
-      align-items: center;
-    }
-    
-    // Label to the right of the control
-    :deep(.q-checkbox),
-    :deep(.q-toggle) {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      
-      .q-checkbox__label,
-      .q-toggle__label {
-        order: 2;
-        margin-left: 8px;
-      }
-      
-      .q-checkbox__inner,
-      .q-toggle__inner {
-        order: 1;
-      }
-    }
-    
-    // Remove focus border on boolean fields too
-    :deep(.q-checkbox.q-checkbox--focused),
-    :deep(.q-toggle.q-toggle--focused) {
-      .q-checkbox__inner::after,
-      .q-toggle__track::after {
-        display: none;
-      }
-    }
+  :deep(.q-checkbox__inner:hover) {
+    border-color: #999;
   }
 }
 
-// Range field styling  
-.range-field {
-  width: 100%;
-  min-width: 0;
+.filter-checkbox-label {
+  font-size: 14px;
+  color: #333;
+  cursor: pointer;
   display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
+  align-items: center;
+}
+
+// Well-balanced range container - maintains Van-Tot format
+.filter-range-container {
+  display: flex;
+  align-items: center;
+  gap: 8px; // Proper gap for good visual spacing
+  width: 100%;
+  min-height: 42px; // Match field height exactly
+}
+
+.filter-range-input {
+  flex: 1;
+  min-width: 0;
   
-  .range-label {
-    margin-bottom: 2px;
-    font-size: 0.75rem; // Smaller label  
-    font-weight: 500;
-    color: var(--text-secondary);
-    line-height: 1.2;
-    min-height: 14px; // Reserve space for label
-    flex-shrink: 0;
-    padding-left: 4px; // Align with input padding
+  // Ensure range inputs have exact same height and centering as other fields
+  :deep(.q-field__control) {
+    min-height: 42px; // Match main field height
+    height: 42px; // Match main field height
+    display: flex; // Enable flex for proper centering
+    align-items: center; // Perfect vertical centering
   }
   
-  .range-inputs {
-    display: flex;
-    gap: 12px;
-    align-items: flex-start;
-    width: 100%;
-    min-width: 0;
-    flex: 1; // Take remaining space to align with other inputs
+  // Range inputs inherit label styling from parent .filter-input-magento
+}
+
+.filter-range-separator {
+  font-size: 14px; // Reduced size for compactness
+  color: #666;
+  font-weight: normal;
+  margin: 0 2px; // Reduced margin
+  line-height: 1;
+}
+
+// Mobile responsiveness - compact yet touch-friendly
+@media (max-width: 768px) {
+  .filter-field-container {
+    min-height: 62px; // Mobile: 18px label + 4px gap + 40px field
+    gap: 4px; // Proper gap for mobile
     
-    .range-input {
-      flex: 1;
-      min-width: 0;
-      width: 50%;
-      
-      // Apply same focus styling as other inputs
-      :deep(.q-field--focused) {
-        .q-field__control {
-          border-color: var(--brand-primary);
-          box-shadow: 0 0 0 3px rgba(30, 58, 138, 0.1);
-        }
-      }
-      
-      // Ensure range inputs align with single inputs
+    &--checkbox {
+      min-height: 44px; // Touch-friendly checkboxes
+    }
+  }
+  
+  .filter-range-container {
+    flex-direction: column;
+    gap: 8px; // Proper gap on mobile for touch
+    
+    .filter-range-separator {
+      display: none;
+    }
+    
+    .filter-range-input {
       :deep(.q-field__control) {
-        min-height: 40px; // Match standard input height
-        padding-top: 4px; // Match other fields
-      }
-      
-      // Hover styling handled by global field system
-    }
-    
-    .currency-symbol {
-      flex-shrink: 0;
-      font-size: 0.875rem;
-      color: var(--text-secondary);
-    }
-    
-    .date-picker-icon {
-      cursor: pointer;
-      color: var(--text-tertiary);
-      transition: color 0.2s ease;
-      
-      &:hover {
-        color: var(--brand-primary);
+        min-height: 40px; // Match mobile field height
+        height: 40px; // Fixed height consistency
       }
     }
   }
-}
-
-// Unknown field styling
-.unknown-field-container {
-  padding: 12px;
-  border: 1px solid var(--border-primary);
-  border-radius: 6px;
-  background: var(--bg-secondary);
   
-  .unknown-field-content {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    
-    .unknown-field-icon {
-      color: var(--brand-warning);
+  .filter-input-magento {
+    :deep(.q-field__control) {
+      min-height: 40px; // Touch-friendly but compact
+      height: 40px; // Fixed height consistency
+      font-size: 16px; // Prevent zoom on iOS
+      display: flex; // Maintain flex for centering
+      align-items: center; // Perfect vertical centering
     }
     
-    .unknown-field-message {
-      font-size: 0.875rem;
-      color: var(--text-secondary);
+    // Mobile label positioning
+    :deep(.q-field__label) {
+      top: 50%; // Center vertically on mobile too
+      transform: translateY(-50%);
+      font-size: 16px; // Larger on mobile
     }
-  }
-}
-
-// Country select specific styling
-.filter-input.country-select {
-  :deep(.q-field__selected) {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    min-width: 0;
     
-    span {
-      flex: 1;
-      min-width: 0;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
+    :deep(.q-field--float .q-field__label) {
+      top: -8px; // Adjust for mobile
+      font-size: 14px; // Smaller when floating
     }
   }
 }

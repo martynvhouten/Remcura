@@ -7,43 +7,42 @@
           icon="checklist"
       >
         <template #actions>
-          <div class="header-actions">
-            <!-- Status Filter -->
-            <q-select
-              v-model="selectedStatus"
-              :options="statusOptions"
-              :label="$t('counting.sessionStatus')"
-              emit-value
-              map-options
-              outlined
-              dense
-              clearable
-              class="status-filter"
-            >
-              <template v-slot:prepend>
-                <q-icon name="filter_list" />
-              </template>
-            </q-select>
+          <q-btn
+            flat
+            round
+            icon="refresh"
+            size="md"
+            @click="refreshData"
+            :loading="countingStore.loading"
+            class="app-btn-refresh"
+          >
+            <q-tooltip>{{ $t('common.refresh') }}</q-tooltip>
+          </q-btn>
+          
+          <q-select
+            v-model="selectedStatus"
+            :options="statusOptions"
+            :label="$t('counting.sessionStatus')"
+            emit-value
+            map-options
+            outlined
+            dense
+            clearable
+            class="status-filter"
+          >
+            <template v-slot:prepend>
+              <q-icon name="filter_list" />
+            </template>
+          </q-select>
 
-            <!-- Refresh Button -->
-            <q-btn
-              color="primary"
-          icon="refresh"
-              :label="$t('common.refresh')"
-              @click="refreshData"
-              :loading="countingStore.loading"
-              unelevated
-            />
-
-            <!-- Start New Session Button -->
-            <q-btn
-              color="secondary"
-          icon="add"
-              :label="$t('counting.startSession')"
-              @click="showStartSessionDialog"
-              unelevated
-            />
-          </div>
+          <q-btn
+            icon="add"
+            :label="$t('counting.startSession')"
+            @click="showStartSessionDialog"
+            unelevated
+            no-caps
+            class="app-btn-success"
+          />
         </template>
       </PageTitle>
     </template>

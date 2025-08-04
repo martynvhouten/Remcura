@@ -7,26 +7,26 @@
           icon="timeline"
       >
         <template #actions>
-          <div class="header-actions">
-            <!-- Refresh Button -->
-            <q-btn
-              color="primary"
-          icon="refresh"
-              :label="$t('common.refresh')"
-              @click="refreshData"
-              :loading="inventoryStore.loading"
-              unelevated
-            />
+          <q-btn
+            flat
+            round
+            icon="refresh"
+            size="md"
+            @click="refreshData"
+            :loading="inventoryStore.loading"
+            class="app-btn-refresh"
+          >
+            <q-tooltip>{{ $t('common.refresh') }}</q-tooltip>
+          </q-btn>
 
-            <!-- Export Button -->
-            <q-btn
-              color="secondary"
-          icon="file_download"
-              :label="$t('common.export')"
-              @click="exportMovements"
-              unelevated
-            />
-          </div>
+          <q-btn
+            icon="file_download"
+            :label="$t('common.export')"
+            @click="exportMovements"
+            unelevated
+            no-caps
+            class="app-btn-secondary"
+          />
         </template>
       </PageTitle>
     </template>

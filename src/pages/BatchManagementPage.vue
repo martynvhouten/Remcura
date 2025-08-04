@@ -8,10 +8,22 @@
       >
         <template #actions>
           <q-btn
-            color="primary"
+            flat
+            round
+            icon="refresh"
+            size="md"
+            @click="loadBatches"
+            class="app-btn-refresh"
+          >
+            <q-tooltip>{{ $t('common.refresh') }}</q-tooltip>
+          </q-btn>
+          <q-btn
             icon="add"
             :label="$t('batch.addBatch')"
             @click="showAddBatchDialog = true"
+            unelevated
+            no-caps
+            class="app-btn-success"
           />
         </template>
       </PageTitle>

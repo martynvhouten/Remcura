@@ -4,22 +4,22 @@
       <PageTitle
         :title="$t('inventory.stockLevels')"
         :subtitle="$t('inventory.overview')"
-          icon="inventory_2"
-      />
-    </template>
-
-    <template #actions>
-      <div class="row q-gutter-sm items-center">
-        <!-- Refresh Button -->
-        <q-btn
-          icon="refresh"
-          :loading="loading"
-          round
-          flat
-          @click="refreshData"
-          :title="$t('common.refresh')"
-        />
-      </div>
+        icon="inventory_2"
+      >
+        <template #actions>
+          <q-btn
+            icon="refresh"
+            :loading="loading"
+            round
+            flat
+            size="md"
+            @click="refreshData"
+            class="app-btn-refresh"
+          >
+            <q-tooltip>{{ $t('common.refresh') }}</q-tooltip>
+          </q-btn>
+        </template>
+      </PageTitle>
     </template>
 
     <!-- Quick Stats Overview -->

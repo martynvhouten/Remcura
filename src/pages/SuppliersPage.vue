@@ -8,21 +8,31 @@
       >
         <template #actions>
           <q-btn
+            flat
+            round
+            icon="refresh"
+            size="md"
+            @click="loadSuppliers"
+            :loading="loading"
+            class="app-btn-refresh"
+          >
+            <q-tooltip>{{ $t('common.refresh') }}</q-tooltip>
+          </q-btn>
+          <q-btn
             icon="cloud_upload"
             :label="$t('suppliersPage.importSuppliers')"
             @click="importSuppliers"
             unelevated
             no-caps
-            class="btn-modern"
+            class="app-btn-secondary"
           />
           <q-btn
-            color="primary"
             icon="add"
             :label="$t('suppliersPage.addSupplier')"
             @click="openAddDialog"
             unelevated
             no-caps
-            class="btn-modern"
+            class="app-btn-success"
           />
         </template>
       </PageTitle>

@@ -8,9 +8,24 @@
       >
         <template #actions>
           <q-btn
-            v-bind="exportBtn"
+            flat
+            round
+            icon="refresh"
+            size="md"
+            @click="refreshAnalytics"
+            :loading="loading"
+            class="app-btn-refresh"
+          >
+            <q-tooltip>{{ $t('common.refresh') }}</q-tooltip>
+          </q-btn>
+          <q-btn
+            icon="file_download"
+            :label="$t('common.export')"
             @click="exportAnalytics"
             :loading="exporting"
+            unelevated
+            no-caps
+            class="app-btn-secondary"
           />
         </template>
       </PageTitle>

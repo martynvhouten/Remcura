@@ -12,14 +12,24 @@
       >
         <template #actions>
           <q-btn
-            color="primary"
-          icon="save"
+            flat
+            round
+            icon="refresh"
+            size="md"
+            @click="loadSettings"
+            :loading="loading"
+            class="app-btn-refresh"
+          >
+            <q-tooltip>{{ $t('common.refresh') }}</q-tooltip>
+          </q-btn>
+          <q-btn
+            icon="save"
             :label="$t('settings.saveSettings')"
             @click="saveSettings"
             :loading="saving"
             unelevated
             no-caps
-            class="btn-modern"
+            class="app-btn-success"
           />
         </template>
       </PageTitle>

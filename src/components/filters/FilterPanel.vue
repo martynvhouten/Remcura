@@ -1,51 +1,56 @@
 <template>
-  <div class="filter-panel">
-    <!-- Filter Toggle Button -->
-    <div class="filter-toggle">
+  <div class="filter-panel-container">
+    <!-- Filter Toggle Button - Top Right -->
+    <div class="filter-panel-header">
       <q-btn
-        flat
-        :icon="isFiltersVisible ? 'filter_list' : 'filter_list_off'"
-        :label="t('filters.filterPanel.filtersButton')"
+        unelevated
         @click="toggleFilters"
         class="filter-toggle-btn"
-        :class="{ 'active': isFiltersVisible, 'has-active-filters': activeFiltersCount > 0 }"
-      />
+        :class="{ 'active': isFiltersVisible }"
+        color="grey-3"
+        text-color="grey-8"
+        size="sm"
+        padding="8px 16px"
+      >
+        <template v-slot:default>
+          <q-icon name="tune" size="16px" class="q-mr-xs" />
+          {{ t('filters.filterPanel.filtersButton') }}
           <q-chip 
             v-if="activeFiltersCount > 0" 
             :label="activeFiltersCount" 
             color="primary"
             text-color="white"
-            size="sm"
-        class="filter-count-chip"
-      />
+            size="xs"
+            class="q-ml-sm"
+          />
+        </template>
+      </q-btn>
     </div>
 
     <!-- Filter Content - Collapsible -->
     <q-slide-transition>
       <div v-show="isFiltersVisible" class="filter-content">
-        <!-- Main Filter Fields Grid -->
-        <div class="filter-grid">
+        <!-- Main Filter Fields Grid - 12 Column Layout -->
+        <div class="filter-grid-12col">
           <!-- Regular fields (non-boolean) -->
           <template v-for="field in regularFields" :key="field.id">
-            <div :class="getFieldGridClass(field)">
-                <FilterField
-                  :field="field"
-                  :model-value="modelValue[field.id]"
-                  @update:model-value="(value) => handleFieldChange(field.id, value)"
-                  @change="(value, oldValue) => handleFieldChangeEvent(field, value, oldValue)"
-                  @scan="(value) => handleScanEvent(field, value)"
-                  :loading="loading"
-                  :disabled="disabled"
-                  :readonly="readonly"
-                />
-              </div>
-            </template>
-        </div>
+            <div :class="getMagentoFieldClass(field)">
+              <FilterField
+                :field="field"
+                :model-value="modelValue[field.id]"
+                @update:model-value="(value) => handleFieldChange(field.id, value)"
+                @change="(value, oldValue) => handleFieldChangeEvent(field, value, oldValue)"
+                @scan="(value) => handleScanEvent(field, value)"
+                :loading="loading"
+                :disabled="disabled"
+                :readonly="readonly"
+              />
+            </div>
+          </template>
 
-        <!-- Boolean/Toggle Fields Section -->
-        <div v-if="booleanFields.length > 0" class="filter-boolean-section">
+          <!-- Boolean Fields Inline -->
           <template v-for="field in booleanFields" :key="field.id">
-            <div class="filter-boolean-field">
+            <div :class="getMagentoFieldClass(field)">
               <FilterField
                 :field="field"
                 :model-value="modelValue[field.id]"
@@ -60,16 +65,30 @@
           </template>
         </div>
 
-        <!-- Clear All Filters Button - Only when there are active filters -->
-        <div v-if="activeFiltersCount > 0" class="filter-actions">
-            <q-btn
-              flat
-              icon="clear_all"
+        <!-- Action Buttons - Right Bottom -->
+        <div class="filter-actions">
+          <q-btn
+            unelevated
             :label="t('filters.filterPanel.clearAllFilters')"
-              @click="handleClearAll"
-              :disable="disabled"
-            class="filter-btn filter-btn--clear-all"
-            />
+            @click="handleClearAll"
+            :disable="disabled || activeFiltersCount === 0"
+            class="filter-btn filter-btn--clear"
+            color="grey-3"
+            text-color="grey-8"
+            size="sm"
+            padding="8px 16px"
+          />
+          <q-btn
+            unelevated
+            :label="t('filters.filterPanel.applyFilters')"
+            @click="handleApplyFilters"
+            :disable="disabled"
+            class="filter-btn filter-btn--apply"
+            color="primary"
+            text-color="white"
+            size="sm"
+            padding="8px 20px"
+          />
         </div>
       </div>
     </q-slide-transition>
@@ -105,6 +124,7 @@ interface Emits {
   (e: 'change', event: FilterChangeEvent): void
   (e: 'reset', event: FilterResetEvent): void
   (e: 'clear'): void
+  (e: 'apply', values: FilterValues): void
 }
 
 const props = withDefaults(defineProps<Props>(), {
@@ -114,7 +134,7 @@ const props = withDefaults(defineProps<Props>(), {
   showHeader: true,
   showFooter: true,
   collapsible: true,
-  initiallyCollapsed: false,
+  initiallyCollapsed: true, // Default to collapsed (hidden)
 })
 
 const emit = defineEmits<Emits>()
@@ -147,21 +167,38 @@ const activeFiltersCount = computed(() => {
   }).length
 })
 
-// Methods
-const getFieldGridClass = (field: FilterFieldType) => {
-  const baseClasses = ['filter-field-container']
+// Methods - New Magento-style 12-column grid system
+const getMagentoFieldClass = (field: FilterFieldType) => {
+  const baseClasses = ['filter-field-magento']
   
-  // Add size-based classes based on field.size
+  // Compact multi-column grid sizing (3-4 fields per row)
   if (field.size) {
-    baseClasses.push(`field-size-${field.size}`)
+    switch(field.size) {
+      case 'xs':
+        baseClasses.push('col-span-3') // 4 fields per row (3/12)
+        break
+      case 'sm':
+        baseClasses.push('col-span-3') // 4 fields per row (3/12)
+        break
+      case 'md':
+        baseClasses.push('col-span-4') // 3 fields per row (4/12)
+        break
+      case 'lg':
+        baseClasses.push('col-span-6') // 2 fields per row (6/12)
+        break
+      default:
+        baseClasses.push('col-span-3') // Default: 4 per row
+    }
   } else {
-    // Default sizing based on field type
+    // Auto-sizing based on field type for compact layout
     if (field.type === 'number_range' || field.type === 'date_range') {
-      baseClasses.push('field-size-large')
+      baseClasses.push('col-span-6') // Ranges take half width (2 per row)
+    } else if (field.type === 'text' && field.id === 'search') {
+      baseClasses.push('col-span-6') // Search takes half width
     } else if (field.type === 'boolean') {
-      baseClasses.push('field-size-small')
+      baseClasses.push('col-span-4') // Checkboxes: 3 per row
     } else {
-      baseClasses.push('field-size-medium')
+      baseClasses.push('col-span-3') // Default: 4 per row
     }
   }
   
@@ -202,6 +239,11 @@ const handleClearAll = () => {
   emit('clear')
 }
 
+const handleApplyFilters = () => {
+  // Emit apply event for parent to handle
+  emit('apply', props.modelValue)
+}
+
 const toggleFilters = () => {
   isFiltersVisible.value = !isFiltersVisible.value
 }
@@ -215,197 +257,307 @@ onMounted(() => {
 </script>
 
 <style lang="scss" scoped>
-.filter-panel {
+// ===================================================================
+// MAGENTO-STYLE FILTER PANEL - CLEAN & CONSISTENT  
+// ===================================================================
+
+.filter-panel-container {
   width: 100%;
-  background: white;
-  border-radius: var(--radius-lg);
-  box-shadow: var(--shadow-sm);
-  border: 1px solid var(--neutral-200);
-  overflow: hidden;
+  background: transparent;
+  position: relative;
 }
 
-.filter-toggle {
+// Header with toggle button - top right position
+.filter-panel-header {
   display: flex;
+  justify-content: flex-end;
   align-items: center;
-  gap: 12px;
-  padding: var(--space-4) var(--space-6);
-  background: var(--neutral-50);
-  border-bottom: 1px solid var(--neutral-200);
+  margin-bottom: 16px;
   
   .filter-toggle-btn {
-    font-weight: var(--font-weight-medium);
-    color: var(--text-primary);
-    transition: all var(--transition-base);
+    background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+    border: 1px solid #e1e5e9;
+    border-radius: 6px; // Match other buttons
+    font-size: 14px; // Consistent with other buttons
+    font-weight: 500;
+    color: #495057;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    line-height: 1;
+    letter-spacing: 0.025em;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
     
-    &.has-active-filters {
-      color: var(--brand-primary);
-      background: rgba(30, 58, 138, 0.08);
+    // Ensure icon and text are properly aligned
+    .q-icon {
+      display: flex;
+      align-items: center;
+    }
+    
+    &:hover:not(.active) {
+      background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+      border-color: #adb5bd;
+      color: #212529;
+      transform: translateY(-1px);
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
     }
     
     &.active {
-      color: var(--brand-primary);
+      background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%);
+      border-color: #2196f3;
+      color: #1976d2;
+      box-shadow: 0 2px 8px rgba(33, 150, 243, 0.2);
+    }
+    
+    &:active {
+      transform: translateY(0);
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
     }
   }
-  
-  .filter-count-chip {
-    font-weight: var(--font-weight-semibold);
-    border-radius: var(--radius-full);
-  }
 }
 
+// Modern filter content panel
 .filter-content {
-  padding: var(--space-6);
-  background: white;
+  background: #ffffff;
+  border: 1px solid #e1e5e9;
+  border-radius: 8px; // More rounded for modern look
+  padding: 24px; // Slightly more padding
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08); // Subtle modern shadow
 }
 
-.filter-grid {
+// Well-balanced grid with proper proportions
+.filter-grid-12col {
   display: grid;
-  gap: var(--space-4);
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-  margin-bottom: var(--space-6);
+  grid-template-columns: repeat(12, 1fr);
+  gap: 12px 8px; // Balanced gaps for good visual spacing
+  margin-bottom: 16px; // Proper margin
   
-  // Responsive grid
-  @media (min-width: 768px) {
-    grid-template-columns: repeat(2, 1fr);
+  // Desktop: 3-4 fields per row
+  @media (min-width: 1200px) {
+    grid-template-columns: repeat(12, 1fr); // 4 fields x 3 cols = 12
   }
   
-  @media (min-width: 1024px) {
-    grid-template-columns: repeat(3, 1fr);
+  // Large tablet: 3 fields per row  
+  @media (min-width: 1025px) and (max-width: 1199px) {
+    grid-template-columns: repeat(9, 1fr); // 3 fields x 3 cols = 9
   }
   
-  @media (min-width: 1440px) {
-    grid-template-columns: repeat(4, 1fr);
+  // Tablet: 2 fields per row
+  @media (min-width: 769px) and (max-width: 1024px) {
+    grid-template-columns: repeat(6, 1fr); // 2 fields x 3 cols = 6
+  }
+  
+  // Mobile: 1 field per row
+  @media (max-width: 768px) {
+    grid-template-columns: 1fr;
+    gap: 10px; // Proper mobile spacing
   }
 }
 
-.filter-field-container {
+// Well-proportioned field containers with perfect alignment
+.filter-field-magento {
   display: flex;
   flex-direction: column;
-  gap: var(--space-2);
-  min-width: 0; // Allow shrinking
+  min-height: 68px; // Consistent with FilterField.vue updated height
+  margin: 0; // Reset any default margins
+  padding: 0; // Reset any default padding
   
-  // Size variations
-  &.field-size-small {
-    grid-column: span 1;
-    max-width: 200px;
+  // Grid column span classes for compact layout
+  &.col-span-3 {
+    grid-column: span 3; // 4 fields per row (desktop)
   }
   
-  &.field-size-medium {
-    grid-column: span 1;
+  &.col-span-4 {
+    grid-column: span 4; // 3 fields per row (desktop)
   }
   
-  &.field-size-large {
-    grid-column: span 2;
+  &.col-span-6 {
+    grid-column: span 6; // 2 fields per row (desktop)
+  }
+  
+  &.col-span-12 {
+    grid-column: span 12; // Full width
+  }
+  
+  // Responsive behavior for compact layout
+  @media (min-width: 1025px) and (max-width: 1199px) {
+    // Large tablet: adjust for 9-column grid (3 fields per row)
+    &.col-span-3 {
+      grid-column: span 3; // 3 fields per row
+    }
     
-    @media (max-width: 768px) {
-      grid-column: span 1;
+    &.col-span-4 {
+      grid-column: span 3; // 3 fields per row
+    }
+    
+    &.col-span-6 {
+      grid-column: span 4.5; // Approximate 2 fields per row
     }
   }
   
-  &.field-size-full {
-    grid-column: 1 / -1;
-  }
-}
-
-.filter-btn {
-  font-weight: var(--font-weight-medium);
-  padding: var(--space-3) var(--space-5);
-  border-radius: var(--radius-base);
-  transition: all var(--transition-base);
-  
-  &--clear-all {
-    color: var(--text-secondary);
-    border: 1px solid var(--neutral-300);
+  @media (min-width: 769px) and (max-width: 1024px) {
+    // Tablet: adjust for 6-column grid (2 fields per row)
+    &.col-span-3,
+    &.col-span-4 {
+      grid-column: span 3; // 2 fields per row
+    }
     
-    &:hover {
-      color: var(--text-primary);
-      background: var(--neutral-100);
-      border-color: var(--neutral-400);
+    &.col-span-6 {
+      grid-column: span 6; // Full width on tablet
+    }
+  }
+  
+  @media (max-width: 768px) {
+    // Mobile: all fields full width
+    &.col-span-3,
+    &.col-span-4,
+    &.col-span-6,
+    &.col-span-12 {
+      grid-column: span 1; // Stack on mobile
     }
   }
 }
 
-// Boolean fields section styling
-.filter-boolean-section {
+// Action buttons section - larger and clearer
+.filter-actions {
   display: flex;
-  flex-wrap: wrap;
-  gap: var(--space-4);
-  margin-top: var(--space-4);
-  padding-top: var(--space-4);
-  border-top: 1px solid var(--neutral-200);
+  justify-content: flex-end;
+  align-items: center;
+  gap: 16px; // Increased gap
+  padding-top: 20px; // Increased padding
+  border-top: 1px solid #e0e0e0;
+  margin-top: 20px; // Increased margin
   
-  .filter-boolean-field {
+  .filter-btn {
+    border-radius: 6px; // Slightly rounded for modern look
+    font-size: 14px; // Clean readable size
+    font-weight: 500; // Medium weight
+    padding: 10px 20px; // Balanced padding
+    min-height: 40px; // Proper proportions
     display: flex;
     align-items: center;
-    min-width: 200px;
+    justify-content: center;
+    line-height: 1;
+    letter-spacing: 0.025em; // Slight letter spacing for clarity
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1); // Smooth modern transition
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1); // Subtle depth
     
-    // On smaller screens, full width
-    @media (max-width: 768px) {
-      width: 100%;
-      min-width: auto;
+    &--clear {
+      background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%); // Subtle gradient
+      border: 1px solid #e1e5e9;
+      color: #495057;
+      
+      &:hover:not(:disabled) {
+        background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+        border-color: #adb5bd;
+        color: #212529;
+        transform: translateY(-1px); // Subtle lift effect
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+      }
+      
+      &:active {
+        transform: translateY(0);
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+      }
+      
+      &:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+        transform: none;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+      }
+    }
+    
+    &--apply {
+      background: linear-gradient(135deg, #2196f3 0%, #1976d2 100%); // Modern gradient
+      border: 1px solid #1976d2;
+      color: #ffffff;
+      font-weight: 600;
+      
+      &:hover:not(:disabled) {
+        background: linear-gradient(135deg, #1976d2 0%, #1565c0 100%);
+        border-color: #1565c0;
+        transform: translateY(-1px); // Subtle lift effect
+        box-shadow: 0 4px 12px rgba(33, 150, 243, 0.3);
+      }
+      
+      &:active {
+        transform: translateY(0);
+        box-shadow: 0 1px 3px rgba(33, 150, 243, 0.3);
+      }
     }
   }
 }
 
 // Mobile responsiveness
 @media (max-width: 768px) {
-  .filter-panel {
-    border-radius: var(--radius-base);
-    margin: 0 var(--space-2);
-  }
-  
-  .filter-toggle {
-    padding: var(--space-3) var(--space-4);
+  .filter-panel-header {
+    margin-bottom: 12px;
   }
   
   .filter-content {
-    padding: var(--space-4);
+    padding: 16px;
   }
   
-  .filter-grid {
-    grid-template-columns: 1fr;
-    gap: var(--space-3);
-    margin-bottom: var(--space-4);
-  }
-  
-  .filter-field-container {
-    &.field-size-small,
-    &.field-size-medium,
-    &.field-size-large {
-      grid-column: span 1;
-      max-width: none;
+  .filter-actions {
+    flex-direction: column;
+    gap: 12px; // Increased gap on mobile
+    padding-top: 16px;
+    
+    .filter-btn {
+      width: 100%;
+      justify-content: center;
+      font-size: 16px; // Larger on mobile
+      padding: 14px 24px; // Touch-friendly padding
+      min-height: 48px; // Larger touch target
+      display: flex;
+      align-items: center;
+      line-height: 1;
+      letter-spacing: 0.025em;
+      border-radius: 8px; // Slightly more rounded on mobile
+      
+      // Enhanced touch feedback
+      &:active {
+        transform: scale(0.98);
+      }
     }
   }
 }
 
-// Dark mode adjustments
+// Dark mode support
 body.body--dark {
-  .filter-panel {
-    background: var(--bg-secondary);
-    border-color: var(--border-primary);
-  }
-  
-  .filter-toggle {
-    background: var(--bg-tertiary);
-    border-color: var(--border-primary);
-  }
-  
   .filter-content {
     background: var(--bg-secondary);
+    border-color: var(--border-primary);
   }
   
-  .filter-btn--clear-all {
-    color: var(--text-secondary);
-    border-color: var(--border-secondary);
+  .filter-toggle-btn {
+    background: var(--bg-primary);
+    border-color: var(--border-primary);
+    color: var(--text-primary);
     
     &:hover {
-      color: var(--text-primary);
       background: var(--bg-tertiary);
-      border-color: var(--border-primary);
+    }
+    
+    &.active {
+      background: var(--brand-primary-light);
+      color: var(--brand-primary);
     }
   }
   
-  .filter-boolean-section {
+  .filter-btn--clear {
+    background: var(--bg-primary);
+    border-color: var(--border-primary);
+    color: var(--text-primary);
+    
+    &:hover:not(:disabled) {
+      background: var(--bg-tertiary);
+    }
+  }
+  
+  .filter-actions {
     border-color: var(--border-primary);
   }
 }

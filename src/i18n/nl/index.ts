@@ -1165,6 +1165,7 @@ export default {
     title: 'Bestellingen',
     export: 'Exporteren',
     createOrder: 'Bestelling aanmaken',
+    analytics: 'Analyses',
     bulkExport: 'Geselecteerde exporteren',
     bulkEmail: 'Geselecteerde E-mailen',
     downloadPDF: 'PDF downloaden',
@@ -1217,15 +1218,6 @@ export default {
       subject: 'Onderwerp',
       message: 'Bericht',
       send: 'E-mail verzenden',
-    },
-
-    analytics: {
-      totalOrders: 'Totaal bestellingen',
-      totalValue: 'Totale waarde',
-      avgOrderSize: 'Gemiddelde Bestelgrootte',
-      orderFrequency: 'Bestellingen/Dag',
-      orderTrends: 'Bestel trends',
-      chartsComingSoon: 'Grafieken en gedetailleerde analyses komen binnenkort!',
     },
 
     notifications: {
@@ -2365,9 +2357,7 @@ export default {
 
     'orders.export.export': 'Export',
 
-    'orders.analytics.title': 'Title',
-
-    'orders.analytics.comingSoon': 'ComingSoon',
+    
 
     'common.close': 'Close',
 

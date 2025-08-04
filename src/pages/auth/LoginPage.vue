@@ -72,7 +72,7 @@
           :loading="loading"
           type="submit"
           color="primary"
-          class="login-btn btn-modern"
+          class="app-btn-primary"
           :label="$t('auth.login')"
           unelevated
           no-caps
@@ -99,7 +99,7 @@
             color="secondary"
             :label="$t('auth.demoAccount')"
             @click="fillDemoCredentials"
-            class="demo-btn btn-modern"
+            class="app-btn-secondary"
             icon="person"
             no-caps
             :aria-describedby="'demo-help'"
@@ -111,7 +111,7 @@
             color="primary"
             :label="$t('auth.forgotPassword')"
             @click="handleForgotPassword"
-            class="forgot-btn btn-modern"
+            class="app-btn-secondary"
             no-caps
           />
         </div>

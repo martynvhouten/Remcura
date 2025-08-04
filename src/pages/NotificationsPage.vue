@@ -4,7 +4,38 @@
       :title="$t('notificationsPage.title')"
       :subtitle="$t('notificationsPage.subtitle')"
       icon="campaign"
-    />
+    >
+      <template #actions>
+        <q-btn
+          flat
+          round
+          icon="refresh"
+          size="md"
+          @click="loadNotifications"
+          :loading="loading"
+          class="app-btn-refresh"
+        >
+          <q-tooltip>{{ $t('common.refresh') }}</q-tooltip>
+        </q-btn>
+        <q-btn
+          icon="mark_email_read"
+          :label="$t('notificationsPage.markAllRead')"
+          @click="markAllAsRead"
+          :disable="unreadCount === 0"
+          unelevated
+          no-caps
+          class="app-btn-success"
+        />
+        <q-btn
+          icon="clear_all"
+          :label="$t('notificationsPage.clearAllNotifications')"
+          @click="confirmClearAll"
+          unelevated
+          no-caps
+          class="app-btn-danger"
+        />
+      </template>
+    </PageTitle>
 
     <div class="row q-gutter-md">
       <!-- Filters and Stats -->
@@ -46,31 +77,7 @@
         </BaseCard>
       </div>
 
-      <!-- Quick Actions -->
-      <div class="col-12">
-        <BaseCard
-          :title="$t('notificationsPage.quickActions')"
-          icon="flash_on"
-          icon-color="warning"
-        >
-          <div class="row q-gutter-sm">
-            <q-btn
-              v-bind="markAllReadBtn"
-              @click="markAllAsRead"
-              :disable="unreadCount === 0"
-            />
-            <q-btn
-              v-bind="testStockAlertBtn"
-              @click="createTestNotification('stock_alert')"
-            />
-            <q-btn
-              v-bind="testOrderUpdateBtn"
-              @click="createTestNotification('order_update')"
-            />
-            <q-btn v-bind="clearAllBtn" @click="confirmClearAll" />
-          </div>
-        </BaseCard>
-      </div>
+
 
       <!-- Notifications List -->
       <div class="col-12">
