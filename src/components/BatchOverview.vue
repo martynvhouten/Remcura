@@ -249,12 +249,27 @@
 
     <!-- Batch Details Dialog -->
     <q-dialog v-model="showDetailsDialog" max-width="600px">
-      <BatchDetailCard
-        v-if="selectedBatch"
-        :batch="selectedBatch"
-        @close="showDetailsDialog = false"
-        @updated="onBatchUpdated"
-      />
+      <q-card v-if="selectedBatch">
+        <q-card-section>
+          <div class="text-h6">{{ selectedBatch.batchNumber }}</div>
+          <div class="text-subtitle2">{{ selectedBatch.productName }}</div>
+        </q-card-section>
+        <q-card-section>
+          <div class="row q-gutter-sm">
+            <div class="col">
+              <div class="text-caption">Quantity</div>
+              <div class="text-body1">{{ selectedBatch.currentQuantity }}</div>
+            </div>
+            <div class="col">
+              <div class="text-caption">Expiry</div>
+              <div class="text-body1">{{ formatDate(selectedBatch.expiryDate) }}</div>
+            </div>
+          </div>
+        </q-card-section>
+        <q-card-actions align="right">
+          <q-btn flat label="Close" @click="showDetailsDialog = false" />
+        </q-card-actions>
+      </q-card>
     </q-dialog>
 
     <!-- Use Batch Dialog -->
@@ -277,7 +292,7 @@
   import { useClinicStore } from '@/stores/clinic';
   import { useAuthStore } from '@/stores/auth';
   import BatchRegistrationForm from './BatchRegistrationForm.vue';
-  import BatchDetailCard from './BatchDetailCard.vue';
+
   import UseBatchDialog from './UseBatchDialog.vue';
   import type { ProductBatchWithDetails } from '@/types/inventory';
 

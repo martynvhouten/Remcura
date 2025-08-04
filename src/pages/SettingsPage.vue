@@ -616,11 +616,6 @@
     padding: var(--space-4);
     border-radius: var(--radius-lg);
     border: 1px solid var(--neutral-200);
-    transition: all var(--transition-base);
-
-    &:hover {
-      border-color: var(--neutral-300);
-      box-shadow: var(--shadow-sm);
   }
 
   .setting-info {

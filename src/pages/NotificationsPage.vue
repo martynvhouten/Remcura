@@ -510,14 +510,31 @@
 </script>
 
 <style scoped>
-  .glass-card {
-    backdrop-filter: blur(10px);
-    background: rgba(255, 255, 255, 0.9);
-    border: 1px solid rgba(255, 255, 255, 0.2);
+.notification-stats {
+  .stats-filters {
+    margin-bottom: 16px;
   }
 
-  .body--dark .glass-card {
-    background: rgba(30, 30, 30, 0.9);
-    border: 1px solid rgba(255, 255, 255, 0.1);
+  .stats-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+
+    .stat-item {
+      text-align: center;
+
+      .stat-value {
+        font-size: 32px;
+        font-weight: 700;
+        line-height: 1.2;
+        margin-bottom: 4px;
+      }
+
+      .stat-label {
+        font-size: 14px;
+        color: var(--text-secondary);
+      }
+    }
   }
+}
 </style>
