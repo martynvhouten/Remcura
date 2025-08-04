@@ -4998,25 +4998,4 @@ export default {
 
     'orders.table.actions': 'Acties',
 
-  // Period labels for dropdowns
-  periods: {
-    oneDay: '1 dag',
-    sevenDays: '7 dagen',
-    fourteenDays: '14 dagen',
-    thirtyDays: '30 dagen',
-    ninetyDays: '90 dagen',
-    oneYear: '1 jaar',
-    today: 'Vandaag',
-    yesterday: 'Gisteren',
-    thisWeek: 'Deze week',
-    thisMonth: 'Deze maand',
-    thisQuarter: 'Dit kwartaal',
-    thisYear: 'Dit jaar',
-    lastSevenDays: 'Laatste 7 dagen',
-    lastThirtyDays: 'Laatste 30 dagen',
-    lastNinetyDays: 'Laatste 90 dagen',
-    lastYear: 'Vorig jaar',
-    customRange: 'Aangepast bereik',
-    allTime: 'Alle tijd'
-  }
 };

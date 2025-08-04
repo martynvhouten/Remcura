@@ -3,67 +3,71 @@
     <PageTitle
       :title="$t('notificationsPage.title')"
       :subtitle="$t('notificationsPage.subtitle')"
-          icon="campaign"
+      icon="campaign"
     />
 
     <div class="row q-gutter-md">
       <!-- Filters and Stats -->
       <div class="col-12">
-        <BaseCard
-          :title="$t('notificationsPage.notificationStatistics')"
-          icon="assessment"
-          icon-color="info"
-        >
-          <div class="row items-center justify-between q-mb-md">
-            <div class="col-auto">
-              <q-btn-group flat>
-                <q-btn
-                  flat
-                  :color="filter === 'all' ? 'primary' : 'grey-6'"
-                  :label="`${$t('notificationsPage.all')} (${
-                    mockNotifications.length
-                  })`"
-                  @click="filter = 'all'"
-                />
-                <q-btn
-                  flat
-                  :color="filter === 'unread' ? 'primary' : 'grey-6'"
-                  :label="`${$t(
-                    'notificationsPage.unread'
-                  )} (${unreadCount})`"
-                  @click="filter = 'unread'"
-                />
-              </q-btn-group>
+        <q-card class="glass-card">
+          <q-card-section>
+            <div class="row items-center justify-between">
+              <div class="col-auto">
+                <div class="text-h6">
+                  {{ $t('notificationsPage.notificationStatistics') }}
+                </div>
+              </div>
+              <div class="col-auto">
+                <q-btn-group flat>
+                  <q-btn
+                    flat
+                    :color="filter === 'all' ? 'primary' : 'grey-6'"
+                    :label="`${$t('notificationsPage.all')} (${
+                      mockNotifications.length
+                    })`"
+                    @click="filter = 'all'"
+                  />
+                  <q-btn
+                    flat
+                    :color="filter === 'unread' ? 'primary' : 'grey-6'"
+                    :label="`${$t(
+                      'notificationsPage.unread'
+                    )} (${unreadCount})`"
+                    @click="filter = 'unread'"
+                  />
+                </q-btn-group>
+              </div>
             </div>
-          </div>
 
-          <div class="row q-gutter-md">
-            <div class="col">
-              <div class="text-center">
-                <div class="text-h4 text-primary">{{ unreadCount }}</div>
-                <div class="text-caption">
-                  {{ $t('notificationsPage.unreadCount') }}
+            <div class="row q-gutter-md q-mt-sm">
+              <div class="col">
+                <div class="text-center">
+                  <div class="text-h4 text-primary">{{ unreadCount }}</div>
+                  <div class="text-caption">
+                    {{ $t('notificationsPage.unreadCount') }}
+                  </div>
+                </div>
+              </div>
+              <div class="col">
+                <div class="text-center">
+                  <div class="text-h4">{{ mockNotifications.length }}</div>
+                  <div class="text-caption">
+                    {{ $t('notificationsPage.total') }}
+                  </div>
                 </div>
               </div>
             </div>
-            <div class="col">
-              <div class="text-center">
-                <div class="text-h4">{{ mockNotifications.length }}</div>
-                <div class="text-caption">
-                  {{ $t('notificationsPage.total') }}
-                </div>
-              </div>
-            </div>
-          </div>
-        </BaseCard>
+          </q-card-section>
+        </q-card>
       </div>
 
       <!-- Quick Actions -->
       <div class="col-12">
         <BaseCard
+          
           :title="$t('notificationsPage.quickActions')"
           icon="flash_on"
-          icon-color="warning"
+          header-color="warning"
         >
           <div class="row q-gutter-sm">
             <q-btn
@@ -87,8 +91,9 @@
       <!-- Notifications List -->
       <div class="col-12">
         <BaseCard
+          
           icon="notifications"
-          icon-color="info"
+          header-color="info"
           :title="`${
             filter === 'all'
               ? $t('notificationsPage.all')
@@ -168,7 +173,7 @@
                     flat
                     round
                     dense
-          icon="mark_email_read"
+                    icon="mark_email_read"
                     :tooltip="$t('notificationsPage.markAsReadTooltip')"
                     @click.stop="markAsRead(notification.id)"
                   />
@@ -176,7 +181,7 @@
                     flat
                     round
                     dense
-          icon="delete"
+                    icon="delete"
                     color="negative"
                     :tooltip="$t('notificationsPage.deleteTooltip')"
                     @click.stop="deleteNotification(notification.id)"
@@ -507,6 +512,14 @@
 </script>
 
 <style scoped>
-// All styling is now handled by the new card components
-// No custom styling needed here
+  .glass-card {
+    backdrop-filter: blur(10px);
+    background: rgba(255, 255, 255, 0.9);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+  }
+
+  .body--dark .glass-card {
+    background: rgba(30, 30, 30, 0.9);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+  }
 </style>

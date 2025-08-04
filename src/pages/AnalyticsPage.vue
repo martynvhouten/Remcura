@@ -4,7 +4,7 @@
       <PageTitle
         :title="$t('analyticsPage.title')"
         :subtitle="$t('analyticsPage.subtitle')"
-          icon="insights"
+        icon="insights"
       >
         <template #actions>
           <q-btn
@@ -33,50 +33,54 @@
     <div class="row q-mb-lg stats-cards-container">
       <div class="col-12 col-sm-6 col-md-3 stats-card-col">
         <BaseCard
-          :title="$t('analyticsPage.totalEvents')"
+          
+          title=$t('analyticsPage.totalEvents')>
+            <div class="stat-display">
+              <div class="stat-value">{{ summary.totalEvents || 0 }}</div>
+            </div>
+          
           icon="event"
           icon-color="primary"
-        >
-          <div class="stat-display">
-            <div class="stat-value">{{ summary.totalEvents || 0 }}</div>
-          </div>
-        </BaseCard>
+        />
       </div>
 
       <div class="col-12 col-sm-6 col-md-3 stats-card-col">
         <BaseCard
-          :title="$t('analyticsPage.activeUsers')"
+          
+          title=$t('analyticsPage.activeUsers')>
+            <div class="stat-display">
+              <div class="stat-value">{{ summary.activeUsers || 0 }}</div>
+            </div>
+          
           icon="people"
           icon-color="positive"
-        >
-          <div class="stat-display">
-            <div class="stat-value">{{ summary.activeUsers || 0 }}</div>
-          </div>
-        </BaseCard>
+        />
       </div>
 
       <div class="col-12 col-sm-6 col-md-3 stats-card-col">
         <BaseCard
-          :title="$t('analyticsPage.totalOrders')"
+          
+          title=$t('analyticsPage.totalOrders')>
+            <div class="stat-display">
+              <div class="stat-value">{{ orderMetrics.totalOrders || 0 }}</div>
+            </div>
+          
           icon="shopping_cart"
           icon-color="warning"
-        >
-          <div class="stat-display">
-            <div class="stat-value">{{ orderMetrics.totalOrders || 0 }}</div>
-          </div>
-        </BaseCard>
+        />
       </div>
 
       <div class="col-12 col-sm-6 col-md-3 stats-card-col">
         <BaseCard
-          :title="$t('analyticsPage.productUpdates')"
+          
+          title=$t('analyticsPage.productUpdates')>
+            <div class="stat-display">
+              <div class="stat-value">{{ productMetrics.totalUpdates || 0 }}</div>
+            </div>
+          
           icon="inventory"
           icon-color="info"
-        >
-          <div class="stat-display">
-            <div class="stat-value">{{ productMetrics.totalUpdates || 0 }}</div>
-          </div>
-        </BaseCard>
+        />
       </div>
     </div>
 

@@ -1,694 +1,342 @@
 <template>
   <PageLayout>
-    <PageTitle
-      :title="$t('settings.styleGuideTitle')"
-      :subtitle="$t('settings.styleGuideSubtitle')"
-      icon="palette"
-    />
+    <template #header>
+      <PageTitle
+        title="Design System Style Guide"
+        subtitle="Complete design system for the Remcura application"
+        icon="style"
+      />
+    </template>
 
-    <!-- Color System -->
-    <div class="style-section">
-      <h2 class="section-title">🎨 {{ $t('settings.colorsSection') }}</h2>
-
-      <!-- Brand Colors -->
-      <div class="subsection">
-        <h3 class="subsection-title">{{ $t('settings.primaryColors') }}</h3>
-        <div class="color-grid">
-          <div class="color-card">
-            <div
-              class="color-swatch"
-              style="background: var(--brand-primary)"
-            ></div>
-            <div class="color-info">
-              <div class="color-name">Primary</div>
-              <div class="color-value">#1e3a8a</div>
-              <div class="color-usage">Main brand color, buttons, links</div>
-            </div>
-          </div>
-          <div class="color-card">
-            <div
-              class="color-swatch"
-              style="background: var(--brand-primary-light)"
-            ></div>
-            <div class="color-info">
-              <div class="color-name">Primary Light</div>
-              <div class="color-value">#3b82f6</div>
-              <div class="color-usage">Hover states, accents</div>
-            </div>
-          </div>
-          <div class="color-card">
-            <div
-              class="color-swatch"
-              style="background: var(--brand-secondary)"
-            ></div>
-            <div class="color-info">
-              <div class="color-name">Secondary</div>
-              <div class="color-value">#0f766e</div>
-              <div class="color-usage">Secondary actions, teal theme</div>
-            </div>
-          </div>
-          <div class="color-card">
-            <div
-              class="color-swatch"
-              style="background: var(--brand-accent)"
-            ></div>
-            <div class="color-info">
-              <div class="color-name">Accent</div>
-              <div class="color-value">#0d9488</div>
-              <div class="color-usage">Highlights, medical teal</div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Semantic Colors -->
-      <div class="subsection">
-        <h3 class="subsection-title">Semantic Colors</h3>
-        <div class="color-grid">
-          <div class="color-card">
-            <div
-              class="color-swatch"
-              style="background: var(--brand-success)"
-            ></div>
-            <div class="color-info">
-              <div class="color-name">Success</div>
-              <div class="color-value">#065f46</div>
-              <div class="color-usage">Success states, positive actions</div>
-            </div>
-          </div>
-          <div class="color-card">
-            <div
-              class="color-swatch"
-              style="background: var(--brand-warning)"
-            ></div>
-            <div class="color-info">
-              <div class="color-name">Warning</div>
-              <div class="color-value">#d97706</div>
-              <div class="color-usage">Warning messages, alerts</div>
-            </div>
-          </div>
-          <div class="color-card">
-            <div
-              class="color-swatch"
-              style="background: var(--brand-danger)"
-            ></div>
-            <div class="color-info">
-              <div class="color-name">Danger</div>
-              <div class="color-value">#b91c1c</div>
-              <div class="color-usage">Error states, destructive actions</div>
-            </div>
-          </div>
-          <div class="color-card">
-            <div
-              class="color-swatch"
-              style="background: var(--brand-info)"
-            ></div>
-            <div class="color-info">
-              <div class="color-name">Info</div>
-              <div class="color-value">#1e40af</div>
-              <div class="color-usage">Informational messages</div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Neutral Palette -->
-      <div class="subsection">
-        <h3 class="subsection-title">{{ $t('settings.neutralColors') }}</h3>
-        <div class="neutral-grid">
-          <div
-            v-for="(color, index) in neutralColors"
-            :key="index"
-            class="neutral-card"
-          >
-            <div
-              class="neutral-swatch"
-              :style="`background: var(--neutral-${color.value})`"
-            ></div>
-            <div class="neutral-info">
-              <div class="neutral-name">{{ color.name }}</div>
-              <div class="neutral-value">--neutral-{{ color.value }}</div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Typography System -->
-    <div class="style-section">
-      <h2 class="section-title">📝 {{ $t('settings.typographySection') }}</h2>
-
-      <div class="subsection">
-        <h3 class="subsection-title">Text Sizes</h3>
-        <div class="typography-showcase">
-          <div class="text-h1">Heading 1 - 2.25rem (36px)</div>
-          <div class="text-h2">Heading 2 - 1.875rem (30px)</div>
-          <div class="text-h3">Heading 3 - 1.5rem (24px)</div>
-          <div class="text-h4">Heading 4 - 1.25rem (20px)</div>
-          <div class="text-h5">Heading 5 - 1.125rem (18px)</div>
-          <div class="text-h6">Heading 6 - 1rem (16px)</div>
-          <div style="font-size: var(--text-base)">Body Text - 1rem (16px)</div>
-          <div style="font-size: var(--text-sm)">
-            Small Text - 0.875rem (14px)
-          </div>
-          <div style="font-size: var(--text-xs)">
-            Extra Small - 0.75rem (12px)
-          </div>
-        </div>
-      </div>
-
-      <div class="subsection">
-        <h3 class="subsection-title">Font Weights</h3>
-        <div class="typography-showcase">
-          <div style="font-weight: var(--font-weight-normal)">
-            Normal Weight (400)
-          </div>
-          <div style="font-weight: var(--font-weight-medium)">
-            Medium Weight (500)
-          </div>
-          <div style="font-weight: var(--font-weight-semibold)">
-            Semibold Weight (600)
-          </div>
-          <div style="font-weight: var(--font-weight-bold)">
-            Bold Weight (700)
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Button System -->
-    <div class="style-section">
-      <h2 class="section-title">🔘 {{ $t('settings.buttonsSection') }}</h2>
-
-      <!-- Standard Buttons -->
-      <div class="subsection">
-        <h3 class="subsection-title">{{ $t('settings.solidButtons') }}</h3>
-        <div class="button-showcase">
-          <q-btn :label="$t('settings.primaryButton')" color="primary" class="btn-modern" />
-          <q-btn :label="$t('settings.secondaryButton')" color="secondary" class="btn-modern" />
-          <q-btn :label="$t('settings.successButton')" color="positive" class="btn-modern" />
-          <q-btn :label="$t('settings.warningButton')" color="warning" class="btn-modern" />
-          <q-btn :label="$t('settings.dangerButton')" color="negative" class="btn-modern" />
-          <q-btn :label="$t('settings.infoButton')" color="info" class="btn-modern" />
-        </div>
-      </div>
-
-      <!-- Outline Buttons -->
-      <div class="subsection">
-        <h3 class="subsection-title">{{ $t('settings.outlinedButtons') }}</h3>
-        <div class="button-showcase">
-          <q-btn :label="$t('settings.primaryButton')" outline color="primary" class="btn-modern" />
-          <q-btn
-            :label="$t('settings.secondaryButton')"
-            outline
-            color="secondary"
-            class="btn-modern"
-          />
-          <q-btn :label="$t('settings.successButton')" outline color="positive" class="btn-modern" />
-          <q-btn :label="$t('settings.warningButton')" outline color="warning" class="btn-modern" />
-          <q-btn :label="$t('settings.dangerButton')" outline color="negative" class="btn-modern" />
-          <q-btn :label="$t('settings.infoButton')" outline color="info" class="btn-modern" />
-        </div>
-      </div>
-
-      <!-- Flat Buttons -->
-      <div class="subsection">
-        <h3 class="subsection-title">{{ $t('settings.flatButtons') }}</h3>
-        <div class="button-showcase">
-          <q-btn :label="$t('settings.primaryButton')" flat color="primary" class="btn-modern" />
-          <q-btn :label="$t('settings.secondaryButton')" flat color="secondary" class="btn-modern" />
-          <q-btn :label="$t('settings.successButton')" flat color="positive" class="btn-modern" />
-          <q-btn :label="$t('settings.warningButton')" flat color="warning" class="btn-modern" />
-          <q-btn :label="$t('settings.dangerButton')" flat color="negative" class="btn-modern" />
-          <q-btn :label="$t('settings.infoButton')" flat color="info" class="btn-modern" />
-        </div>
-      </div>
-
-      <!-- Button with Icons -->
-      <div class="subsection">
-        <h3 class="subsection-title">{{ $t('settings.iconButtons') }}</h3>
-        <div class="button-showcase">
-          <q-btn
-            :label="$t('settings.addProductButton')"
-            icon="add"
-            color="primary"
-            class="btn-modern"
-          />
-          <q-btn
-            :label="$t('settings.editButton')"
-            icon="edit"
-            color="secondary"
-            class="btn-modern"
-          />
-          <q-btn
-            :label="$t('settings.deleteButton')"
-            icon="delete"
-            color="negative"
-            class="btn-modern"
-          />
-          <q-btn :label="$t('settings.saveButton')" icon="save" color="positive" class="btn-modern" />
-          <q-btn
-            :label="$t('settings.downloadButton')"
-            icon="download"
-            color="info"
-            class="btn-modern"
-          />
-        </div>
-      </div>
-    </div>
-
-    <!-- New Card System -->
-    <div class="style-section">
-      <h2 class="section-title">🃏 New Card Design System</h2>
-      <p class="section-description">
-        Streamlined 3-category system: BaseCard (static), InteractiveCard (clickable), AlertCard (status).
-      </p>
-
-      <div class="card-showcase">
-        <!-- Base Card Example -->
-        <BaseCard
-          title="Base Card"
-          subtitle="For static content display"
-          icon="article"
-          icon-color="primary"
-        >
-          <p>
-            Use BaseCard for displaying static information without interactive behavior.
-            Perfect for dashboards, data display, and content containers.
-          </p>
-          <div class="card-features">
-            <div class="feature">✓ No hover effects</div>
-            <div class="feature">✓ Clean, professional look</div>
-            <div class="feature">✓ Focus on content</div>
-          </div>
-          <template #actions>
-            <q-btn outline color="primary" label="View Details" />
-          </template>
-        </BaseCard>
-
-        <!-- Interactive Card Example -->
-        <InteractiveCard
-          title="Interactive Card"
-          subtitle="For clickable elements"
-          icon="touch_app"
-          icon-color="positive"
-          show-click-indicator
-          @click="handleCardClick"
-        >
-          <p>
-            Use InteractiveCard for navigation, actions, and any clickable content.
-            Features subtle hover effects and proper accessibility.
-          </p>
-          <div class="card-features">
-            <div class="feature">✓ Hover lift effect (-3px)</div>
-            <div class="feature">✓ Keyboard navigation</div>
-            <div class="feature">✓ Loading & disabled states</div>
-          </div>
-          <template #actions>
-            <q-btn color="positive" label="Click Me" />
-          </template>
-        </InteractiveCard>
-
-        <!-- Alert Card Examples -->
-        <AlertCard
-          severity="info"
-          title="Info Alert"
-          subtitle="Information message"
-          dismissible
-        >
-          <p>
-            Use AlertCard for status messages, notifications, and alerts.
-            Supports different severity levels with appropriate colors.
-          </p>
-          <div class="card-features">
-            <div class="feature">✓ 4 severity levels</div>
-            <div class="feature">✓ Colored indicators</div>
-            <div class="feature">✓ Dismissible option</div>
-          </div>
-        </AlertCard>
-
-        <AlertCard
-          severity="success"
-          title="Success Alert"
-          subtitle="Operation completed"
-          dismissible
-        >
-          <p>Success message with green color scheme and checkmark icon.</p>
-        </AlertCard>
-
-        <AlertCard
-          severity="warning"
-          title="Warning Alert"
-          subtitle="Attention required"
-        >
-          <p>Warning message with orange color scheme and warning icon.</p>
-        </AlertCard>
-
-        <AlertCard
-          severity="error"
-          title="Error Alert"
-          subtitle="Something went wrong"
-          dismissible
-        >
-          <p>Error message with red color scheme and error icon.</p>
-        </AlertCard>
-      </div>
-      
-      <!-- Usage Guidelines -->
-      <div class="usage-guidelines">
-        <h3>When to Use Each Card Type</h3>
-        <div class="guidelines-grid">
-          <div class="guideline-item">
-            <h4>BaseCard</h4>
-            <ul>
-              <li>Static information display</li>
-              <li>Dashboard widgets (non-clickable)</li>
-              <li>Data presentations</li>
-              <li>Content containers</li>
-            </ul>
-          </div>
-          <div class="guideline-item">
-            <h4>InteractiveCard</h4>
-            <ul>
-              <li>Navigation elements</li>
-              <li>Action triggers</li>
-              <li>Menu items</li>
-              <li>Any clickable content</li>
-            </ul>
-          </div>
-          <div class="guideline-item">
-            <h4>AlertCard</h4>
-            <ul>
-              <li>Status messages</li>
-              <li>Notifications</li>
-              <li>Warnings and errors</li>
-              <li>System alerts</li>
-            </ul>
-          </div>
-        </div>
-      </div>
-
-      <div class="design-notes">
-        <h4>🎨 Card Design Guidelines</h4>
-        <ul>
-          <li><strong>Default:</strong> Use for standard content containers</li>
-          <li>
-            <strong>Modern:</strong> Enhanced styling with borders for
-            contemporary designs
-          </li>
-          <li>
-            <strong>Elevated:</strong> Use for important content that needs
-            emphasis
-          </li>
-          <li>
-            <strong>Glass:</strong> Use for overlay content or modern aesthetic
-          </li>
-          <li>
-            <strong>Outlined:</strong> Use in minimal designs or when shadows
-            aren't appropriate
-          </li>
-          <li>
-            <strong>Header Colors:</strong> Use to categorize different types of
-            content
-          </li>
-        </ul>
-      </div>
-    </div>
-
-    <!-- Shadows System -->
-    <div class="style-section">
-      <h2 class="section-title">🌟 {{ $t('settings.shadowsSection') }}</h2>
-
-      <div class="shadow-showcase">
-        <div class="shadow-card" style="box-shadow: var(--shadow-xs)">
-          <div class="shadow-label">Extra Small</div>
-          <div class="shadow-value">--shadow-xs</div>
-        </div>
-
-        <div class="shadow-card" style="box-shadow: var(--shadow-sm)">
-          <div class="shadow-label">Small</div>
-          <div class="shadow-value">--shadow-sm</div>
-        </div>
-
-        <div class="shadow-card" style="box-shadow: var(--shadow-base)">
-          <div class="shadow-label">Base</div>
-          <div class="shadow-value">--shadow-base</div>
-        </div>
-
-        <div class="shadow-card" style="box-shadow: var(--shadow-md)">
-          <div class="shadow-label">Medium</div>
-          <div class="shadow-value">--shadow-md</div>
-        </div>
-
-        <div class="shadow-card" style="box-shadow: var(--shadow-lg)">
-          <div class="shadow-label">Large</div>
-          <div class="shadow-value">--shadow-lg</div>
-        </div>
-
-        <div class="shadow-card" style="box-shadow: var(--shadow-xl)">
-          <div class="shadow-label">Extra Large</div>
-          <div class="shadow-value">--shadow-xl</div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Deprecated System Notice -->
-    <div class="style-section deprecated-section">
-      <h2 class="section-title">🚫 Deprecated Card System</h2>
-      <div class="deprecation-notice">
-        <q-icon name="warning" size="24px" color="warning" />
-        <div>
-          <h3>Legacy System - Do Not Use</h3>
-          <p>The following card variants have been deprecated in favor of our new 3-category system above.</p>
-        </div>
-      </div>
-
-      <!-- Demo Notice -->
-      <div class="demo-notice">
-        <div class="demo-notice-header">
-          <q-icon name="info" size="20px" color="primary" />
-          <span>Live Demo Effects</span>
-        </div>
-        <ul class="demo-effects-list">
-          <li><strong>Glassmorphism:</strong> Backdrop blur met transparantie - hover voor extra effecten</li>
-          <li><strong>Neumorphism:</strong> 3D ingebouwde schaduwen - klik om inset effect te zien</li>
-          <li><strong>Gradient:</strong> Animerende regenboog borders - continu roterende kleuren</li>
-          <li><strong>Quick Actions:</strong> Micro-interactions met progress bars en badges</li>
-        </ul>
-        <div class="demo-note">
-          💡 <em>Als effecten niet zichtbaar zijn, check of je browser backdrop-filter ondersteunt (Chrome/Safari/Firefox 103+)</em>
-        </div>
-      </div>
-
-      <div class="cards-showcase">
-        <div class="card-row">
-          <!-- Glass Modern Card -->
-          <div class="card-demo">
-            <BaseCard 
-              
-              <p>Ultra-moderne glassmorphism met backdrop blur, gradients en perfect hover effecten.</p>
-            </BaseCard>
-            <div class="card-label">
-          </div>
-
-          <!-- Neumorphism Card -->
-          <div class="card-demo">
-            <BaseCard 
-              
-              <p>Zachte 3D effecten die elementen laten lijken alsof ze uit het oppervlak komen.</p>
-            </BaseCard>
-            <div class="card-label">
-          </div>
-
-          <!-- Gradient Card -->
-          <div class="card-demo">
-            <BaseCard 
-              
-              <p>Prachtige animerende gradient borders die de focus trekken.</p>
-            </BaseCard>
-            <div class="card-label">
-          </div>
-        </div>
-
-        <div class="card-row">
-          <!-- Premium Card -->
-          <div class="card-demo">
-            <BaseCard 
-              
-              <p>Luxe gevoel met subtiele schaduwen en premium materiaal effecten.</p>
-            </BaseCard>
-            <div class="card-label">
-          </div>
-
-          <!-- Quick Action Card - Blue -->
-          <div class="card-demo">
-            <BaseCard 
-              
-            <div class="card-label">
-          </div>
-
-          <!-- Quick Action Card - Orange -->
-          <div class="card-demo">
-            <BaseCard 
-              
-            <div class="card-label">gradient-direction="orange"</div>
-          </div>
-        </div>
-
-        <div class="card-row">
-          <!-- Stats Cards -->
-          <div class="card-demo">
-            <BaseCard 
-              
-            <div class="card-label">
-          </div>
-
-          <!-- Modern Elevated -->
-          <div class="card-demo">
-            <BaseCard 
-              
-              <p>Klassieke elevated style met moderne hover effecten en betere schaduwen.</p>
-            </BaseCard>
-            <div class="card-label">
-          </div>
-
-          <!-- Traditional Glass -->
-          <div class="card-demo">
-            <BaseCard 
-              
-              <p>Basis glassmorphism effect voor subtiele transparantie.</p>
-            </BaseCard>
-            <div class="card-label">
-          </div>
-        </div>
-      </div>
-
-      <!-- Quick Action Variants -->
-      <div class="style-subsection">
-        <h3>Quick Action Color Variants</h3>
+    <div class="style-guide">
+      <!-- Colors Section -->
+      <div class="style-section">
+        <h2 class="section-title">🎨 {{ $t('settings.colorsSection') }}</h2>
         
-      </div>
-    </div>
+        <div class="color-showcase">
+          <!-- Primary Colors -->
+          <div class="color-group">
+            <h4>Primary Colors</h4>
+            <div class="color-row">
+              <div class="color-card" style="background: var(--q-primary)">
+                <div class="color-value">Primary</div>
+                <div class="color-hex">#3B82F6</div>
+              </div>
+              <div class="color-card" style="background: var(--q-secondary)">
+                <div class="color-value">Secondary</div>
+                <div class="color-hex">#64748B</div>
+              </div>
+              <div class="color-card" style="background: var(--q-accent)">
+                <div class="color-value">Accent</div>
+                <div class="color-hex">#8B5CF6</div>
+              </div>
+            </div>
+          </div>
 
-    <!-- Icon System -->
-    <div class="style-section">
-      <h2 class="section-title">🎯 {{ $t('settings.iconsSection') }}</h2>
-
-      <div class="icon-showcase">
-        <!-- Medical Icons -->
-        <div class="icon-group">
-          <q-icon
-            name="medical_services"
-            size="var(--icon-lg)"
-            color="primary"
-          />
-          <div class="icon-label">Medical Services</div>
-          <div class="icon-class">medical_services</div>
-        </div>
-
-        <div class="icon-group">
-          <q-icon name="inventory" size="var(--icon-lg)" color="secondary" />
-          <div class="icon-label">Inventory</div>
-          <div class="icon-class">inventory</div>
-        </div>
-
-        <div class="icon-group">
-          <q-icon name="shopping_cart" size="var(--icon-lg)" color="orange" />
-          <div class="icon-label">Orders</div>
-          <div class="icon-class">shopping_cart</div>
-        </div>
-
-        <!-- Status Icons -->
-        <div class="icon-group">
-          <q-icon name="check_circle" size="var(--icon-lg)" color="positive" />
-          <div class="icon-label">Success</div>
-          <div class="icon-class">check_circle</div>
-        </div>
-
-        <div class="icon-group">
-          <q-icon name="warning" size="var(--icon-lg)" color="warning" />
-          <div class="icon-label">Warning</div>
-          <div class="icon-class">warning</div>
-        </div>
-
-        <div class="icon-group">
-          <q-icon name="error" size="var(--icon-lg)" color="negative" />
-          <div class="icon-label">Error</div>
-          <div class="icon-class">error</div>
-        </div>
-
-        <!-- Interface Icons -->
-        <div class="icon-group">
-          <q-icon name="settings" size="var(--icon-lg)" color="grey-7" />
-          <div class="icon-label">Settings</div>
-          <div class="icon-class">settings</div>
-        </div>
-
-        <div class="icon-group">
-          <q-icon name="analytics" size="var(--icon-lg)" color="blue-7" />
-          <div class="icon-label">Analytics</div>
-          <div class="icon-class">analytics</div>
+          <!-- Status Colors -->
+          <div class="color-group">
+            <h4>Status Colors</h4>
+            <div class="color-row">
+              <div class="color-card" style="background: var(--q-positive)">
+                <div class="color-value">Positive</div>
+                <div class="color-hex">#22C55E</div>
+              </div>
+              <div class="color-card" style="background: var(--q-negative)">
+                <div class="color-value">Negative</div>
+                <div class="color-hex">#EF4444</div>
+              </div>
+              <div class="color-card" style="background: var(--q-warning)">
+                <div class="color-value">Warning</div>
+                <div class="color-hex">#F59E0B</div>
+              </div>
+              <div class="color-card" style="background: var(--q-info)">
+                <div class="color-value">Info</div>
+                <div class="color-hex">#0EA5E9</div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
-    </div>
 
-    <!-- Border Radius System -->
-    <div class="style-section">
-      <h2 class="section-title">📐 Border Radius System</h2>
-
-      <div class="radius-showcase">
-        <div class="radius-item">
-          <div
-            class="radius-demo"
-            style="border-radius: var(--radius-sm)"
-          ></div>
-          <div class="radius-label">Small</div>
-          <div class="radius-class">--radius-sm</div>
+      <!-- Typography Section -->
+      <div class="style-section">
+        <h2 class="section-title">📝 {{ $t('settings.typographySection') }}</h2>
+        
+        <div class="typography-showcase">
+          <div class="text-example">
+            <h1 class="text-h1">Heading 1 - Display Large</h1>
+            <div class="text-meta">36px, Bold, Line Height 1.2</div>
+          </div>
+          
+          <div class="text-example">
+            <h2 class="text-h2">Heading 2 - Display Medium</h2>
+            <div class="text-meta">28px, Semibold, Line Height 1.25</div>
+          </div>
+          
+          <div class="text-example">
+            <h3 class="text-h3">Heading 3 - Display Small</h3>
+            <div class="text-meta">24px, Semibold, Line Height 1.3</div>
+          </div>
+          
+          <div class="text-example">
+            <h4 class="text-h4">Heading 4 - Title Large</h4>
+            <div class="text-meta">20px, Semibold, Line Height 1.4</div>
+          </div>
+          
+          <div class="text-example">
+            <h5 class="text-h5">Heading 5 - Title Medium</h5>
+            <div class="text-meta">18px, Medium, Line Height 1.4</div>
+          </div>
+          
+          <div class="text-example">
+            <h6 class="text-h6">Heading 6 - Title Small</h6>
+            <div class="text-meta">16px, Medium, Line Height 1.5</div>
+          </div>
+          
+          <div class="text-example">
+            <p class="text-body1">Body 1 - Primary text for most content</p>
+            <div class="text-meta">16px, Regular, Line Height 1.6</div>
+          </div>
+          
+          <div class="text-example">
+            <p class="text-body2">Body 2 - Secondary text for descriptions</p>
+            <div class="text-meta">14px, Regular, Line Height 1.5</div>
+          </div>
+          
+          <div class="text-example">
+            <p class="text-caption">Caption - Small text for labels and metadata</p>
+            <div class="text-meta">12px, Regular, Line Height 1.4</div>
+          </div>
         </div>
+      </div>
 
-        <div class="radius-item">
-          <div
-            class="radius-demo"
-            style="border-radius: var(--radius-base)"
-          ></div>
-          <div class="radius-label">Base</div>
-          <div class="radius-class">--radius-base</div>
+      <!-- Button System -->
+      <div class="style-section">
+        <h2 class="section-title">🔘 {{ $t('settings.buttonsSection') }}</h2>
+        
+        <div class="button-showcase">
+          <div class="button-group">
+            <h4>Primary Buttons</h4>
+            <div class="button-row">
+              <q-btn color="primary" label="Primary" />
+              <q-btn color="primary" icon="add" label="With Icon" />
+              <q-btn color="primary" icon="download" />
+              <q-btn color="primary" label="Loading" loading />
+            </div>
+          </div>
+
+          <div class="button-group">
+            <h4>Secondary Buttons</h4>
+            <div class="button-row">
+              <q-btn outline color="primary" label="Outline" />
+              <q-btn flat color="primary" label="Flat" />
+              <q-btn unelevated color="grey-3" text-color="grey-8" label="Neutral" />
+            </div>
+          </div>
+
+          <div class="button-group">
+            <h4>Status Buttons</h4>
+            <div class="button-row">
+              <q-btn color="positive" label="Success" icon="check" />
+              <q-btn color="negative" label="Danger" icon="warning" />
+              <q-btn color="warning" label="Warning" icon="info" />
+              <q-btn color="info" label="Info" icon="help" />
+            </div>
+          </div>
+
+          <div class="button-group">
+            <h4>Button Sizes</h4>
+            <div class="button-row items-end">
+              <q-btn size="xs" color="primary" label="Extra Small" />
+              <q-btn size="sm" color="primary" label="Small" />
+              <q-btn size="md" color="primary" label="Medium" />
+              <q-btn size="lg" color="primary" label="Large" />
+            </div>
+          </div>
         </div>
+      </div>
 
-        <div class="radius-item">
-          <div
-            class="radius-demo"
-            style="border-radius: var(--radius-lg)"
-          ></div>
-          <div class="radius-label">Large</div>
-          <div class="radius-class">--radius-lg</div>
+      <!-- NEW Card Design System -->
+      <CardStyleGuide />
+
+      <!-- Shadows System -->
+      <div class="style-section">
+        <h2 class="section-title">🌟 {{ $t('settings.shadowsSection') }}</h2>
+
+        <div class="shadow-showcase">
+          <div class="shadow-card" style="box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08), 0 1px 2px rgba(0, 0, 0, 0.06)">
+            <div class="shadow-label">Base Shadow</div>
+            <div class="shadow-value">New card system default</div>
+          </div>
+
+          <div class="shadow-card" style="box-shadow: 0 8px 25px rgba(0, 0, 0, 0.12), 0 4px 10px rgba(0, 0, 0, 0.08)">
+            <div class="shadow-label">Hover Shadow</div>
+            <div class="shadow-value">Interactive card hover</div>
+          </div>
+
+          <div class="shadow-card" style="box-shadow: 0 2px 4px rgba(0, 0, 0, 0.06), 0 1px 2px rgba(0, 0, 0, 0.04)">
+            <div class="shadow-label">Interactive Shadow</div>
+            <div class="shadow-value">Interactive card default</div>
+          </div>
+
+          <div class="shadow-card" style="box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.08)">
+            <div class="shadow-label">Medium Shadow</div>
+            <div class="shadow-value">Elevated elements</div>
+          </div>
         </div>
+      </div>
 
-        <div class="radius-item">
-          <div
-            class="radius-demo"
-            style="border-radius: var(--radius-xl)"
-          ></div>
-          <div class="radius-label">Extra Large</div>
-          <div class="radius-class">--radius-xl</div>
+      <!-- Icon System -->
+      <div class="style-section">
+        <h2 class="section-title">🎯 {{ $t('settings.iconsSection') }}</h2>
+
+        <div class="icon-showcase">
+          <!-- Medical Icons -->
+          <div class="icon-group">
+            <h4>Medical Icons</h4>
+            <div class="icon-row">
+              <div class="icon-item">
+                <q-icon name="medical_services" size="32px" color="primary" />
+                <div class="icon-label">Medical Services</div>
+              </div>
+              <div class="icon-item">
+                <q-icon name="inventory" size="32px" color="secondary" />
+                <div class="icon-label">Inventory</div>
+              </div>
+              <div class="icon-item">
+                <q-icon name="health_and_safety" size="32px" color="positive" />
+                <div class="icon-label">Health & Safety</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Status Icons -->
+          <div class="icon-group">
+            <h4>Status Icons</h4>
+            <div class="icon-row">
+              <div class="icon-item">
+                <q-icon name="check_circle" size="32px" color="positive" />
+                <div class="icon-label">Success</div>
+              </div>
+              <div class="icon-item">
+                <q-icon name="warning" size="32px" color="warning" />
+                <div class="icon-label">Warning</div>
+              </div>
+              <div class="icon-item">
+                <q-icon name="error" size="32px" color="negative" />
+                <div class="icon-label">Error</div>
+              </div>
+              <div class="icon-item">
+                <q-icon name="info" size="32px" color="info" />
+                <div class="icon-label">Info</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Interface Icons -->
+          <div class="icon-group">
+            <h4>Interface Icons</h4>
+            <div class="icon-row">
+              <div class="icon-item">
+                <q-icon name="settings" size="32px" color="grey-7" />
+                <div class="icon-label">Settings</div>
+              </div>
+              <div class="icon-item">
+                <q-icon name="analytics" size="32px" color="blue-7" />
+                <div class="icon-label">Analytics</div>
+              </div>
+              <div class="icon-item">
+                <q-icon name="notifications" size="32px" color="orange" />
+                <div class="icon-label">Notifications</div>
+              </div>
+            </div>
+          </div>
         </div>
+      </div>
 
-        <div class="radius-item">
-          <div
-            class="radius-demo"
-            style="border-radius: var(--radius-2xl)"
-          ></div>
-          <div class="radius-label">2X Large</div>
-          <div class="radius-class">--radius-2xl</div>
+      <!-- Border Radius System -->
+      <div class="style-section">
+        <h2 class="section-title">📐 Border Radius System</h2>
+
+        <div class="radius-showcase">
+          <div class="radius-item">
+            <div class="radius-demo" style="border-radius: 4px"></div>
+            <div class="radius-label">Small</div>
+            <div class="radius-value">4px</div>
+          </div>
+
+          <div class="radius-item">
+            <div class="radius-demo" style="border-radius: 8px"></div>
+            <div class="radius-label">Medium</div>
+            <div class="radius-value">8px</div>
+          </div>
+
+          <div class="radius-item">
+            <div class="radius-demo" style="border-radius: 12px"></div>
+            <div class="radius-label">Large (Cards)</div>
+            <div class="radius-value">12px</div>
+          </div>
+
+          <div class="radius-item">
+            <div class="radius-demo" style="border-radius: 16px"></div>
+            <div class="radius-label">Extra Large</div>
+            <div class="radius-value">16px</div>
+          </div>
+
+          <div class="radius-item">
+            <div class="radius-demo" style="border-radius: 50%"></div>
+            <div class="radius-label">Round</div>
+            <div class="radius-value">50%</div>
+          </div>
         </div>
+      </div>
 
-        <div class="radius-item">
-          <div
-            class="radius-demo"
-            style="border-radius: var(--radius-full)"
-          ></div>
-          <div class="radius-label">Full</div>
-          <div class="radius-class">--radius-full</div>
+      <!-- Spacing System -->
+      <div class="style-section">
+        <h2 class="section-title">📏 Spacing System</h2>
+
+        <div class="spacing-showcase">
+          <div class="spacing-item">
+            <div class="spacing-demo" style="width: 4px"></div>
+            <div class="spacing-label">XS</div>
+            <div class="spacing-value">4px</div>
+          </div>
+
+          <div class="spacing-item">
+            <div class="spacing-demo" style="width: 8px"></div>
+            <div class="spacing-label">SM</div>
+            <div class="spacing-value">8px</div>
+          </div>
+
+          <div class="spacing-item">
+            <div class="spacing-demo" style="width: 12px"></div>
+            <div class="spacing-label">MD</div>
+            <div class="spacing-value">12px</div>
+          </div>
+
+          <div class="spacing-item">
+            <div class="spacing-demo" style="width: 16px"></div>
+            <div class="spacing-label">LG</div>
+            <div class="spacing-value">16px</div>
+          </div>
+
+          <div class="spacing-item">
+            <div class="spacing-demo" style="width: 20px"></div>
+            <div class="spacing-label">XL</div>
+            <div class="spacing-value">20px</div>
+          </div>
+
+          <div class="spacing-item">
+            <div class="spacing-demo" style="width: 24px"></div>
+            <div class="spacing-label">2XL</div>
+            <div class="spacing-value">24px</div>
+          </div>
+
+          <div class="spacing-item">
+            <div class="spacing-demo" style="width: 32px"></div>
+            <div class="spacing-label">3XL</div>
+            <div class="spacing-value">32px</div>
+          </div>
         </div>
       </div>
     </div>
@@ -696,568 +344,289 @@
 </template>
 
 <script setup lang="ts">
-  import { ref } from 'vue';
-  import PageLayout from 'src/components/PageLayout.vue';
-  import PageTitle from 'src/components/PageTitle.vue';
-  import { BaseCard, InteractiveCard, AlertCard } from 'src/components/cards';
-
-  // Neutral colors data
-  const neutralColors = [
-    { name: 'Neutral 50', value: '50' },
-    { name: 'Neutral 100', value: '100' },
-    { name: 'Neutral 200', value: '200' },
-    { name: 'Neutral 300', value: '300' },
-    { name: 'Neutral 400', value: '400' },
-    { name: 'Neutral 500', value: '500' },
-    { name: 'Neutral 600', value: '600' },
-    { name: 'Neutral 700', value: '700' },
-    { name: 'Neutral 800', value: '800' },
-    { name: 'Neutral 900', value: '900' },
-  ];
-
-  // Demo data for design system components
-  // (Clean focus on design system only)
+import { ref } from 'vue';
+import PageLayout from 'src/components/PageLayout.vue';
+import PageTitle from 'src/components/PageTitle.vue';
+import CardStyleGuide from 'src/components/cards/CardStyleGuide.vue';
 </script>
 
 <style scoped lang="scss">
-  .style-section {
-    margin-bottom: var(--space-12);
-  }
+.style-guide {
+  display: flex;
+  flex-direction: column;
+  gap: 48px;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
 
+.style-section {
   .section-title {
-    font-size: var(--text-3xl);
-    font-weight: var(--font-weight-bold);
-    color: var(--brand-primary);
-    margin-bottom: var(--space-8);
-    border-bottom: 2px solid var(--brand-primary);
-    padding-bottom: var(--space-3);
-  }
-
-  .subsection {
-    margin-bottom: var(--space-8);
-  }
-
-  .subsection-title {
-    font-size: var(--text-xl);
-    font-weight: var(--font-weight-semibold);
-    color: var(--neutral-700);
-    margin-bottom: var(--space-4);
-  }
-
-  // Color System Styles
-  .color-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    gap: var(--space-4);
-    margin-bottom: var(--space-6);
-  }
-
-  .color-card {
-    display: flex;
-    align-items: center;
-    gap: var(--space-4);
-    padding: var(--space-4);
-    background: var(--glass-bg);
-    backdrop-filter: var(--glass-backdrop);
-    -webkit-backdrop-filter: var(--glass-backdrop);
-    border-radius: var(--radius-lg);
-    border: 1px solid var(--glass-border);
-    box-shadow: var(--glass-shadow);
-    transition: all var(--transition-base);
-
-    &:hover {
-      box-shadow: var(--shadow-md);
-      transform: translateY(-2px);
-    }
-  }
-
-  .color-swatch {
-    width: 60px;
-    height: 60px;
-    border-radius: var(--radius-base);
-    border: 1px solid rgba(0, 0, 0, 0.1);
-    flex-shrink: 0;
-  }
-
-  .color-info {
-    flex: 1;
-  }
-
-  .color-name {
-    font-weight: var(--font-weight-semibold);
-    color: var(--neutral-900);
-    margin-bottom: var(--space-1);
-  }
-
-  .color-value {
-    font-family: 'SF Mono', 'Monaco', 'Inconsolata', monospace;
-    font-size: var(--text-sm);
-    color: var(--neutral-600);
-    margin-bottom: var(--space-1);
-  }
-
-  .color-usage {
-    font-size: var(--text-xs);
-    color: var(--neutral-500);
-  }
-
-  // Neutral Colors
-  .neutral-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
-    gap: var(--space-3);
-  }
-
-  .neutral-card {
-    text-align: center;
-    padding: var(--space-3);
-    background: var(--neutral-50);
-    border-radius: var(--radius-base);
-    border: 1px solid var(--neutral-200);
-  }
-
-  .neutral-swatch {
-    width: 100%;
-    height: 60px;
-    border-radius: var(--radius-base);
-    border: 1px solid rgba(0, 0, 0, 0.1);
-    margin-bottom: var(--space-2);
-  }
-
-  .neutral-name {
-    font-size: var(--text-sm);
-    font-weight: var(--font-weight-medium);
-    color: var(--neutral-900);
-  }
-
-  .neutral-value {
-    font-family: 'SF Mono', 'Monaco', 'Inconsolata', monospace;
-    font-size: var(--text-xs);
-    color: var(--neutral-600);
-  }
-
-  // Typography
-  .typography-showcase {
-    padding: var(--space-6);
-    background: var(--glass-bg);
-    backdrop-filter: var(--glass-backdrop);
-    -webkit-backdrop-filter: var(--glass-backdrop);
-    border-radius: var(--radius-lg);
-    border: 1px solid var(--glass-border);
-    box-shadow: var(--glass-shadow);
-
-    > * {
-      margin-bottom: var(--space-3);
-
-      &:last-child {
-        margin-bottom: 0;
-      }
-    }
-  }
-
-  // Buttons
-  .button-showcase {
-    display: flex;
-    flex-wrap: wrap;
-    gap: var(--space-3);
-    padding: var(--space-6);
-    background: var(--glass-bg);
-    backdrop-filter: var(--glass-backdrop);
-    -webkit-backdrop-filter: var(--glass-backdrop);
-    border-radius: var(--radius-lg);
-    border: 1px solid var(--glass-border);
-    box-shadow: var(--glass-shadow);
-  }
-
-  // Cards
-  .card-showcase {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    gap: var(--space-6);
-  }
-
-  // Shadows
-  .shadow-showcase {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-    gap: var(--space-6);
-  }
-
-  .shadow-card {
-    padding: var(--space-6);
-    background: var(--glass-bg);
-    backdrop-filter: var(--glass-backdrop);
-    -webkit-backdrop-filter: var(--glass-backdrop);
-    border-radius: var(--radius-lg);
-    text-align: center;
-    border: 1px solid var(--glass-border);
-    box-shadow: var(--glass-shadow);
-  }
-
-  .shadow-label {
-    font-weight: var(--font-weight-semibold);
-    color: var(--neutral-900);
-    margin-bottom: var(--space-1);
-  }
-
-  .shadow-value {
-    font-family: 'SF Mono', 'Monaco', 'Inconsolata', monospace;
-    font-size: var(--text-sm);
-    color: var(--neutral-600);
-  }
-
-  // Glass Effects
-  .glass-showcase {
-    position: relative;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    border-radius: var(--radius-xl);
-    padding: var(--space-8);
-    min-height: 300px;
-  }
-
-  .glass-demo {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    gap: var(--space-6);
-
-    h4 {
-      color: white;
-      margin-bottom: var(--space-3);
-    }
-
-    p {
-      color: rgba(255, 255, 255, 0.9);
-      margin: 0;
-    }
-  }
-
-  // Gradients
-  .gradient-showcase {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: var(--space-4);
-  }
-
-  .gradient-label {
-    font-weight: var(--font-weight-semibold);
-    margin-bottom: var(--space-2);
-    font-size: var(--text-lg);
-  }
-
-  .gradient-class {
-    font-family: 'SF Mono', 'Monaco', 'Inconsolata', monospace;
-    font-size: var(--text-sm);
-    opacity: 0.9;
-  }
-
-  // Icons
-  .icon-showcase {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
-    gap: var(--space-4);
-  }
-
-  .icon-group {
-    text-align: center;
-    padding: var(--space-4);
-    background: var(--glass-bg);
-    backdrop-filter: var(--glass-backdrop);
-    -webkit-backdrop-filter: var(--glass-backdrop);
-    border-radius: var(--radius-lg);
-    border: 1px solid var(--glass-border);
-    box-shadow: var(--glass-shadow);
-  }
-
-  .icon-label {
-    font-size: var(--text-sm);
-    font-weight: var(--font-weight-medium);
-    color: var(--neutral-900);
-    margin-top: var(--space-2);
-  }
-
-  .icon-class {
-    font-family: 'SF Mono', 'Monaco', 'Inconsolata', monospace;
-    font-size: var(--text-xs);
-    color: var(--neutral-600);
-  }
-
-  // Spacing
-  .spacing-showcase {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
-    gap: var(--space-4);
-  }
-
-  .spacing-item {
-    text-align: center;
-  }
-
-  .spacing-demo {
-    background: var(--brand-primary);
-    border-radius: var(--radius-base);
-    margin-bottom: var(--space-2);
-  }
-
-  .spacing-content {
-    background: var(--neutral-50);
-    border-radius: var(--radius-sm);
-    width: 100%;
-    height: 40px;
-  }
-
-  .spacing-label {
-    font-family: 'SF Mono', 'Monaco', 'Inconsolata', monospace;
-    font-size: var(--text-xs);
-    color: var(--neutral-600);
-  }
-
-  // Border Radius
-  .radius-showcase {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
-    gap: var(--space-4);
-  }
-
-  .radius-item {
-    text-align: center;
-  }
-
-  .radius-demo {
-    width: 80px;
-    height: 80px;
-    background: var(--brand-primary);
-    margin: 0 auto var(--space-2);
-  }
-
-  .radius-label {
-    font-size: var(--text-sm);
-    font-weight: var(--font-weight-medium);
-    color: var(--neutral-900);
-    margin-bottom: var(--space-1);
-  }
-
-  .radius-class {
-    font-family: 'SF Mono', 'Monaco', 'Inconsolata', monospace;
-    font-size: var(--text-xs);
-    color: var(--neutral-600);
-  }
-
-  // Code Examples
-  .code-examples {
-    h4 {
-      color: var(--brand-primary);
-      margin-bottom: var(--space-2);
-      margin-top: var(--space-4);
-
-      &:first-child {
-        margin-top: 0;
-      }
-    }
-
-    pre {
-      background: var(--neutral-100);
-      border-radius: var(--radius-base);
-      padding: var(--space-4);
-      margin-bottom: var(--space-4);
-      overflow-x: auto;
-
-      code {
-        font-family: 'SF Mono', 'Monaco', 'Inconsolata', monospace;
-        font-size: var(--text-sm);
-        color: var(--neutral-800);
-      }
-    }
-  }
-
-  // Modern Card Showcase Styling
-  .cards-showcase {
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-6);
-  }
-
-  .card-row {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-    gap: var(--space-4);
-  }
-
-  .card-demo {
-    position: relative;
-  }
-
-  .card-label {
-    margin-top: var(--space-2);
-    padding: var(--space-2) var(--space-3);
-    background: var(--neutral-100);
-    border-radius: var(--radius-sm);
-    font-family: 'SF Mono', 'Monaco', 'Inconsolata', monospace;
-    font-size: var(--text-xs);
-    color: var(--neutral-700);
-    text-align: center;
-    border: 1px solid var(--neutral-200);
-
-    .body--dark & {
-      background: var(--neutral-800);
-      color: var(--neutral-300);
-      border-color: var(--neutral-700);
-    }
-  }
-
-  .style-subsection {
-    margin-top: var(--space-8);
-    
-    h3 {
-      font-size: var(--text-lg);
-      font-weight: var(--font-weight-semibold);
-      color: var(--text-primary);
-      margin-bottom: var(--space-4);
-      display: flex;
-      align-items: center;
-      gap: var(--space-2);
-
-      &::before {
-        content: '';
-        width: 4px;
-        height: 20px;
-        background: var(--brand-primary);
-        border-radius: var(--radius-full);
-      }
-    }
-  }
-
+    font-size: 32px;
+    font-weight: 600;
+    margin: 0 0 24px 0;
+    color: var(--text-primary);
   }
 
   .section-description {
-    font-size: var(--text-base);
+    font-size: 18px;
     color: var(--text-secondary);
-    margin-bottom: var(--space-6);
-    line-height: var(--leading-relaxed);
-    max-width: 600px;
+    margin-bottom: 32px;
+    line-height: 1.6;
   }
+}
 
-  // Responsive adjustments
-  @media (max-width: 768px) {
-    .card-showcase {
-      grid-template-columns: 1fr;
-    }
+// Color showcase
+.color-showcase {
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
 
-    .card-row {
-      grid-template-columns: 1fr;
-    }
-
-    .color-grid {
-      grid-template-columns: 1fr;
-    }
-
-    .button-showcase {
-      flex-direction: column;
-      align-items: flex-start;
-    }
-
-    .shadow-showcase {
-      grid-template-columns: repeat(2, 1fr);
-    }
-  }
-
-  // Design system specific styling
-  .design-notes {
-    margin-top: var(--space-6);
-    padding: var(--space-4);
-    background: var(--glass-bg);
-    backdrop-filter: var(--glass-backdrop);
-    -webkit-backdrop-filter: var(--glass-backdrop);
-    border-radius: var(--radius-md);
-    border-left: 4px solid var(--brand-primary);
-    box-shadow: var(--glass-shadow);
-
+  .color-group {
     h4 {
-      color: var(--brand-primary);
-      margin-bottom: var(--space-3);
-      font-size: var(--text-lg);
+      font-size: 18px;
+      font-weight: 600;
+      margin: 0 0 16px 0;
+      color: var(--text-primary);
     }
 
-    ul {
-      margin: 0;
-      padding-left: var(--space-5);
-
-      li {
-        margin-bottom: var(--space-2);
-        line-height: var(--leading-relaxed);
-
-        strong {
-          color: var(--neutral-800);
-
-          body.body--dark & {
-            color: var(--neutral-200);
-          }
-        }
-      }
+    .color-row {
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
     }
   }
 
-  // Demo Notice Styles
-  .demo-notice {
-    margin-bottom: var(--space-6);
-    padding: var(--space-4);
-    background: var(--neutral-50);
-    border-radius: var(--radius-base);
-    border: 1px solid var(--neutral-200);
-    box-shadow: var(--shadow-xs);
+  .color-card {
+    width: 120px;
+    height: 80px;
+    border-radius: 12px;
+    padding: 12px;
+    color: white;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 
-    .demo-notice-header {
+    .color-value {
+      font-weight: 600;
+      font-size: 14px;
+    }
+
+    .color-hex {
+      font-size: 11px;
+      opacity: 0.9;
+      font-family: monospace;
+    }
+  }
+}
+
+// Typography showcase
+.typography-showcase {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+
+  .text-example {
+    padding: 16px 0;
+    border-bottom: 1px solid var(--border-color);
+
+    &:last-child {
+      border-bottom: none;
+    }
+
+    .text-meta {
+      font-size: 12px;
+      color: var(--text-secondary);
+      margin-top: 8px;
+      font-family: monospace;
+    }
+  }
+}
+
+// Button showcase
+.button-showcase {
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+
+  .button-group {
+    h4 {
+      font-size: 18px;
+      font-weight: 600;
+      margin: 0 0 16px 0;
+      color: var(--text-primary);
+    }
+
+    .button-row {
       display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
       align-items: center;
-      gap: var(--space-2);
-      margin-bottom: var(--space-3);
-      color: var(--brand-primary);
-      font-weight: var(--font-weight-semibold);
-      font-size: var(--text-base);
+    }
+  }
+}
+
+// Shadow showcase
+.shadow-showcase {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 24px;
+
+  .shadow-card {
+    background: var(--card-background, #ffffff);
+    border-radius: 12px;
+    padding: 24px;
+    text-align: center;
+
+    .shadow-label {
+      font-weight: 600;
+      margin-bottom: 8px;
+      color: var(--text-primary);
     }
 
-    .demo-effects-list {
-      list-style: none;
-      padding: 0;
-      margin-bottom: var(--space-2);
-
-      li {
-        margin-bottom: var(--space-1);
-        font-size: var(--text-sm);
-        color: var(--neutral-700);
-        line-height: var(--leading-relaxed);
-
-        strong {
-          color: var(--neutral-900);
-        }
-      }
+    .shadow-value {
+      font-size: 14px;
+      color: var(--text-secondary);
     }
 
-         .demo-note {
-       font-size: var(--text-xs);
-       color: var(--neutral-600);
-       font-style: italic;
-     }
+    .body--dark & {
+      background: #1e1e1e;
+    }
+  }
+}
 
-     // Dark mode support
-     .body--dark & {
-       background: var(--neutral-800);
-       border-color: var(--neutral-700);
+// Icon showcase
+.icon-showcase {
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
 
-       .demo-notice-header {
-         color: var(--brand-primary-light);
-       }
+  .icon-group {
+    h4 {
+      font-size: 18px;
+      font-weight: 600;
+      margin: 0 0 16px 0;
+      color: var(--text-primary);
+    }
 
-       .demo-effects-list li {
-         color: var(--neutral-300);
+    .icon-row {
+      display: flex;
+      gap: 24px;
+      flex-wrap: wrap;
+    }
+  }
 
-         strong {
-           color: var(--neutral-100);
-         }
-       }
+  .icon-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    text-align: center;
 
-       .demo-note {
-         color: var(--neutral-400);
-       }
-     }
-   }
+    .icon-label {
+      font-size: 14px;
+      color: var(--text-secondary);
+    }
+  }
+}
+
+// Radius showcase
+.radius-showcase {
+  display: flex;
+  gap: 24px;
+  flex-wrap: wrap;
+  align-items: end;
+
+  .radius-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+
+    .radius-demo {
+      width: 60px;
+      height: 60px;
+      background: var(--q-primary);
+    }
+
+    .radius-label {
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+
+    .radius-value {
+      font-size: 12px;
+      color: var(--text-secondary);
+      font-family: monospace;
+    }
+  }
+}
+
+// Spacing showcase
+.spacing-showcase {
+  display: flex;
+  gap: 24px;
+  flex-wrap: wrap;
+  align-items: end;
+
+  .spacing-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+
+    .spacing-demo {
+      height: 40px;
+      background: var(--q-primary);
+      border-radius: 4px;
+    }
+
+    .spacing-label {
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+
+    .spacing-value {
+      font-size: 12px;
+      color: var(--text-secondary);
+      font-family: monospace;
+    }
+  }
+}
+
+// Responsive adjustments
+@media (max-width: 768px) {
+  .style-guide {
+    gap: 32px;
+    padding: 0 16px;
+  }
+
+  .style-section {
+    .section-title {
+      font-size: 24px;
+    }
+
+    .section-description {
+      font-size: 16px;
+    }
+  }
+
+  .color-row {
+    justify-content: center;
+  }
+
+  .button-row {
+    justify-content: center;
+  }
+
+  .icon-row {
+    justify-content: center;
+  }
+
+  .radius-showcase,
+  .spacing-showcase {
+    justify-content: center;
+  }
+}
 </style>

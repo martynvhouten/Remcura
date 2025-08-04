@@ -1,681 +1,830 @@
 <template>
   <PageLayout>
-    <PageTitle
-      :title="$t('settings.title')"
-      :subtitle="$t('settings.subtitle')"
-      icon="settings"
-    />
+    <template #header>
+      <PageTitle
+        :title="$t('settings.title')"
+        :subtitle="$t('settings.manageSettingsSubtitle')"
+          icon="tune"
+        :meta="[
+          { icon: 'person', text: userProfile?.full_name || 'User' },
+          { icon: 'domain', text: clinicName },
+        ]"
+      >
+        <template #actions>
+          <q-btn
+            color="primary"
+          icon="save"
+            :label="$t('settings.saveSettings')"
+            @click="saveSettings"
+            :loading="saving"
+            unelevated
+            no-caps
+            class="btn-modern"
+          />
+        </template>
+      </PageTitle>
+    </template>
 
-    <div class="settings-page">
-      <!-- Card Container for All Settings -->
-      <q-card flat class="settings-main-card">
-        <q-card-section>
-          <!-- Appearance Settings -->
-          <div class="settings-section">
-            <h3 class="section-title">
-              {{ $t('settings.appearance') }}
-            </h3>
-            <div
-              class="settings-items"
-              role="group"
-              aria-labelledby="appearance-title"
+    <!-- Settings Grid -->
+    <div class="settings-grid animate-slide-up">
+      <!-- User Profile Settings -->
+      <div class="settings-section">
+        <BaseCard
+          
+          :title="$t('settings.profile')"
+          :subtitle="$t('settings.profileSubtitle')"
+          icon="person"
+          icon-color="primary"
+        >
+          <div class="form-grid" role="group" aria-labelledby="profile-title">
+            <q-input
+              v-model="userSettings.fullName"
+              :label="$t('auth.fullName')"
+              outlined
+              readonly
+              class="input-modern"
+              :aria-label="`${$t('auth.fullName')}: ${userSettings.fullName}`"
             >
-              <!-- Dark Mode Toggle -->
-              <BaseCard>
+              <template v-slot:prepend>
+                <q-icon name="person" aria-hidden="true" />
+              </template>
+            </q-input>
+
+            <q-input
+              v-model="userSettings.email"
+              :label="$t('auth.email')"
+              outlined
+              readonly
+              class="input-modern"
+              :aria-label="`${$t('auth.email')}: ${userSettings.email}`"
+            >
+              <template v-slot:prepend>
+                <q-icon name="email" aria-hidden="true" />
+              </template>
+            </q-input>
+
+            <q-input
+              v-model="userSettings.role"
+              :label="$t('settings.role')"
+              outlined
+              readonly
+              class="input-modern"
+              :aria-label="`${$t('settings.role')}: ${userSettings.role}`"
+            >
+              <template v-slot:prepend>
+                <q-icon name="badge" aria-hidden="true" />
+              </template>
+            </q-input>
+          </div>
+        </BaseCard>
+      </div>
+
+      <!-- Appearance Settings -->
+      <div class="settings-section">
+        <BaseCard
+          
+          :title="$t('settings.appearanceTitle')"
+          :subtitle="$t('settings.appearanceSubtitle')"
+          icon="palette"
+          icon-color="secondary"
+        >
+          <div
+            class="settings-items"
+            role="group"
+            aria-labelledby="appearance-title"
+          >
+            <!-- Dark Mode Toggle -->
+            <div class="setting-item glass-card">
+              <div class="setting-info">
+                <div class="setting-label" id="dark-mode-label">
+                  {{ $t('settings.darkMode') }}
+                </div>
+                <div class="setting-description">
+                  {{ $t('settings.darkModeDescription') }}
+                </div>
+              </div>
+              <div class="setting-control">
+                <q-toggle
+                  v-model="isDarkMode"
+                  @update:model-value="toggleDarkMode"
+                  color="primary"
+                  size="lg"
+                  class="toggle-modern"
+                  :aria-labelledby="'dark-mode-label'"
+                  :aria-describedby="'dark-mode-description'"
+                />
+                <div id="dark-mode-description" class="sr-only">
+                  {{
+                    isDarkMode
+                      ? $t('settings.darkModeEnabled')
+                      : $t('settings.lightModeEnabled')
+                  }}
+                </div>
+              </div>
+            </div>
+
+            <!-- Language Setting -->
+            <div class="setting-item glass-card">
+              <div class="setting-info">
+                <div class="setting-label" id="language-label">
+                  {{ $t('settings.language') }}
+                </div>
+                <div class="setting-description">
+                  {{ $t('settings.selectLanguage') }}
+                </div>
+              </div>
+              <div class="setting-control">
+                <q-select
+                  v-model="selectedLanguage"
+                  :options="languageOptions"
+                  @update:model-value="changeLanguage"
+                  option-value="value"
+                  option-label="label"
+                  emit-value
+                  map-options
+                  outlined
+                  dense
+                  class="select-modern"
+                  style="width: 150px"
+                  :aria-labelledby="'language-label'"
+                />
+              </div>
+            </div>
+
+            <!-- Theme Setting -->
+            <div class="setting-item glass-card">
+              <div class="setting-info">
+                <div class="setting-label" id="theme-label">
+                  {{ $t('settings.colorSchemeTitle') }}
+                </div>
+                <div class="setting-description">
+                  {{ $t('settings.colorSchemeDescription') }}
+                </div>
+              </div>
+              <div class="setting-control">
+                <q-select
+                  v-model="selectedTheme"
+                  :options="themeOptions"
+                  @update:model-value="changeTheme"
+                  option-value="value"
+                  option-label="label"
+                  emit-value
+                  map-options
+                  outlined
+                  dense
+                  class="select-modern"
+                  style="width: 150px"
+                  :aria-labelledby="'theme-label'"
+                />
+              </div>
+            </div>
+          </div>
+        </BaseCard>
+      </div>
+
+      <!-- Clinic Information -->
+      <div class="settings-section full-width">
+        <q-card class="card-modern card-elevated">
+          <q-card-section class="card-header">
+            <div class="card-header-content">
+              <div class="card-title-section">
+                <q-icon
+                  name="business"
+                  color="info"
+                  size="24px"
+                  aria-hidden="true"
+                />
+                <div>
+                  <h2 class="card-title">{{ $t('settings.clinic') }}</h2>
+                  <p class="card-subtitle">
+                    {{ $t('settings.clinicInfoSubtitle') }}
+                  </p>
+                </div>
+              </div>
+            </div>
+          </q-card-section>
+
+          <q-separator />
+
+          <q-card-section class="card-content">
+            <div
+              class="clinic-form-grid"
+              role="group"
+              aria-labelledby="clinic-title"
+            >
+              <q-input
+                v-model="clinicSettings.name"
+                :label="$t('settings.clinicName')"
+                outlined
+                readonly
+                class="input-modern"
+                :aria-label="`${$t('settings.clinicName')}: ${
+                  clinicSettings.name
+                }`"
+              >
+                <template v-slot:prepend>
+                  <q-icon name="business" aria-hidden="true" />
+                </template>
+              </q-input>
+
+              <q-input
+                v-model="clinicSettings.contactEmail"
+                :label="$t('settings.contactEmail')"
+                outlined
+                readonly
+                class="input-modern"
+                :aria-label="`${$t('settings.contactEmail')}: ${
+                  clinicSettings.contactEmail
+                }`"
+              >
+                <template v-slot:prepend>
+                  <q-icon name="email" aria-hidden="true" />
+                </template>
+              </q-input>
+
+              <q-input
+                v-model="clinicSettings.contactPhone"
+                :label="$t('settings.phoneNumber')"
+                outlined
+                readonly
+                class="input-modern"
+                :aria-label="`${$t('settings.phoneNumber')}: ${
+                  clinicSettings.contactPhone
+                }`"
+              >
+                <template v-slot:prepend>
+                  <q-icon name="phone" aria-hidden="true" />
+                </template>
+              </q-input>
+
+              <q-input
+                v-model="clinicSettings.address"
+                :label="$t('settings.address')"
+                outlined
+                readonly
+                class="input-modern"
+                :aria-label="`${$t('settings.address')}: ${
+                  clinicSettings.address
+                }`"
+              >
+                <template v-slot:prepend>
+                  <q-icon name="location_on" aria-hidden="true" />
+                </template>
+              </q-input>
+            </div>
+
+            <div class="clinic-notice">
+              <q-banner class="notice-banner glass-card" rounded>
+                <template v-slot:avatar>
+                  <q-icon name="info" color="info" />
+                </template>
+                <div class="notice-text">
+                  {{ $t('settings.contactSettingsNotice') }}
+                </div>
+              </q-banner>
+            </div>
+          </q-card-section>
+        </q-card>
+      </div>
+
+      <!-- Notification Settings -->
+      <div class="settings-section">
+        <q-card class="card-modern card-elevated">
+          <q-card-section class="card-header">
+            <div class="card-header-content">
+              <div class="card-title-section">
+                <q-icon name="notifications" color="warning" size="24px" />
+                <div>
+                  <h3 class="card-title">{{ $t('settings.notifications') }}</h3>
+                  <p class="card-subtitle">
+                    {{ $t('settings.notificationSettingsSubtitle') }}
+                  </p>
+                </div>
+              </div>
+            </div>
+          </q-card-section>
+
+          <q-separator />
+
+          <q-card-section class="card-content">
+            <div class="settings-items">
+              <!-- Low Stock Alerts -->
+              <div class="setting-item glass-card">
                 <div class="setting-info">
-                  <div class="setting-label" id="dark-mode-label">
-                    {{ $t('settings.darkMode') }}
+                  <div class="setting-label">
+                    {{ $t('settings.stockAlertsLabel') }}
                   </div>
                   <div class="setting-description">
-                    {{ $t('settings.darkModeDescription') }}
+                    {{ $t('settings.stockAlertsDescription') }}
                   </div>
                 </div>
                 <div class="setting-control">
                   <q-toggle
-                    v-model="isDarkMode"
-                    @update:model-value="toggleDarkMode"
+                    v-model="notificationSettings.lowStockAlerts"
                     color="primary"
-                    size="lg"
                     class="toggle-modern"
-                    :aria-labelledby="'dark-mode-label'"
-                    :aria-describedby="'dark-mode-description'"
                   />
-                  <div id="dark-mode-description" class="sr-only">
-                    {{
-                      isDarkMode
-                        ? $t('settings.darkModeEnabled')
-                        : $t('settings.lightModeEnabled')
-                    }}
-                  </div>
                 </div>
-              </BaseCard>
+              </div>
 
-              <!-- Language Setting -->
-              <BaseCard>
+              <!-- Email Notifications -->
+              <div class="setting-item glass-card">
                 <div class="setting-info">
-                  <div class="setting-label" id="language-label">
-                    {{ $t('settings.language') }}
+                  <div class="setting-label">
+                    {{ $t('settings.emailNotificationsLabel') }}
                   </div>
                   <div class="setting-description">
-                    {{ $t('settings.selectLanguage') }}
+                    {{ $t('settings.emailNotificationsDescription') }}
                   </div>
                 </div>
                 <div class="setting-control">
-                  <q-select
-                    v-model="selectedLocale"
-                    :options="localeOptions"
-                    emit-value
-                    map-options
-                    @update:model-value="changeLocale"
+                  <q-toggle
+                    v-model="notificationSettings.emailNotifications"
                     color="primary"
-                    outlined
-                    dense
-                    :aria-labelledby="'language-label'"
+                    class="toggle-modern"
                   />
                 </div>
-              </BaseCard>
+              </div>
 
-              <!-- Theme Setting -->
-              <BaseCard>
+              <!-- Browser Notifications -->
+              <div class="setting-item glass-card">
                 <div class="setting-info">
-                  <div class="setting-label" id="theme-label">
-                    {{ $t('settings.theme') }}
+                  <div class="setting-label">
+                    {{ $t('settings.browserNotificationsLabel') }}
                   </div>
                   <div class="setting-description">
-                    {{ $t('settings.selectTheme') }}
+                    {{ $t('settings.browserNotificationsDescription') }}
                   </div>
                 </div>
                 <div class="setting-control">
-                  <q-select
-                    v-model="selectedTheme"
-                    :options="themeOptions"
-                    emit-value
-                    map-options
-                    @update:model-value="changeTheme"
+                  <q-toggle
+                    v-model="notificationSettings.browserNotifications"
                     color="primary"
-                    outlined
-                    dense
-                    :aria-labelledby="'theme-label'"
+                    class="toggle-modern"
                   />
                 </div>
-              </BaseCard>
+              </div>
             </div>
-          </div>
+          </q-card-section>
+        </q-card>
+      </div>
 
-          <!-- Personal Information Settings -->
-          <div class="settings-section">
-            <h3 class="section-title" id="personal-title">
-              {{ $t('settings.personalInformation') }}
-            </h3>
-
-            <BaseCard>
-              <div class="q-gutter-md">
-                <q-input
-                  v-model="firstName"
-                  :label="$t('settings.firstName')"
-                  color="primary"
-                  outlined
-                  :rules="[val => !!val || $t('settings.firstNameRequired')]"
-                  class="col-12 col-md-6"
-                >
-                  <template v-slot:prepend>
-                    <q-icon name="person" aria-hidden="true" />
-                  </template>
-                </q-input>
-
-                <q-input
-                  v-model="lastName"
-                  :label="$t('settings.lastName')"
-                  color="primary"
-                  outlined
-                  :rules="[val => !!val || $t('settings.lastNameRequired')]"
-                  class="col-12 col-md-6"
-                >
-                  <template v-slot:prepend>
-                    <q-icon name="person" aria-hidden="true" />
-                  </template>
-                </q-input>
-
-                <q-input
-                  v-model="email"
-                  :label="$t('settings.email')"
-                  type="email"
-                  color="primary"
-                  outlined
-                  readonly
-                  :rules="[
-                    val => !!val || $t('settings.emailRequired'),
-                    val => /.+@.+\..+/.test(val) || $t('settings.emailInvalid')
-                  ]"
-                  class="col-12"
-                >
-                  <template v-slot:prepend>
-                    <q-icon name="email" aria-hidden="true" />
-                  </template>
-                </q-input>
-              </div>
-            </BaseCard>
-          </div>
-
-          <!-- Clinic Settings -->
-          <div class="settings-section">
-            <h3 class="section-title" id="clinic-title">
-              {{ $t('settings.clinic') }}
-            </h3>
-
-            <BaseCard>
-              <div class="q-gutter-md">
-                <q-input
-                  v-model="clinicName"
-                  :label="$t('settings.clinicName')"
-                  color="primary"
-                  outlined
-                  :rules="[val => !!val || $t('settings.clinicNameRequired')]"
-                  class="col-12"
-                >
-                  <template v-slot:prepend>
-                    <q-icon name="local_hospital" aria-hidden="true" />
-                  </template>
-                </q-input>
-
-                <q-input
-                  v-model="clinicPhone"
-                  :label="$t('settings.clinicPhone')"
-                  type="tel"
-                  color="primary"
-                  outlined
-                  class="col-12"
-                >
-                  <template v-slot:prepend>
-                    <q-icon name="phone" aria-hidden="true" />
-                  </template>
-                </q-input>
-
-                <q-input
-                  v-model="clinicAddress"
-                  :label="$t('settings.clinicAddress')"
-                  color="primary"
-                  outlined
-                  class="col-12"
-                >
-                  <template v-slot:prepend>
-                    <q-icon name="location_on" aria-hidden="true" />
-                  </template>
-                </q-input>
-              </div>
-
-              <div class="clinic-notice">
-                <AlertCard 
-                  type="info"
-                  icon="info"
-                  :title="$t('settings.contactSettingsNotice')"
-                >
-                  <div class="notice-text">
-                    {{ $t('settings.contactSettingsNotice') }}
-                    <a href="mailto:support@remcura.nl">support@remcura.nl</a>
-                  </div>
-                </AlertCard>
-              </div>
-            </BaseCard>
-          </div>
-
-          <!-- Notification Settings -->
-          <div class="settings-section">
-            <h3 class="section-title">
-              {{ $t('settings.notifications') }}
-            </h3>
-            
-            <!-- Email Notifications -->
-            <BaseCard>
-              <div class="setting-info">
-                <div class="setting-label" id="email-notifications-label">
-                  {{ $t('settings.emailNotifications') }}
-                </div>
-                <div class="setting-description">
-                  {{ $t('settings.emailNotificationsDescription') }}
+      <!-- System Information -->
+      <div class="settings-section">
+        <q-card class="card-modern card-elevated">
+          <q-card-section class="card-header">
+            <div class="card-header-content">
+              <div class="card-title-section">
+                <q-icon name="info" color="accent" size="24px" />
+                <div>
+                  <h3 class="card-title">
+                    {{ $t('settings.systemInfoTitle') }}
+                  </h3>
+                  <p class="card-subtitle">
+                    {{ $t('settings.systemInfoSubtitle') }}
+                  </p>
                 </div>
               </div>
-              <div class="setting-control">
-                <q-toggle
-                  v-model="emailNotifications"
-                  @update:model-value="updateEmailNotifications"
-                  color="primary"
-                  size="lg"
-                  class="toggle-modern"
-                  :aria-labelledby="'email-notifications-label'"
-                />
-              </div>
-            </BaseCard>
+            </div>
+          </q-card-section>
 
-            <!-- SMS Settings -->
-            <BaseCard>
-              <div class="setting-info">
-                <div class="setting-label" id="sms-notifications-label">
-                  {{ $t('settings.smsNotifications') }}
-                </div>
-                <div class="setting-description">
-                  {{ $t('settings.smsNotificationsDescription') }}
-                </div>
-              </div>
-              <div class="setting-control">
-                <q-toggle
-                  v-model="smsNotifications"
-                  @update:model-value="updateSmsNotifications"
-                  color="primary"
-                  size="lg"
-                  class="toggle-modern"
-                  :aria-labelledby="'sms-notifications-label'"
-                />
-              </div>
-            </BaseCard>
+          <q-separator />
 
-            <!-- Backup Settings -->
-            <BaseCard>
-              <div class="setting-info">
-                <div class="setting-label" id="auto-backup-label">
-                  {{ $t('settings.autoBackup') }}
-                </div>
-                <div class="setting-description">
-                  {{ $t('settings.autoBackupDescription') }}
-                </div>
+          <q-card-section class="card-content">
+            <div class="system-info">
+              <div class="info-item">
+                <div class="info-label">{{ $t('settings.versionLabel') }}</div>
+                <div class="info-value">1.0.0</div>
               </div>
-              <div class="setting-control">
-                <q-toggle
-                  v-model="autoBackup"
-                  @update:model-value="updateAutoBackup"
-                  color="primary"
-                  size="lg"
-                  class="toggle-modern"
-                  :aria-labelledby="'auto-backup-label'"
-                />
-              </div>
-            </BaseCard>
-          </div>
 
-          <!-- Action Buttons -->
-          <div class="settings-actions">
-            <q-btn
-              :label="$t('settings.saveChanges')"
-              color="primary"
-              unelevated
-              @click="saveSettings"
-              :loading="saving"
-              :disable="!hasUnsavedChanges"
-              class="save-btn"
-            />
-            
-            <q-btn
-              :label="$t('settings.resetToDefaults')"
-              color="grey-7"
-              outline
-              @click="resetToDefaults"
-              :disable="saving"
-              class="reset-btn"
-            />
-          </div>
-        </q-card-section>
-      </q-card>
+              <div class="info-item">
+                <div class="info-label">
+                  {{ $t('settings.lastUpdateLabel') }}
+                </div>
+                <div class="info-value">
+                  {{ new Date().toLocaleDateString('nl-NL') }}
+                </div>
+              </div>
+
+              <div class="info-item">
+                <div class="info-label">{{ $t('settings.supportLabel') }}</div>
+                <div class="info-value">
+                  <a
+                    href="mailto:support@remcura.com"
+                    class="support-link"
+                  >
+                    support@remcura.com
+                  </a>
+                </div>
+              </div>
+            </div>
+          </q-card-section>
+        </q-card>
+      </div>
     </div>
   </PageLayout>
 </template>
 
 <script setup lang="ts">
-  import { ref, computed, watch, onMounted } from 'vue';
+  import { ref, computed, onMounted } from 'vue';
+  import { useQuasar } from 'quasar';
   import { useI18n } from 'vue-i18n';
-  import { useQuasar, Dark } from 'quasar';
   import { useAuthStore } from 'src/stores/auth';
-  import { useThemeStore } from 'src/stores/theme';
-  import { useClinicsStore } from 'src/stores/clinics';
-  import { settingsService } from 'src/services/settings';
-  import { monitoringService } from 'src/services/monitoring';
+  import { useClinicStore } from 'src/stores/clinic';
+  import { useThemeManager } from 'src/composables/themeManager';
+  import {
+    setI18nLanguage,
+    getCurrentLocale,
+    type SupportedLocale,
+  } from 'src/i18n';
   import PageLayout from 'src/components/PageLayout.vue';
   import PageTitle from 'src/components/PageTitle.vue';
   import { BaseCard, InteractiveCard, AlertCard } from 'src/components/cards';
 
-  // Composables
-  const { t, locale } = useI18n();
   const $q = useQuasar();
+  const { t } = useI18n();
   const authStore = useAuthStore();
-  const themeStore = useThemeStore();
-  const clinicsStore = useClinicsStore();
+  const clinicStore = useClinicStore();
+  const { themeOptions, currentTheme, applyTheme, getCurrentThemeName } =
+    useThemeManager();
 
   // State
   const saving = ref(false);
-  const firstName = ref('');
-  const lastName = ref('');
-  const email = ref('');
-  const clinicName = ref('');
-  const clinicPhone = ref('');
-  const clinicAddress = ref('');
-  const selectedLocale = ref(locale.value);
-  const selectedTheme = ref('auto');
-  const emailNotifications = ref(true);
-  const smsNotifications = ref(false);
-  const autoBackup = ref(true);
+  const isDarkMode = ref($q.dark.isActive);
+  const selectedLanguage = ref(getCurrentLocale());
+  const selectedTheme = ref(getCurrentThemeName());
 
-  // Computed
-  const isDarkMode = computed({
-    get: () => Dark.isActive,
-    set: (value: boolean) => {
-      Dark.set(value);
-    }
+  // Computed properties
+  const userProfile = computed(() => authStore.userProfile);
+  const clinicName = computed(() => clinicStore.clinic?.name || 'Kliniek');
+
+  // Form data
+  const userSettings = ref({
+    fullName: userProfile.value?.full_name || '',
+    email: authStore.userEmail || '',
+    role: 'Administrator', // This would come from your role system
   });
 
-  const localeOptions = computed(() => [
-    { label: 'Nederlands', value: 'nl' },
-    { label: 'English', value: 'en' },
-    { label: 'Español', value: 'es' }
-  ]);
-
-  const themeOptions = computed(() => [
-    { label: t('settings.themeAuto'), value: 'auto' },
-    { label: t('settings.themeLight'), value: 'light' },
-    { label: t('settings.themeDark'), value: 'dark' }
-  ]);
-
-  const hasUnsavedChanges = computed(() => {
-    // Add logic to detect unsaved changes
-    return true; // Simplified for now
+  const clinicSettings = ref({
+    name: clinicName.value,
+    contactEmail: 'contact@example.com',
+    contactPhone: '+31 20 123 4567',
+    address: 'Voorbeeldstraat 123, Amsterdam',
   });
+
+  const notificationSettings = ref({
+    lowStockAlerts: true,
+    emailNotifications: true,
+    browserNotifications: false,
+  });
+
+  const languageOptions = [
+    { label: t('settings.languages.dutch'), value: 'nl' },
+    { label: t('settings.languages.english'), value: 'en' },
+    { label: t('settings.languages.spanish'), value: 'es' },
+  ];
 
   // Methods
   const toggleDarkMode = (value: boolean) => {
-    Dark.set(value);
-    themeStore.setDarkMode(value);
-    monitoringService.trackEvent('theme_changed', { isDark: value });
-  };
+    $q.dark.set(value);
 
-  const changeLocale = (newLocale: string) => {
-    locale.value = newLocale;
-    localStorage.setItem('locale', newLocale);
     $q.notify({
       type: 'positive',
-      message: t('settings.languageChanged'),
-      position: 'top'
-    });
-    monitoringService.trackEvent('language_changed', { locale: newLocale });
-  };
-
-  const changeTheme = (theme: string) => {
-    selectedTheme.value = theme;
-    themeStore.setTheme(theme);
-    
-    if (theme === 'auto') {
-      Dark.set('auto');
-    } else {
-      Dark.set(theme === 'dark');
-    }
-    
-    monitoringService.trackEvent('theme_changed', { theme });
-  };
-
-  const updateEmailNotifications = (value: boolean) => {
-    emailNotifications.value = value;
-    monitoringService.trackEvent('notification_setting_changed', { 
-      type: 'email', 
-      enabled: value 
+      message: value
+        ? t('settings.darkModeEnabled')
+        : t('settings.lightModeEnabled'),
+      position: 'top-right',
+      timeout: 2000,
     });
   };
 
-  const updateSmsNotifications = (value: boolean) => {
-    smsNotifications.value = value;
-    monitoringService.trackEvent('notification_setting_changed', { 
-      type: 'sms', 
-      enabled: value 
+  const changeTheme = (themeName: string) => {
+    selectedTheme.value = themeName;
+    applyTheme(themeName);
+
+    const themeLabel =
+      themeOptions.value.find(option => option.value === themeName)?.label ||
+      themeName;
+    $q.notify({
+      type: 'positive',
+              message: `${$t('settingspa.positive')} ${themeLabel} toegepast`,
+      position: 'top-right',
+      timeout: 2000,
     });
   };
 
-  const updateAutoBackup = (value: boolean) => {
-    autoBackup.value = value;
-    monitoringService.trackEvent('backup_setting_changed', { enabled: value });
+  const changeLanguage = (locale: SupportedLocale) => {
+    selectedLanguage.value = locale;
+    setI18nLanguage(locale);
+
+    const languageLabel =
+      languageOptions.find(option => option.value === locale)?.label || locale;
+    $q.notify({
+      type: 'positive',
+      message: t('settings.languageChanged', { language: languageLabel }),
+      position: 'top-right',
+      timeout: 2000,
+    });
   };
 
   const saveSettings = async () => {
     saving.value = true;
-    try {
-      const settings = {
-        firstName: firstName.value,
-        lastName: lastName.value,
-        clinicName: clinicName.value,
-        clinicPhone: clinicPhone.value,
-        clinicAddress: clinicAddress.value,
-        emailNotifications: emailNotifications.value,
-        smsNotifications: smsNotifications.value,
-        autoBackup: autoBackup.value,
-        theme: selectedTheme.value,
-        locale: selectedLocale.value
-      };
 
-      await settingsService.updateSettings(settings);
-      
+    try {
+      // Here you would save the settings to your backend/store
+      await new Promise(resolve => setTimeout(resolve, 1000)); // Simulate API call
+
       $q.notify({
         type: 'positive',
         message: t('settings.settingsSaved'),
-        position: 'top'
+        position: 'top-right',
+        timeout: 3000,
       });
-
-      monitoringService.trackEvent('settings_saved', { settingsCount: Object.keys(settings).length });
     } catch (error) {
-      console.error('Error saving settings:', error);
       $q.notify({
         type: 'negative',
         message: t('settings.settingsSaveError'),
-        position: 'top'
+        position: 'top-right',
+        timeout: 3000,
       });
     } finally {
       saving.value = false;
     }
   };
 
-  const resetToDefaults = () => {
-    $q.dialog({
-      title: t('settings.resetToDefaultsConfirm'),
-      message: t('settings.resetToDefaultsMessage'),
-      cancel: true,
-      persistent: true
-    }).onOk(() => {
-      // Reset to defaults
-      selectedLocale.value = 'nl';
-      selectedTheme.value = 'auto';
-      emailNotifications.value = true;
-      smsNotifications.value = false;
-      autoBackup.value = true;
-      
-      $q.notify({
-        type: 'info',
-        message: t('settings.settingsReset'),
-        position: 'top'
-      });
-
-      monitoringService.trackEvent('settings_reset');
-    });
-  };
-
-  const loadUserData = async () => {
-    try {
-      const user = authStore.user;
-      if (user) {
-        email.value = user.email || '';
-        firstName.value = user.user_metadata?.first_name || '';
-        lastName.value = user.user_metadata?.last_name || '';
-      }
-
-      const clinic = clinicsStore.currentClinic;
-      if (clinic) {
-        clinicName.value = clinic.name || '';
-        clinicPhone.value = clinic.phone || '';
-        clinicAddress.value = clinic.address || '';
-      }
-    } catch (error) {
-      console.error('Error loading user data:', error);
-    }
-  };
-
-  // Lifecycle
+  // Initialize data
   onMounted(() => {
-    loadUserData();
-  });
-
-  // Watchers
-  watch(selectedLocale, (newLocale) => {
-    if (newLocale !== locale.value) {
-      changeLocale(newLocale);
+    // Load settings from store/localStorage if available
+    const savedDarkMode = $q.localStorage.getItem('darkMode');
+    if (savedDarkMode !== null) {
+      const darkModeValue = savedDarkMode === 'true';
+      isDarkMode.value = darkModeValue;
+      $q.dark.set(darkModeValue);
     }
   });
 </script>
 
-<style scoped lang="scss">
-@import 'src/css/variables.scss';
-@import 'src/css/mixins.scss';
-@import 'src/css/form-inputs.scss';
+<style lang="scss" scoped>
+  // Settings grid
+  .settings-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+    gap: var(--space-6);
 
-.settings-page {
-  max-width: 800px;
-  margin: 0 auto;
-  padding: var(--space-4);
-
-  .settings-main-card {
-    border-radius: var(--radius-lg);
-    box-shadow: var(--shadow-base);
-  }
-
-  .settings-section {
-    margin-bottom: var(--space-8);
-
-    &:last-child {
-      margin-bottom: 0;
-    }
-
-    .section-title {
-      font-size: var(--text-xl);
-      font-weight: var(--font-semibold);
-      color: var(--text-primary);
-      margin-bottom: var(--space-4);
-      padding-bottom: var(--space-2);
-      border-bottom: 2px solid var(--primary-100);
+    .settings-section {
+      &.full-width {
+        grid-column: 1 / -1;
+      }
     }
   }
 
+  // Form grids
+  .form-grid {
+    display: grid;
+    gap: var(--space-4);
+  }
+
+  .clinic-form-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: var(--space-4);
+    margin-bottom: var(--space-6);
+  }
+
+  .clinic-notice {
+    .notice-banner {
+      background: var(--glass-bg);
+      backdrop-filter: var(--glass-backdrop);
+      border: 1px solid var(--glass-border);
+
+      .notice-text {
+        font-size: var(--text-sm);
+        color: var(--neutral-700);
+      }
+    }
+  }
+
+  // Settings items
   .settings-items {
     display: flex;
     flex-direction: column;
     gap: var(--space-4);
   }
 
-  .setting-info {
-    flex: 1;
+  .setting-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: var(--space-4);
+    border-radius: var(--radius-lg);
+    border: 1px solid var(--neutral-200);
+    transition: all var(--transition-base);
 
-    .setting-label {
-      font-size: var(--text-base);
-      font-weight: var(--font-medium);
-      color: var(--text-primary);
-      margin-bottom: var(--space-1);
+    &:hover {
+      border-color: var(--neutral-300);
+      box-shadow: var(--shadow-sm);
     }
 
-    .setting-description {
-      font-size: var(--text-sm);
-      color: var(--text-secondary);
-      line-height: 1.4;
+    .setting-info {
+      flex: 1;
+
+      .setting-label {
+        font-size: var(--text-base);
+        font-weight: var(--font-weight-medium);
+        color: var(--neutral-900);
+        margin-bottom: var(--space-1);
+      }
+
+      .setting-description {
+        font-size: var(--text-sm);
+        color: var(--neutral-600);
+        margin: 0;
+      }
+    }
+
+    .setting-control {
+      margin-left: var(--space-4);
     }
   }
 
-  .setting-control {
-    margin-left: auto;
-    min-width: 140px;
+  // Input styling
+  .input-modern {
+    .q-field__control {
+      border-radius: var(--radius-lg);
+      transition: all var(--transition-base);
 
-    .toggle-modern {
-      transform: scale(1.1);
+      &:hover {
+        box-shadow: var(--shadow-sm);
+      }
     }
   }
 
-  .clinic-notice {
-    margin-top: var(--space-4);
-    
-    .notice-text {
-      font-size: var(--text-sm);
-      
-      a {
-        color: var(--q-primary);
-        text-decoration: none;
-        
-        &:hover {
-          text-decoration: underline;
+  .select-modern {
+    border-radius: var(--radius-lg);
+  }
+
+  .toggle-modern {
+    .q-toggle__track {
+      border-radius: var(--radius-full);
+    }
+
+    .q-toggle__thumb {
+      border-radius: var(--radius-full);
+    }
+  }
+
+  // Card header styling
+  .card-header {
+    .card-header-content {
+      display: flex;
+      align-items: center;
+      gap: var(--space-4);
+
+      .card-title-section {
+        display: flex;
+        align-items: flex-start;
+        gap: var(--space-3);
+
+        .q-icon {
+          margin-top: 2px; // Align icon with first line of title text
+          flex-shrink: 0;
+        }
+
+        .card-title {
+          font-size: var(--text-xl);
+          font-weight: var(--font-weight-semibold);
+          color: var(--neutral-900);
+          margin: 0;
+        }
+
+        .card-subtitle {
+          font-size: var(--text-sm);
+          color: var(--neutral-600);
+          margin: 0;
+          margin-top: var(--space-1);
         }
       }
     }
   }
 
-  .settings-actions {
-    display: flex;
-    gap: var(--space-3);
-    justify-content: flex-end;
-    margin-top: var(--space-6);
-    padding-top: var(--space-4);
-    border-top: 1px solid var(--neutral-200);
+  // Card content
+  .card-content {
+    padding: var(--space-6);
+  }
 
-    .save-btn {
-      min-width: 140px;
+  // System info
+  .system-info {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-4);
+
+    .info-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: var(--space-3) 0;
+      border-bottom: 1px solid var(--neutral-200);
+
+      &:last-child {
+        border-bottom: none;
+      }
+
+      .info-label {
+        font-weight: var(--font-weight-medium);
+        color: var(--neutral-700);
+      }
+
+      .info-value {
+        color: var(--neutral-900);
+
+        .support-link {
+          color: var(--brand-primary);
+          text-decoration: none;
+          transition: color var(--transition-base);
+
+          &:hover {
+            color: var(--brand-primary-dark);
+          }
+        }
+      }
+    }
+  }
+
+  // Responsive design
+  @media (max-width: 768px) {
+    .settings-grid {
+      grid-template-columns: 1fr;
+      gap: var(--space-4);
     }
 
-    .reset-btn {
-      min-width: 120px;
+    .clinic-form-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .setting-item {
+      flex-direction: column;
+      align-items: stretch;
+      gap: var(--space-3);
+
+      .setting-control {
+        margin-left: 0;
+        align-self: flex-end;
+      }
     }
   }
 
   // Dark mode adjustments
-  body.body--dark & {
-    .section-title {
-      color: var(--text-primary-dark);
-      border-bottom-color: var(--primary-800);
-    }
+  body.body--dark {
+    .setting-item {
+      border-color: var(--neutral-300);
 
-    .settings-actions {
-      border-top-color: var(--neutral-700);
-    }
-  }
+      &:hover {
+        border-color: var(--neutral-400);
+      }
 
-  // Responsive adjustments
-  @media (max-width: 768px) {
-    padding: var(--space-2);
+      .setting-label {
+        color: var(--neutral-900);
+      }
 
-    .settings-actions {
-      flex-direction: column;
-      align-items: stretch;
-      gap: var(--space-2);
-
-      .save-btn,
-      .reset-btn {
-        min-width: auto;
-        width: 100%;
+      .setting-description {
+        color: var(--neutral-600);
       }
     }
 
-    .setting-control {
-      margin-left: 0;
-      align-self: flex-end;
+    .clinic-notice .notice-banner .notice-text {
+      color: var(--neutral-600);
+    }
+
+    .card-title {
+      color: var(--neutral-900);
+    }
+
+    .card-subtitle {
+      color: var(--neutral-600);
     }
   }
 
-  @media (max-width: 480px) {
-    .settings-items {
-      .setting-control {
-        margin-left: 0;
-        margin-top: var(--space-2);
-      }
-    }
+  // Screen reader only content
+  .sr-only {
+    position: absolute !important;
+    width: 1px !important;
+    height: 1px !important;
+    padding: 0 !important;
+    margin: -1px !important;
+    overflow: hidden !important;
+    clip: rect(0, 0, 0, 0) !important;
+    white-space: nowrap !important;
+    border: 0 !important;
   }
-}
 
-// Screen reader only class
-.sr-only {
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  padding: 0;
-  margin: -1px;
-  overflow: hidden;
-  clip: rect(0, 0, 0, 0);
-  white-space: nowrap;
-  border: 0;
-}
+  // Focus styles for interactive elements
+  .toggle-modern:focus {
+    outline: 2px solid var(--brand-primary);
+    outline-offset: 2px;
+  }
+
+  .select-modern:focus-within {
+    outline: 2px solid var(--brand-primary);
+    outline-offset: 2px;
+  }
 </style>

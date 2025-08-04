@@ -73,20 +73,10 @@ interface Props {
   // Layout props
   padding?: 'none' | 'sm' | 'md' | 'lg';
   
-  // Deprecated props (kept for backwards compatibility)
-  variant?: string; // Deprecated - use specific card types instead
-  value?: string | number; // Deprecated - use custom content instead
-  label?: string; // Deprecated - use title instead
-  trend?: string | number; // Deprecated - use custom content instead
-  trendDirection?: 'up' | 'down' | 'neutral'; // Deprecated
-  trendColor?: 'positive' | 'negative' | 'neutral'; // Deprecated
-  actionIcon?: string; // Deprecated - use InteractiveCard instead
-  actionDescription?: string; // Deprecated - use InteractiveCard instead
-  actionProgress?: number; // Deprecated
-  actionBadge?: string | number; // Deprecated
-  gradientDirection?: string; // Deprecated
-  headerColor?: string; // Deprecated
-  size?: string; // Deprecated
+  // Legacy props (deprecated but kept for backwards compatibility)
+  variant?: string; // DEPRECATED - will be removed in future version
+  headerColor?: string; // DEPRECATED
+  size?: string; // DEPRECATED
   
   // Custom classes
   cardClass?: string;
@@ -130,14 +120,6 @@ const hasHeaderActions = computed(() => !!slots['header-actions']);
 // Card classes
 const cardClasses = computed(() => {
   const classes = ['base-card'];
-  
-  // Show deprecation warning for variant usage
-  if (props.variant && props.variant !== 'default') {
-    console.warn(`⚠️ BaseCard variant="${props.variant}" is deprecated. Use specific card types instead:
-- BaseCard (no variant) for static content
-- InteractiveCard for clickable elements  
-- AlertCard for status messages`);
-  }
   
   // Padding classes
   if (props.padding !== 'md') {
