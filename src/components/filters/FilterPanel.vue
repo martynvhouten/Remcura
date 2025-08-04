@@ -5,12 +5,10 @@
       <q-btn
         unelevated
         @click="toggleFilters"
-        class="filter-toggle-btn"
+        class="filter-toggle-btn app-btn-filter"
         :class="{ 'active': isFiltersVisible }"
-        color="grey-3"
-        text-color="grey-8"
         size="sm"
-        padding="8px 16px"
+        padding="10px 18px"
       >
         <template v-slot:default>
           <q-icon name="tune" size="16px" class="q-mr-xs" />
@@ -72,22 +70,18 @@
             :label="t('filters.filterPanel.clearAllFilters')"
             @click="handleClearAll"
             :disable="disabled || activeFiltersCount === 0"
-            class="filter-btn filter-btn--clear"
-            color="grey-3"
-            text-color="grey-8"
+            class="filter-btn filter-btn--clear app-btn-secondary"
             size="sm"
-            padding="8px 16px"
+            padding="10px 18px"
           />
           <q-btn
             unelevated
             :label="t('filters.filterPanel.applyFilters')"
             @click="handleApplyFilters"
             :disable="disabled"
-            class="filter-btn filter-btn--apply"
-            color="primary"
-            text-color="white"
+            class="filter-btn filter-btn--apply app-btn-primary"
             size="sm"
-            padding="8px 20px"
+            padding="10px 20px"
           />
         </div>
       </div>
@@ -274,46 +268,9 @@ onMounted(() => {
   align-items: center;
   margin-bottom: 16px;
   
+  // Filter toggle button styling is now handled by app-btn-filter class in app.scss
   .filter-toggle-btn {
-    background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
-    border: 1px solid #e1e5e9;
-    border-radius: 6px; // Match other buttons
-    font-size: 14px; // Consistent with other buttons
-    font-weight: 500;
-    color: #495057;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    line-height: 1;
-    letter-spacing: 0.025em;
-    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-    
-    // Ensure icon and text are properly aligned
-    .q-icon {
-      display: flex;
-      align-items: center;
-    }
-    
-    &:hover:not(.active) {
-      background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
-      border-color: #adb5bd;
-      color: #212529;
-      transform: translateY(-1px);
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
-    }
-    
-    &.active {
-      background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%);
-      border-color: #2196f3;
-      color: #1976d2;
-      box-shadow: 0 2px 8px rgba(33, 150, 243, 0.2);
-    }
-    
-    &:active {
-      transform: translateY(0);
-      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-    }
+    // All styling moved to global app-btn-filter class for consistency
   }
 }
 
@@ -429,64 +386,9 @@ onMounted(() => {
   border-top: 1px solid #e0e0e0;
   margin-top: 20px; // Increased margin
   
+  // Filter action button styling is now handled by app-btn-primary and app-btn-secondary classes
   .filter-btn {
-    border-radius: 6px; // Slightly rounded for modern look
-    font-size: 14px; // Clean readable size
-    font-weight: 500; // Medium weight
-    padding: 10px 20px; // Balanced padding
-    min-height: 40px; // Proper proportions
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    line-height: 1;
-    letter-spacing: 0.025em; // Slight letter spacing for clarity
-    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1); // Smooth modern transition
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1); // Subtle depth
-    
-    &--clear {
-      background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%); // Subtle gradient
-      border: 1px solid #e1e5e9;
-      color: #495057;
-      
-      &:hover:not(:disabled) {
-        background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
-        border-color: #adb5bd;
-        color: #212529;
-        transform: translateY(-1px); // Subtle lift effect
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
-      }
-      
-      &:active {
-        transform: translateY(0);
-        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-      }
-      
-      &:disabled {
-        opacity: 0.6;
-        cursor: not-allowed;
-        transform: none;
-        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-      }
-    }
-    
-    &--apply {
-      background: linear-gradient(135deg, #2196f3 0%, #1976d2 100%); // Modern gradient
-      border: 1px solid #1976d2;
-      color: #ffffff;
-      font-weight: 600;
-      
-      &:hover:not(:disabled) {
-        background: linear-gradient(135deg, #1976d2 0%, #1565c0 100%);
-        border-color: #1565c0;
-        transform: translateY(-1px); // Subtle lift effect
-        box-shadow: 0 4px 12px rgba(33, 150, 243, 0.3);
-      }
-      
-      &:active {
-        transform: translateY(0);
-        box-shadow: 0 1px 3px rgba(33, 150, 243, 0.3);
-      }
-    }
+    // All styling moved to global button classes for consistency
   }
 }
 
@@ -508,53 +410,21 @@ onMounted(() => {
     .filter-btn {
       width: 100%;
       justify-content: center;
-      font-size: 16px; // Larger on mobile
-      padding: 14px 24px; // Touch-friendly padding
-      min-height: 48px; // Larger touch target
-      display: flex;
-      align-items: center;
-      line-height: 1;
-      letter-spacing: 0.025em;
-      border-radius: 8px; // Slightly more rounded on mobile
+      min-height: 48px; // Larger touch target for mobile
       
       // Enhanced touch feedback
       &:active {
-        transform: scale(0.98);
+        transform: scale(0.98) !important;
       }
     }
   }
 }
 
-// Dark mode support
+// Dark mode support now handled by global app.scss classes
 body.body--dark {
   .filter-content {
     background: var(--bg-secondary);
     border-color: var(--border-primary);
-  }
-  
-  .filter-toggle-btn {
-    background: var(--bg-primary);
-    border-color: var(--border-primary);
-    color: var(--text-primary);
-    
-    &:hover {
-      background: var(--bg-tertiary);
-    }
-    
-    &.active {
-      background: var(--brand-primary-light);
-      color: var(--brand-primary);
-    }
-  }
-  
-  .filter-btn--clear {
-    background: var(--bg-primary);
-    border-color: var(--border-primary);
-    color: var(--text-primary);
-    
-    &:hover:not(:disabled) {
-      background: var(--bg-tertiary);
-    }
   }
   
   .filter-actions {
