@@ -97,7 +97,7 @@ export function useProductsCore() {
 
     products.value.forEach(product => {
       const totalStock = product.stock_levels?.reduce((sum, level) => sum + level.current_quantity, 0) || 0;
-      if (totalStock > product.minimum_stock) {
+      if (totalStock > ((product as any).minimum_stock || 0)) {
         stats.inStock++;
       } else if (totalStock > 0) {
         stats.lowStock++;
@@ -202,13 +202,30 @@ export function useProductsCore() {
 
       if (rpcData && rpcData.length > 0) {
         productLogger.info('✅ RPC function succeeded, got', rpcData.length, 'products');
-        return rpcData.map((item: ProductWithStockRPC) =>
-          ({
-            ...item.product,
-            stock_levels: item.stock_levels || [],
-            total_stock: item.total_stock || 0,
-          } as ProductWithStock)
-        );
+        return rpcData.map((item: ProductWithStockRPC) => {
+          const product = item.product;
+          const stockLevels = item.stock_levels || [];
+          const totalStock = item.total_stock || 0;
+          
+          // Calculate aggregate stock properties
+          const availableStock = stockLevels.reduce((sum, level) => 
+            sum + Math.max(0, (level.current_quantity || 0) - (level.reserved_quantity || 0)), 0
+          );
+          const reservedStock = stockLevels.reduce((sum, level) => 
+            sum + (level.reserved_quantity || 0), 0
+          );
+          const overallStockStatus = totalStock === 0 ? 'out_of_stock' : 
+            (totalStock < ((product as any).minimum_stock || 0) ? 'low_stock' : 'in_stock');
+
+          return {
+            ...product,
+            stock_levels: stockLevels,
+            total_stock: totalStock,
+            available_stock: availableStock,
+            reserved_stock: reservedStock,
+            stock_status: overallStockStatus,
+          } as ProductWithStock;
+        });
       } else {
         productLogger.info('⚠️ RPC function failed or returned no data:', rpcError);
         
@@ -239,14 +256,14 @@ export function useProductsCore() {
       productLogger.info('✅ Fallback query succeeded, got', products.length, 'products');
 
       // ✅ PERFORMANCE OPTIMIZATION: Transform with optimized mapping
-      const productsWithStock: ProductWithStock[] = products.map((product: Product) => {
+      const productsWithStock: ProductWithStock[] = (products as any[]).map((product: any) => {
         const stockLevels = product.stock_levels || [];
-        const totalStock = stockLevels.reduce((sum: number, level: StockLevel) => 
+        const totalStock = stockLevels.reduce((sum: number, level: any) => 
           sum + (level.current_quantity || 0), 0
         );
 
         // Optimize stock level processing
-        const processedStockLevels = stockLevels.map((stock: StockLevel) => ({
+        const processedStockLevels = stockLevels.map((stock: any) => ({
           ...stock,
           practice_id: practiceId,
           product_id: product.id,
@@ -298,6 +315,7 @@ export function useProductsCore() {
         reserved_stock: 0,
         stock_status: ((product as any).quantity || 0) > 0 ? 'in_stock' as const : 'out_of_stock' as const,
         is_active: product.status === 1,
+        requires_batch_tracking: false, // Default for Magento products
         created_at: new Date().toISOString(),
         updated_at: new Date().toISOString(),
       } as ProductWithStock));
@@ -347,7 +365,7 @@ export function useProductsCore() {
       if (error) throw error;
 
       const uniqueCategories = Array.from(
-        new Set((data || []).map(item => item.category))
+        new Set((data || []).map((item: any) => item.category))
       ).filter(Boolean);
 
       categories.value = uniqueCategories.map(cat => ({
