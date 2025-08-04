@@ -62,9 +62,69 @@
         />
       </div>
 
-      <!-- Products Table -->
+      <!-- Products Table - Virtualized for Performance -->
       <div class="products-table-container">
+        <!-- Use virtualized table for large datasets (>100 items) -->
+        <VirtualizedTable
+          v-if="filteredProducts.length > 100"
+          :rows="filteredProducts"
+          :columns="tableColumns"
+          :loading="loading"
+          row-key="id"
+          :container-height="600"
+          :item-height="65"
+          @sort="handleTableSort"
+          class="products-virtualized-table"
+        >
+          <!-- Product Name Cell for Virtualized Table -->
+          <template #body-cell-name="props">
+            <div class="product-info">
+              <div class="product-name">{{ props.row.name }}</div>
+              <div v-if="props.row.brand" class="product-brand">
+                {{ props.row.brand }}
+              </div>
+            </div>
+          </template>
+
+          <!-- Stock Status Cell for Virtualized Table -->
+          <template #body-cell-stock_status="props">
+            <q-chip
+              :color="getStockStatusColor(props.row.stock_status)"
+              :text-color="getStockStatusTextColor(props.row.stock_status)"
+              size="sm"
+              class="stock-status-chip"
+            >
+              {{ getStockStatusLabel(props.row.stock_status) }}
+            </q-chip>
+          </template>
+
+          <!-- Actions Cell for Virtualized Table -->
+          <template #body-cell-actions="props">
+            <div class="table-actions">
+              <q-btn
+                flat
+                round
+                dense
+                icon="visibility"
+                @click="openProductDetails(props.row)"
+                class="action-btn"
+              />
+              <q-btn
+                flat
+                round
+                dense
+                icon="add_shopping_cart"
+                @click="addToCart(props.row)"
+                class="action-btn"
+                :color="cartItems[props.row.id] ? 'green' : 'primary'"
+              />
+            </div>
+          </template>
+        </VirtualizedTable>
+
+        <!-- Regular q-table for smaller datasets -->
         <q-table
+          v-else
           :rows="filteredProducts"
           :columns="tableColumns"
           :loading="loading"
@@ -425,12 +485,16 @@ import { useAuthStore } from 'src/stores/auth';
 import PageLayout from 'src/components/PageLayout.vue';
 import PageTitle from 'src/components/PageTitle.vue';
 import FilterPanel from 'src/components/filters/FilterPanel.vue';
-import ProductDetailsDialog from 'src/components/products/ProductDetailsDialog.vue';
-import ShoppingCartDialog from 'src/components/products/ShoppingCartDialog.vue';
-import OrderListDialog from 'src/components/products/OrderListDialog.vue';
-import BarcodeScanner from 'src/components/BarcodeScanner.vue';
-import AdvancedSearchDialog from 'src/components/products/AdvancedSearchDialog.vue';
-import ProductFormDialog from 'src/components/products/ProductFormDialog.vue';
+// ✅ PERFORMANCE OPTIMIZATION: Dynamic imports for heavy dialogs
+import { defineAsyncComponent } from 'vue';
+
+const ProductDetailsDialog = defineAsyncComponent(() => import('src/components/products/ProductDetailsDialog.vue'));
+const ShoppingCartDialog = defineAsyncComponent(() => import('src/components/products/ShoppingCartDialog.vue'));
+const OrderListDialog = defineAsyncComponent(() => import('src/components/products/OrderListDialog.vue'));
+const BarcodeScanner = defineAsyncComponent(() => import('src/components/BarcodeScanner.vue'));
+const AdvancedSearchDialog = defineAsyncComponent(() => import('src/components/products/AdvancedSearchDialog.vue'));
+const ProductFormDialog = defineAsyncComponent(() => import('src/components/products/ProductFormDialog.vue'));
+import VirtualizedTable from 'src/components/tables/VirtualizedTable.vue';
 import { productsFilterPreset } from '@/presets/filters/products';
 import { usePermissions } from 'src/services/permissions';
 import type {
@@ -845,6 +909,24 @@ const onProductSaved = async (product: any) => {
   
   // Refresh products list to show the changes
   await refreshData();
+};
+
+// Table sort handler for virtualized table
+const handleTableSort = (column: string, direction: 'asc' | 'desc') => {
+  // Update pagination to trigger sorting in the store
+  const newPagination = {
+    ...pagination.value,
+    sortBy: column,
+    descending: direction === 'desc'
+  };
+  
+  // Apply sorting via store (this will trigger reactive updates)
+  productsStore.updateFilters({
+    sortBy: column,
+    sortOrder: direction
+  });
+  
+  pagination.value = newPagination;
 };
 
 // Lifecycle

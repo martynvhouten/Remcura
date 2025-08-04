@@ -285,13 +285,15 @@
   import PageLayout from 'src/components/PageLayout.vue';
   import PageTitle from 'src/components/PageTitle.vue';
   import { BaseCard, InteractiveCard } from 'src/components/cards';
+  // ✅ PERFORMANCE OPTIMIZATION: Dynamic imports for heavy components
+  import { defineAsyncComponent } from 'vue';
+  
   import BatchOverview from 'src/components/BatchOverview.vue';
-  import BatchRegistrationForm from 'src/components/BatchRegistrationForm.vue';
-
-  import BarcodeScanner from 'src/components/BarcodeScanner.vue';
-  import ExpiringBatchesList from 'src/components/ExpiringBatchesList.vue';
-  import FifoBatchManager from 'src/components/FifoBatchManager.vue';
-  import BatchReports from 'src/components/BatchReports.vue';
+  const BatchRegistrationForm = defineAsyncComponent(() => import('src/components/BatchRegistrationForm.vue'));
+  const BarcodeScanner = defineAsyncComponent(() => import('src/components/BarcodeScanner.vue'));
+  const ExpiringBatchesList = defineAsyncComponent(() => import('src/components/ExpiringBatchesList.vue'));
+  const FifoBatchManager = defineAsyncComponent(() => import('src/components/FifoBatchManager.vue'));
+  const BatchReports = defineAsyncComponent(() => import('src/components/BatchReports.vue'));
   import type { ProductBatchWithDetails } from 'src/types/inventory';
   import { useFormatting } from 'src/composables/useFormatting';
 

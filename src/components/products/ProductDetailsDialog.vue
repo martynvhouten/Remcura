@@ -24,24 +24,22 @@
       <!-- Content -->
       <q-card-section class="col scroll">
         <div v-if="product" class="q-gutter-lg">
-          <!-- Product Image -->
-          <div v-if="product.image_url" class="text-center">
-            <q-img
-              :src="product.image_url"
+          <!-- Product Image - Optimized -->
+          <div class="text-center">
+            <OptimizedImage
+              :src="product.image_url || ''"
               :alt="product.name"
-              style="max-width: 300px; max-height: 200px"
-              class="rounded-borders"
-              fit="contain"
-            >
-              <template #error>
-                <div class="absolute-full flex flex-center bg-grey-3">
-                  <q-icon name="image" size="3rem" color="grey-5" />
-                  <div class="q-ml-sm text-grey-6">
-                    {{ $t('productsPage.details.noImage') }}
-                  </div>
-                </div>
-              </template>
-            </q-img>
+              width="300"
+              height="200"
+              :lazy="true"
+              quality="85"
+              format="webp"
+              class="product-image"
+              placeholder-icon="image"
+              :show-skeleton="true"
+              border-radius="8px"
+              object-fit="contain"
+            />
           </div>
 
           <!-- Basic Information Card -->
@@ -400,6 +398,7 @@
   import { useI18n } from 'vue-i18n';
   import { BaseCard } from 'src/components/cards';
   import { useFormatting } from 'src/composables/useFormatting';
+  import OptimizedImage from 'src/components/base/OptimizedImage.vue';
   import type { ProductWithStock } from 'src/types/inventory';
 
   interface Props {

@@ -4,6 +4,7 @@ import { magentoApi } from '@/services/magento';
 import { productService } from '@/services/supabase';
 import { productLogger } from '@/utils/logger';
 import { createEventEmitter, StoreEvents, type UserLoggedInPayload, type UserLoggedOutPayload } from '@/utils/eventBus';
+import { useApiCache } from '@/composables/useCache';
 import type {
   Product,
   ProductWithStock,
@@ -21,6 +22,9 @@ interface ProductWithStockRPC {
 export function useProductsCore() {
   // Event emitter for store communication
   const eventEmitter = createEventEmitter('products-core');
+  
+  // ✅ PERFORMANCE OPTIMIZATION: API Cache for faster data loading
+  const cache = useApiCache();
   
   // Current practice ID (from auth events)
   const currentPracticeId = ref<string | null>(null);
@@ -108,8 +112,20 @@ export function useProductsCore() {
   });
 
   // Core actions
-  const fetchProducts = async (practiceId: string) => {
+  const fetchProducts = async (practiceId: string, forceRefresh = false) => {
     if (loading.value) { return; }
+    
+    // ✅ PERFORMANCE OPTIMIZATION: Check cache first
+    const cacheKey = `products:${practiceId}`;
+    if (!forceRefresh) {
+      const cachedProducts = cache.get(cacheKey);
+      if (cachedProducts) {
+        products.value = cachedProducts;
+        productLogger.info('🎯 Using cached products for practice:', practiceId);
+        return;
+      }
+    }
+    
     loading.value = true;
     
     try {
@@ -138,6 +154,9 @@ export function useProductsCore() {
       const mergedProducts = mergeProducts(magentoProducts, supabaseProducts);
       products.value = mergedProducts;
       lastSyncAt.value = new Date();
+      
+      // ✅ Cache the results for 5 minutes
+      cache.set(cacheKey, mergedProducts, 5 * 60 * 1000);
       
       productLogger.info(`✅ Successfully loaded ${mergedProducts.length} products`);
       
