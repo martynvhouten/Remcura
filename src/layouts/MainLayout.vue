@@ -158,7 +158,6 @@
         </div>
         <div class="clinic-details">
           <div class="clinic-name">{{ clinicName }}</div>
-          <div class="clinic-plan">{{ $t('clinic.professionalPlan') }}</div>
         </div>
       </div>
 

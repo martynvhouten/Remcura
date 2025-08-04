@@ -64,6 +64,7 @@
 
 <script setup lang="ts">
 import { computed } from 'vue';
+import { useI18n } from 'vue-i18n';
 import { useFormatting } from '@/composables/useFormatting';
 
 interface MetricData {
@@ -96,6 +97,7 @@ interface Props {
 }
 
 const props = defineProps<Props>();
+const { t } = useI18n();
 const { formatCurrency, formatValue: formatNumberValue } = useFormatting();
 
 const isSingleMetric = computed(() => 
@@ -174,7 +176,7 @@ const showProgress = computed(() =>
   props.data.practiceHealth !== undefined && isSingleMetric.value
 );
 
-const progressLabel = computed(() => $t('dashboard.service.widgets.systemHealth'));
+const progressLabel = computed(() => t('dashboard.service.widgets.systemHealth'));
 const progressValue = computed(() => props.data.practiceHealth || 0);
 const progressColor = computed(() => {
   const value = progressValue.value;
