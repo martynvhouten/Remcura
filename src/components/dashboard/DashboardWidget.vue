@@ -114,23 +114,48 @@ const chartType = computed(() => {
 
 <style lang="scss" scoped>
 .dashboard-widget {
-  border-radius: var(--radius-lg);
-  box-shadow: var(--shadow-sm);
-  transition: all 0.3s ease;
-  background: var(--surface);
-  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  background: var(--card-background, #ffffff);
+  border: 1px solid var(--card-border, rgba(0, 0, 0, 0.08));
+  box-shadow: var(--card-shadow, 
+    0 1px 3px rgba(0, 0, 0, 0.08),
+    0 1px 2px rgba(0, 0, 0, 0.06)
+  );
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
   overflow: hidden;
   
-  &:hover {
-    box-shadow: var(--shadow-md);
-    transform: translateY(-2px);
+  // Dark mode support
+  .body--dark & {
+    --card-background: #1e1e1e;
+    --card-border: rgba(255, 255, 255, 0.1);
+    --card-shadow: 
+      0 1px 3px rgba(0, 0, 0, 0.3),
+      0 1px 2px rgba(0, 0, 0, 0.2);
   }
   
+  // Only interactive widgets get hover effects
   &.widget-clickable {
     cursor: pointer;
     
     &:hover {
-      border-color: var(--primary);
+      transform: translateY(-3px);
+      box-shadow: var(--card-hover-shadow,
+        0 8px 25px rgba(0, 0, 0, 0.12),
+        0 4px 10px rgba(0, 0, 0, 0.08)
+      );
+      border-color: var(--card-hover-border, rgba(0, 0, 0, 0.12));
+      
+      .body--dark & {
+        --card-hover-shadow:
+          0 8px 25px rgba(0, 0, 0, 0.4),
+          0 4px 10px rgba(0, 0, 0, 0.3);
+        --card-hover-border: rgba(255, 255, 255, 0.2);
+      }
+    }
+    
+    &:active {
+      transform: translateY(-1px);
+      transition-duration: 0.1s;
     }
   }
 }

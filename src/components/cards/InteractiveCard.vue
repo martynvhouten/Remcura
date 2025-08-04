@@ -3,7 +3,10 @@
     :class="cardClasses"
     :role="role"
     :aria-labelledby="titleId"
+    :tabindex="disabled ? -1 : 0"
     v-bind="$attrs"
+    @click="handleClick"
+    @keydown="handleKeydown"
   >
     <!-- Card Header -->
     <div 
@@ -36,6 +39,11 @@
         <div v-if="hasHeaderActions" class="card-header-actions">
           <slot name="header-actions" />
         </div>
+        
+        <!-- Click indicator -->
+        <div v-if="showClickIndicator" class="click-indicator">
+          <q-icon name="chevron_right" size="16px" />
+        </div>
       </div>
     </div>
 
@@ -56,6 +64,11 @@
     >
       <slot name="actions" />
     </div>
+    
+    <!-- Loading overlay -->
+    <div v-if="loading" class="card-loading-overlay">
+      <q-spinner size="24px" color="primary" />
+    </div>
   </div>
 </template>
 
@@ -69,6 +82,11 @@ interface Props {
   icon?: string;
   iconColor?: 'primary' | 'secondary' | 'positive' | 'negative' | 'warning' | 'info';
   iconVariant?: 'default' | 'outlined' | 'filled';
+  
+  // Interactive props
+  disabled?: boolean;
+  loading?: boolean;
+  showClickIndicator?: boolean;
   
   // Layout props
   padding?: 'none' | 'sm' | 'md' | 'lg';
@@ -86,8 +104,14 @@ interface Props {
 const props = withDefaults(defineProps<Props>(), {
   iconVariant: 'default',
   padding: 'md',
-  role: 'article',
+  role: 'button',
+  showClickIndicator: false,
 });
+
+const emit = defineEmits<{
+  click: [event: MouseEvent];
+  keydown: [event: KeyboardEvent];
+}>();
 
 const slots = useSlots();
 const attrs = useAttrs();
@@ -114,7 +138,11 @@ const hasHeaderActions = computed(() => !!slots['header-actions']);
 
 // Card classes
 const cardClasses = computed(() => {
-  const classes = ['base-card'];
+  const classes = ['interactive-card'];
+  
+  // State classes
+  if (props.disabled) classes.push('interactive-card--disabled');
+  if (props.loading) classes.push('interactive-card--loading');
   
   // Padding classes
   if (props.padding !== 'md') {
@@ -128,27 +156,100 @@ const cardClasses = computed(() => {
   
   return classes.join(' ');
 });
+
+// Event handlers
+const handleClick = (event: MouseEvent) => {
+  if (props.disabled || props.loading) return;
+  emit('click', event);
+};
+
+const handleKeydown = (event: KeyboardEvent) => {
+  if (props.disabled || props.loading) return;
+  
+  if (event.key === 'Enter' || event.key === ' ') {
+    event.preventDefault();
+    emit('click', event as unknown as MouseEvent);
+  }
+  
+  emit('keydown', event);
+};
 </script>
 
 <style scoped lang="scss">
-.base-card {
+.interactive-card {
   border-radius: 12px;
   background: var(--card-background, #ffffff);
   border: 1px solid var(--card-border, rgba(0, 0, 0, 0.08));
   box-shadow: var(--card-shadow, 
-    0 1px 3px rgba(0, 0, 0, 0.08),
-    0 1px 2px rgba(0, 0, 0, 0.06)
+    0 2px 4px rgba(0, 0, 0, 0.06),
+    0 1px 2px rgba(0, 0, 0, 0.04)
   );
   transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
   overflow: hidden;
+  cursor: pointer;
+  position: relative;
+  
+  // Focus styles
+  &:focus-visible {
+    outline: 2px solid var(--q-primary);
+    outline-offset: 2px;
+  }
+  
+  // Hover effects - the magic happens here ✨
+  &:hover:not(.interactive-card--disabled):not(.interactive-card--loading) {
+    transform: translateY(-3px);
+    box-shadow: var(--card-hover-shadow,
+      0 8px 25px rgba(0, 0, 0, 0.12),
+      0 4px 10px rgba(0, 0, 0, 0.08)
+    );
+    border-color: var(--card-hover-border, rgba(0, 0, 0, 0.12));
+    
+    .click-indicator {
+      transform: translateX(4px);
+      opacity: 1;
+    }
+  }
+  
+  // Active state
+  &:active:not(.interactive-card--disabled):not(.interactive-card--loading) {
+    transform: translateY(-1px);
+    transition-duration: 0.1s;
+  }
+  
+  // Disabled state
+  &--disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    
+    &:hover {
+      transform: none;
+      box-shadow: var(--card-shadow);
+      border-color: var(--card-border);
+    }
+  }
+  
+  // Loading state
+  &--loading {
+    cursor: wait;
+    
+    &:hover {
+      transform: none;
+      box-shadow: var(--card-shadow);
+      border-color: var(--card-border);
+    }
+  }
   
   // Dark mode support
   .body--dark & {
     --card-background: #1e1e1e;
     --card-border: rgba(255, 255, 255, 0.1);
     --card-shadow: 
-      0 1px 3px rgba(0, 0, 0, 0.3),
+      0 2px 4px rgba(0, 0, 0, 0.3),
       0 1px 2px rgba(0, 0, 0, 0.2);
+    --card-hover-shadow:
+      0 8px 25px rgba(0, 0, 0, 0.4),
+      0 4px 10px rgba(0, 0, 0, 0.3);
+    --card-hover-border: rgba(255, 255, 255, 0.2);
   }
 }
 
@@ -200,7 +301,17 @@ const cardClasses = computed(() => {
   }
 }
 
-// Card icon
+// Click indicator
+.click-indicator {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0.6;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  color: var(--text-secondary);
+}
+
+// Card icon (same as BaseCard)
 .card-icon {
   display: flex;
   align-items: center;
@@ -276,7 +387,25 @@ const cardClasses = computed(() => {
   }
 }
 
-// Padding variants
+// Loading overlay
+.card-loading-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(var(--card-background-rgb, 255, 255, 255), 0.8);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10;
+  
+  .body--dark & {
+    --card-background-rgb: 30, 30, 30;
+  }
+}
+
+// Padding variants (same as BaseCard)
 .card-padding-none {
   .card-content {
     padding: 0;

@@ -5,6 +5,9 @@
     :aria-labelledby="titleId"
     v-bind="$attrs"
   >
+    <!-- Alert indicator line -->
+    <div class="alert-indicator" />
+    
     <!-- Card Header -->
     <div 
       v-if="hasHeader" 
@@ -13,9 +16,18 @@
     >
       <div class="card-header-content">
         <div class="card-title-section">
-          <!-- Icon -->
+          <!-- Status Icon -->
           <div 
-            v-if="icon" 
+            v-if="showStatusIcon" 
+            class="status-icon"
+            :class="`status-icon--${severity}`"
+          >
+            <q-icon :name="statusIcon" size="20px" />
+          </div>
+          
+          <!-- Custom Icon -->
+          <div 
+            v-else-if="icon" 
             class="card-icon"
             :class="[`card-icon--${iconVariant}`, iconColor ? `card-icon--${iconColor}` : '']"
           >
@@ -35,6 +47,19 @@
         <!-- Header actions -->
         <div v-if="hasHeaderActions" class="card-header-actions">
           <slot name="header-actions" />
+        </div>
+        
+        <!-- Dismiss button -->
+        <div v-if="dismissible" class="dismiss-button">
+          <q-btn
+            flat
+            round
+            dense
+            icon="close"
+            size="sm"
+            @click="handleDismiss"
+            :aria-label="$t ? $t('common.dismiss') : 'Dismiss'"
+          />
         </div>
       </div>
     </div>
@@ -70,6 +95,11 @@ interface Props {
   iconColor?: 'primary' | 'secondary' | 'positive' | 'negative' | 'warning' | 'info';
   iconVariant?: 'default' | 'outlined' | 'filled';
   
+  // Alert props
+  severity?: 'info' | 'success' | 'warning' | 'error';
+  showStatusIcon?: boolean;
+  dismissible?: boolean;
+  
   // Layout props
   padding?: 'none' | 'sm' | 'md' | 'lg';
   
@@ -86,8 +116,14 @@ interface Props {
 const props = withDefaults(defineProps<Props>(), {
   iconVariant: 'default',
   padding: 'md',
-  role: 'article',
+  role: 'alert',
+  severity: 'info',
+  showStatusIcon: true,
 });
+
+const emit = defineEmits<{
+  dismiss: [];
+}>();
 
 const slots = useSlots();
 const attrs = useAttrs();
@@ -104,6 +140,7 @@ const hasHeader = computed(() => !!(
   props.title || 
   props.subtitle || 
   props.icon || 
+  props.showStatusIcon ||
   slots['header-content'] || 
   slots['header-actions']
 ));
@@ -112,9 +149,20 @@ const hasContent = computed(() => !!slots.default);
 const hasActions = computed(() => !!slots.actions);
 const hasHeaderActions = computed(() => !!slots['header-actions']);
 
+// Status icon based on severity
+const statusIcon = computed(() => {
+  switch (props.severity) {
+    case 'success': return 'check_circle';
+    case 'warning': return 'warning';
+    case 'error': return 'error';
+    case 'info':
+    default: return 'info';
+  }
+});
+
 // Card classes
 const cardClasses = computed(() => {
-  const classes = ['base-card'];
+  const classes = ['alert-card', `alert-card--${props.severity}`];
   
   // Padding classes
   if (props.padding !== 'md') {
@@ -128,34 +176,112 @@ const cardClasses = computed(() => {
   
   return classes.join(' ');
 });
+
+// Event handlers
+const handleDismiss = () => {
+  emit('dismiss');
+};
 </script>
 
 <style scoped lang="scss">
-.base-card {
+.alert-card {
   border-radius: 12px;
   background: var(--card-background, #ffffff);
-  border: 1px solid var(--card-border, rgba(0, 0, 0, 0.08));
+  border: 1px solid var(--alert-border);
   box-shadow: var(--card-shadow, 
     0 1px 3px rgba(0, 0, 0, 0.08),
     0 1px 2px rgba(0, 0, 0, 0.06)
   );
   transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
   overflow: hidden;
+  position: relative;
   
   // Dark mode support
   .body--dark & {
     --card-background: #1e1e1e;
-    --card-border: rgba(255, 255, 255, 0.1);
     --card-shadow: 
       0 1px 3px rgba(0, 0, 0, 0.3),
       0 1px 2px rgba(0, 0, 0, 0.2);
+  }
+  
+  // Alert indicator line
+  .alert-indicator {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: var(--alert-color);
+    z-index: 1;
+  }
+  
+  // Severity variants
+  &--info {
+    --alert-color: #3b82f6;
+    --alert-border: rgba(59, 130, 246, 0.2);
+    --alert-background: rgba(59, 130, 246, 0.05);
+    
+    .body--dark & {
+      --alert-border: rgba(59, 130, 246, 0.3);
+      --alert-background: rgba(59, 130, 246, 0.1);
+    }
+  }
+  
+  &--success {
+    --alert-color: #22c55e;
+    --alert-border: rgba(34, 197, 94, 0.2);
+    --alert-background: rgba(34, 197, 94, 0.05);
+    
+    .body--dark & {
+      --alert-border: rgba(34, 197, 94, 0.3);
+      --alert-background: rgba(34, 197, 94, 0.1);
+    }
+  }
+  
+  &--warning {
+    --alert-color: #f59e0b;
+    --alert-border: rgba(245, 158, 11, 0.2);
+    --alert-background: rgba(245, 158, 11, 0.05);
+    
+    .body--dark & {
+      --alert-border: rgba(245, 158, 11, 0.3);
+      --alert-background: rgba(245, 158, 11, 0.1);
+    }
+  }
+  
+  &--error {
+    --alert-color: #ef4444;
+    --alert-border: rgba(239, 68, 68, 0.2);
+    --alert-background: rgba(239, 68, 68, 0.05);
+    
+    .body--dark & {
+      --alert-border: rgba(239, 68, 68, 0.3);
+      --alert-background: rgba(239, 68, 68, 0.1);
+    }
+  }
+  
+  // Subtle background tint
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: var(--alert-background);
+    z-index: 0;
+  }
+  
+  // Ensure content is above background
+  > * {
+    position: relative;
+    z-index: 1;
   }
 }
 
 // Card header
 .card-header {
-  background: var(--card-header-background, var(--card-background));
-  border-bottom: 1px solid var(--card-border);
+  background: transparent;
   padding: 16px 20px;
   
   .card-header-content {
@@ -200,7 +326,49 @@ const cardClasses = computed(() => {
   }
 }
 
-// Card icon
+// Status icon
+.status-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  
+  &--info {
+    background: rgba(59, 130, 246, 0.15);
+    color: #3b82f6;
+  }
+  
+  &--success {
+    background: rgba(34, 197, 94, 0.15);
+    color: #22c55e;
+  }
+  
+  &--warning {
+    background: rgba(245, 158, 11, 0.15);
+    color: #f59e0b;
+  }
+  
+  &--error {
+    background: rgba(239, 68, 68, 0.15);
+    color: #ef4444;
+  }
+}
+
+// Dismiss button
+.dismiss-button {
+  display: flex;
+  align-items: center;
+  opacity: 0.7;
+  
+  &:hover {
+    opacity: 1;
+  }
+}
+
+// Card icon (same as other cards)
 .card-icon {
   display: flex;
   align-items: center;
@@ -255,14 +423,14 @@ const cardClasses = computed(() => {
 // Card content
 .card-content {
   padding: 20px;
-  background: var(--card-background);
+  background: transparent;
 }
 
 // Card actions
 .card-actions {
   padding: 12px 20px;
-  background: var(--card-background);
-  border-top: 1px solid var(--card-border);
+  background: transparent;
+  border-top: 1px solid var(--alert-border);
   
   display: flex;
   justify-content: flex-end;
@@ -333,6 +501,7 @@ const cardClasses = computed(() => {
     padding: 10px 16px;
   }
   
+  .status-icon,
   .card-icon {
     width: 28px;
     height: 28px;
