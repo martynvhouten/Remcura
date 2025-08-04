@@ -552,7 +552,7 @@ import { InteractiveCard } from 'src/components/cards';
     }
   }
 
-  // New stat display styles for replaced stats cards
+  /* New stat display styles for replaced stats cards */
   .stat-display {
     text-align: center;
     

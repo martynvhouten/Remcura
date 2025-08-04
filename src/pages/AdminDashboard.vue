@@ -55,33 +55,28 @@
 
       <div class="col-12 col-sm-6 col-md-3 stats-card-col">
         <BaseCard
-          
-          :title="$t('admin.stats.pendingSync')>
-            <div class="stat-display">
-              <div class="stat-value">{{ stats.pendingSync }}</div>
-            </div>
+          :title="$t('admin.stats.pendingSync')"
           icon="sync_problem"
           icon-color="warning"
-          :trend="`${$t('admin.stats.lastSync')}: ${formatDate(
-            stats.lastSync
-          )}`"
-          trend-direction="neutral"
-        />
+        >
+          <div class="stat-display">
+            <div class="stat-value">{{ stats.pendingSync }}</div>
+            <div class="stat-trend">{{ $t('admin.stats.lastSync') }}: {{ formatDate(stats.lastSync) }}</div>
+          </div>
+        </BaseCard>
       </div>
 
       <div class="col-12 col-sm-6 col-md-3 stats-card-col">
         <BaseCard
-          
-          :title="$t('admin.stats.todayEvents')>
-            <div class="stat-display">
-              <div class="stat-value">{{ stats.todayEvents }}</div>
-            </div>
+          :title="$t('admin.stats.todayEvents')"
           icon="event"
           icon-color="info"
-          :trend="`+${stats.eventsGrowth}% ${$t('admin.stats.fromYesterday')}`"
-          trend-direction="up"
-          trend-color="positive"
-        />
+        >
+          <div class="stat-display">
+            <div class="stat-value">{{ stats.todayEvents }}</div>
+            <div class="stat-trend">+{{ stats.eventsGrowth }}% {{ $t('admin.stats.fromYesterday') }}</div>
+          </div>
+        </BaseCard>
       </div>
     </div>
 
