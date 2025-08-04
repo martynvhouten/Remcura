@@ -692,6 +692,15 @@ export default {
     fifoResults: 'Resultados FIFO',
     noFifoResults: 'No hay resultados FIFO disponibles',
     fifoSuggestionGenerated: 'Sugerencia FIFO generada exitosamente',
+    
+    // Quick Actions
+    quickActions: 'Acciones rápidas',
+    scanBatch: 'Escanear Lote',
+    scanBatchSubtitle: 'Escanea código de barras para encontrar lote',
+    viewExpiring: 'Ver Vencimientos',
+    viewExpiringSubtitle: 'lotes que vencen pronto',
+    exportBatches: 'Exportar Lotes',
+    exportBatchesSubtitle: 'Descargar datos de lotes',
     applyFifoSuggestion: 'Aplicar sugerencia FIFO',
     confirmFifoApplication: 'Confirmar aplicación FIFO',
     confirmFifoMessage: '¿Estás seguro de que quieres aplicar esta sugerencia FIFO?',

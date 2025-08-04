@@ -1133,69 +1133,35 @@ body.body--dark {
   }
 
   // ===================================================================
-// GLOBAL QUASAR FIELD OVERRIDES - FIX DOUBLE BORDERS AND LABEL ISSUES
+// MODERN FIELD SYSTEM - CLEAN OVERRIDE WITHOUT DOUBLE BORDERS
 // ===================================================================
 
-// NUCLEAR OPTION: Completely disable ALL possible Quasar border sources including login page
-html body .q-field.q-field--outlined .q-field__control:before,
-html body .q-field.q-field--outlined .q-field__control:after,
-html body .q-field.q-field--outlined.q-field--focused .q-field__control:before,
-html body .q-field.q-field--outlined.q-field--focused .q-field__control:after,
-html body .q-field.q-field--outlined.q-field--error .q-field__control:before,
-html body .q-field.q-field--outlined.q-field--error .q-field__control:after,
-html body .q-field.q-field--standard .q-field__control:before,
-html body .q-field.q-field--standard .q-field__control:after,
-html body .q-field.q-field--filled .q-field__control:before,
-html body .q-field.q-field--filled .q-field__control:after,
-html body .input-modern.q-field.q-field--outlined .q-field__control:before,
-html body .input-modern.q-field.q-field--outlined .q-field__control:after,
-html body .input-modern.q-field.q-field--outlined.q-field--focused .q-field__control:before,
-html body .input-modern.q-field.q-field--outlined.q-field--focused .q-field__control:after,
-html body .focus-ring.q-field.q-field--outlined .q-field__control:before,
-html body .focus-ring.q-field.q-field--outlined .q-field__control:after,
-html body .focus-ring.q-field.q-field--outlined.q-field--focused .q-field__control:before,
-html body .focus-ring.q-field.q-field--outlined.q-field--focused .q-field__control:after {
-  content: none;
-  display: none;
-  border: none;
-  box-shadow: none;
-  outline: none;
-  background: transparent;
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  width: 0;
-  height: 0;
-  opacity: 0;
-  visibility: hidden;
-  pointer-events: none;
+// Clean Quasar field override - disable all pseudo-elements completely
+.q-field__control {
+  &::before,
+  &::after {
+    display: none !important;
+    content: none !important;
+    border: none !important;
+  }
 }
 
-// Complete pseudo-element elimination
-html body .q-app .q-field__control:before,
-html body .q-app .q-field__control:after,
-html body .q-app .q-field .q-field__control:before,
-html body .q-app .q-field .q-field__control:after {
-  content: none;
-  display: none;
-  visibility: hidden;
-  opacity: 0;
+// Additional safety for all Quasar field variants
+.q-field--outlined .q-field__control::before,
+.q-field--outlined .q-field__control::after,
+.q-field--filled .q-field__control::before,
+.q-field--filled .q-field__control::after,
+.q-field--standard .q-field__control::before,
+.q-field--standard .q-field__control::after {
+  display: none !important;
+  content: none !important;
 }
 
 // ===================================================================
-// UNIVERSAL FIELD STYLING - CONSISTENT ACROSS ALL FORMS
+// MODERN FIELD STYLING - CLEAN AND CONSISTENT
 // ===================================================================
 
-// ULTRA HIGH SPECIFICITY: Override ALL Quasar field styling including login page
-html body .q-app .q-field,
-html body .q-app .q-field.q-field--outlined,
-html body .q-app .q-field.q-field--standard,
-html body .q-app .q-field.q-field--filled,
-html body .q-app .input-modern.q-field,
-html body .q-app .input-modern.q-field.q-field--outlined {
-  // Force our styling over any Quasar defaults
+.q-field {
   .q-field__control {
     border-radius: var(--radius-lg);
     min-height: 56px;
@@ -1203,25 +1169,6 @@ html body .q-app .input-modern.q-field.q-field--outlined {
     background: var(--bg-primary);
     transition: all var(--transition-base);
     box-shadow: var(--shadow-xs);
-    position: relative;
-    
-    // NUCLEAR: Remove ALL possible pseudo-element interference
-    &:before,
-    &:after {
-      content: none;
-      display: none;
-      visibility: hidden;
-      opacity: 0;
-      border: none;
-      box-shadow: none;
-      outline: none;
-      background: none;
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 0;
-      height: 0;
-    }
     
     &:hover {
       border-color: var(--border-secondary);
@@ -1229,39 +1176,21 @@ html body .q-app .input-modern.q-field.q-field--outlined {
     }
   }
   
-  // ULTRA SPECIFIC focus state
+  // Focus state
   &.q-field--focused .q-field__control {
-    border: 1px solid var(--brand-primary);
+    border-color: var(--brand-primary);
     box-shadow: 0 0 0 3px rgba(30, 58, 138, 0.1);
-    outline: none;
-    
-    // Absolutely no pseudo-elements
-    &:before,
-    &:after {
-      content: none;
-      display: none;
-      visibility: hidden;
-      opacity: 0;
-    }
   }
   
-  // ULTRA SPECIFIC error state
+  // Error state
   &.q-field--error .q-field__control {
-    border: 1px solid var(--brand-danger);
+    border-color: var(--brand-danger);
     box-shadow: 0 0 0 3px rgba(185, 28, 28, 0.1);
-    
-    &:before,
-    &:after {
-      content: none;
-      display: none;
-      visibility: hidden;
-      opacity: 0;
-    }
   }
   
-  // Input/native element styling with higher specificity
+  // Input styling with improved alignment
   .q-field__native {
-    padding: 16px 12px 8px 12px; // Top padding for floating label
+    padding: 16px 12px;
     font-family: var(--font-family-primary);
     font-size: var(--text-base);
     color: var(--text-primary);
@@ -1269,83 +1198,41 @@ html body .q-app .input-modern.q-field.q-field--outlined {
     border: none;
     outline: none;
     box-shadow: none;
+    display: flex;
+    align-items: center;
   }
   
-  // ===================================================================
-  // ENHANCED LABEL POSITIONING - HIGH SPECIFICITY APPROACH
-  // ===================================================================
+  // Better text alignment for field elements
+  .q-field__selected {
+    display: flex;
+    align-items: center;
+    line-height: 1.4;
+  }
   
+  input {
+    line-height: 1.4;
+    vertical-align: middle;
+  }
+  
+  // Label styling
   .q-field__label {
     font-family: var(--font-family-primary);
     font-weight: var(--font-weight-medium);
     color: var(--text-secondary);
     transition: all var(--transition-base);
-    pointer-events: none;
-    position: absolute;
-    z-index: 2;
-    left: 12px;
   }
   
-  // Default: centered label when empty and not focused
-  &:not(.q-field--focused):not(.q-field--filled):not(.q-field--has-value) .q-field__label {
-    top: 50%;
-    transform: translateY(-50%);
-    font-size: var(--text-base);
-    color: var(--text-tertiary);
-  }
-  
-  // Floating: when focused, filled, or has value
-  &.q-field--focused .q-field__label,
-  &.q-field--filled .q-field__label,
-  &.q-field--has-value .q-field__label,
-  &.q-field--float .q-field__label {
-    top: -8px;
-    transform: translateY(0);
-    font-size: var(--text-xs);
-    font-weight: var(--font-weight-semibold);
-    background: var(--bg-primary);
-    padding: 0 4px;
-    border-radius: 2px;
-    color: var(--text-secondary);
-  }
-  
-  // Focused label color
+  // Focused label
   &.q-field--focused .q-field__label {
     color: var(--brand-primary);
   }
   
-  // Error label color
+  // Error label
   &.q-field--error .q-field__label {
     color: var(--brand-danger);
   }
   
-  // Ensure native input has proper padding when label is floating
-  &.q-field--focused .q-field__native,
-  &.q-field--filled .q-field__native,
-  &.q-field--has-value .q-field__native,
-  &.q-field--float .q-field__native {
-    padding-top: 20px;
-    padding-bottom: 8px;
-  }
-  
-  // ===================================================================
-  // PLACEHOLDER HANDLING
-  // ===================================================================
-  
-  .q-field__native::placeholder {
-    color: var(--text-tertiary);
-    opacity: 0;
-    transition: opacity var(--transition-fast);
-  }
-  
-  &.q-field--focused .q-field__native::placeholder {
-    opacity: 1;
-  }
-  
-  // ===================================================================
-  // ICONS AND APPEND/PREPEND
-  // ===================================================================
-  
+  // Icons
   .q-field__prepend,
   .q-field__append {
     .q-icon {
@@ -1366,79 +1253,13 @@ html body .q-app .input-modern.q-field.q-field--outlined {
   }
 }
 
-// ===================================================================
-// ADDITIONAL HIGH SPECIFICITY OVERRIDES
-// ===================================================================
 
-// MAXIMUM SPECIFICITY: Target all possible input sources including login page
-html body .q-app .q-input,
-html body .q-app .q-select,
-html body .q-app .q-field,
-html body .q-app .q-field.q-field--outlined,
-html body .q-app .q-field.q-field--standard,
-html body .q-app .q-field.q-field--filled,
-html body .q-app .input-modern,
-html body .q-app .input-modern.q-field,
-html body .q-app .input-modern.q-field.q-field--outlined,
-html body .q-app .focus-ring,
-html body .q-app .focus-ring.q-field {
-  border: none;
-  outline: none;
-  box-shadow: none;
-  
-  // Target ALL possible input elements
-  input,
-  textarea,
-  select,
-  .q-field__input,
-  .q-field__native,
-  .q-field__control {
-    border: none;
-    outline: none;
-    box-shadow: none;
-    
-    // Remove browser focus rings
-    &:focus {
-      outline: none;
-      border: none;
-      box-shadow: none;
-    }
-  }
-}
 
-// NUCLEAR browser default override
-html body .q-app input:focus,
-html body .q-app textarea:focus,
-html body .q-app select:focus,
-html body .q-app .q-field__native:focus,
-html body .q-app .q-field__input:focus {
+// Remove browser default focus rings on native elements
+input:focus,
+textarea:focus,
+select:focus {
   outline: none;
-  border: none;
-  box-shadow: none;
-  -webkit-appearance: none;
-  -moz-appearance: none;
-  appearance: none;
-}
-
-// Override ALL possible Quasar focus states
-html body .q-app .q-field--focused,
-html body .q-app .q-field--focused input,
-html body .q-app .q-field--focused textarea,
-html body .q-app .q-field--focused select,
-html body .q-app .q-field--focused .q-field__native,
-html body .q-app .q-field--focused .q-field__input {
-  outline: none;
-  border: none;
-  box-shadow: none;
-}
-
-// Absolutely ensure native elements are clean
-html body .q-app .q-field--focused .q-field__native,
-html body .q-app .q-field .q-field__native,
-html body .q-app .q-field__native {
-  border: none;
-  outline: none;
-  box-shadow: none;
   -webkit-appearance: none;
   -moz-appearance: none;
   appearance: none;
@@ -2037,49 +1858,6 @@ h2,
 // ENHANCED UI UTILITIES
 // ===================================================================
 
-// Improved input field text alignment
-.q-field {
-  // Remove default focus border globally
-  &.q-field--focused {
-    .q-field__control::after {
-      display: none !important; // Remove Quasar's default focus border
-    }
-    
-    .q-field__control::before {
-      border-width: 1px !important; // Keep single border
-    }
-  }
-  
-  .q-field__control {
-    display: flex;
-    align-items: center;
-  }
-  
-  .q-field__native {
-    display: flex;
-    align-items: center;
-    line-height: 1.4;
-  }
-  
-  input {
-    line-height: 1.4 !important;
-    vertical-align: middle;
-  }
-  
-  .q-field__selected {
-    display: flex;
-    align-items: center;
-    line-height: 1.4;
-  }
-  
-  // Better placeholder alignment
-  .q-placeholder {
-    display: flex;
-    align-items: center;
-    line-height: 1.4;
-  }
-}
-
 // Hover and interaction effects
 .hover-lift {
   transition: all var(--transition-base);
@@ -2095,13 +1873,7 @@ h2,
   }
 }
 
-.focus-ring {
-  &:focus {
-    outline: none;
-    box-shadow: var(--focus-ring);
-    border-color: var(--brand-primary);
-  }
-}
+// Old focus-ring class removed - focus styling handled by .q-field system
 
 // Glass morphism effects
 .glass-card {
@@ -2562,26 +2334,7 @@ h2,
   }
 }
 
-/* Improve form control accessibility */
-.q-field {
-  &__control {
-    &:focus-within {
-      outline: 2px solid var(--brand-primary);
-      outline-offset: 2px;
-    }
-  }
-
-  &--error {
-    .q-field__control {
-      border-color: var(--brand-danger);
-      box-shadow: 0 0 0 1px rgba(185, 28, 28, 0.2);
-    }
-    
-    .q-field__label {
-      color: var(--brand-danger);
-    }
-  }
-}
+/* Form control accessibility is handled in main field system above */
 
 /* Improve table accessibility */
 .q-table {

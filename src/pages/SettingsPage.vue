@@ -41,7 +41,6 @@
               :label="$t('auth.fullName')"
               outlined
               readonly
-              class="input-modern"
               :aria-label="`${$t('auth.fullName')}: ${userSettings.fullName}`"
             >
               <template v-slot:prepend>
@@ -54,7 +53,6 @@
               :label="$t('auth.email')"
               outlined
               readonly
-              class="input-modern"
               :aria-label="`${$t('auth.email')}: ${userSettings.email}`"
             >
               <template v-slot:prepend>
@@ -67,7 +65,6 @@
               :label="$t('settings.role')"
               outlined
               readonly
-              class="input-modern"
               :aria-label="`${$t('settings.role')}: ${userSettings.role}`"
             >
               <template v-slot:prepend>
@@ -86,125 +83,107 @@
           icon="palette"
           icon-color="secondary"
         >
-            <div
-              class="settings-items"
-              role="group"
-              aria-labelledby="appearance-title"
-            >
+            <div class="settings-options" role="group" aria-labelledby="appearance-title">
               <!-- Dark Mode Toggle -->
-            <div class="setting-item glass-card">
-                <div class="setting-info">
-                  <div class="setting-label" id="dark-mode-label">
-                    {{ $t('settings.darkMode') }}
+              <BaseCard padding="sm">
+                <div class="setting-item">
+                  <div class="setting-info">
+                    <div class="setting-label" id="dark-mode-label">
+                      {{ $t('settings.darkMode') }}
+                    </div>
+                    <div class="setting-description">
+                      {{ $t('settings.darkModeDescription') }}
+                    </div>
                   </div>
-                  <div class="setting-description">
-                    {{ $t('settings.darkModeDescription') }}
+                  <div class="setting-control">
+                    <q-toggle
+                      v-model="isDarkMode"
+                      @update:model-value="toggleDarkMode"
+                      color="primary"
+                      size="lg"
+                      :aria-labelledby="'dark-mode-label'"
+                      :aria-describedby="'dark-mode-description'"
+                    />
+                    <div id="dark-mode-description" class="sr-only">
+                      {{
+                        isDarkMode
+                          ? $t('settings.darkModeEnabled')
+                          : $t('settings.lightModeEnabled')
+                      }}
+                    </div>
                   </div>
                 </div>
-                <div class="setting-control">
-                  <q-toggle
-                    v-model="isDarkMode"
-                    @update:model-value="toggleDarkMode"
-                    color="primary"
-                    size="lg"
-                    class="toggle-modern"
-                    :aria-labelledby="'dark-mode-label'"
-                    :aria-describedby="'dark-mode-description'"
-                  />
-                  <div id="dark-mode-description" class="sr-only">
-                    {{
-                      isDarkMode
-                        ? $t('settings.darkModeEnabled')
-                        : $t('settings.lightModeEnabled')
-                    }}
-                  </div>
-                </div>
-            </div>
+              </BaseCard>
 
               <!-- Language Setting -->
-            <div class="setting-item glass-card">
-                <div class="setting-info">
-                  <div class="setting-label" id="language-label">
-                    {{ $t('settings.language') }}
+              <BaseCard padding="sm">
+                <div class="setting-item">
+                  <div class="setting-info">
+                    <div class="setting-label" id="language-label">
+                      {{ $t('settings.language') }}
+                    </div>
+                    <div class="setting-description">
+                      {{ $t('settings.selectLanguage') }}
+                    </div>
                   </div>
-                  <div class="setting-description">
-                    {{ $t('settings.selectLanguage') }}
+                  <div class="setting-control">
+                    <q-select
+                      v-model="selectedLanguage"
+                      :options="languageOptions"
+                      @update:model-value="changeLanguage"
+                      option-value="value"
+                      option-label="label"
+                      emit-value
+                      map-options
+                      outlined
+                      dense
+                      style="width: 150px"
+                      :aria-labelledby="'language-label'"
+                    />
                   </div>
                 </div>
-                <div class="setting-control">
-                  <q-select
-                  v-model="selectedLanguage"
-                  :options="languageOptions"
-                  @update:model-value="changeLanguage"
-                  option-value="value"
-                  option-label="label"
-                    emit-value
-                    map-options
-                    outlined
-                    dense
-                  class="select-modern"
-                  style="width: 150px"
-                    :aria-labelledby="'language-label'"
-                  />
-                </div>
-            </div>
+              </BaseCard>
 
               <!-- Theme Setting -->
-            <div class="setting-item glass-card">
-                <div class="setting-info">
-                  <div class="setting-label" id="theme-label">
-                  {{ $t('settings.colorSchemeTitle') }}
+              <BaseCard padding="sm">
+                <div class="setting-item">
+                  <div class="setting-info">
+                    <div class="setting-label" id="theme-label">
+                      {{ $t('settings.colorSchemeTitle') }}
+                    </div>
+                    <div class="setting-description">
+                      {{ $t('settings.colorSchemeDescription') }}
+                    </div>
                   </div>
-                  <div class="setting-description">
-                  {{ $t('settings.colorSchemeDescription') }}
+                  <div class="setting-control">
+                    <q-select
+                      v-model="selectedTheme"
+                      :options="themeOptions"
+                      @update:model-value="changeTheme"
+                      option-value="value"
+                      option-label="label"
+                      emit-value
+                      map-options
+                      outlined
+                      dense
+                      style="width: 150px"
+                      :aria-labelledby="'theme-label'"
+                    />
+                  </div>
                 </div>
-                </div>
-                <div class="setting-control">
-                  <q-select
-                    v-model="selectedTheme"
-                    :options="themeOptions"
-                  @update:model-value="changeTheme"
-                  option-value="value"
-                  option-label="label"
-                    emit-value
-                    map-options
-                    outlined
-                    dense
-                  class="select-modern"
-                  style="width: 150px"
-                    :aria-labelledby="'theme-label'"
-                  />
-                </div>
-            </div>
+              </BaseCard>
           </div>
         </BaseCard>
       </div>
 
       <!-- Clinic Information -->
       <div class="settings-section full-width">
-        <q-card class="card-modern card-elevated">
-          <q-card-section class="card-header">
-            <div class="card-header-content">
-              <div class="card-title-section">
-                <q-icon
-                  name="business"
-                  color="info"
-                  size="24px"
-                  aria-hidden="true"
-                />
-                <div>
-                  <h2 class="card-title">{{ $t('settings.clinic') }}</h2>
-                  <p class="card-subtitle">
-                    {{ $t('settings.clinicInfoSubtitle') }}
-                  </p>
-                </div>
-              </div>
-            </div>
-          </q-card-section>
-
-          <q-separator />
-
-          <q-card-section class="card-content">
+        <BaseCard
+          :title="$t('settings.clinic')"
+          :subtitle="$t('settings.clinicInfoSubtitle')"
+          icon="business"
+          icon-color="info"
+        >
             <div
               class="clinic-form-grid"
               role="group"
@@ -272,152 +251,123 @@
               </div>
 
               <div class="clinic-notice">
-              <q-banner class="notice-banner glass-card" rounded>
-                <template v-slot:avatar>
-                  <q-icon name="info" color="info" />
-                </template>
-                  <div class="notice-text">
-                    {{ $t('settings.contactSettingsNotice') }}
-                  </div>
-              </q-banner>
+                <AlertCard
+                  severity="info"
+                  :title="$t('settings.contactSettingsNotice')"
+                  padding="sm"
+                />
               </div>
-          </q-card-section>
-        </q-card>
-          </div>
+        </BaseCard>
+      </div>
 
           <!-- Notification Settings -->
           <div class="settings-section">
-        <q-card class="card-modern card-elevated">
-          <q-card-section class="card-header">
-            <div class="card-header-content">
-              <div class="card-title-section">
-                <q-icon name="notifications" color="warning" size="24px" />
-                <div>
-                  <h3 class="card-title">{{ $t('settings.notifications') }}</h3>
-                  <p class="card-subtitle">
-                    {{ $t('settings.notificationSettingsSubtitle') }}
-                  </p>
-                </div>
-              </div>
-            </div>
-          </q-card-section>
-
-          <q-separator />
-
-          <q-card-section class="card-content">
-            <div class="settings-items">
-              <!-- Low Stock Alerts -->
-              <div class="setting-item glass-card">
-              <div class="setting-info">
-                  <div class="setting-label">
-                    {{ $t('settings.stockAlertsLabel') }}
+            <BaseCard
+              :title="$t('settings.notifications')"
+              :subtitle="$t('settings.notificationSettingsSubtitle')"
+              icon="notifications"
+              icon-color="warning"
+            >
+              <div class="settings-options">
+                <!-- Low Stock Alerts -->
+                <BaseCard padding="sm">
+                  <div class="setting-item">
+                    <div class="setting-info">
+                      <div class="setting-label">
+                        {{ $t('settings.stockAlertsLabel') }}
+                      </div>
+                      <div class="setting-description">
+                        {{ $t('settings.stockAlertsDescription') }}
+                      </div>
+                    </div>
+                    <div class="setting-control">
+                      <q-toggle
+                        v-model="notificationSettings.lowStockAlerts"
+                        color="primary"
+                      />
+                    </div>
                   </div>
-                  <div class="setting-description">
-                    {{ $t('settings.stockAlertsDescription') }}
-                  </div>
-                </div>
-                <div class="setting-control">
-                  <q-toggle
-                    v-model="notificationSettings.lowStockAlerts"
-                    color="primary"
-                    class="toggle-modern"
-                  />
-                </div>
-              </div>
+                </BaseCard>
 
-              <!-- Email Notifications -->
-              <div class="setting-item glass-card">
-                <div class="setting-info">
-                  <div class="setting-label">
-                    {{ $t('settings.emailNotificationsLabel') }}
-                </div>
-                <div class="setting-description">
-                  {{ $t('settings.emailNotificationsDescription') }}
-                </div>
-              </div>
-              <div class="setting-control">
-                <q-toggle
-                    v-model="notificationSettings.emailNotifications"
-                  color="primary"
-                  class="toggle-modern"
-                />
-                </div>
-              </div>
+                <!-- Email Notifications -->
+                <BaseCard padding="sm">
+                  <div class="setting-item">
+                    <div class="setting-info">
+                      <div class="setting-label">
+                        {{ $t('settings.emailNotificationsLabel') }}
+                      </div>
+                      <div class="setting-description">
+                        {{ $t('settings.emailNotificationsDescription') }}
+                      </div>
+                    </div>
+                    <div class="setting-control">
+                      <q-toggle
+                        v-model="notificationSettings.emailNotifications"
+                        color="primary"
+                      />
+                    </div>
+                  </div>
+                </BaseCard>
 
-              <!-- Browser Notifications -->
-              <div class="setting-item glass-card">
-              <div class="setting-info">
-                  <div class="setting-label">
-                    {{ $t('settings.browserNotificationsLabel') }}
+                <!-- Browser Notifications -->
+                <BaseCard padding="sm">
+                  <div class="setting-item">
+                    <div class="setting-info">
+                      <div class="setting-label">
+                        {{ $t('settings.browserNotificationsLabel') }}
+                      </div>
+                      <div class="setting-description">
+                        {{ $t('settings.browserNotificationsDescription') }}
+                      </div>
+                    </div>
+                    <div class="setting-control">
+                      <q-toggle
+                        v-model="notificationSettings.browserNotifications"
+                        color="primary"
+                      />
+                    </div>
                   </div>
-                  <div class="setting-description">
-                    {{ $t('settings.browserNotificationsDescription') }}
-                  </div>
-                </div>
-                <div class="setting-control">
-                  <q-toggle
-                    v-model="notificationSettings.browserNotifications"
-                    color="primary"
-                    class="toggle-modern"
-                  />
-                </div>
+                </BaseCard>
               </div>
-            </div>
-          </q-card-section>
-        </q-card>
-      </div>
+            </BaseCard>
+          </div>
 
       <!-- System Information -->
       <div class="settings-section">
-        <q-card class="card-modern card-elevated">
-          <q-card-section class="card-header">
-            <div class="card-header-content">
-              <div class="card-title-section">
-                <q-icon name="info" color="accent" size="24px" />
-                <div>
-                  <h3 class="card-title">
-                    {{ $t('settings.systemInfoTitle') }}
-                  </h3>
-                  <p class="card-subtitle">
-                    {{ $t('settings.systemInfoSubtitle') }}
-                  </p>
-                </div>
+        <BaseCard
+          :title="$t('settings.systemInfoTitle')"
+          :subtitle="$t('settings.systemInfoSubtitle')"
+          icon="info"
+          icon-color="info"
+        >
+          <div class="system-info">
+            <div class="info-item">
+              <div class="info-label">{{ $t('settings.versionLabel') }}</div>
+              <div class="info-value">1.0.0</div>
+            </div>
+
+            <div class="info-item">
+              <div class="info-label">
+                {{ $t('settings.lastUpdateLabel') }}
+              </div>
+              <div class="info-value">
+                {{ new Date().toLocaleDateString('nl-NL') }}
               </div>
             </div>
-          </q-card-section>
 
-          <q-separator />
-
-          <q-card-section class="card-content">
-            <div class="system-info">
-              <div class="info-item">
-                <div class="info-label">{{ $t('settings.versionLabel') }}</div>
-                <div class="info-value">1.0.0</div>
+            <div class="info-item">
+              <div class="info-label">{{ $t('settings.supportLabel') }}</div>
+              <div class="info-value">
+                <a
+                  href="mailto:support@remcura.com"
+                  class="support-link"
+                >
+                  support@remcura.com
+                </a>
               </div>
-
-              <div class="info-item">
-                <div class="info-label">
-                  {{ $t('settings.lastUpdateLabel') }}
-                </div>
-                <div class="info-value">
-                  {{ new Date().toLocaleDateString('nl-NL') }}
-                </div>
-              </div>
-
-              <div class="info-item">
-                <div class="info-label">{{ $t('settings.supportLabel') }}</div>
-                <div class="info-value">
-                  <a
-                    href="mailto:support@remcura.com"
-                    class="support-link"
-                  >
-                    support@remcura.com
-                  </a>
-                </div>
-              </div>
+            </div>
           </div>
-        </q-card-section>
-      </q-card>
+        </BaseCard>
       </div>
     </div>
   </PageLayout>
@@ -590,32 +540,21 @@
   }
 
   .clinic-notice {
-    .notice-banner {
-      background: var(--glass-bg);
-      backdrop-filter: var(--glass-backdrop);
-      border: 1px solid var(--glass-border);
-
-      .notice-text {
-        font-size: var(--text-sm);
-        color: var(--neutral-700);
-      }
-    }
+    margin-top: var(--space-4);
   }
 
-  // Settings items
-  .settings-items {
+  // Settings options within BaseCards
+  .settings-options {
     display: flex;
     flex-direction: column;
-    gap: var(--space-4);
+    gap: var(--space-3);
   }
 
   .setting-item {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: var(--space-4);
-    border-radius: var(--radius-lg);
-    border: 1px solid var(--neutral-200);
+    gap: var(--space-4);
   }
 
   .setting-info {
@@ -639,70 +578,9 @@
     margin-left: var(--space-4);
   }
 
-  // Input styling
-  .input-modern {
-    .q-field__control {
-      border-radius: var(--radius-lg);
-      transition: all var(--transition-base);
+  // All input styling is now handled by global field system
 
-      &:hover {
-        box-shadow: var(--shadow-sm);
-      }
-    }
-  }
-
-  .select-modern {
-    border-radius: var(--radius-lg);
-  }
-
-    .toggle-modern {
-    .q-toggle__track {
-      border-radius: var(--radius-full);
-    }
-
-    .q-toggle__thumb {
-      border-radius: var(--radius-full);
-    }
-  }
-
-  // Card header styling
-  .card-header {
-    .card-header-content {
-      display: flex;
-      align-items: center;
-      gap: var(--space-4);
-
-      .card-title-section {
-        display: flex;
-        align-items: flex-start;
-        gap: var(--space-3);
-
-        .q-icon {
-          margin-top: 2px; // Align icon with first line of title text
-          flex-shrink: 0;
-        }
-
-        .card-title {
-          font-size: var(--text-xl);
-          font-weight: var(--font-weight-semibold);
-          color: var(--neutral-900);
-          margin: 0;
-        }
-
-        .card-subtitle {
-          font-size: var(--text-sm);
-          color: var(--neutral-600);
-          margin: 0;
-          margin-top: var(--space-1);
-        }
-      }
-    }
-  }
-
-  // Card content
-  .card-content {
-    padding: var(--space-6);
-  }
+  // All card styling is now handled by BaseCard components
 
   // System info
   .system-info {
@@ -765,36 +643,7 @@
     }
   }
 
-  // Dark mode adjustments
-  body.body--dark {
-    .setting-item {
-      border-color: var(--neutral-300);
-
-      &:hover {
-        border-color: var(--neutral-400);
-      }
-
-      .setting-label {
-        color: var(--neutral-900);
-      }
-
-      .setting-description {
-        color: var(--neutral-600);
-      }
-    }
-
-    .clinic-notice .notice-banner .notice-text {
-      color: var(--neutral-600);
-    }
-
-    .card-title {
-      color: var(--neutral-900);
-    }
-
-    .card-subtitle {
-      color: var(--neutral-600);
-    }
-  }
+  // Dark mode is handled by CSS variables and BaseCard components
 
   // Screen reader only content
 .sr-only {
@@ -809,14 +658,5 @@
     border: 0 !important;
   }
 
-  // Focus styles for interactive elements
-  .toggle-modern:focus {
-    outline: 2px solid var(--brand-primary);
-    outline-offset: 2px;
-  }
-
-  .select-modern:focus-within {
-    outline: 2px solid var(--brand-primary);
-    outline-offset: 2px;
-}
+  // Focus styles are handled by global field system
 </style>

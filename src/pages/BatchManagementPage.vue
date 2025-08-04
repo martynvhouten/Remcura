@@ -84,41 +84,36 @@
           <!-- Scan Batch Action -->
           <div class="col-12 col-sm-6 col-md-3">
             <InteractiveCard
-              title="Scan Batch"
-              subtitle="Scan barcode om batch te vinden"
+              :title="$t('batch.scanBatch')"
+              :subtitle="$t('batch.scanBatchSubtitle')"
               icon="qr_code_scanner"
               icon-color="primary"
               @click="openBarcodeScanner"
+
             />
           </div>
 
           <!-- View Expiring Action -->
           <div class="col-12 col-sm-6 col-md-3">
             <InteractiveCard
-              title="View Expiring"
-              :subtitle="`${expiringBatches} batches verlopen binnenkort`"
+              :title="$t('batch.viewExpiring')"
+              :subtitle="`${expiringBatches} ${$t('batch.viewExpiringSubtitle')}`"
               icon="warning"
               icon-color="warning"
               @click="filterExpiring"
               :class="showExpiringOnly ? 'expiring-active' : ''"
-            >
-              <q-badge 
-                v-if="expiringBatches > 0" 
-                :label="expiringBatches" 
-                color="warning" 
-                floating 
-              />
-            </InteractiveCard>
+            />
           </div>
 
           <!-- Export Batches Action -->
           <div class="col-12 col-sm-6 col-md-3">
             <InteractiveCard
-              title="Export Batches"
-              subtitle="Download batch gegevens"
+              :title="$t('batch.exportBatches')"
+              :subtitle="$t('batch.exportBatchesSubtitle')"
               icon="download"
               icon-color="positive"
               @click="exportBatches"
+
             />
           </div>
 
@@ -277,8 +272,7 @@
   import { useAuthStore } from 'src/stores/auth';
   import PageLayout from 'src/components/PageLayout.vue';
   import PageTitle from 'src/components/PageTitle.vue';
-  import { BaseCard } from 'src/components/cards';
-import { InteractiveCard } from 'src/components/cards';
+  import { BaseCard, InteractiveCard } from 'src/components/cards';
   import BatchOverview from 'src/components/BatchOverview.vue';
   import BatchRegistrationForm from 'src/components/BatchRegistrationForm.vue';
 
@@ -519,6 +513,8 @@ import { InteractiveCard } from 'src/components/cards';
     height: 100%;
   }
 
+
+
   @media (max-width: 768px) {
     .batch-management-page {
       padding: 8px;
@@ -554,13 +550,15 @@ import { InteractiveCard } from 'src/components/cards';
 
   /* New stat display styles for replaced stats cards */
   .stat-display {
-    text-align: center;
-    
-      .stat-value {
+  text-align: center;
+  padding: var(--space-4);
+  
+  .stat-value {
     font-size: 28px;
     font-weight: 700;
     color: var(--text-primary);
     line-height: 1.2;
+    margin-bottom: 4px;
   }
 }
 

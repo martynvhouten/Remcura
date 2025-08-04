@@ -188,6 +188,9 @@ const handleKeydown = (event: KeyboardEvent) => {
   overflow: hidden;
   cursor: pointer;
   position: relative;
+  min-height: 120px;
+  display: flex;
+  flex-direction: column;
   
   // Focus styles
   &:focus-visible {
@@ -257,13 +260,17 @@ const handleKeydown = (event: KeyboardEvent) => {
 .card-header {
   background: var(--card-header-background, var(--card-background));
   border-bottom: 1px solid var(--card-border);
-  padding: 16px 20px;
+  padding: 20px;
+  flex: 1;
+  display: flex;
+  align-items: center;
   
   .card-header-content {
     display: flex;
     align-items: center;
     justify-content: space-between;
     gap: 12px;
+    width: 100%;
   }
   
   .card-title-section {
@@ -271,12 +278,15 @@ const handleKeydown = (event: KeyboardEvent) => {
     align-items: center;
     gap: 12px;
     flex: 1;
+    width: 100%;
   }
   
   .card-text-content {
     display: flex;
     flex-direction: column;
     gap: 4px;
+    flex: 1;
+    justify-content: center;
   }
   
   .card-title {
@@ -288,10 +298,15 @@ const handleKeydown = (event: KeyboardEvent) => {
   }
   
   .card-subtitle {
-    font-size: 14px;
+    font-size: 13px;
     color: var(--text-secondary);
     margin: 0;
-    line-height: 1.4;
+    line-height: 1.3;
+    max-height: 2.6em;
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
   }
   
   .card-header-actions {

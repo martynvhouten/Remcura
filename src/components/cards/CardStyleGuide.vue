@@ -255,12 +255,63 @@
       </div>
     </section>
 
+    <!-- Field Styling Section -->
+    <section class="card-section">
+      <div class="section-header">
+        <h2>Form Field Styling</h2>
+        <p class="section-description">
+          Consistent input field styling across all forms and components.
+        </p>
+      </div>
+      
+      <div class="field-examples">
+        <div class="example-group">
+          <h4>Input Fields</h4>
+          <div class="field-demo">
+            <q-input
+              v-model="demoText"
+              label="Standard Input"
+              outlined
+              placeholder="Enter text here"
+              style="margin-bottom: 16px;"
+            />
+            <q-select
+              v-model="demoSelect"
+              :options="['Option 1', 'Option 2', 'Option 3']"
+              label="Select Field"
+              outlined
+              style="margin-bottom: 16px;"
+            />
+            <q-input
+              v-model="demoError"
+              label="Error State"
+              outlined
+              error
+              error-message="This field has an error"
+            />
+          </div>
+        </div>
+      </div>
+
+      <div class="usage-guidelines">
+        <h4>Field Styling Guidelines</h4>
+        <ul>
+          <li>All fields use consistent border-radius (12px)</li>
+          <li>Single border - no double borders on focus</li>
+          <li>Subtle focus ring with primary color</li>
+          <li>Clean error states with red border and shadow</li>
+          <li>Consistent padding and typography</li>
+          <li>No !important rules - clean CSS override system</li>
+        </ul>
+      </div>
+    </section>
+
     <!-- Design Tokens Section -->
     <section class="card-section">
       <div class="section-header">
         <h2>Design Tokens</h2>
         <p class="section-description">
-          Consistent design values used across all card types.
+          Consistent design values used across all card types and form fields.
         </p>
       </div>
       
@@ -321,6 +372,26 @@
         </div>
 
         <div class="token-group">
+          <h4>Field Styling</h4>
+          <div class="token-item">
+            <span class="token-name">Border Radius:</span>
+            <span class="token-value">12px</span>
+          </div>
+          <div class="token-item">
+            <span class="token-name">Focus Ring:</span>
+            <span class="token-value">3px rgba primary</span>
+          </div>
+          <div class="token-item">
+            <span class="token-name">Min Height:</span>
+            <span class="token-value">56px</span>
+          </div>
+          <div class="token-item">
+            <span class="token-name">Padding:</span>
+            <span class="token-value">16px 12px</span>
+          </div>
+        </div>
+
+        <div class="token-group">
           <h4>Animation</h4>
           <div class="token-item">
             <span class="token-name">Transition:</span>
@@ -341,6 +412,9 @@ import { ref } from 'vue';
 import { BaseCard, InteractiveCard, AlertCard } from './index';
 
 const isScanning = ref(false);
+const demoText = ref('');
+const demoSelect = ref(null);
+const demoError = ref('');
 
 const handleCardClick = (type: string) => {
   console.log(`Card clicked: ${type}`);

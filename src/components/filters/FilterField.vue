@@ -731,15 +731,11 @@ const forceUpdateLabels = () => {
   width: 100%;
   min-width: 0;
   
-  // Remove default Quasar focus styling
+  // Clean focus styling using new field system
   :deep(.q-field--focused) {
-    .q-field__control::before {
-      border-color: var(--brand-primary) !important;
-      border-width: 1px !important;
-    }
-    
-    .q-field__control::after {
-      display: none !important; // Remove the extra focus border
+    .q-field__control {
+      border-color: var(--brand-primary);
+      box-shadow: 0 0 0 3px rgba(30, 58, 138, 0.1);
     }
   }
   
@@ -783,7 +779,7 @@ const forceUpdateLabels = () => {
   
   // Better text alignment for inputs
   :deep(input) {
-    line-height: 1.4 !important;
+    line-height: 1.4;
     vertical-align: middle;
   }
   
@@ -795,12 +791,7 @@ const forceUpdateLabels = () => {
     min-height: 24px;
   }
   
-  // Better hover state
-  :deep(.q-field--outlined) {
-    .q-field__control:hover::before {
-      border-color: var(--brand-primary);
-    }
-  }
+  // Hover styling handled by global field system
   
   // Special styling for text inputs (search fields)
   &.filter-input--text {
@@ -872,7 +863,7 @@ const forceUpdateLabels = () => {
     :deep(.q-toggle.q-toggle--focused) {
       .q-checkbox__inner::after,
       .q-toggle__track::after {
-        display: none !important;
+        display: none;
       }
     }
   }
@@ -912,13 +903,9 @@ const forceUpdateLabels = () => {
       
       // Apply same focus styling as other inputs
       :deep(.q-field--focused) {
-        .q-field__control::before {
-          border-color: var(--brand-primary) !important;
-          border-width: 1px !important;
-        }
-        
-        .q-field__control::after {
-          display: none !important;
+        .q-field__control {
+          border-color: var(--brand-primary);
+          box-shadow: 0 0 0 3px rgba(30, 58, 138, 0.1);
         }
       }
       
@@ -928,12 +915,7 @@ const forceUpdateLabels = () => {
         padding-top: 4px; // Match other fields
       }
       
-      // Better hover state
-      :deep(.q-field--outlined) {
-        .q-field__control:hover::before {
-          border-color: var(--brand-primary);
-        }
-      }
+      // Hover styling handled by global field system
     }
     
     .currency-symbol {

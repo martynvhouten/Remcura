@@ -160,10 +160,10 @@ const cardClasses = computed(() => {
   .q-checkbox,
   .q-radio,
   .q-slider {
-    transition: none !important;
+    transition: none;
     
     &:hover {
-      transform: none !important;
+      transform: none;
     }
   }
 }

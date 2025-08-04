@@ -1,5 +1,5 @@
 <template>
-  <PageLayout>
+  <PageLayout class="analytics-page">
     <template #header>
       <PageTitle
         :title="$t('analyticsPage.title')"
@@ -18,15 +18,29 @@
 
     <!-- Date Range Filter -->
     <div class="row q-gutter-md q-mb-lg">
-      <q-select
-        v-model="selectedPeriod"
-        :options="periodOptions"
-        :label="$t('analyticsPage.period')"
-        style="min-width: 200px"
-        outlined
-        dense
-        @update:model-value="loadAnalytics"
-      />
+      <div class="period-filter">
+        <q-select
+          v-model="selectedPeriod"
+          :options="periodOptions"
+          :label="$t('analyticsPage.period')"
+          outlined
+          @update:model-value="loadAnalytics"
+
+          option-value="value"
+          option-label="label"
+          emit-value
+          map-options
+          style="
+            min-width: 200px; 
+            max-width: 240px;
+            border: 2px solid #e5e7eb;
+            border-radius: 8px;
+            background: #ffffff;
+            min-height: 48px;
+          "
+
+        />
+      </div>
     </div>
 
     <!-- Key Metrics Cards -->
@@ -313,13 +327,13 @@
   });
   const dailyChartData = ref<Array<{ date: string; count: number }>>([]);
 
-  // Options
-  const periodOptions = [
+  // Options - computed for reactivity
+  const periodOptions = computed(() => [
     { label: t('analyticsPage.periods.7d'), value: '7d' },
     { label: t('analyticsPage.periods.30d'), value: '30d' },
     { label: t('analyticsPage.periods.90d'), value: '90d' },
     { label: t('analyticsPage.periods.1y'), value: '1y' },
-  ];
+  ]);
 
   // Table Columns
   const userActivityColumns = [

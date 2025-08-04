@@ -481,7 +481,6 @@
         items: orderList.total_items,
         amount: `€${orderList.total_amount.toFixed(2)}`
       }),
-      cancel: true,
       persistent: true,
       ok: {
         label: t('orderLists.confirmSubmit'),
@@ -535,7 +534,6 @@
         supplier: orderList.supplier?.name || t('common.unknownSupplier'),
         method: orderList.supplier?.order_method || 'manual'
       }),
-      cancel: true,
       persistent: true,
       ok: {
         label: t('orderLists.confirmSend'),

@@ -10,7 +10,7 @@
           outlined
           :error="!!email.error.value"
           :error-message="email.error.value"
-          class="input-modern focus-ring"
+          class="input-modern"
           autocomplete="email"
           required
           :aria-describedby="email.error.value ? 'email-error' : undefined"
@@ -33,7 +33,7 @@
           outlined
           :error="!!password.error.value"
           :error-message="password.error.value"
-          class="input-modern focus-ring"
+          class="input-modern"
           autocomplete="current-password"
           required
           :aria-describedby="
@@ -243,60 +243,8 @@
       position: relative;
     }
 
-    // Consistent sizing for login input fields - preserve floating label functionality
-    .input-modern {
-      // Force consistent dimensions with high specificity but preserve label behavior
-      &.q-field {
-        :deep(.q-field__control) {
-          min-height: 64px;
-          // Remove explicit height to let floating labels work properly
-          width: 100%;
-          box-sizing: border-box;
-          // Let global CSS handle colors/borders, we just ensure size consistency
-        }
-        
-        // Ensure label positioning works correctly
-        :deep(.q-field__label) {
-          // Let Quasar handle label positioning - don't interfere
-        }
-        
-        // Ensure native input has correct padding for floating label
-        :deep(.q-field__native) {
-          padding-top: 16px; // Space for floating label
-          padding-bottom: 8px;
-        }
-      }
-
-      // Ensure focus state maintains exact same dimensions with even higher specificity
-      &.q-field.q-field--focused {
-        :deep(.q-field__control) {
-          min-height: 64px; // Size lock but no explicit height
-          width: 100%;
-          box-sizing: border-box;
-        }
-        
-        // Ensure label stays in floating position
-        :deep(.q-field__label) {
-          // Let Quasar handle floating behavior
-        }
-      }
-
-      // Remove any browser default focus styling that might interfere
-      :deep(.q-field__native:focus) {
-        outline: none;
-      }
-
-      :deep(.q-field__control:focus-within) {
-        outline: none;
-      }
-
-      // Let global CSS handle all visual styling
-      :deep(.q-field__label),
-      :deep(.q-field__prepend),
-      :deep(.q-field__append) {
-        // Global styling handles these
-      }
-    }
+    // Field styling is now fully handled by global field system
+    // This ensures consistent sizing and prevents field jumping on focus
 
     // Password toggle button
     .password-toggle {
@@ -426,9 +374,7 @@
           background: var(--neutral-200);
         }
 
-        :deep(.q-field--outlined .q-field__control:before) {
-          border-color: var(--neutral-600);
-        }
+        // Border styling handled by global field system
 
         :deep(.q-field__label) {
           // Color handled by global dark mode styles to prevent conflicts
@@ -491,10 +437,7 @@
     }
   }
 
-  // Remove duplicate focus styling - handled by global styles
-  .input-modern:focus-within {
-    // Styling handled by global .q-field styles
-  }
+  // All focus styling is handled by global .q-field system
 
   // Screen reader only content
   .sr-only {

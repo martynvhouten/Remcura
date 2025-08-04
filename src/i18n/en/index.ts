@@ -734,6 +734,15 @@ export default {
     fifoResults: 'FIFO results',
     noFifoResults: 'No FIFO results available',
     fifoSuggestionGenerated: 'FIFO suggestion generated successfully',
+    
+    // Quick Actions
+    quickActions: 'Quick actions',
+    scanBatch: 'Scan Batch',
+    scanBatchSubtitle: 'Scan barcode to find batch',
+    viewExpiring: 'View Expiring',
+    viewExpiringSubtitle: 'batches expiring soon',
+    exportBatches: 'Export Batches',
+    exportBatchesSubtitle: 'Download batch data',
     applyFifoSuggestion: 'Apply FIFO suggestion',
     confirmFifoApplication: 'Confirm FIFO application',
     confirmFifoMessage: 'Are you sure you want to apply this FIFO suggestion?',
