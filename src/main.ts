@@ -8,8 +8,7 @@ import '@quasar/extras/mdi-v7/mdi-v7.css';
 // Import Quasar css
 import 'quasar/src/css/index.sass';
 
-// Import monitoring service
-import { initializeMonitoring } from './services/monitoring';
+// Monitoring service will be lazy loaded
 
 // Import centralized error handling
 import { ErrorHandler } from '@/utils/service-error-handler';
@@ -39,10 +38,19 @@ myApp.config.errorHandler = (error, instance, info) => {
   });
 };
 
-// Initialize monitoring service
-initializeMonitoring(router).catch(error => {
-  // Error handling is done internally by the monitoring service
-});
+// Lazy initialize monitoring service only when needed
+const initMonitoringLazy = async () => {
+  // Only load monitoring in production or when errors occur
+  if (import.meta.env.PROD || import.meta.env.VITE_SENTRY_DSN) {
+    const { initializeMonitoring } = await import('./services/monitoring');
+    await initializeMonitoring(router);
+  }
+};
+
+// Initialize monitoring in background after app loads
+setTimeout(() => {
+  initMonitoringLazy().catch(console.warn);
+}, 2000); // Delay 2 seconds to not block initial load
 
 // Setup global error handlers for unhandled promises and JS errors
 ErrorHandler.setupGlobalHandlers();

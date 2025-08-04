@@ -201,34 +201,32 @@ export function useProductsCore() {
 
       productLogger.info('✅ Fallback query succeeded, got', products.length, 'products');
 
-      // Transform and add computed fields
-      const productsWithStock: ProductWithStock[] = [];
-      products.forEach((product: Product) => {
+      // ✅ PERFORMANCE OPTIMIZATION: Transform with optimized mapping
+      const productsWithStock: ProductWithStock[] = products.map((product: Product) => {
         const stockLevels = product.stock_levels || [];
         const totalStock = stockLevels.reduce((sum: number, level: StockLevel) => 
           sum + (level.current_quantity || 0), 0
         );
 
-        const productWithStock: ProductWithStock = {
-          ...product,
-          stock_levels: stockLevels,
-          total_stock: totalStock,
-        };
-
-        // Add stock levels for each location if practice has multiple locations
-        product.stock_levels.forEach((stock: StockLevel) => {
-          stock.practice_id = practiceId;
-          stock.product_id = product.id;
-          stock.available_quantity = Math.max(0, 
+        // Optimize stock level processing
+        const processedStockLevels = stockLevels.map((stock: StockLevel) => ({
+          ...stock,
+          practice_id: practiceId,
+          product_id: product.id,
+          available_quantity: Math.max(0, 
             (stock.current_quantity || 0) - (stock.reserved_quantity || 0)
-          );
-          stock.stock_status = determineStockStatus(
+          ),
+          stock_status: determineStockStatus(
             stock.current_quantity || 0,
             stock.minimum_stock || 0
-          );
-        });
+          )
+        }));
 
-        productsWithStock.push(productWithStock);
+        return {
+          ...product,
+          stock_levels: processedStockLevels,
+          total_stock: totalStock,
+        };
       });
 
       return productsWithStock;

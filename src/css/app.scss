@@ -2450,6 +2450,30 @@ body .q-layout .q-btn.app-btn-refresh,
     border-radius: inherit;
     pointer-events: none;
   }
+  
+  // Enhanced filter count badge styling
+  .filter-count-badge {
+    font-weight: 600;
+    font-size: 12px;
+    min-width: 20px;
+    height: 20px;
+    border-radius: 10px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  }
+  
+  // Smooth loading animation for filter updates
+  .animate-spin {
+    animation: spin 1s linear infinite;
+  }
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 @keyframes filter-pulse {

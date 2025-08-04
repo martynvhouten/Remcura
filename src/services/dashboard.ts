@@ -180,16 +180,14 @@ class DashboardService {
   ): Promise<DashboardWidget[]> {
     dashboardLogger.info(`🔧 Loading widgets for ${userRole}:`, widgetIds);
     
-            // Try real widgets first, fallback to mock for role-specific content
-    const widgets: DashboardWidget[] = [];
-
-    for (const [index, widgetId] of widgetIds.entries()) {
+    // ✅ PERFORMANCE OPTIMIZATION: Load all widgets concurrently instead of sequentially
+    const widgetPromises = widgetIds.map(async (widgetId, index) => {
       try {
         // Try real widget first
         const widget = await this.createWidget(widgetId, practiceId, userRole);
         if (widget) {
           dashboardLogger.info(`✅ Real widget loaded: ${widgetId}`);
-          widgets.push(widget);
+          return widget;
         } else {
           throw new Error($t('dashboard.widgetcreationreturnednull'));
         }
@@ -199,10 +197,14 @@ class DashboardService {
         const mockWidget = this.createMockWidget(widgetId, index);
         if (mockWidget) {
           dashboardLogger.info(`📋 Mock widget created: ${mockWidget.title}`);
-          widgets.push(mockWidget);
+          return mockWidget;
         }
+        return null;
       }
-    }
+    });
+
+    // Wait for all widgets to load concurrently
+    const widgets = (await Promise.all(widgetPromises)).filter(Boolean) as DashboardWidget[];
 
     dashboardLogger.info(`🎯 Final widget titles for ${userRole}:`, widgets.map(w => w.title));
     return widgets;

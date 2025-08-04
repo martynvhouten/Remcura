@@ -7,19 +7,24 @@
         @click="toggleFilters"
         class="filter-toggle-btn app-btn-filter"
         :class="{ 'active': isFiltersVisible }"
-        size="sm"
-        padding="10px 18px"
+        size="md"
+        padding="12px 20px"
       >
         <template v-slot:default>
-          <q-icon name="tune" size="16px" class="q-mr-xs" />
+          <q-icon 
+            :name="updatePending ? 'hourglass_empty' : 'tune'" 
+            :class="updatePending ? 'animate-spin' : ''"
+            size="16px" 
+            class="q-mr-xs" 
+          />
           {{ t('filters.filterPanel.filtersButton') }}
           <q-chip 
             v-if="activeFiltersCount > 0" 
             :label="activeFiltersCount" 
-            color="primary"
+            color="red"
             text-color="white"
-            size="xs"
-            class="q-ml-sm"
+            size="sm"
+            class="q-ml-sm filter-count-badge"
           />
         </template>
       </q-btn>
@@ -93,6 +98,7 @@
 import { computed, ref, reactive, watch, onMounted } from 'vue'
 import { useI18n } from 'vue-i18n'
 import FilterField from './FilterField.vue'
+import { useDebounce } from '@/composables/useDebounce'
 import type { 
   FilterPreset, 
   FilterValues, 
@@ -157,6 +163,8 @@ const activeFiltersCount = computed(() => {
     if (value === null || value === undefined || value === '') { return false; }
     if (Array.isArray(value) && value.length === 0) return false
     if (typeof value === 'object' && Object.keys(value).length === 0) return false
+    // Exclude boolean false values as they are not "active" filters
+    if (typeof value === 'boolean' && value === false) return false
     return true
   }).length
 })
@@ -199,6 +207,14 @@ const getMagentoFieldClass = (field: FilterFieldType) => {
   return baseClasses.join(' ')
 }
 
+// Debounced filter updates for better performance
+const { debouncedFn: debouncedEmitUpdate, pending: updatePending } = useDebounce(
+  (newValues: FilterValues) => {
+    emit('update:modelValue', newValues)
+  },
+  300 // 300ms debounce delay
+)
+
 const handleFieldChange = (fieldId: string, value: any) => {
   const newValues = { ...props.modelValue, [fieldId]: value }
   
@@ -207,7 +223,16 @@ const handleFieldChange = (fieldId: string, value: any) => {
     delete newValues[fieldId]
   }
   
-  emit('update:modelValue', newValues)
+  // Use debounced update for text/search fields to improve performance
+  const field = allFields.value.find(f => f.id === fieldId)
+  const shouldDebounce = field?.type === 'text' || field?.debounce !== false
+  
+  if (shouldDebounce) {
+    debouncedEmitUpdate(newValues)
+  } else {
+    // Immediate update for selects, toggles, etc.
+    emit('update:modelValue', newValues)
+  }
 }
 
 const handleFieldChangeEvent = (field: FilterFieldType, value: any, oldValue?: any) => {
