@@ -30,7 +30,7 @@
       <!-- User Profile Settings -->
       <div class="settings-section">
         <BaseCard
-          variant="elevated"
+          
           :title="$t('settings.profile')"
           :subtitle="$t('settings.profileSubtitle')"
           icon="person"
@@ -82,7 +82,7 @@
       <!-- Appearance Settings -->
       <div class="settings-section">
         <BaseCard
-          variant="elevated"
+          
           :title="$t('settings.appearanceTitle')"
           :subtitle="$t('settings.appearanceSubtitle')"
           icon="palette"
@@ -439,7 +439,7 @@
   } from 'src/i18n';
   import PageLayout from 'src/components/PageLayout.vue';
   import PageTitle from 'src/components/PageTitle.vue';
-  import BaseCard from 'src/components/base/BaseCard.vue';
+  import { BaseCard, InteractiveCard, AlertCard } from 'src/components/cards';
 
   const $q = useQuasar();
   const { t } = useI18n();

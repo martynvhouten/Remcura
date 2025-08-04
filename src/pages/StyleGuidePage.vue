@@ -257,106 +257,135 @@
       </div>
     </div>
 
-    <!-- Card Variants -->
+    <!-- New Card System -->
     <div class="style-section">
-      <h2 class="section-title">🃏 {{ $t('settings.cardsSection') }}</h2>
+      <h2 class="section-title">🃏 New Card Design System</h2>
+      <p class="section-description">
+        Streamlined 3-category system: BaseCard (static), InteractiveCard (clickable), AlertCard (status).
+      </p>
 
       <div class="card-showcase">
-        <!-- Default Card -->
+        <!-- Base Card Example -->
         <BaseCard
-          variant="default"
-          :title="$t('settings.cards.defaultCard.title')"
-          :subtitle="$t('settings.cards.defaultCard.subtitle')"
+          title="Base Card"
+          subtitle="For static content display"
           icon="article"
+          icon-color="primary"
         >
           <p>
-            {{ $t('settings.cards.defaultCard.description') }}
+            Use BaseCard for displaying static information without interactive behavior.
+            Perfect for dashboards, data display, and content containers.
           </p>
+          <div class="card-features">
+            <div class="feature">✓ No hover effects</div>
+            <div class="feature">✓ Clean, professional look</div>
+            <div class="feature">✓ Focus on content</div>
+          </div>
           <template #actions>
-            <q-btn outline color="primary" :label="$t('settings.cards.defaultCard.action')" />
+            <q-btn outline color="primary" label="View Details" />
           </template>
         </BaseCard>
 
-        <!-- Modern Card -->
-        <BaseCard
-          variant="modern"
-          :title="$t('settings.cards.modernCard.title')"
-          :subtitle="$t('settings.cards.modernCard.subtitle')"
-          icon="auto_awesome"
-          header-color="primary"
+        <!-- Interactive Card Example -->
+        <InteractiveCard
+          title="Interactive Card"
+          subtitle="For clickable elements"
+          icon="touch_app"
+          icon-color="positive"
+          show-click-indicator
+          @click="handleCardClick"
         >
           <p>
-            {{ $t('settings.cards.modernCard.description') }}
+            Use InteractiveCard for navigation, actions, and any clickable content.
+            Features subtle hover effects and proper accessibility.
           </p>
+          <div class="card-features">
+            <div class="feature">✓ Hover lift effect (-3px)</div>
+            <div class="feature">✓ Keyboard navigation</div>
+            <div class="feature">✓ Loading & disabled states</div>
+          </div>
           <template #actions>
-            <q-btn color="primary" :label="$t('settings.cards.modernCard.action')" />
+            <q-btn color="positive" label="Click Me" />
           </template>
-        </BaseCard>
+        </InteractiveCard>
 
-        <!-- Elevated Card -->
-        <BaseCard
-          variant="elevated"
-          :title="$t('settings.cards.elevatedCard.title')"
-          :subtitle="$t('settings.cards.elevatedCard.subtitle')"
-          icon="star"
-          header-color="secondary"
+        <!-- Alert Card Examples -->
+        <AlertCard
+          severity="info"
+          title="Info Alert"
+          subtitle="Information message"
+          dismissible
         >
           <p>
-            {{ $t('settings.cards.elevatedCard.description') }}
+            Use AlertCard for status messages, notifications, and alerts.
+            Supports different severity levels with appropriate colors.
           </p>
-          <template #actions>
-            <q-btn color="secondary" :label="$t('settings.cards.elevatedCard.action')" />
-          </template>
-        </BaseCard>
+          <div class="card-features">
+            <div class="feature">✓ 4 severity levels</div>
+            <div class="feature">✓ Colored indicators</div>
+            <div class="feature">✓ Dismissible option</div>
+          </div>
+        </AlertCard>
 
-        <!-- Glass Card -->
-        <BaseCard
-          variant="glass"
-          :title="$t('settings.cards.glassCard.title')"
-          :subtitle="$t('settings.cards.glassCard.subtitle')"
-          icon="blur_on"
-          header-color="info"
+        <AlertCard
+          severity="success"
+          title="Success Alert"
+          subtitle="Operation completed"
+          dismissible
         >
-          <p>
-            {{ $t('settings.cards.glassCard.description') }}
-          </p>
-          <template #actions>
-            <q-btn outline color="info" :label="$t('settings.cards.glassCard.action')" />
-          </template>
-        </BaseCard>
+          <p>Success message with green color scheme and checkmark icon.</p>
+        </AlertCard>
 
-        <!-- Outlined Card -->
-        <BaseCard
-          variant="outlined"
-          :title="$t('settings.cards.outlinedCard.title')"
-          :subtitle="$t('settings.cards.outlinedCard.subtitle')"
-          icon="border_style"
-          header-color="positive"
-          size="sm"
+        <AlertCard
+          severity="warning"
+          title="Warning Alert"
+          subtitle="Attention required"
         >
-          <p>
-            {{ $t('settings.cards.outlinedCard.description') }}
-          </p>
-          <template #actions>
-            <q-btn flat color="positive" :label="$t('settings.cards.outlinedCard.action')" />
-          </template>
-        </BaseCard>
+          <p>Warning message with orange color scheme and warning icon.</p>
+        </AlertCard>
 
-        <!-- Warning Card Example -->
-        <BaseCard
-          variant="modern"
-          :title="$t('settings.cards.warningCard.title')"
-          :subtitle="$t('settings.cards.warningCard.subtitle')"
-          icon="warning"
-          header-color="warning"
+        <AlertCard
+          severity="error"
+          title="Error Alert"
+          subtitle="Something went wrong"
+          dismissible
         >
-          <p>
-            {{ $t('settings.cards.warningCard.description') }}
-          </p>
-          <template #actions>
-            <q-btn color="warning" :label="$t('settings.cards.warningCard.action')" />
-          </template>
-        </BaseCard>
+          <p>Error message with red color scheme and error icon.</p>
+        </AlertCard>
+      </div>
+      
+      <!-- Usage Guidelines -->
+      <div class="usage-guidelines">
+        <h3>When to Use Each Card Type</h3>
+        <div class="guidelines-grid">
+          <div class="guideline-item">
+            <h4>BaseCard</h4>
+            <ul>
+              <li>Static information display</li>
+              <li>Dashboard widgets (non-clickable)</li>
+              <li>Data presentations</li>
+              <li>Content containers</li>
+            </ul>
+          </div>
+          <div class="guideline-item">
+            <h4>InteractiveCard</h4>
+            <ul>
+              <li>Navigation elements</li>
+              <li>Action triggers</li>
+              <li>Menu items</li>
+              <li>Any clickable content</li>
+            </ul>
+          </div>
+          <div class="guideline-item">
+            <h4>AlertCard</h4>
+            <ul>
+              <li>Status messages</li>
+              <li>Notifications</li>
+              <li>Warnings and errors</li>
+              <li>System alerts</li>
+            </ul>
+          </div>
+        </div>
       </div>
 
       <div class="design-notes">
@@ -423,12 +452,16 @@
       </div>
     </div>
 
-    <!-- Modern Card Showcase -->
-    <div class="style-section">
-      <h2 class="section-title">🎨 Modern Card System</h2>
-      <p class="section-description">
-        Ultra-moderne card variants met de nieuwste design trends: glassmorphism, neumorphism, gradient effecten en micro-interactions.
-      </p>
+    <!-- Deprecated System Notice -->
+    <div class="style-section deprecated-section">
+      <h2 class="section-title">🚫 Deprecated Card System</h2>
+      <div class="deprecation-notice">
+        <q-icon name="warning" size="24px" color="warning" />
+        <div>
+          <h3>Legacy System - Do Not Use</h3>
+          <p>The following card variants have been deprecated in favor of our new 3-category system above.</p>
+        </div>
+      </div>
 
       <!-- Demo Notice -->
       <div class="demo-notice">
@@ -749,7 +782,7 @@
   import { ref } from 'vue';
   import PageLayout from 'src/components/PageLayout.vue';
   import PageTitle from 'src/components/PageTitle.vue';
-  import BaseCard from 'src/components/base/BaseCard.vue';
+  import { BaseCard, InteractiveCard, AlertCard } from 'src/components/cards';
 
   // Neutral colors data
   const neutralColors = [

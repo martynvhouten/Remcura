@@ -29,9 +29,12 @@
     <div class="row q-mb-lg stats-cards-container">
       <div class="col-12 col-sm-6 col-md-3 stats-card-col">
         <BaseCard
-          variant="stats"
-          :value="stats.totalUsers"
-          :label="$t('admin.stats.totalUsers')"
+          
+          title=$t('admin.stats.totalUsers')>
+            <div class="stat-display">
+              <div class="stat-value">{{ stats.totalUsers }}</div>
+            </div>
+          
           icon="people"
           icon-color="primary"
           :trend="`${stats.activeUsers} ${$t('admin.stats.activeToday')}`"
@@ -41,9 +44,12 @@
 
       <div class="col-12 col-sm-6 col-md-3 stats-card-col">
         <BaseCard
-          variant="stats"
-          :value="stats.totalLocations"
-          :label="$t('admin.stats.totalLocations')"
+          
+          title=$t('admin.stats.totalLocations')>
+            <div class="stat-display">
+              <div class="stat-value">{{ stats.totalLocations }}</div>
+            </div>
+          
           icon="place"
           icon-color="positive"
           :trend="`${stats.activeLocations} ${$t('admin.stats.active')}`"
@@ -53,9 +59,12 @@
 
       <div class="col-12 col-sm-6 col-md-3 stats-card-col">
         <BaseCard
-          variant="stats"
-          :value="stats.pendingSync"
-          :label="$t('admin.stats.pendingSync')"
+          
+          title=$t('admin.stats.pendingSync')>
+            <div class="stat-display">
+              <div class="stat-value">{{ stats.pendingSync }}</div>
+            </div>
+          
           icon="sync_problem"
           icon-color="warning"
           :trend="`${$t('admin.stats.lastSync')}: ${formatDate(
@@ -67,9 +76,12 @@
 
       <div class="col-12 col-sm-6 col-md-3 stats-card-col">
         <BaseCard
-          variant="stats"
-          :value="stats.todayEvents"
-          :label="$t('admin.stats.todayEvents')"
+          
+          title=$t('admin.stats.todayEvents')>
+            <div class="stat-display">
+              <div class="stat-value">{{ stats.todayEvents }}</div>
+            </div>
+          
           icon="event"
           icon-color="info"
           :trend="`+${stats.eventsGrowth}% ${$t('admin.stats.fromYesterday')}`"
@@ -81,7 +93,7 @@
 
     <!-- Quick Actions -->
     <BaseCard
-      variant="elevated"
+      
       :title="$t('admin.quickActions')"
       icon="admin_panel_settings"
       header-color="primary"
@@ -134,7 +146,7 @@
 
     <!-- 🎭 Revolutionary Magic Invite System -->
     <BaseCard
-      variant="elevated"
+      
       :title="$t('magicInvite.revolutionaryUserSystem')"
       icon="auto_awesome"
       header-color="secondary"
@@ -145,7 +157,7 @@
 
     <!-- 👥 Team Overview - Auto-Upgrade System -->
     <BaseCard
-      variant="elevated"
+      
       :title="$t('admin.teamOverview')"
       icon="group"
       header-color="primary"
@@ -326,7 +338,7 @@
       <q-tab-panel name="permissions">
         <div class="text-h6 q-mb-md">{{ $t('permissions.title') }}</div>
 
-        <BaseCard :title="$t('permissions.templates.title')" variant="outlined">
+        <BaseCard :title="$t('permissions.templates.title')" >
           <div class="row q-gutter-md">
             <q-btn
               v-for="template in permissionTemplates"
@@ -397,7 +409,7 @@
 
         <div class="row q-gutter-md">
           <div class="col-12 col-md-6">
-            <BaseCard :title="$t('analytics.usage')" variant="modern">
+            <BaseCard :title="$t('analytics.usage')" >
               <div class="q-mt-md">
                 <div
                   v-for="event in topEvents"
@@ -422,7 +434,7 @@
           </div>
 
           <div class="col-12 col-md-6">
-            <BaseCard :title="$t('analytics.patterns')" variant="modern">
+            <BaseCard :title="$t('analytics.patterns')" >
               <div class="q-mt-md">
                 <div class="text-h6">
                   {{ analyticsData.averageSessionTime }}min

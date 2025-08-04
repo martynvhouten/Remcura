@@ -64,7 +64,7 @@
       <!-- Quick Actions -->
       <div class="col-12">
         <BaseCard
-          variant="elevated"
+          
           :title="$t('notificationsPage.quickActions')"
           icon="flash_on"
           header-color="warning"
@@ -91,7 +91,7 @@
       <!-- Notifications List -->
       <div class="col-12">
         <BaseCard
-          variant="elevated"
+          
           icon="notifications"
           header-color="info"
           :title="`${
@@ -205,7 +205,7 @@
   import { useButtons } from 'src/composables/useButtons';
   import PageLayout from 'src/components/PageLayout.vue';
   import PageTitle from 'src/components/PageTitle.vue';
-  import BaseCard from 'src/components/base/BaseCard.vue';
+  import { BaseCard, InteractiveCard, AlertCard } from 'src/components/cards';
 
   const $q = useQuasar();
   const { t } = useI18n();

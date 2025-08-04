@@ -54,7 +54,7 @@
       </div>
 
       <!-- Movements Table -->
-      <BaseCard v-else variant="modern" class="movements-table-card">
+      <BaseCard v-else  class="movements-table-card">
         <q-table
           :rows="filteredMovements"
           :columns="columns"
@@ -257,7 +257,7 @@
   import type { FilterValues, FilterChangeEvent, FilterResetEvent } from 'src/types/filters';
   import PageLayout from 'src/components/PageLayout.vue';
   import PageTitle from 'src/components/PageTitle.vue';
-  import BaseCard from 'src/components/base/BaseCard.vue';
+  import { BaseCard, InteractiveCard, AlertCard } from 'src/components/cards';
   import FilterPanel from 'src/components/filters/FilterPanel.vue';
   import { movementsFilterPreset } from 'src/presets/filters/movements';
 

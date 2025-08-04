@@ -53,7 +53,7 @@
       <!-- Active Session Alert -->
       <BaseCard
         v-if="activeSession"
-        variant="modern"
+        
         header-color="info"
         class="active-session-card"
       >
@@ -130,7 +130,7 @@
       </BaseCard>
 
       <!-- Sessions Overview -->
-      <BaseCard variant="modern" class="sessions-overview">
+      <BaseCard  class="sessions-overview">
         <template #header>
           <q-card-section class="sessions-header">
             <div class="text-h6">{{ $t('counting.sessionsOverview') }}</div>
@@ -271,7 +271,7 @@
   import type { CountingSession, PracticeLocation } from 'src/types/inventory';
   import PageLayout from 'src/components/PageLayout.vue';
   import PageTitle from 'src/components/PageTitle.vue';
-  import BaseCard from 'src/components/base/BaseCard.vue';
+  import { BaseCard, InteractiveCard, AlertCard } from 'src/components/cards';
 
   // Lazy loaded dialogs
   const CountingSessionDialog = defineAsyncComponent(

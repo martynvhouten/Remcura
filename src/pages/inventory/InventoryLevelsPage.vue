@@ -26,7 +26,7 @@
     <div class="row q-mb-lg stats-cards-container">
       <div class="col-12 col-sm-6 col-lg-3 stats-card-col">
         <BaseCard
-          variant="modern"
+          
           :title="$t('inventory.totalProducts')"
           :subtitle="selectedLocationName"
           icon="inventory_2"
@@ -43,7 +43,7 @@
 
       <div class="col-12 col-sm-6 col-lg-3 stats-card-col">
         <BaseCard
-          variant="modern"
+          
           :title="$t('inventory.stockLocations')"
           :subtitle="$t('inventory.activeLocations')"
           icon="location_on"
@@ -60,7 +60,7 @@
 
       <div class="col-12 col-sm-6 col-lg-3 stats-card-col">
         <BaseCard
-          variant="modern"
+          
           :title="$t('inventory.dataLoaded')"
           :subtitle="$t('inventory.upToDate')"
           icon="check_circle"
@@ -81,7 +81,7 @@
 
       <div class="col-12 col-sm-6 col-lg-3 stats-card-col">
         <BaseCard
-          variant="modern"
+          
           :title="$t('inventory.lastUpdated')"
           :subtitle="$t('inventory.refreshData')"
           icon="refresh"
@@ -113,7 +113,7 @@
 
     <!-- Stock Levels Table -->
     <BaseCard
-      variant="outlined"
+      
       :title="$t('inventory.stockLevels')"
       icon="table_chart"
       header-color="primary"
@@ -290,7 +290,7 @@ import { useQuasar, date } from 'quasar';
 import { useI18n } from 'vue-i18n';
 import PageTitle from 'src/components/PageTitle.vue';
 import PageLayout from 'src/components/PageLayout.vue';
-import BaseCard from 'src/components/base/BaseCard.vue';
+import { BaseCard, InteractiveCard, AlertCard } from 'src/components/cards';
 import FilterPanel from 'src/components/filters/FilterPanel.vue';
 import { inventoryFilterPreset } from 'src/presets/filters/inventory';
 import { supabase } from 'src/boot/supabase';

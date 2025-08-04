@@ -33,9 +33,12 @@
     <div class="row q-mb-lg stats-cards-container">
       <div class="col-12 col-sm-6 col-md-3 stats-card-col">
         <BaseCard
-          variant="stats"
-          :value="summary.totalEvents || 0"
-          :label="$t('analyticsPage.totalEvents')"
+          
+          title=$t('analyticsPage.totalEvents')>
+            <div class="stat-display">
+              <div class="stat-value">{{ summary.totalEvents || 0 }}</div>
+            </div>
+          
           icon="event"
           icon-color="primary"
         />
@@ -43,9 +46,12 @@
 
       <div class="col-12 col-sm-6 col-md-3 stats-card-col">
         <BaseCard
-          variant="stats"
-          :value="summary.activeUsers || 0"
-          :label="$t('analyticsPage.activeUsers')"
+          
+          title=$t('analyticsPage.activeUsers')>
+            <div class="stat-display">
+              <div class="stat-value">{{ summary.activeUsers || 0 }}</div>
+            </div>
+          
           icon="people"
           icon-color="positive"
         />
@@ -53,9 +59,12 @@
 
       <div class="col-12 col-sm-6 col-md-3 stats-card-col">
         <BaseCard
-          variant="stats"
-          :value="orderMetrics.totalOrders || 0"
-          :label="$t('analyticsPage.totalOrders')"
+          
+          title=$t('analyticsPage.totalOrders')>
+            <div class="stat-display">
+              <div class="stat-value">{{ orderMetrics.totalOrders || 0 }}</div>
+            </div>
+          
           icon="shopping_cart"
           icon-color="warning"
         />
@@ -63,9 +72,12 @@
 
       <div class="col-12 col-sm-6 col-md-3 stats-card-col">
         <BaseCard
-          variant="stats"
-          :value="productMetrics.totalUpdates || 0"
-          :label="$t('analyticsPage.productUpdates')"
+          
+          title=$t('analyticsPage.productUpdates')>
+            <div class="stat-display">
+              <div class="stat-value">{{ productMetrics.totalUpdates || 0 }}</div>
+            </div>
+          
           icon="inventory"
           icon-color="info"
         />
@@ -76,7 +88,7 @@
     <div class="row q-gutter-md q-mb-lg">
       <!-- Daily Activity Summary -->
       <div class="col-12 col-lg-8">
-        <BaseCard :title="$t('analyticsPage.dailyActivity')" variant="modern">
+        <BaseCard :title="$t('analyticsPage.dailyActivity')" >
           <div
             v-if="!loading && dailyChartData.length > 0"
             class="activity-summary"
@@ -117,7 +129,7 @@
 
       <!-- Top Events Chart -->
       <div class="col-12 col-lg-4">
-        <BaseCard :title="$t('analyticsPage.topEvents')" variant="modern">
+        <BaseCard :title="$t('analyticsPage.topEvents')" >
           <div v-if="summary.topEvents && summary.topEvents.length > 0">
             <div
               v-for="[event, count] in (summary.topEvents || []).slice(0, 5)"
@@ -155,7 +167,7 @@
       <div class="col-12 col-lg-6">
         <BaseCard
           :title="$t('analyticsPage.frequentlyOrderedItems')"
-          variant="modern"
+          
           padding="none"
         >
           <q-table
@@ -182,7 +194,7 @@
       <div class="col-12 col-lg-6">
         <BaseCard
           :title="$t('analyticsPage.mostUpdatedProducts')"
-          variant="modern"
+          
           padding="none"
         >
           <q-table
@@ -209,7 +221,7 @@
       <div class="col-12">
         <BaseCard
           :title="$t('analyticsPage.userActivity')"
-          variant="modern"
+          
           padding="none"
         >
           <q-table
@@ -245,7 +257,7 @@
   import { useButtons } from 'src/composables/useButtons';
   import PageTitle from 'src/components/PageTitle.vue';
   import PageLayout from 'src/components/PageLayout.vue';
-  import BaseCard from 'src/components/base/BaseCard.vue';
+  import { BaseCard, InteractiveCard, AlertCard } from 'src/components/cards';
   import { 
     AnalyticsService,
     type AnalyticsSummary,

@@ -23,45 +23,53 @@
         <!-- Total Batches Card -->
         <div class="col-12 col-sm-6 col-md-3 stats-card-col">
           <BaseCard
-            variant="stats"
-            :value="totalBatches"
-            :label="$t('batch.totalBatches')"
+            :title="$t('batch.totalBatches')"
             icon="inventory"
             icon-color="primary"
-          />
+          >
+            <div class="stat-display">
+              <div class="stat-value">{{ totalBatches }}</div>
+            </div>
+          </BaseCard>
         </div>
 
         <!-- Expiring Soon Card -->
         <div class="col-12 col-sm-6 col-md-3 stats-card-col">
           <BaseCard
-            variant="stats"
-            :value="expiringBatches"
-            :label="$t('batch.expiringSoon')"
+            :title="$t('batch.expiringSoon')"
             icon="warning"
             :icon-color="expiringBatches > 0 ? 'warning' : 'info'"
-          />
+          >
+            <div class="stat-display">
+              <div class="stat-value">{{ expiringBatches }}</div>
+            </div>
+          </BaseCard>
         </div>
 
         <!-- Active Batches Card -->
         <div class="col-12 col-sm-6 col-md-3 stats-card-col">
           <BaseCard
-            variant="stats"
-            :value="activeBatches"
-            :label="$t('batch.activeBatches')"
+            :title="$t('batch.activeBatches')"
             icon="check_circle"
             icon-color="positive"
-          />
+          >
+            <div class="stat-display">
+              <div class="stat-value">{{ activeBatches }}</div>
+            </div>
+          </BaseCard>
         </div>
 
         <!-- Total Value Card -->
         <div class="col-12 col-sm-6 col-md-3 stats-card-col">
           <BaseCard
-            variant="stats"
-            :value="formatCurrency(totalValue, 'EUR')"
-            :label="$t('batch.totalValue')"
+            :title="$t('batch.totalValue')"
             icon="euro"
             icon-color="primary"
-          />
+          >
+            <div class="stat-display">
+              <div class="stat-value">{{ formatCurrency(totalValue, 'EUR') }}</div>
+            </div>
+          </BaseCard>
         </div>
       </div>
 
@@ -76,12 +84,12 @@
           <!-- Scan Batch Action -->
           <div class="col-12 col-sm-6 col-md-3">
             <BaseCard
-              variant="quick-action"
+              
               title="Scan Batch"
-              action-description="Scan barcode om batch te vinden"
-              action-icon="qr_code_scanner"
-              gradient-direction="blue"
-              :action-progress="0"
+              subtitle="Scan barcode om batch te vinden"
+              icon="qr_code_scanner"
+              
+              
               @click="openBarcodeScanner"
               class="cursor-pointer"
             />
@@ -90,13 +98,13 @@
           <!-- View Expiring Action -->
           <div class="col-12 col-sm-6 col-md-3">
             <BaseCard
-              variant="quick-action"
+              
               title="View Expiring"
-              :action-description="`${expiringBatches} batches verlopen binnenkort`"
-              action-icon="warning"
-              gradient-direction="orange"
-              :action-badge="expiringBatches > 0 ? expiringBatches : undefined"
-              :action-progress="Math.round((expiringBatches / Math.max(totalBatches, 1)) * 100)"
+              :subtitle="`${expiringBatches} batches verlopen binnenkort`"
+              icon="warning"
+              
+              
+              
               @click="filterExpiring"
               class="cursor-pointer"
               :class="showExpiringOnly ? 'expiring-active' : ''"
@@ -106,12 +114,12 @@
           <!-- Export Batches Action -->
           <div class="col-12 col-sm-6 col-md-3">
             <BaseCard
-              variant="quick-action"
+              
               title="Export Batches"
-              action-description="Download batch gegevens"
-              action-icon="download"
-              gradient-direction="green"
-              :action-progress="0"
+              subtitle="Download batch gegevens"
+              icon="download"
+              
+              
               @click="exportBatches"
               class="cursor-pointer"
             />
@@ -243,7 +251,7 @@
   import { useAuthStore } from 'src/stores/auth';
   import PageLayout from 'src/components/PageLayout.vue';
   import PageTitle from 'src/components/PageTitle.vue';
-  import BaseCard from 'src/components/base/BaseCard.vue';
+  import { BaseCard, InteractiveCard, AlertCard } from 'src/components/cards';
   import BatchOverview from 'src/components/BatchOverview.vue';
   import BatchRegistrationForm from 'src/components/BatchRegistrationForm.vue';
   import BatchDetailCard from 'src/components/BatchDetailCard.vue';

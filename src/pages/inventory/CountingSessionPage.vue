@@ -69,7 +69,7 @@
       </div>
 
       <!-- Session Not Found -->
-      <BaseCard v-else-if="!session" variant="modern" header-color="negative">
+      <BaseCard v-else-if="!session"  header-color="negative">
         <q-card-section class="text-center">
           <q-icon name="error_outline" size="xl" color="negative" />
           <div class="text-h6 q-mt-md">
@@ -91,7 +91,7 @@
       <!-- Session Content -->
       <template v-else>
         <!-- Session Summary -->
-        <BaseCard variant="modern" class="session-summary">
+        <BaseCard  class="session-summary">
           <template #header>
             <q-card-section class="session-header">
               <div class="text-h6">{{ $t('counting.sessionSummary') }}</div>
@@ -166,7 +166,7 @@
         />
 
         <!-- Counting Results Table (for completed sessions) -->
-        <BaseCard v-else variant="modern" class="counting-results">
+        <BaseCard v-else  class="counting-results">
           <template #header>
             <q-card-section class="results-header">
               <div class="text-h6">{{ $t('counting.countingResults') }}</div>
@@ -242,7 +242,7 @@
   } from 'src/types/inventory';
   import PageLayout from 'src/components/PageLayout.vue';
   import PageTitle from 'src/components/PageTitle.vue';
-  import BaseCard from 'src/components/base/BaseCard.vue';
+  import { BaseCard, InteractiveCard, AlertCard } from 'src/components/cards';
 
   // Lazy loaded components
   const MobileCountingInterface = defineAsyncComponent(
