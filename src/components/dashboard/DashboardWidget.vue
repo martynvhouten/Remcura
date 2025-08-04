@@ -25,10 +25,10 @@
             <q-menu>
               <q-list dense>
                 <q-item clickable v-close-popup>
-                  <q-item-section>Vernieuwen</q-item-section>
+                  <q-item-section>{{ $t('common.refresh') }}</q-item-section>
                 </q-item>
                 <q-item clickable v-close-popup>
-                  <q-item-section>Exporteren</q-item-section>
+                  <q-item-section>{{ $t('common.export') }}</q-item-section>
                 </q-item>
               </q-list>
             </q-menu>
@@ -67,7 +67,7 @@
       <!-- Fallback -->
       <div v-else class="fallback-widget">
         <q-icon name="widgets" size="3rem" color="grey-5" />
-        <p class="text-grey-6 q-mt-md">Widget type niet ondersteund</p>
+        <p class="text-grey-6 q-mt-md">{{ $t('dashboard.widgetTypeNotSupported') }}</p>
       </div>
     </q-card-section>
 

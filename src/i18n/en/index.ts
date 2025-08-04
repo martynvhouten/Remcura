@@ -7,14 +7,12 @@ export default {
   // Brand
   brand: {
     name: 'Remcura',
-    edition: 'Professional Edition',
     tagline: 'Professional Medical Inventory',
   },
 
   // Clinic
   clinic: {
-    defaultName: 'Default Clinic',
-    professionalPlan: 'Professional Plan',
+    defaultName: 'Demo Clinic',
     settings: 'Clinic Settings',
     information: 'Clinic Information',
   },
@@ -263,6 +261,7 @@ export default {
     failedToLoadData: 'Failed to load dashboard data',
     dataRefreshedSuccessfully: 'Data refreshed successfully',
     failedToRefreshData: 'Failed to refresh data',
+    widgetTypeNotSupported: 'Widget type not supported',
 
     // Empty state
     empty: {
@@ -328,6 +327,16 @@ export default {
         quickScanDescription: 'Scan a product barcode for quick inventory updates',
         analyticsOverview: 'Analytics overview',
         businessOverview: 'Business overview',
+        financialSummary: 'Financial overview',
+        monthlyRevenue: 'Revenue this month',
+        inventoryCosts: 'Inventory costs',
+        netProfit: 'Net profit',
+        userManagement: 'User management',
+        systemHealth: 'System health',
+        systemStatus: 'System status',
+        ownerLastActive: 'Owner - Last active: {time}',
+        managerOnlineNow: 'Manager - Online now',
+        assistantLastActive: 'Assistant - Last active: {time}',
       },
       quickActions: {
         scanProduct: 'Scan product',

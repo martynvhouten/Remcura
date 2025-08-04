@@ -787,13 +787,13 @@ class DashboardService {
       case 'financial-summary':
         return {
           id: 'financial-summary',
-          title: 'Financieel Overzicht',
+          title: t('dashboard.service.widgets.financialSummary'),
           type: 'metric',
           data: { 
             metrics: [
-              { key: 'revenue', value: '€45.230', label: 'Omzet deze maand', icon: 'trending_up', color: 'positive' },
-              { key: 'costs', value: '€12.840', label: 'Voorraadkosten', icon: 'account_balance', color: 'warning' },
-              { key: 'profit', value: '€32.390', label: 'Netto winst', icon: 'savings', color: 'positive' }
+              { key: 'revenue', value: '€45.230', label: t('dashboard.service.widgets.monthlyRevenue'), icon: 'trending_up', color: 'positive' },
+              { key: 'costs', value: '€12.840', label: t('dashboard.service.widgets.inventoryCosts'), icon: 'account_balance', color: 'warning' },
+              { key: 'profit', value: '€32.390', label: t('dashboard.service.widgets.netProfit'), icon: 'savings', color: 'positive' }
             ]
           },
           size: 'large',
@@ -804,13 +804,13 @@ class DashboardService {
       case 'user-management':
         return {
           id: 'user-management',
-          title: 'Gebruikersbeheer',
+          title: t('dashboard.service.widgets.userManagement'),
           type: 'list',
           data: { 
             items: [
-              { title: 'Dr. Sarah Johnson', subtitle: 'Eigenaar - Laatst actief: 2 uur geleden', icon: 'person' },
-              { title: 'Mark van der Berg', subtitle: 'Manager - Online nu', icon: 'person' },
-              { title: 'Lisa de Vries', subtitle: 'Assistent - Laatst actief: 1 dag geleden', icon: 'person' }
+              { title: 'Dr. Sarah Johnson', subtitle: t('dashboard.service.widgets.ownerLastActive', { time: '2 uur geleden' }), icon: 'person' },
+              { title: 'Mark van der Berg', subtitle: t('dashboard.service.widgets.managerOnlineNow'), icon: 'person' },
+              { title: 'Lisa de Vries', subtitle: t('dashboard.service.widgets.assistantLastActive', { time: '1 dag geleden' }), icon: 'person' }
             ]
           },
           size: 'medium',
@@ -821,11 +821,11 @@ class DashboardService {
       case 'system-health':
         return {
           id: 'system-health',
-          title: 'Systeem Gezondheid',
+          title: t('dashboard.service.widgets.systemHealth'),
           type: 'metric',
           data: { 
             value: 98,
-            label: 'Systeem Status',
+            label: t('dashboard.service.widgets.systemStatus'),
             icon: 'health_and_safety',
             color: 'positive'
           },

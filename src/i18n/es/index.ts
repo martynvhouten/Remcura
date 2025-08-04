@@ -7,14 +7,13 @@ export default {
   // Brand
   brand: {
     name: 'Remcura',
-    edition: 'Edición profesional',
+
     tagline: 'Inventario médico profesional',
   },
 
   // Clinic
   clinic: {
-    defaultName: 'Clínica predeterminada',
-    professionalPlan: 'Plan profesional',
+    defaultName: 'Clínica demo',
     settings: 'Configuración de clínica',
     information: 'Información de clínica',
   },
@@ -264,6 +263,7 @@ export default {
     failedToLoadData: 'Error al cargar datos del panel',
     dataRefreshedSuccessfully: 'Datos actualizados exitosamente',
     failedToRefreshData: 'Error al actualizar datos',
+    widgetTypeNotSupported: 'Tipo de widget no compatible',
 
     // Empty state
     empty: {
@@ -329,6 +329,16 @@ export default {
         quickScanDescription: 'Escanea un código de barras de producto para actualizaciones rápidas de inventario',
         analyticsOverview: 'Resumen de análisis',
         businessOverview: 'Resumen de negocio',
+        financialSummary: 'Resumen financiero',
+        monthlyRevenue: 'Ingresos este mes',
+        inventoryCosts: 'Costos de inventario',
+        netProfit: 'Beneficio neto',
+        userManagement: 'Gestión de usuarios',
+        systemHealth: 'Salud del sistema',
+        systemStatus: 'Estado del sistema',
+        ownerLastActive: 'Propietario - Última actividad: {time}',
+        managerOnlineNow: 'Gerente - En línea ahora',
+        assistantLastActive: 'Asistente - Última actividad: {time}',
       },
       quickActions: {
         scanProduct: 'Escanear producto',

@@ -174,7 +174,7 @@ const showProgress = computed(() =>
   props.data.practiceHealth !== undefined && isSingleMetric.value
 );
 
-const progressLabel = computed(() => 'Systeem Gezondheid');
+const progressLabel = computed(() => $t('dashboard.service.widgets.systemHealth'));
 const progressValue = computed(() => props.data.practiceHealth || 0);
 const progressColor = computed(() => {
   const value = progressValue.value;

@@ -28,7 +28,6 @@
           </q-avatar>
           <div class="brand-text">
             <div class="brand-title">{{ $t('brand.name') }}</div>
-            <div class="brand-subtitle">{{ $t('brand.edition') }}</div>
           </div>
         </div>
 

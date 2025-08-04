@@ -7,14 +7,13 @@ export default {
   // Brand
   brand: {
     name: 'Remcura',
-    edition: 'Professionele editie',
+
     tagline: 'Professioneel medisch voorraadbeheer',
   },
 
   // Clinic
   clinic: {
-    defaultName: 'Standaard kliniek',
-    professionalPlan: 'Professioneel plan',
+    defaultName: 'Demo kliniek',
     settings: 'Kliniek instellingen',
     information: 'Kliniek informatie',
   },
@@ -313,6 +312,8 @@ export default {
       switchFailed: 'Wisselen van rol mislukt',
       tryAgain: 'Probeer het opnieuw',
     },
+    
+    widgetTypeNotSupported: 'Widget type niet ondersteund',
 
     // Service layer translations
     service: {
@@ -329,6 +330,16 @@ export default {
         quickScanDescription: 'Scan een product barcode voor snelle voorraad updates',
         analyticsOverview: 'Analytics overzicht',
         businessOverview: 'Business overzicht',
+        financialSummary: 'Financieel overzicht',
+        monthlyRevenue: 'Omzet deze maand',
+        inventoryCosts: 'Voorraadkosten',
+        netProfit: 'Netto winst',
+        userManagement: 'Gebruikersbeheer',
+        systemHealth: 'Systeem gezondheid',
+        systemStatus: 'Systeem status',
+        ownerLastActive: 'Eigenaar - Laatst actief: {time}',
+        managerOnlineNow: 'Manager - Online nu',
+        assistantLastActive: 'Assistent - Laatst actief: {time}',
       },
       quickActions: {
         scanProduct: 'Scan product',
