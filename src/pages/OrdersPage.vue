@@ -382,7 +382,7 @@ const columns = computed(() => [
   },
   {
     name: 'status',
-    label: t('orders.status'),
+    label: t('orders.columns.status'),
     field: 'status',
     align: 'center' as const,
     sortable: true,
