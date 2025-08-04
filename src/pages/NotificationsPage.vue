@@ -507,7 +507,6 @@
 </script>
 
 <style scoped>
-  
-
-  .body--dark 
+// All styling is now handled by the new card components
+// No custom styling needed here
 </style>

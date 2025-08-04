@@ -14,9 +14,7 @@
 
         <!-- Main Auth Container -->
         <div class="auth-container">
-          <!-- Auth Card with Glass Morphism -->
-          <div >
-            <!-- Header Section -->
+          <!-- Header Section -->
             <div class="auth-header">
               <div class="brand-section">
                 <q-avatar size="64px" class="brand-avatar">
@@ -262,11 +260,29 @@ export default defineComponent({
     align-items: center;
   }
 
-  // Auth card styling
-  
-  }
+      // Auth container styling
+    .auth-container {
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: var(--radius-2xl);
+      padding: var(--space-8);
+      box-shadow: var(--shadow-lg);
+      transition: all var(--transition-base);
+      max-width: 480px;
+      width: 100%;
 
-  body.body--dark 
+      &:hover {
+        transform: translateY(-1px);
+        box-shadow: var(--shadow-xl);
+      }
+    }
+ 
+   body.body--dark .auth-container {
+     background: rgba(23, 23, 23, 0.95);
+     border-color: rgba(255, 255, 255, 0.1);
+   } 
 
   // Header section
   .auth-header {
@@ -498,9 +514,11 @@ export default defineComponent({
       padding: var(--space-2);
     }
 
-    
+         .auth-container {
+       padding: var(--space-4);
+     }
 
-    .auth-header {
+      .auth-header {
       margin-bottom: var(--space-6);
     }
 

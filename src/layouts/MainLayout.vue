@@ -265,9 +265,9 @@
 
       <!-- Footer Section -->
       <div class="drawer-footer">
-        <q-item
-                          
-          clickable
+                  <q-item
+            class="upgrade-item"
+            clickable
           tabindex="0"
           role="button"
           :aria-label="$t('nav.upgradePlan')"
@@ -986,11 +986,20 @@
 
     .drawer-footer {
       padding: var(--space-4);
-      border-top: 1px solid var(--neutral-200);
+              border-top: 1px solid var(--neutral-200);
 
-      
+        .upgrade-item {
+          border-radius: var(--radius-lg);
+          cursor: pointer;
+          transition: all var(--transition-base);
+          padding: var(--space-3);
+          
+          &:hover {
+            background: var(--q-primary);
+            color: white;
+          }
 
-        &:focus {
+          &:focus {
           outline: 2px solid var(--brand-primary);
           outline-offset: 2px;
           box-shadow: var(--shadow-lg);
