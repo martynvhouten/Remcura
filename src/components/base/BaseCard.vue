@@ -73,11 +73,6 @@ interface Props {
   // Layout props
   padding?: 'none' | 'sm' | 'md' | 'lg';
   
-  // Legacy props (deprecated but kept for backwards compatibility)
-  variant?: string; // DEPRECATED - will be removed in future version
-  headerColor?: string; // DEPRECATED
-  size?: string; // DEPRECATED
-  
   // Custom classes
   cardClass?: string;
   headerClass?: string;
@@ -140,10 +135,9 @@ const cardClasses = computed(() => {
   border-radius: 12px;
   background: var(--card-background, #ffffff);
   border: 1px solid var(--card-border, rgba(0, 0, 0, 0.08));
-  box-shadow: var(--card-shadow, 
+  box-shadow: 
     0 1px 3px rgba(0, 0, 0, 0.08),
-    0 1px 2px rgba(0, 0, 0, 0.06)
-  );
+    0 1px 2px rgba(0, 0, 0, 0.06);
   transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
   overflow: hidden;
   
@@ -151,9 +145,6 @@ const cardClasses = computed(() => {
   .body--dark & {
     --card-background: #1e1e1e;
     --card-border: rgba(255, 255, 255, 0.1);
-    --card-shadow: 
-      0 1px 3px rgba(0, 0, 0, 0.3),
-      0 1px 2px rgba(0, 0, 0, 0.2);
   }
 }
 

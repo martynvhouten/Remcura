@@ -1,8 +1,8 @@
 <template>
   <PageLayout>
     <template #header>
-      <PageTitle
-        :title="$t('settings.title')"
+    <PageTitle
+      :title="$t('settings.title')"
         :subtitle="$t('settings.manageSettingsSubtitle')"
           icon="tune"
         :meta="[
@@ -30,7 +30,6 @@
       <!-- User Profile Settings -->
       <div class="settings-section">
         <BaseCard
-          
           :title="$t('settings.profile')"
           :subtitle="$t('settings.profileSubtitle')"
           icon="person"
@@ -79,104 +78,103 @@
         </BaseCard>
       </div>
 
-      <!-- Appearance Settings -->
-      <div class="settings-section">
+          <!-- Appearance Settings -->
+          <div class="settings-section">
         <BaseCard
-          
           :title="$t('settings.appearanceTitle')"
           :subtitle="$t('settings.appearanceSubtitle')"
           icon="palette"
           icon-color="secondary"
         >
-          <div
-            class="settings-items"
-            role="group"
-            aria-labelledby="appearance-title"
-          >
-            <!-- Dark Mode Toggle -->
+            <div
+              class="settings-items"
+              role="group"
+              aria-labelledby="appearance-title"
+            >
+              <!-- Dark Mode Toggle -->
             <div class="setting-item glass-card">
-              <div class="setting-info">
-                <div class="setting-label" id="dark-mode-label">
-                  {{ $t('settings.darkMode') }}
+                <div class="setting-info">
+                  <div class="setting-label" id="dark-mode-label">
+                    {{ $t('settings.darkMode') }}
+                  </div>
+                  <div class="setting-description">
+                    {{ $t('settings.darkModeDescription') }}
+                  </div>
                 </div>
-                <div class="setting-description">
-                  {{ $t('settings.darkModeDescription') }}
+                <div class="setting-control">
+                  <q-toggle
+                    v-model="isDarkMode"
+                    @update:model-value="toggleDarkMode"
+                    color="primary"
+                    size="lg"
+                    class="toggle-modern"
+                    :aria-labelledby="'dark-mode-label'"
+                    :aria-describedby="'dark-mode-description'"
+                  />
+                  <div id="dark-mode-description" class="sr-only">
+                    {{
+                      isDarkMode
+                        ? $t('settings.darkModeEnabled')
+                        : $t('settings.lightModeEnabled')
+                    }}
+                  </div>
                 </div>
-              </div>
-              <div class="setting-control">
-                <q-toggle
-                  v-model="isDarkMode"
-                  @update:model-value="toggleDarkMode"
-                  color="primary"
-                  size="lg"
-                  class="toggle-modern"
-                  :aria-labelledby="'dark-mode-label'"
-                  :aria-describedby="'dark-mode-description'"
-                />
-                <div id="dark-mode-description" class="sr-only">
-                  {{
-                    isDarkMode
-                      ? $t('settings.darkModeEnabled')
-                      : $t('settings.lightModeEnabled')
-                  }}
-                </div>
-              </div>
             </div>
 
-            <!-- Language Setting -->
+              <!-- Language Setting -->
             <div class="setting-item glass-card">
-              <div class="setting-info">
-                <div class="setting-label" id="language-label">
-                  {{ $t('settings.language') }}
+                <div class="setting-info">
+                  <div class="setting-label" id="language-label">
+                    {{ $t('settings.language') }}
+                  </div>
+                  <div class="setting-description">
+                    {{ $t('settings.selectLanguage') }}
+                  </div>
                 </div>
-                <div class="setting-description">
-                  {{ $t('settings.selectLanguage') }}
-                </div>
-              </div>
-              <div class="setting-control">
-                <q-select
+                <div class="setting-control">
+                  <q-select
                   v-model="selectedLanguage"
                   :options="languageOptions"
                   @update:model-value="changeLanguage"
                   option-value="value"
                   option-label="label"
-                  emit-value
-                  map-options
-                  outlined
-                  dense
+                    emit-value
+                    map-options
+                    outlined
+                    dense
                   class="select-modern"
                   style="width: 150px"
-                  :aria-labelledby="'language-label'"
-                />
-              </div>
+                    :aria-labelledby="'language-label'"
+                  />
+                </div>
             </div>
 
-            <!-- Theme Setting -->
+              <!-- Theme Setting -->
             <div class="setting-item glass-card">
-              <div class="setting-info">
-                <div class="setting-label" id="theme-label">
+                <div class="setting-info">
+                  <div class="setting-label" id="theme-label">
                   {{ $t('settings.colorSchemeTitle') }}
-                </div>
-                <div class="setting-description">
+                  </div>
+                  <div class="setting-description">
                   {{ $t('settings.colorSchemeDescription') }}
                 </div>
-              </div>
-              <div class="setting-control">
-                <q-select
-                  v-model="selectedTheme"
-                  :options="themeOptions"
+                </div>
+                <div class="setting-control">
+                  <q-select
+                    v-model="selectedTheme"
+                    :options="themeOptions"
                   @update:model-value="changeTheme"
                   option-value="value"
                   option-label="label"
-                  emit-value
-                  map-options
-                  outlined
-                  dense
+                    emit-value
+                    map-options
+                    outlined
+                    dense
                   class="select-modern"
                   style="width: 150px"
-                  :aria-labelledby="'theme-label'"
-                />
-              </div>
+                    :aria-labelledby="'theme-label'"
+                  />
+                </div>
             </div>
           </div>
         </BaseCard>
@@ -212,83 +210,83 @@
               role="group"
               aria-labelledby="clinic-title"
             >
-              <q-input
+                <q-input
                 v-model="clinicSettings.name"
                 :label="$t('settings.clinicName')"
-                outlined
+                  outlined
                 readonly
                 class="input-modern"
                 :aria-label="`${$t('settings.clinicName')}: ${
                   clinicSettings.name
                 }`"
-              >
-                <template v-slot:prepend>
+                >
+                  <template v-slot:prepend>
                   <q-icon name="business" aria-hidden="true" />
-                </template>
-              </q-input>
+                  </template>
+                </q-input>
 
-              <q-input
+                <q-input
                 v-model="clinicSettings.contactEmail"
                 :label="$t('settings.contactEmail')"
-                outlined
-                readonly
+                  outlined
+                  readonly
                 class="input-modern"
                 :aria-label="`${$t('settings.contactEmail')}: ${
                   clinicSettings.contactEmail
                 }`"
-              >
-                <template v-slot:prepend>
-                  <q-icon name="email" aria-hidden="true" />
-                </template>
-              </q-input>
+                >
+                  <template v-slot:prepend>
+                    <q-icon name="email" aria-hidden="true" />
+                  </template>
+                </q-input>
 
-              <q-input
+                <q-input
                 v-model="clinicSettings.contactPhone"
                 :label="$t('settings.phoneNumber')"
-                outlined
+                  outlined
                 readonly
                 class="input-modern"
                 :aria-label="`${$t('settings.phoneNumber')}: ${
                   clinicSettings.contactPhone
                 }`"
-              >
-                <template v-slot:prepend>
-                  <q-icon name="phone" aria-hidden="true" />
-                </template>
-              </q-input>
+                >
+                  <template v-slot:prepend>
+                    <q-icon name="phone" aria-hidden="true" />
+                  </template>
+                </q-input>
 
-              <q-input
+                <q-input
                 v-model="clinicSettings.address"
                 :label="$t('settings.address')"
-                outlined
+                  outlined
                 readonly
                 class="input-modern"
                 :aria-label="`${$t('settings.address')}: ${
                   clinicSettings.address
                 }`"
-              >
-                <template v-slot:prepend>
-                  <q-icon name="location_on" aria-hidden="true" />
-                </template>
-              </q-input>
-            </div>
+                >
+                  <template v-slot:prepend>
+                    <q-icon name="location_on" aria-hidden="true" />
+                  </template>
+                </q-input>
+              </div>
 
-            <div class="clinic-notice">
+              <div class="clinic-notice">
               <q-banner class="notice-banner glass-card" rounded>
                 <template v-slot:avatar>
                   <q-icon name="info" color="info" />
                 </template>
-                <div class="notice-text">
-                  {{ $t('settings.contactSettingsNotice') }}
-                </div>
+                  <div class="notice-text">
+                    {{ $t('settings.contactSettingsNotice') }}
+                  </div>
               </q-banner>
-            </div>
+              </div>
           </q-card-section>
         </q-card>
-      </div>
+          </div>
 
-      <!-- Notification Settings -->
-      <div class="settings-section">
+          <!-- Notification Settings -->
+          <div class="settings-section">
         <q-card class="card-modern card-elevated">
           <q-card-section class="card-header">
             <div class="card-header-content">
@@ -310,7 +308,7 @@
             <div class="settings-items">
               <!-- Low Stock Alerts -->
               <div class="setting-item glass-card">
-                <div class="setting-info">
+              <div class="setting-info">
                   <div class="setting-label">
                     {{ $t('settings.stockAlertsLabel') }}
                   </div>
@@ -332,23 +330,23 @@
                 <div class="setting-info">
                   <div class="setting-label">
                     {{ $t('settings.emailNotificationsLabel') }}
-                  </div>
-                  <div class="setting-description">
-                    {{ $t('settings.emailNotificationsDescription') }}
-                  </div>
                 </div>
-                <div class="setting-control">
-                  <q-toggle
+                <div class="setting-description">
+                  {{ $t('settings.emailNotificationsDescription') }}
+                </div>
+              </div>
+              <div class="setting-control">
+                <q-toggle
                     v-model="notificationSettings.emailNotifications"
-                    color="primary"
-                    class="toggle-modern"
-                  />
+                  color="primary"
+                  class="toggle-modern"
+                />
                 </div>
               </div>
 
               <!-- Browser Notifications -->
               <div class="setting-item glass-card">
-                <div class="setting-info">
+              <div class="setting-info">
                   <div class="setting-label">
                     {{ $t('settings.browserNotificationsLabel') }}
                   </div>
@@ -417,9 +415,9 @@
                   </a>
                 </div>
               </div>
-            </div>
-          </q-card-section>
-        </q-card>
+          </div>
+        </q-card-section>
+      </q-card>
       </div>
     </div>
   </PageLayout>
@@ -533,7 +531,7 @@
     try {
       // Here you would save the settings to your backend/store
       await new Promise(resolve => setTimeout(resolve, 1000)); // Simulate API call
-
+      
       $q.notify({
         type: 'positive',
         message: t('settings.settingsSaved'),
@@ -571,7 +569,7 @@
     grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
     gap: var(--space-6);
 
-    .settings-section {
+  .settings-section {
       &.full-width {
         grid-column: 1 / -1;
       }
@@ -623,26 +621,26 @@
     &:hover {
       border-color: var(--neutral-300);
       box-shadow: var(--shadow-sm);
-    }
+  }
 
-    .setting-info {
-      flex: 1;
+  .setting-info {
+    flex: 1;
 
-      .setting-label {
-        font-size: var(--text-base);
+    .setting-label {
+      font-size: var(--text-base);
         font-weight: var(--font-weight-medium);
         color: var(--neutral-900);
-        margin-bottom: var(--space-1);
-      }
-
-      .setting-description {
-        font-size: var(--text-sm);
-        color: var(--neutral-600);
-        margin: 0;
-      }
+      margin-bottom: var(--space-1);
     }
 
-    .setting-control {
+    .setting-description {
+      font-size: var(--text-sm);
+        color: var(--neutral-600);
+        margin: 0;
+    }
+  }
+
+  .setting-control {
       margin-left: var(--space-4);
     }
   }
@@ -663,7 +661,7 @@
     border-radius: var(--radius-lg);
   }
 
-  .toggle-modern {
+    .toggle-modern {
     .q-toggle__track {
       border-radius: var(--radius-full);
     }
@@ -766,10 +764,10 @@
       align-items: stretch;
       gap: var(--space-3);
 
-      .setting-control {
-        margin-left: 0;
-        align-self: flex-end;
-      }
+    .setting-control {
+      margin-left: 0;
+      align-self: flex-end;
+    }
     }
   }
 
@@ -805,7 +803,7 @@
   }
 
   // Screen reader only content
-  .sr-only {
+.sr-only {
     position: absolute !important;
     width: 1px !important;
     height: 1px !important;
@@ -826,5 +824,5 @@
   .select-modern:focus-within {
     outline: 2px solid var(--brand-primary);
     outline-offset: 2px;
-  }
+}
 </style>

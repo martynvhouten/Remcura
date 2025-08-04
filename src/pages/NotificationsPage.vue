@@ -64,10 +64,9 @@
       <!-- Quick Actions -->
       <div class="col-12">
         <BaseCard
-          
           :title="$t('notificationsPage.quickActions')"
           icon="flash_on"
-          header-color="warning"
+          icon-color="warning"
         >
           <div class="row q-gutter-sm">
             <q-btn
@@ -91,9 +90,8 @@
       <!-- Notifications List -->
       <div class="col-12">
         <BaseCard
-          
           icon="notifications"
-          header-color="info"
+          icon-color="info"
           :title="`${
             filter === 'all'
               ? $t('notificationsPage.all')

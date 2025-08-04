@@ -53,7 +53,7 @@
       <!-- Active Session Alert -->
       <BaseCard
         v-if="activeSession"
-          icon-color="info"
+        icon-color="info"
         class="active-session-card"
       >
         <template #header>
@@ -129,7 +129,7 @@
       </BaseCard>
 
       <!-- Sessions Overview -->
-      <BaseCard  class="sessions-overview">
+      <BaseCard class="sessions-overview">
         <template #header>
           <q-card-section class="sessions-header">
             <div class="text-h6">{{ $t('counting.sessionsOverview') }}</div>
