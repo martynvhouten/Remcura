@@ -545,12 +545,23 @@
   .stats-cards-container {
     gap: 0;
 
-    .stats-card-col {
-      padding: 8px;
+      .stats-card-col {
+    padding: 8px;
 
-      @media (max-width: 640px) {
-        padding: 6px;
-      }
+    @media (max-width: 640px) {
+      padding: 6px;
     }
   }
+}
+
+.stat-display {
+  text-align: center;
+  
+  .stat-value {
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--text-primary);
+    line-height: 1.2;
+  }
+}
 </style>
