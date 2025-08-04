@@ -2387,68 +2387,68 @@ body .q-layout .q-btn.app-btn-refresh,
   }
 }
 
-// Modern Filter Toggle Button - Beautiful gradient design
-body .q-layout .q-btn.app-btn-filter,
-.q-btn.app-btn-filter {
-  background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%) !important;
-  color: #64748b !important;
-  border: 1px solid #cbd5e1 !important;
-  border-radius: 10px !important;
-  font-weight: 500 !important;
-  text-transform: none !important;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1), 0 1px 2px rgba(0, 0, 0, 0.06) !important;
-  position: relative !important;
-  overflow: hidden !important;
+// Modern Filter Toggle Button - Beautiful gradient design (no !important)
+.filter-panel-container .q-btn.app-btn-filter {
+  background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+  color: #64748b;
+  border: 1px solid #cbd5e1;
+  border-radius: 10px;
+  font-weight: 500;
+  text-transform: none;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1), 0 1px 2px rgba(0, 0, 0, 0.06);
+  position: relative;
+  overflow: hidden;
   
   .q-icon {
-    transition: transform 0.3s ease !important;
+    transition: transform 0.3s ease;
   }
   
   &:hover:not(.q-btn--disable):not(.q-btn--loading) {
-    background: linear-gradient(135deg, #e2e8f0 0%, #cbd5e1 100%) !important;
-    color: #475569 !important;
-    border-color: #94a3b8 !important;
-    transform: translateY(-2px) !important;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1), 0 2px 4px rgba(0, 0, 0, 0.06) !important;
+    background: linear-gradient(135deg, #e2e8f0 0%, #cbd5e1 100%);
+    color: #475569;
+    border-color: #94a3b8;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1), 0 2px 4px rgba(0, 0, 0, 0.06);
     
     .q-icon {
-      transform: rotate(90deg) !important;
+      transform: rotate(90deg);
     }
   }
   
   // Active state when filters are visible
   &.active {
-    background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%) !important;
-    color: #1d4ed8 !important;
-    border-color: #3b82f6 !important;
-    box-shadow: 0 2px 4px rgba(59, 130, 246, 0.15), 0 1px 2px rgba(59, 130, 246, 0.1) !important;
+    background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%);
+    color: #1d4ed8;
+    border-color: #3b82f6;
+    box-shadow: 0 2px 4px rgba(59, 130, 246, 0.15), 0 1px 2px rgba(59, 130, 246, 0.1);
     
     .q-icon {
-      transform: rotate(180deg) !important;
-      color: #1d4ed8 !important;
+      transform: rotate(180deg);
+      color: #1d4ed8;
     }
     
     &:hover {
-      background: linear-gradient(135deg, #bfdbfe 0%, #93c5fd 100%) !important;
-      color: #1e40af !important;
-      border-color: #2563eb !important;
-      transform: translateY(-2px) !important;
-      box-shadow: 0 4px 8px rgba(59, 130, 246, 0.2), 0 2px 4px rgba(59, 130, 246, 0.1) !important;
+      background: linear-gradient(135deg, #bfdbfe 0%, #93c5fd 100%);
+      color: #1e40af;
+      border-color: #2563eb;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 8px rgba(59, 130, 246, 0.2), 0 2px 4px rgba(59, 130, 246, 0.1);
     }
   }
   
   // Subtle pulse animation when active
   &.active::before {
-    content: '' !important;
-    position: absolute !important;
-    top: 0 !important;
-    left: 0 !important;
-    right: 0 !important;
-    bottom: 0 !important;
-    background: radial-gradient(circle, rgba(59, 130, 246, 0.1) 0%, transparent 70%) !important;
-    animation: filter-pulse 2s ease-in-out infinite !important;
-    border-radius: inherit !important;
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: radial-gradient(circle, rgba(59, 130, 246, 0.1) 0%, transparent 70%);
+    animation: filter-pulse 2s ease-in-out infinite;
+    border-radius: inherit;
+    pointer-events: none;
   }
 }
 
@@ -2464,31 +2464,30 @@ body .q-layout .q-btn.app-btn-filter,
 }
 
 // Dark mode support for filter button
-body.body--dark .q-layout .q-btn.app-btn-filter,
-body.body--dark .q-btn.app-btn-filter {
-  background: linear-gradient(135deg, #334155 0%, #1e293b 100%) !important;
-  color: #cbd5e1 !important;
-  border-color: #475569 !important;
+body.body--dark .filter-panel-container .q-btn.app-btn-filter {
+  background: linear-gradient(135deg, #334155 0%, #1e293b 100%);
+  color: #cbd5e1;
+  border-color: #475569;
   
   &:hover:not(.q-btn--disable):not(.q-btn--loading) {
-    background: linear-gradient(135deg, #475569 0%, #334155 100%) !important;
-    color: #e2e8f0 !important;
-    border-color: #64748b !important;
+    background: linear-gradient(135deg, #475569 0%, #334155 100%);
+    color: #e2e8f0;
+    border-color: #64748b;
   }
   
   &.active {
-    background: linear-gradient(135deg, #1e3a8a 0%, #1e40af 100%) !important;
-    color: #dbeafe !important;
-    border-color: #3b82f6 !important;
+    background: linear-gradient(135deg, #1e3a8a 0%, #1e40af 100%);
+    color: #dbeafe;
+    border-color: #3b82f6;
     
     &:hover {
-      background: linear-gradient(135deg, #1e40af 0%, #1d4ed8 100%) !important;
-      color: #eff6ff !important;
-      border-color: #60a5fa !important;
+      background: linear-gradient(135deg, #1e40af 0%, #1d4ed8 100%);
+      color: #eff6ff;
+      border-color: #60a5fa;
     }
     
     &::before {
-      background: radial-gradient(circle, rgba(147, 197, 253, 0.15) 0%, transparent 70%) !important;
+      background: radial-gradient(circle, rgba(147, 197, 253, 0.15) 0%, transparent 70%);
     }
   }
 }

@@ -25,8 +25,8 @@
       </q-btn>
     </div>
 
-    <!-- Filter Content - Collapsible -->
-    <q-slide-transition>
+    <!-- Filter Content - Smooth Collapsible -->
+    <transition name="filter-slide" appear>
       <div v-show="isFiltersVisible" class="filter-content">
         <!-- Main Filter Fields Grid - 12 Column Layout -->
         <div class="filter-grid-12col">
@@ -85,7 +85,7 @@
           />
         </div>
       </div>
-    </q-slide-transition>
+    </transition>
   </div>
 </template>
 
@@ -274,6 +274,33 @@ onMounted(() => {
   }
 }
 
+// Premium smooth filter slide transition - Optimized for performance
+.filter-slide-enter-active {
+  transition: all 0.35s cubic-bezier(0.25, 0.8, 0.25, 1);
+  will-change: transform, opacity;
+}
+
+.filter-slide-leave-active {
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.6, 1);
+  will-change: transform, opacity;
+}
+
+.filter-slide-enter-from {
+  opacity: 0;
+  transform: translateY(-15px) scale(0.95);
+}
+
+.filter-slide-leave-to {
+  opacity: 0;
+  transform: translateY(-10px) scale(0.98);
+}
+
+.filter-slide-enter-to,
+.filter-slide-leave-from {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+}
+
 // Modern filter content panel
 .filter-content {
   background: #ffffff;
@@ -281,6 +308,12 @@ onMounted(() => {
   border-radius: 8px; // More rounded for modern look
   padding: 24px; // Slightly more padding
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08); // Subtle modern shadow
+  overflow: hidden; // Prevent content overflow during animation
+  
+  // Performance optimizations for smooth animation
+  backface-visibility: hidden;
+  transform: translateZ(0); // Force GPU acceleration
+  contain: layout style paint; // Optimize rendering
 }
 
 // Well-balanced grid with proper proportions
