@@ -9,56 +9,41 @@
     <div class="row q-gutter-md">
       <!-- Filters and Stats -->
       <div class="col-12">
-        <q-card class="glass-card">
-          <q-card-section>
-            <div class="row items-center justify-between">
-              <div class="col-auto">
-                <div class="text-h6">
-                  {{ $t('notificationsPage.notificationStatistics') }}
-                </div>
-              </div>
-              <div class="col-auto">
-                <q-btn-group flat>
-                  <q-btn
-                    flat
-                    :color="filter === 'all' ? 'primary' : 'grey-6'"
-                    :label="`${$t('notificationsPage.all')} (${
-                      mockNotifications.length
-                    })`"
-                    @click="filter = 'all'"
-                  />
-                  <q-btn
-                    flat
-                    :color="filter === 'unread' ? 'primary' : 'grey-6'"
-                    :label="`${$t(
-                      'notificationsPage.unread'
-                    )} (${unreadCount})`"
-                    @click="filter = 'unread'"
-                  />
-                </q-btn-group>
-              </div>
+        <BaseCard 
+          :title="$t('notificationsPage.notificationStatistics')"
+          icon="analytics"
+          icon-color="primary"
+        >
+          <div class="notification-stats">
+            <div class="stats-filters">
+              <q-btn-group flat>
+                <q-btn
+                  flat
+                  :color="filter === 'all' ? 'primary' : 'grey-6'"
+                  :label="`${$t('notificationsPage.all')} (${mockNotifications.length})`"
+                  @click="filter = 'all'"
+                />
+                <q-btn
+                  flat
+                  :color="filter === 'unread' ? 'primary' : 'grey-6'"
+                  :label="`${$t('notificationsPage.unread')} (${unreadCount})`"
+                  @click="filter = 'unread'"
+                />
+              </q-btn-group>
             </div>
 
-            <div class="row q-gutter-md q-mt-sm">
-              <div class="col">
-                <div class="text-center">
-                  <div class="text-h4 text-primary">{{ unreadCount }}</div>
-                  <div class="text-caption">
-                    {{ $t('notificationsPage.unreadCount') }}
-                  </div>
-                </div>
+            <div class="stats-grid">
+              <div class="stat-item">
+                <div class="stat-value text-primary">{{ unreadCount }}</div>
+                <div class="stat-label">{{ $t('notificationsPage.unreadCount') }}</div>
               </div>
-              <div class="col">
-                <div class="text-center">
-                  <div class="text-h4">{{ mockNotifications.length }}</div>
-                  <div class="text-caption">
-                    {{ $t('notificationsPage.total') }}
-                  </div>
-                </div>
+              <div class="stat-item">
+                <div class="stat-value">{{ mockNotifications.length }}</div>
+                <div class="stat-label">{{ $t('notificationsPage.total') }}</div>
               </div>
             </div>
-          </q-card-section>
-        </q-card>
+          </div>
+        </BaseCard>
       </div>
 
       <!-- Quick Actions -->

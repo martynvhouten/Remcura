@@ -636,8 +636,7 @@
   }
 
   .setting-control {
-      margin-left: var(--space-4);
-    }
+    margin-left: var(--space-4);
   }
 
   // Input styling
