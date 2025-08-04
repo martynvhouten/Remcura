@@ -10,10 +10,25 @@ import type {
   ProductWithStock,
   ProductCategory,
   ProductFilter,
-  ProductInsert,
-  ProductUpdate,
-  StockLevel,
 } from '@/types/inventory';
+
+// Temporary type definitions until they're properly defined in types/inventory.ts
+type ProductInsert = Omit<Product, 'id' | 'created_at' | 'updated_at'>;
+type ProductUpdate = Partial<ProductInsert>;
+type StockLevel = {
+  id: string;
+  practice_id: string;
+  product_id: string;
+  location_id: string;
+  current_quantity: number;
+  minimum_quantity: number;
+  reserved_quantity: number;
+  available_quantity: number;
+  stock_status: 'in_stock' | 'low_stock' | 'out_of_stock';
+  location_name?: string;
+  created_at: string;
+  updated_at: string;
+};
 
 // RPC response interface for get_products_with_stock_levels
 interface ProductWithStockRPC {
@@ -105,12 +120,12 @@ export function useProductsCore() {
   });
 
   const availableGpcCodes = computed(() => {
-    const gpcSet = new Set(products.value.map(p => p.gpc_code).filter(Boolean));
+    const gpcSet = new Set(products.value.map(p => (p as any).gpc_code).filter(Boolean));
     return Array.from(gpcSet).sort();
   });
 
   const availableLifecycleStatuses = computed(() => {
-    const statusSet = new Set(products.value.map(p => p.lifecycle_status).filter(Boolean));
+    const statusSet = new Set(products.value.map(p => (p as any).lifecycle_status).filter(Boolean));
     return Array.from(statusSet).sort();
   });
 
@@ -240,15 +255,28 @@ export function useProductsCore() {
           ),
           stock_status: determineStockStatus(
             stock.current_quantity || 0,
-            stock.minimum_stock || 0
+            stock.minimum_quantity || 0
           )
         }));
+
+        // Calculate aggregate stock properties
+        const availableStock = processedStockLevels.reduce((sum, level) => 
+          sum + (level.available_quantity || 0), 0
+        );
+        const reservedStock = processedStockLevels.reduce((sum, level) => 
+          sum + (level.reserved_quantity || 0), 0
+        );
+        const overallStockStatus = totalStock === 0 ? 'out_of_stock' : 
+          (totalStock < ((product as any).minimum_stock || 0) ? 'low_stock' : 'in_stock');
 
         return {
           ...product,
           stock_levels: processedStockLevels,
           total_stock: totalStock,
-        };
+          available_stock: availableStock,
+          reserved_stock: reservedStock,
+          stock_status: overallStockStatus,
+        } as ProductWithStock;
       });
 
       return productsWithStock;
@@ -263,9 +291,16 @@ export function useProductsCore() {
       const magentoProducts = await magentoApi.getProducts();
       return magentoProducts.map(product => ({
         ...product,
+        id: product.id.toString(), // Convert number to string
         stock_levels: [],
-        total_stock: product.quantity || 0,
-      }));
+        total_stock: (product as any).quantity || 0,
+        available_stock: (product as any).quantity || 0,
+        reserved_stock: 0,
+        stock_status: ((product as any).quantity || 0) > 0 ? 'in_stock' as const : 'out_of_stock' as const,
+        is_active: product.status === 1,
+        created_at: new Date().toISOString(),
+        updated_at: new Date().toISOString(),
+      } as ProductWithStock));
     } catch (error) {
       productLogger.warn('Magento API unavailable, using Supabase data only');
       return [];
@@ -318,7 +353,10 @@ export function useProductsCore() {
       categories.value = uniqueCategories.map(cat => ({
         id: cat,
         name: cat,
-        description: null,
+        description: undefined,
+        parent_id: undefined,
+        sort_order: 0,
+        is_active: true,
       }));
     } catch (error) {
       productLogger.error('Error fetching categories:', error);
@@ -404,7 +442,7 @@ export function useProductsCore() {
   });
 
   const manualStockProducts = computed(() => {
-    return products.value.filter(p => p.manual_stock_management);
+    return products.value.filter(p => (p as any).manual_stock_management);
   });
 
   return {

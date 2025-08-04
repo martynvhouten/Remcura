@@ -225,7 +225,7 @@ const handleFieldChange = (fieldId: string, value: any) => {
   
   // Use debounced update for text/search fields to improve performance
   const field = allFields.value.find(f => f.id === fieldId)
-  const shouldDebounce = field?.type === 'text' || (field?.debounce !== undefined && field?.debounce !== false)
+  const shouldDebounce = field?.type === 'text' || (typeof field?.debounce === 'boolean' && field.debounce === true)
   
   if (shouldDebounce) {
     debouncedEmitUpdate(newValues)

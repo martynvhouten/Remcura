@@ -724,6 +724,19 @@ const getStockStatusTextColor = (status: string): string => {
   }
 };
 
+const getStockStatusLabel = (status: string): string => {
+  switch (status) {
+    case 'in_stock':
+      return t('productsPage.stockStatus.inStock');
+    case 'low_stock':
+      return t('productsPage.stockStatus.lowStock');
+    case 'out_of_stock':
+      return t('productsPage.stockStatus.outOfStock');
+    default:
+      return t('productsPage.stockStatus.unknown');
+  }
+};
+
 const getCountryFlag = (countryCode: string): string => {
   // Simple flag implementation - could be enhanced
   return '🏳️';
@@ -921,9 +934,12 @@ const handleTableSort = (column: string, direction: 'asc' | 'desc') => {
   };
   
   // Apply sorting via store (this will trigger reactive updates)
+  const validSortColumns = ['name', 'category', 'price', 'stock'] as const;
+  const sortColumn = validSortColumns.includes(column as any) ? column as typeof validSortColumns[number] : 'name';
+  
   productsStore.updateFilters({
-    sort_by: column,
-    sort_order: direction
+    sort_by: sortColumn,
+    sort_order: direction as 'asc' | 'desc'
   });
   
   pagination.value = newPagination;
