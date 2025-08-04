@@ -29,30 +29,28 @@
     <div class="row q-mb-lg stats-cards-container">
       <div class="col-12 col-sm-6 col-md-3 stats-card-col">
         <BaseCard
-          
-          :title="$t('admin.stats.totalUsers')>
-            <div class="stat-display">
-              <div class="stat-value">{{ stats.totalUsers }}</div>
-            </div>
+          :title="$t('admin.stats.totalUsers')"
           icon="people"
           icon-color="primary"
-          :trend="`${stats.activeUsers} ${$t('admin.stats.activeToday')}`"
-          trend-direction="neutral"
-        />
+        >
+          <div class="stat-display">
+            <div class="stat-value">{{ stats.totalUsers }}</div>
+            <div class="stat-trend">{{ stats.activeUsers }} {{ $t('admin.stats.activeToday') }}</div>
+          </div>
+        </BaseCard>
       </div>
 
       <div class="col-12 col-sm-6 col-md-3 stats-card-col">
         <BaseCard
-          
-          :title="$t('admin.stats.totalLocations')>
-            <div class="stat-display">
-              <div class="stat-value">{{ stats.totalLocations }}</div>
-            </div>
+          :title="$t('admin.stats.totalLocations')"
           icon="place"
           icon-color="positive"
-          :trend="`${stats.activeLocations} ${$t('admin.stats.active')}`"
-          trend-direction="neutral"
-        />
+        >
+          <div class="stat-display">
+            <div class="stat-value">{{ stats.totalLocations }}</div>
+            <div class="stat-trend">{{ stats.activeLocations }} {{ $t('admin.stats.active') }}</div>
+          </div>
+        </BaseCard>
       </div>
 
       <div class="col-12 col-sm-6 col-md-3 stats-card-col">
