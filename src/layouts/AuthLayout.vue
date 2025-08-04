@@ -15,7 +15,7 @@
         <!-- Main Auth Container -->
         <div class="auth-container">
           <!-- Auth Card with Glass Morphism -->
-          <div class="auth-card glass-card animate-scale-in">
+          <div >
             <!-- Header Section -->
             <div class="auth-header">
               <div class="brand-section">
@@ -263,28 +263,10 @@ export default defineComponent({
   }
 
   // Auth card styling
-  .auth-card {
-    background: rgba(255, 255, 255, 0.95);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    border-radius: var(--radius-2xl);
-    padding: var(--space-8);
-    box-shadow: var(--shadow-lg);
-    transition: all var(--transition-base);
-    max-width: 480px;
-    width: 100%;
-
-    &:hover {
-      transform: translateY(-1px);
-      box-shadow: var(--shadow-xl);
-    }
+  
   }
 
-  body.body--dark .auth-card {
-    background: rgba(23, 23, 23, 0.95);
-    border-color: rgba(255, 255, 255, 0.1);
-  }
+  body.body--dark 
 
   // Header section
   .auth-header {
@@ -479,9 +461,7 @@ export default defineComponent({
       padding: var(--space-4);
     }
 
-    .auth-card {
-      padding: var(--space-6);
-    }
+    
 
     .info-panel {
       padding: var(--space-4);
@@ -518,9 +498,7 @@ export default defineComponent({
       padding: var(--space-2);
     }
 
-    .auth-card {
-      padding: var(--space-4);
-    }
+    
 
     .auth-header {
       margin-bottom: var(--space-6);
@@ -544,9 +522,7 @@ export default defineComponent({
       animation: none;
     }
 
-    .auth-card {
-      animation: none;
-    }
+    
 
     .info-panel {
       animation: none;

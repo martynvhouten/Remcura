@@ -1,0 +1,226 @@
+// Form Input Styling - Consistent with Card Design System
+// Applies to q-input, q-select, q-field, q-date, q-time
+
+// Main form field styling
+.q-field {
+  margin-bottom: 16px;
+  
+  // Control container (the main input area)
+  .q-field__control {
+    border-radius: 12px !important;
+    background: var(--input-bg, #ffffff);
+    border: 1px solid var(--input-border, rgba(0, 0, 0, 0.12));
+    box-shadow: var(--input-shadow,
+      0 1px 3px rgba(0, 0, 0, 0.08),
+      0 1px 2px rgba(0, 0, 0, 0.06)
+    );
+    transition: all 0.2s ease;
+    min-height: 48px;
+    
+    // Remove default Quasar outline
+    &:before, &:after {
+      display: none !important;
+    }
+    
+    // Dark mode
+    .body--dark & {
+      --input-bg: rgba(255, 255, 255, 0.05);
+      --input-border: rgba(255, 255, 255, 0.12);
+      --input-shadow:
+        0 1px 3px rgba(0, 0, 0, 0.2),
+        0 1px 2px rgba(0, 0, 0, 0.15);
+    }
+  }
+  
+  // Focus state - consistent with card hover
+  &.q-field--focused .q-field__control {
+    border-color: var(--q-primary) !important;
+    box-shadow: var(--input-focus-shadow,
+      0 0 0 2px rgba(var(--q-primary-rgb), 0.1),
+      0 1px 3px rgba(0, 0, 0, 0.08),
+      0 1px 2px rgba(0, 0, 0, 0.06)
+    ) !important;
+    
+    .body--dark & {
+      --input-focus-shadow:
+        0 0 0 2px rgba(var(--q-primary-rgb), 0.2),
+        0 1px 3px rgba(0, 0, 0, 0.2),
+        0 1px 2px rgba(0, 0, 0, 0.15);
+    }
+  }
+  
+  // Hover state (for selects and clickable fields)
+  &:not(.q-field--focused):hover .q-field__control {
+    border-color: var(--input-hover-border, rgba(0, 0, 0, 0.2));
+    box-shadow: var(--input-hover-shadow,
+      0 2px 4px rgba(0, 0, 0, 0.1),
+      0 1px 2px rgba(0, 0, 0, 0.08)
+    );
+    
+    .body--dark & {
+      --input-hover-border: rgba(255, 255, 255, 0.2);
+      --input-hover-shadow:
+        0 2px 4px rgba(0, 0, 0, 0.25),
+        0 1px 2px rgba(0, 0, 0, 0.2);
+    }
+  }
+  
+  // Label styling
+  .q-field__label {
+    color: var(--text-secondary) !important;
+    font-weight: 500;
+    padding: 0 8px;
+    background: var(--input-bg, #ffffff);
+    
+    .body--dark & {
+      color: rgba(255, 255, 255, 0.7) !important;
+      background: var(--input-bg, rgba(255, 255, 255, 0.05));
+    }
+  }
+  
+  // Focused label
+  &.q-field--focused .q-field__label {
+    color: var(--q-primary) !important;
+  }
+  
+  // Input text
+  .q-field__native {
+    color: var(--text-primary);
+    font-size: 14px;
+    font-weight: 400;
+    padding: 12px 16px;
+    
+    &::placeholder {
+      color: var(--text-secondary);
+      opacity: 0.6;
+    }
+    
+    .body--dark & {
+      color: rgba(255, 255, 255, 0.9);
+      
+      &::placeholder {
+        color: rgba(255, 255, 255, 0.5);
+      }
+    }
+  }
+  
+  // Icons (prepend/append)
+  .q-field__prepend,
+  .q-field__append {
+    .q-icon {
+      color: var(--text-secondary);
+      
+      .body--dark & {
+        color: rgba(255, 255, 255, 0.6);
+      }
+    }
+  }
+  
+  // Error state
+  &.q-field--error .q-field__control {
+    border-color: var(--q-negative) !important;
+    box-shadow: var(--input-error-shadow,
+      0 0 0 2px rgba(var(--q-negative-rgb), 0.1),
+      0 1px 3px rgba(0, 0, 0, 0.08)
+    ) !important;
+  }
+  
+  // Success state (if needed)
+  &.q-field--success .q-field__control {
+    border-color: var(--q-positive) !important;
+    box-shadow: var(--input-success-shadow,
+      0 0 0 2px rgba(var(--q-positive-rgb), 0.1),
+      0 1px 3px rgba(0, 0, 0, 0.08)
+    ) !important;
+  }
+  
+  // Disabled state
+  &.q-field--disabled .q-field__control {
+    opacity: 0.6;
+    cursor: not-allowed;
+    background: var(--input-disabled-bg, #f5f5f5);
+    
+    .body--dark & {
+      background: var(--input-disabled-bg, rgba(255, 255, 255, 0.02));
+    }
+  }
+}
+
+// Select dropdown styling
+.q-menu .q-item {
+  padding: 12px 16px;
+  border-radius: 8px;
+  margin: 2px 4px;
+  transition: all 0.15s ease;
+  
+  &:hover, &.q-item--active {
+    background: var(--q-primary);
+    color: white;
+  }
+}
+
+// Date/time picker styling
+.q-date {
+  box-shadow: var(--card-shadow,
+    0 1px 3px rgba(0, 0, 0, 0.08),
+    0 1px 2px rgba(0, 0, 0, 0.06)
+  );
+  border-radius: 12px;
+  border: 1px solid var(--input-border, rgba(0, 0, 0, 0.12));
+}
+
+// Button group styling (for period selectors)
+.q-btn-group {
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: var(--input-shadow,
+    0 1px 3px rgba(0, 0, 0, 0.08),
+    0 1px 2px rgba(0, 0, 0, 0.06)
+  );
+  
+  .q-btn {
+    border-radius: 0;
+    border-right: 1px solid var(--input-border, rgba(0, 0, 0, 0.12));
+    
+    &:last-child {
+      border-right: none;
+    }
+    
+    &:first-child {
+      border-top-left-radius: 12px;
+      border-bottom-left-radius: 12px;
+    }
+    
+    &:last-child {
+      border-top-right-radius: 12px;
+      border-bottom-right-radius: 12px;
+    }
+  }
+}
+
+// Remove browser focus outlines
+.q-field__native:focus,
+.q-field__control:focus,
+.q-btn:focus {
+  outline: none !important;
+  box-shadow: var(--input-focus-shadow) !important;
+}
+
+// Period selector custom styling
+.period-selector {
+  .q-btn {
+    border-radius: 12px;
+    padding: 8px 16px;
+    margin: 2px;
+    transition: all 0.2s ease;
+    
+    &.active {
+      background: var(--q-primary);
+      color: white;
+      box-shadow: var(--card-hover-shadow,
+        0 4px 12px rgba(0, 0, 0, 0.15),
+        0 2px 4px rgba(0, 0, 0, 0.12)
+      );
+    }
+  }
+}

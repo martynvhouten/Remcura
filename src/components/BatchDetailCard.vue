@@ -1,5 +1,5 @@
 <template>
-  <q-card class="batch-detail-card glass-card-modern">
+  <q-card >
     <q-card-section class="row items-center q-pb-none">
       <div class="text-h6">{{ $t('batch.batchDetails') }}</div>
       <q-space />
@@ -54,7 +54,7 @@
         </div>
 
         <div class="col-12 col-md-6">
-          <q-card flat class="info-card neumorph-card">
+          <q-card flat >
             <div class="text-subtitle2 text-grey q-mb-sm">
               {{ $t('batch.quantityStatus') }}
             </div>
@@ -468,20 +468,7 @@
     }
   }
 
-  .neumorph-card {
-    background: var(--bg-primary);
-    border: none;
-    box-shadow: 
-      12px 12px 24px rgba(0, 0, 0, 0.08),
-      -12px -12px 24px rgba(255, 255, 255, 0.9),
-      inset 0 1px 0 rgba(255, 255, 255, 0.6);
-
-    &:hover {
-      box-shadow: 
-        6px 6px 16px rgba(0, 0, 0, 0.12),
-        -6px -6px 16px rgba(255, 255, 255, 0.95),
-        inset 0 1px 0 rgba(255, 255, 255, 0.8);
-    }
+  
 
     /* Dark mode support */
     .body--dark & {

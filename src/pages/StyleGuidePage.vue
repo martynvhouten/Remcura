@@ -485,43 +485,28 @@
           <!-- Glass Modern Card -->
           <div class="card-demo">
             <BaseCard 
-              variant="glass-modern" 
-              title="Glass Modern" 
-              subtitle="Enhanced glassmorphism with depth"
-              icon="auto_awesome"
-              icon-color="primary"
-            >
+              
               <p>Ultra-moderne glassmorphism met backdrop blur, gradients en perfect hover effecten.</p>
             </BaseCard>
-            <div class="card-label">variant="glass-modern"</div>
+            <div class="card-label">
           </div>
 
           <!-- Neumorphism Card -->
           <div class="card-demo">
             <BaseCard 
-              variant="neumorph" 
-              title="Neumorphism" 
-              subtitle="Soft 3D embossed effect"
-              icon="3d_rotation"
-              icon-color="secondary"
-            >
+              
               <p>Zachte 3D effecten die elementen laten lijken alsof ze uit het oppervlak komen.</p>
             </BaseCard>
-            <div class="card-label">variant="neumorph"</div>
+            <div class="card-label">
           </div>
 
           <!-- Gradient Card -->
           <div class="card-demo">
             <BaseCard 
-              variant="gradient" 
-              title="Gradient Border" 
-              subtitle="Animated gradient borders"
-              icon="gradient"
-              icon-color="accent"
-            >
+              
               <p>Prachtige animerende gradient borders die de focus trekken.</p>
             </BaseCard>
-            <div class="card-label">variant="gradient"</div>
+            <div class="card-label">
           </div>
         </div>
 
@@ -529,41 +514,23 @@
           <!-- Premium Card -->
           <div class="card-demo">
             <BaseCard 
-              variant="premium" 
-              title="Premium Luxury" 
-              subtitle="High-end feel with subtle effects"
-              icon="diamond"
-              icon-color="warning"
-            >
+              
               <p>Luxe gevoel met subtiele schaduwen en premium materiaal effecten.</p>
             </BaseCard>
-            <div class="card-label">variant="premium"</div>
+            <div class="card-label">
           </div>
 
           <!-- Quick Action Card - Blue -->
           <div class="card-demo">
             <BaseCard 
-              variant="quick-action" 
-              title="Scan Batch"
-              action-description="Scan barcode om batch te vinden"
-              action-icon="qr_code_scanner"
-              gradient-direction="blue"
-              :action-progress="75"
-            />
-            <div class="card-label">variant="quick-action"</div>
+              
+            <div class="card-label">
           </div>
 
           <!-- Quick Action Card - Orange -->
           <div class="card-demo">
             <BaseCard 
-              variant="quick-action" 
-              title="View Expiring"
-              action-description="5 batches verlopen binnenkort"
-              action-icon="warning"
-              gradient-direction="orange"
-              :action-badge="5"
-              :action-progress="60"
-            />
+              
             <div class="card-label">gradient-direction="orange"</div>
           </div>
         </div>
@@ -572,43 +539,26 @@
           <!-- Stats Cards -->
           <div class="card-demo">
             <BaseCard 
-              variant="stats"
-              :value="1234"
-              label="Total Products"
-              icon="inventory"
-              icon-color="primary"
-              trend="+12%"
-              trend-direction="up"
-            />
-            <div class="card-label">variant="stats"</div>
+              
+            <div class="card-label">
           </div>
 
           <!-- Modern Elevated -->
           <div class="card-demo">
             <BaseCard 
-              variant="elevated" 
-              title="Modern Elevated" 
-              subtitle="Classic with modern touches"
-              icon="trending_up"
-              icon-color="positive"
-            >
+              
               <p>Klassieke elevated style met moderne hover effecten en betere schaduwen.</p>
             </BaseCard>
-            <div class="card-label">variant="elevated"</div>
+            <div class="card-label">
           </div>
 
           <!-- Traditional Glass -->
           <div class="card-demo">
             <BaseCard 
-              variant="glass" 
-              title="Traditional Glass" 
-              subtitle="Basic glassmorphism"
-              icon="blur_on"
-              icon-color="info"
-            >
+              
               <p>Basis glassmorphism effect voor subtiele transparantie.</p>
             </BaseCard>
-            <div class="card-label">variant="glass"</div>
+            <div class="card-label">
           </div>
         </div>
       </div>
@@ -616,40 +566,7 @@
       <!-- Quick Action Variants -->
       <div class="style-subsection">
         <h3>Quick Action Color Variants</h3>
-        <div class="quick-actions-demo">
-          <BaseCard 
-            variant="quick-action" 
-            title="Blue Action"
-            action-description="Primary actions"
-            action-icon="star"
-            gradient-direction="blue"
-            size="sm"
-          />
-          <BaseCard 
-            variant="quick-action" 
-            title="Green Action"
-            action-description="Success actions"
-            action-icon="check_circle"
-            gradient-direction="green"
-            size="sm"
-          />
-          <BaseCard 
-            variant="quick-action" 
-            title="Purple Action"
-            action-description="Creative actions"
-            action-icon="palette"
-            gradient-direction="purple"
-            size="sm"
-          />
-          <BaseCard 
-            variant="quick-action" 
-            title="Red Action"
-            action-description="Important actions"
-            action-icon="priority_high"
-            gradient-direction="red"
-            size="sm"
-          />
-        </div>
+        
       </div>
     </div>
 
@@ -1021,15 +938,6 @@
     gap: var(--space-4);
   }
 
-  .gradient-card {
-    padding: var(--space-6);
-    border-radius: var(--radius-lg);
-    text-align: center;
-    color: white;
-    position: relative;
-    overflow: hidden;
-  }
-
   .gradient-label {
     font-weight: var(--font-weight-semibold);
     margin-bottom: var(--space-2);
@@ -1218,14 +1126,6 @@
     }
   }
 
-  .quick-actions-demo {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: var(--space-3);
-
-    .base-card {
-      min-height: 120px;
-    }
   }
 
   .section-description {
@@ -1243,10 +1143,6 @@
     }
 
     .card-row {
-      grid-template-columns: 1fr;
-    }
-
-    .quick-actions-demo {
       grid-template-columns: 1fr;
     }
 

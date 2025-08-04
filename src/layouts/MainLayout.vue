@@ -266,7 +266,7 @@
       <!-- Footer Section -->
       <div class="drawer-footer">
         <q-item
-          class="upgrade-item glass-card"
+                          
           clickable
           tabindex="0"
           role="button"
@@ -988,16 +988,7 @@
       padding: var(--space-4);
       border-top: 1px solid var(--neutral-200);
 
-      .upgrade-item {
-        border-radius: var(--radius-lg);
-        cursor: pointer;
-        transition: all var(--transition-base);
-        box-shadow: var(--shadow-base);
-
-        &:hover {
-          transform: translateY(-2px);
-          box-shadow: var(--shadow-lg);
-        }
+      
 
         &:focus {
           outline: 2px solid var(--brand-primary);

@@ -94,7 +94,7 @@
             aria-labelledby="appearance-title"
           >
             <!-- Dark Mode Toggle -->
-            <div class="setting-item glass-card">
+            <BaseCard>
               <div class="setting-info">
                 <div class="setting-label" id="dark-mode-label">
                   {{ $t('settings.darkMode') }}
@@ -124,7 +124,7 @@
             </div>
 
             <!-- Language Setting -->
-            <div class="setting-item glass-card">
+            <BaseCard>
               <div class="setting-info">
                 <div class="setting-label" id="language-label">
                   {{ $t('settings.language') }}
@@ -152,7 +152,7 @@
             </div>
 
             <!-- Theme Setting -->
-            <div class="setting-item glass-card">
+            <BaseCard>
               <div class="setting-info">
                 <div class="setting-label" id="theme-label">
                   {{ $t('settings.colorSchemeTitle') }}
@@ -274,14 +274,16 @@
             </div>
 
             <div class="clinic-notice">
-              <q-banner class="notice-banner glass-card" rounded>
-                <template v-slot:avatar>
-                  <q-icon name="info" color="info" />
-                </template>
+              <AlertCard 
+                type="info"
+                icon="info"
+                :title="$t('settings.contactSettingsNotice')"
+              >
                 <div class="notice-text">
                   {{ $t('settings.contactSettingsNotice') }}
+                  <a href="mailto:support@remcura.nl">support@remcura.nl</a>
                 </div>
-              </q-banner>
+              </AlertCard>
             </div>
           </q-card-section>
         </q-card>
@@ -309,7 +311,7 @@
           <q-card-section class="card-content">
             <div class="settings-items">
               <!-- Low Stock Alerts -->
-              <div class="setting-item glass-card">
+              <BaseCard>
                 <div class="setting-info">
                   <div class="setting-label">
                     {{ $t('settings.stockAlertsLabel') }}
@@ -328,7 +330,7 @@
               </div>
 
               <!-- Email Notifications -->
-              <div class="setting-item glass-card">
+              <BaseCard>
                 <div class="setting-info">
                   <div class="setting-label">
                     {{ $t('settings.emailNotificationsLabel') }}
@@ -347,7 +349,7 @@
               </div>
 
               <!-- Browser Notifications -->
-              <div class="setting-item glass-card">
+              <BaseCard>
                 <div class="setting-info">
                   <div class="setting-label">
                     {{ $t('settings.browserNotificationsLabel') }}
@@ -592,15 +594,7 @@
   }
 
   .clinic-notice {
-    .notice-banner {
-      background: var(--glass-bg);
-      backdrop-filter: var(--glass-backdrop);
-      border: 1px solid var(--glass-border);
-
-      .notice-text {
-        font-size: var(--text-sm);
-        color: var(--neutral-700);
-      }
+    
     }
   }
 
@@ -610,20 +604,6 @@
     flex-direction: column;
     gap: var(--space-4);
   }
-
-  .setting-item {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: var(--space-4);
-    border-radius: var(--radius-lg);
-    border: 1px solid var(--neutral-200);
-    transition: all var(--transition-base);
-
-    &:hover {
-      border-color: var(--neutral-300);
-      box-shadow: var(--shadow-sm);
-    }
 
     .setting-info {
       flex: 1;
@@ -761,26 +741,11 @@
       grid-template-columns: 1fr;
     }
 
-    .setting-item {
-      flex-direction: column;
-      align-items: stretch;
-      gap: var(--space-3);
-
-      .setting-control {
-        margin-left: 0;
-        align-self: flex-end;
-      }
     }
   }
 
   // Dark mode adjustments
   body.body--dark {
-    .setting-item {
-      border-color: var(--neutral-300);
-
-      &:hover {
-        border-color: var(--neutral-400);
-      }
 
       .setting-label {
         color: var(--neutral-900);
