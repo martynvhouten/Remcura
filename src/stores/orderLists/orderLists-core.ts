@@ -9,21 +9,7 @@ import type {
   OrderListStatus,
 } from '@/types/inventory';
 import { ServiceErrorHandler } from '@/utils/service-error-handler';
-
-export interface OrderListWithItems extends OrderList {
-  items: OrderListItem[];
-  supplier?: Supplier;
-}
-
-export interface CreateOrderListRequest {
-  practice_id: string;
-  supplier_id: string;
-  name: string;
-  description?: string;
-  auto_suggest_quantities?: boolean;
-  urgent_order?: boolean;
-  notes?: string;
-}
+import type { OrderListWithItems, CreateOrderListRequest, UpdateOrderListRequest } from '@/types/stores';
 
 export interface UpdateOrderListRequest {
   id: string;

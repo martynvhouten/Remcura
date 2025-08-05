@@ -10,26 +10,7 @@ import type {
 import { useAuthStore } from '@/stores/auth';
 import { offlineLogger } from 'src/utils/logger';
 import { analyticsService } from './analytics';
-
-export interface OfflineAction {
-  id: string;
-  type: 'create' | 'update' | 'delete';
-  table: string;
-  data: any;
-  timestamp: Date;
-  retry_count: number;
-  practice_id: string;
-  user_id: string;
-}
-
-export interface OfflineData {
-  bestellijsten: Bestellijst[];
-  bestellijst_items: BestellijstItem[];
-  products: Product[];
-  shopping_carts: ShoppingCart[];
-  shopping_cart_items: ShoppingCartItem[];
-  last_sync: Date | null;
-}
+import type { OfflineAction, OfflineData } from '@/types/offline';
 
 export class OfflineService {
   private isOnline = ref(navigator.onLine);

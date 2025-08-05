@@ -1,34 +1,6 @@
 import { supabase } from 'src/boot/supabase';
 import { useAuthStore } from 'src/stores/auth';
-
-export type MovementType = 
-  | 'count' 
-  | 'adjustment' 
-  | 'order_received' 
-  | 'consumption' 
-  | 'transfer' 
-  | 'expired'
-  | 'manual_adjustment'
-  | 'correction';
-
-export interface StockMovement {
-  id: string;
-  practice_id: string;
-  location_id: string;
-  product_id: string;
-  movement_type: MovementType;
-  quantity_change: number;
-  quantity_before: number;
-  quantity_after: number;
-  reference_type?: string;
-  reference_id?: string;
-  reason?: string;
-  notes?: string;
-  batch_number?: string;
-  expiry_date?: string;
-  created_by?: string;
-  created_at: string;
-}
+import type { MovementType, StockMovement } from '@/types/inventory';
 
 export interface CreateStockMovementRequest {
   practice_id: string;

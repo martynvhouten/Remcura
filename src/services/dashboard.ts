@@ -2,51 +2,9 @@ import { supabase } from './supabase';
 import { useAuthStore } from '@/stores/auth';
 import { dashboardLogger } from '@/utils/logger';
 import { t } from '@/utils/i18n-service';
+import type { DashboardWidget, DashboardData } from '@/types/dashboard';
 
-export interface DashboardWidget {
-  id: string;
-  title: string;
-  type: 'metric' | 'chart' | 'list' | 'alert' | 'quickAction';
-  data: Record<string, any>;
-  size: 'small' | 'medium' | 'large';
-  position: number;
-  visible: boolean;
-}
-
-export interface DashboardData {
-  widgets: DashboardWidget[];
-  metrics: {
-    totalProducts: number;
-    lowStockCount: number;
-    pendingOrders: number;
-    totalValue: number;
-    recentActivity: number;
-  };
-  quickActions: Array<{
-    id: string;
-    label: string;
-    icon: string;
-    route: string;
-    color: string;
-    permission?: string;
-  }>;
-  alerts: Array<{
-    id: string;
-    type: 'warning' | 'error' | 'info' | 'success';
-    message: string;
-    action?: string;
-    actionLabel?: string;
-  }>;
-}
-
-export interface RoleDashboardConfig {
-  role: string;
-  title: string;
-  subtitle: string;
-  primaryColor: string;
-  widgets: string[];
-  quickActions: string[];
-}
+// Types moved to @/types/dashboard
 
 class DashboardService {
   private getRoleConfigs(): Record<string, RoleDashboardConfig> {
@@ -257,7 +215,7 @@ class DashboardService {
   }
 
   private async createStockAlertsWidget(practiceId: string): Promise<DashboardWidget> {
-    const { data: lowStock } = await supabase
+    const { data: stockData } = await supabase
       .from('stock_levels')
       .select(`
         *,
@@ -265,9 +223,12 @@ class DashboardService {
         practice_locations (name)
       `)
       .eq('practice_id', practiceId)
-      .filter('current_quantity', 'lt', 'minimum_quantity')
       .order('current_quantity', { ascending: true })
-      .limit(10);
+      .limit(50);
+
+    const lowStock = stockData?.filter(item => 
+      item.current_quantity < (item.minimum_quantity || 0)
+    ).slice(0, 10);
 
     return {
       id: 'stock-alerts',

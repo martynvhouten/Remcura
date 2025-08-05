@@ -10,23 +10,7 @@ import type {
 import { useAuthStore } from '@/stores/auth';
 import { notificationLogger } from 'src/utils/logger';
 import { ref, reactive } from 'vue';
-
-export interface NotificationMessage {
-  id?: string;
-  title: string;
-  body: string;
-  type: NotificationType;
-  data?: any;
-  icon?: string;
-  badge?: string;
-  tag?: string;
-  requireInteraction?: boolean;
-  actions?: Array<{
-    action: string;
-    title: string;
-    icon?: string;
-  }>;
-}
+import type { NotificationMessage } from '@/types/notifications';
 
 export class NotificationService {
   private registration: ServiceWorkerRegistration | null = null;

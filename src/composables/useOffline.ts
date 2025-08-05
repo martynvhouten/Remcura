@@ -8,6 +8,7 @@ export function useOffline() {
   const translations = {
     onlineMode: 'Je bent weer online',
     offlineMode: 'Je werkt nu offline. Sommige functies zijn mogelijk beperkt.',
+    newVersionAvailable: 'Er is een nieuwe versie van de app beschikbaar. Wilt u nu opnieuw laden?',
   };
 
   const isOnline = ref(navigator.onLine);
@@ -86,7 +87,7 @@ export function registerServiceWorker() {
                 // New content is available
                 if (
                   confirm(
-                    'A new version of the app is available. Would you like to reload now?'
+                    translations.newVersionAvailable
                   )
                 ) {
                   window.location.reload();

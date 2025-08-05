@@ -1,19 +1,5 @@
 // Common button configurations and utilities
-
-// Common button configurations
-export interface ButtonConfig {
-  label?: string;
-  icon?: string;
-  color?: string;
-  size?: 'xs' | 'sm' | 'md' | 'lg' | 'xl';
-  variant?: 'filled' | 'outline' | 'flat';
-  loading?: boolean;
-  disable?: boolean;
-  dense?: boolean;
-  round?: boolean;
-  noCaps?: boolean;
-  class?: string;
-}
+import type { ButtonConfig } from '@/types/ui';
 
 // Predefined button themes
 export const buttonThemes = {

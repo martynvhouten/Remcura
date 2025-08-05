@@ -196,7 +196,7 @@
         <q-input
           :model-value="rangeValue.min || ''"
           @update:model-value="(value) => handleRangeChange('min', value)"
-          label="Van"
+          placeholder="Van"
           type="number"
           :step="field.step || 1"
           outlined
@@ -213,7 +213,7 @@
         <q-input
           :model-value="rangeValue.max || ''"
           @update:model-value="(value) => handleRangeChange('max', value)"
-          label="Tot"
+          placeholder="Tot"
           type="number"
           :step="field.step || 1"
           outlined
@@ -278,7 +278,7 @@
         <q-input
           :model-value="dateRangeValue.start || ''"
           @update:model-value="(value) => handleDateRangeChange('start', value)"
-          label="Van"
+          placeholder="Van"
           outlined
           class="filter-range-input filter-input-magento"
           hide-bottom-space
@@ -305,7 +305,7 @@
         <q-input
           :model-value="dateRangeValue.end || ''"
           @update:model-value="(value) => handleDateRangeChange('end', value)"
-          label="Tot"
+          placeholder="Tot"
           outlined
           class="filter-range-input filter-input-magento"
           hide-bottom-space
@@ -716,7 +716,7 @@ const forceUpdateLabels = () => {
   display: flex;
   flex-direction: column;
   gap: 4px; // Proper gap for good visual spacing
-  min-height: 68px; // Proper height: 18px label + 4px gap + 42px field + 4px margin
+  min-height: 66px; // Proper height: 18px label + 4px gap + 40px field + 4px margin
   
   &--checkbox {
     align-items: flex-start;
@@ -728,7 +728,7 @@ const forceUpdateLabels = () => {
 .filter-field-label {
   font-size: 13px; // Good readable size
   font-weight: 500;
-  color: #333;
+  color: var(--text-primary);
   line-height: 1.2; // Balanced line height
   margin-bottom: 0; // No margin - gap handles spacing
   min-height: 18px; // Proper label height
@@ -746,43 +746,50 @@ const forceUpdateLabels = () => {
   width: 100%;
   min-width: 0;
   
+  // Fix the parent field height to match control height
+  :deep(.q-field) {
+    min-height: 40px;
+    height: 40px;
+  }
+  
   // Compact Magento-style field control with perfect centering
   :deep(.q-field__control) {
-    background-color: #ffffff;
-    border: 1px solid #ccc;
+    background-color: var(--bg-primary);
+    border: 1px solid var(--border-primary);
     border-radius: 4px;
-    min-height: 42px; // Restored to proper height for good centering
-    height: 42px; // Fixed height for perfect consistency
+    min-height: 40px; // Consistent 40px height
+    height: 40px; // Fixed height for perfect consistency
     padding: 0 12px; // Restored padding for proper spacing
     transition: border-color 0.2s ease;
     display: flex; // Enable flex for proper centering
     align-items: center; // Perfect vertical centering
     
     &:hover {
-      border-color: #999;
+      border-color: var(--border-secondary);
     }
   }
   
   // Focus state
   :deep(.q-field--focused .q-field__control) {
-    border-color: #2196f3;
-    box-shadow: 0 0 0 2px rgba(33, 150, 243, 0.2);
+    border-color: var(--brand-primary);
+    box-shadow: 0 0 0 2px rgba(30, 58, 138, 0.1);
   }
   
   // Native input styling with perfect vertical centering
   :deep(.q-field__native) {
     font-size: 14px;
-    color: #333;
+    color: var(--text-primary);
     line-height: 1.4;
-    padding: 0;
-    height: 100%; // Take full height of parent
+    padding: 8px 0; // Reduced padding to fit 40px
+    height: 40px; // Force 40px height
+    min-height: 40px;
     display: flex;
     align-items: center; // Perfect vertical centering
   }
   
-  // Placeholder styling - normal text, #666 color, perfect centering
+  // Placeholder styling - normal text, secondary color, perfect centering
   :deep(.q-placeholder) {
-    color: #666;
+    color: var(--text-tertiary);
     font-style: normal;
     font-size: 14px;
     line-height: 1.4;
@@ -793,13 +800,14 @@ const forceUpdateLabels = () => {
   
   // Selected value styling with perfect centering
   :deep(.q-field__selected) {
-    color: #333;
+    color: var(--text-primary);
     font-size: 14px;
     line-height: 1.4;
     height: 100%; // Take full height
     display: flex;
     align-items: center; // Perfect vertical centering
-    min-height: 40px; // Ensure minimum height for centering
+    min-height: 38px; // Match field control height minus border
+    padding: 0; // Remove any extra padding
   }
   
   // Fix Quasar label positioning for all inputs
@@ -809,7 +817,7 @@ const forceUpdateLabels = () => {
     transform: translateY(-50%); // Perfect center
     left: 12px;
     font-size: 14px;
-    color: #666;
+    color: var(--text-tertiary);
     pointer-events: none;
     transition: all 0.2s ease;
     line-height: 1;
@@ -819,8 +827,8 @@ const forceUpdateLabels = () => {
   :deep(.q-field--float .q-field__label) {
     top: -6px;
     font-size: 12px;
-    color: #2196f3;
-    background: white;
+    color: var(--brand-primary);
+    background: var(--bg-primary);
     padding: 0 4px;
     transform: none;
   }
@@ -828,7 +836,7 @@ const forceUpdateLabels = () => {
 
 // Icon styling - consistent positioning, size and perfect centering
 .filter-icon {
-  color: #666;
+  color: var(--text-secondary);
   flex-shrink: 0;
   display: flex;
   align-items: center; // Perfect vertical centering
@@ -837,33 +845,33 @@ const forceUpdateLabels = () => {
 
 // Scanner button styling with perfect centering
 .filter-scanner-btn {
-  color: #666;
+  color: var(--text-secondary);
   display: flex;
   align-items: center; // Perfect vertical centering
   justify-content: center; // Perfect horizontal centering
   
   &:hover {
-    color: #2196f3;
+    color: var(--brand-primary);
   }
 }
 
 // Date picker icon styling with perfect centering
 .filter-date-icon {
-  color: #666;
+  color: var(--text-secondary);
   cursor: pointer;
   display: flex;
   align-items: center; // Perfect vertical centering
   justify-content: center; // Perfect horizontal centering
   
   &:hover {
-    color: #2196f3;
+    color: var(--brand-primary);
   }
 }
 
 // Currency display styling
 .filter-currency {
   font-size: 14px;
-  color: #666;
+  color: var(--text-secondary);
   font-weight: normal;
 }
 
@@ -877,19 +885,19 @@ const forceUpdateLabels = () => {
 
 .filter-checkbox-magento {
   :deep(.q-checkbox__inner) {
-    border: 1px solid #ccc;
+    border: 1px solid var(--border-primary);
     border-radius: 3px;
-    background: #ffffff;
+    background: var(--bg-primary);
   }
   
   :deep(.q-checkbox__inner:hover) {
-    border-color: #999;
+    border-color: var(--border-secondary);
   }
 }
 
 .filter-checkbox-label {
   font-size: 14px;
-  color: #333;
+  color: var(--text-primary);
   cursor: pointer;
   display: flex;
   align-items: center;

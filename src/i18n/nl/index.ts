@@ -142,12 +142,19 @@ export default {
     styleGuide: 'Stijlgids',
     designSystem: 'Ontwerp systeem referentie',
     
+    // Platform navigation
+    platformDashboard: 'Platform Dashboard',
+    practiceManagement: 'Praktijk Beheer',
+    systemMonitoring: 'Systeem Monitoring',
+    databaseAdmin: 'Database Beheer',
+    
     sections: {
       main: 'Overzicht',
       inventory: 'Voorraadbeheer',
       supplyChain: 'Supply Chain',
       analytics: 'Analyses & Rapporten',
       administration: 'Beheer',
+      platform: 'Platform',
     },
     
     inventoryLevels: 'Voorraadniveaus',
@@ -178,6 +185,8 @@ export default {
     demoAccount: 'Demo account',
     or: 'of',
     secureConnection: 'Beveiligde verbinding',
+    fullName: 'Volledige naam',
+    role: 'Rol',
     privacyPolicy: 'Privacybeleid',
     termsOfService: 'Servicevoorwaarden',
     support: 'Ondersteuning',
@@ -192,9 +201,8 @@ export default {
     passwordResetComingSoon: 'Wachtwoord reset functionaliteit komt binnenkort.',
     copyright: '© {year} {company}. Alle rechten voorbehouden.',
     passwordHelp: 'Voer je wachtwoord in om veilig in te loggen',
-    demoHelp: 'Gebruik demo@remcura.com met wachtwoord demo123 voor demonstratie',
+    demoHelp: 'Gebruik demo{at}remcura.com met wachtwoord demo123 voor demonstratie',
     signingIn: 'Inloggen...',
-    fullName: 'Volledige naam',
   },
 
   // Demo Account
@@ -254,6 +262,8 @@ export default {
       customize: 'Dashboard aanpassen',
       refreshed: 'Dashboard vernieuwd',
     },
+
+
 
     // Empty state
     empty: {
@@ -387,6 +397,8 @@ export default {
     assistantDashboard: 'Assistent dashboard',
     managerDashboard: 'Manager dashboard', 
     ownerDashboard: 'Eigenaar dashboard',
+    
+
     
     // Widget titles
     stockAlerts: 'Voorraad waarschuwingen',
@@ -1557,6 +1569,9 @@ export default {
     timeFormat: 'Tijdformaat',
     emailNotifications: 'E-mail meldingen',
     pushNotifications: 'Push meldingen',
+    role: 'Gebruikersrol',
+    permissions: 'Rechten',
+    preferences: 'Voorkeuren',
     stockAlerts: 'Voorraad waarschuwingen',
     orderAlerts: 'Bestel waarschuwingen',
     systemAlerts: 'Systeem waarschuwingen',
@@ -1597,7 +1612,7 @@ export default {
     contactEmail: 'Contact e-mail',
     phoneNumber: 'Telefoonnummer',
     address: 'Adres',
-    role: 'Rol',
+    userRole: 'Rol',
     darkModeEnabled: 'Donkere modus is ingeschakeld',
     lightModeEnabled: 'Lichte modus is ingeschakeld',
     settingsSaved: 'Instellingen succesvol opgeslagen',
@@ -1881,6 +1896,34 @@ export default {
     errors: {
       setMainFailed: 'Fout bij instellen hoofdlocatie',
       accessUpdateFailed: 'Fout bij bijwerken toegang',
+    },
+  },
+
+  // Platform - Owner Portal
+  platform: {
+    title: 'Platform Dashboard',
+    subtitle: 'Systeembeheer en monitoring',
+    
+    systemHealth: {
+      healthy: 'Gezond',
+      warning: 'Waarschuwing',
+      critical: 'Kritiek',
+    },
+    
+    version: 'Versie',
+    environment: 'Omgeving',
+    
+    metrics: {
+      totalPractices: 'Totaal Praktijken',
+      totalUsers: 'Totaal Gebruikers', 
+      activeToday: 'Actief Vandaag',
+      totalEvents: 'Totaal Events',
+      systemHealth: 'Systeem Status',
+    },
+    
+    notifications: {
+      dataRefreshed: 'Platform data ververst',
+      refreshFailed: 'Fout bij verversen platform data',
     },
   },
 
@@ -4999,5 +5042,7 @@ export default {
     'orders.table.expectedDelivery': 'Verwachte levering',
 
     'orders.table.actions': 'Acties',
+
+
 
 };

@@ -282,8 +282,12 @@ export default defineComponent({
   }
 
   body.body--dark .auth-card {
-    background: rgba(23, 23, 23, 0.95);
-    border-color: rgba(255, 255, 255, 0.1);
+    background: rgba(41, 37, 36, 0.95);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    box-shadow: 
+      0 20px 60px rgba(0, 0, 0, 0.4),
+      0 8px 24px rgba(0, 0, 0, 0.2),
+      inset 0 1px 0 rgba(255, 255, 255, 0.1);
   }
 
   // Header section
@@ -319,11 +323,11 @@ export default defineComponent({
 
   body.body--dark .auth-header {
     .brand-text .brand-title {
-      color: var(--neutral-900);
+      color: var(--text-primary);
     }
 
     .brand-text .brand-subtitle {
-      color: var(--neutral-600);
+      color: var(--text-secondary);
     }
   }
 
@@ -372,10 +376,10 @@ export default defineComponent({
   }
 
   body.body--dark .auth-footer {
-    border-top-color: var(--neutral-300);
+    border-top-color: var(--border-primary);
 
     .footer-links .footer-link {
-      color: var(--neutral-400);
+      color: var(--text-secondary);
 
       &:hover {
         color: var(--brand-primary-light);
@@ -383,11 +387,11 @@ export default defineComponent({
     }
 
     .footer-links .separator {
-      color: var(--neutral-500);
+      color: var(--text-tertiary);
     }
 
     .copyright {
-      color: var(--neutral-600);
+      color: var(--text-tertiary);
     }
   }
 
@@ -448,6 +452,16 @@ export default defineComponent({
         }
       }
     }
+  }
+
+  // Dark mode info panel
+  body.body--dark .info-panel {
+    background: rgba(41, 37, 36, 0.3);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    box-shadow: 
+      0 20px 60px rgba(0, 0, 0, 0.4),
+      0 8px 24px rgba(0, 0, 0, 0.2),
+      inset 0 1px 0 rgba(255, 255, 255, 0.1);
   }
 
   // Responsive design

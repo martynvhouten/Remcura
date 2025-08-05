@@ -366,12 +366,17 @@
     }
   }
 
-  // Dark mode adjustments
+    // Dark mode adjustments
   body.body--dark {
     .login-form {
       .input-modern {
         :deep(.q-field__control) {
-          background: var(--neutral-200);
+          background: var(--bg-secondary);
+          border-color: var(--border-primary);
+        }
+        
+        :deep(.q-field__native) {
+          color: var(--text-primary);
         }
 
         // Border styling handled by global field system

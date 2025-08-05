@@ -1,18 +1,6 @@
 import { ref, computed, Ref } from 'vue';
 import { useI18n } from 'vue-i18n';
-
-export interface ValidationRule {
-  (value: any): boolean | string;
-}
-
-export interface FieldValidation {
-  value: Ref<any>;
-  rules: ValidationRule[];
-  error: Ref<string>;
-  isValid: Ref<boolean>;
-  validate: () => boolean;
-  clear: () => void;
-}
+import type { ValidationRule, FieldValidation } from '@/types/validation';
 
 export function useFormValidation() {
   const { t } = useI18n();

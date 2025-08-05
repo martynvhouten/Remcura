@@ -1,27 +1,6 @@
 import { ref, reactive } from 'vue';
 import { analyticsService } from './analytics';
-
-export interface ScanResult {
-  code: string;
-  format: string;
-  timestamp: Date;
-  confidence?: number;
-}
-
-export interface CameraDevice {
-  deviceId: string;
-  label: string;
-  kind: MediaDeviceKind;
-}
-
-export interface ScannerOptions {
-  facingMode?: 'user' | 'environment';
-  deviceId?: string;
-  width?: number;
-  height?: number;
-  focusMode?: 'auto' | 'manual';
-  torch?: boolean;
-}
+import type { ScanResult, CameraDevice, ScannerOptions } from '@/types/scanner';
 
 export class CameraScannerService {
   private videoElement: HTMLVideoElement | null = null;

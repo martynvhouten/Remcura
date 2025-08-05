@@ -3,59 +3,13 @@ import { useAuthStore } from '@/stores/auth';
 import { analyticsLogger } from '@/utils/logger';
 import { handleSupabaseError, ServiceErrorHandler } from '@/utils/service-error-handler';
 import type { AnalyticsEvent } from '@/types/supabase';
-
-export interface AnalyticsDateRange {
-  startDate: string;
-  endDate: string;
-}
-
-export interface AnalyticsSummary {
-  totalEvents: number;
-  activeUsers: number;
-  totalOrders: number;
-  productUpdates: number;
-  topEvents: [string, number][];
-  userActivity: Record<string, { count: number; lastActivity: string }>;
-  dailyActivity: Record<string, number>;
-}
-
-export interface OrderMetrics {
-  totalOrders: number;
-  totalOrderValue: number;
-  averageOrderSize: number;
-  ordersByStatus: Record<string, number>;
-  frequentlyOrderedItems: Array<{
-    product_name: string;
-    total_quantity: number;
-    order_count: number;
-    product_id: string;
-  }>;
-  orderTrends: Record<string, number>;
-}
-
-export interface ProductMetrics {
-  totalUpdates: number;
-  productsScanned: number;
-  lowStockAlerts: number;
-  stockEntryTrends: Record<string, number>;
-  mostUpdatedProducts: Array<{
-    product_name: string;
-    update_count: number;
-    product_id: string;
-  }>;
-}
-
-export interface UserActivityMetrics {
-  activeUsers: number;
-  totalSessions: number;
-  averageSessionDuration: number;
-  userList: Array<{
-    user_id: string;
-    activity_count: number;
-    last_activity: string;
-    total_events: number;
-  }>;
-}
+import type { 
+  AnalyticsDateRange, 
+  AnalyticsSummary, 
+  OrderMetrics, 
+  ProductMetrics, 
+  UserActivityMetrics 
+} from '@/types/analytics';
 
 export class AnalyticsService {
   private sessionId: string = crypto.randomUUID();
@@ -540,15 +494,19 @@ export class AnalyticsService {
     }
 
     try {
-      const { data: products } = await supabase
+      const { data: productsData } = await supabase
         .from('products')
         .select(`
           *,
           stock_levels!inner(practice_id, current_quantity, minimum_quantity)
         `)
         .eq('stock_levels.practice_id', clinicId)
-        .filter('stock_levels.current_quantity', 'lte', 'stock_levels.minimum_quantity')
         .order('stock_levels.current_quantity', { ascending: true });
+
+      const products = productsData?.filter(product => {
+        const stockLevel = (product.stock_levels as any)[0];
+        return stockLevel && stockLevel.current_quantity <= (stockLevel.minimum_quantity || 0);
+      });
 
       return products || [];
     } catch (error) {

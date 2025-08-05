@@ -1,16 +1,6 @@
 import { monitoringService } from '@/services/monitoring';
 import { apiLogger } from './logger';
-
-// Type for error objects that can come from various sources
-export type ErrorLike = Error | { message?: string; code?: string; status?: number } | string | unknown;
-
-export interface ServiceErrorContext {
-  service: string;
-  operation: string;
-  userId?: string;
-  practiceId?: string;
-  metadata?: Record<string, unknown>;
-}
+import type { ErrorLike, ServiceErrorContext } from '@/types/logging';
 
 export class ServiceError extends Error {
   public readonly code: string;

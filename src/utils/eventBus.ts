@@ -1,20 +1,6 @@
 import { reactive } from 'vue';
 import { logger } from './logger';
-
-export type EventCallback<T = any> = (data: T) => void | Promise<void>;
-export type EventUnsubscribe = () => void;
-
-export interface StoreEvent {
-  type: string;
-  source: string;
-  data?: Record<string, unknown>;
-  timestamp: string;
-}
-
-export interface EventBusOptions {
-  enableLogging?: boolean;
-  maxListeners?: number;
-}
+import type { EventCallback, EventUnsubscribe, StoreEvent, EventBusOptions } from '@/types/events';
 
 class EventBus {
   private listeners = new Map<string, Set<EventCallback>>();

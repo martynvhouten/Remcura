@@ -206,11 +206,13 @@ export interface StockMovement {
   quantity_after: number;
   reference_type?: string;
   reference_id?: string;
+  reason?: string;
+  notes?: string;
   batch_number?: string;
   expiry_date?: string;
-  performed_by: string;
+  created_by?: string;
+  performed_by?: string;
   reason_code?: ReasonCode;
-  notes?: string;
   from_location_id?: string;
   to_location_id?: string;
   created_at: string;
@@ -324,7 +326,12 @@ export type MovementType =
   | 'usage'
   | 'transfer'
   | 'adjustment'
-  | 'waste';
+  | 'waste'
+  | 'order_received'
+  | 'consumption'
+  | 'expired'
+  | 'manual_adjustment'
+  | 'correction';
 
 export type ReasonCode =
   | 'normal_usage'

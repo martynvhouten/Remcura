@@ -80,7 +80,7 @@ const routes: RouteRecordRaw[] = [
             name: 'inventory-counting',
             component: () => import('pages/inventory/CountingPage.vue'),
             meta: {
-              requiresRole: ['owner', 'manager', 'assistant', 'logistics'],
+              requiresRole: ['owner', 'manager', 'assistant', 'logistics', 'platform_owner'],
               title: 'Stock Counting'
             }
           },
@@ -89,7 +89,7 @@ const routes: RouteRecordRaw[] = [
             name: 'counting-session',
             component: () => import('pages/inventory/CountingSessionPage.vue'),
             meta: {
-              requiresRole: ['owner', 'manager', 'assistant', 'logistics'],
+              requiresRole: ['owner', 'manager', 'assistant', 'logistics', 'platform_owner'],
               title: 'Counting Session'
             }
           },
@@ -110,7 +110,7 @@ const routes: RouteRecordRaw[] = [
             name: 'inventory-locations',
             component: () => import('pages/inventory/LocationsPage.vue'),
             meta: {
-              requiresRole: ['owner', 'manager', 'assistant'],
+              requiresRole: ['owner', 'manager', 'assistant', 'platform_owner'],
               title: 'Locations'
             }
           }
@@ -150,7 +150,7 @@ const routes: RouteRecordRaw[] = [
         component: () => import('pages/SuppliersPage.vue'),
         meta: { 
           requiresAuth: true,
-          requiresRole: ['owner', 'manager', 'assistant'],
+          requiresRole: ['owner', 'manager', 'assistant', 'platform_owner'],
           title: 'Suppliers',
           icon: 'business'
         }
@@ -185,7 +185,7 @@ const routes: RouteRecordRaw[] = [
         component: () => import('pages/SettingsPage.vue'),
         meta: { 
           requiresAuth: true,
-          requiresRole: ['owner', 'manager'],
+          requiresRole: ['owner', 'manager', 'platform_owner'],
           title: 'Settings',
           icon: 'settings'
         }
@@ -196,7 +196,7 @@ const routes: RouteRecordRaw[] = [
         component: () => import('pages/AdminDashboard.vue'),
         meta: { 
           requiresAuth: true,
-          requiresRole: ['owner'],
+          requiresRole: ['owner', 'platform_owner'],
           title: 'Admin Dashboard',
           icon: 'admin_panel_settings'
         }
@@ -221,7 +221,7 @@ const routes: RouteRecordRaw[] = [
         component: () => import('pages/StyleGuidePage.vue'),
         meta: { 
           requiresAuth: true,
-          requiresRole: ['owner'],
+          requiresRole: ['owner', 'platform_owner'],
           title: 'Style Guide'
         }
       }
@@ -247,6 +247,108 @@ const routes: RouteRecordRaw[] = [
       },
     ],
   },
+
+  // Platform Owner Portal
+  {
+    path: '/platform',
+    component: () => import('layouts/MainLayout.vue'),
+    meta: { 
+      requiresAuth: true,
+      requiresRole: 'platform_owner'
+    },
+    children: [
+      {
+        path: '',
+        name: 'platform-dashboard',
+        component: () => import('pages/platform/PlatformDashboard.vue'),
+        meta: {
+          requiresAuth: true,
+          requiresRole: 'platform_owner',
+          title: 'Platform Dashboard',
+          icon: 'settings'
+        }
+      },
+      {
+        path: 'practices',
+        name: 'platform-practices',
+        component: () => import('pages/platform/PracticesPage.vue'),
+        meta: {
+          requiresAuth: true,
+          requiresRole: 'platform_owner',
+          title: 'Practice Management',
+          icon: 'business'
+        }
+      },
+      {
+        path: 'practices/create',
+        name: 'platform-practices-create',
+        component: () => import('pages/platform/CreatePracticePage.vue'),
+        meta: {
+          requiresAuth: true,
+          requiresRole: 'platform_owner',
+          title: 'Create Practice',
+          icon: 'add_business'
+        }
+      },
+      {
+        path: 'logs',
+        name: 'platform-logs',
+        component: () => import('pages/platform/SystemLogsPage.vue'),
+        meta: {
+          requiresAuth: true,
+          requiresRole: 'platform_owner',
+          title: 'System Logs',
+          icon: 'description'
+        }
+      },
+      {
+        path: 'database',
+        name: 'platform-database',
+        component: () => import('pages/platform/DatabaseAdminPage.vue'),
+        meta: {
+          requiresAuth: true,
+          requiresRole: 'platform_owner',
+          title: 'Database Admin',
+          icon: 'storage'
+        }
+      },
+      {
+        path: 'api-docs',
+        name: 'platform-api-docs',
+        component: () => import('pages/platform/ApiDocsPage.vue'),
+        meta: {
+          requiresAuth: true,
+          requiresRole: 'platform_owner',
+          title: 'API Documentation',
+          icon: 'api'
+        }
+      },
+      {
+        path: 'monitoring',
+        name: 'platform-monitoring',
+        component: () => import('pages/platform/MonitoringPage.vue'),
+        meta: {
+          requiresAuth: true,
+          requiresRole: 'platform_owner',
+          title: 'System Monitoring',
+          icon: 'monitoring'
+        }
+      },
+      {
+        path: 'backup',
+        name: 'platform-backup',
+        component: () => import('pages/platform/BackupPage.vue'),
+        meta: {
+          requiresAuth: true,
+          requiresRole: 'platform_owner',
+          title: 'Backup & Restore',
+          icon: 'backup'
+        }
+      }
+    ]
+  },
+
+
 
   // Always leave this as last one,
   // but you can also remove it

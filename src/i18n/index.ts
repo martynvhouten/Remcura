@@ -1,7 +1,5 @@
 import { createI18n } from 'vue-i18n';
-
-// Supported locales
-export type SupportedLocale = 'en' | 'nl' | 'es';
+import type { SupportedLocale } from '@/types/i18n';
 
 // Always use lazy loading to avoid require() issues in Vite
 const ENABLE_LAZY_LOADING = true;

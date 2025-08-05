@@ -4,15 +4,7 @@ import { orderLogger } from '@/utils/logger';
 import type { OrderListItem } from '@/types/inventory';
 import { ServiceErrorHandler } from '@/utils/service-error-handler';
 import type { OrderListWithItems } from './orderLists-core';
-
-export interface AddOrderListItemRequest {
-  order_list_id: string;
-  product_id: string;
-  supplier_product_id: string;
-  requested_quantity: number;
-  location_id?: string;
-  notes?: string;
-}
+import type { AddOrderListItemRequest } from '@/types/stores';
 
 export function useOrderListsItems(orderLists: Ref<OrderListWithItems[]>) {
   // Dependencies

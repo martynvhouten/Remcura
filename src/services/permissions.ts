@@ -1,24 +1,6 @@
 import { supabase } from 'src/boot/supabase';
 import { useAuthStore } from 'src/stores/auth';
-
-export type UserRole = 'owner' | 'manager' | 'assistant' | 'logistics' | 'member' | 'guest';
-export type PermissionType = 'read' | 'write' | 'admin';
-export type ResourceType = 'products' | 'inventory' | 'orders' | 'analytics' | 'users' | 'all';
-
-export interface Permission {
-  permission_type: PermissionType;
-  resource_type: ResourceType;
-  resource_id?: string;
-  conditions?: Record<string, any>;
-  source: 'role' | 'user';
-}
-
-export interface RoleDefinition {
-  role: UserRole;
-  displayName: string;
-  description: string;
-  permissions: Permission[];
-}
+import type { UserRole, PermissionType, ResourceType, Permission, RoleDefinition } from '@/types/permissions';
 
 // Role definitions for frontend display
 export const ROLE_DEFINITIONS: Record<UserRole, RoleDefinition> = {
@@ -80,6 +62,14 @@ export const ROLE_DEFINITIONS: Record<UserRole, RoleDefinition> = {
     permissions: [
       { permission_type: 'read', resource_type: 'products', conditions: { limited: true }, source: 'role' },
       { permission_type: 'read', resource_type: 'inventory', conditions: { limited: true }, source: 'role' },
+    ]
+  },
+  platform_owner: {
+    role: 'platform_owner',
+    displayName: 'Platform Eigenaar',
+    description: 'Volledige platform en alle praktijk toegang',
+    permissions: [
+      { permission_type: 'admin', resource_type: 'all', source: 'role' },
     ]
   }
 };
@@ -183,9 +173,9 @@ export class PermissionService {
     const userId = authStore.user?.id;
     const practiceId = authStore.clinicId;
 
-    // For demo user, return owner role
+    // For demo user, return platform_owner role
     if (userId === '550e8400-e29b-41d4-a716-446655440001') {
-      return 'owner';
+      return 'platform_owner';
     }
 
     // If no practiceId, this might be a Magic Join user - give them guest access for now
@@ -223,31 +213,31 @@ export class PermissionService {
    * Check if user can perform specific actions based on role
    */
   static canCreateProducts(role: UserRole): boolean {
-    return ['owner', 'manager', 'assistant'].includes(role);
+    return ['owner', 'manager', 'assistant', 'platform_owner'].includes(role);
   }
 
   static canEditProducts(role: UserRole): boolean {
-    return ['owner', 'manager', 'assistant'].includes(role);
+    return ['owner', 'manager', 'assistant', 'platform_owner'].includes(role);
   }
 
   static canDeleteProducts(role: UserRole): boolean {
-    return ['owner', 'manager'].includes(role);
+    return ['owner', 'manager', 'platform_owner'].includes(role);
   }
 
   static canManageInventory(role: UserRole): boolean {
-    return ['owner', 'manager', 'assistant', 'logistics'].includes(role);
+    return ['owner', 'manager', 'assistant', 'logistics', 'platform_owner'].includes(role);
   }
 
   static canViewAnalytics(role: UserRole): boolean {
-    return ['owner', 'manager', 'assistant'].includes(role);
+    return ['owner', 'manager', 'assistant', 'platform_owner'].includes(role);
   }
 
   static canManageUsers(role: UserRole): boolean {
-    return ['owner', 'manager'].includes(role);
+    return ['owner', 'manager', 'platform_owner'].includes(role);
   }
 
   static canSubmitOrders(role: UserRole): boolean {
-    return ['owner', 'manager', 'assistant'].includes(role);
+    return ['owner', 'manager', 'assistant', 'platform_owner'].includes(role);
   }
 
   /**

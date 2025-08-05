@@ -1,7 +1,6 @@
 import { boot } from 'quasar/wrappers';
-import { i18n, type SupportedLocale } from 'src/i18n';
-
-export type MessageLanguages = SupportedLocale;
+import { i18n } from 'src/i18n';
+import type { SupportedLocale, MessageLanguages } from '@/types/i18n';
 
 export { i18n };
 

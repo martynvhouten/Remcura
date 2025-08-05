@@ -140,12 +140,19 @@ export default {
     styleGuide: 'Style guide',
     designSystem: 'Design system reference',
     
+    // Platform navigation
+    platformDashboard: 'Platform Dashboard',
+    practiceManagement: 'Practice Management',
+    systemMonitoring: 'System Monitoring',
+    databaseAdmin: 'Database Admin',
+    
     sections: {
       main: 'Overview',
       inventory: 'Inventory Management',
       supplyChain: 'Supply Chain',
       analytics: 'Analytics & Reports',
       administration: 'Administration',
+      platform: 'Platform',
     },
     
     inventoryLevels: 'Inventory levels',
@@ -176,6 +183,8 @@ export default {
     demoAccount: 'Demo account',
     or: 'or',
     secureConnection: 'Secure connection',
+    fullName: 'Full Name',
+    role: 'Role',
     privacyPolicy: 'Privacy policy',
     termsOfService: 'Terms of service',
     support: 'Support',
@@ -192,7 +201,6 @@ export default {
     passwordHelp: 'Enter your password to securely log in',
     demoHelp: 'Use demo@remcura.com with password demo123 for demonstration',
     signingIn: 'Signing in...',
-    fullName: 'Full name',
   },
 
   // Demo Account
@@ -734,15 +742,6 @@ export default {
     fifoResults: 'FIFO results',
     noFifoResults: 'No FIFO results available',
     fifoSuggestionGenerated: 'FIFO suggestion generated successfully',
-    
-    // Quick Actions
-    quickActions: 'Quick actions',
-    scanBatch: 'Scan Batch',
-    scanBatchSubtitle: 'Scan barcode to find batch',
-    viewExpiring: 'View Expiring',
-    viewExpiringSubtitle: 'batches expiring soon',
-    exportBatches: 'Export Batches',
-    exportBatchesSubtitle: 'Download batch data',
     applyFifoSuggestion: 'Apply FIFO suggestion',
     confirmFifoApplication: 'Confirm FIFO application',
     confirmFifoMessage: 'Are you sure you want to apply this FIFO suggestion?',
@@ -1417,6 +1416,9 @@ export default {
     timeFormat: 'Time format',
     emailNotifications: 'Email notifications',
     pushNotifications: 'Push notifications',
+    role: 'User Role',
+    permissions: 'Permissions',
+    preferences: 'Preferences',
     stockAlerts: 'Stock alerts',
     orderAlerts: 'Order alerts',
     systemAlerts: 'System alerts',
@@ -1456,7 +1458,7 @@ export default {
     contactEmail: 'Contact email',
     phoneNumber: 'Phone number',
     address: 'Address',
-    role: 'Role',
+    userRole: 'Role',
     darkModeEnabled: 'Dark mode is enabled',
     lightModeEnabled: 'Light mode is enabled',
     settingsSaved: 'Settings saved successfully',
@@ -1739,6 +1741,34 @@ export default {
     errors: {
       setMainFailed: 'Error setting main location',
       accessUpdateFailed: 'Error updating access',
+    },
+  },
+
+  // Platform - Owner Portal
+  platform: {
+    title: 'Platform Dashboard',
+    subtitle: 'System administration and monitoring',
+    
+    systemHealth: {
+      healthy: 'Healthy',
+      warning: 'Warning',
+      critical: 'Critical',
+    },
+    
+    version: 'Version',
+    environment: 'Environment',
+    
+    metrics: {
+      totalPractices: 'Total Practices',
+      totalUsers: 'Total Users', 
+      activeToday: 'Active Today',
+      totalEvents: 'Total Events',
+      systemHealth: 'System Health',
+    },
+    
+    notifications: {
+      dataRefreshed: 'Platform data refreshed',
+      refreshFailed: 'Failed to refresh platform data',
     },
   },
 
@@ -2559,5 +2589,14 @@ export default {
     'orders.table.expectedDelivery': 'Expected delivery',
 
     'orders.table.actions': 'Actions',
+
+
+
+  // Quick adjustment keys
+  quickAdjustment: {
+    noProduct: 'No product selected',
+    selectProduct: 'Select Product',
+    adjustmentComplete: 'Stock adjustment completed'
+  }
 
 };

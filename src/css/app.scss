@@ -1162,9 +1162,14 @@ body.body--dark {
 // ===================================================================
 
 .q-field {
+  // Ensure the field itself is also 40px to match control
+  min-height: 40px;
+  height: 40px;
+  
   .q-field__control {
     border-radius: var(--radius-lg);
-    min-height: 56px;
+    min-height: 40px;
+    height: 40px; // Force consistent height
     border: 1px solid var(--border-primary);
     background: var(--bg-primary);
     transition: all var(--transition-base);
@@ -1190,7 +1195,7 @@ body.body--dark {
   
   // Input styling with improved alignment
   .q-field__native {
-    padding: 16px 12px;
+    padding: 8px 12px; // Reduced padding to fit 40px height
     font-family: var(--font-family-primary);
     font-size: var(--text-base);
     color: var(--text-primary);
@@ -1200,6 +1205,8 @@ body.body--dark {
     box-shadow: none;
     display: flex;
     align-items: center;
+    height: 40px; // Force 40px height
+    min-height: 40px;
   }
   
   // Better text alignment for field elements
@@ -1250,6 +1257,59 @@ body.body--dark {
   &.q-field--disabled .q-field__control {
     opacity: 0.6;
     background: var(--bg-tertiary);
+  }
+}
+
+// Dark mode specific field fixes
+body.body--dark {
+  .q-field {
+    .q-field__control {
+      background: var(--bg-secondary);
+      border-color: var(--border-primary);
+    }
+    
+    .q-field__native {
+      color: var(--text-primary);
+      display: flex;
+      align-items: center;
+      height: 40px; // Force 40px height in dark mode too
+      min-height: 40px;
+      padding: 8px 12px; // Consistent padding
+    }
+    
+    // Fix selected value alignment in dark mode
+    .q-field__selected {
+      color: var(--text-primary);
+      font-size: 14px;
+      line-height: 1.4;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      min-height: 38px; // Match field control height minus border
+      padding: 0; // Remove any extra padding
+    }
+    
+    // Fix label positioning and contrast in dark mode
+    .q-field__label {
+      color: var(--text-secondary);
+      font-weight: var(--font-weight-medium);
+    }
+    
+    // Better contrast for focused labels in dark mode
+    &.q-field--focused .q-field__label {
+      color: var(--brand-primary-light);
+    }
+    
+    // Fix prepend/append icon colors
+    .q-field__prepend .q-icon,
+    .q-field__append .q-icon {
+      color: var(--text-secondary);
+    }
+    
+    &.q-field--focused .q-field__prepend .q-icon,
+    &.q-field--focused .q-field__append .q-icon {
+      color: var(--brand-primary-light);
+    }
   }
 }
 

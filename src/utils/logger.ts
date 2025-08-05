@@ -3,26 +3,7 @@
  * Replaces console.log statements with environment-aware logging
  */
 
-export type LogLevel = 'debug' | 'info' | 'warn' | 'error';
-
-// Type for log data - allows common log data types while maintaining type safety
-export type LogData = 
-  | string 
-  | number 
-  | boolean 
-  | Error 
-  | Record<string, unknown> 
-  | Array<unknown> 
-  | null 
-  | undefined;
-
-export interface LogEntry {
-  level: LogLevel;
-  message: string;
-  context?: string;
-  data?: LogData;
-  timestamp: string;
-}
+import type { LogLevel, LogData, LogEntry } from '@/types/logging';
 
 class Logger {
   private isDevelopment = import.meta.env.DEV;

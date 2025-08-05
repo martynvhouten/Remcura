@@ -168,7 +168,7 @@
   import { useI18n } from 'vue-i18n';
   import { useQuasar } from 'quasar';
   import { useAuthStore } from 'src/stores/auth';
-  import { dashboardService, type DashboardData, type DashboardWidget as DashboardWidgetType } from 'src/services/dashboard';
+  import { practiceDashboardService, type PracticeDashboardData, type PracticeWidget as DashboardWidgetType, type PracticeRole } from '@/services/dashboard/practice-dashboard';
   import PageLayout from 'src/components/PageLayout.vue';
   import PageTitle from 'src/components/PageTitle.vue';
   import DashboardWidget from 'src/components/dashboard/DashboardWidget.vue';
@@ -180,7 +180,7 @@
   // State
   const loading = ref(false);
   const showCustomizeDialog = ref(false);
-  const dashboardData = ref<DashboardData | null>(null);
+  const dashboardData = ref<PracticeDashboardData | null>(null);
 
   // Computed properties
   const userProfile = computed(() => authStore.userProfile);
@@ -188,7 +188,7 @@
   const selectedDemoRole = ref(userRole.value);
   
   const dashboardConfig = computed(() => 
-    dashboardService.getRoleConfig(selectedDemoRole.value)
+    practiceDashboardService.getRoleConfig(selectedDemoRole.value)
   );
 
   const widgets = computed(() => dashboardData.value?.widgets || []);
@@ -233,8 +233,14 @@
   async function loadDashboard() {
     try {
       loading.value = true;
-      // Loading dashboard data for selected role
-      dashboardData.value = await dashboardService.getDashboardData(selectedDemoRole.value);
+      const role = selectedDemoRole.value || userRole.value || 'assistant';
+      const practiceId = authStore.clinicId || authStore.selectedPractice?.id;
+      
+      if (!practiceId) {
+        throw new Error(t('dashboard.errors.practiceIdMissing'));
+      }
+      
+      dashboardData.value = await practiceDashboardService.getDashboardData(role as PracticeRole, practiceId);
       // Dashboard loaded successfully
     } catch (error) {
       console.error('Failed to load dashboard:', error);

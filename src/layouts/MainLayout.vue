@@ -346,7 +346,7 @@
   // Check if user has admin permissions
   const isAdmin = computed(() => {
     const role = userProfile.value?.role || '';
-    return role === 'admin' || role === 'owner';
+    return role === 'admin' || role === 'owner' || role === 'platform_owner';
   });
 
   // Enhanced navigation links with more details
@@ -484,6 +484,40 @@
             icon: 'palette',
             to: '/style-guide',
             routeName: 'style-guide',
+          },
+        ],
+      });
+    }
+
+    // Add platform section for platform owner users
+    if (userProfile.value?.role === 'platform_owner') {
+      sections.push({
+        id: 'platform',
+        title: t('nav.sections.platform'),
+        items: [
+          {
+            title: t('nav.platformDashboard'),
+            icon: 'admin_panel_settings',
+            to: '/platform',
+            routeName: 'platform-dashboard',
+          },
+          {
+            title: t('nav.practiceManagement'),
+            icon: 'business',
+            to: '/platform/practices',
+            routeName: 'platform-practices',
+          },
+          {
+            title: t('nav.systemMonitoring'),
+            icon: 'monitor_heart',
+            to: '/platform/monitoring',
+            routeName: 'platform-monitoring',
+          },
+          {
+            title: t('nav.databaseAdmin'),
+            icon: 'storage',
+            to: '/platform/database',
+            routeName: 'platform-database',
           },
         ],
       });
