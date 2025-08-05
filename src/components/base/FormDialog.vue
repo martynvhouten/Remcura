@@ -155,7 +155,7 @@
   );
 
   const dialogVariant = computed(() => 'elegant');
-  const headerVariant = computed(() => 'gradient');
+  const headerVariant = computed(() => 'solid');
 
   // Methods
   const handleSubmit = () => {

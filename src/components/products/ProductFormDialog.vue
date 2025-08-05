@@ -399,7 +399,14 @@ watch(
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: var(--space-4);
-  align-items: start;
+  align-items: stretch; // Better alignment for equal height fields
+  width: 100%;
+
+  // Ensure all child form fields have equal width
+  > * {
+    width: 100%;
+    min-width: 0; // Prevent overflow
+  }
 
   @media (max-width: 640px) {
     grid-template-columns: 1fr;
@@ -409,78 +416,23 @@ watch(
 
 .form-field {
   width: 100%;
-  
-  :deep(.q-field__control) {
-    border-radius: 12px;
-    border: 2px solid var(--neutral-200);
-    background: white;
-    transition: all 0.2s ease;
-    min-height: 48px;
-
-    &:hover {
-      border-color: var(--brand-primary);
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-    }
-  }
-
-  :deep(.q-field--focused .q-field__control) {
-    border-color: var(--brand-primary);
-    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
-  }
-
-  :deep(.q-field--error .q-field__control) {
-    border-color: var(--brand-danger);
-    background: rgba(220, 38, 38, 0.05);
-  }
-
-  :deep(.q-field__label) {
-    font-weight: var(--font-weight-medium);
-    color: var(--neutral-700);
-    font-size: var(--text-sm);
-  }
-
-  :deep(.q-field__messages) {
-    font-size: var(--text-xs);
-    padding-top: var(--space-2);
-  }
+  // Remove all custom field styling - use global field system to prevent double borders
+  // This ensures consistent styling with the rest of the application
 }
 
-// Enhanced checkbox styling
-:deep(.q-checkbox) {
-  .q-checkbox__inner {
-    border-radius: 6px;
-    border: 2px solid var(--neutral-300);
-    transition: all 0.2s ease;
+// Use global checkbox styling - remove custom overrides to prevent conflicts
 
-    &:hover {
-      border-color: var(--brand-primary);
-    }
-  }
-
-  &.q-checkbox--checked .q-checkbox__inner {
-    background: var(--brand-primary);
-    border-color: var(--brand-primary);
-  }
-
-  .q-checkbox__label {
-    font-weight: var(--font-weight-medium);
-    color: var(--neutral-700);
-  }
-}
-
-// Advanced expansion styling
+// Clean expansion styling
 .advanced-expansion {
-  border: 2px solid var(--neutral-200);
-  border-radius: 16px;
+  border: 1px solid var(--border-primary);
+  border-radius: var(--radius-lg);
   overflow: hidden;
-  background: var(--neutral-50);
 
   :deep(.q-expansion-item__container) {
     .q-expansion-item__header {
-      background: white;
-      padding: var(--space-4) var(--space-5);
-      font-weight: var(--font-weight-semibold);
-      border-bottom: 1px solid var(--neutral-200);
+      background: var(--bg-primary);
+      padding: var(--space-4);
+      font-weight: var(--font-weight-medium);
 
       .q-expansion-item__icon {
         color: var(--brand-primary);
@@ -488,89 +440,42 @@ watch(
     }
 
     .q-expansion-item__content {
-      background: white;
+      background: var(--bg-primary);
       padding: 0;
     }
   }
 }
 
 .advanced-content {
-  padding: var(--space-5);
+  padding: var(--space-4);
   display: flex;
   flex-direction: column;
   gap: var(--space-4);
 }
 
 // ===================================================================
-// DARK MODE ADAPTATIONS
+// DARK MODE ADAPTATIONS - MINIMAL OVERRIDES
 // ===================================================================
 
 body.body--dark {
   .form-section {
     .section-title {
-      color: var(--neutral-100);
-      border-bottom-color: var(--neutral-700);
-    }
-  }
-
-  .form-field {
-    :deep(.q-field__control) {
-      background: var(--neutral-900);
-      border-color: var(--neutral-600);
-      color: var(--neutral-100);
-
-      &:hover {
-        border-color: var(--brand-primary-light);
-      }
-    }
-
-    :deep(.q-field--focused .q-field__control) {
-      border-color: var(--brand-primary-light);
-      box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
-    }
-
-    :deep(.q-field--error .q-field__control) {
-      background: rgba(220, 38, 38, 0.1);
-    }
-
-    :deep(.q-field__label) {
-      color: var(--neutral-300);
-    }
-  }
-
-  :deep(.q-checkbox) {
-    .q-checkbox__inner {
-      border-color: var(--neutral-500);
-      background: var(--neutral-800);
-
-      &:hover {
-        border-color: var(--brand-primary-light);
-      }
-    }
-
-    &.q-checkbox--checked .q-checkbox__inner {
-      background: var(--brand-primary-light);
-      border-color: var(--brand-primary-light);
-    }
-
-    .q-checkbox__label {
-      color: var(--neutral-200);
+      color: var(--text-primary);
+      border-bottom-color: var(--border-primary);
     }
   }
 
   .advanced-expansion {
-    background: var(--neutral-800);
-    border-color: var(--neutral-700);
+    border-color: var(--border-primary);
 
     :deep(.q-expansion-item__container) {
       .q-expansion-item__header {
-        background: var(--neutral-900);
-        border-bottom-color: var(--neutral-700);
-        color: var(--neutral-100);
+        background: var(--bg-primary);
+        color: var(--text-primary);
       }
 
       .q-expansion-item__content {
-        background: var(--neutral-900);
+        background: var(--bg-primary);
       }
     }
   }
@@ -594,21 +499,8 @@ body.body--dark {
   }
 
   .advanced-content {
-    padding: var(--space-4);
+    padding: var(--space-3);
     gap: var(--space-3);
-  }
-}
-
-// ===================================================================
-// ACCESSIBILITY ENHANCEMENTS
-// ===================================================================
-
-.form-field {
-  :deep(.q-field__control) {
-    &:focus-within {
-      outline: 2px solid var(--brand-primary);
-      outline-offset: 2px;
-    }
   }
 }
 </style> 

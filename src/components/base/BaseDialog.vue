@@ -648,26 +648,33 @@ body.body--dark {
   outline-offset: 2px;
 }
 
-// Scroll behavior
+// Enhanced scroll behavior with proper corner handling
 .base-dialog-card {
   scrollbar-width: thin;
   scrollbar-color: var(--neutral-300) transparent;
 
   &::-webkit-scrollbar {
-    width: 6px;
+    width: 8px;
   }
 
   &::-webkit-scrollbar-track {
     background: transparent;
+    border-radius: 24px; // Match dialog border-radius
   }
 
   &::-webkit-scrollbar-thumb {
     background: var(--neutral-300);
-    border-radius: 3px;
+    border-radius: 24px; // Match dialog border-radius
+    border: 2px solid transparent;
+    background-clip: content-box;
   }
 
   &::-webkit-scrollbar-thumb:hover {
     background: var(--neutral-400);
+  }
+  
+  &::-webkit-scrollbar-corner {
+    background: transparent;
   }
 }
 </style>
