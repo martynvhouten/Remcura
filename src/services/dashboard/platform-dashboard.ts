@@ -1,6 +1,7 @@
 import { supabase } from '../supabase';
 import { dashboardLogger } from '@/utils/logger';
 import { t } from '@/utils/i18n-service';
+import { ServiceErrorHandler } from '@/utils/service-error-handler';
 
 export interface PlatformWidget {
   id: string;
@@ -167,7 +168,12 @@ class PlatformDashboardService {
           widgets.push(widget);
         }
       } catch (error) {
-        dashboardLogger.error(`Error loading platform widget ${widgetId}:`, error);
+        ServiceErrorHandler.handle(error, {
+          service: 'PlatformDashboardService',
+          operation: 'loadWidget',
+          metadata: { widgetId, position: i }
+        }, { rethrow: false, logLevel: 'error' });
+        
         // Add error widget
         widgets.push({
           id: widgetId,

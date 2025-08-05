@@ -1140,21 +1140,21 @@ body.body--dark {
 .q-field__control {
   &::before,
   &::after {
-    display: none !important;
-    content: none !important;
-    border: none !important;
+    display: none;
+    content: none;
+    border: none;
   }
 }
 
 // Additional safety for all Quasar field variants
-.q-field--outlined .q-field__control::before,
-.q-field--outlined .q-field__control::after,
-.q-field--filled .q-field__control::before,
-.q-field--filled .q-field__control::after,
-.q-field--standard .q-field__control::before,
-.q-field--standard .q-field__control::after {
-  display: none !important;
-  content: none !important;
+html body .q-field--outlined .q-field__control::before,
+html body .q-field--outlined .q-field__control::after,
+html body .q-field--filled .q-field__control::before,
+html body .q-field--filled .q-field__control::after,
+html body .q-field--standard .q-field__control::before,
+html body .q-field--standard .q-field__control::after {
+  display: none;
+  content: none;
 }
 
 // ===================================================================
@@ -2337,113 +2337,132 @@ h2,
 // ===================================================================
 
 // FORCE OVERRIDE Quasar's button system with ultra-high specificity
-body .q-layout .q-btn.app-btn-primary,
-.q-btn.app-btn-primary {
-  background: #1976d2 !important;
-  color: white !important;
-  border: none !important;
-  border-radius: 8px !important;
-  font-weight: 500 !important;
-  text-transform: none !important;
-  transition: all 0.2s ease !important;
-  box-shadow: 0 2px 4px rgba(25, 118, 210, 0.2) !important;
+html body .q-layout .q-btn.app-btn-primary,
+html body .q-btn.app-btn-primary {
+  background: #1976d2;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-weight: 500;
+  text-transform: none;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 4px rgba(25, 118, 210, 0.2);
   
   &:hover:not(.q-btn--disable):not(.q-btn--loading) {
-    background: #1565c0 !important;
-    transform: translateY(-1px) !important;
-    box-shadow: 0 4px 12px rgba(25, 118, 210, 0.3) !important;
+    background: #1565c0;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(25, 118, 210, 0.3);
   }
 }
 
-body .q-layout .q-btn.app-btn-secondary,
-.q-btn.app-btn-secondary {
-  background: #6c757d !important;
-  color: white !important;
-  border: none !important;
-  border-radius: 8px !important;
-  font-weight: 500 !important;
-  text-transform: none !important;
-  transition: all 0.2s ease !important;
-  box-shadow: 0 2px 4px rgba(108, 117, 125, 0.2) !important;
+html body .q-layout .q-btn.app-btn-secondary,
+html body .q-btn.app-btn-secondary {
+  background: #6c757d;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-weight: 500;
+  text-transform: none;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 4px rgba(108, 117, 125, 0.2);
   
   &:hover:not(.q-btn--disable):not(.q-btn--loading) {
-    background: #5a6268 !important;
-    transform: translateY(-1px) !important;
-    box-shadow: 0 4px 12px rgba(108, 117, 125, 0.3) !important;
+    background: #5a6268;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(108, 117, 125, 0.3);
   }
 }
 
-body .q-layout .q-btn.app-btn-success,
-.q-btn.app-btn-success {
-  background: #28a745 !important;
-  color: white !important;
-  border: none !important;
-  border-radius: 8px !important;
-  font-weight: 500 !important;
-  text-transform: none !important;
-  transition: all 0.2s ease !important;
-  box-shadow: 0 2px 4px rgba(40, 167, 69, 0.2) !important;
+html body .q-layout .q-btn.app-btn-success,
+html body .q-btn.app-btn-success {
+  background: #28a745;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-weight: 500;
+  text-transform: none;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 4px rgba(40, 167, 69, 0.2);
   
   &:hover:not(.q-btn--disable):not(.q-btn--loading) {
-    background: #218838 !important;
-    transform: translateY(-1px) !important;
-    box-shadow: 0 4px 12px rgba(40, 167, 69, 0.3) !important;
+    background: #218838;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(40, 167, 69, 0.3);
   }
 }
 
-body .q-layout .q-btn.app-btn-danger,
-.q-btn.app-btn-danger {
-  background: #dc3545 !important;
-  color: white !important;
-  border: none !important;
-  border-radius: 8px !important;
-  font-weight: 500 !important;
-  text-transform: none !important;
-  transition: all 0.2s ease !important;
-  box-shadow: 0 2px 4px rgba(220, 53, 69, 0.2) !important;
+html body .q-layout .q-btn.app-btn-danger,
+html body .q-btn.app-btn-danger {
+  background: #dc3545;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-weight: 500;
+  text-transform: none;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 4px rgba(220, 53, 69, 0.2);
   
   &:hover:not(.q-btn--disable):not(.q-btn--loading) {
-    background: #c82333 !important;
-    transform: translateY(-1px) !important;
-    box-shadow: 0 4px 12px rgba(220, 53, 69, 0.3) !important;
+    background: #c82333;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(220, 53, 69, 0.3);
   }
 }
 
-body .q-layout .q-btn.app-btn-info,
-.q-btn.app-btn-info {
-  background: #17a2b8 !important;
-  color: white !important;
-  border: none !important;
-  border-radius: 8px !important;
-  font-weight: 500 !important;
-  text-transform: none !important;
-  transition: all 0.2s ease !important;
-  box-shadow: 0 2px 4px rgba(23, 162, 184, 0.2) !important;
+html body .q-layout .q-btn.app-btn-info,
+html body .q-btn.app-btn-info {
+  background: #17a2b8;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-weight: 500;
+  text-transform: none;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 4px rgba(23, 162, 184, 0.2);
   
   &:hover:not(.q-btn--disable):not(.q-btn--loading) {
-    background: #138496 !important;
-    transform: translateY(-1px) !important;
-    box-shadow: 0 4px 12px rgba(23, 162, 184, 0.3) !important;
+    background: #138496;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(23, 162, 184, 0.3);
+  }
+}
+
+html body .q-layout .q-btn.app-btn-warning,
+html body .q-btn.app-btn-warning {
+  background: #ffc107;
+  color: #212529;
+  border: none;
+  border-radius: 8px;
+  font-weight: 500;
+  text-transform: none;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 4px rgba(255, 193, 7, 0.2);
+  
+  &:hover:not(.q-btn--disable):not(.q-btn--loading) {
+    background: #e0a800;
+    color: #212529;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(255, 193, 7, 0.3);
   }
 }
 
 // Refresh buttons (flat, icon-only)
-body .q-layout .q-btn.app-btn-refresh,
-.q-btn.app-btn-refresh {
-  background: transparent !important;
-  color: #6c757d !important;
-  border: none !important;
-  border-radius: 6px !important;
+html body .q-layout .q-btn.app-btn-refresh,
+html body .q-btn.app-btn-refresh {
+  background: transparent;
+  color: #6c757d;
+  border: none;
+  border-radius: 6px;
   
   .q-icon {
-    font-size: 18px !important;
+    font-size: 18px;
   }
   
   &:hover:not(.q-btn--disable):not(.q-btn--loading) {
-    background: rgba(25, 118, 210, 0.08) !important;
-    color: #1976d2 !important;
-    transform: translateY(-1px) !important;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1) !important;
+    background: rgba(25, 118, 210, 0.08);
+    color: #1976d2;
+    transform: translateY(-1px);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   }
 }
 
@@ -2599,16 +2618,16 @@ body.body--dark .filter-panel-container .q-btn.app-btn-filter {
 /* Global Accessibility Improvements */
 
 /* Screen reader only utility class */
-.sr-only {
-  position: absolute !important;
-  width: 1px !important;
-  height: 1px !important;
-  padding: 0 !important;
-  margin: -1px !important;
-  overflow: hidden !important;
-  clip: rect(0, 0, 0, 0) !important;
-  white-space: nowrap !important;
-  border: 0 !important;
+html body .sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
 }
 
 /* Ensure focus is visible when navigating with keyboard */
@@ -2643,24 +2662,24 @@ body.body--dark .filter-panel-container .q-btn.app-btn-filter {
 
 /* High contrast mode support */
 @media (prefers-contrast: high) {
-  * {
-    border-color: currentColor !important;
+  html body * {
+    border-color: currentColor;
   }
 
-  .q-btn {
-    border: 2px solid currentColor !important;
+  html body .q-btn {
+    border: 2px solid currentColor;
   }
 }
 
 /* Reduced motion support */
 @media (prefers-reduced-motion: reduce) {
-  *,
-  *::before,
-  *::after {
-    animation-duration: 0.01ms !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: 0.01ms !important;
-    scroll-behavior: auto !important;
+  html body *,
+  html body *::before,
+  html body *::after {
+    animation-duration: 0.01ms;
+    animation-iteration-count: 1;
+    transition-duration: 0.01ms;
+    scroll-behavior: auto;
   }
 }
 
@@ -3426,5 +3445,88 @@ body.body--dark .filter-panel-container .q-btn.app-btn-filter {
   .table-container {
     margin: 0 calc(-1 * var(--space-3));
     border-radius: 0;
+  }
+}
+
+// ===================================================================
+// CUSTOM SCROLLBAR STYLING
+// ===================================================================
+
+/* Subtle and modern scrollbar styling for navigation and content */
+.navigation-drawer,
+.q-drawer__content {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(0, 0, 0, 0.1) transparent;
+  
+  &::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+  
+  &::-webkit-scrollbar-track {
+    background: transparent;
+    border-radius: 3px;
+  }
+  
+  &::-webkit-scrollbar-thumb {
+    background: rgba(0, 0, 0, 0.1);
+    border-radius: 3px;
+    transition: background-color 0.2s ease;
+    
+    &:hover {
+      background: rgba(0, 0, 0, 0.2);
+    }
+  }
+  
+  &::-webkit-scrollbar-corner {
+    background: transparent;
+  }
+}
+
+/* Dark mode scrollbar */
+body.body--dark {
+  .navigation-drawer,
+  .q-drawer__content {
+    scrollbar-color: rgba(255, 255, 255, 0.2) transparent;
+    
+    &::-webkit-scrollbar-thumb {
+      background: rgba(255, 255, 255, 0.2);
+      
+      &:hover {
+        background: rgba(255, 255, 255, 0.3);
+      }
+    }
+  }
+}
+
+/* Content area scrollbar - slightly more visible */
+.q-page-container,
+.q-page,
+.content-area {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(0, 0, 0, 0.15) rgba(0, 0, 0, 0.05);
+  
+  &::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+  
+  &::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0.02);
+    border-radius: 4px;
+  }
+  
+  &::-webkit-scrollbar-thumb {
+    background: rgba(0, 0, 0, 0.15);
+    border-radius: 4px;
+    transition: background-color 0.2s ease;
+    
+    &:hover {
+      background: rgba(0, 0, 0, 0.25);
+    }
+  }
+  
+  &::-webkit-scrollbar-corner {
+    background: rgba(0, 0, 0, 0.02);
   }
 }

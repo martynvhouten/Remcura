@@ -68,28 +68,50 @@ class DashboardService {
 
   private async loadMetrics(practiceId: string) {
     try {
-      // Get stock levels
-      const { data: stockLevels } = await supabase
-        .from('stock_levels')
-        .select('*')
-        .eq('practice_id', practiceId);
+      // 🚀 PERFORMANCE OPTIMIZATION: Parallel queries instead of sequential
+      const [
+        stockLevelsResponse,
+        ordersResponse,
+        productsResponse,
+        inventoryValueResponse
+      ] = await Promise.all([
+        // Stock levels for low stock calculation
+        supabase
+          .from('stock_levels')
+          .select('current_quantity, minimum_quantity')
+          .eq('practice_id', practiceId),
+        
+        // Recent orders
+        supabase
+          .from('orders')
+          .select('status, created_at')
+          .eq('practice_id', practiceId)
+          .order('created_at', { ascending: false })
+          .limit(50),
+        
+        // Products count (only need count)
+        supabase
+          .from('products')
+          .select('id')
+          .eq('practice_id', practiceId)
+          .eq('active', true),
+        
+        // Inventory value with JOIN (single optimized query)
+        supabase
+          .from('stock_levels')
+          .select(`
+            current_quantity,
+            products!inner(price)
+          `)
+          .eq('practice_id', practiceId)
+      ]);
 
-      // Get recent orders
-      const { data: orders } = await supabase
-        .from('orders')
-        .select('*')
-        .eq('practice_id', practiceId)
-        .order('created_at', { ascending: false })
-        .limit(50);
+      const { data: stockLevels } = stockLevelsResponse;
+      const { data: orders } = ordersResponse;
+      const { data: products } = productsResponse;
+      const { data: productsWithPrices } = inventoryValueResponse;
 
-      // Get products count
-      const { data: products } = await supabase
-        .from('products')
-        .select('id')
-        .eq('practice_id', practiceId)
-        .eq('active', true);
-
-      // Calculate metrics
+      // Calculate metrics from parallel data
       const lowStockCount = stockLevels?.filter(stock => 
         stock.current_quantity <= (stock.minimum_quantity || 0)
       ).length || 0;
@@ -97,15 +119,6 @@ class DashboardService {
       const pendingOrders = orders?.filter(order => 
         ['draft', 'submitted', 'confirmed'].includes(order.status)
       ).length || 0;
-
-      // Get products with prices for total value calculation
-      const { data: productsWithPrices } = await supabase
-        .from('stock_levels')
-        .select(`
-          current_quantity,
-          products!inner(price)
-        `)
-        .eq('practice_id', practiceId);
       
       const totalValue = productsWithPrices?.reduce((sum, stock) => 
         sum + (stock.current_quantity * (stock.products.price || 0)), 0
@@ -194,9 +207,6 @@ class DashboardService {
 
       case 'analytics-overview':
         return this.createAnalyticsWidget(practiceId);
-      
-      case 'business-overview':
-        return this.createBusinessOverviewWidget(practiceId);
 
       // For other widget types, return null to trigger mock widget creation
       case 'cost-analysis':

@@ -578,11 +578,11 @@
     .pulse-ring,
     .error-number span,
     .shape {
-      animation: none !important;
+      animation: none;
     }
 
     .btn-modern:hover {
-      transform: none !important;
+      transform: none;
     }
   }
 </style>

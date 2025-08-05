@@ -1022,6 +1022,8 @@ export default {
   orderLists: {
     title: 'Listas de pedidos',
     subtitle: 'Gestiona las listas de pedidos de tu práctica',
+    advancedTitle: 'Listas de Pedidos Avanzadas',
+    advancedSubtitle: 'Sistema de pedidos independiente de proveedores impulsado por min/max',
     create: 'Nueva lista de pedidos',
     edit: 'Editar lista de pedidos',
     duplicate: 'Duplicar',

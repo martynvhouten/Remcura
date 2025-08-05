@@ -82,7 +82,9 @@ export function useOrderListsCore() {
 
       orderLists.value = (data || []).map(orderList => ({
         ...orderList,
-        items: orderList.items || []
+        items: orderList.items || [],
+        total_amount: orderList.total_value || orderList.total_cost || 0,
+        total_items: orderList.items?.length || 0
       }));
     } catch (err) {
       const handledError = ServiceErrorHandler.handle(err, {

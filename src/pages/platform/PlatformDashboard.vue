@@ -137,6 +137,7 @@
 <script setup lang="ts">
 import { ref, computed, onMounted, onUnmounted } from 'vue';
 import { useI18n } from 'vue-i18n';
+import { useQuasar } from 'quasar';
 import { platformDashboardService, type PlatformDashboardData } from '@/services/dashboard/platform-dashboard';
 import { dashboardLogger } from '@/utils/logger';
 import PlatformWidget from '@/components/platform/PlatformWidget.vue';
@@ -144,6 +145,7 @@ import PageLayout from '@/components/PageLayout.vue';
 import PageTitle from '@/components/PageTitle.vue';
 
 const { t } = useI18n();
+const $q = useQuasar();
 
 // Reactive state
 const loading = ref(false);
@@ -369,7 +371,7 @@ onUnmounted(() => {
 @media (max-width: 768px) {
   .system-info-bar .row {
     flex-direction: column;
-    align-items: flex-start !important;
+    align-items: flex-start;
     
     .col-auto {
       margin-bottom: 0.5rem;

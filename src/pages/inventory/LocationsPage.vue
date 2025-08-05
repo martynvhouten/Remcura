@@ -76,7 +76,9 @@
         <q-btn
           :label="$t('locations.add')"
           icon="add"
-          color="primary"
+          unelevated
+          no-caps
+          class="app-btn-success"
           @click="showComingSoon"
         />
       </div>

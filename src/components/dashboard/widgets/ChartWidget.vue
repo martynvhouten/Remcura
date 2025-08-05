@@ -481,7 +481,7 @@ body.body--dark {
 // Mobile optimizations
 @media (max-width: 768px) {
   .summary-stats {
-    grid-template-columns: 1fr !important;
+    grid-template-columns: 1fr;
     gap: var(--space-3);
   }
   
@@ -495,7 +495,7 @@ body.body--dark {
   
   .event-item {
     flex-direction: column;
-    align-items: stretch !important;
+    align-items: stretch;
     gap: var(--space-2);
     
     .event-name {
@@ -503,7 +503,7 @@ body.body--dark {
     }
     
     .event-count {
-      text-align: left !important;
+      text-align: left;
     }
   }
 }

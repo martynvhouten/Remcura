@@ -71,8 +71,7 @@
         <q-btn
           :loading="loading"
           type="submit"
-          color="primary"
-          class="app-btn-primary"
+          class="app-btn-primary login-btn"
           :label="$t('auth.login')"
           unelevated
           no-caps
@@ -94,24 +93,20 @@
       <div class="form-footer">
         <div class="footer-actions">
           <q-btn
-            flat
-            dense
-            color="secondary"
             :label="$t('auth.demoAccount')"
             @click="fillDemoCredentials"
-            class="app-btn-secondary"
+            class="app-btn-secondary demo-btn"
             icon="person"
+            unelevated
             no-caps
             :aria-describedby="'demo-help'"
           />
 
           <q-btn
-            flat
-            dense
-            color="primary"
             :label="$t('auth.forgotPassword')"
             @click="handleForgotPassword"
-            class="app-btn-secondary"
+            class="app-btn-refresh forgot-btn"
+            unelevated
             no-caps
           />
         </div>
@@ -259,25 +254,13 @@
     // Form actions
     .form-actions {
       margin-top: var(--space-2);
+      display: flex;
+      justify-content: center;
 
       .login-btn {
         width: 100%;
+        max-width: 300px;
         height: 56px;
-        border-radius: var(--radius-lg);
-        font-weight: var(--font-weight-semibold);
-        font-size: var(--text-base);
-        letter-spacing: 0.025em;
-        box-shadow: var(--shadow-sm);
-        transition: all var(--transition-base);
-
-        &:hover {
-          box-shadow: var(--shadow-md);
-          transform: translateY(-1px);
-        }
-
-        &:active {
-          transform: translateY(0);
-        }
 
         :deep(.q-btn__content) {
           gap: var(--space-2);
@@ -315,38 +298,13 @@
         grid-template-columns: 1fr 1fr;
         gap: var(--space-3);
 
+        // Let the global app-btn-* classes handle the styling
         .demo-btn,
         .forgot-btn {
           height: 48px;
-          border-radius: var(--radius-md);
-          font-weight: var(--font-weight-medium);
-          transition: all var(--transition-base);
-
+          
           :deep(.q-btn__content) {
             gap: var(--space-2);
-          }
-
-          &:hover {
-            transform: translateY(-1px);
-            background-color: var(--neutral-100);
-          }
-        }
-
-        .demo-btn {
-          border: 1px solid var(--brand-secondary);
-          color: var(--brand-secondary);
-
-          &:hover {
-            background-color: rgba(6, 182, 212, 0.05);
-          }
-        }
-
-        .forgot-btn {
-          border: 1px solid var(--brand-primary);
-          color: var(--brand-primary);
-
-          &:hover {
-            background-color: rgba(99, 102, 241, 0.05);
           }
         }
       }
@@ -406,15 +364,7 @@
         color: var(--neutral-400);
       }
 
-      .footer-actions {
-        .demo-btn:hover {
-          background-color: var(--neutral-200);
-        }
-
-        .forgot-btn:hover {
-          background-color: var(--neutral-200);
-        }
-      }
+      // Dark mode styles handled by global button classes
 
       .security-notice {
         color: var(--neutral-400);
@@ -445,17 +395,7 @@
   // All focus styling is handled by global .q-field system
 
   // Screen reader only content
-  .sr-only {
-    position: absolute !important;
-    width: 1px !important;
-    height: 1px !important;
-    padding: 0 !important;
-    margin: -1px !important;
-    overflow: hidden !important;
-    clip: rect(0, 0, 0, 0) !important;
-    white-space: nowrap !important;
-    border: 0 !important;
-  }
+  // Screen reader only content (now in global app.scss)
 
   // Focus styles for buttons
   .demo-btn:focus,

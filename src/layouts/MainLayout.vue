@@ -432,7 +432,7 @@
             routeName: 'products',
           },
           {
-            title: t('orderLists.title'),
+            title: 'Bestellijsten',
             icon: 'list_alt',
             to: '/order-lists',
             routeName: 'order-lists',
@@ -1319,7 +1319,7 @@
   }
 
   .demo-status {
-    color: var(--q-amber-6) !important;
+    color: var(--q-amber-6);
     font-weight: 500;
     display: flex;
     align-items: center;

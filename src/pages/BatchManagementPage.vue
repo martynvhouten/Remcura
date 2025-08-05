@@ -278,7 +278,6 @@
 <script setup lang="ts">
   import { ref, computed, onMounted, getCurrentInstance } from 'vue';
   import { useI18n } from 'vue-i18n';
-  import { useQuasar } from 'quasar';
   import { useBatchStore } from 'src/stores/batch';
   import { useInventoryStore } from 'src/stores/inventory';
   import { useAuthStore } from 'src/stores/auth';
@@ -553,12 +552,12 @@
 
   /* Active state for expiring filter */
   .expiring-active {
-    border-color: #ff9800 !important;
-    background: linear-gradient(135deg, #fff3e0 0%, #ffebcc 100%) !important;
+    border-color: #ff9800;
+    background: linear-gradient(135deg, #fff3e0 0%, #ffebcc 100%);
 
     .body--dark & {
-      background: linear-gradient(135deg, #2d1b0e 0%, #3d2914 100%) !important;
-      border-color: #ff9800 !important;
+          background: linear-gradient(135deg, #2d1b0e 0%, #3d2914 100%);
+    border-color: #ff9800;
     }
   }
 

@@ -394,7 +394,7 @@ const handleDemoLogin = async () => {
     await new Promise(resolve => setTimeout(resolve, 1500));
     
     welcomeMessage.value = t('magicJoin.welcomeMessage', { 
-      practice: 'Demo Kliniek'
+      practice: t('demo.clinicName')
     });
     showWelcome.value = true;
     
@@ -416,7 +416,7 @@ const handleDemoLogin = async () => {
 const handleUpgradeCompleted = async (upgradeResult: any) => {
   try {
     $q.loading.show({
-      message: t('upgrade.creatingAccount') || 'Account wordt aangemaakt...'
+      message: t('upgrade.creatingAccount')
     });
 
     // Create the permanent user account

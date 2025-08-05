@@ -494,7 +494,7 @@ function formatValue(value: any): string {
 // Responsive design
 @media (max-width: 480px) {
   .dependencies-grid {
-    grid-template-columns: 1fr !important;
+    grid-template-columns: 1fr;
   }
   
   .version-item,
@@ -502,7 +502,7 @@ function formatValue(value: any): string {
   .database-item,
   .system-item {
     flex-direction: column;
-    align-items: flex-start !important;
+    align-items: flex-start;
     gap: 0.25rem;
   }
 }

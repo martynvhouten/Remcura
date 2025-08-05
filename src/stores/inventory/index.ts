@@ -21,15 +21,11 @@ export const useInventoryStore = defineStore('inventory', () => {
 
   // Combined refresh data function
   const refreshData = async (practiceId: string) => {
-    try {
-      await Promise.all([
-        core.fetchStockLevels(practiceId),
-        alerts.fetchOrderSuggestions(practiceId),
-        movements.fetchStockMovements(practiceId),
-      ]);
-    } catch (error) {
-      throw error;
-    }
+    await Promise.all([
+      core.fetchStockLevels(practiceId),
+      alerts.fetchOrderSuggestions(practiceId),
+      movements.fetchStockMovements(practiceId),
+    ]);
   };
 
   // Return all public APIs from modules

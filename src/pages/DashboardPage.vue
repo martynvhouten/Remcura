@@ -492,7 +492,7 @@ body.body--dark {
     gap: var(--space-4);
     
     .widget-grid-item {
-      grid-column: span 12 !important;
+      grid-column: span 12;
     }
   }
   

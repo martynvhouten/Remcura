@@ -528,11 +528,11 @@ const loadStockLevels = async () => {
        current_quantity: level.current_quantity || 0,
        minimum_quantity: level.minimum_stock || 0, // Use minimum_stock from database
        last_counted_at: level.last_counted_at,
-       product_name: 'Product ' + level.product_id, // Simplified until we fix relations
+       product_name: t('inventory.product') + ' ' + level.product_id, // Simplified until we fix relations
        product_sku: null,
        product_category: null,
        product_unit: 'pcs',
-       location_name: 'Location ' + level.location_id, // Simplified until we fix relations
+       location_name: t('inventory.location') + ' ' + level.location_id, // Simplified until we fix relations
        stock_status: determineStockStatus(level.current_quantity, level.minimum_stock || 0),
      }));
 

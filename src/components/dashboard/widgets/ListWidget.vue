@@ -4,7 +4,7 @@
     <div v-if="widgetId === 'order-suggestions'" class="suggestions-list">
       <div v-if="!data.suggestions?.length" class="empty-state">
         <q-icon name="lightbulb" color="info" size="2rem" />
-        <p>Geen bestel suggesties</p>
+        <p>{{ t('dashboard.noOrderSuggestions') }}</p>
       </div>
       <div v-else class="suggestion-items">
         <div 
@@ -59,7 +59,7 @@
     <div v-else-if="widgetId === 'recent-orders'" class="orders-list">
       <div v-if="!data.orders?.length" class="empty-state">
         <q-icon name="shopping_cart" color="grey-5" size="2rem" />
-        <p>Geen recente bestellingen</p>
+        <p>{{ t('dashboard.noRecentOrders') }}</p>
       </div>
       <div v-else class="order-items">
         <div 
@@ -124,6 +124,9 @@
 <script setup lang="ts">
 import { computed } from 'vue';
 import { useRouter } from 'vue-router';
+import { useI18n } from 'vue-i18n';
+
+const { t } = useI18n();
 import { useFormatting } from '@/composables/useFormatting';
 
 interface ListData {
@@ -177,10 +180,10 @@ function getUrgencyColor(urgency: string): string {
 
 function getUrgencyLabel(urgency: string): string {
   switch (urgency.toLowerCase()) {
-    case 'critical': return 'Kritiek';
-    case 'high': return 'Hoog';
-    case 'medium': return 'Gemiddeld';
-    case 'low': return 'Laag';
+    case 'critical': return t('priority.critical');
+    case 'high': return t('priority.high');
+    case 'medium': return t('priority.medium');
+    case 'low': return t('priority.low');
     default: return urgency;
   }
 }
@@ -199,12 +202,12 @@ function getStatusColor(status: string): string {
 
 function getStatusLabel(status: string): string {
   switch (status.toLowerCase()) {
-    case 'delivered': return 'Geleverd';
-    case 'shipped': return 'Verzonden';
-    case 'confirmed': return 'Bevestigd';
-    case 'submitted': return 'Verstuurd';
-    case 'draft': return 'Concept';
-    case 'cancelled': return 'Geannuleerd';
+    case 'delivered': return t('orderStatus.delivered');
+    case 'shipped': return t('orderStatus.shipped');
+    case 'confirmed': return t('orderStatus.confirmed');
+    case 'submitted': return t('orderStatus.submitted');
+    case 'draft': return t('orderStatus.draft');
+    case 'cancelled': return t('orderStatus.cancelled');
     default: return status;
   }
 }
@@ -410,7 +413,7 @@ body.body--dark {
 @media (max-width: 768px) {
   .suggestion-details,
   .order-details {
-    grid-template-columns: 1fr !important;
+    grid-template-columns: 1fr;
     gap: var(--space-1);
   }
   
@@ -426,7 +429,7 @@ body.body--dark {
   .suggestion-header,
   .order-header {
     flex-direction: column;
-    align-items: flex-start !important;
+    align-items: flex-start;
     gap: var(--space-2);
   }
 }

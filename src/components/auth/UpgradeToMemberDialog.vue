@@ -276,13 +276,13 @@ const emailForm = ref({
 
 // Device info
 const deviceInfo = ref({
-  name: 'This device',
-  type: 'Unknown'
+  name: t('device.thisDevice'),
+  type: t('device.unknown')
 });
 
 // Computed
 const previewMagicCode = computed(() => {
-  if (!userName.value) return '🏥JOUW-NAAM2024';
+  if (!userName.value) return t('upgrade.previewCode');
   const cleanName = userName.value.split(' ')[0].toUpperCase().replace(/[^A-Z]/g, '');
   return `🏥${cleanName}2024`;
 });
@@ -510,8 +510,8 @@ onMounted(() => {
             margin-top: auto;
             
             .selected-btn {
-              background: #1976D2 !important;
-              color: white !important;
+              background: #1976D2;
+              color: white;
             }
           }
         }

@@ -140,7 +140,21 @@ const routes: RouteRecordRaw[] = [
             permission: 'read',
             resource: 'orders'
           },
-          title: 'Order Lists',
+          title: 'Bestellijsten',
+          icon: 'list_alt'
+        }
+      },
+      { 
+        path: 'order-lists/:id', 
+        name: 'order-list-detail',
+        component: () => import('pages/OrderListDetailPage.vue'),
+        meta: { 
+          requiresAuth: true,
+          requiresPermission: {
+            permission: 'read',
+            resource: 'orders'
+          },
+          title: 'Bestellijst Details',
           icon: 'list_alt'
         }
       },

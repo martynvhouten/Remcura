@@ -467,7 +467,7 @@ onMounted(() => {
       
       // Enhanced touch feedback
       &:active {
-        transform: scale(0.98) !important;
+        transform: scale(0.98);
       }
     }
   }

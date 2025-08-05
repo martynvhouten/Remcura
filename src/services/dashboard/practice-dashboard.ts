@@ -1,6 +1,7 @@
 import { supabase } from '../supabase';
 import { dashboardLogger } from '@/utils/logger';
 import { t } from '@/utils/i18n-service';
+import { ServiceErrorHandler } from '@/utils/service-error-handler';
 
 export interface PracticeWidget {
   id: string;
@@ -131,32 +132,66 @@ class PracticeDashboardService {
 
   private async loadMetrics(practiceId: string) {
     try {
-      // Use real Supabase data only
-
-      // Get real data from Supabase
-      const { data: stockLevels, error: stockError } = await supabase
-        .from('stock_levels')
-        .select('current_quantity, minimum_quantity')
-        .eq('practice_id', practiceId);
-
-      const { data: orders, error: ordersError } = await supabase
-        .from('order_lists')
-        .select('id, status, total_value')
-        .eq('practice_id', practiceId)
-        .order('created_at', { ascending: false })
-        .limit(50);
-
-      const { data: products, error: productsError } = await supabase
-        .from('products')
-        .select('id, price')
-        .eq('active', true);
+      // 🚀 PERFORMANCE OPTIMIZATION: Use parallel queries instead of sequential
+      const [
+        stockLevelsResponse,
+        ordersResponse,
+        productsResponse,
+        inventoryValueResponse,
+        recentActivityResponse
+      ] = await Promise.all([
+        // Stock levels for low stock calculation
+        supabase
+          .from('stock_levels')
+          .select('current_quantity, minimum_quantity')
+          .eq('practice_id', practiceId),
+        
+        // Orders for pending count
+        supabase
+          .from('order_lists')
+          .select('id, status, total_value')
+          .eq('practice_id', practiceId)
+          .order('created_at', { ascending: false })
+          .limit(50),
+        
+        // Products count
+        supabase
+          .from('products')
+          .select('id')
+          .eq('practice_id', practiceId)
+          .eq('active', true),
+        
+        // Inventory value with JOIN optimization
+        supabase
+          .from('stock_levels')
+          .select(`
+            current_quantity,
+            products!inner(price)
+          `)
+          .eq('practice_id', practiceId),
+        
+        // Recent activity count
+        supabase
+          .from('activity_log')
+          .select('id')
+          .eq('practice_id', practiceId)
+          .gte('created_at', new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString())
+      ]);
 
       // Check for errors
+      const { data: stockLevels, error: stockError } = stockLevelsResponse;
+      const { data: orders, error: ordersError } = ordersResponse;
+      const { data: products, error: productsError } = productsResponse;
+      const { data: inventoryValue, error: inventoryError } = inventoryValueResponse;
+      const { data: recentActivity, error: activityError } = recentActivityResponse;
+
       if (stockError) console.error('Error fetching stock levels:', stockError);
       if (ordersError) console.error('Error fetching orders:', ordersError);
       if (productsError) console.error('Error fetching products:', productsError);
+      if (inventoryError) console.error('Error fetching inventory value:', inventoryError);
+      if (activityError) console.error('Error fetching recent activity:', activityError);
 
-      // Calculate metrics from real data
+      // 🚀 PERFORMANCE: Calculate metrics from parallel data
       const lowStockCount = stockLevels?.filter(stock => 
         stock.current_quantity <= (stock.minimum_quantity || 0)
       ).length || 0;
@@ -167,26 +202,10 @@ class PracticeDashboardService {
 
       const totalProducts = products?.length || 0;
 
-      // Get total inventory value
-      const { data: inventoryValue } = await supabase
-        .from('stock_levels')
-        .select(`
-          current_quantity,
-          products!inner(price)
-        `)
-        .eq('practice_id', practiceId);
-
       const totalValue = inventoryValue?.reduce((total, item) => {
         const price = (item.products as any)?.price || 0;
         return total + (item.current_quantity * price);
       }, 0) || 0;
-
-      // Get recent activity count
-      const { data: recentActivity } = await supabase
-        .from('activity_log')
-        .select('id')
-        .eq('practice_id', practiceId)
-        .gte('created_at', new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString());
 
       return {
         totalProducts,
@@ -219,7 +238,13 @@ class PracticeDashboardService {
           widgets.push(widget);
         }
       } catch (error) {
-        dashboardLogger.error(`Error loading widget ${widgetId}:`, error);
+        ServiceErrorHandler.handle(error, {
+          service: 'PracticeDashboardService',
+          operation: 'loadWidget',
+          practiceId,
+          metadata: { widgetId, role, position: i }
+        }, { rethrow: false, logLevel: 'error' });
+        
         // Add error widget
         widgets.push({
           id: widgetId,

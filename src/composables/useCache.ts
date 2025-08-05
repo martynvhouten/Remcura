@@ -49,13 +49,15 @@ export function useCache<T = any>(
   const getFromStorage = (key: string): CacheItem<T> | null => {
     try {
       switch (storage) {
-        case 'localStorage':
+        case 'localStorage': {
           const localItem = localStorage.getItem(getCacheKey(key))
           return localItem ? JSON.parse(localItem) : null
+        }
 
-        case 'sessionStorage':
+        case 'sessionStorage': {
           const sessionItem = sessionStorage.getItem(getCacheKey(key))
           return sessionItem ? JSON.parse(sessionItem) : null
+        }
 
         case 'memory':
         default:
@@ -73,13 +75,15 @@ export function useCache<T = any>(
   const setInStorage = (key: string, item: CacheItem<T>): void => {
     try {
       switch (storage) {
-        case 'localStorage':
+        case 'localStorage': {
           localStorage.setItem(getCacheKey(key), JSON.stringify(item))
           break
+        }
 
-        case 'sessionStorage':
+        case 'sessionStorage': {
           sessionStorage.setItem(getCacheKey(key), JSON.stringify(item))
           break
+        }
 
         case 'memory':
         default:
@@ -98,13 +102,15 @@ export function useCache<T = any>(
    */
   const removeFromStorage = (key: string): void => {
     switch (storage) {
-      case 'localStorage':
+      case 'localStorage': {
         localStorage.removeItem(getCacheKey(key))
         break
+      }
 
-      case 'sessionStorage':
+      case 'sessionStorage': {
         sessionStorage.removeItem(getCacheKey(key))
         break
+      }
 
       case 'memory':
       default:

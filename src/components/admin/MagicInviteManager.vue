@@ -555,11 +555,11 @@ onMounted(() => {
 @media (max-width: 768px) {
   .magic-invite-manager {
     .steps-grid {
-      grid-template-columns: 1fr !important;
+      grid-template-columns: 1fr;
     }
 
     .share-buttons {
-      flex-direction: column !important;
+      flex-direction: column;
     }
   }
 }

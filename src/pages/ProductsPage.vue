@@ -475,7 +475,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted, watch } from 'vue';
+import { ref, computed, onMounted, watch, defineAsyncComponent } from 'vue';
 import { storeToRefs } from 'pinia';
 import { useI18n } from 'vue-i18n';
 import { useQuasar } from 'quasar';
@@ -486,7 +486,6 @@ import PageLayout from 'src/components/PageLayout.vue';
 import PageTitle from 'src/components/PageTitle.vue';
 import FilterPanel from 'src/components/filters/FilterPanel.vue';
 // ✅ PERFORMANCE OPTIMIZATION: Dynamic imports for heavy dialogs
-import { defineAsyncComponent } from 'vue';
 
 const ProductDetailsDialog = defineAsyncComponent(() => import('src/components/products/ProductDetailsDialog.vue'));
 const ShoppingCartDialog = defineAsyncComponent(() => import('src/components/products/ShoppingCartDialog.vue'));

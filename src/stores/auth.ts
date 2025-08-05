@@ -3,7 +3,7 @@ import { ref, computed, readonly } from 'vue';
 import { supabase } from '@/boot/supabase';
 import type { User, Session } from '@supabase/supabase-js';
 import type { UserProfile } from '@/types/supabase';
-import { ErrorHandler } from '@/utils/service-error-handler';
+import { ServiceErrorHandler } from '@/utils/service-error-handler';
 import { authLogger } from '@/utils/logger';
 import { monitoringService } from '@/services/monitoring';
 import { createEventEmitter, StoreEvents } from '@/utils/eventBus';
@@ -163,7 +163,11 @@ export const useAuthStore = defineStore('auth', () => {
         userAgent: navigator.userAgent,
         timestamp: new Date().toISOString(),
       });
-      ErrorHandler.handle(error as Error, 'Auth Initialization');
+              ServiceErrorHandler.handle(error as Error, {
+          service: 'AuthStore',
+          operation: 'initialize',
+          metadata: { context: 'Auth Initialization' }
+        }, { rethrow: false, logLevel: 'error' });
     } finally {
       loading.value = false;
     }
@@ -443,7 +447,12 @@ export const useAuthStore = defineStore('auth', () => {
       );
     } catch (error) {
       authLogger.error('Error fetching user profile', error as Error);
-      ErrorHandler.handle(error as Error, 'Fetch User Profile');
+              ServiceErrorHandler.handle(error as Error, {
+          service: 'AuthStore',
+          operation: 'fetchUserProfile',
+          userId: this.user?.id,
+          metadata: { context: 'Fetch User Profile' }
+        }, { rethrow: false, logLevel: 'error' });
     }
   };
 

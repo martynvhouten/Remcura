@@ -1281,6 +1281,8 @@ export default {
   orderLists: {
     title: 'Orderlijsten',
     subtitle: 'Beheer uw inkooplijsten',
+    advancedTitle: 'Geavanceerde Orderlijsten',
+    advancedSubtitle: 'Min/max gestuurd leverancier-onafhankelijk bestelsysteem',
     create: 'Nieuwe orderlijst',
     edit: 'Bewerken',
     delete: 'Verwijderen',

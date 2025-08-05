@@ -196,7 +196,7 @@ export function useProductsCore() {
     try {
       // Try RPC function first for better performance
       const { data: rpcData, error: rpcError } = await supabase.rpc(
-        'get_products_with_stock_levels',
+        'get_products_with_stock',
         { practice_id_param: practiceId }
       );
 

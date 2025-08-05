@@ -376,7 +376,7 @@ function addKeyToTranslations(key, text) {
 
     // Check if key already exists to avoid duplicates
     // This requires a proper way to check nested keys, which extractKeys does
-    const allExistingKeys = new Set(extractKeys(currentTranslations));
+    const allExistingKeys = new Set(extractKeysFromObject(currentTranslations));
     if (allExistingKeys.has(key)) {
         // console.log(`   ⚠️ Key '${key}' bestaat al, overslaan.`); // Suppress this for cleaner output during autofix
         return false; // Key already exists

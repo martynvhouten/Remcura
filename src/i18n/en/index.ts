@@ -1122,6 +1122,8 @@ export default {
   orderLists: {
     title: 'Order Lists',
     subtitle: 'Manage your practice order lists',
+    advancedTitle: 'Advanced Order Lists',
+    advancedSubtitle: 'Min/max driven supplier-agnostic ordering system',
     create: 'New order list',
     edit: 'Edit order list',
     duplicate: 'Duplicate',

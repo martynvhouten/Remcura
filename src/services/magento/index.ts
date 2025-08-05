@@ -529,7 +529,6 @@ export const magentoDataService = {
       const { data: products, error } = await supabase
         .from('products')
         .select('*')
-        .eq('practice_id', currentPracticeId)
         .eq('is_active', true)
         .order('name');
 

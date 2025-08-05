@@ -197,6 +197,16 @@ export const StoreEvents = {
   ORDER_UPDATED: 'order:updated',
   ORDER_STATUS_CHANGED: 'order:status_changed',
   
+  // Order List events (advanced min/max system)
+  ORDER_LIST_CREATED: 'order_list:created',
+  ORDER_LIST_UPDATED: 'order_list:updated',
+  ORDER_LIST_DELETED: 'order_list:deleted',
+  ORDER_SUGGESTIONS_UPDATED: 'order_list:suggestions_updated',
+  ORDERS_CREATED_FROM_ADVICE: 'order_list:orders_created_from_advice',
+  ORDER_SPLIT_COMPLETED: 'order_list:split_completed',
+  ORDERS_SENT_TO_SUPPLIERS: 'order_list:sent_to_suppliers',
+  STOCK_LEVEL_UPDATED: 'order_list:stock_level_updated',
+  
   // Supplier events
   SUPPLIER_CREATED: 'supplier:created',
   SUPPLIER_UPDATED: 'supplier:updated',
