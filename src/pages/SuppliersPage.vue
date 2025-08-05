@@ -193,20 +193,16 @@
     </q-table>
 
     <!-- Add/Edit Supplier Dialog -->
-    <q-dialog v-model="showDialog">
-      <q-card style="min-width: 500px">
-        <q-card-section>
-          <div class="text-h6">
-            {{
-              editingSupplier
-                ? $t('suppliersPage.editSupplier')
-                : $t('suppliersPage.addSupplier')
-            }}
-          </div>
-        </q-card-section>
-
-        <q-card-section>
-          <q-form @submit="saveSupplier" class="q-gutter-md">
+    <FormDialog
+      v-model="showDialog"
+      :title="editingSupplier ? $t('suppliersPage.editSupplier') : $t('suppliersPage.addSupplier')"
+      icon="business"
+      size="lg"
+      :loading="saving"
+      @submit="saveSupplier"
+      @cancel="closeDialog"
+    >
+      <div class="supplier-form-content q-gutter-md">
             <q-input
               v-model="supplierForm.name"
               :label="$t('suppliersPage.supplierName')"
@@ -352,20 +348,8 @@
               :label="$t('suppliersPage.activeSupplier')"
               color="positive"
             />
-          </q-form>
-        </q-card-section>
-
-        <q-card-actions align="right">
-          <q-btn flat :label="$t('common.cancel')" @click="closeDialog" />
-          <q-btn
-            color="primary"
-            :label="$t('common.save')"
-            @click="saveSupplier"
-            :loading="saving"
-          />
-        </q-card-actions>
-      </q-card>
-    </q-dialog>
+      </div>
+    </FormDialog>
 
     <!-- Integration Configuration Dialog -->
     <q-dialog v-model="showIntegrationDialog">
@@ -455,6 +439,7 @@ import { useI18n } from 'vue-i18n';
 import PageTitle from 'src/components/PageTitle.vue';
 import PageLayout from 'src/components/PageLayout.vue';
 import FilterPanel from 'src/components/filters/FilterPanel.vue';
+import FormDialog from 'src/components/base/FormDialog.vue';
 import { suppliersFilterPreset } from '@/presets/filters/suppliers';
 import { supabase } from 'src/services/supabase';
 import { monitoringService } from 'src/services/monitoring';

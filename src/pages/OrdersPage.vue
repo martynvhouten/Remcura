@@ -155,50 +155,41 @@
     </q-table>
 
     <!-- Export Dialog -->
-    <q-dialog v-model="showExportDialog">
-      <q-card style="min-width: 350px">
-        <q-card-section>
-          <div class="text-h6">{{ $t('orders.export.title') }}</div>
-        </q-card-section>
-
-        <q-card-section class="q-pt-none">
-          <q-form class="q-gutter-md">
-            <q-select
-              v-model="exportFormat"
-              :options="exportFormatOptions"
-              :label="$t('orders.export.format')"
-              outlined
-              emit-value
-              map-options
-            />
-            
-            <q-input
-              v-model="exportDateFrom"
-              :label="$t('orders.export.dateFrom')"
-              type="date"
-              outlined
-            />
-            
-            <q-input
-              v-model="exportDateTo"
-              :label="$t('orders.export.dateTo')"
-              type="date"
-              outlined
-            />
-          </q-form>
-        </q-card-section>
-
-        <q-card-actions align="right">
-          <q-btn flat :label="$t('common.cancel')" @click="showExportDialog = false" />
-          <q-btn
-            color="primary"
-            :label="$t('orders.export.export')"
-            @click="performExport"
-            :loading="exporting"
-          />
-        </q-card-actions>
-      </q-card>
-    </q-dialog>
+    <FormDialog
+      v-model="showExportDialog"
+      :title="$t('orders.export.title')"
+      icon="download"
+      size="sm"
+      :loading="exporting"
+      :submit-button-text="$t('orders.export.export')"
+      @submit="performExport"
+      @cancel="showExportDialog = false"
+    >
+      <div class="q-gutter-md">
+        <q-select
+          v-model="exportFormat"
+          :options="exportFormatOptions"
+          :label="$t('orders.export.format')"
+          outlined
+          emit-value
+          map-options
+        />
+        
+        <q-input
+          v-model="exportDateFrom"
+          :label="$t('orders.export.dateFrom')"
+          type="date"
+          outlined
+        />
+        
+        <q-input
+          v-model="exportDateTo"
+          :label="$t('orders.export.dateTo')"
+          type="date"
+          outlined
+        />
+      </div>
+    </FormDialog>
 
     <!-- Analytics Dialog -->
     <q-dialog v-model="showAnalytics" maximized>
@@ -229,6 +220,7 @@ import { useI18n } from 'vue-i18n';
 import PageTitle from 'src/components/PageTitle.vue';
 import PageLayout from 'src/components/PageLayout.vue';
 import FilterPanel from 'src/components/filters/FilterPanel.vue';
+import FormDialog from 'src/components/base/FormDialog.vue';
 import { ordersFilterPreset } from '@/presets/filters/orders';
 import { supabase } from 'src/services/supabase';
 import { useAuthStore } from 'src/stores/auth';

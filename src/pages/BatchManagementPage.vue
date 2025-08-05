@@ -229,44 +229,44 @@
     </q-dialog>
 
     <!-- Batch Detail Dialog -->
-    <q-dialog v-model="showBatchDetailDialog" max-width="800px">
-      <BaseCard
-        v-if="selectedBatch"
-        :title="`Batch: ${selectedBatch.batchNumber}`"
-        :subtitle="selectedBatch.productName"
-        icon="inventory"
-        icon-color="primary"
-      >
-        <div class="batch-details">
-          <div class="detail-row">
-            <span class="label">{{ $t('batch.expiryDate') }}:</span>
-            <span>{{ formatDate(selectedBatch.expiryDate) }}</span>
-          </div>
-          <div class="detail-row">
-            <span class="label">{{ $t('batch.currentQuantity') }}:</span>
-            <span>{{ selectedBatch.currentQuantity }}</span>
-          </div>
-          <div class="detail-row">
-            <span class="label">{{ $t('batch.status') }}:</span>
-            <q-chip 
-              :color="getStatusColor(selectedBatch.status)"
-              text-color="white"
-              size="sm"
-            >
-              {{ $t(`batch.status.${selectedBatch.status}`) }}
-            </q-chip>
-          </div>
+    <BaseDialog
+      v-model="showBatchDetailDialog"
+      :title="`Batch: ${selectedBatch?.batchNumber || ''}`"
+      :subtitle="selectedBatch?.productName || ''"
+      icon="inventory"
+      size="md"
+      @close="showBatchDetailDialog = false"
+    >
+      <div v-if="selectedBatch" class="batch-details">
+        <div class="detail-row">
+          <span class="label">{{ $t('batch.expiryDate') }}:</span>
+          <span class="value">{{ formatDate(selectedBatch.expiryDate) }}</span>
         </div>
-        
-        <template #actions>
-          <q-btn 
-            flat 
-            :label="$t('common.close')" 
-            @click="showBatchDetailDialog = false" 
-          />
-        </template>
-      </BaseCard>
-    </q-dialog>
+        <div class="detail-row">
+          <span class="label">{{ $t('batch.currentQuantity') }}:</span>
+          <span class="value">{{ selectedBatch.currentQuantity }}</span>
+        </div>
+        <div class="detail-row">
+          <span class="label">{{ $t('batch.status') }}:</span>
+          <q-chip 
+            :color="getStatusColor(selectedBatch.status)"
+            text-color="white"
+            size="sm"
+          >
+            {{ $t(`batch.status.${selectedBatch.status}`) }}
+          </q-chip>
+        </div>
+      </div>
+      
+      <template #actions>
+        <q-btn 
+          flat 
+          :label="$t('common.close')" 
+          color="primary"
+          @click="showBatchDetailDialog = false" 
+        />
+      </template>
+    </BaseDialog>
 
     <!-- Barcode Scanner Dialog -->
     <q-dialog v-model="showScannerDialog" max-width="500px">
@@ -276,7 +276,7 @@
 </template>
 
 <script setup lang="ts">
-  import { ref, computed, onMounted, getCurrentInstance } from 'vue';
+  import { ref, computed, onMounted, getCurrentInstance, defineAsyncComponent } from 'vue';
   import { useI18n } from 'vue-i18n';
   import { useBatchStore } from 'src/stores/batch';
   import { useInventoryStore } from 'src/stores/inventory';
@@ -284,8 +284,8 @@
   import PageLayout from 'src/components/PageLayout.vue';
   import PageTitle from 'src/components/PageTitle.vue';
   import { BaseCard, InteractiveCard } from 'src/components/cards';
+  import BaseDialog from 'src/components/base/BaseDialog.vue';
   // ✅ PERFORMANCE OPTIMIZATION: Dynamic imports for heavy components
-  import { defineAsyncComponent } from 'vue';
   
   import BatchOverview from 'src/components/BatchOverview.vue';
   const BatchRegistrationForm = defineAsyncComponent(() => import('src/components/BatchRegistrationForm.vue'));

@@ -305,68 +305,55 @@
     </div>
 
     <!-- Add Product Dialog -->
-    <q-dialog v-model="showAddProductDialog" persistent>
-      <q-card style="min-width: 500px">
-        <q-card-section class="q-pb-none">
-          <div class="text-h6">Product toevoegen</div>
-          <div class="text-caption text-grey-6">Zoek en selecteer een product</div>
-        </q-card-section>
+    <FormDialog
+      v-model="showAddProductDialog"
+      title="Product toevoegen"
+      subtitle="Zoek en selecteer een product"
+      icon="add_shopping_cart"
+      size="md"
+      :loading="addingProduct"
+      :can-submit="!!(selectedProduct && newItemQuantity)"
+      submit-button-text="Toevoegen"
+      @submit="confirmAddProduct"
+      @cancel="showAddProductDialog = false"
+    >
+      <div class="q-gutter-md">
+        <q-select
+          v-model="selectedProduct"
+          :options="filteredProducts"
+          option-label="name"
+          option-value="id"
+          label="Zoek product"
+          outlined
+          use-input
+          clearable
+          @filter="filterProducts"
+          :loading="loadingProducts"
+        >
+          <template v-slot:option="scope">
+            <q-item v-bind="scope.itemProps">
+              <q-item-section avatar>
+                <q-avatar size="sm">
+                  <q-icon name="inventory" />
+                </q-avatar>
+              </q-item-section>
+              <q-item-section>
+                <q-item-label>{{ scope.opt.name }}</q-item-label>
+                <q-item-label caption>{{ scope.opt.sku }}</q-item-label>
+              </q-item-section>
+            </q-item>
+          </template>
+        </q-select>
 
-        <q-card-section>
-          <q-select
-            v-model="selectedProduct"
-            :options="filteredProducts"
-            option-label="name"
-            option-value="id"
-            label="Zoek product"
-            outlined
-            use-input
-            clearable
-            @filter="filterProducts"
-            :loading="loadingProducts"
-          >
-            <template v-slot:option="scope">
-              <q-item v-bind="scope.itemProps">
-                <q-item-section avatar>
-                  <q-avatar size="sm">
-                    <q-icon name="inventory" />
-                  </q-avatar>
-                </q-item-section>
-                <q-item-section>
-                  <q-item-label>{{ scope.opt.name }}</q-item-label>
-                  <q-item-label caption>{{ scope.opt.sku }}</q-item-label>
-                </q-item-section>
-              </q-item>
-            </template>
-          </q-select>
-
-          <q-input
-            v-model.number="newItemQuantity"
-            label="Aanbevolen hoeveelheid"
-            type="number"
-            min="1"
-            outlined
-            class="q-mt-md"
-          />
-        </q-card-section>
-
-        <q-card-actions align="right" class="q-pa-md">
-          <q-btn
-            flat
-            label="Annuleren"
-            @click="showAddProductDialog = false"
-            class="app-btn-secondary"
-          />
-          <q-btn
-            @click="confirmAddProduct"
-            :loading="addingProduct"
-            label="Toevoegen"
-            class="app-btn-primary"
-            :disable="!selectedProduct || !newItemQuantity"
-          />
-        </q-card-actions>
-      </q-card>
-    </q-dialog>
+        <q-input
+          v-model.number="newItemQuantity"
+          label="Aanbevolen hoeveelheid"
+          type="number"
+          min="1"
+          outlined
+        />
+      </div>
+    </FormDialog>
   </div>
 </template>
 
@@ -376,6 +363,7 @@ import { useRoute, useRouter } from 'vue-router';
 import { useQuasar } from 'quasar';
 import { useOrderListsStore } from '@/stores/orderLists';
 import { useProductsStore } from '@/stores/products';
+import FormDialog from 'src/components/base/FormDialog.vue';
 import type { OrderListWithItems } from '@/types/stores';
 
 const route = useRoute();

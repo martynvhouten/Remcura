@@ -445,32 +445,15 @@
     />
 
     <!-- Delete Confirmation Dialog -->
-    <q-dialog v-model="showDeleteDialog">
-      <q-card style="min-width: 350px">
-        <q-card-section>
-          <div class="text-h6">{{ $t('products.deleteConfirm') }}</div>
-        </q-card-section>
-
-        <q-card-section class="q-pt-none">
-          {{ $t('products.deleteMessage', { name: productToDelete?.name }) }}
-        </q-card-section>
-
-        <q-card-actions align="right">
-          <q-btn
-            flat
-            :label="$t('common.cancel')"
-            color="primary"
-            v-close-popup
-          />
-          <q-btn
-            :label="$t('common.delete')"
-            color="negative"
-            @click="confirmDelete"
-            :loading="deleting"
-          />
-        </q-card-actions>
-      </q-card>
-    </q-dialog>
+    <ConfirmDialog
+      v-model="showDeleteDialog"
+      type="danger"
+      :title="$t('products.deleteConfirm')"
+      :message="$t('products.deleteMessage', { name: productToDelete?.name })"
+      :loading="deleting"
+      @confirm="confirmDelete"
+      @cancel="showDeleteDialog = false"
+    />
   </PageLayout>
 </template>
 
@@ -485,6 +468,7 @@ import { useAuthStore } from 'src/stores/auth';
 import PageLayout from 'src/components/PageLayout.vue';
 import PageTitle from 'src/components/PageTitle.vue';
 import FilterPanel from 'src/components/filters/FilterPanel.vue';
+import ConfirmDialog from 'src/components/base/ConfirmDialog.vue';
 // ✅ PERFORMANCE OPTIMIZATION: Dynamic imports for heavy dialogs
 
 const ProductDetailsDialog = defineAsyncComponent(() => import('src/components/products/ProductDetailsDialog.vue'));

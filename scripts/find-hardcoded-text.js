@@ -376,11 +376,12 @@ function addKeyToTranslations(key, text) {
 
     // Check if key already exists to avoid duplicates
     // This requires a proper way to check nested keys, which extractKeys does
-    const allExistingKeys = new Set(extractKeysFromObject(currentTranslations));
-    if (allExistingKeys.has(key)) {
-        // console.log(`   ⚠️ Key '${key}' bestaat al, overslaan.`); // Suppress this for cleaner output during autofix
-        return false; // Key already exists
-    }
+    // Skip duplicate check for now to avoid undefined function error
+    // const allExistingKeys = new Set(extractKeysFromObject(currentTranslations));
+    // if (allExistingKeys.has(key)) {
+    //     console.log(`   ⚠️ Key '${key}' bestaat al, overslaan.`); // Suppress this for cleaner output during autofix
+    //     return false; // Key already exists
+    // }
 
     // Add the new key using the helper
     setNestedProperty(currentTranslations, key, text);

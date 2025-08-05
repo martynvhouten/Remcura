@@ -228,59 +228,50 @@
     </BaseCard>
 
     <!-- Stock Adjustment Dialog -->
-    <q-dialog v-model="showAdjustDialog">
-      <q-card style="min-width: 400px">
-        <q-card-section>
-          <div class="text-h6">{{ $t('inventory.adjustStock') }}</div>
-        </q-card-section>
+    <FormDialog
+      v-model="showAdjustDialog"
+      :title="$t('inventory.adjustStock')"
+      icon="tune"
+      size="md"
+      :loading="adjusting"
+      :submit-button-text="$t('inventory.adjust')"
+      @submit="performAdjustment"
+      @cancel="closeAdjustDialog"
+    >
+      <div v-if="selectedStockLevel" class="adjustment-product-info">
+        <div class="product-name">{{ selectedStockLevel.product_name }}</div>
+        <div class="current-stock">
+          {{ $t('inventory.currentStock') }}: {{ selectedStockLevel.current_quantity }} {{ selectedStockLevel.product_unit || 'pcs' }}
+        </div>
+      </div>
 
-        <q-card-section>
-          <div v-if="selectedStockLevel" class="q-mb-md">
-            <div class="text-subtitle2">{{ selectedStockLevel.product_name }}</div>
-            <div class="text-caption text-grey-7">
-              {{ $t('inventory.currentStock') }}: {{ selectedStockLevel.current_quantity }} {{ selectedStockLevel.product_unit || 'pcs' }}
-            </div>
-          </div>
+      <div class="q-gutter-md">
+        <q-select
+          v-model="adjustmentType"
+          :options="adjustmentTypeOptions"
+          :label="$t('inventory.adjustmentType')"
+          outlined
+          emit-value
+          map-options
+        />
 
-          <q-form class="q-gutter-md">
-            <q-select
-              v-model="adjustmentType"
-              :options="adjustmentTypeOptions"
-              :label="$t('inventory.adjustmentType')"
-              outlined
-              emit-value
-              map-options
-            />
+        <q-input
+          v-model.number="adjustmentQuantity"
+          :label="$t('inventory.quantity')"
+          type="number"
+          outlined
+          :rules="[val => val !== null && val > 0 || $t('validation.required')]"
+        />
 
-            <q-input
-              v-model.number="adjustmentQuantity"
-              :label="$t('inventory.quantity')"
-              type="number"
-              outlined
-              :rules="[val => val !== null && val > 0 || $t('validation.required')]"
-            />
-
-            <q-input
-              v-model="adjustmentReason"
-              :label="$t('inventory.reason')"
-              type="textarea"
-              outlined
-              rows="3"
-            />
-          </q-form>
-        </q-card-section>
-
-        <q-card-actions align="right">
-          <q-btn flat :label="$t('common.cancel')" @click="closeAdjustDialog" />
-          <q-btn
-            color="primary"
-            :label="$t('inventory.adjust')"
-            @click="performAdjustment"
-            :loading="adjusting"
-          />
-        </q-card-actions>
-      </q-card>
-    </q-dialog>
+        <q-input
+          v-model="adjustmentReason"
+          :label="$t('inventory.reason')"
+          type="textarea"
+          outlined
+          rows="3"
+        />
+      </div>
+    </FormDialog>
   </PageLayout>
 </template>
 
@@ -291,6 +282,7 @@ import { useI18n } from 'vue-i18n';
 import PageTitle from 'src/components/PageTitle.vue';
 import PageLayout from 'src/components/PageLayout.vue';
 import { BaseCard, InteractiveCard, AlertCard } from 'src/components/cards';
+import FormDialog from 'src/components/base/FormDialog.vue';
 import FilterPanel from 'src/components/filters/FilterPanel.vue';
 import { inventoryFilterPreset } from 'src/presets/filters/inventory';
 import { supabase } from 'src/boot/supabase';
@@ -771,6 +763,41 @@ body.body--dark {
     
     .location-type {
       color: var(--text-secondary);
+    }
+  }
+}
+
+// Adjustment dialog styles
+.adjustment-product-info {
+  padding: var(--space-4);
+  background: var(--neutral-50);
+  border-radius: var(--radius-lg);
+  margin-bottom: var(--space-4);
+
+  .product-name {
+    font-size: var(--text-base);
+    font-weight: var(--font-weight-semibold);
+    color: var(--neutral-900);
+    margin-bottom: var(--space-1);
+  }
+
+  .current-stock {
+    font-size: var(--text-sm);
+    color: var(--neutral-600);
+  }
+}
+
+// Dark mode adjustments
+body.body--dark {
+  .adjustment-product-info {
+    background: var(--neutral-800);
+
+    .product-name {
+      color: var(--neutral-100);
+    }
+
+    .current-stock {
+      color: var(--neutral-400);
     }
   }
 }

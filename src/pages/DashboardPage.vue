@@ -147,19 +147,26 @@
     </div>
 
     <!-- Customize Dialog -->
-    <q-dialog v-model="showCustomizeDialog">
-      <q-card style="min-width: 400px">
-        <q-card-section>
-          <div class="text-h6">{{ $t('dashboard.customize.title') }}</div>
-        </q-card-section>
-        <q-card-section>
-          <p>{{ $t('dashboard.customize.comingSoon') }}</p>
-        </q-card-section>
-        <q-card-actions align="right">
-          <q-btn flat :label="$t('common.close')" class="app-btn-secondary" v-close-popup />
-        </q-card-actions>
-      </q-card>
-    </q-dialog>
+    <BaseDialog
+      v-model="showCustomizeDialog"
+      :title="$t('dashboard.customize.title')"
+      icon="tune"
+      size="sm"
+      @close="showCustomizeDialog = false"
+    >
+      <div class="customize-dialog-content">
+        <p>{{ $t('dashboard.customize.comingSoon') }}</p>
+      </div>
+
+      <template #actions>
+        <q-btn
+          flat
+          :label="$t('common.close')"
+          color="primary"
+          @click="showCustomizeDialog = false"
+        />
+      </template>
+    </BaseDialog>
   </PageLayout>
 </template>
 
@@ -172,6 +179,7 @@
   import PageLayout from 'src/components/PageLayout.vue';
   import PageTitle from 'src/components/PageTitle.vue';
   import DashboardWidget from 'src/components/dashboard/DashboardWidget.vue';
+  import BaseDialog from 'src/components/base/BaseDialog.vue';
 
   const { t } = useI18n();
   const $q = useQuasar();

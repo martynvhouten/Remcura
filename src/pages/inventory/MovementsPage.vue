@@ -153,15 +153,14 @@
     </div>
 
     <!-- Movement Details Dialog -->
-    <q-dialog v-model="showMovementDetails" max-width="600px">
-      <q-card v-if="selectedMovement">
-        <q-card-section class="row items-center q-pb-none">
-          <div class="text-h6">{{ $t('inventory.movementDetails') }}</div>
-          <q-space />
-          <q-btn icon="close" flat round dense v-close-popup />
-        </q-card-section>
-
-        <q-card-section class="movement-details">
+    <BaseDialog
+      v-model="showMovementDetails"
+      :title="$t('inventory.movementDetails')"
+      icon="swap_horiz"
+      size="md"
+      @close="showMovementDetails = false"
+    >
+      <div v-if="selectedMovement" class="movement-details">
           <div class="detail-row">
             <span class="label">{{ $t('inventory.movementType') }}:</span>
             <q-chip
@@ -236,9 +235,17 @@
               formatDateTime(selectedMovement.created_at)
             }}</span>
           </div>
-        </q-card-section>
-      </q-card>
-    </q-dialog>
+      </div>
+
+      <template #actions>
+        <q-btn
+          flat
+          :label="$t('common.close')"
+          color="primary"
+          @click="showMovementDetails = false"
+        />
+      </template>
+    </BaseDialog>
   </PageLayout>
 </template>
 
@@ -258,6 +265,7 @@
   import PageLayout from 'src/components/PageLayout.vue';
   import PageTitle from 'src/components/PageTitle.vue';
   import { BaseCard, InteractiveCard, AlertCard } from 'src/components/cards';
+  import BaseDialog from 'src/components/base/BaseDialog.vue';
   import FilterPanel from 'src/components/filters/FilterPanel.vue';
   import { movementsFilterPreset } from 'src/presets/filters/movements';
 

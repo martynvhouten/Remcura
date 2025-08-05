@@ -248,29 +248,40 @@
     </q-dialog>
 
     <!-- Batch Details Dialog -->
-    <q-dialog v-model="showDetailsDialog" max-width="600px">
-      <q-card v-if="selectedBatch">
-        <q-card-section>
-          <div class="text-h6">{{ selectedBatch.batchNumber }}</div>
-          <div class="text-subtitle2">{{ selectedBatch.productName }}</div>
-        </q-card-section>
-        <q-card-section>
-          <div class="row q-gutter-sm">
-            <div class="col">
-              <div class="text-caption">Quantity</div>
-              <div class="text-body1">{{ selectedBatch.currentQuantity }}</div>
-            </div>
-            <div class="col">
-              <div class="text-caption">Expiry</div>
-              <div class="text-body1">{{ formatDate(selectedBatch.expiryDate) }}</div>
+    <BaseDialog
+      v-model="showDetailsDialog"
+      :title="selectedBatch?.batchNumber || ''"
+      :subtitle="selectedBatch?.productName || ''"
+      icon="inventory_2"
+      size="md"
+      @close="showDetailsDialog = false"
+    >
+      <div v-if="selectedBatch" class="batch-details-content">
+        <div class="row q-gutter-md">
+          <div class="col">
+            <div class="detail-item">
+              <div class="detail-label">{{ $t('batch.quantity') }}</div>
+              <div class="detail-value">{{ selectedBatch.currentQuantity }}</div>
             </div>
           </div>
-        </q-card-section>
-        <q-card-actions align="right">
-          <q-btn flat label="Close" @click="showDetailsDialog = false" />
-        </q-card-actions>
-      </q-card>
-    </q-dialog>
+          <div class="col">
+            <div class="detail-item">
+              <div class="detail-label">{{ $t('batch.expiryDate') }}</div>
+              <div class="detail-value">{{ formatDate(selectedBatch.expiryDate) }}</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <template #actions>
+        <q-btn
+          flat
+          :label="$t('common.close')"
+          color="primary"
+          @click="showDetailsDialog = false"
+        />
+      </template>
+    </BaseDialog>
 
     <!-- Use Batch Dialog -->
     <q-dialog v-model="showUseBatchDialog" max-width="500px">
@@ -292,7 +303,7 @@
   import { useClinicStore } from '@/stores/clinic';
   import { useAuthStore } from '@/stores/auth';
   import BatchRegistrationForm from './BatchRegistrationForm.vue';
-
+  import BaseDialog from 'src/components/base/BaseDialog.vue';
   import UseBatchDialog from './UseBatchDialog.vue';
   import type { ProductBatchWithDetails } from '@/types/inventory';
 
@@ -612,5 +623,37 @@
 
   .batch-table :deep(.q-table th) {
     font-weight: 600;
+  }
+
+  .batch-details-content {
+    .detail-item {
+      .detail-label {
+        font-size: var(--text-sm);
+        color: var(--neutral-600);
+        margin-bottom: var(--space-1);
+        font-weight: var(--font-weight-medium);
+      }
+
+      .detail-value {
+        font-size: var(--text-base);
+        color: var(--neutral-900);
+        font-weight: var(--font-weight-semibold);
+      }
+    }
+  }
+
+  // Dark mode adjustments
+  body.body--dark {
+    .batch-details-content {
+      .detail-item {
+        .detail-label {
+          color: var(--neutral-400);
+        }
+
+        .detail-value {
+          color: var(--neutral-100);
+        }
+      }
+    }
   }
 </style>
