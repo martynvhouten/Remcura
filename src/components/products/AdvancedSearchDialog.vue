@@ -1,17 +1,13 @@
 <template>
-  <q-dialog v-model="isOpen" persistent class="advanced-search-dialog">
-    <q-card class="advanced-search-card" style="min-width: 700px; max-width: 900px;">
-      <q-card-section class="row items-center q-pb-none">
-        <div class="text-h6">
-          <q-icon name="search" class="q-mr-sm" />
-          {{ $t('productsPage.advancedSearch.title') }}
-        </div>
-        <q-space />
-        <q-btn icon="close" flat round dense v-close-popup />
-      </q-card-section>
-
-      <q-card-section class="q-pt-none">
-        <div class="advanced-search-content">
+  <BaseDialog
+    v-model="isOpen"
+    :title="$t('productsPage.advancedSearch.title')"
+    icon="search"
+    size="lg"
+    variant="elegant"
+    header-variant="solid"
+  >
+    <div class="advanced-search-content">
           <!-- Basic Search -->
           <div class="search-section">
             <h6 class="section-title">{{ $t('productsPage.advancedSearch.basicSearch') }}</h6>
@@ -20,7 +16,6 @@
                 v-model="searchCriteria.search"
                 :placeholder="$t('productsPage.advancedSearch.searchPlaceholder')"
                 outlined
-                dense
                 clearable
                 class="search-input full-width"
               >
@@ -42,7 +37,7 @@
                 v-model="searchCriteria.gtin"
                 :placeholder="$t('productsPage.filters.gtinPlaceholder')"
                 outlined
-                dense
+
                 clearable
                 class="search-input"
               >
@@ -52,7 +47,7 @@
                 <template #append>
                   <q-btn
                     flat
-                    dense
+    
                     round
                     icon="qr_code_scanner"
                     color="primary"
@@ -69,7 +64,7 @@
                 map-options
                 clearable
                 outlined
-                dense
+
                 :placeholder="$t('productsPage.filters.selectCountry')"
                 class="search-input"
               >
@@ -85,7 +80,7 @@
                 map-options
                 clearable
                 outlined
-                dense
+
                 :placeholder="$t('productsPage.filters.selectGpc')"
                 class="search-input"
               >
@@ -101,7 +96,7 @@
                 map-options
                 clearable
                 outlined
-                dense
+
                 :placeholder="$t('productsPage.filters.selectLifecycle')"
                 class="search-input"
               >
@@ -123,7 +118,7 @@
                 map-options
                 clearable
                 outlined
-                dense
+
                 :placeholder="$t('productsPage.filters.selectCategory')"
                 class="search-input"
               >
@@ -139,7 +134,7 @@
                 map-options
                 clearable
                 outlined
-                dense
+
                 :placeholder="$t('productsPage.filters.selectSupplier')"
                 class="search-input"
               >
@@ -155,7 +150,7 @@
                 map-options
                 clearable
                 outlined
-                dense
+
                 :placeholder="$t('productsPage.filters.selectStockStatus')"
                 class="search-input"
               >
@@ -174,7 +169,7 @@
                 v-model.number="searchCriteria.priceMin"
                 type="number"
                 outlined
-                dense
+
                 :placeholder="$t('productsPage.filters.minPrice')"
                 class="price-input"
               >
@@ -187,7 +182,7 @@
                 v-model.number="searchCriteria.priceMax"
                 type="number"
                 outlined
-                dense
+
                 :placeholder="$t('productsPage.filters.maxPrice')"
                 class="price-input"
               >
@@ -239,7 +234,7 @@
                 emit-value
                 map-options
                 outlined
-                dense
+
                 :placeholder="$t('productsPage.advancedSearch.sortBy')"
                 class="sort-select"
               >
@@ -266,7 +261,7 @@
               </h6>
               <q-btn
                 flat
-                dense
+
                 size="sm"
                 :icon="previewExpanded ? 'expand_less' : 'expand_more'"
                 @click="previewExpanded = !previewExpanded"
@@ -348,45 +343,44 @@
               </q-slide-transition>
             </div>
           </div>
-        </div>
-      </q-card-section>
+    </div>
 
-      <q-card-actions align="right" class="q-pa-md">
-        <q-btn
-          flat
-          :label="$t('common.cancel')"
-          v-close-popup
-        />
-        <q-btn
-          flat
-          color="grey"
-          :label="$t('productsPage.advancedSearch.reset')"
-          @click="resetCriteria"
-        />
-        <q-btn
-          color="primary"
-          :label="$t('productsPage.advancedSearch.search')"
-          @click="performSearch"
-          :disable="!hasValidCriteria"
-          icon="search"
-        />
-        <q-btn
-          v-if="hasValidCriteria && previewResults.count > 0"
-          flat
-          color="info"
-          :label="$t('productsPage.advancedSearch.previewTable')"
-          @click="$emit('preview-table')"
-          icon="table_view"
-          class="q-ml-sm"
-        />
-      </q-card-actions>
-    </q-card>
-  </q-dialog>
+    <template #actions>
+      <q-btn
+        flat
+        :label="$t('common.cancel')"
+        @click="isOpen = false"
+      />
+      <q-btn
+        flat
+        color="grey"
+        :label="$t('productsPage.advancedSearch.reset')"
+        @click="resetCriteria"
+      />
+      <q-btn
+        color="primary"
+        :label="$t('productsPage.advancedSearch.search')"
+        @click="performSearch"
+        :disable="!hasValidCriteria"
+        icon="search"
+        unelevated
+      />
+      <q-btn
+        v-if="hasValidCriteria && previewResults.count > 0"
+        flat
+        color="info"
+        :label="$t('productsPage.advancedSearch.previewTable')"
+        @click="$emit('preview-table')"
+        icon="table_view"
+      />
+    </template>
+  </BaseDialog>
 </template>
 
 <script setup lang="ts">
   import { ref, computed, watch } from 'vue';
   import { useI18n } from 'vue-i18n';
+  import BaseDialog from 'src/components/base/BaseDialog.vue';
   import type { ProductFilter } from 'src/types/inventory';
 
   // Props & Emits
@@ -558,30 +552,30 @@
 </script>
 
 <style lang="scss" scoped>
-  .advanced-search-dialog {
-    .advanced-search-card {
-      margin: 0 auto;
-      border-radius: 12px;
-    }
-  }
+  // Modern dialog styling handled by BaseDialog
 
   .advanced-search-content {
-    .search-section {
-      margin-bottom: 2rem;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-6);
+    padding: var(--space-6);
 
-      &:last-child {
-        margin-bottom: 0;
-      }
+    .search-section {
+      background: var(--bg-primary);
+      border-radius: var(--radius-lg);
+      padding: var(--space-5);
+      border: 1px solid var(--border-primary);
+      box-shadow: var(--shadow-sm);
 
       .section-title {
-        font-size: 1rem;
-        font-weight: 600;
-        margin: 0 0 1rem 0;
-        color: var(--q-primary);
+        font-size: var(--text-lg);
+        font-weight: var(--font-weight-semibold);
+        margin: 0 0 var(--space-4) 0;
+        color: var(--brand-primary);
         display: flex;
         align-items: center;
-        border-bottom: 1px solid rgba(0, 0, 0, 0.1);
-        padding-bottom: 0.5rem;
+        border-bottom: 1px solid var(--border-primary);
+        padding-bottom: var(--space-3);
       }
     }
 
