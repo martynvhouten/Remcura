@@ -222,86 +222,9 @@
   flex-direction: column;
   gap: var(--space-6);
 
-  // Enhanced form field styling
-  :deep(.q-field) {
-    margin-bottom: var(--space-5);
+  // Use global field system - no custom overrides
 
-    .q-field__control {
-      border-radius: 12px;
-      border: 2px solid var(--neutral-200);
-      background: white;
-      transition: all 0.2s ease;
-      min-height: 48px;
-
-      &:hover {
-        border-color: var(--brand-primary);
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-      }
-    }
-
-    &.q-field--focused .q-field__control {
-      border-color: var(--brand-primary);
-      box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
-    }
-
-    &.q-field--error .q-field__control {
-      border-color: var(--brand-danger);
-      background: rgba(220, 38, 38, 0.05);
-    }
-
-    .q-field__label {
-      font-weight: var(--font-weight-medium);
-      color: var(--neutral-700);
-      font-size: var(--text-sm);
-    }
-
-    .q-field__messages {
-      font-size: var(--text-xs);
-      padding-top: var(--space-2);
-    }
-  }
-
-  // Enhanced select styling
-  :deep(.q-select) {
-    .q-field__append {
-      .q-icon {
-        color: var(--neutral-500);
-        transition: color 0.2s ease;
-      }
-    }
-
-    &.q-field--focused .q-field__append .q-icon {
-      color: var(--brand-primary);
-    }
-  }
-
-  // Enhanced textarea styling
-  :deep(.q-textarea) {
-    .q-field__control {
-      min-height: 120px;
-    }
-  }
-
-  // Enhanced checkbox and radio styling
-  :deep(.q-checkbox),
-  :deep(.q-radio) {
-    .q-checkbox__inner,
-    .q-radio__inner {
-      border-radius: 6px;
-      border: 2px solid var(--neutral-300);
-      transition: all 0.2s ease;
-
-      &:hover {
-        border-color: var(--brand-primary);
-      }
-    }
-
-    &.q-checkbox--checked .q-checkbox__inner,
-    &.q-radio--checked .q-radio__inner {
-      background: var(--brand-primary);
-      border-color: var(--brand-primary);
-    }
-  }
+  // All form field styling handled by global field system
 }
 
 .error-summary {

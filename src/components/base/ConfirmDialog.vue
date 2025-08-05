@@ -309,28 +309,7 @@
       line-height: 1.5;
     }
 
-    :deep(.q-field) {
-      .q-field__control {
-        border-radius: 12px;
-        background: white;
-        border: 2px solid var(--neutral-200);
-        transition: all 0.2s ease;
-        
-        &:hover {
-          border-color: var(--brand-primary);
-        }
-      }
-      
-      &.q-field--error .q-field__control {
-        border-color: var(--brand-danger);
-        background: rgba(220, 38, 38, 0.05);
-      }
-      
-      &.q-field--focused .q-field__control {
-        border-color: var(--brand-primary);
-        box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
-      }
-    }
+    // Field styling handled by global field system
   }
 }
 
