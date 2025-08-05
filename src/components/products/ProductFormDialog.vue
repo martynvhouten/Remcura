@@ -45,42 +45,46 @@
         <h3 class="section-title">{{ $t('products.details') }}</h3>
         
         <!-- Category and Brand Row -->
-        <div class="form-row">
-          <q-input
-            v-model="form.category"
-            :label="$t('products.category')"
-            outlined
-            class="form-field"
-          />
-          <q-input
-            v-model="form.brand"
-            :label="$t('products.brand')"
-            outlined
-            class="form-field"
-          />
+        <div class="row q-gutter-md">
+          <div class="col">
+            <q-input
+              v-model="form.category"
+              :label="$t('products.category')"
+              outlined
+            />
+          </div>
+          <div class="col">
+            <q-input
+              v-model="form.brand"
+              :label="$t('products.brand')"
+              outlined
+            />
+          </div>
         </div>
 
         <!-- Unit and Price Row -->
-        <div class="form-row">
-          <q-select
-            v-model="form.unit"
-            :options="unitOptions"
-            :label="$t('products.unit')"
-            outlined
-            emit-value
-            map-options
-            class="form-field"
-          />
-          <q-input
-            v-model.number="form.price"
-            :label="$t('products.price')"
-            type="number"
-            step="0.01"
-            min="0"
-            outlined
-            :prefix="form.currency"
-            class="form-field"
-          />
+        <div class="row q-gutter-md">
+          <div class="col">
+            <q-select
+              v-model="form.unit"
+              :options="unitOptions"
+              :label="$t('products.unit')"
+              outlined
+              emit-value
+              map-options
+            />
+          </div>
+          <div class="col">
+            <q-input
+              v-model.number="form.price"
+              :label="$t('products.price')"
+              type="number"
+              step="0.01"
+              min="0"
+              outlined
+              :prefix="form.currency"
+            />
+          </div>
         </div>
       </div>
 
@@ -108,17 +112,19 @@
         </q-input>
 
         <!-- Options Row -->
-        <div class="form-row">
-          <q-checkbox
-            v-model="form.requires_batch_tracking"
-            :label="$t('products.requiresBatchTracking')"
-            class="form-field"
-          />
-          <q-checkbox
-            v-model="form.active"
-            :label="$t('products.active')"
-            class="form-field"
-          />
+        <div class="row q-gutter-md">
+          <div class="col">
+            <q-checkbox
+              v-model="form.requires_batch_tracking"
+              :label="$t('products.requiresBatchTracking')"
+            />
+          </div>
+          <div class="col">
+            <q-checkbox
+              v-model="form.active"
+              :label="$t('products.active')"
+            />
+          </div>
         </div>
       </div>
 
@@ -130,42 +136,46 @@
           header-class="text-primary"
           class="advanced-expansion"
         >
-          <div class="advanced-content">
+          <div class="q-pa-md q-gutter-md">
             <!-- GTIN and GPC Row -->
-            <div class="form-row">
-              <q-input
-                v-model="form.gtin"
-                label="GTIN"
-                outlined
-                :hint="$t('products.gtinHint')"
-                class="form-field"
-              />
-              <q-input
-                v-model="form.gpc_brick_code"
-                label="GPC Brick Code"
-                outlined
-                :hint="$t('products.gpcHint')"
-                class="form-field"
-              />
+            <div class="row q-gutter-md">
+              <div class="col">
+                <q-input
+                  v-model="form.gtin"
+                  label="GTIN"
+                  outlined
+                  :hint="$t('products.gtinHint')"
+                />
+              </div>
+              <div class="col">
+                <q-input
+                  v-model="form.gpc_brick_code"
+                  label="GPC Brick Code"
+                  outlined
+                  :hint="$t('products.gpcHint')"
+                />
+              </div>
             </div>
 
             <!-- Country and Lifecycle Row -->
-            <div class="form-row">
-              <q-input
-                v-model="form.country_of_origin"
-                :label="$t('products.countryOfOrigin')"
-                outlined
-                class="form-field"
-              />
-              <q-select
-                v-model="form.product_lifecycle_status"
-                :options="lifecycleOptions"
-                :label="$t('products.lifecycleStatus')"
-                outlined
-                emit-value
-                map-options
-                class="form-field"
-              />
+            <div class="row q-gutter-md">
+              <div class="col">
+                <q-input
+                  v-model="form.country_of_origin"
+                  :label="$t('products.countryOfOrigin')"
+                  outlined
+                />
+              </div>
+              <div class="col">
+                <q-select
+                  v-model="form.product_lifecycle_status"
+                  :options="lifecycleOptions"
+                  :label="$t('products.lifecycleStatus')"
+                  outlined
+                  emit-value
+                  map-options
+                />
+              </div>
             </div>
           </div>
         </q-expansion-item>
@@ -370,10 +380,6 @@ watch(
 </script>
 
 <style lang="scss" scoped>
-// ===================================================================
-// MODERN PRODUCT FORM STYLING
-// ===================================================================
-
 .product-form {
   display: flex;
   flex-direction: column;
@@ -381,126 +387,20 @@ watch(
 }
 
 .form-section {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-4);
+  margin-bottom: var(--space-6);
 
   .section-title {
     font-size: var(--text-lg);
     font-weight: var(--font-weight-semibold);
-    color: var(--neutral-900);
-    margin: 0 0 var(--space-2) 0;
+    color: var(--text-primary);
+    margin: 0 0 var(--space-4) 0;
     padding-bottom: var(--space-2);
-    border-bottom: 2px solid var(--neutral-100);
+    border-bottom: 1px solid var(--border-primary);
   }
 }
 
-.form-row {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: var(--space-4);
-  align-items: stretch; // Better alignment for equal height fields
-  width: 100%;
-
-  // Ensure all child form fields have equal width
-  > * {
-    width: 100%;
-    min-width: 0; // Prevent overflow
-  }
-
-  @media (max-width: 640px) {
-    grid-template-columns: 1fr;
-    gap: var(--space-3);
-  }
-}
-
-.form-field {
-  width: 100%;
-  // Remove all custom field styling - use global field system to prevent double borders
-  // This ensures consistent styling with the rest of the application
-}
-
-// Use global checkbox styling - remove custom overrides to prevent conflicts
-
-// Clean expansion styling
 .advanced-expansion {
   border: 1px solid var(--border-primary);
-  border-radius: var(--radius-lg);
-  overflow: hidden;
-
-  :deep(.q-expansion-item__container) {
-    .q-expansion-item__header {
-      background: var(--bg-primary);
-      padding: var(--space-4);
-      font-weight: var(--font-weight-medium);
-
-      .q-expansion-item__icon {
-        color: var(--brand-primary);
-      }
-    }
-
-    .q-expansion-item__content {
-      background: var(--bg-primary);
-      padding: 0;
-    }
-  }
-}
-
-.advanced-content {
-  padding: var(--space-4);
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-4);
-}
-
-// ===================================================================
-// DARK MODE ADAPTATIONS - MINIMAL OVERRIDES
-// ===================================================================
-
-body.body--dark {
-  .form-section {
-    .section-title {
-      color: var(--text-primary);
-      border-bottom-color: var(--border-primary);
-    }
-  }
-
-  .advanced-expansion {
-    border-color: var(--border-primary);
-
-    :deep(.q-expansion-item__container) {
-      .q-expansion-item__header {
-        background: var(--bg-primary);
-        color: var(--text-primary);
-      }
-
-      .q-expansion-item__content {
-        background: var(--bg-primary);
-      }
-    }
-  }
-}
-
-// ===================================================================
-// RESPONSIVE DESIGN
-// ===================================================================
-
-@media (max-width: 768px) {
-  .product-form {
-    gap: var(--space-4);
-  }
-
-  .form-section {
-    gap: var(--space-3);
-
-    .section-title {
-      font-size: var(--text-base);
-    }
-  }
-
-  .advanced-content {
-    padding: var(--space-3);
-    gap: var(--space-3);
-  }
+  border-radius: 4px;
 }
 </style> 
