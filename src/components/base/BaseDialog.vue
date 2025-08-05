@@ -2,8 +2,8 @@
   <q-dialog
     :model-value="modelValue"
     @update:model-value="$emit('update:modelValue', $event)"
-    :persistent="persistent && !backdropDismiss"
-    :maximized="maximized"
+    :persistent="persistent"
+    :maximized="isMobile && !preventMobileFullscreen"
     :position="position"
     :full-width="fullWidth"
     :transition-show="transitionShow"
@@ -11,192 +11,437 @@
     :class="dialogClass"
     role="dialog"
     :aria-labelledby="titleId"
+    :aria-describedby="subtitleId"
     aria-modal="true"
+    @show="onShow"
+    @hide="onHide"
+    @escape-key="onEscapeKey"
   >
-    <q-card :class="cardClasses">
-        <!-- Loading Overlay -->
-        <div v-if="loading" class="dialog-loading-overlay">
-          <q-spinner-dots size="48px" color="primary" />
-          <p class="loading-text">{{ loadingText || $t('common.loading') }}</p>
+    <div :class="cardClasses" @keydown="onKeyDown">
+      <!-- Loading Overlay -->
+      <div v-if="loading" class="dialog-loading-overlay">
+        <div class="loading-spinner"></div>
+        <p class="loading-text">{{ loadingText || $t('common.loading') }}</p>
+      </div>
+
+      <!-- Step Indicator (for multi-step dialogs) -->
+      <div v-if="showSteps && steps && steps.length > 1" class="dialog-steps">
+        <div class="steps-container">
+          <div
+            v-for="(step, index) in steps"
+            :key="index"
+            :class="[
+              'step-item',
+              { 
+                'step-active': index === currentStep,
+                'step-completed': index < currentStep,
+                'step-disabled': index > currentStep
+              }
+            ]"
+          >
+            <div class="step-indicator">
+              <q-icon v-if="index < currentStep" name="check" size="16px" />
+              <span v-else>{{ index + 1 }}</span>
+            </div>
+            <span class="step-label">{{ step.label }}</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Dialog Header -->
+      <header
+        v-if="hasHeader"
+        class="dialog-header"
+        :class="[headerClass, headerVariantClass, statusColorClass]"
+      >
+        <div class="header-content">
+          <div v-if="icon" class="header-icon-container">
+            <div class="header-icon" :class="iconVariantClass">
+              <q-icon :name="icon" :size="iconSize" />
+            </div>
+          </div>
+          <div class="header-text">
+            <h1 class="dialog-title" :id="titleId">{{ title }}</h1>
+            <p v-if="subtitle" class="dialog-subtitle" :id="subtitleId">{{ subtitle }}</p>
+          </div>
+          <button
+            v-if="closable"
+            type="button"
+            @click="onClose"
+            class="close-btn"
+            :aria-label="$t('common.closeDialog') || 'Close dialog'"
+            :disabled="loading || actionsDisabled"
+          >
+            <q-icon name="close" size="20px" />
+          </button>
+        </div>
+      </header>
+
+      <!-- Dialog Content -->
+      <main class="dialog-content" :class="contentClass">
+        <slot />
+      </main>
+
+      <!-- Dialog Footer -->
+      <footer
+        v-if="hasActions || primaryAction || secondaryAction"
+        class="dialog-footer"
+        :class="footerClass"
+      >
+        <!-- Custom Actions Slot -->
+        <div v-if="hasActions" class="custom-actions">
+          <slot name="actions" :loading="loading" :disabled="actionsDisabled" />
         </div>
 
-        <!-- Dialog Header -->
-        <q-card-section
-          v-if="hasHeader"
-          class="dialog-header"
-          :class="[headerClass, headerVariantClass]"
-        >
-          <div class="header-content">
-            <div v-if="icon" class="header-icon-container">
-              <div class="header-icon" :class="iconVariantClass">
-                <q-icon :name="icon" :size="iconInnerSize" />
-              </div>
-            </div>
-            <div class="header-text">
-              <h2 class="dialog-title" :id="titleId">{{ title }}</h2>
-              <p v-if="subtitle" class="dialog-subtitle">{{ subtitle }}</p>
-            </div>
-            <q-btn
-              v-if="closable"
-              flat
-              round
-              dense
-              icon="close"
-              @click="close"
-              class="close-btn"
-              :size="closeButtonSize"
-              :aria-label="$t('common.closeDialog') || 'Close dialog'"
-            />
-          </div>
-        </q-card-section>
+        <!-- Standard Actions -->
+        <div v-else class="standard-actions">
+          <!-- Secondary Action -->
+          <button
+            v-if="secondaryAction"
+            type="button"
+            @click="onSecondaryAction"
+            :disabled="loading || actionsDisabled || secondaryAction.disabled"
+            :class="['app-btn', secondaryAction.class || 'app-btn-secondary']"
+          >
+            <q-icon v-if="secondaryAction.icon" :name="secondaryAction.icon" size="16px" />
+            {{ secondaryAction.label }}
+          </button>
 
-        <!-- Dialog Content -->
-        <q-card-section class="dialog-content" :class="contentClass">
-          <slot />
-        </q-card-section>
-
-        <!-- Dialog Actions -->
-        <q-card-section
-          v-if="hasActions"
-          class="dialog-actions"
-          :class="actionsClass"
-        >
-          <slot name="actions" />
-        </q-card-section>
-    </q-card>
+          <!-- Primary Action -->
+          <button
+            v-if="primaryAction"
+            type="button"
+            @click="onPrimaryAction"
+            :disabled="loading || actionsDisabled || primaryAction.disabled"
+            :class="['app-btn', primaryAction.class || 'app-btn-primary']"
+          >
+            <div v-if="primaryActionLoading" class="btn-loading">
+              <div class="btn-spinner"></div>
+            </div>
+            <template v-else>
+              <q-icon v-if="primaryAction.icon" :name="primaryAction.icon" size="16px" />
+              {{ primaryAction.label }}
+            </template>
+          </button>
+        </div>
+      </footer>
+    </div>
   </q-dialog>
 </template>
 
 <script setup lang="ts">
-  import { computed, useSlots } from 'vue';
-  import { useI18n } from 'vue-i18n';
+import { computed, useSlots, ref, nextTick, onMounted, onUnmounted } from 'vue';
+import { useI18n } from 'vue-i18n';
+import { useQuasar } from 'quasar';
 
-  interface Props {
-    modelValue: boolean;
-    title?: string;
-    subtitle?: string;
-    icon?: string;
-    iconColor?: string;
-    iconSize?: string;
-    persistent?: boolean;
-    maximized?: boolean;
-    position?: 'standard' | 'top' | 'right' | 'bottom' | 'left';
-    fullWidth?: boolean;
-    transitionShow?: string;
-    transitionHide?: string;
-    closable?: boolean;
-    headerClass?: string | string[];
-    contentClass?: string | string[];
-    actionsClass?: string | string[];
-    dialogClass?: string | string[];
-    variant?: 'standard' | 'modern' | 'glass' | 'elegant' | 'minimal';
-    size?: 'sm' | 'md' | 'lg' | 'xl' | 'full';
-    headerVariant?: 'gradient' | 'solid' | 'minimal' | 'glass';
-    loading?: boolean;
-    loadingText?: string;
-    backdropDismiss?: boolean;
+/**
+ * BaseDialog Component - Enterprise-grade dialog system
+ * 
+ * Features:
+ * - Responsive design (mobile fullscreen, desktop modal)
+ * - Keyboard navigation (Enter/Escape)
+ * - Loading states and async actions
+ * - Multi-step wizard support
+ * - Dirty state checking
+ * - Focus management
+ * - Status colors and variants
+ * - Consistent with app design system
+ */
+
+interface DialogStep {
+  label: string;
+  completed?: boolean;
+}
+
+interface DialogAction {
+  label: string;
+  icon?: string;
+  class?: string;
+  disabled?: boolean;
+  loading?: boolean;
+}
+
+interface Props {
+  /** Dialog visibility state */
+  modelValue: boolean;
+  
+  /** Dialog title */
+  title?: string;
+  
+  /** Dialog subtitle */
+  subtitle?: string;
+  
+  /** Header icon */
+  icon?: string;
+  
+  /** Icon size */
+  iconSize?: string;
+  
+  /** Prevent closing on backdrop click */
+  persistent?: boolean;
+  
+  /** Force maximized state */
+  maximized?: boolean;
+  
+  /** Prevent mobile fullscreen behavior */
+  preventMobileFullscreen?: boolean;
+  
+  /** Dialog position */
+  position?: 'standard' | 'top' | 'right' | 'bottom' | 'left';
+  
+  /** Full width dialog */
+  fullWidth?: boolean;
+  
+  /** Show transition */
+  transitionShow?: string;
+  
+  /** Hide transition */
+  transitionHide?: string;
+  
+  /** Show close button */
+  closable?: boolean;
+  
+  /** Header CSS classes */
+  headerClass?: string | string[];
+  
+  /** Content CSS classes */
+  contentClass?: string | string[];
+  
+  /** Footer CSS classes */
+  footerClass?: string | string[];
+  
+  /** Dialog CSS classes */
+  dialogClass?: string | string[];
+  
+  /** Visual variant */
+  variant?: 'standard' | 'modern' | 'glass' | 'elegant' | 'minimal';
+  
+  /** Dialog size */
+  size?: 'sm' | 'md' | 'lg' | 'xl' | 'full';
+  
+  /** Header variant */
+  headerVariant?: 'gradient' | 'solid' | 'minimal' | 'glass';
+  
+  /** Status color for header */
+  statusColor?: 'primary' | 'success' | 'warning' | 'danger' | 'info';
+  
+  /** Loading state */
+  loading?: boolean;
+  
+  /** Loading text */
+  loadingText?: string;
+  
+  /** Disable all actions */
+  actionsDisabled?: boolean;
+  
+  /** Primary action configuration */
+  primaryAction?: DialogAction;
+  
+  /** Secondary action configuration */
+  secondaryAction?: DialogAction;
+  
+  /** Primary action loading state */
+  primaryActionLoading?: boolean;
+  
+  /** Steps for wizard dialogs */
+  steps?: DialogStep[];
+  
+  /** Current step index */
+  currentStep?: number;
+  
+  /** Show step indicator */
+  showSteps?: boolean;
+  
+  /** Auto-focus first input */
+  autoFocus?: boolean;
+  
+  /** Check for unsaved changes */
+  isDirty?: boolean;
+  
+  /** Confirm close message */
+  confirmCloseMessage?: string;
+  
+  /** Enable keyboard shortcuts */
+  keyboardShortcuts?: boolean;
+}
+
+interface Emits {
+  (e: 'update:modelValue', value: boolean): void;
+  (e: 'close'): void;
+  (e: 'primary-action'): void;
+  (e: 'secondary-action'): void;
+  (e: 'show'): void;
+  (e: 'hide'): void;
+  (e: 'escape'): void;
+}
+
+const props = withDefaults(defineProps<Props>(), {
+  persistent: true,
+  maximized: false,
+  preventMobileFullscreen: false,
+  position: 'standard',
+  fullWidth: false,
+  transitionShow: 'jump-up',
+  transitionHide: 'jump-down',
+  closable: true,
+  iconSize: '24px',
+  variant: 'elegant',
+  size: 'md',
+  headerVariant: 'solid',
+  statusColor: 'primary',
+  loading: false,
+  actionsDisabled: false,
+  primaryActionLoading: false,
+  currentStep: 0,
+  showSteps: false,
+  autoFocus: true,
+  isDirty: false,
+  keyboardShortcuts: true,
+});
+
+const emit = defineEmits<Emits>();
+const slots = useSlots();
+const { t } = useI18n();
+const $q = useQuasar();
+
+// Reactive references
+const dialogRef = ref<HTMLElement>();
+
+// Computed properties
+const titleId = computed(() => `dialog-title-${Math.random().toString(36).substr(2, 9)}`);
+const subtitleId = computed(() => `dialog-subtitle-${Math.random().toString(36).substr(2, 9)}`);
+
+const isMobile = computed(() => $q.screen.lt.md);
+
+const hasHeader = computed(() => !!(props.title || props.subtitle || props.icon || slots.header));
+const hasActions = computed(() => !!slots.actions);
+
+const cardClasses = computed(() => {
+  const classes = ['app-dialog-card'];
+  
+  // Variant classes
+  classes.push(`dialog-${props.variant}`);
+  
+  // Size classes
+  classes.push(`dialog-${props.size}`);
+  
+  // Loading state
+  if (props.loading) {
+    classes.push('dialog-loading');
   }
-
-  interface Emits {
-    (e: 'update:modelValue', value: boolean): void;
-    (e: 'close'): void;
+  
+  // Mobile fullscreen
+  if (isMobile.value && !props.preventMobileFullscreen) {
+    classes.push('dialog-mobile-fullscreen');
   }
+  
+  return classes;
+});
 
-  const props = withDefaults(defineProps<Props>(), {
-    persistent: true,
-    maximized: false,
-    position: 'standard',
-    fullWidth: false,
-    transitionShow: 'jump-up',
-    transitionHide: 'jump-down',
-    closable: true,
-    iconColor: 'primary',
-    iconSize: '48px',
-    variant: 'elegant',
-    size: 'md',
-    headerVariant: 'gradient',
-    loading: false,
-    backdropDismiss: false,
-  });
+const headerVariantClass = computed(() => `header-${props.headerVariant}`);
+const statusColorClass = computed(() => `header-${props.statusColor}`);
 
-  const emit = defineEmits<Emits>();
-  const slots = useSlots();
+// Methods
+const onShow = () => {
+  emit('show');
+  
+  if (props.autoFocus) {
+    nextTick(() => {
+      focusFirstInput();
+    });
+  }
+};
 
-  // Computed properties
-  const titleId = computed(
-    () => `dialog-title-${Math.random().toString(36).substr(2, 9)}`
-  );
+const onHide = () => {
+  emit('hide');
+};
 
-  const hasHeader = computed(
-    () => !!(props.title || props.subtitle || props.icon || slots.header)
-  );
-  const hasActions = computed(() => !!slots.actions);
+const onClose = async () => {
+  if (props.isDirty && props.confirmCloseMessage) {
+    const confirmed = await showConfirmDialog(props.confirmCloseMessage);
+    if (!confirmed) return;
+  }
+  
+  emit('close');
+  emit('update:modelValue', false);
+};
 
-  const iconInnerSize = computed(() => {
-    const size = parseInt(props.iconSize);
-    return `${Math.round(size * 0.5)}px`;
-  });
+const onPrimaryAction = () => {
+  emit('primary-action');
+};
 
-  const closeButtonSize = computed(() => {
-    const size = parseInt(props.iconSize);
-    return size > 40 ? 'md' : 'sm';
-  });
+const onSecondaryAction = () => {
+  emit('secondary-action');
+};
 
-  const cardClasses = computed(() => {
-    const classes = ['base-dialog-card'];
+const onEscapeKey = () => {
+  if (props.keyboardShortcuts) {
+    emit('escape');
+    onClose();
+  }
+};
 
-    // Variant classes
-    classes.push(`dialog-${props.variant}`);
-
-    // Size classes
-    classes.push(`dialog-${props.size}`);
-
-    // Loading state
-    if (props.loading) {
-      classes.push('dialog-loading');
+const onKeyDown = (event: KeyboardEvent) => {
+  if (!props.keyboardShortcuts || props.loading) return;
+  
+  // Enter key - trigger primary action
+  if (event.key === 'Enter' && (event.ctrlKey || event.metaKey)) {
+    event.preventDefault();
+    if (props.primaryAction && !props.primaryAction.disabled) {
+      onPrimaryAction();
     }
+  }
+};
 
-    return classes;
+const focusFirstInput = () => {
+  const firstInput = dialogRef.value?.querySelector('input, textarea, select, [tabindex="0"]') as HTMLElement;
+  if (firstInput) {
+    firstInput.focus();
+  }
+};
+
+const showConfirmDialog = (message: string): Promise<boolean> => {
+  return new Promise((resolve) => {
+    $q.dialog({
+      title: t('common.confirmClose'),
+      message,
+      cancel: true,
+      persistent: true,
+    }).onOk(() => {
+      resolve(true);
+    }).onCancel(() => {
+      resolve(false);
+    });
   });
+};
 
-  const headerVariantClass = computed(() => {
-    return `header-${props.headerVariant}`;
-  });
+// Lifecycle
+onMounted(() => {
+  // Add global keyboard listeners if needed
+});
 
-  const iconVariantClass = computed(() => {
-    return `icon-${props.headerVariant}`;
-  });
-
-  // Methods
-  const close = () => {
-    if (!props.loading) {
-      emit('close');
-      emit('update:modelValue', false);
-    }
-  };
-
-  // Note: Backdrop dismiss is now handled by Quasar's native functionality
+onUnmounted(() => {
+  // Cleanup global listeners
+});
 </script>
 
 <style lang="scss" scoped>
 // ===================================================================
-// MODERN DIALOG SYSTEM - TOP-NOTCH DESIGN
+// ENTERPRISE DIALOG SYSTEM - CONSISTENT WITH APP DESIGN SYSTEM
 // ===================================================================
 
-// Remove the custom backdrop - let Quasar handle positioning
-
-.base-dialog-card {
+.app-dialog-card {
   position: relative;
-  background: white;
-  border-radius: 24px;
+  background: var(--bg-primary);
+  border-radius: var(--radius-2xl);
   overflow: hidden;
-  box-shadow: 
-    0 25px 50px -12px rgba(0, 0, 0, 0.25),
-    0 0 0 1px rgba(255, 255, 255, 0.1);
+  box-shadow: var(--shadow-2xl);
+  border: 1px solid var(--border-primary);
   transform: translateY(0);
-  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: var(--transition-base);
   max-height: 90vh;
   overflow-y: auto;
+  font-family: var(--font-family-primary);
 
   // Loading state
   &.dialog-loading {
@@ -216,11 +461,20 @@
       justify-content: center;
       gap: var(--space-4);
       z-index: 10;
-      border-radius: 24px;
+      border-radius: var(--radius-2xl);
+
+      .loading-spinner {
+        width: 32px;
+        height: 32px;
+        border: 3px solid var(--neutral-200);
+        border-top: 3px solid var(--brand-primary);
+        border-radius: var(--radius-full);
+        animation: spin 1s linear infinite;
+      }
 
       .loading-text {
         font-size: var(--text-sm);
-        color: var(--neutral-600);
+        color: var(--text-secondary);
         font-weight: var(--font-weight-medium);
         margin: 0;
       }
@@ -255,89 +509,172 @@
     max-height: none;
   }
 
+  // Mobile fullscreen
+  &.dialog-mobile-fullscreen {
+    width: 100vw;
+    height: 100vh;
+    max-width: none;
+    max-height: none;
+    border-radius: 0;
+  }
+
   // Style variants
   &.dialog-elegant {
-    background: linear-gradient(135deg, #ffffff 0%, #fafafa 100%);
-    border: 1px solid rgba(0, 0, 0, 0.08);
+    background: linear-gradient(135deg, var(--bg-primary) 0%, var(--bg-secondary) 100%);
+    border: 1px solid var(--border-primary);
   }
 
   &.dialog-modern {
-    background: white;
-    box-shadow: 
-      0 32px 64px -12px rgba(0, 0, 0, 0.25),
-      0 0 0 1px rgba(0, 0, 0, 0.05);
+    background: var(--bg-primary);
+    box-shadow: var(--shadow-2xl);
   }
 
   &.dialog-glass {
-    background: rgba(255, 255, 255, 0.85);
-    backdrop-filter: blur(24px);
-    -webkit-backdrop-filter: blur(24px);
-    border: 1px solid rgba(255, 255, 255, 0.3);
-    box-shadow: 
-      0 25px 50px -12px rgba(0, 0, 0, 0.15),
-      inset 0 1px 0 rgba(255, 255, 255, 0.6);
+    background: var(--glass-bg);
+    backdrop-filter: var(--glass-backdrop);
+    -webkit-backdrop-filter: var(--glass-backdrop);
+    border: 1px solid var(--glass-border);
+    box-shadow: var(--glass-shadow);
   }
 
   &.dialog-minimal {
-    background: white;
+    background: var(--bg-primary);
     border: none;
-    box-shadow: 0 20px 40px -4px rgba(0, 0, 0, 0.1);
+    box-shadow: var(--shadow-lg);
   }
 
   &.dialog-standard {
-    background: white;
-    border: 1px solid var(--neutral-200);
-    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+    background: var(--bg-primary);
+    border: 1px solid var(--border-primary);
+    box-shadow: var(--shadow-md);
   }
 }
 
 // ===================================================================
-// HEADER STYLES - MULTIPLE VARIANTS
+// STEP INDICATOR
+// ===================================================================
+
+.dialog-steps {
+  background: var(--bg-secondary);
+  border-bottom: 1px solid var(--border-primary);
+  padding: var(--space-6) var(--space-8);
+
+  .steps-container {
+    display: flex;
+    justify-content: center;
+    gap: var(--space-8);
+    max-width: 600px;
+    margin: 0 auto;
+
+    .step-item {
+      display: flex;
+      align-items: center;
+      gap: var(--space-2);
+      font-size: var(--text-sm);
+      font-weight: var(--font-weight-medium);
+      color: var(--text-tertiary);
+      transition: var(--transition-base);
+
+      &.step-active {
+        color: var(--brand-primary);
+      }
+
+      &.step-completed {
+        color: var(--brand-success);
+      }
+
+      .step-indicator {
+        width: 24px;
+        height: 24px;
+        border-radius: var(--radius-full);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: var(--text-xs);
+        font-weight: var(--font-weight-bold);
+        background: var(--neutral-200);
+        color: var(--text-secondary);
+        transition: var(--transition-base);
+      }
+
+      &.step-active .step-indicator {
+        background: var(--brand-primary);
+        color: white;
+      }
+
+      &.step-completed .step-indicator {
+        background: var(--brand-success);
+        color: white;
+      }
+    }
+  }
+
+  @media (max-width: 640px) {
+    .steps-container {
+      gap: var(--space-4);
+      
+      .step-label {
+        display: none;
+      }
+    }
+  }
+}
+
+// ===================================================================
+// HEADER STYLES
 // ===================================================================
 
 .dialog-header {
   position: relative;
-  padding: 0;
-  border: none;
+  border-bottom: 1px solid var(--border-primary);
 
   // Header variants
   &.header-gradient {
-    background: linear-gradient(135deg, 
-      var(--brand-primary) 0%, 
-      var(--brand-primary-light) 50%,
-      var(--brand-accent) 100%);
+    background: linear-gradient(135deg, var(--brand-primary) 0%, var(--brand-primary-light) 100%);
     color: white;
-    
-    &::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      background: linear-gradient(135deg, 
-        rgba(255, 255, 255, 0.1) 0%, 
-        rgba(255, 255, 255, 0.05) 100%);
-      pointer-events: none;
-    }
+    border-bottom: none;
   }
 
   &.header-solid {
     background: var(--brand-primary);
     color: white;
+    border-bottom: none;
   }
 
   &.header-minimal {
     background: transparent;
-    color: var(--neutral-900);
-    border-bottom: 1px solid var(--neutral-100);
+    color: var(--text-primary);
   }
 
   &.header-glass {
-    background: rgba(255, 255, 255, 0.8);
+    background: var(--glass-bg);
     backdrop-filter: blur(12px);
-    color: var(--neutral-900);
-    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+    color: var(--text-primary);
+  }
+
+  // Status colors
+  &.header-success {
+    &.header-solid, &.header-gradient {
+      background: var(--brand-success);
+    }
+  }
+
+  &.header-warning {
+    &.header-solid, &.header-gradient {
+      background: var(--brand-warning);
+    }
+  }
+
+  &.header-danger {
+    &.header-solid, &.header-gradient {
+      background: var(--brand-danger);
+    }
+  }
+
+  &.header-info {
+    &.header-solid, &.header-gradient {
+      background: var(--brand-info);
+    }
   }
 
   .header-content {
@@ -345,43 +682,20 @@
     align-items: center;
     gap: var(--space-4);
     padding: var(--space-6) var(--space-8);
-    position: relative;
-    z-index: 1;
 
     .header-icon-container {
       flex-shrink: 0;
 
       .header-icon {
-        width: 56px;
-        height: 56px;
-        border-radius: 16px;
+        width: 48px;
+        height: 48px;
+        border-radius: var(--radius-xl);
         display: flex;
         align-items: center;
         justify-content: center;
-        font-size: 24px;
-        transition: all 0.3s ease;
-
-        &.icon-gradient {
-          background: rgba(255, 255, 255, 0.2);
-          color: white;
-          box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
-        }
-
-        &.icon-solid {
-          background: rgba(255, 255, 255, 0.15);
-          color: white;
-        }
-
-        &.icon-minimal {
-          background: var(--brand-primary);
-          color: white;
-        }
-
-        &.icon-glass {
-          background: rgba(255, 255, 255, 0.9);
-          color: var(--brand-primary);
-          backdrop-filter: blur(8px);
-        }
+        background: rgba(255, 255, 255, 0.15);
+        color: currentColor;
+        transition: var(--transition-base);
       }
     }
 
@@ -390,20 +704,20 @@
       min-width: 0;
 
       .dialog-title {
-        font-size: 28px;
-        font-weight: 700;
+        font-size: var(--text-2xl);
+        font-weight: var(--font-weight-bold);
         margin: 0 0 var(--space-1) 0;
-        line-height: 1.2;
-        letter-spacing: -0.02em;
-        font-family: 'Poppins', sans-serif;
+        line-height: var(--leading-tight);
+        color: currentColor;
       }
 
       .dialog-subtitle {
         font-size: var(--text-base);
         margin: 0;
         opacity: 0.85;
-        line-height: 1.4;
+        line-height: var(--leading-normal);
         font-weight: var(--font-weight-medium);
+        color: currentColor;
       }
     }
 
@@ -411,37 +725,50 @@
       flex-shrink: 0;
       width: 40px;
       height: 40px;
-      border-radius: 12px;
-      transition: all 0.2s ease;
-      margin: -8px -8px 0 0;
+      border-radius: var(--radius-lg);
+      border: none;
+      background: rgba(255, 255, 255, 0.1);
+      color: currentColor;
+      cursor: pointer;
+      transition: var(--transition-base);
+      display: flex;
+      align-items: center;
+      justify-content: center;
 
-      &:hover {
-        background: rgba(255, 255, 255, 0.15);
+      &:hover:not(:disabled) {
+        background: rgba(255, 255, 255, 0.2);
         transform: scale(1.05);
       }
 
       &:active {
         transform: scale(0.95);
       }
+
+      &:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+      }
     }
   }
 }
 
 // ===================================================================
-// CONTENT & ACTIONS STYLES
+// CONTENT STYLES
 // ===================================================================
 
 .dialog-content {
   padding: var(--space-8);
   font-size: var(--text-base);
-  line-height: 1.6;
-  color: var(--neutral-700);
+  line-height: var(--leading-relaxed);
+  color: var(--text-primary);
+  min-height: 0;
+  flex: 1;
 
   &:empty {
     display: none;
   }
 
-  // Better typography for content
+  // Better typography
   :deep(p) {
     margin: 0 0 var(--space-4) 0;
     
@@ -450,46 +777,77 @@
     }
   }
 
-  :deep(h3) {
-    font-size: var(--text-lg);
+  :deep(h1, h2, h3, h4, h5, h6) {
     font-weight: var(--font-weight-semibold);
-    color: var(--neutral-900);
+    color: var(--text-primary);
     margin: 0 0 var(--space-3) 0;
   }
 
-  :deep(.q-field) {
-    margin-bottom: var(--space-4);
+  :deep(h3) {
+    font-size: var(--text-lg);
   }
 }
 
-.dialog-actions {
-  padding: var(--space-6) var(--space-8) var(--space-8);
-  background: linear-gradient(to bottom, 
-    rgba(0, 0, 0, 0.02) 0%, 
-    rgba(0, 0, 0, 0.04) 100%);
-  border-top: 1px solid rgba(0, 0, 0, 0.06);
+// ===================================================================
+// FOOTER STYLES
+// ===================================================================
 
+.dialog-footer {
+  padding: var(--space-6) var(--space-8) var(--space-8);
+  background: var(--bg-secondary);
+  border-top: 1px solid var(--border-primary);
   display: flex;
   justify-content: flex-end;
   gap: var(--space-3);
   align-items: center;
 
-  :deep(.q-btn) {
+  .standard-actions,
+  .custom-actions {
+    display: flex;
+    gap: var(--space-3);
+    align-items: center;
+  }
+
+  // Button styles using app design system
+  .app-btn {
     min-width: 120px;
     height: 44px;
-    border-radius: 12px;
+    border-radius: var(--radius-lg);
     font-weight: var(--font-weight-semibold);
     font-size: var(--text-sm);
+    font-family: var(--font-family-primary);
     letter-spacing: 0.01em;
-    transition: all 0.2s ease;
+    transition: var(--transition-base);
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-2);
+    text-transform: none;
+    position: relative;
 
-    &:hover {
-      transform: translateY(-1px);
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    &:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+      transform: none !important;
     }
 
-    &:active {
-      transform: translateY(0);
+    .btn-loading {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      .btn-spinner {
+        width: 16px;
+        height: 16px;
+        border: 2px solid rgba(255, 255, 255, 0.3);
+        border-top: 2px solid white;
+        border-radius: var(--radius-full);
+        animation: spin 1s linear infinite;
+      }
     }
   }
 
@@ -498,7 +856,13 @@
     align-items: stretch;
     gap: var(--space-3);
 
-    :deep(.q-btn) {
+    .standard-actions,
+    .custom-actions {
+      flex-direction: column-reverse;
+      align-items: stretch;
+    }
+
+    .app-btn {
       width: 100%;
       min-width: auto;
     }
@@ -510,146 +874,68 @@
 // ===================================================================
 
 body.body--dark {
-  .dialog-backdrop {
-    background: rgba(0, 0, 0, 0.6);
-  }
-
-  .base-dialog-card {
-    background: var(--neutral-800);
-    border: 1px solid var(--neutral-700);
-    box-shadow: 
-      0 25px 50px -12px rgba(0, 0, 0, 0.5),
-      0 0 0 1px rgba(255, 255, 255, 0.05);
+  .app-dialog-card {
+    background: var(--bg-primary);
+    border: 1px solid var(--border-primary);
+    box-shadow: var(--shadow-2xl);
 
     &.dialog-elegant {
-      background: linear-gradient(135deg, var(--neutral-800) 0%, var(--neutral-850) 100%);
+      background: linear-gradient(135deg, var(--bg-primary) 0%, var(--bg-secondary) 100%);
     }
 
     &.dialog-glass {
-      background: rgba(0, 0, 0, 0.8);
-      border: 1px solid rgba(255, 255, 255, 0.1);
+      background: var(--glass-bg);
+      border: 1px solid var(--glass-border);
     }
 
     &.dialog-loading .dialog-loading-overlay {
       background: rgba(0, 0, 0, 0.9);
       
       .loading-text {
-        color: var(--neutral-300);
+        color: var(--text-secondary);
       }
     }
   }
 
   .dialog-header {
     &.header-minimal {
-      color: var(--neutral-100);
-      border-bottom: 1px solid var(--neutral-700);
+      color: var(--text-primary);
+      border-bottom: 1px solid var(--border-primary);
     }
 
     &.header-glass {
-      background: rgba(0, 0, 0, 0.6);
-      color: var(--neutral-100);
-      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      background: var(--glass-bg);
+      color: var(--text-primary);
+      border-bottom: 1px solid var(--border-primary);
     }
   }
 
   .dialog-content {
-    color: var(--neutral-300);
-
-    :deep(h3) {
-      color: var(--neutral-100);
-    }
+    color: var(--text-primary);
   }
 
-  .dialog-actions {
-    background: linear-gradient(to bottom, 
-      rgba(255, 255, 255, 0.02) 0%, 
-      rgba(255, 255, 255, 0.04) 100%);
-    border-top: 1px solid var(--neutral-700);
-  }
-}
-
-// ===================================================================
-// RESPONSIVE DESIGN
-// ===================================================================
-
-@media (max-width: 768px) {
-  .dialog-backdrop {
-    padding: var(--space-2);
+  .dialog-footer {
+    background: var(--bg-secondary);
+    border-top: 1px solid var(--border-primary);
   }
 
-  .base-dialog-card {
-    &.dialog-sm,
-    &.dialog-md,
-    &.dialog-lg,
-    &.dialog-xl {
-      max-width: calc(100vw - var(--space-4));
-      margin: 0;
-    }
-
-    &.dialog-full {
-      width: 100vw;
-      height: 100vh;
-      max-width: none;
-      max-height: none;
-      border-radius: 0;
-    }
-  }
-
-  .dialog-header .header-content {
-    padding: var(--space-5) var(--space-6);
-    gap: var(--space-3);
-
-    .header-icon-container .header-icon {
-      width: 48px;
-      height: 48px;
-      font-size: 20px;
-    }
-
-    .dialog-title {
-      font-size: 24px;
-    }
-
-    .dialog-subtitle {
-      font-size: var(--text-sm);
-    }
-  }
-
-  .dialog-content {
-    padding: var(--space-6);
-  }
-
-  .dialog-actions {
-    padding: var(--space-5) var(--space-6) var(--space-6);
+  .dialog-steps {
+    background: var(--bg-secondary);
+    border-bottom: 1px solid var(--border-primary);
   }
 }
 
 // ===================================================================
-// ADVANCED ANIMATIONS
+// ANIMATIONS
 // ===================================================================
 
-.base-dialog-card {
-  animation: dialogSlideUp 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
 }
 
-@keyframes dialogSlideUp {
-  0% {
-    opacity: 0;
-    transform: translateY(32px) scale(0.96);
-  }
-  100% {
-    opacity: 1;
-    transform: translateY(0) scale(1);
-  }
-}
-
-// Focus states
-.dialog-header .close-btn:focus-visible {
-  outline: 3px solid rgba(255, 255, 255, 0.4);
-  outline-offset: 2px;
-}
-
-// Enhanced scroll behavior with proper corner handling
-.base-dialog-card {
+// Enhanced scroll behavior
+.app-dialog-card {
   scrollbar-width: thin;
   scrollbar-color: var(--neutral-300) transparent;
 
@@ -659,12 +945,12 @@ body.body--dark {
 
   &::-webkit-scrollbar-track {
     background: transparent;
-    border-radius: 24px; // Match dialog border-radius
+    border-radius: var(--radius-2xl);
   }
 
   &::-webkit-scrollbar-thumb {
     background: var(--neutral-300);
-    border-radius: 24px; // Match dialog border-radius
+    border-radius: var(--radius-2xl);
     border: 2px solid transparent;
     background-clip: content-box;
   }
@@ -676,5 +962,15 @@ body.body--dark {
   &::-webkit-scrollbar-corner {
     background: transparent;
   }
+}
+
+// Focus states
+.close-btn:focus-visible {
+  outline: 3px solid rgba(255, 255, 255, 0.4);
+  outline-offset: 2px;
+}
+
+body.body--dark .close-btn:focus-visible {
+  outline-color: rgba(255, 255, 255, 0.2);
 }
 </style>

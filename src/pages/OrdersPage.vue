@@ -352,9 +352,9 @@ const createOrderBtn = computed(() => ({
 // Table columns
 const columns = computed(() => [
   {
-    name: 'id',
+    name: 'order_number',
     label: t('orders.orderNumber'),
-    field: 'id',
+    field: 'order_number',
     align: 'left' as const,
     sortable: true,
   },
@@ -460,9 +460,10 @@ const loadOrders = async () => {
 
     if (error) throw error;
 
-    orders.value = (data || []).map(order => ({
+    orders.value = (data || []).map((order, index) => ({
       ...order,
       supplier_name: order.supplier?.name || 'Unknown',
+      order_number: order.order_number || `ORD-${String(index + 1).padStart(4, '0')}`,
     }));
   } catch (error: any) {
     console.error('Failed to load orders:', error);
