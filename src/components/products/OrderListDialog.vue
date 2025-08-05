@@ -1,127 +1,104 @@
 <template>
-  <q-dialog
-    :model-value="modelValue"
-    @update:model-value="$emit('update:modelValue', $event)"
+  <BaseDialog
+    v-model="dialogVisible"
+    :title="isEditing ? $t('orderLists.editDialog') : $t('orderLists.createDialog')"
+    icon="list_alt"
+    size="xl"
+    variant="elegant"
+    header-variant="solid"
     @hide="onDialogHide"
-    persistent
-    :style="{ maxWidth: '95vw', maxHeight: '95vh' }"
   >
-    <q-card class="column" style="min-height: 600px; max-height: 85vh; width: 90vw; max-width: 1200px;">
-      <q-toolbar class="bg-primary text-white">
-        <q-toolbar-title>
-          {{
-            isEditing
-              ? $t('orderLists.editDialog')
-              : $t('orderLists.createDialog')
-          }}
-        </q-toolbar-title>
-        <q-btn flat round dense icon="close" @click="closeDialog" />
-      </q-toolbar>
 
-      <q-card-section class="col q-pa-none">
-        <div class="row no-wrap full-height">
-          <!-- Left Panel - Order List Details -->
-          <div class="col-12 col-md-4 q-pa-md bg-grey-1">
-            <div class="text-h6 q-mb-md">{{ $t('orderLists.details') }}</div>
+    <div class="orderlist-dialog-content">
+      <div class="orderlist-layout">
+        <!-- Left Panel - Order List Details -->
+        <div class="orderlist-details-panel">
+          <h3 class="panel-title">{{ $t('orderLists.details') }}</h3>
 
-            <q-form @submit="saveOrderList" class="q-gutter-md">
-              <q-input
-                v-model="form.name"
-                :label="$t('orderLists.name')"
-                :rules="[
-                  val => !!val || $t('orderLists.nameRequired'),
-                  val => val.length >= 3 || $t('orderLists.nameMinLength'),
-                ]"
-                outlined
-                dense
-                ref="nameInput"
+          <q-form @submit="saveOrderList" class="orderlist-form">
+            <q-input
+              v-model="form.name"
+              :label="$t('orderLists.name')"
+              :rules="[
+                val => !!val || $t('orderLists.nameRequired'),
+                val => val.length >= 3 || $t('orderLists.nameMinLength'),
+              ]"
+              outlined
+              ref="nameInput"
+            />
+
+            <q-input
+              v-model="form.description"
+              :label="$t('orderLists.description')"
+              type="textarea"
+              rows="3"
+              outlined
+            />
+
+            <q-select
+              v-model="form.supplier_id"
+              :options="supplierOptions"
+              :label="$t('orderLists.supplier')"
+              :rules="[val => !!val || $t('orderLists.supplierRequired')]"
+              outlined
+              emit-value
+              map-options
+            />
+
+            <q-input
+              v-model="form.notes"
+              :label="$t('orderLists.notes')"
+              type="textarea"
+              rows="2"
+              outlined
+            />
+
+            <div class="checkbox-group">
+              <q-checkbox
+                v-model="form.auto_suggest_quantities"
+                :label="$t('orderLists.autoFill')"
               />
-
-              <q-input
-                v-model="form.description"
-                :label="$t('orderLists.description')"
-                type="textarea"
-                rows="3"
-                outlined
-                dense
+              <q-checkbox
+                v-model="form.urgent_order"
+                :label="$t('orderLists.urgent')"
+                color="orange"
               />
-
-              <q-select
-                v-model="form.supplier_id"
-                :options="supplierOptions"
-                :label="$t('orderLists.supplier')"
-                :rules="[val => !!val || $t('orderLists.supplierRequired')]"
-                outlined
-                dense
-                emit-value
-                map-options
-              />
-
-              <q-input
-                v-model="form.notes"
-                :label="$t('orderLists.notes')"
-                type="textarea"
-                rows="2"
-                outlined
-                dense
-              />
-
-              <div class="row q-gutter-sm">
-                <q-checkbox
-                  v-model="form.auto_suggest_quantities"
-                  :label="$t('orderLists.autoFill')"
-                />
-                <q-checkbox
-                  v-model="form.urgent_order"
-                  :label="$t('orderLists.urgent')"
-                  color="orange"
-                />
-              </div>
-
-              <!-- Summary -->
-              <q-separator class="q-my-md" />
-
-              <div class="text-subtitle2 q-mb-sm">
-                {{ $t('orderLists.summary') }}
-              </div>
-              <div class="row q-gutter-sm text-body2">
-                <div class="col-6">
-                  <div class="text-grey-6">
-                    {{ $t('orderLists.totalItems') }}
-                  </div>
-                  <div class="text-weight-bold">{{ totalItems }}</div>
-                </div>
-                <div class="col-6">
-                  <div class="text-grey-6">
-                    {{ $t('orderLists.totalAmount') }}
-                  </div>
-                  <div class="text-weight-bold">
-                    €{{ totalAmount.toFixed(2) }}
-                  </div>
-                </div>
-              </div>
-            </q-form>
-          </div>
-
-          <!-- Right Panel - Products -->
-          <div class="col-12 col-md-8 q-pa-md">
-            <div class="row items-center q-mb-md">
-              <div class="col">
-                <div class="text-h6">{{ $t('orderLists.products') }}</div>
-              </div>
-              <div class="col-auto">
-                <q-btn
-                  :label="$t('orderLists.addProduct')"
-                  color="primary"
-                  icon="add"
-                  @click="showAddProductDialog = true"
-                  :disable="!form.supplier_id"
-                />
-              </div>
             </div>
 
-            <!-- Products List -->
-            <div v-if="orderListItems.length > 0" class="q-gutter-sm">
+            <!-- Summary -->
+            <div class="orderlist-summary">
+              <h4 class="summary-title">{{ $t('orderLists.summary') }}</h4>
+              <div class="summary-stats">
+                <div class="stat-item">
+                  <span class="stat-label">{{ $t('orderLists.totalItems') }}</span>
+                  <span class="stat-value">{{ totalItems }}</span>
+                </div>
+                <div class="stat-item">
+                  <span class="stat-label">{{ $t('orderLists.totalAmount') }}</span>
+                  <span class="stat-value">€{{ totalAmount.toFixed(2) }}</span>
+                </div>
+              </div>
+            </div>
+          </q-form>
+        </div>
+
+        <!-- Right Panel - Products -->
+        <div class="orderlist-products-panel">
+          <div class="panel-header">
+            <h3 class="panel-title">{{ $t('orderLists.products') }}</h3>
+            <q-btn
+              :label="$t('orderLists.addProduct')"
+              color="primary"
+              icon="add"
+              @click="showAddProductDialog = true"
+              :disable="!form.supplier_id"
+              unelevated
+              no-caps
+            />
+          </div>
+
+          <!-- Products List -->
+          <div v-if="orderListItems.length > 0" class="products-list">
               <q-card
                 v-for="(item, index) in orderListItems"
                 :key="item.id || index"
@@ -187,10 +164,10 @@
                   </div>
                 </div>
               </q-card>
-            </div>
+          </div>
 
-            <!-- Empty State -->
-            <BaseCard v-else class="text-center q-pa-xl">
+          <!-- Empty State -->
+          <BaseCard v-else class="text-center q-pa-xl">
               <q-icon
                 name="shopping_cart"
                 size="3rem"
@@ -208,22 +185,22 @@
                 @click="showAddProductDialog = true"
               />
             </BaseCard>
-          </div>
         </div>
-      </q-card-section>
+      </div>
+    </div>
 
-      <!-- Actions -->
-      <q-card-actions align="right" class="q-pa-md bg-grey-1">
-        <q-btn :label="$t('common.cancel')" flat @click="closeDialog" />
-        <q-btn
-          :label="$t('common.save')"
-          color="primary"
-          @click="saveOrderList"
-          :loading="orderListsStore.saving"
-          :disable="!isFormValid"
-        />
-      </q-card-actions>
-    </q-card>
+    <template #actions>
+      <q-btn :label="$t('common.cancel')" flat @click="closeDialog" />
+      <q-btn
+        :label="$t('common.save')"
+        color="primary"
+        @click="saveOrderList"
+        :loading="orderListsStore.saving"
+        :disable="!isFormValid"
+        unelevated
+      />
+    </template>
+  </BaseDialog>
 
     <!-- Add Product Dialog -->
     <q-dialog v-model="showAddProductDialog" persistent>
@@ -293,7 +270,6 @@
         </q-card-actions>
       </q-card>
     </q-dialog>
-  </q-dialog>
 </template>
 
 <script setup lang="ts">
@@ -311,6 +287,7 @@
   import { useProductsStore } from 'src/stores/products';
   import { useAuthStore } from 'src/stores/auth';
   import { BaseCard } from 'src/components/cards';
+  import BaseDialog from 'src/components/base/BaseDialog.vue';
   import type { OrderListItem, ProductWithStock } from 'src/types/inventory';
 
   interface Props {
@@ -357,6 +334,11 @@
   const availableProducts = ref<ProductWithStock[]>([]);
 
   // Computed
+  const dialogVisible = computed({
+    get: () => props.modelValue,
+    set: (value) => emit('update:modelValue', value),
+  });
+
   const isEditing = computed(() => !!props.orderList);
 
   const supplierOptions = computed(() =>
@@ -620,8 +602,129 @@
   });
 </script>
 
-<style scoped>
-  .q-card {
-    max-height: none;
+<style lang="scss" scoped>
+// ===================================================================
+// MODERN ORDERLIST DIALOG STYLING
+// ===================================================================
+
+.orderlist-dialog-content {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-6);
+  min-height: 600px;
+}
+
+.orderlist-layout {
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+  gap: var(--space-6);
+  height: 100%;
+  
+  @media (max-width: 768px) {
+    grid-template-columns: 1fr;
+    gap: var(--space-4);
   }
+}
+
+// Left Panel - Details
+.orderlist-details-panel {
+  background: var(--neutral-50);
+  border-radius: var(--radius-lg);
+  padding: var(--space-6);
+  border: 1px solid var(--border-primary);
+}
+
+// Right Panel - Products
+.orderlist-products-panel {
+  background: var(--bg-primary);
+  border-radius: var(--radius-lg);
+  padding: var(--space-6);
+  border: 1px solid var(--border-primary);
+}
+
+.panel-title {
+  font-size: var(--text-xl);
+  font-weight: var(--font-weight-semibold);
+  color: var(--text-primary);
+  margin: 0 0 var(--space-4) 0;
+}
+
+.panel-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: var(--space-4);
+}
+
+// Form Styling
+.orderlist-form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.checkbox-group {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  margin-top: var(--space-2);
+}
+
+// Summary Section
+.orderlist-summary {
+  margin-top: var(--space-6);
+  padding: var(--space-4);
+  background: white;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border-primary);
+}
+
+.summary-title {
+  font-size: var(--text-lg);
+  font-weight: var(--font-weight-semibold);
+  color: var(--text-primary);
+  margin: 0 0 var(--space-3) 0;
+}
+
+.summary-stats {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-4);
+}
+
+.stat-item {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+.stat-label {
+  font-size: var(--text-sm);
+  color: var(--text-secondary);
+  font-weight: var(--font-weight-medium);
+}
+
+.stat-value {
+  font-size: var(--text-lg);
+  font-weight: var(--font-weight-bold);
+  color: var(--text-primary);
+}
+
+// Dark Mode
+body.body--dark {
+  .orderlist-details-panel {
+    background: var(--neutral-800);
+    border-color: var(--border-primary);
+  }
+  
+  .orderlist-products-panel {
+    background: var(--bg-primary);
+    border-color: var(--border-primary);
+  }
+  
+  .orderlist-summary {
+    background: var(--neutral-900);
+    border-color: var(--border-primary);
+  }
+}
 </style>
