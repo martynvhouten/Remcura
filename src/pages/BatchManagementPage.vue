@@ -278,6 +278,7 @@
 <script setup lang="ts">
   import { ref, computed, onMounted, getCurrentInstance, defineAsyncComponent } from 'vue';
   import { useI18n } from 'vue-i18n';
+  import { useQuasar } from 'quasar';
   import { useBatchStore } from 'src/stores/batch';
   import { useInventoryStore } from 'src/stores/inventory';
   import { useAuthStore } from 'src/stores/auth';

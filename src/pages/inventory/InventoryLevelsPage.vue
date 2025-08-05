@@ -518,13 +518,13 @@ const loadStockLevels = async () => {
        product_id: level.product_id,
        location_id: level.location_id,
        current_quantity: level.current_quantity || 0,
-       minimum_quantity: level.minimum_stock || 0, // Use minimum_stock from database
+       minimum_quantity: level.minimum_stock || 0,
        last_counted_at: level.last_counted_at,
-       product_name: t('inventory.product') + ' ' + level.product_id, // Simplified until we fix relations
-       product_sku: null,
-       product_category: null,
-       product_unit: 'pcs',
-       location_name: t('inventory.location') + ' ' + level.location_id, // Simplified until we fix relations
+       product_name: level.product?.name || `Product ${level.product_id}`,
+       product_sku: level.product?.sku || null,
+       product_category: level.product?.category || null,
+       product_unit: level.product?.unit || 'pcs',
+       location_name: level.location?.name || `Location ${level.location_id}`,
        stock_status: determineStockStatus(level.current_quantity, level.minimum_stock || 0),
      }));
 

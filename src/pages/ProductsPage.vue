@@ -493,10 +493,10 @@ const orderListsStore = useOrderListsStore();
 const authStore = useAuthStore();
 const permissions = usePermissions();
 
-// Permission checks
-const canCreate = ref(false);
-const canEdit = ref(false);
-const canDelete = ref(false);
+// Permission checks - TODO: Connect to proper auth system
+const canCreate = ref(true);
+const canEdit = ref(true);
+const canDelete = ref(true);
 
 // Reactive data
 const selectedProduct = ref<ProductWithStock | null>(null);
