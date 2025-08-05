@@ -642,7 +642,7 @@
     }
   }
 
-  // Dark mode adjustments
+  /* Dark mode adjustments */
   body.body--dark {
     .batch-details-content {
       .detail-item {

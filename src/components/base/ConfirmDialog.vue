@@ -5,6 +5,9 @@
     :title="title"
     :icon="icon"
     :size="size"
+    :variant="dialogVariant"
+    :header-variant="headerVariant"
+    :loading="loading"
     persistent
     @close="handleCancel"
   >
@@ -182,6 +185,18 @@
     return true;
   });
 
+  const dialogVariant = computed(() => {
+    if (props.type === 'danger') return 'elegant';
+    if (props.type === 'warning') return 'modern';
+    return 'elegant';
+  });
+
+  const headerVariant = computed(() => {
+    if (props.type === 'danger') return 'gradient';
+    if (props.type === 'warning') return 'solid';
+    return 'gradient';
+  });
+
   // Methods
   const handleConfirm = () => {
     if (canConfirm.value && !props.loading) {
@@ -210,78 +225,256 @@
 </script>
 
 <style lang="scss" scoped>
-  .confirm-dialog-content {
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-4);
+// ===================================================================
+// MODERN CONFIRM DIALOG STYLING
+// ===================================================================
 
-    .message {
-      font-size: var(--text-base);
-      line-height: var(--leading-relaxed);
-      color: var(--neutral-900);
-    }
+.confirm-dialog-content {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-6);
 
-    .details {
-      font-size: var(--text-sm);
-      line-height: var(--leading-relaxed);
-      color: var(--neutral-600);
-    }
+  .message {
+    font-size: 18px;
+    line-height: 1.6;
+    color: var(--neutral-800);
+    font-weight: var(--font-weight-medium);
+    letter-spacing: -0.01em;
+  }
 
-    .alert-section {
-      .alert-text {
-        font-weight: var(--font-weight-medium);
-        margin-bottom: var(--space-2);
+  .details {
+    font-size: var(--text-base);
+    line-height: 1.5;
+    color: var(--neutral-600);
+    background: var(--neutral-50);
+    padding: var(--space-4);
+    border-radius: 12px;
+    border-left: 4px solid var(--brand-primary);
+  }
+
+  .alert-section {
+    :deep(.q-banner) {
+      border-radius: 16px;
+      padding: var(--space-5);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      border: none;
+      
+      &.bg-warning {
+        background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
       }
+      
+      &.bg-negative {
+        background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%);
+      }
+      
+      &.bg-info {
+        background: linear-gradient(135deg, #3b82f6 0%, #1e40af 100%);
+      }
+    }
 
-      .consequences-list {
-        margin: 0;
-        padding-left: var(--space-4);
+    .alert-text {
+      font-weight: var(--font-weight-semibold);
+      font-size: var(--text-base);
+      margin-bottom: var(--space-3);
+      line-height: 1.5;
+    }
 
-        li {
-          margin-bottom: var(--space-1);
+    .consequences-list {
+      margin: 0;
+      padding-left: var(--space-5);
+      
+      li {
+        margin-bottom: var(--space-2);
+        font-size: var(--text-sm);
+        line-height: 1.4;
+        
+        &:last-child {
+          margin-bottom: 0;
         }
       }
     }
+  }
+
+  .verification-section {
+    background: var(--neutral-50);
+    padding: var(--space-5);
+    border-radius: 16px;
+    border: 2px solid var(--neutral-200);
+    
+    .verification-prompt {
+      font-size: var(--text-base);
+      color: var(--neutral-700);
+      margin-bottom: var(--space-4);
+      font-weight: var(--font-weight-medium);
+      line-height: 1.5;
+    }
+
+    :deep(.q-field) {
+      .q-field__control {
+        border-radius: 12px;
+        background: white;
+        border: 2px solid var(--neutral-200);
+        transition: all 0.2s ease;
+        
+        &:hover {
+          border-color: var(--brand-primary);
+        }
+      }
+      
+      &.q-field--error .q-field__control {
+        border-color: var(--brand-danger);
+        background: rgba(220, 38, 38, 0.05);
+      }
+      
+      &.q-field--focused .q-field__control {
+        border-color: var(--brand-primary);
+        box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+      }
+    }
+  }
+}
+
+.confirm-dialog-actions {
+  display: flex;
+  gap: var(--space-4);
+  justify-content: flex-end;
+  margin-top: var(--space-2);
+
+  :deep(.q-btn) {
+    min-width: 140px;
+    height: 48px;
+    border-radius: 14px;
+    font-weight: var(--font-weight-semibold);
+    font-size: var(--text-base);
+    letter-spacing: 0.01em;
+    text-transform: none;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+
+    &:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+    }
+
+    &:active {
+      transform: translateY(0);
+    }
+
+    // Cancel button styling
+    &[color="grey-7"] {
+      background: var(--neutral-100);
+      color: var(--neutral-700);
+      border: 2px solid var(--neutral-200);
+
+      &:hover {
+        background: var(--neutral-200);
+        border-color: var(--neutral-300);
+      }
+    }
+
+    // Primary button enhancements
+    &.q-btn--unelevated.q-btn--rectangle.bg-primary {
+      background: linear-gradient(135deg, var(--brand-primary) 0%, var(--brand-primary-light) 100%);
+      box-shadow: 0 4px 12px rgba(30, 58, 138, 0.3);
+    }
+
+    // Danger button enhancements
+    &.q-btn--unelevated.q-btn--rectangle.bg-negative {
+      background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%);
+      box-shadow: 0 4px 12px rgba(220, 38, 38, 0.3);
+    }
+
+    // Warning button enhancements
+    &.q-btn--unelevated.q-btn--rectangle.bg-warning {
+      background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+      box-shadow: 0 4px 12px rgba(245, 158, 11, 0.3);
+    }
+  }
+
+  @media (max-width: 640px) {
+    flex-direction: column-reverse;
+    gap: var(--space-3);
+
+    :deep(.q-btn) {
+      width: 100%;
+      min-width: auto;
+    }
+  }
+}
+
+// ===================================================================
+// DARK MODE ADAPTATIONS
+// ===================================================================
+
+body.body--dark {
+  .confirm-dialog-content {
+    .message {
+      color: var(--neutral-100);
+    }
+
+    .details {
+      color: var(--neutral-300);
+      background: var(--neutral-800);
+      border-left-color: var(--brand-primary-light);
+    }
 
     .verification-section {
+      background: var(--neutral-800);
+      border-color: var(--neutral-700);
+      
       .verification-prompt {
-        font-size: var(--text-sm);
-        color: var(--neutral-700);
-        margin-bottom: var(--space-2);
+        color: var(--neutral-200);
+      }
+
+      :deep(.q-field) {
+        .q-field__control {
+          background: var(--neutral-900);
+          border-color: var(--neutral-600);
+          color: var(--neutral-100);
+          
+          &:hover {
+            border-color: var(--brand-primary-light);
+          }
+        }
+        
+        &.q-field--focused .q-field__control {
+          border-color: var(--brand-primary-light);
+          box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
+        }
       }
     }
   }
 
   .confirm-dialog-actions {
-    display: flex;
-    gap: var(--space-3);
-    justify-content: flex-end;
+    :deep(.q-btn) {
+      // Cancel button dark mode
+      &[color="grey-7"] {
+        background: var(--neutral-700);
+        color: var(--neutral-200);
+        border-color: var(--neutral-600);
 
-    @media (max-width: 640px) {
-      flex-direction: column-reverse;
-
-      .q-btn {
-        width: 100%;
-      }
-    }
-  }
-
-  // Dark mode adjustments
-  body.body--dark {
-    .confirm-dialog-content {
-      .message {
-        color: var(--neutral-100);
-      }
-
-      .details {
-        color: var(--neutral-400);
-      }
-
-      .verification-section {
-        .verification-prompt {
-          color: var(--neutral-300);
+        &:hover {
+          background: var(--neutral-600);
+          border-color: var(--neutral-500);
         }
       }
     }
   }
+}
+
+// ===================================================================
+// ACCESSIBILITY ENHANCEMENTS
+// ===================================================================
+
+.confirm-dialog-content {
+  .verification-section {
+    :deep(.q-field) {
+      .q-field__control {
+        &:focus-within {
+          outline: 2px solid var(--brand-primary);
+          outline-offset: 2px;
+        }
+      }
+    }
+  }
+}
 </style> 

@@ -154,7 +154,7 @@ const refreshInterval = ref<NodeJS.Timer | null>(null);
 
 // Computed properties
 const sortedWidgets = computed(() => {
-  return dashboardData.value?.widgets.sort((a, b) => a.position - b.position) || [];
+  return dashboardData.value?.widgets.slice().sort((a, b) => a.position - b.position) || [];
 });
 
 const systemHealthColor = computed(() => {
