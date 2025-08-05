@@ -2,7 +2,7 @@
   <q-dialog
     :model-value="modelValue"
     @update:model-value="$emit('update:modelValue', $event)"
-    :persistent="persistent"
+    :persistent="persistent && !backdropDismiss"
     :maximized="maximized"
     :position="position"
     :full-width="fullWidth"
@@ -13,8 +13,7 @@
     :aria-labelledby="titleId"
     aria-modal="true"
   >
-    <div class="dialog-backdrop" @click="handleBackdropClick">
-      <q-card :class="cardClasses" @click.stop>
+    <q-card :class="cardClasses">
         <!-- Loading Overlay -->
         <div v-if="loading" class="dialog-loading-overlay">
           <q-spinner-dots size="48px" color="primary" />
@@ -64,8 +63,7 @@
         >
           <slot name="actions" />
         </q-card-section>
-      </q-card>
-    </div>
+    </q-card>
   </q-dialog>
 </template>
 
@@ -177,11 +175,7 @@
     }
   };
 
-  const handleBackdropClick = () => {
-    if (props.backdropDismiss && !props.persistent && !props.loading) {
-      close();
-    }
-  };
+  // Note: Backdrop dismiss is now handled by Quasar's native functionality
 </script>
 
 <style lang="scss" scoped>
@@ -189,21 +183,7 @@
 // MODERN DIALOG SYSTEM - TOP-NOTCH DESIGN
 // ===================================================================
 
-.dialog-backdrop {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0, 0, 0, 0.4);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: var(--space-4);
-  z-index: 9999;
-}
+// Remove the custom backdrop - let Quasar handle positioning
 
 .base-dialog-card {
   position: relative;
