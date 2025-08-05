@@ -1,29 +1,14 @@
 <template>
-  <q-dialog
+  <BaseDialog
     v-model="isOpen"
+    :title="$t('productsPage.details.title')"
+    icon="info"
+    size="fullscreen"
+    variant="elegant"
+    header-variant="solid"
     position="right"
-    maximized
-    class="product-details-dialog"
   >
-    <q-card class="column no-wrap full-height">
-      <!-- Header -->
-      <q-card-section class="row items-center bg-primary text-white q-pa-md">
-        <q-icon name="info" size="1.5rem" class="q-mr-sm" />
-        <div class="text-h6">{{ $t('productsPage.details.title') }}</div>
-        <q-space />
-        <q-btn
-          icon="close"
-          flat
-          round
-          dense
-          v-close-popup
-          :title="$t('common.close')"
-        />
-      </q-card-section>
-
-      <!-- Content -->
-      <q-card-section class="col scroll">
-        <div v-if="product" class="q-gutter-lg">
+    <div v-if="product" class="product-details-content">
           <!-- Product Image - Optimized -->
           <div class="text-center">
             <OptimizedImage
@@ -366,37 +351,34 @@
               </div>
             </q-card-section>
           </BaseCard>
-        </div>
-      </q-card-section>
+    </div>
 
-      <!-- Actions -->
-      <q-card-actions class="bg-grey-1 q-pa-md">
-        <q-btn
-          :label="$t('productsPage.addToCart')"
-          icon="add_shopping_cart"
-          color="primary"
-          class="q-mr-sm"
-          :disable="product?.stock_status === 'out_of_stock'"
-          @click="$emit('addToCart', product)"
-        />
-        <q-btn
-          :label="$t('productsPage.addToOrderList')"
-          icon="playlist_add"
-          color="secondary"
-          outline
-          @click="$emit('addToOrderList', product)"
-        />
-        <q-space />
-        <q-btn :label="$t('common.close')" color="grey-7" flat v-close-popup />
-      </q-card-actions>
-    </q-card>
-  </q-dialog>
+    <template #actions>
+      <q-btn
+        :label="$t('productsPage.addToCart')"
+        icon="add_shopping_cart"
+        color="primary"
+        :disable="product?.stock_status === 'out_of_stock'"
+        @click="$emit('addToCart', product)"
+        unelevated
+      />
+      <q-btn
+        :label="$t('productsPage.addToOrderList')"
+        icon="playlist_add"
+        color="secondary"
+        outline
+        @click="$emit('addToOrderList', product)"
+      />
+      <q-btn :label="$t('common.close')" color="grey-7" flat @click="isOpen = false" />
+    </template>
+  </BaseDialog>
 </template>
 
 <script setup lang="ts">
   import { computed } from 'vue';
   import { useI18n } from 'vue-i18n';
   import { BaseCard } from 'src/components/cards';
+  import BaseDialog from 'src/components/base/BaseDialog.vue';
   import { useFormatting } from 'src/composables/useFormatting';
   import OptimizedImage from 'src/components/base/OptimizedImage.vue';
   import type { ProductWithStock } from 'src/types/inventory';
@@ -560,9 +542,129 @@
 </script>
 
 <style lang="scss" scoped>
-  .product-details-dialog {
-    .q-dialog__inner {
-      padding: 0;
+// ===================================================================
+// MODERN PRODUCT DETAILS DIALOG STYLING
+// ===================================================================
+
+.product-details-content {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-6);
+  padding: var(--space-6);
+  height: 100%;
+  overflow-y: auto;
+
+  // Product Image Section
+  .text-center {
+    margin-bottom: var(--space-6);
+    
+    .product-image {
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-lg);
+      transition: transform 0.3s ease;
+      
+      &:hover {
+        transform: scale(1.02);
+      }
     }
   }
+
+  // Enhanced BaseCard styling
+  :deep(.base-card) {
+    border-radius: var(--radius-xl);
+    box-shadow: var(--shadow-md);
+    transition: box-shadow 0.3s ease;
+    
+    &:hover {
+      box-shadow: var(--shadow-lg);
+    }
+    
+    .q-card-section {
+      padding: var(--space-6);
+    }
+  }
+
+  // Section Headers
+  .text-h6 {
+    font-size: var(--text-xl);
+    font-weight: var(--font-weight-semibold);
+    color: var(--text-primary);
+    display: flex;
+    align-items: center;
+    margin-bottom: var(--space-4);
+    
+    .q-icon {
+      color: var(--brand-primary);
+      margin-right: var(--space-2);
+    }
+  }
+
+  // List Items Enhancement
+  :deep(.q-list) {
+    .q-item {
+      padding: var(--space-3) 0;
+      border-bottom: 1px solid var(--border-primary);
+      
+      &:last-child {
+        border-bottom: none;
+      }
+    }
+    
+    .q-item-label {
+      &.text-caption {
+        font-size: var(--text-sm);
+        font-weight: var(--font-weight-medium);
+        color: var(--text-secondary);
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+      }
+      
+      &.text-weight-medium {
+        font-size: var(--text-base);
+        font-weight: var(--font-weight-semibold);
+        color: var(--text-primary);
+      }
+    }
+  }
+
+  // Price Highlighting
+  .text-h6.text-primary {
+    color: var(--brand-primary) !important;
+    font-weight: var(--font-weight-bold);
+  }
+
+  // Chip Enhancements
+  :deep(.q-chip) {
+    border-radius: var(--radius-md);
+    font-weight: var(--font-weight-medium);
+  }
+
+  // Responsive Design
+  @media (max-width: 768px) {
+    padding: var(--space-4);
+    gap: var(--space-4);
+    
+    .text-center {
+      margin-bottom: var(--space-4);
+    }
+    
+    :deep(.base-card .q-card-section) {
+      padding: var(--space-4);
+    }
+  }
+}
+
+// Dark Mode Support
+body.body--dark {
+  .product-details-content {
+    :deep(.base-card) {
+      background: var(--bg-secondary);
+      border-color: var(--border-primary);
+    }
+    
+    .product-image {
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+    }
+  }
+}
 </style>
