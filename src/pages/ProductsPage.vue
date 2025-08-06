@@ -62,82 +62,17 @@
         />
       </div>
 
-      <!-- Products Table - Virtualized for Performance -->
+      <!-- Smart Products Table -->
       <div class="products-table-container">
-        <!-- Use virtualized table for large datasets (>100 items) -->
-        <VirtualizedTable
-          v-if="filteredProducts.length > 100"
-          :rows="filteredProducts"
+        <SmartTable
+          :data="products"
           :columns="tableColumns"
-          :loading="loading"
+          :config="smartTableConfig"
+          :show-strategy-indicator="isDevelopment"
+          :show-performance-info="isDevelopment"
           row-key="id"
-          :container-height="600"
-          :item-height="65"
-          @sort="handleTableSort"
-          class="products-virtualized-table"
-        >
-          <!-- Product Name Cell for Virtualized Table -->
-          <template #body-cell-name="slotProps">
-            <div class="product-info">
-              <div class="product-name">{{ slotProps.props.row.name }}</div>
-              <div v-if="slotProps.props.row.brand" class="product-brand">
-                {{ slotProps.props.row.brand }}
-              </div>
-            </div>
-          </template>
-
-          <!-- Stock Status Cell for Virtualized Table -->
-          <template #body-cell-stock_status="slotProps">
-            <q-chip
-              :color="getStockStatusColor(slotProps.props.row.stock_status)"
-              :text-color="getStockStatusTextColor(slotProps.props.row.stock_status)"
-              size="sm"
-              class="stock-status-chip"
-            >
-              {{ getStockStatusLabel(slotProps.props.row.stock_status) }}
-            </q-chip>
-          </template>
-
-          <!-- Actions Cell for Virtualized Table -->
-          <template #body-cell-actions="slotProps">
-            <div class="table-actions">
-              <q-btn
-                flat
-                round
-                dense
-                icon="visibility"
-                @click="showProductDetails(slotProps.props.row)"
-                class="action-btn"
-              />
-              <q-btn
-                flat
-                round
-                dense
-                icon="add_shopping_cart"
-                @click="handleAddToCart(slotProps.props.row)"
-                class="action-btn"
-                :color="cart[slotProps.props.row.id] ? 'green' : 'primary'"
-              />
-            </div>
-          </template>
-        </VirtualizedTable>
-
-        <!-- Regular q-table for smaller datasets -->
-        <q-table
-          v-else
-          :rows="filteredProducts"
-          :columns="tableColumns"
-          :loading="loading"
-          :pagination="pagination"
           :rows-per-page-options="[25, 50, 100]"
-          row-key="id"
-          flat
-          bordered
-          class="products-table"
-          @update:pagination="
-            value =>
-              (pagination = { ...value, rowsNumber: value.rowsNumber ?? 0 })
-          "
+          @strategy-changed="onStrategyChanged"
         >
           <!-- Loading -->
           <template #loading>
@@ -152,17 +87,7 @@
             </div>
           </template>
 
-          <!-- Product Name Cell -->
-          <template #body-cell-name="props">
-            <q-td :props="props" class="product-name-cell">
-              <div class="product-info">
-                <div class="product-name">{{ props.row.name }}</div>
-                <div v-if="props.row.brand" class="product-brand">
-                  {{ props.row.brand }}
-                </div>
-              </div>
-            </q-td>
-          </template>
+
 
           <!-- SKU Cell -->
           <template #body-cell-sku="props">
@@ -188,26 +113,14 @@
           <!-- GS1 Status Cell -->
           <template #body-cell-gs1_status="props">
             <q-td :props="props">
-              <div class="gs1-status-cell">
-                <div v-if="props.row.gtin || props.row.gpc_brick_code || props.row.country_of_origin" class="gs1-data">
-                  <div v-if="props.row.gtin" class="gs1-item">
-                    <q-icon name="qr_code_2" size="xs" color="primary" />
-                    <span class="gs1-value">{{ props.row.gtin }}</span>
-                  </div>
-                  <div v-if="props.row.country_of_origin" class="gs1-item">
-                    <q-icon name="flag" size="xs" color="info" />
-                    <span class="gs1-value">{{ props.row.country_of_origin }}</span>
-                  </div>
-                  <div v-if="props.row.gpc_brick_code" class="gs1-item">
-                    <q-icon name="category" size="xs" color="orange" />
-                    <span class="gs1-value">{{ props.row.gpc_brick_code }}</span>
-                  </div>
-                </div>
-                <div v-else class="no-gs1-data">
-                  <q-icon name="close" size="xs" color="grey-5" />
-                  <span class="text-grey-5">{{ $t('productsPage.noGs1Data') }}</span>
-                </div>
-              </div>
+              <q-chip
+                :color="props.row.gs1_status === 'complete' ? 'positive' : 'orange'"
+                text-color="white"
+                size="sm"
+                dense
+              >
+                {{ $t(`productsPage.gs1Status.${props.row.gs1_status}`) }}
+              </q-chip>
             </q-td>
           </template>
 
@@ -215,7 +128,10 @@
           <template #body-cell-price="props">
             <q-td :props="props" class="price-info">
               <div class="price-value">
-                {{ props.row.lowest_price ? `€${props.row.lowest_price.toFixed(2)}` : '-' }}
+                <span v-if="props.row.price" class="price-amount">
+                  € {{ props.row.price.toFixed(2) }}
+                </span>
+                <span v-else class="no-price">-</span>
               </div>
             </q-td>
           </template>
@@ -299,90 +215,22 @@
             </q-td>
           </template>
 
-          <!-- Row Expansion -->
-          <template #body="props">
-            <q-tr :props="props">
-              <q-td
-                v-for="col in props.cols"
-                :key="col.name"
-                :props="props"
-                @click="col.name === 'name' ? toggleRowExpansion(props.row.id) : null"
-                :class="{ 'cursor-pointer': col.name === 'name' }"
-              >
-                <slot :name="`body-cell-${col.name}`" :props="{ ...props, col }">
-                  {{ col.value }}
-                </slot>
-              </q-td>
-            </q-tr>
-
-            <!-- Expanded Row Content -->
-            <q-tr v-show="expandedRows.includes(props.row.id)" :props="props">
-              <q-td colspan="100%" class="expanded-content">
-                <div class="expanded-grid">
-                  <!-- Product Details -->
-                  <div class="detail-section">
-                    <div class="section-title">{{ $t('productsPage.productDetails') }}</div>
-                    <div class="detail-items">
-                      <div v-if="props.row.description" class="detail-item">
-                        <span class="detail-label">{{ $t('productsPage.description') }}:</span>
-                        <span class="detail-value">{{ props.row.description }}</span>
-                      </div>
-                      <div v-if="props.row.unit" class="detail-item">
-                        <span class="detail-label">{{ $t('productsPage.unit') }}:</span>
-                        <span class="detail-value">{{ props.row.unit }}</span>
-                      </div>
-                      <div v-if="props.row.category" class="detail-item">
-                        <span class="detail-label">{{ $t('productsPage.category') }}:</span>
-                        <span class="detail-value">{{ props.row.category }}</span>
-                      </div>
-                    </div>
-                  </div>
-
-                  <!-- GS1 Information -->
-                  <div v-if="props.row.gtin || props.row.gpc_brick_code" class="detail-section">
-                    <div class="section-title">{{ $t('productsPage.gs1Information') }}</div>
-                    <div class="detail-items">
-                      <div v-if="props.row.gtin" class="detail-item">
-                        <span class="detail-label">GTIN:</span>
-                        <span class="detail-value">{{ props.row.gtin }}</span>
-                      </div>
-                      <div v-if="props.row.gpc_brick_code" class="detail-item">
-                        <span class="detail-label">GPC:</span>
-                        <span class="detail-value">{{ props.row.gpc_brick_code }}</span>
-                      </div>
-                      <div v-if="props.row.product_lifecycle_status" class="detail-item">
-                        <span class="detail-label">{{ $t('productsPage.lifecycle') }}:</span>
-                        <span class="detail-value">{{ props.row.product_lifecycle_status }}</span>
-                      </div>
-                    </div>
-                  </div>
-
-                  <!-- Suppliers -->
-                  <div v-if="props.row.suppliers?.length" class="detail-section">
-                    <div class="section-title">{{ $t('productsPage.suppliers') }}</div>
-                    <div class="supplier-list">
-                      <div v-for="supplier in props.row.suppliers" :key="supplier.id" class="supplier-item">
-                        <span class="supplier-name">{{ supplier.name }}</span>
-                        <span v-if="supplier.price" class="supplier-price">€{{ supplier.price.toFixed(2) }}</span>
-                      </div>
-                    </div>
-                  </div>
-
-                  <!-- Stock Levels -->
-                  <div v-if="props.row.stock_levels?.length" class="detail-section">
-                    <div class="section-title">{{ $t('productsPage.stockLevels') }}</div>
-                    <div class="stock-list">
-                      <div v-for="stock in props.row.stock_levels" :key="stock.location_id" class="stock-item">
-                        <span class="location-name">{{ stock.location_name || 'Unknown Location' }}</span>
-                        <span class="stock-amount">{{ stock.current_quantity || 0 }} {{ props.row.unit || 'pcs' }}</span>
-                      </div>
-                    </div>
-                  </div>
+          <!-- Row with click handler for expansion -->
+          <template #body-cell-name="props">
+            <q-td 
+              :props="props" 
+              class="product-name-cell cursor-pointer"
+              @click="toggleRowExpansion(props.row.id)"
+            >
+              <div class="product-info">
+                <div class="product-name">{{ props.row.name }}</div>
+                <div v-if="props.row.brand" class="product-brand">
+                  {{ props.row.brand }}
                 </div>
-              </q-td>
-            </q-tr>
+              </div>
+            </q-td>
           </template>
-        </q-table>
+        </SmartTable>
       </div>
     </div>
 
@@ -469,6 +317,7 @@ import PageLayout from 'src/components/PageLayout.vue';
 import PageTitle from 'src/components/PageTitle.vue';
 import FilterPanel from 'src/components/filters/FilterPanel.vue';
 import ConfirmDialog from 'src/components/base/ConfirmDialog.vue';
+import SmartTable from 'src/components/tables/SmartTable.vue';
 // ✅ PERFORMANCE OPTIMIZATION: Dynamic imports for heavy dialogs
 
 const ProductDetailsDialog = defineAsyncComponent(() => import('src/components/products/ProductDetailsDialog.vue'));
@@ -477,7 +326,7 @@ const OrderListDialog = defineAsyncComponent(() => import('src/components/produc
 const BarcodeScanner = defineAsyncComponent(() => import('src/components/BarcodeScanner.vue'));
 const AdvancedSearchDialog = defineAsyncComponent(() => import('src/components/products/AdvancedSearchDialog.vue'));
 const ProductFormDialog = defineAsyncComponent(() => import('src/components/products/ProductFormDialog.vue'));
-import VirtualizedTable from 'src/components/tables/VirtualizedTable.vue';
+
 import { productsFilterPreset } from '@/presets/filters/products';
 import { usePermissions } from 'src/services/permissions';
 import type {
@@ -516,18 +365,9 @@ const searchResultsCount = ref<number | null>(null);
 // New filter state for FilterPanel
 const filterValues = ref<FilterValues>({});
 
-const pagination = ref({
-  sortBy: null as string | null,
-  descending: false,
-  page: 1,
-  rowsPerPage: 25,
-  rowsNumber: 0,
-});
-
 // Store getters - using storeToRefs for reactivity
 const {
   products,
-  filteredProducts,
   loading,
   cart,
   cartItemsCount,
@@ -542,7 +382,44 @@ const {
   productStats,
 } = storeToRefs(productsStore);
 
-// Table columns configuration
+// Development mode indicator
+const isDevelopment = computed(() => process.env.NODE_ENV === 'development');
+
+// Smart table configuration for large datasets
+const smartTableConfig = computed(() => ({
+  clientSideThreshold: 1000,      // Switch to server-side at 1000 products
+  virtualizationThreshold: 5000,  // Switch to virtualization at 5000 products
+  debounceMs: 300,
+  itemHeight: 60,
+  serverSideLoader: async (pagination: any, filters: any) => {
+    // Server-side loading for large datasets
+    const practiceId = authStore.clinicId;
+    if (!practiceId) return { data: [], totalCount: 0 };
+    
+    const result = await productsStore.fetchProductsPaginated({
+      ...pagination,
+      filters,
+      practiceId
+    });
+    
+    return {
+      data: result.products,
+      totalCount: result.total
+    };
+  }
+}));
+
+// Handle strategy changes
+const onStrategyChanged = (strategy: string) => {
+  console.log(`Products table strategy changed to: ${strategy}`);
+  $q.notify({
+    type: 'info',
+    message: `Table optimized for ${strategy} mode`,
+    timeout: 2000
+  });
+};
+
+// Table columns configuration with enhanced sorting support
 const tableColumns = computed(() => [
   {
     name: 'name',
@@ -551,6 +428,8 @@ const tableColumns = computed(() => [
     align: 'left' as const,
     sortable: true,
     style: 'width: 250px',
+    classes: 'col-name',
+    headerClasses: 'col-name',
   },
   {
     name: 'sku',
@@ -567,6 +446,8 @@ const tableColumns = computed(() => [
     align: 'center' as const,
     sortable: true,
     style: 'width: 150px',
+    classes: 'col-status',
+    headerClasses: 'col-status',
   },
   {
     name: 'gs1_status',
@@ -575,6 +456,8 @@ const tableColumns = computed(() => [
     align: 'center' as const,
     sortable: false,
     style: 'width: 140px',
+    classes: 'col-status',
+    headerClasses: 'col-status',
   },
   {
     name: 'price',
@@ -583,6 +466,8 @@ const tableColumns = computed(() => [
     align: 'right' as const,
     sortable: true,
     style: 'width: 120px',
+    classes: 'col-numeric',
+    headerClasses: 'col-numeric',
   },
   {
     name: 'batch_status',
@@ -591,6 +476,8 @@ const tableColumns = computed(() => [
     align: 'center' as const,
     sortable: false,
     style: 'width: 140px',
+    classes: 'col-status',
+    headerClasses: 'col-status',
   },
   {
     name: 'actions',
@@ -599,6 +486,8 @@ const tableColumns = computed(() => [
     align: 'center' as const,
     sortable: false,
     style: 'width: 180px',
+    classes: 'col-actions',
+    headerClasses: 'col-actions',
   },
 ]);
 
@@ -710,13 +599,13 @@ const getStockStatusTextColor = (status: string): string => {
 const getStockStatusLabel = (status: string): string => {
   switch (status) {
     case 'in_stock':
-      return t('productsPage.stockStatus.inStock');
+      return t('productsPage.stockStatus.in_stock');
     case 'low_stock':
-      return t('productsPage.stockStatus.lowStock');
+      return t('productsPage.stockStatus.low_stock');
     case 'out_of_stock':
-      return t('productsPage.stockStatus.outOfStock');
+      return t('productsPage.stockStatus.out_of_stock');
     default:
-      return t('productsPage.stockStatus.unknown');
+      return t('productsPage.stockStatus.unavailable');
   }
 };
 
@@ -907,26 +796,14 @@ const onProductSaved = async (product: any) => {
   await refreshData();
 };
 
-// Table sort handler for virtualized table
-const handleTableSort = (column: string, direction: 'asc' | 'desc') => {
-  // Update pagination to trigger sorting in the store
-  const newPagination = {
-    ...pagination.value,
-    sortBy: column,
-    descending: direction === 'desc'
-  };
-  
-  // Apply sorting via store (this will trigger reactive updates)
-  const validSortColumns = ['name', 'category', 'price', 'stock'] as const;
-  const sortColumn = validSortColumns.includes(column as any) ? column as typeof validSortColumns[number] : 'name';
-  
-  productsStore.updateFilters({
-    sort_by: sortColumn,
-    sort_order: direction as 'asc' | 'desc'
-  });
-  
-  pagination.value = newPagination;
+// Table request handler for sorting and pagination
+const onTableRequest = (props: any) => {
+  // Use the composable's handler and then update rowsNumber
+  tableRequestHandler(props);
+  pagination.value.rowsNumber = filteredProducts.value.length;
 };
+
+
 
 // Lifecycle
 onMounted(async () => {
@@ -979,158 +856,42 @@ onMounted(async () => {
   }
 
   .products-table-container {
-    .products-table {
-      .product-name-cell {
-        .product-info {
-          .product-name {
-            font-weight: 500;
-            color: rgba(0, 0, 0, 0.87);
-          }
-
-          .product-brand {
-            font-size: 0.8rem;
-            color: rgba(0, 0, 0, 0.6);
-            margin-top: 0.25rem;
-          }
-        }
+    // Minimal product-specific styling - main table styling handled by global medical-table class
+    .product-info {
+      .product-name {
+        font-weight: var(--font-weight-medium);
+        color: var(--text-primary);
       }
 
-      .sku-code {
-        font-family: monospace;
-        background: rgba(0, 0, 0, 0.05);
-        padding: 0.25rem 0.5rem;
-        border-radius: 4px;
-        font-size: 0.8rem;
+      .product-brand {
+        font-size: var(--text-sm);
+        color: var(--text-secondary);
+        margin-top: var(--space-1);
       }
+    }
 
-      .gs1-status-cell {
-        min-width: 120px;
+    .sku-code {
+      font-family: var(--font-family-mono);
+      background: var(--neutral-100);
+      padding: var(--space-1) var(--space-2);
+      border-radius: var(--radius-sm);
+      font-size: var(--text-sm);
+      color: var(--text-secondary);
+    }
 
-        .gs1-data {
-          display: flex;
-          flex-direction: column;
-          gap: 0.25rem;
+    .price-value {
+      font-weight: var(--font-weight-semibold);
+      color: var(--brand-primary);
+    }
 
-          .gs1-item {
-            display: flex;
-            align-items: center;
-            gap: 0.25rem;
-
-            .gs1-value {
-              font-size: 0.8rem;
-              font-family: monospace;
-            }
-
-            &:first-child .gs1-value {
-              font-weight: 600;
-              color: var(--q-primary);
-            }
-          }
-
-          .gs1-item:not(:first-child) {
-            .gs1-value {
-              font-size: 0.75rem;
-              color: rgba(0, 0, 0, 0.7);
-            }
-
-            .q-icon {
-              font-size: 1em;
-              line-height: 1;
-            }
-          }
-        }
-
-        .no-gs1-data {
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          height: 100%;
-          text-align: center;
-        }
-      }
-
-      .price-info {
-        align-items: flex-end;
-
-        .price-value {
-          font-weight: 600;
-          color: var(--q-primary);
-        }
-      }
-
-      .action-buttons {
-        display: flex;
-        gap: 0.25rem;
-        justify-content: center;
-      }
-
-      .expanded-content {
-        padding: 1rem;
-        background: rgba(0, 0, 0, 0.02);
-        border-top: 1px solid rgba(0, 0, 0, 0.08);
-
-        .expanded-grid {
-          display: grid;
-          grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-          gap: 1.5rem;
-
-          .detail-section {
-            .section-title {
-              font-size: 0.875rem;
-              font-weight: 600;
-              margin: 0 0 0.75rem 0;
-              color: rgba(0, 0, 0, 0.8);
-            }
-
-            .detail-items {
-              .detail-item {
-                display: flex;
-                margin-bottom: 0.5rem;
-
-                .detail-label {
-                  font-weight: 500;
-                  margin-right: 0.5rem;
-                  min-width: 80px;
-                  font-size: 0.8rem;
-                  color: rgba(0, 0, 0, 0.7);
-                }
-
-                .detail-value {
-                  font-size: 0.8rem;
-                  color: rgba(0, 0, 0, 0.8);
-                }
-              }
-            }
-
-            .supplier-list,
-            .stock-list {
-              .supplier-item,
-              .stock-item {
-                display: flex;
-                justify-content: space-between;
-                align-items: center;
-                padding: 0.5rem;
-                background: white;
-                border-radius: 4px;
-                margin-bottom: 0.5rem;
-                border: 1px solid rgba(0, 0, 0, 0.08);
-
-                .supplier-name,
-                .location-name {
-                  font-size: 0.8rem;
-                  font-weight: 500;
-                }
-
-                .supplier-price,
-                .stock-amount {
-                  font-size: 0.8rem;
-                  color: var(--q-primary);
-                  font-weight: 600;
-                }
-              }
-            }
-          }
-        }
+    .action-buttons {
+      display: flex;
+      gap: var(--space-1);
+      justify-content: center;
+      
+      .q-btn {
+        min-width: 32px;
+        min-height: 32px;
       }
     }
   }

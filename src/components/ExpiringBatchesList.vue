@@ -1,11 +1,15 @@
 <template>
   <div class="expiring-batches-list">
-    <q-table
-      :rows="batches"
-      :columns="columns"
-      row-key="batchId"
-      :no-data-label="$t('batch.noExpiringBatches')"
-    >
+    <div class="medical-table">
+      <q-table
+        :rows="batches"
+        :columns="columns"
+        row-key="batchId"
+        :no-data-label="$t('batch.noExpiringBatches')"
+        flat
+        bordered
+        separator="cell"
+      >
       <template v-slot:body-cell-urgency="props">
         <q-td :props="props">
           <q-chip
@@ -32,7 +36,8 @@
           </q-btn>
         </q-td>
       </template>
-    </q-table>
+      </q-table>
+    </div>
   </div>
 </template>
 

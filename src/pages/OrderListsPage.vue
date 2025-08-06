@@ -144,18 +144,15 @@
         :key="orderList.id"
         class="col-12 col-sm-6 col-md-4 order-list-col"
       >
-        <AdvancedOrderListCard
+        <SimpleOrderListCard
           :order-list="orderList"
           :reorder-advice="getOrderAdviceForList(orderList.id)"
-          @order-created="handleOrderCreated"
-          @list-updated="handleListUpdated"
-          @analytics-requested="handleAnalyticsRequest"
         />
               </div>
             </div>
 
     <!-- Table View -->
-    <div v-else class="q-mb-lg">
+    <div v-else class="q-mb-lg medical-table">
       <q-table
         :rows="filteredOrderLists"
         :columns="tableColumns"
@@ -380,7 +377,7 @@ import PageLayout from '@/components/PageLayout.vue';
 import PageTitle from '@/components/PageTitle.vue';
 import { BaseCard } from '@/components/cards';
 import FilterPanel from '@/components/filters/FilterPanel.vue';
-import AdvancedOrderListCard from '@/components/orderLists/AdvancedOrderListCard.vue';
+import SimpleOrderListCard from '@/components/orderLists/SimpleOrderListCard.vue';
 import MobileStockCountingInterface from '@/components/inventory/MobileStockCountingInterface.vue';
 import OrderListDialog from '@/components/products/OrderListDialog.vue';
 import type { OrderListWithItems } from '@/types/stores';

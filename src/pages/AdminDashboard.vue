@@ -196,7 +196,8 @@
           {{ $t('admin.userManagement.title') }}
         </div>
 
-        <q-table
+        <div class="medical-table">
+          <q-table
           :rows="users"
           :columns="userColumns"
           :loading="loadingUsers"
@@ -257,6 +258,7 @@
             </q-td>
           </template>
         </q-table>
+        </div>
 
         <!-- Demo Reset Card (only for demo user) -->
         <div
@@ -271,7 +273,8 @@
       <q-tab-panel name="locations">
         <div class="text-h6 q-mb-md">{{ $t('locations.title') }}</div>
 
-        <q-table
+        <div class="medical-table">
+          <q-table
           :rows="locations"
           :columns="locationColumns"
           :loading="loadingLocations"
@@ -330,6 +333,7 @@
             </q-td>
           </template>
         </q-table>
+        </div>
       </q-tab-panel>
 
       <!-- Permissions Tab -->
@@ -349,7 +353,8 @@
           </div>
         </BaseCard>
 
-        <q-table
+        <div class="medical-table">
+          <q-table
           :rows="permissions"
           :columns="permissionColumns"
           :loading="loadingPermissions"
@@ -399,6 +404,7 @@
             </q-td>
           </template>
         </q-table>
+        </div>
       </q-tab-panel>
 
       <!-- Analytics Tab -->

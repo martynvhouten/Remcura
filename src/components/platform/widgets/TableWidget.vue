@@ -67,16 +67,8 @@ const pagination = ref({
 .table-widget {
   height: 100%;
   
-  .platform-table {
-    border-radius: 8px;
-    
-    :deep(.q-table__top) {
-      padding: 12px 16px;
+      .platform-table {
+      /* Table styling now handled by global medical-table class */
     }
-    
-    :deep(.q-table__bottom) {
-      padding: 8px 16px;
-    }
-  }
 }
 </style>

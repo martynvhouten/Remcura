@@ -33,7 +33,8 @@
           </template>
           
           <div class="q-pa-md">
-            <q-table
+            <div class="medical-table">
+              <q-table
               :rows="practices"
               :columns="columns"
               row-key="id"
@@ -74,6 +75,7 @@
                 </q-td>
               </template>
             </q-table>
+            </div>
           </div>
         </BaseCard>
       </div>

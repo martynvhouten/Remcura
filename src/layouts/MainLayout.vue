@@ -13,7 +13,7 @@
           dense
           round
           icon="menu"
-          :aria-label="$t('nav.openNavigation') || 'Open navigation menu'"
+          :aria-label="t('nav.openNavigation') || 'Open navigation menu'"
           @click="toggleLeftDrawer"
         />
 
@@ -27,7 +27,7 @@
             <q-icon name="local_hospital" size="18px" />
           </q-avatar>
           <div class="brand-text">
-            <div class="brand-title">{{ $t('brand.name') }}</div>
+            <div class="brand-title">{{ t('brand.name') }}</div>
           </div>
         </div>
 
@@ -41,10 +41,16 @@
             round
             icon="notifications"
             @click="goToNotifications"
-            :aria-label="$t('nav.notifications')"
+            :aria-label="t('nav.notifications')"
           >
-            <q-badge color="red" floating>3</q-badge>
-            <q-tooltip>{{ $t('nav.notifications') }}</q-tooltip>
+            <q-badge 
+              v-if="notificationStore.hasUnreadNotifications"
+              color="red" 
+              floating
+            >
+              {{ notificationStore.unreadCount }}
+            </q-badge>
+            <q-tooltip>{{ t('nav.notifications') }}</q-tooltip>
           </q-btn>
 
           <!-- Theme Toggle -->
@@ -54,16 +60,16 @@
             :icon="$q.dark.isActive ? 'light_mode' : 'dark_mode'"
             @click="toggleDarkMode"
             :aria-label="
-              $q.dark.isActive ? $t('nav.lightMode') : $t('nav.darkMode')
+              $q.dark.isActive ? t('nav.lightMode') : t('nav.darkMode')
             "
           >
             <q-tooltip>{{
-              $q.dark.isActive ? $t('nav.lightMode') : $t('nav.darkMode')
+              $q.dark.isActive ? t('nav.lightMode') : t('nav.darkMode')
             }}</q-tooltip>
           </q-btn>
 
           <!-- User Menu -->
-          <q-btn flat round icon="person" :aria-label="$t('nav.userMenu')">
+          <q-btn flat round icon="person" :aria-label="t('nav.userMenu')">
             <!-- Demo indicator badge -->
             <q-badge
               v-if="isDemoUser"
@@ -98,7 +104,7 @@
                         class="q-mr-xs"
                         color="amber"
                       />
-                      {{ $t('demo.title') }}
+                      {{ t('demo.title') }}
                     </q-item-label>
                   </q-item-section>
                 </q-item>
@@ -109,14 +115,14 @@
                   <q-item-section avatar>
                     <q-icon name="settings" />
                   </q-item-section>
-                  <q-item-section>{{ $t('nav.settings') }}</q-item-section>
+                  <q-item-section>{{ t('nav.settings') }}</q-item-section>
                 </q-item>
 
                 <q-item clickable v-close-popup>
                   <q-item-section avatar>
                     <q-icon name="help" />
                   </q-item-section>
-                  <q-item-section>{{ $t('nav.helpSupport') }}</q-item-section>
+                  <q-item-section>{{ t('nav.helpSupport') }}</q-item-section>
                 </q-item>
 
                 <q-separator />
@@ -130,7 +136,7 @@
                   <q-item-section avatar>
                     <q-icon name="logout" />
                   </q-item-section>
-                  <q-item-section>{{ $t('nav.logout') }}</q-item-section>
+                  <q-item-section>{{ t('nav.logout') }}</q-item-section>
                 </q-item>
               </q-list>
             </q-menu>
@@ -147,7 +153,7 @@
       class="navigation-drawer"
       :width="280"
       role="navigation"
-              :aria-label="$t('common.accessibility.mainNavigation')"
+              :aria-label="t('common.accessibility.mainNavigation')"
     >
       <!-- Clinic Info Section -->
       <div class="clinic-info-section" role="banner">
@@ -270,17 +276,17 @@
           clickable
           tabindex="0"
           role="button"
-          :aria-label="$t('nav.upgradePlan')"
+                      :aria-label="t('nav.upgradePlan')"
         >
           <q-item-section avatar>
             <q-icon name="upgrade" color="accent" />
           </q-item-section>
           <q-item-section>
             <q-item-label class="text-weight-medium">{{
-              $t('nav.upgradePlan')
+              t('nav.upgradePlan')
             }}</q-item-label>
             <q-item-label caption>{{
-              $t('nav.getAdvancedFeatures')
+              t('nav.getAdvancedFeatures')
             }}</q-item-label>
           </q-item-section>
         </q-item>
@@ -304,6 +310,7 @@
   import { useI18n } from 'vue-i18n';
   import { useAuthStore } from 'src/stores/auth';
   import { useClinicStore } from 'src/stores/clinic';
+  import { useNotificationStore } from 'src/stores/notifications';
 
   // Type definitions for navigation
   interface NavigationItem {
@@ -327,6 +334,7 @@
   const { t } = useI18n();
   const authStore = useAuthStore();
   const clinicStore = useClinicStore();
+  const notificationStore = useNotificationStore();
 
   // State
   const leftDrawerOpen = ref(false);
@@ -368,7 +376,7 @@
             icon: 'campaign',
             to: '/notifications',
             routeName: 'notifications',
-            badge: 3,
+            badge: notificationStore.unreadCount,
             badgeColor: 'red',
           },
         ],
@@ -635,6 +643,9 @@
   onMounted(() => {
     window.addEventListener('scroll', handleScroll);
     checkAndExpandCurrentSubmenu();
+    
+    // Load notifications for badge count
+    notificationStore.loadNotifications();
   });
 
   onUnmounted(() => {
@@ -1142,6 +1153,7 @@
     display: flex;
     align-items: center;
     gap: 12px;
+    margin: 8px 12px 0 0; // Extra ruimte rechts voor floating badges
   }
 
   .header-actions .q-btn {
@@ -1154,6 +1166,7 @@
     backdrop-filter: blur(8px);
     transition: all 0.3s ease;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    padding: 6px; // Extra padding binnen de knop voor badges
 
     .q-icon {
       font-size: 22px;
@@ -1177,7 +1190,7 @@
     }
   }
 
-  // Notification badge styling
+  // Notification badge styling - floating next to icon
   .header-actions .q-btn .q-badge {
     font-size: 11px;
     font-weight: 600;
@@ -1185,6 +1198,21 @@
     height: 18px;
     border: 2px solid white;
     box-shadow: 0 2px 6px rgba(239, 68, 68, 0.3);
+    top: -6px;
+    right: -10px;
+    z-index: 10;
+    position: absolute;
+  }
+
+  // Demo badge styling (geel icoontje) - floating next to icon
+  .header-actions .q-btn .demo-badge {
+    font-size: 10px;
+    min-width: 16px;
+    height: 16px;
+    top: -5px;
+    right: -8px;
+    z-index: 10;
+    position: absolute;
   }
 
   // User menu

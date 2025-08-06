@@ -53,15 +53,17 @@
     </div>
 
     <!-- Suppliers Table -->
-    <q-table
-      :rows="filteredSuppliers"
-      :columns="columns"
-      row-key="id"
-      :loading="loading"
-      :pagination="{ rowsPerPage: 10 }"
-      flat
-      bordered
-    >
+    <div class="medical-table">
+      <q-table
+        :rows="filteredSuppliers"
+        :columns="columns"
+        row-key="id"
+        :loading="loading"
+        :pagination="{ rowsPerPage: 25 }"
+        flat
+        bordered
+        separator="cell"
+      >
       <template #body-cell-status="props">
         <q-td :props="props">
           <q-chip
@@ -191,6 +193,7 @@
         </q-td>
       </template>
     </q-table>
+    </div>
 
     <!-- Add/Edit Supplier Dialog -->
     <FormDialog
@@ -443,10 +446,13 @@ import FormDialog from 'src/components/base/FormDialog.vue';
 import { suppliersFilterPreset } from '@/presets/filters/suppliers';
 import { supabase } from 'src/services/supabase';
 import { monitoringService } from 'src/services/monitoring';
+import { useTableSorting } from 'src/composables/useTableSorting';
 import type { FilterValues, FilterChangeEvent, FilterResetEvent } from '@/types/filters';
 
 const $q = useQuasar();
 const { t } = useI18n();
+
+
 
 // Refs
 const loading = ref(false);
@@ -614,7 +620,9 @@ const filteredSuppliers = computed(() => {
   return filtered;
 });
 
-// Table columns
+
+
+// Table columns with enhanced configuration
 const columns = computed(() => [
   {
     name: 'name',
@@ -622,6 +630,8 @@ const columns = computed(() => [
     field: 'name',
     align: 'left' as const,
     sortable: true,
+    classes: 'col-name',
+    headerClasses: 'col-name',
   },
   {
     name: 'integration_status',
@@ -629,6 +639,8 @@ const columns = computed(() => [
     field: 'integration_type',
     align: 'center' as const,
     sortable: true,
+    classes: 'col-status',
+    headerClasses: 'col-status',
   },
   {
     name: 'order_method',
@@ -636,6 +648,8 @@ const columns = computed(() => [
     field: 'order_method',
     align: 'center' as const,
     sortable: true,
+    classes: 'col-status',
+    headerClasses: 'col-status',
   },
   {
     name: 'contact_email',
@@ -671,6 +685,8 @@ const columns = computed(() => [
     field: 'active',
     align: 'center' as const,
     sortable: true,
+    classes: 'col-status',
+    headerClasses: 'col-status',
   },
   {
     name: 'actions',
@@ -678,6 +694,8 @@ const columns = computed(() => [
     field: '',
     align: 'center' as const,
     sortable: false,
+    classes: 'col-actions',
+    headerClasses: 'col-actions',
   },
 ]);
 

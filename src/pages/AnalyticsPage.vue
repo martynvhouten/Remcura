@@ -195,7 +195,8 @@
           
           padding="none"
         >
-          <q-table
+          <div class="medical-table">
+            <q-table
             :rows="orderMetrics.frequentlyOrderedItems || []"
             :columns="frequentlyOrderedColumns"
             row-key="product_id"
@@ -212,6 +213,7 @@
               </div>
             </template>
           </q-table>
+          </div>
         </BaseCard>
       </div>
 

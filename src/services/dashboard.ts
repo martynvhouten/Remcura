@@ -165,7 +165,7 @@ class DashboardService {
       } catch (error) {
         dashboardLogger.info(`⚠️ Real widget failed for ${widgetId}, using mock:`, error.message);
         // Always create mock widget on error - this ensures role-specific content
-        const mockWidget = this.createMockWidget(widgetId, index);
+        const mockWidget = await this.createRealTimeWidget(widgetId, index, practiceId) || this.createFallbackWidget(widgetId, index);
         if (mockWidget) {
           dashboardLogger.info(`📋 Mock widget created: ${mockWidget.title}`);
           return mockWidget;
@@ -204,9 +204,6 @@ class DashboardService {
       
       case 'quick-scan':
         return this.createQuickScanWidget();
-
-      case 'analytics-overview':
-        return this.createAnalyticsWidget(practiceId);
 
       // For other widget types, return null to trigger mock widget creation
       case 'cost-analysis':
@@ -440,40 +437,7 @@ class DashboardService {
   }
 
   private async loadAlerts(practiceId: string, userRole: string) {
-    try {
-      const alerts = [];
-
-          // Low stock alerts - fix supabase.raw issue
-    const { data: lowStock } = await supabase
-      .from('stock_levels') 
-      .select('*')
-      .eq('practice_id', practiceId)
-      .filter('current_quantity', 'lt', 'minimum_quantity');
-
-      if (lowStock && lowStock.length > 0) {
-        alerts.push({
-          id: 'low-stock',
-          type: 'warning' as const,
-          message: t('dashboard.service.alerts.lowStockMessage', { count: lowStock.length }),
-          action: '/inventory/levels',
-          actionLabel: t('dashboard.service.alerts.viewStock')
-        });
-      }
-
-      return alerts;
-    } catch (error) {
-      dashboardLogger.error('Error loading alerts:', error);
-      // Return mock alerts if there's an error
-      return [
-        {
-          id: 'demo-alert-1',
-          type: 'warning' as const,
-          message: t('dashboard.service.alerts.lowStockMessage', { count: 12 }),
-          action: '/inventory/levels',
-          actionLabel: t('dashboard.service.alerts.viewStock')
-        }
-      ];
-    }
+    return await this.getRealTimeAlerts(userRole, practiceId);
   }
 
   getRoleConfig(userRole: string): RoleDashboardConfig {
@@ -489,7 +453,7 @@ class DashboardService {
     
     // Create mock widgets based on role - MUST be role specific
     const mockWidgets = config.widgets.map((widgetId, index) => {
-      const widget = this.createMockWidget(widgetId, index);
+      const widget = this.createFallbackWidget(widgetId, index);
       return widget;
     }).filter(widget => widget !== null) as DashboardWidget[];
 
@@ -497,7 +461,7 @@ class DashboardService {
 
     // Role-specific metrics
     const metrics = this.getMockMetrics(userRole);
-    const alerts = this.getMockAlerts(userRole);
+    const alerts = this.getFallbackAlerts(userRole);
 
     return {
       widgets: mockWidgets,
@@ -536,7 +500,85 @@ class DashboardService {
     }
   }
 
-  private getMockAlerts(userRole: string) {
+  private async getRealTimeAlerts(userRole: string, practiceId?: string) {
+    if (!practiceId) return [];
+
+    try {
+      // Get low stock items
+      const { data: lowStockItems, error: stockError } = await supabase
+        .from('stock_levels')
+        .select(`
+          id,
+          current_quantity,
+          minimum_quantity,
+          products!inner(name, sku, category),
+          practice_locations!inner(name)
+        `)
+        .eq('practice_id', practiceId)
+        .lt('current_quantity', supabase.rpc('minimum_quantity'))
+        .limit(5);
+
+      if (stockError) {
+        dashboardLogger.error('Error fetching low stock alerts:', stockError);
+        return this.getFallbackAlerts(userRole);
+      }
+
+      const alerts = [];
+
+      // Low stock alert for all roles
+      if (lowStockItems && lowStockItems.length > 0) {
+        alerts.push({
+          id: 'low-stock-alert',
+          type: 'warning' as const,
+          message: t('dashboard.service.alerts.lowStockMessage', { count: lowStockItems.length }),
+          action: '/inventory/levels',
+          actionLabel: t('dashboard.service.alerts.viewStock')
+        });
+      }
+
+      // Role-specific alerts
+      switch (userRole) {
+        case 'manager':
+          // Check for pending orders
+          const { data: pendingOrders } = await supabase
+            .from('order_lists')
+            .select('id')
+            .eq('practice_id', practiceId)
+            .eq('status', 'submitted')
+            .limit(1);
+
+          if (pendingOrders && pendingOrders.length > 0) {
+            alerts.push({
+              id: 'pending-orders-alert',
+              type: 'info' as const,
+              message: t('dashboard.service.alerts.pendingOrdersAvailable'),
+              action: '/orders',
+              actionLabel: t('dashboard.service.alerts.reviewOrders')
+            });
+          }
+          break;
+
+        case 'owner':
+          // Check for system health issues
+          alerts.push({
+            id: 'system-health-alert',
+            type: 'info' as const,
+            message: t('dashboard.service.alerts.systemHealthGood'),
+            action: '/admin/monitoring',
+            actionLabel: t('dashboard.service.alerts.viewDetails')
+          });
+          break;
+      }
+
+      return alerts;
+
+    } catch (error) {
+      dashboardLogger.error('Error fetching real-time alerts:', error);
+      return this.getFallbackAlerts(userRole);
+    }
+  }
+
+  private getFallbackAlerts(userRole: string) {
     switch (userRole) {
       case 'manager':
         return [
@@ -563,7 +605,7 @@ class DashboardService {
           {
             id: 'assistant-alert-1',
             type: 'warning' as const,
-            message: t('dashboard.service.alerts.lowStockMessage', { count: 12 }),
+            message: t('dashboard.service.alerts.lowStockMessage', { count: 0 }),
             action: '/inventory/levels',
             actionLabel: t('dashboard.service.alerts.viewStock')
           }
@@ -571,91 +613,129 @@ class DashboardService {
     }
   }
 
-  private createMockWidget(widgetId: string, position: number): DashboardWidget | null {
+  private async createRealTimeWidget(widgetId: string, position: number, practiceId?: string): Promise<DashboardWidget | null> {
+    if (!practiceId) return null;
+
     switch (widgetId) {
       case 'stock-alerts':
-        return {
-          id: 'stock-alerts',
-          title: t('dashboard.service.widgets.stockAlerts'),
-          type: 'alert',
-          data: { 
-            items: [
-              {
-                id: '1',
-                current_quantity: 5,
-                minimum_quantity: 10,
-                products: { name: 'Paracetamol 500mg', sku: 'PAR-500', category: 'Medicatie' },
-                practice_locations: { name: 'Hoofdlocatie' }
-              },
-              {
-                id: '2', 
-                current_quantity: 0,
-                minimum_quantity: 5,
-                products: { name: 'Steriele handschoenen', sku: 'HSG-001', category: 'Verbruiksmateriaal' },
-                practice_locations: { name: 'Behandelkamer 1' }
-              }
-            ] 
-          },
-          size: 'medium',
-          position,
-          visible: true
-        };
+        try {
+          const { data: lowStockItems, error } = await supabase
+            .from('stock_levels')
+            .select(`
+              id,
+              current_quantity,
+              minimum_quantity,
+              products!inner(name, sku, category),
+              practice_locations!inner(name)
+            `)
+            .eq('practice_id', practiceId)
+            .lt('current_quantity', supabase.rpc('minimum_quantity'))
+            .order('current_quantity', { ascending: true })
+            .limit(5);
+
+          if (error) {
+            dashboardLogger.error('Error fetching stock alerts:', error);
+            return this.createFallbackWidget(widgetId, position);
+          }
+
+          return {
+            id: 'stock-alerts',
+            title: t('dashboard.service.widgets.stockAlerts'),
+            type: 'alert',
+            data: { 
+              items: lowStockItems || []
+            },
+            size: 'medium',
+            position,
+            visible: true
+          };
+        } catch (error) {
+          dashboardLogger.error('Error creating stock alerts widget:', error);
+          return this.createFallbackWidget(widgetId, position);
+        }
 
       case 'order-suggestions':
-        return {
-          id: 'order-suggestions',
-          title: t('dashboard.service.widgets.orderSuggestions'),
-          type: 'list',
-          data: { 
-            suggestions: [
-              {
-                id: '1',
-                current_stock: 5,
-                suggested_quantity: 50,
-                urgency_level: 'high',
-                products: { name: 'Insuline injecties', sku: 'INS-001' }
-              },
-              {
-                id: '2',
-                current_stock: 12,
-                suggested_quantity: 25,
-                urgency_level: 'medium', 
-                products: { name: 'Bloeddrukmeters', sku: 'BDM-001' }
-              }
-            ] 
-          },
-          size: 'large',
-          position,
-          visible: true
-        };
+        try {
+          // Get products that need reordering based on min/max levels
+          const { data: reorderSuggestions, error } = await supabase
+            .from('stock_levels')
+            .select(`
+              id,
+              current_quantity,
+              minimum_quantity,
+              reorder_point,
+              products!inner(name, sku),
+              preferred_supplier_id
+            `)
+            .eq('practice_id', practiceId)
+            .lt('current_quantity', supabase.rpc('reorder_point'))
+            .order('current_quantity', { ascending: true })
+            .limit(5);
+
+          if (error) {
+            dashboardLogger.error('Error fetching order suggestions:', error);
+            return this.createFallbackWidget(widgetId, position);
+          }
+
+          const suggestions = (reorderSuggestions || []).map(item => ({
+            id: item.id,
+            current_stock: item.current_quantity,
+            suggested_quantity: Math.max(item.minimum_quantity * 2, 10), // Simple reorder calculation
+            urgency_level: item.current_quantity <= 0 ? 'high' : item.current_quantity <= item.minimum_quantity / 2 ? 'medium' : 'low',
+            products: item.products
+          }));
+
+          return {
+            id: 'order-suggestions',
+            title: t('dashboard.service.widgets.orderSuggestions'),
+            type: 'list',
+            data: { suggestions },
+            size: 'large',
+            position,
+            visible: true
+          };
+        } catch (error) {
+          dashboardLogger.error('Error creating order suggestions widget:', error);
+          return this.createFallbackWidget(widgetId, position);
+        }
 
       case 'recent-orders':
-        return {
-          id: 'recent-orders',
-          title: 'Recente Bestellingen',
-          type: 'list',
-          data: { 
-            orders: [
-              {
-                id: '1',
-                order_number: 'ORD-2024-001',
-                status: 'confirmed',
-                order_date: new Date().toISOString(),
-                total_amount: 1250.50
-              },
-              {
-                id: '2',
-                order_number: 'ORD-2024-002', 
-                status: 'delivered',
-                order_date: new Date(Date.now() - 24*60*60*1000).toISOString(),
-                total_amount: 890.25
-              }
-            ] 
-          },
-          size: 'medium',
-          position,
-          visible: true
-        };
+        try {
+          const { data: recentOrders, error } = await supabase
+            .from('order_lists')
+            .select(`
+              id,
+              name,
+              status,
+              total_amount,
+              currency,
+              created_at,
+              suppliers(name)
+            `)
+            .eq('practice_id', practiceId)
+            .order('created_at', { ascending: false })
+            .limit(5);
+
+          if (error) {
+            dashboardLogger.error('Error fetching recent orders:', error);
+            return this.createFallbackWidget(widgetId, position);
+          }
+
+          return {
+            id: 'recent-orders',
+            title: t('dashboard.service.widgets.recentOrders'),
+            type: 'list',
+            data: { 
+              orders: recentOrders || []
+            },
+            size: 'medium',
+            position,
+            visible: true
+          };
+        } catch (error) {
+          dashboardLogger.error('Error creating recent orders widget:', error);
+          return this.createFallbackWidget(widgetId, position);
+        }
 
       case 'quick-scan':
         return {
@@ -803,6 +883,78 @@ class DashboardService {
             color: 'positive'
           },
           size: 'small',
+          position,
+          visible: true
+        };
+
+      default:
+        return null;
+    }
+  }
+
+  private createFallbackWidget(widgetId: string, position: number): DashboardWidget | null {
+    switch (widgetId) {
+      case 'stock-alerts':
+        return {
+          id: 'stock-alerts',
+          title: t('dashboard.service.widgets.stockAlerts'),
+          type: 'alert',
+          data: { 
+            items: [
+              {
+                id: '1',
+                current_quantity: 5,
+                minimum_quantity: 10,
+                products: { name: 'Paracetamol 500mg', sku: 'PAR-500', category: 'Medicatie' },
+                practice_locations: { name: 'Hoofdlocatie' }
+              }
+            ] 
+          },
+          size: 'medium',
+          position,
+          visible: true
+        };
+
+      case 'order-suggestions':
+        return {
+          id: 'order-suggestions',
+          title: t('dashboard.service.widgets.orderSuggestions'),
+          type: 'list',
+          data: { 
+            suggestions: [
+              {
+                id: '1',
+                current_stock: 5,
+                suggested_quantity: 50,
+                urgency_level: 'high',
+                products: { name: 'Insuline injecties', sku: 'INS-001' }
+              }
+            ] 
+          },
+          size: 'large',
+          position,
+          visible: true
+        };
+
+      case 'recent-orders':
+        return {
+          id: 'recent-orders',
+          title: t('dashboard.service.widgets.recentOrders'),
+          type: 'list',
+          data: { 
+            orders: [
+              {
+                id: '1',
+                name: 'Standaard bestelling',
+                status: 'confirmed',
+                total_amount: 1250.50,
+                currency: 'EUR',
+                created_at: new Date().toISOString(),
+                suppliers: { name: 'Medische Groothandel BV' }
+              }
+            ] 
+          },
+          size: 'medium',
           position,
           visible: true
         };

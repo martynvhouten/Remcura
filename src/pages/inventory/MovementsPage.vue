@@ -54,17 +54,19 @@
       </div>
 
       <!-- Movements Table -->
-      <BaseCard v-else  class="movements-table-card">
-        <q-table
-          :rows="filteredMovements"
-          :columns="columns"
-          row-key="id"
-          :pagination="pagination"
-          :loading="inventoryStore.loading"
-          :no-data-label="$t('inventory.noMovementsFound')"
-          class="movements-table"
-          flat
-        >
+      <div v-else class="medical-table">
+          <q-table
+            :rows="filteredMovements"
+            :columns="columns"
+            row-key="id"
+            :pagination="pagination"
+            :loading="inventoryStore.loading"
+            :no-data-label="$t('inventory.noMovementsFound')"
+            class="movements-table"
+            flat
+            bordered
+            separator="cell"
+          >
           <!-- Movement Type Column -->
           <template v-slot:body-cell-movement_type="props">
             <q-td :props="props">
@@ -149,7 +151,7 @@
             </q-td>
           </template>
         </q-table>
-      </BaseCard>
+      </div>
     </div>
 
     <!-- Movement Details Dialog -->

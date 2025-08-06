@@ -30,12 +30,12 @@ const missingHandler = (locale: string, key: string, instance: any, type: string
 };
 
 // Create i18n instance 
-// Use legacy mode for better Quasar compatibility
+// Use composition mode for Vue 3 compatibility
 export const i18n = createI18n({
   locale: getSavedLocale(),
   fallbackLocale: 'en',
   messages: ENABLE_LAZY_LOADING ? {} : messages, // Empty in production for lazy loading
-  legacy: true, // Changed to true for better compatibility
+  legacy: false, // Use composition mode for Vue 3 compatibility
   globalInjection: true,
   missingWarn: isDevelopment,
   fallbackWarn: isDevelopment,
@@ -89,13 +89,8 @@ export const setI18nLanguage = async (locale: SupportedLocale): Promise<Supporte
     await loadLanguageAsync(locale);
   }
   
-  // In legacy mode, locale is a string property
   // In composition mode, locale is a ref with .value
-  if (i18n.mode === 'legacy') {
-    (i18n.global.locale as any) = locale;
-  } else {
-    (i18n.global.locale as any).value = locale;
-  }
+  (i18n.global.locale as any).value = locale;
   document.querySelector('html')?.setAttribute('lang', locale);
   localStorage.setItem('remcura_locale', locale);
   return locale;
@@ -103,13 +98,8 @@ export const setI18nLanguage = async (locale: SupportedLocale): Promise<Supporte
 
 // Get current locale
 export const getCurrentLocale = (): SupportedLocale => {
-  // In legacy mode, locale is a string property
   // In composition mode, locale is a ref with .value
-  if (i18n.mode === 'legacy') {
-    return i18n.global.locale as SupportedLocale;
-  } else {
-    return (i18n.global.locale as any).value as SupportedLocale;
-  }
+  return (i18n.global.locale as any).value as SupportedLocale;
 };
 
 // Development helper: Check if a translation exists

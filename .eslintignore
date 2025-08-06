@@ -9,10 +9,7 @@
 *.d.ts
 src/types/supabase.ts
 
-# Test files
-/test/**
-/test-results/**
-vitest.config.ts
+
 
 # Generated configuration files
 /quasar.config.js

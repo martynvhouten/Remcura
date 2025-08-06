@@ -293,15 +293,21 @@
   interface Props {
     modelValue: boolean;
     orderList?: OrderListWithItems | null;
+    orderLists?: OrderListWithItems[];
+    selectedProduct?: ProductWithStock | null;
   }
 
   const props = withDefaults(defineProps<Props>(), {
     orderList: null,
+    orderLists: () => [],
+    selectedProduct: null,
   });
 
   const emit = defineEmits<{
     'update:modelValue': [value: boolean];
     saved: [];
+    createOrderList: [orderList: OrderListWithItems];
+    addToExisting: [orderListId: string, product: ProductWithStock];
   }>();
 
   const $q = useQuasar();

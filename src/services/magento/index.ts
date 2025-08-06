@@ -395,35 +395,7 @@ class MagentoApiService {
     return products.find(p => p.sku === sku) || null;
   }
 
-  // Order management with Supabase fallback
-  async getOrders(): Promise<MagentoOrder[]> {
-    // If Magento API is configured, try to use it first
-    if (this.isConfigured()) {
-      try {
-        return this.makeRequest('/orders');
-      } catch (error) {
-        console.warn('Magento API failed, falling back to Supabase data:', error);
-      }
-    }
-    
-    // Fallback to Supabase data
-    return magentoDataService.getOrders();
-  }
 
-  // Invoice management with Supabase fallback
-  async getInvoices(): Promise<MagentoInvoice[]> {
-    // If Magento API is configured, try to use it first
-    if (this.isConfigured()) {
-      try {
-        return this.makeRequest('/invoices');
-      } catch (error) {
-        console.warn('Magento API failed, falling back to Supabase data:', error);
-      }
-    }
-    
-    // Fallback to Supabase data
-    return magentoDataService.getInvoices();
-  }
 
   // Utility methods
   isConfigured(): boolean {
@@ -529,7 +501,7 @@ export const magentoDataService = {
       const { data: products, error } = await supabase
         .from('products')
         .select('*')
-        .eq('is_active', true)
+        .eq('active', true)
         .order('name');
 
       if (error) throw error;

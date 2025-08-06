@@ -107,200 +107,183 @@
 
     <!-- Main Content -->
     <div v-else-if="orderList" class="main-content">
-      <!-- Quick Stats Bar -->
-      <div class="stats-bar">
-        <div class="stats-container">
-          <div class="stat-card">
-            <div class="stat-icon">
-              <q-icon name="inventory_2" color="primary" size="24px" />
-            </div>
-            <div class="stat-content">
-              <div class="stat-value">{{ orderList.total_items || 0 }}</div>
-              <div class="stat-label">Producten</div>
-            </div>
-          </div>
-          
-          <div class="stat-card">
-            <div class="stat-icon">
-              <q-icon name="euro" color="positive" size="24px" />
-            </div>
-            <div class="stat-content">
-              <div class="stat-value">€{{ formatCurrency((orderList as any)?.total_value || 0) }}</div>
-              <div class="stat-label">Totale waarde</div>
-            </div>
-          </div>
-          
-          <div class="stat-card">
-            <div class="stat-icon">
-              <q-icon name="schedule" color="info" size="24px" />
-            </div>
-            <div class="stat-content">
-              <div class="stat-value">{{ formatDate(orderList.updated_at) }}</div>
-              <div class="stat-label">Laatst bijgewerkt</div>
+      <!-- Filters Section -->
+      <div class="filters-section q-mb-md">
+        <FilterPanel
+          :preset="orderListsFilterPreset"
+          v-model="filterValues"
+          @change="handleFilterChange"
+          @reset="handleFilterReset"
+          @clear="handleFilterClear"
+          :loading="loadingItems"
+          collapsible
+          class="order-list-filter-panel"
+        />
+      </div>
+
+      <!-- Table Header -->
+      <div class="table-header q-mb-sm">
+        <div class="row items-center justify-between">
+          <div class="col-auto">
+            <div class="table-info">
+              <span class="table-count">{{ filteredOrderListItems.length }} van {{ orderListItems.length }} items</span>
             </div>
           </div>
           
-          <div class="stat-card" v-if="(orderList as any).auto_reorder_enabled">
-            <div class="stat-icon">
-              <q-icon name="autorenew" color="secondary" size="24px" />
-            </div>
-            <div class="stat-content">
-              <div class="stat-value">{{ (orderList as any).reorder_frequency_days || 14 }}d</div>
-              <div class="stat-label">Auto-reorder</div>
-            </div>
+          <div class="col-auto">
+            <q-btn
+              flat
+              round
+              icon="refresh"
+              @click="loadOrderListItems"
+              :loading="loadingItems"
+              color="grey-7"
+              size="sm"
+            >
+              <q-tooltip>Vernieuwen</q-tooltip>
+            </q-btn>
           </div>
         </div>
       </div>
 
-      <!-- Products Table Section -->
-      <div class="products-section">
-        <div class="section-header">
-          <div class="section-title">
-            <h2>Producten</h2>
-            <span class="item-count">{{ orderListItems.length }} items</span>
-          </div>
-          
-          <div class="section-actions">
-            <q-btn
-              flat
-              icon="refresh"
-              @click="loadOrderListItems"
-              :loading="loadingItems"
-              class="refresh-btn"
-            >
-              <q-tooltip>Vernieuwen</q-tooltip>
-            </q-btn>
-            
-            <q-btn
-              @click="addProduct"
-              icon="add"
-              label="Product toevoegen"
-              color="primary"
-              unelevated
-              no-caps
-            />
-          </div>
+      <!-- Products Table (Direct, not in card container) -->
+      <div v-if="loadingItems" class="loading-state">
+        <q-inner-loading :showing="loadingItems">
+          <q-spinner-gears size="50px" color="primary" />
+        </q-inner-loading>
+      </div>
+      
+      <div v-else-if="orderListItems.length === 0" class="empty-state">
+        <div class="empty-icon">
+          <q-icon name="inventory_2" size="64px" color="grey-4" />
         </div>
+        <h3>Geen producten toegevoegd</h3>
+        <p>Voeg producten toe aan deze bestellijst om te beginnen.</p>
+        <q-btn
+          @click="addProduct"
+          icon="add"
+          label="Eerste product toevoegen"
+          color="primary"
+          unelevated
+          no-caps
+        />
+      </div>
+      
+      <div v-else class="medical-table">
+        <SmartTable
+          :data="filteredOrderListItems"
+          :columns="orderListTableColumns"
+          :config="smartTableConfig"
+          row-key="id"
+          :rows-per-page-options="[25, 50, 100]"
+        >
+          <!-- Loading -->
+          <template #loading>
+            <q-inner-loading showing color="primary" />
+          </template>
 
-        <!-- Modern Products Table -->
-        <div class="products-table-container">
-          <div v-if="loadingItems" class="loading-state">
-            <q-inner-loading :showing="loadingItems">
-              <q-spinner-gears size="50px" color="primary" />
-            </q-inner-loading>
-          </div>
-          
-          <div v-else-if="orderListItems.length === 0" class="empty-state">
-            <div class="empty-icon">
-              <q-icon name="inventory_2" size="64px" color="grey-4" />
+          <!-- No Data -->
+          <template #no-data>
+            <div class="full-width row flex-center q-gutter-sm">
+              <q-icon size="2em" name="search_off" />
+              <span>Geen producten gevonden met de huidige filters</span>
             </div>
-            <h3>Geen producten toegevoegd</h3>
-            <p>Voeg producten toe aan deze bestellijst om te beginnen.</p>
-            <q-btn
-              @click="addProduct"
-              icon="add"
-              label="Eerste product toevoegen"
-              color="primary"
-              unelevated
-              no-caps
-            />
-          </div>
-          
-          <div v-else class="products-grid">
-            <div 
-              v-for="item in orderListItems" 
-              :key="item.id"
-              class="product-card"
-            >
-              <div class="product-header">
-                <div class="product-info">
-                  <div class="product-icon">
-                    <q-icon name="inventory" size="20px" color="primary" />
-                  </div>
-                  <div class="product-details">
-                    <h4 class="product-name">{{ item.product_name || item.product?.name || 'Onbekend product' }}</h4>
-                    <p class="product-sku">{{ item.product_sku || item.product?.sku || 'Geen SKU' }}</p>
-                  </div>
-                </div>
-                
+          </template>
+
+          <!-- Product Name Cell -->
+          <template #body-cell-name="props">
+            <q-td :props="props" class="product-name-cell">
+              <div class="product-info">
+                <div class="product-name">{{ props.row.product_name || props.row.product?.name || 'Onbekend product' }}</div>
+                <div class="product-sku">{{ props.row.product_sku || props.row.product?.sku || 'Geen SKU' }}</div>
+              </div>
+            </q-td>
+          </template>
+
+          <!-- Quantity Cell with Controls -->
+          <template #body-cell-quantity="props">
+            <q-td :props="props" class="quantity-cell">
+              <div class="quantity-controls">
                 <q-btn
                   flat
                   round
                   dense
-                  icon="more_vert"
-                  class="product-menu"
+                  icon="remove"
+                  @click="decrementQuantity(props.row)"
+                  :disable="props.row.suggested_quantity <= 0"
+                  class="quantity-btn"
+                />
+                <q-input
+                  v-model.number="props.row.suggested_quantity"
+                  type="number"
+                  min="0"
+                  dense
+                  outlined
+                  class="quantity-input"
+                  @update:model-value="updateItemQuantity(props.row)"
+                  style="width: 80px"
+                />
+                <q-btn
+                  flat
+                  round
+                  dense
+                  icon="add"
+                  @click="incrementQuantity(props.row)"
+                  class="quantity-btn"
+                />
+              </div>
+            </q-td>
+          </template>
+
+          <!-- Unit Price Cell -->
+          <template #body-cell-unit_price="props">
+            <q-td :props="props" class="price-cell">
+              €{{ (props.row.unit_price || 0).toFixed(2) }}
+            </q-td>
+          </template>
+
+          <!-- Total Price Cell -->
+          <template #body-cell-total_price="props">
+            <q-td :props="props" class="total-price-cell">
+              <strong>€{{ ((props.row.suggested_quantity || 0) * (props.row.unit_price || 0)).toFixed(2) }}</strong>
+            </q-td>
+          </template>
+
+          <!-- Supplier Cell -->
+          <template #body-cell-supplier="props">
+            <q-td :props="props" class="supplier-cell">
+              {{ props.row.supplier_product?.supplier?.name || 'Onbekend' }}
+            </q-td>
+          </template>
+
+          <!-- Actions Cell -->
+          <template #body-cell-actions="props">
+            <q-td :props="props" class="actions-cell">
+              <div class="row q-gutter-xs">
+                <q-btn
+                  flat
+                  round
+                  dense
+                  icon="edit"
+                  color="primary"
+                  @click="editItem(props.row)"
                 >
-                  <q-menu>
-                    <q-list dense>
-                      <q-item clickable @click="editItem(item)" v-close-popup>
-                        <q-item-section avatar>
-                          <q-icon name="edit" />
-                        </q-item-section>
-                        <q-item-section>Bewerken</q-item-section>
-                      </q-item>
-                      
-                      <q-item clickable @click="removeItem(item)" v-close-popup class="text-negative">
-                        <q-item-section avatar>
-                          <q-icon name="delete" />
-                        </q-item-section>
-                        <q-item-section>Verwijderen</q-item-section>
-                      </q-item>
-                    </q-list>
-                  </q-menu>
+                  <q-tooltip>Bewerken</q-tooltip>
+                </q-btn>
+                <q-btn
+                  flat
+                  round
+                  dense
+                  icon="delete"
+                  color="negative"
+                  @click="removeItem(props.row)"
+                >
+                  <q-tooltip>Verwijderen</q-tooltip>
                 </q-btn>
               </div>
-              
-              <div class="product-content">
-                <div class="quantity-section">
-                  <label class="quantity-label">Bestelhoeveelheid</label>
-                  <div class="quantity-controls">
-                    <q-btn
-                      flat
-                      round
-                      dense
-                      icon="remove"
-                      @click="decrementQuantity(item)"
-                      :disable="item.suggested_quantity <= 0"
-                      class="quantity-btn"
-                    />
-                    <q-input
-                      v-model.number="item.suggested_quantity"
-                      type="number"
-                      min="0"
-                      dense
-                      outlined
-                      class="quantity-input"
-                      @update:model-value="updateItemQuantity(item)"
-                    />
-                    <q-btn
-                      flat
-                      round
-                      dense
-                      icon="add"
-                      @click="incrementQuantity(item)"
-                      class="quantity-btn"
-                    />
-                  </div>
-                </div>
-                
-                <div class="product-meta">
-                  <div class="meta-item">
-                    <span class="meta-label">Prijs per stuk:</span>
-                    <span class="meta-value">€{{ (item.unit_price || 0).toFixed(2) }}</span>
-                  </div>
-                  <div class="meta-item">
-                    <span class="meta-label">Totaal:</span>
-                    <span class="meta-value total-price">€{{ ((item.suggested_quantity || 0) * (item.unit_price || 0)).toFixed(2) }}</span>
-                  </div>
-                  <div class="meta-item" v-if="item.notes">
-                    <span class="meta-label">Notities:</span>
-                    <span class="meta-value">{{ item.notes }}</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
+            </q-td>
+          </template>
+        </SmartTable>
       </div>
     </div>
 
@@ -361,10 +344,16 @@
 import { ref, computed, onMounted } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { useQuasar } from 'quasar';
+import { useI18n } from 'vue-i18n';
 import { useOrderListsStore } from '@/stores/orderLists';
 import { useProductsStore } from '@/stores/products';
+import { useAuthStore } from '@/stores/auth';
 import FormDialog from 'src/components/base/FormDialog.vue';
+import SmartTable from '@/components/tables/SmartTable.vue';
+import FilterPanel from '@/components/filters/FilterPanel.vue';
 import type { OrderListWithItems } from '@/types/stores';
+import type { FilterValues, FilterChangeEvent, FilterResetEvent } from '@/types/filters';
+import { orderListsFilterPreset } from '@/presets/filters/orderLists';
 
 const route = useRoute();
 const router = useRouter();
@@ -385,52 +374,77 @@ const selectedProduct = ref<any>(null);
 const newItemQuantity = ref(1);
 const filteredProducts = ref<any[]>([]);
 
-// Table columns
-const columns = [
+// Filter state
+const filterValues = ref<FilterValues>({});
+
+// Table columns for order list items
+const orderListTableColumns = computed(() => [
   {
-    name: 'product_name',
+    name: 'name',
     label: 'Product',
     field: 'product_name',
-    align: 'left',
+    align: 'left' as const,
     sortable: true,
+    style: 'width: 250px',
   },
   {
-    name: 'current_stock',
-    label: 'Huidige voorraad',
-    field: 'current_stock',
-    align: 'center',
-    sortable: true,
-  },
-  {
-    name: 'minimum_stock',
-    label: 'Minimum',
-    field: 'minimum_stock',
-    align: 'center',
-    sortable: true,
-  },
-  {
-    name: 'suggested_quantity',
-    label: 'Aanbevolen',
+    name: 'quantity',
+    label: 'Hoeveelheid',
     field: 'suggested_quantity',
-    align: 'center',
+    align: 'center' as const,
     sortable: true,
+    style: 'width: 150px',
+  },
+  {
+    name: 'unit_price',
+    label: 'Prijs/stuk',
+    field: 'unit_price',
+    align: 'right' as const,
+    sortable: true,
+    style: 'width: 120px',
+  },
+  {
+    name: 'total_price',
+    label: 'Totaal',
+    field: (row: any) => (row.suggested_quantity || 0) * (row.unit_price || 0),
+    align: 'right' as const,
+    sortable: true,
+    style: 'width: 120px',
+  },
+  {
+    name: 'supplier',
+    label: 'Leverancier',
+    field: (row: any) => row.supplier_product?.supplier?.name || 'Onbekend',
+    align: 'left' as const,
+    sortable: true,
+    style: 'width: 150px',
   },
   {
     name: 'actions',
     label: 'Acties',
     field: 'actions',
-    align: 'center',
+    align: 'center' as const,
+    sortable: false,
+    style: 'width: 120px',
   },
-];
+]);
+
+// Smart table configuration
+const smartTableConfig = computed(() => ({
+  enableVirtualization: orderListItems.value.length > 100,
+  clientSideThreshold: 50,
+  serverSideThreshold: 200,
+}));
 
 // Computed
 const statusColor = computed(() => {
   if (!orderList.value) return 'grey';
   switch (orderList.value.status) {
-    case 'active': return 'positive';
+    case 'ready': return 'positive';
     case 'draft': return 'warning';
     case 'submitted': return 'info';
-    case 'completed': return 'positive';
+    case 'confirmed': return 'primary';
+    case 'delivered': return 'positive';
     case 'cancelled': return 'negative';
     default: return 'grey';
   }
@@ -439,14 +453,53 @@ const statusColor = computed(() => {
 const statusLabel = computed(() => {
   if (!orderList.value) return 'Onbekend';
   switch (orderList.value.status) {
-    case 'active': return 'Actief';
+    case 'ready': return 'Klaar';
     case 'draft': return 'Concept';
     case 'submitted': return 'Verzonden';
-    case 'completed': return 'Voltooid';
+    case 'confirmed': return 'Bevestigd';
+    case 'delivered': return 'Geleverd';
     case 'cancelled': return 'Geannuleerd';
     default: return 'Onbekend';
   }
 });
+
+// Filter computed properties
+const filteredOrderListItems = computed(() => {
+  let filtered = [...orderListItems.value];
+
+  // Text search
+  if (filterValues.value.search && typeof filterValues.value.search === 'string') {
+    const search = filterValues.value.search.toLowerCase();
+    filtered = filtered.filter(item => 
+      (item.product_name || item.product?.name || '').toLowerCase().includes(search) ||
+      (item.product_sku || item.product?.sku || '').toLowerCase().includes(search)
+    );
+  }
+
+  // Supplier filter
+  if (filterValues.value.supplier) {
+    filtered = filtered.filter(item => 
+      item.supplier_product?.supplier?.id === filterValues.value.supplier
+    );
+  }
+
+  return filtered;
+});
+
+// Filter handlers
+const handleFilterChange = (event: FilterChangeEvent) => {
+  if (event.value && typeof event.value === 'object' && !Array.isArray(event.value) && !(event.value instanceof Date)) {
+    filterValues.value = { ...filterValues.value, ...event.value as FilterValues };
+  }
+};
+
+const handleFilterReset = (event: FilterResetEvent) => {
+  filterValues.value = {};
+};
+
+const handleFilterClear = () => {
+  filterValues.value = {};
+};
 
 // Methods
 const loadOrderList = async () => {
@@ -519,7 +572,10 @@ const addProduct = () => {
 const loadProducts = async () => {
   loadingProducts.value = true;
   try {
-    await productsStore.loadProducts();
+    const authStore = useAuthStore();
+    if (authStore.clinicId) {
+      await productsStore.fetchProducts(authStore.clinicId);
+    }
     filteredProducts.value = productsStore.products.slice(0, 20); // Limit initial results
   } catch (err) {
     $q.notify({
@@ -712,6 +768,36 @@ onMounted(() => {
 </script>
 
 <style scoped>
+/* Table Header Styling */
+.table-header {
+  padding: 0;
+}
+
+.table-info {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.table-count {
+  font-size: 13px;
+  color: #666;
+  font-weight: 500;
+}
+
+/* Compact margins for better spacing */
+.filters-section {
+  margin-bottom: 16px !important;
+}
+
+.table-header {
+  margin-bottom: 8px !important;
+}
+
+/* Ensure medical-table styling is applied */
+.medical-table {
+  margin-top: 0;
+}
 /* Modern Order List Detail Page Design */
 .order-detail-page {
   min-height: 100vh;

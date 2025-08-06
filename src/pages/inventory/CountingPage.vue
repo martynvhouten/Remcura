@@ -127,31 +127,26 @@
         </q-card-actions>
       </BaseCard>
 
-      <!-- Sessions Overview -->
-      <BaseCard class="sessions-overview">
-        <template #header>
-          <q-card-section class="sessions-header">
-            <div class="text-h6">{{ $t('counting.sessionsOverview') }}</div>
-          </q-card-section>
-        </template>
+      <!-- Loading State -->
+      <div v-if="countingStore.loading" class="loading-container">
+        <q-spinner-dots size="xl" color="primary" />
+        <p class="loading-text">{{ $t('counting.loadingSessions') }}</p>
+      </div>
 
-        <!-- Loading State -->
-        <div v-if="countingStore.loading" class="loading-container">
-          <q-spinner-dots size="xl" color="primary" />
-          <p class="loading-text">{{ $t('counting.loadingSessions') }}</p>
-        </div>
-
-        <!-- Sessions Table -->
-        <q-table
-          v-else
-          :rows="filteredSessions"
-          :columns="columns"
-          row-key="id"
-          :pagination="pagination"
-          :no-data-label="$t('counting.noSessionsFound')"
-          class="sessions-table"
-          flat
-        >
+      <!-- Sessions Table -->
+      <div v-else class="medical-table">
+          <q-table
+            :rows="sortedSessions"
+            :columns="enhancedColumns"
+            row-key="id"
+            :pagination="pagination"
+            :no-data-label="$t('counting.noSessionsFound')"
+            class="sessions-table"
+            flat
+            bordered
+            separator="cell"
+            @request="onTableRequest"
+          >
           <!-- Session Name Column -->
           <template v-slot:body-cell-name="props">
             <q-td :props="props">
@@ -246,7 +241,7 @@
             </q-td>
           </template>
         </q-table>
-      </BaseCard>
+      </div>
     </div>
 
     <!-- Start Session Dialog -->
@@ -266,6 +261,7 @@
   import { useAuthStore } from 'src/stores/auth';
   import { useCountingStore } from 'src/stores/counting';
   import { useClinicStore } from 'src/stores/clinic';
+  import { useTableSorting } from 'src/composables/useTableSorting';
   import type { CountingSession, PracticeLocation } from 'src/types/inventory';
   import PageLayout from 'src/components/PageLayout.vue';
   import PageTitle from 'src/components/PageTitle.vue';
@@ -284,17 +280,16 @@
   const countingStore = useCountingStore();
   const clinicStore = useClinicStore();
 
+  // Table sorting
+  const { pagination, onTableRequest, sortData } = useTableSorting({
+    sortBy: 'started_at',
+    descending: true,
+    rowsPerPage: 25
+  });
+
   // Reactive state
   const selectedStatus = ref<string | null>(null);
   const showStartDialog = ref(false);
-
-  // Pagination
-  const pagination = ref({
-    sortBy: 'started_at',
-    descending: true,
-    page: 1,
-    rowsPerPage: 25,
-  });
 
   // Computed properties
   const practiceId = computed(() => authStore.userProfile?.clinic_id || '');
@@ -329,7 +324,12 @@
     return sessions;
   });
 
-  const columns = computed(() => [
+  // Apply sorting to filtered sessions
+  const sortedSessions = computed(() => {
+    return sortData(filteredSessions.value, pagination.value.sortBy, pagination.value.descending);
+  });
+
+  const enhancedColumns = computed(() => [
     {
       name: 'name',
       label: t('counting.sessionName'),
@@ -337,14 +337,18 @@
       sortable: true,
       align: 'left' as const,
       style: 'width: 200px',
+      classes: 'col-name',
+      headerClasses: 'col-name',
     },
     {
       name: 'status',
       label: t('counting.status'),
       field: 'status',
       sortable: true,
-      align: 'left' as const,
+      align: 'center' as const,
       style: 'width: 120px',
+      classes: 'col-status',
+      headerClasses: 'col-status',
     },
     {
       name: 'progress',
@@ -352,6 +356,8 @@
       field: 'progress',
       align: 'center' as const,
       sortable: false,
+      classes: 'col-status',
+      headerClasses: 'col-status',
     },
     {
       name: 'started_at',
@@ -366,6 +372,8 @@
       field: 'actions',
       align: 'center' as const,
       sortable: false,
+      classes: 'col-actions',
+      headerClasses: 'col-actions',
     },
   ]);
 

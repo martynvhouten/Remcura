@@ -446,7 +446,7 @@ class PlatformDashboardService {
 
     data?.forEach(event => {
       const day = event.created_at.split('T')[0];
-      if (dailyMetrics.hasOwnProperty(day)) {
+      if (Object.prototype.hasOwnProperty.call(dailyMetrics, day)) {
         dailyMetrics[day]++;
       }
     });

@@ -100,7 +100,7 @@ export function useFormValidation() {
     // Phone number validation
     phone: (value: string): boolean | string => {
       if (!value) return true;
-      const phonePattern = /^[\+]?[\d\s\-\(\)]+$/;
+      const phonePattern = /^[+]?[\d\s\-()]+$/;
       return phonePattern.test(value) || t('validation.phone');
     },
 

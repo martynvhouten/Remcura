@@ -62,15 +62,19 @@
     </q-banner>
 
     <!-- Main table -->
-    <q-table
-      :rows="filteredBatches"
-      :columns="columns"
-      :loading="loading"
-      :pagination="{ rowsPerPage: 50 }"
-      row-key="id"
-      class="batch-table"
-      :no-data-label="$t('batch.noBatchesFound')"
-    >
+    <div class="medical-table">
+      <q-table
+        :rows="filteredBatches"
+        :columns="columns"
+        :loading="loading"
+        :pagination="{ rowsPerPage: 50 }"
+        row-key="id"
+        class="batch-table"
+        :no-data-label="$t('batch.noBatchesFound')"
+        flat
+        bordered
+        separator="cell"
+      >
       <!-- Product column with grouping -->
       <template v-slot:body-cell-product="props">
         <q-td :props="props">
@@ -237,7 +241,8 @@
           </div>
         </q-td>
       </template>
-    </q-table>
+      </q-table>
+    </div>
 
     <!-- Add Batch Dialog -->
     <q-dialog v-model="showAddBatchDialog" max-width="900px">
@@ -613,17 +618,7 @@
     padding: 16px;
   }
 
-  .batch-table :deep(.q-table__top) {
-    padding: 12px 0;
-  }
-
-  .batch-table :deep(.q-table tbody td) {
-    padding: 12px 8px;
-  }
-
-  .batch-table :deep(.q-table th) {
-    font-weight: 600;
-  }
+  /* Table styling now handled by global medical-table class */
 
   .batch-details-content {
     .detail-item {

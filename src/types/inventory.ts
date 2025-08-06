@@ -639,7 +639,7 @@ export interface Product {
   barcode?: string;
   price?: number;
   currency?: string;
-  is_active: boolean;
+  active: boolean;
   requires_batch_tracking: boolean;
   
   // GS1 Fields
@@ -670,7 +670,12 @@ export interface ProductWithStock extends Product {
   reserved_stock: number;
   stock_status: 'in_stock' | 'low_stock' | 'out_of_stock';
   lowest_price?: number;
+  unit_price?: number;
+  minimum_stock?: number;
+  gs1_status?: 'complete' | 'incomplete';
+  batch_status?: 'batch_tracked' | 'manual_stock';
   cheapest_supplier?: Supplier;
+  stock_levels?: StockLevel[];
   batches?: ProductBatchSummary[];
 }
 

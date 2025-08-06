@@ -58,35 +58,20 @@
     </div>
 
     <!-- Orders Table -->
-    <q-table
-      :rows="filteredOrders"
-      :columns="columns"
-      :loading="loading"
-      v-model:selected="selected"
-      selection="multiple"
-      row-key="id"
-      :pagination="pagination"
-      @update:pagination="onPaginationChange"
-      @request="onRequest"
-    >
-      <template v-slot:top-right>
-        <div class="row q-gutter-sm">
-          <q-btn
-            v-if="selected.length > 0"
-            :label="$t('orders.bulkExport')"
-            icon="download"
-            color="secondary"
-            @click="bulkExport"
-          />
-          <q-btn
-            v-if="selected.length > 0"
-            :label="$t('orders.bulkEmail')"
-            icon="email"
-            color="info"
-            @click="bulkEmail"
-          />
-        </div>
-      </template>
+    <div class="medical-table no-top-content">
+      <q-table
+        :rows="filteredOrders"
+        :columns="columns"
+        :loading="loading"
+        v-model:selected="selected"
+        selection="multiple"
+        row-key="id"
+        :pagination="{ rowsPerPage: 25 }"
+        flat
+        bordered
+        separator="cell"
+      >
+
 
       <template v-slot:body-cell-status="props">
         <q-td :props="props" class="text-center">
@@ -153,6 +138,7 @@
         </q-td>
       </template>
     </q-table>
+    </div>
 
     <!-- Export Dialog -->
     <FormDialog
@@ -224,11 +210,14 @@ import FormDialog from 'src/components/base/FormDialog.vue';
 import { ordersFilterPreset } from '@/presets/filters/orders';
 import { supabase } from 'src/services/supabase';
 import { useAuthStore } from 'src/stores/auth';
+
 import type { FilterValues, FilterChangeEvent, FilterResetEvent } from '@/types/filters';
 
 const $q = useQuasar();
 const { t } = useI18n();
 const authStore = useAuthStore();
+
+
 
 // Refs
 const loading = ref(false);
@@ -247,14 +236,6 @@ const exportDateTo = ref('');
 
 // Data
 const orders = ref<any[]>([]);
-
-const pagination = ref({
-  sortBy: 'order_date',
-  descending: true,
-  page: 1,
-  rowsPerPage: 25,
-  rowsNumber: 0,
-});
 
 // Filter event handlers
 const handleFilterChange = (event: FilterChangeEvent) => {
@@ -324,6 +305,10 @@ const filteredOrders = computed(() => {
   return filtered;
 });
 
+
+
+
+
 // Button definitions
 const exportBtn = computed(() => ({
   icon: 'download',
@@ -349,7 +334,7 @@ const createOrderBtn = computed(() => ({
   'no-caps': true,
 }));
 
-// Table columns
+// Table columns with enhanced configuration
 const columns = computed(() => [
   {
     name: 'order_number',
@@ -364,6 +349,8 @@ const columns = computed(() => [
     field: 'supplier_name',
     align: 'left' as const,
     sortable: true,
+    classes: 'col-name',
+    headerClasses: 'col-name',
   },
   {
     name: 'order_date',
@@ -378,6 +365,8 @@ const columns = computed(() => [
     field: 'status',
     align: 'center' as const,
     sortable: true,
+    classes: 'col-status',
+    headerClasses: 'col-status',
   },
   {
     name: 'total_amount',
@@ -385,6 +374,8 @@ const columns = computed(() => [
     field: 'total_amount',
     align: 'right' as const,
     sortable: true,
+    classes: 'col-numeric',
+    headerClasses: 'col-numeric',
   },
   {
     name: 'expected_delivery_date',
@@ -399,6 +390,8 @@ const columns = computed(() => [
     field: '',
     align: 'center' as const,
     sortable: false,
+    classes: 'col-actions',
+    headerClasses: 'col-actions',
   },
 ]);
 
@@ -447,6 +440,10 @@ const formatCurrency = (amount: number): string => {
 };
 
 // Methods
+const refreshOrders = async () => {
+  await loadOrders();
+};
+
 const loadOrders = async () => {
   try {
     loading.value = true;
@@ -465,6 +462,8 @@ const loadOrders = async () => {
       supplier_name: order.supplier?.name || 'Unknown',
       order_number: order.order_number || `ORD-${String(index + 1).padStart(4, '0')}`,
     }));
+    
+
   } catch (error: any) {
     console.error('Failed to load orders:', error);
     $q.notify({
@@ -542,18 +541,7 @@ const performExport = async () => {
   }
 };
 
-const onPaginationChange = (newPagination: any) => {
-  pagination.value = newPagination;
-};
-
-const onRequest = (props: any) => {
-  const { page, rowsPerPage, sortBy, descending } = props.pagination;
-  
-  pagination.value.page = page;
-  pagination.value.rowsPerPage = rowsPerPage;
-  pagination.value.sortBy = sortBy;
-  pagination.value.descending = descending;
-};
+// onTableRequest is now provided by useTableSorting composable
 
 // Lifecycle
 onMounted(async () => {

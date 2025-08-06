@@ -214,10 +214,11 @@ export class APIService {
         }
         break;
 
-      case 'oauth2':
+      case 'oauth2': {
         const token = await this.getOAuth2Token(config);
         headers['Authorization'] = `Bearer ${token}`;
         break;
+      }
     }
 
     return headers;
@@ -298,12 +299,13 @@ export class APIService {
           body = this.convertToXML(payload);
           break;
 
-        case 'form-data':
+        case 'form-data': {
           const formData = new FormData();
           this.flattenObjectToFormData(payload, formData);
           body = formData;
           // Don't set Content-Type for FormData, browser will set it with boundary
           break;
+        }
 
         default:
           throw new Error(`Unsupported API format: ${config.api_format}`);
@@ -408,7 +410,7 @@ export class APIService {
    */
   private flattenObjectToFormData(obj: any, formData: FormData, prefix = ''): void {
     for (const key in obj) {
-      if (obj.hasOwnProperty(key)) {
+              if (Object.prototype.hasOwnProperty.call(obj, key)) {
         const formKey = prefix ? `${prefix}[${key}]` : key;
         const value = obj[key];
 

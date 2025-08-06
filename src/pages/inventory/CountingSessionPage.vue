@@ -174,7 +174,8 @@
             </q-card-section>
           </template>
 
-          <q-table
+          <div class="medical-table">
+            <q-table
             :rows="countingEntries"
             :columns="resultsColumns"
             row-key="id"
@@ -222,6 +223,7 @@
               </q-td>
             </template>
           </q-table>
+          </div>
         </BaseCard>
       </template>
     </div>

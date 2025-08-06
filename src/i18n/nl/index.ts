@@ -1092,19 +1092,6 @@ export default {
       categoriesCount: 'Categorieën',
     },
 
-    stockStatus: {
-      in_stock: 'Op voorraad',
-      low_stock: 'Lage voorraad',
-      out_of_stock: 'Niet op voorraad',
-      unavailable: 'Niet beschikbaar',
-    },
-
-    batchStatus: {
-      good: 'Goed',
-      expiring: 'Binnenkort verlopend',
-      expired: 'Verlopen',
-    },
-
     lifecycleStatus: {
       active: 'Actief',
       discontinued: 'Uitgefaseerd',
@@ -1121,6 +1108,23 @@ export default {
     batches: 'batches',
     noBatches: 'Geen batches',
     bestPrice: 'Beste prijs',
+
+    stockStatus: {
+      in_stock: 'Op voorraad',
+      low_stock: 'Lage voorraad',
+      out_of_stock: 'Niet op voorraad',
+      unavailable: 'Niet beschikbaar',
+    },
+
+    batchStatus: {
+      batch_tracked: 'Batch bijgehouden',
+      manual_stock: 'Handmatige voorraad',
+    },
+
+    gs1Status: {
+      complete: 'Compleet',
+      incomplete: 'Incompleet',
+    },
 
     viewDetails: 'Details bekijken',
     addToCart: 'Toevoegen aan winkelwagen',

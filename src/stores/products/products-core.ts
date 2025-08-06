@@ -217,6 +217,11 @@ export function useProductsCore() {
           const overallStockStatus = totalStock === 0 ? 'out_of_stock' : 
             (totalStock < ((product as any).minimum_stock || 0) ? 'low_stock' : 'in_stock');
 
+          // Calculate derived fields for UI display
+          const lowestPrice = product.price || null;
+          const gs1Status = (product.gtin || product.gpc_brick_code || product.country_of_origin) ? 'complete' : 'incomplete';
+          const batchStatus = product.requires_batch_tracking ? 'batch_tracked' : 'manual_stock';
+
           return {
             ...product,
             stock_levels: stockLevels,
@@ -224,6 +229,12 @@ export function useProductsCore() {
             available_stock: availableStock,
             reserved_stock: reservedStock,
             stock_status: overallStockStatus,
+            lowest_price: lowestPrice,
+            gs1_status: gs1Status,
+            batch_status: batchStatus,
+            unit_price: product.price || 0,
+            minimum_stock: stockLevels.reduce((min, level) => 
+              Math.min(min, level.minimum_quantity || 0), Infinity) || 0,
           } as ProductWithStock;
         });
       } else {
@@ -286,6 +297,11 @@ export function useProductsCore() {
         const overallStockStatus = totalStock === 0 ? 'out_of_stock' : 
           (totalStock < ((product as any).minimum_stock || 0) ? 'low_stock' : 'in_stock');
 
+        // Calculate derived fields for UI display
+        const lowestPrice = product.price || null;
+        const gs1Status = (product.gtin || product.gpc_brick_code || product.country_of_origin) ? 'complete' : 'incomplete';
+        const batchStatus = product.requires_batch_tracking ? 'batch_tracked' : 'manual_stock';
+
         return {
           ...product,
           stock_levels: processedStockLevels,
@@ -293,6 +309,12 @@ export function useProductsCore() {
           available_stock: availableStock,
           reserved_stock: reservedStock,
           stock_status: overallStockStatus,
+          lowest_price: lowestPrice,
+          gs1_status: gs1Status,
+          batch_status: batchStatus,
+          unit_price: product.price || 0,
+          minimum_stock: processedStockLevels.reduce((min, level) => 
+            Math.min(min, level.minimum_quantity || 0), Infinity) || 0,
         } as ProductWithStock;
       });
 

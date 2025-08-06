@@ -1,9 +1,7 @@
 module.exports = {
   root: true,
   ignorePatterns: [
-    'src/types/supabase.ts',
-    'test/**/*',
-    'vitest.config.ts'
+    'src/types/supabase.ts'
   ],
   parserOptions: {
     ecmaVersion: "latest",
@@ -86,14 +84,6 @@ module.exports = {
       files: ["*.vue"],
       rules: {
         "@typescript-eslint/no-unused-vars": "off", // Vue SFCs handle this differently
-      }
-    },
-    {
-      files: ["test/**/*", "tests/**/*", "**/*.test.ts", "**/*.spec.ts"],
-      rules: {
-        "@typescript-eslint/no-explicit-any": "off",
-        "@typescript-eslint/no-unused-vars": "off",
-        "no-console": "off",
       }
     }
   ]

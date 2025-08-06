@@ -112,13 +112,8 @@
     </div>
 
     <!-- Stock Levels Table -->
-    <BaseCard
-      
-      :title="$t('inventory.stockLevels')"
-          icon="table_chart"
-          icon-color="primary"
-    >
-      <q-table
+    <div class="medical-table">
+        <q-table
         :rows="filteredStockLevels"
         :columns="columns"
         :loading="loading"
@@ -126,6 +121,7 @@
         :pagination="{ rowsPerPage: 25 }"
         flat
         bordered
+        separator="cell"
       >
         <template #loading>
           <q-inner-loading showing color="primary" />
@@ -224,8 +220,8 @@
             </q-btn>
           </q-td>
         </template>
-      </q-table>
-    </BaseCard>
+              </q-table>
+    </div>
 
     <!-- Stock Adjustment Dialog -->
     <FormDialog

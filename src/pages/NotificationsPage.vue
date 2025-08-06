@@ -17,67 +17,52 @@
         >
           <q-tooltip>{{ $t('common.refresh') }}</q-tooltip>
         </q-btn>
-        <q-btn
-          icon="mark_email_read"
-          :label="$t('notificationsPage.markAllRead')"
-          @click="markAllAsRead"
-          :disable="unreadCount === 0"
-          unelevated
-          no-caps
-          class="app-btn-success"
-        />
-        <q-btn
-          icon="clear_all"
-          :label="$t('notificationsPage.clearAllNotifications')"
-          @click="confirmClearAll"
-          unelevated
-          no-caps
-          class="app-btn-danger"
-        />
       </template>
     </PageTitle>
 
     <div class="row q-gutter-md">
-      <!-- Filters and Stats -->
+      <!-- Simple Filters -->
       <div class="col-12">
-        <BaseCard 
-          :title="$t('notificationsPage.notificationStatistics')"
-          icon="analytics"
-          icon-color="primary"
-        >
-          <div class="notification-stats">
-            <div class="stats-filters">
-              <q-btn-group flat>
-                <q-btn
-                  flat
-                  :color="filter === 'all' ? 'primary' : 'grey-6'"
-                  :label="`${$t('notificationsPage.all')} (${mockNotifications.length})`"
-                  @click="filter = 'all'"
-                />
-                <q-btn
-                  flat
-                  :color="filter === 'unread' ? 'primary' : 'grey-6'"
-                  :label="`${$t('notificationsPage.unread')} (${unreadCount})`"
-                  @click="filter = 'unread'"
-                />
-              </q-btn-group>
-            </div>
-
-            <div class="stats-grid">
-              <div class="stat-item">
-                <div class="stat-value text-primary">{{ unreadCount }}</div>
-                <div class="stat-label">{{ $t('notificationsPage.unreadCount') }}</div>
-              </div>
-              <div class="stat-item">
-                <div class="stat-value">{{ mockNotifications.length }}</div>
-                <div class="stat-label">{{ $t('notificationsPage.total') }}</div>
-              </div>
-            </div>
+        <div class="notification-filters q-mb-md">
+          <q-btn-group flat>
+            <q-btn
+              flat
+              :color="filter === 'all' ? 'primary' : 'grey-6'"
+              :label="`${$t('notificationsPage.all')} (${notifications.length})`"
+              @click="filter = 'all'"
+              size="sm"
+            />
+            <q-btn
+              flat
+              :color="filter === 'unread' ? 'primary' : 'grey-6'"
+              :label="`${$t('notificationsPage.unread')} (${unreadCount})`"
+              @click="filter = 'unread'"
+              size="sm"
+            />
+          </q-btn-group>
+          
+          <div class="q-ml-auto">
+            <q-btn
+              flat
+              icon="mark_email_read"
+              :label="$t('notificationsPage.markAllRead')"
+              @click="markAllAsRead"
+              :disable="unreadCount === 0"
+              size="sm"
+              color="positive"
+            />
+            <q-btn
+              flat
+              icon="clear_all"
+              :label="$t('notificationsPage.clearAllNotifications')"
+              @click="confirmClearAll"
+              size="sm"
+              color="negative"
+              class="q-ml-sm"
+            />
           </div>
-        </BaseCard>
+        </div>
       </div>
-
-
 
       <!-- Notifications List -->
       <div class="col-12">
@@ -157,25 +142,42 @@
               </q-item-section>
 
               <q-item-section side>
-                <div class="row items-center">
+                <div class="row items-center q-gutter-xs">
                   <q-btn
                     v-if="!notification.is_read"
                     flat
                     round
                     dense
                     icon="mark_email_read"
-                    :tooltip="$t('notificationsPage.markAsReadTooltip')"
+                    color="positive"
+                    size="sm"
                     @click.stop="markAsRead(notification.id)"
-                  />
+                  >
+                    <q-tooltip>Markeer als gelezen</q-tooltip>
+                  </q-btn>
+                  <q-btn
+                    v-else
+                    flat
+                    round
+                    dense
+                    icon="mark_email_unread"
+                    color="primary"
+                    size="sm"
+                    @click.stop="markAsUnread(notification.id)"
+                  >
+                    <q-tooltip>Markeer als ongelezen</q-tooltip>
+                  </q-btn>
                   <q-btn
                     flat
                     round
                     dense
                     icon="delete"
                     color="negative"
-                    :tooltip="$t('notificationsPage.deleteTooltip')"
+                    size="sm"
                     @click.stop="deleteNotification(notification.id)"
-                  />
+                  >
+                    <q-tooltip>Verwijder melding</q-tooltip>
+                  </q-btn>
                 </div>
               </q-item-section>
             </q-item>
@@ -191,8 +193,10 @@
   import { useQuasar } from 'quasar';
   import { useI18n } from 'vue-i18n';
   import { useAuthStore } from 'src/stores/auth';
+  import { useNotificationStore } from 'src/stores/notifications';
   import { monitoringService } from 'src/services/monitoring';
   import { useButtons } from 'src/composables/useButtons';
+  import { supabase } from 'src/boot/supabase';
   import PageLayout from 'src/components/PageLayout.vue';
   import PageTitle from 'src/components/PageTitle.vue';
   import { BaseCard, InteractiveCard, AlertCard } from 'src/components/cards';
@@ -200,83 +204,32 @@
   const $q = useQuasar();
   const { t } = useI18n();
   const authStore = useAuthStore();
+  const notificationStore = useNotificationStore();
   const { quickActions, getThemeConfig } = useButtons();
 
   // State
-  const loading = ref(false);
   const filter = ref<'all' | 'unread'>('all');
   const categoryFilter = ref<string | null>(null);
+  
+  // Use store data
+  const loading = computed(() => notificationStore.loading);
+  const notifications = computed(() => notificationStore.notifications);
+  const error = computed(() => notificationStore.error);
 
-  // Button configurations
-  const markAllReadBtn = computed(() =>
-    quickActions.markAllRead({
-      label: t('notificationsPage.markAllRead'),
-    })
-  );
 
-  const testStockAlertBtn = computed(() =>
-    getThemeConfig('warning', {
-      icon: 'warning',
-      label: t('notificationsPage.testStockAlert'),
-    })
-  );
 
-  const testOrderUpdateBtn = computed(() =>
-    getThemeConfig('info', {
-      icon: 'shopping_cart',
-      label: t('notificationsPage.testOrderUpdate'),
-    })
-  );
+  // Load notifications using store
+  const loadNotifications = () => {
+    notificationStore.loadNotifications();
+  };
 
-  const clearAllBtn = computed(() =>
-    quickActions.clearAll({
-      label: t('notificationsPage.clearAllNotifications'),
-    })
-  );
 
-  // Mock notifications data since we don't have a notifications table
-  const mockNotifications = ref([
-    {
-      id: '1',
-      title: t('sampleNotifications.lowStockWarning'),
-      message: 'Spuiten 10ml zijn bijna op (2 stuks resterend)',
-      category: 'stock_alert',
-      is_read: false,
-      created_at: new Date(Date.now() - 2 * 60 * 60 * 1000).toISOString(), // 2 hours ago
-    },
-    {
-      id: '2',
-      title: t('sampleNotifications.orderConfirmed'),
-      message: 'Bestelling #ORD-2024-003 is bevestigd door leverancier',
-      category: 'order_update',
-      is_read: false,
-      created_at: new Date(Date.now() - 4 * 60 * 60 * 1000).toISOString(), // 4 hours ago
-    },
-    {
-      id: '3',
-      title: t('sampleNotifications.stockUpdated'),
-      message: 'Handschoenen latex voorraad is bijgewerkt naar 150 stuks',
-      category: 'stock_alert',
-      is_read: true,
-      created_at: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000).toISOString(), // 1 day ago
-    },
-    {
-      id: '4',
-      title: t('sampleNotifications.systemMaintenance'),
-      message: 'Gepland onderhoud op zondag 3:00-5:00 AM',
-      category: 'system_notification',
-      is_read: true,
-      created_at: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toISOString(), // 2 days ago
-    },
-  ]);
 
   // Computed properties
-  const unreadCount = computed(
-    () => mockNotifications.value.filter(n => !n.is_read).length
-  );
+  const unreadCount = computed(() => notificationStore.unreadCount);
 
   const filteredNotifications = computed(() => {
-    let filtered = mockNotifications.value;
+    let filtered = notifications.value;
 
     if (filter.value === 'unread') {
       filtered = filtered.filter(n => !n.is_read);
@@ -294,71 +247,66 @@
 
   const categoryOptions = computed(() => [
     {
-      label: t('notificationsPage.categories.stockAlert'),
+      label: 'Voorraad waarschuwingen',
       value: 'stock_alert',
     },
     {
-      label: t('notificationsPage.categories.orderUpdate'),
+      label: 'Bestelling updates',
       value: 'order_update',
     },
     {
-      label: t('notificationsPage.categories.systemNotification'),
+      label: 'Systeem meldingen',
       value: 'system_notification',
     },
-    { label: t('notificationsPage.categories.reminder'), value: 'reminder' },
+    {
+      label: 'Batch vervaldatums',
+      value: 'batch_expiry',
+    },
+    {
+      label: 'Gebruiker activiteit',
+      value: 'user_activity',
+    },
   ]);
 
   // Methods
-  const loadNotifications = async () => {
-    loading.value = true;
-    try {
-      // In a real implementation, this would fetch from Supabase
-      // For now, we use mock data
-      await monitoringService.trackEvent('notifications_viewed', {
-        total: mockNotifications.value.length,
-        unread: unreadCount.value,
-      });
-    } catch (error) {
-      console.error('Error loading notifications:', error);
-      $q.notify({
-        type: 'negative',
-        message: t('notificationsPage.loadNotificationsError'),
-      });
-    } finally {
-      loading.value = false;
-    }
-  };
-
   const markAsRead = async (notificationId: string) => {
     try {
-      const notification = mockNotifications.value.find(
-        n => n.id === notificationId
-      );
-      if (notification) {
-        notification.is_read = true;
-      }
-
+      await notificationStore.markAsRead(notificationId);
+      
       await monitoringService.trackEvent('notification_marked_read', {
         notification_id: notificationId,
       });
     } catch (error) {
       console.error('Error marking notification as read:', error);
+      $q.notify({
+        type: 'negative',
+        message: t('notificationsPage.markReadError'),
+      });
+    }
+  };
+
+  const markAsUnread = async (notificationId: string) => {
+    try {
+      await notificationStore.markAsUnread(notificationId);
+      
+      await monitoringService.trackEvent('notification_marked_unread', {
+        notification_id: notificationId,
+      });
+    } catch (error) {
+      console.error('Error marking notification as unread:', error);
+      $q.notify({
+        type: 'negative',
+        message: t('notificationsPage.markUnreadError'),
+      });
     }
   };
 
   const markAllAsRead = async () => {
     try {
-      const unreadIds = mockNotifications.value
-        .filter(n => !n.is_read)
-        .map(n => n.id);
+      const unreadCount = notificationStore.unreadCount;
+      if (unreadCount === 0) return;
 
-      if (unreadIds.length === 0) { return; }
-
-      mockNotifications.value.forEach(n => {
-        if (unreadIds.includes(n.id)) {
-          n.is_read = true;
-        }
-      });
+      await notificationStore.markAllAsRead();
 
       $q.notify({
         type: 'positive',
@@ -366,18 +314,20 @@
       });
 
       await monitoringService.trackEvent('notifications_mark_all_read', {
-        count: unreadIds.length,
+        count: unreadCount,
       });
     } catch (error) {
       console.error('Error marking all as read:', error);
+      $q.notify({
+        type: 'negative',
+        message: t('notificationsPage.markAllReadError'),
+      });
     }
   };
 
   const deleteNotification = async (notificationId: string) => {
     try {
-      mockNotifications.value = mockNotifications.value.filter(
-        n => n.id !== notificationId
-      );
+      await notificationStore.deleteNotification(notificationId);
 
       $q.notify({
         type: 'positive',
@@ -389,6 +339,10 @@
       });
     } catch (error) {
       console.error('Error deleting notification:', error);
+      $q.notify({
+        type: 'negative',
+        message: t('notificationsPage.deleteNotificationError'),
+      });
     }
   };
 
@@ -400,7 +354,7 @@
       persistent: true,
     }).onOk(async () => {
       try {
-        mockNotifications.value = [];
+        await notificationStore.clearAllNotifications();
 
         $q.notify({
           type: 'positive',
@@ -410,60 +364,23 @@
         await monitoringService.trackEvent('notifications_cleared_all');
       } catch (error) {
         console.error('Error clearing all notifications:', error);
+        $q.notify({
+          type: 'negative',
+          message: t('notificationsPage.clearAllError'),
+        });
       }
     });
   };
 
-  const createTestNotification = async (
-    type: 'stock_alert' | 'order_update'
-  ) => {
-    try {
-      const testMessages = {
-        stock_alert: {
-          title: t('notificationsPage.testMessages.stockAlert.title'),
-          message: t('notificationsPage.testMessages.stockAlert.message'),
-        },
-        order_update: {
-          title: t('notificationsPage.testMessages.orderUpdate.title'),
-          message: t('notificationsPage.testMessages.orderUpdate.message'),
-        },
-      };
 
-      const newNotification = {
-        id: Date.now().toString(),
-        title: testMessages[type].title,
-        message: testMessages[type].message,
-        category: type,
-        is_read: false,
-        created_at: new Date().toISOString(),
-      };
-
-      mockNotifications.value.unshift(newNotification);
-
-      const successMessage =
-        type === 'stock_alert'
-          ? t('notificationsPage.testStockAlertCreated')
-          : t('notificationsPage.testOrderUpdateCreated');
-
-      $q.notify({
-        type: 'positive',
-        message: successMessage,
-      });
-
-      await monitoringService.trackEvent('test_notification_created', {
-        type,
-      });
-    } catch (error) {
-      console.error('Error creating test notification:', error);
-    }
-  };
 
   const getCategoryIcon = (category: string) => {
     const icons = {
       stock_alert: 'warning',
       order_update: 'shopping_cart',
       system_notification: 'info',
-      reminder: 'schedule',
+      batch_expiry: 'schedule',
+      user_activity: 'person',
     };
     return icons[category as keyof typeof icons] || 'notifications';
   };
@@ -473,7 +390,8 @@
       stock_alert: 'warning',
       order_update: 'primary',
       system_notification: 'info',
-      reminder: 'accent',
+      batch_expiry: 'orange',
+      user_activity: 'purple',
     };
     return colors[category as keyof typeof colors] || 'grey';
   };
@@ -502,31 +420,12 @@
 </script>
 
 <style scoped>
-.notification-stats {
-  .stats-filters {
-    margin-bottom: 16px;
-  }
-
-  .stats-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 16px;
-
-    .stat-item {
-      text-align: center;
-
-      .stat-value {
-        font-size: 32px;
-        font-weight: 700;
-        line-height: 1.2;
-        margin-bottom: 4px;
-      }
-
-      .stat-label {
-        font-size: 14px;
-        color: var(--text-secondary);
-      }
-    }
-  }
+.notification-filters {
+  display: flex;
+  align-items: center;
+  padding: 12px 16px;
+  background: rgba(var(--q-primary), 0.05);
+  border-radius: 8px;
+  border: 1px solid rgba(var(--q-primary), 0.1);
 }
 </style>

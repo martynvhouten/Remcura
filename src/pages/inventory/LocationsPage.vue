@@ -85,16 +85,20 @@
     </div>
 
     <!-- Locations Table -->
-    <q-table
-      :rows="filteredLocations"
-      :columns="columns"
-      :loading="loading"
-      row-key="id"
-      flat
-      bordered
-      :rows-per-page-options="[10, 25, 50]"
-      :no-data-label="$t('locations.noLocations')"
-    >
+    <div class="medical-table">
+      <q-table
+        :rows="sortedLocations"
+        :columns="enhancedColumns"
+        :loading="loading"
+        row-key="id"
+        :pagination="pagination"
+        flat
+        bordered
+        separator="cell"
+        :rows-per-page-options="[10, 25, 50]"
+        :no-data-label="$t('locations.noLocations')"
+        @request="onTableRequest"
+      >
       <template v-slot:body-cell-actions="props">
         <q-td :props="props">
           <q-btn icon="edit" size="sm" flat dense @click="showComingSoon" />
@@ -109,6 +113,7 @@
         </q-td>
       </template>
     </q-table>
+    </div>
   </PageLayout>
 </template>
 
@@ -120,11 +125,17 @@
   import PageLayout from '@/components/PageLayout.vue';
   import FilterPanel from 'src/components/filters/FilterPanel.vue';
   import { useAuthStore } from 'src/stores/auth';
+  import { useTableSorting } from 'src/composables/useTableSorting';
   import { locationsFilterPreset } from 'src/presets/filters/locations';
   import type { FilterValues, FilterChangeEvent, FilterResetEvent } from 'src/types/filters';
 
   const { t } = useI18n();
   const $q = useQuasar();
+
+  // Table sorting
+  const { pagination, onTableRequest, sortData } = useTableSorting({
+    rowsPerPage: 25
+  });
 
   // State
   const authStore = useAuthStore();
@@ -136,8 +147,8 @@
   // Modern Filter System
   const filterValues = ref<FilterValues>({});
 
-  // Sample data for demonstration
-  const locations = ref([
+  // Sample data for demonstration - using computed to ensure reactivity with translations
+  const locations = computed(() => [
     {
       id: 1,
       name: t('locations.sampleData.mainWarehouse.name'),
@@ -193,17 +204,24 @@
     return filtered;
   });
 
+  // Apply sorting to filtered locations
+  const sortedLocations = computed(() => {
+    return sortData(filteredLocations.value, pagination.value.sortBy, pagination.value.descending);
+  });
+
   const mainLocationsCount = computed(() => {
     return locations.value.filter(loc => loc.isMain).length;
   });
 
-  const columns = computed(() => [
+  const enhancedColumns = computed(() => [
     {
       name: 'name',
       label: t('locations.name'),
       field: 'name',
       align: 'left' as const,
       sortable: true,
+      classes: 'col-name',
+      headerClasses: 'col-name',
     },
     {
       name: 'type',
@@ -211,6 +229,8 @@
       field: 'type',
       align: 'left' as const,
       sortable: true,
+      classes: 'col-status',
+      headerClasses: 'col-status',
     },
     {
       name: 'description',
@@ -232,6 +252,8 @@
       field: 'actions',
       align: 'center' as const,
       sortable: false,
+      classes: 'col-actions',
+      headerClasses: 'col-actions',
     },
   ]);
 

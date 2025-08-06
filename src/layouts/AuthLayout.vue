@@ -23,7 +23,7 @@
                   <q-icon name="local_hospital" size="32px" color="primary" />
                 </q-avatar>
                 <div class="brand-text">
-                  <h1 class="brand-title">{{ $t('brand.name') }}</h1>
+                  <h1 class="brand-title">{{ t('brand.name') }}</h1>
                   <p class="brand-subtitle">{{ subtitleText }}</p>
                 </div>
               </div>
@@ -42,8 +42,8 @@
                   class="footer-link"
                   role="button"
                   tabindex="0"
-                  :aria-label="$t('auth.privacyPolicy')"
-                  >{{ $t('auth.privacyPolicy') }}</a
+                  :aria-label="t('auth.privacyPolicy')"
+                  >{{ t('auth.privacyPolicy') }}</a
                 >
                 <span class="separator" aria-hidden="true">•</span>
                 <a
@@ -51,8 +51,8 @@
                   class="footer-link"
                   role="button"
                   tabindex="0"
-                  :aria-label="$t('auth.termsOfService')"
-                  >{{ $t('auth.termsOfService') }}</a
+                  :aria-label="t('auth.termsOfService')"
+                  >{{ t('auth.termsOfService') }}</a
                 >
                 <span class="separator" aria-hidden="true">•</span>
                 <a
@@ -60,15 +60,15 @@
                   class="footer-link"
                   role="button"
                   tabindex="0"
-                  :aria-label="$t('auth.support')"
-                  >{{ $t('auth.support') }}</a
+                  :aria-label="t('auth.support')"
+                  >{{ t('auth.support') }}</a
                 >
               </div>
               <p class="copyright">
                 {{
-                  $t('auth.copyright', {
+                  t('auth.copyright', {
                     year: 2025,
-                    company: $t('brand.name'),
+                    company: t('brand.name'),
                   })
                 }}
               </p>
@@ -86,28 +86,28 @@
                 <q-icon name="medical_services" size="48px" />
               </div>
               <h2 id="info-title" class="info-title">
-                {{ $t('auth.professionalInventory') }}
+                {{ t('auth.professionalInventory') }}
               </h2>
               <p class="info-description">
-                {{ $t('auth.platformDescription') }}
+                {{ t('auth.platformDescription') }}
               </p>
 
               <div class="features-list" role="list">
                 <div class="feature-item" role="listitem">
                   <q-icon name="check_circle" color="positive" />
-                  <span>{{ $t('auth.realtimeTracking') }}</span>
+                  <span>{{ t('auth.realtimeTracking') }}</span>
                 </div>
                 <div class="feature-item" role="listitem">
                   <q-icon name="check_circle" color="positive" />
-                  <span>{{ $t('auth.automatedAlerts') }}</span>
+                  <span>{{ t('auth.automatedAlerts') }}</span>
                 </div>
                 <div class="feature-item" role="listitem">
                   <q-icon name="check_circle" color="positive" />
-                  <span>{{ $t('auth.complianceReporting') }}</span>
+                  <span>{{ t('auth.complianceReporting') }}</span>
                 </div>
                 <div class="feature-item" role="listitem">
                   <q-icon name="check_circle" color="positive" />
-                  <span>{{ $t('auth.multilocationSupport') }}</span>
+                  <span>{{ t('auth.multilocationSupport') }}</span>
                 </div>
               </div>
             </div>
@@ -138,6 +138,7 @@ export default defineComponent({
     });
 
     return {
+      t,
       subtitleText
     };
   }

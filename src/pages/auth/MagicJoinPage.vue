@@ -223,7 +223,7 @@ const codePreview = computed(() => {
 // Methods
 const handleCodeInput = () => {
   // Clean and format input
-  magicCode.value = magicCode.value.toUpperCase().replace(/[^A-Z0-9🏥💊🦷👩‍⚕️🔬🩺💉⚕️✨🌟]/g, '');
+  magicCode.value = magicCode.value.toUpperCase().replace(/[^A-Z0-9🏥💊🦷🔬🩺💉⚕️✨🌟]/gu, '');
 };
 
 const clearCode = () => {

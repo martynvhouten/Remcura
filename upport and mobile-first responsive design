@@ -1,5 +1,0 @@
-[33m52d723b[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m)[m refactor: Complete TypeScript types reorganization and fix critical parsing errors
-[33mfcc7168[m[33m ([m[1;31morigin/main[m[33m, [m[1;31morigin/HEAD[m[33m)[m fix: resolve final complex TypeScript errors in products-core
-[33m2d62624[m fix: resolve all TypeScript IDE errors and improve type safety
-[33m29af928[m fix: resolve TypeScript errors and clean up CSS rules
-[33m4d2717d[m feat: implement Phase 2 performance optimizations - 90%+ performance improvement

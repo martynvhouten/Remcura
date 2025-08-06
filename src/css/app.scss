@@ -2843,55 +2843,107 @@ html body .sr-only {
 }
 
 // ===================================================================
-// ENHANCED MEDICAL DATA TABLES
+// ENHANCED MEDICAL DATA TABLES - UNIFIED STYLING
 // ===================================================================
 
 .medical-table {
   .q-table {
     border-radius: var(--radius-lg);
     overflow: hidden;
-
-    // Enhanced header for medical data
-    .q-table__top {
-      background: linear-gradient(
-        135deg,
-        var(--brand-primary),
-        var(--brand-primary-dark)
-      );
+    box-shadow: var(--shadow-sm);
+    border: 1px solid var(--border-primary);
+    
+    // FORCE header colors with higher specificity than Quasar
+    thead tr th,
+    thead tr th.q-th,
+    .q-table__top,
+    thead tr th[class*="q-th"] {
+      background: #1e3a8a;
       color: white;
-      padding: var(--space-4) var(--space-6);
+      font-weight: bold;
     }
 
-    // Improved row styling for quick scanning
-    tbody tr {
-      border-bottom: 1px solid var(--neutral-200);
-      transition: all var(--transition-fast);
-
-      &:hover {
-        background: var(--neutral-50);
-        transform: translateX(2px);
-        box-shadow: 4px 0 8px rgba(0, 0, 0, 0.04);
+    // Enhanced header for medical data - DARKER BACKGROUND
+    .medical-table .q-table .q-table__top {
+      background: linear-gradient(135deg, #1e3a8a, #1e40af);
+      color: white;
+      padding: var(--space-3) var(--space-4);
+      
+      // Hide empty top sections completely
+      &:empty {
+        display: none;
       }
-
-      // Critical row highlighting
-      &.row-critical {
-        background: rgba(220, 38, 38, 0.05);
-        border-left: 4px solid var(--medical-critical);
-
+      
+      // Ensure all content in top section is white
+      * {
+        color: white;
+      }
+      
+      // Style buttons in top section
+      .q-btn {
+        color: white;
+        background: rgba(255, 255, 255, 0.1);
+        
         &:hover {
-          background: rgba(220, 38, 38, 0.08);
+          background: rgba(255, 255, 255, 0.2);
         }
       }
-
-      &.row-warning {
-        background: rgba(245, 158, 11, 0.03);
-        border-left: 3px solid var(--medical-caution);
-      }
+    }
+    
+    // Special case: Hide top section when table has no top-right or top-left content
+    &.no-top-content .q-table__top {
+      display: none;
     }
 
-    // Better column typography
+    // Improved row styling for quick scanning with alternating colors
+    tbody tr {
+      border-bottom: 1px solid var(--border-primary);
+      transition: all var(--transition-fast);
+
+      // Consistent alternating row colors
+      &:nth-child(even) {
+        background: var(--neutral-50);
+      }
+
+      &:nth-child(odd) {
+        background: white;
+      }
+
+                   &:hover {
+               background: rgba(30, 58, 138, 0.05);
+               transform: translateX(2px);
+               box-shadow: 4px 0 12px rgba(30, 58, 138, 0.1);
+             }
+
+             // Critical row highlighting
+             &.row-critical {
+               background: rgba(220, 38, 38, 0.05);
+               border-left: 4px solid var(--medical-critical);
+
+               &:hover {
+                 background: rgba(220, 38, 38, 0.08);
+               }
+             }
+
+             &.row-warning {
+               background: rgba(245, 158, 11, 0.03);
+               border-left: 3px solid var(--medical-caution);
+
+               &:hover {
+                 background: rgba(245, 158, 11, 0.05);
+               }
+             }
+    }
+
+    // Better column typography with subtle separators
     .q-td {
-      padding: var(--space-4) var(--space-6);
+      padding: var(--space-3) var(--space-4);
+      border-right: 1px solid var(--border-primary);
+      vertical-align: middle;
+      
+      &:last-child {
+        border-right: none;
+      }
 
       // Numeric columns (stock counts, prices)
       &.col-numeric {
@@ -2907,23 +2959,121 @@ html body .sr-only {
       }
 
       // Product names
-      &.col-product {
+      &.col-product,
+      &.col-name {
         font-weight: var(--font-weight-medium);
-        color: var(--neutral-900);
+        color: var(--text-primary);
+      }
+
+      // Action columns
+      &.col-actions {
+        text-align: center;
       }
     }
 
-    // Enhanced headers with bolder typography
-    .q-th {
-      background: var(--neutral-100);
-      color: var(--neutral-800);
+    // Enhanced headers with much darker background and better contrast
+    // Use maximum CSS specificity to override Quasar defaults
+    .medical-table .q-table thead tr th.q-th {
+      background: linear-gradient(135deg, #1e3a8a, #1e40af);
+      color: white;
       font-family: var(--font-family-primary);
-      font-weight: var(--font-weight-bold); // 700 - Much bolder for table headers
+      font-weight: var(--font-weight-bold);
       text-transform: uppercase;
       letter-spacing: 0.05em;
       font-size: var(--text-xs);
-      padding: var(--space-3) var(--space-6);
-      border-bottom: 2px solid var(--brand-primary);
+      padding: var(--space-3) var(--space-4);
+      border-right: 1px solid rgba(255, 255, 255, 0.2);
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      
+      &:last-child {
+        border-right: none;
+      }
+      
+      // Sortable column hover effect
+      &.sortable {
+        cursor: pointer;
+        transition: background var(--transition-base);
+        
+        &:hover {
+          background: linear-gradient(135deg, #1e40af, #2563eb);
+        }
+      }
+    }
+    
+    // Additional specificity patterns to catch all Quasar header variations
+    .medical-table .q-table thead th,
+    .medical-table .q-table .q-th,
+    .medical-table .q-table thead tr th {
+      background: linear-gradient(135deg, #1e3a8a, #1e40af);
+      color: white;
+    }
+
+
+
+    // Pagination and other table controls
+    .q-table__bottom {
+      padding: var(--space-3) var(--space-4);
+      border-top: 1px solid var(--border-primary);
+    }
+  }
+}
+
+// Dark mode support for medical tables
+body.body--dark .medical-table {
+  .q-table {
+    background: var(--bg-secondary);
+    border-color: var(--border-primary);
+
+    .q-table__top {
+      background: linear-gradient(135deg, #1e3a8a, #1e40af); // Same dark header in dark mode
+    }
+
+    tbody tr {
+      border-bottom-color: var(--border-primary);
+
+      &:nth-child(even) {
+        background: var(--bg-tertiary);
+      }
+
+      &:nth-child(odd) {
+        background: var(--bg-secondary);
+      }
+
+      &:hover {
+        background: rgba(30, 58, 138, 0.08) !important;
+      }
+    }
+
+    .q-td {
+      border-right-color: var(--border-primary);
+      color: var(--text-primary);
+    }
+
+    .q-th {
+      background: linear-gradient(135deg, #1e3a8a, #1e40af) !important;
+      color: white !important;
+      
+      &.sortable:hover {
+        background: linear-gradient(135deg, #1e40af, #2563eb) !important;
+      }
+    }
+
+    .q-table__bottom {
+      border-top-color: var(--border-primary);
+      background: var(--bg-secondary);
+    }
+  }
+}
+
+// Responsive adjustments
+@media (max-width: 768px) {
+  .medical-table {
+    .q-table {
+      .q-td,
+      .q-th {
+        padding: var(--space-2) var(--space-3);
+        font-size: var(--text-sm);
+      }
     }
   }
 }
