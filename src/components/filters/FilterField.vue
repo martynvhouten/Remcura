@@ -21,7 +21,7 @@
         hide-bottom-space
       >
         <template v-if="field.icon" v-slot:prepend>
-          <q-icon :name="field.icon" size="16px" class="filter-icon" />
+          <q-icon :name="field.icon" class="filter-icon icon-size-sm" />
         </template>
         <template v-if="field.scannerButton" v-slot:append>
           <q-btn
@@ -73,7 +73,7 @@
               <q-icon
                 :name="scope.opt.icon"
                 :color="scope.opt.color"
-                size="14px"
+                class="icon-size-sm"
               />
             </q-item-section>
             <q-item-section>
@@ -119,7 +119,7 @@
         behavior="menu"
       >
         <template v-if="field.icon" v-slot:prepend>
-          <q-icon :name="field.icon" size="16px" class="filter-icon" />
+          <q-icon :name="field.icon" class="filter-icon icon-size-sm" />
         </template>
         <template v-slot:selected>
           <div class="flex flex-wrap gap-1">
@@ -162,8 +162,7 @@
           <q-icon
             v-if="field.icon"
             :name="field.icon"
-            size="16px"
-            class="filter-icon q-mr-xs"
+            class="filter-icon icon-size-sm q-mr-xs"
           />
           {{ $t(field.label as string) }}
         </label>
@@ -192,7 +191,7 @@
         hide-bottom-space
       >
         <template v-if="field.icon" v-slot:prepend>
-          <q-icon :name="field.icon" size="16px" class="filter-icon" />
+          <q-icon :name="field.icon" class="filter-icon icon-size-sm" />
         </template>
         <template v-if="field.currency" v-slot:append>
           <span class="filter-currency">{{ field.currency }}</span>
@@ -268,7 +267,7 @@
           <q-icon :name="field.icon" size="16px" class="filter-icon" />
         </template>
         <template v-slot:append>
-          <q-icon name="event" class="filter-date-icon" size="16px">
+          <q-icon name="event" class="filter-date-icon icon-size-sm">
             <q-popup-proxy
               cover
               transition-show="scale"
@@ -312,7 +311,7 @@
           hide-bottom-space
         >
           <template v-slot:append>
-            <q-icon name="event" class="filter-date-icon" size="16px">
+            <q-icon name="event" class="filter-date-icon icon-size-sm">
               <q-popup-proxy
                 cover
                 transition-show="scale"

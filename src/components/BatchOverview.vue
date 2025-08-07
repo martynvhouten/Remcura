@@ -98,7 +98,7 @@
         <template v-slot:body-cell-batchNumber="props">
           <q-td :props="props">
             <div class="row items-center">
-              <q-icon name="qr_code" class="q-mr-xs text-grey" size="16px" />
+              <q-icon name="qr_code" class="q-mr-xs text-grey icon-size-sm" />
               <span class="text-weight-medium">{{
                 props.row.batchNumber
               }}</span>

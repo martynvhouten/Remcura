@@ -18,7 +18,7 @@
               iconColor ? `card-icon--${iconColor}` : '',
             ]"
           >
-            <q-icon :name="icon" size="20px" />
+            <q-icon :name="icon" class="icon-size-base" />
           </div>
 
           <!-- Title and Subtitle -->

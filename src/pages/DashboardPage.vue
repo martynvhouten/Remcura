@@ -41,7 +41,7 @@
 
             <template #selected>
               <div class="row items-center q-gutter-xs">
-                <q-icon :name="selectedRoleIcon" size="sm" />
+                <q-icon :name="selectedRoleIcon" class="icon-size-sm" />
                 <span>{{ selectedRoleLabel }}</span>
               </div>
             </template>
@@ -164,7 +164,7 @@
 
       <!-- Empty State -->
       <div v-else-if="!widgets.length && !loading" class="empty-dashboard">
-        <q-icon name="widgets" size="4rem" color="grey-5" />
+        <q-icon name="widgets" class="icon-size-3xl" color="grey-5" />
         <h5>{{ $t('dashboard.empty.title') }}</h5>
         <p>{{ $t('dashboard.empty.subtitle') }}</p>
         <q-btn

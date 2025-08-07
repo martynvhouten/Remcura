@@ -161,7 +161,7 @@
 
         <!-- Security Notice -->
         <div class="security-notice" role="status" aria-live="polite">
-          <q-icon name="shield" size="16px" aria-hidden="true" />
+          <q-icon name="shield" class="icon-size-sm" aria-hidden="true" />
           <span>{{ $t('auth.secureConnection') }}</span>
         </div>
       </div>

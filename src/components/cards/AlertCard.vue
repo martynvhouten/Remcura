@@ -18,7 +18,7 @@
             class="status-icon"
             :class="`status-icon--${severity}`"
           >
-            <q-icon :name="statusIcon" size="20px" />
+            <q-icon :name="statusIcon" class="icon-size-base" />
           </div>
 
           <!-- Custom Icon -->
@@ -30,7 +30,7 @@
               iconColor ? `card-icon--${iconColor}` : '',
             ]"
           >
-            <q-icon :name="icon" size="20px" />
+            <q-icon :name="icon" class="icon-size-base" />
           </div>
 
           <!-- Title and Subtitle -->

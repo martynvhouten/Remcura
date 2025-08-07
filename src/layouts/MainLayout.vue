@@ -1193,7 +1193,7 @@
       }
 
       .hide-when-mini {
-        display: none !important;
+        display: none;
       }
 
       .nav-item,

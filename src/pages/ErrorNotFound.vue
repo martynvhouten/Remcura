@@ -16,7 +16,7 @@
         <!-- Medical Icon with Animation -->
         <div class="error-icon-section" aria-hidden="true">
           <div class="medical-cross">
-            <q-icon name="local_hospital" size="120px" />
+            <q-icon name="local_hospital" class="icon-size-5xl" />
           </div>
           <div class="pulse-rings">
             <div class="pulse-ring pulse-ring-1"></div>
@@ -86,7 +86,11 @@
               @keydown.enter="navigateTo('/')"
               @keydown.space="navigateTo('/')"
             >
-              <q-icon name="space_dashboard" size="24px" aria-hidden="true" />
+              <q-icon
+                name="space_dashboard"
+                class="icon-size-lg"
+                aria-hidden="true"
+              />
               <span>{{ $t('nav.dashboard') }}</span>
             </div>
             <div
@@ -98,7 +102,11 @@
               @keydown.enter="navigateTo('/products')"
               @keydown.space="navigateTo('/products')"
             >
-              <q-icon name="medical_services" size="24px" aria-hidden="true" />
+              <q-icon
+                name="medical_services"
+                class="icon-size-lg"
+                aria-hidden="true"
+              />
               <span>{{ $t('nav.products') }}</span>
             </div>
             <div
@@ -110,7 +118,11 @@
               @keydown.enter="navigateTo('/orders')"
               @keydown.space="navigateTo('/orders')"
             >
-              <q-icon name="assignment" size="24px" aria-hidden="true" />
+              <q-icon
+                name="assignment"
+                class="icon-size-lg"
+                aria-hidden="true"
+              />
               <span>{{ $t('nav.orders') }}</span>
             </div>
             <div
@@ -122,7 +134,7 @@
               @keydown.enter="navigateTo('/settings')"
               @keydown.space="navigateTo('/settings')"
             >
-              <q-icon name="tune" size="24px" aria-hidden="true" />
+              <q-icon name="tune" class="icon-size-lg" aria-hidden="true" />
               <span>{{ $t('nav.settings') }}</span>
             </div>
           </div>

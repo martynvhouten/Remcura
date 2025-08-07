@@ -69,7 +69,12 @@
                 :src="selectedProduct.image_url"
                 :alt="selectedProduct.name"
               />
-              <q-icon v-else name="inventory" size="24px" color="grey-6" />
+              <q-icon
+                v-else
+                name="inventory"
+                class="icon-size-lg"
+                color="grey-6"
+              />
             </q-avatar>
             <div class="col">
               <div class="text-subtitle1 text-weight-medium">

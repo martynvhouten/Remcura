@@ -174,7 +174,8 @@
           <div
             class="shadow-card"
             style="
-              box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08),
+              box-shadow:
+                0 1px 3px rgba(0, 0, 0, 0.08),
                 0 1px 2px rgba(0, 0, 0, 0.06);
             "
           >
@@ -185,7 +186,8 @@
           <div
             class="shadow-card"
             style="
-              box-shadow: 0 8px 25px rgba(0, 0, 0, 0.12),
+              box-shadow:
+                0 8px 25px rgba(0, 0, 0, 0.12),
                 0 4px 10px rgba(0, 0, 0, 0.08);
             "
           >
@@ -196,7 +198,8 @@
           <div
             class="shadow-card"
             style="
-              box-shadow: 0 2px 4px rgba(0, 0, 0, 0.06),
+              box-shadow:
+                0 2px 4px rgba(0, 0, 0, 0.06),
                 0 1px 2px rgba(0, 0, 0, 0.04);
             "
           >
@@ -207,7 +210,8 @@
           <div
             class="shadow-card"
             style="
-              box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1),
+              box-shadow:
+                0 4px 6px rgba(0, 0, 0, 0.1),
                 0 1px 3px rgba(0, 0, 0, 0.08);
             "
           >
@@ -227,15 +231,27 @@
             <h4>Medical Icons</h4>
             <div class="icon-row">
               <div class="icon-item">
-                <q-icon name="medical_services" size="32px" color="primary" />
+                <q-icon
+                  name="medical_services"
+                  class="icon-size-xl"
+                  color="primary"
+                />
                 <div class="icon-label">Medical Services</div>
               </div>
               <div class="icon-item">
-                <q-icon name="inventory" size="32px" color="secondary" />
+                <q-icon
+                  name="inventory"
+                  class="icon-size-xl"
+                  color="secondary"
+                />
                 <div class="icon-label">Inventory</div>
               </div>
               <div class="icon-item">
-                <q-icon name="health_and_safety" size="32px" color="positive" />
+                <q-icon
+                  name="health_and_safety"
+                  class="icon-size-xl"
+                  color="positive"
+                />
                 <div class="icon-label">Health & Safety</div>
               </div>
             </div>
@@ -246,19 +262,23 @@
             <h4>Status Icons</h4>
             <div class="icon-row">
               <div class="icon-item">
-                <q-icon name="check_circle" size="32px" color="positive" />
+                <q-icon
+                  name="check_circle"
+                  class="icon-size-xl"
+                  color="positive"
+                />
                 <div class="icon-label">Success</div>
               </div>
               <div class="icon-item">
-                <q-icon name="warning" size="32px" color="warning" />
+                <q-icon name="warning" class="icon-size-xl" color="warning" />
                 <div class="icon-label">Warning</div>
               </div>
               <div class="icon-item">
-                <q-icon name="error" size="32px" color="negative" />
+                <q-icon name="error" class="icon-size-xl" color="negative" />
                 <div class="icon-label">Error</div>
               </div>
               <div class="icon-item">
-                <q-icon name="info" size="32px" color="info" />
+                <q-icon name="info" class="icon-size-xl" color="info" />
                 <div class="icon-label">Info</div>
               </div>
             </div>
@@ -269,15 +289,19 @@
             <h4>Interface Icons</h4>
             <div class="icon-row">
               <div class="icon-item">
-                <q-icon name="settings" size="32px" color="grey-7" />
+                <q-icon name="settings" class="icon-size-xl" color="grey-7" />
                 <div class="icon-label">Settings</div>
               </div>
               <div class="icon-item">
-                <q-icon name="analytics" size="32px" color="blue-7" />
+                <q-icon name="analytics" class="icon-size-xl" color="blue-7" />
                 <div class="icon-label">Analytics</div>
               </div>
               <div class="icon-item">
-                <q-icon name="notifications" size="32px" color="orange" />
+                <q-icon
+                  name="notifications"
+                  class="icon-size-xl"
+                  color="orange"
+                />
                 <div class="icon-label">Notifications</div>
               </div>
             </div>

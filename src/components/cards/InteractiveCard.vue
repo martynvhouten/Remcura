@@ -21,7 +21,7 @@
               iconColor ? `card-icon--${iconColor}` : '',
             ]"
           >
-            <q-icon :name="icon" size="20px" />
+            <q-icon :name="icon" class="icon-size-base" />
           </div>
 
           <!-- Title and Subtitle -->
@@ -41,7 +41,7 @@
 
         <!-- Click indicator -->
         <div v-if="showClickIndicator" class="click-indicator">
-          <q-icon name="chevron_right" size="16px" />
+          <q-icon name="chevron_right" class="icon-size-sm" />
         </div>
       </div>
     </div>
@@ -250,8 +250,8 @@
       --card-background: #1e1e1e;
       --card-border: rgba(255, 255, 255, 0.1);
       --card-shadow: 0 2px 4px rgba(0, 0, 0, 0.3), 0 1px 2px rgba(0, 0, 0, 0.2);
-      --card-hover-shadow: 0 8px 25px rgba(0, 0, 0, 0.4),
-        0 4px 10px rgba(0, 0, 0, 0.3);
+      --card-hover-shadow:
+        0 8px 25px rgba(0, 0, 0, 0.4), 0 4px 10px rgba(0, 0, 0, 0.3);
       --card-hover-border: rgba(255, 255, 255, 0.2);
     }
   }

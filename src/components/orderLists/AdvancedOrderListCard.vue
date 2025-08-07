@@ -4,7 +4,11 @@
     <div class="card-header">
       <div class="header-left">
         <div class="list-icon">
-          <q-icon :name="getListIcon()" :color="getIconColor()" size="24px" />
+          <q-icon
+            :name="getListIcon()"
+            :color="getIconColor()"
+            class="icon-size-lg"
+          />
         </div>
         <div class="list-info">
           <h3 class="list-title">{{ orderList.name }}</h3>
@@ -96,7 +100,7 @@
         class="critical-alert"
       >
         <div class="alert-icon">
-          <q-icon name="warning" color="negative" size="20px" />
+          <q-icon name="warning" color="negative" class="icon-size-base" />
         </div>
         <div class="alert-content">
           <span class="alert-text"
@@ -142,11 +146,11 @@
       <!-- Quick Info -->
       <div class="quick-info">
         <div class="info-item">
-          <q-icon name="inventory" size="16px" class="info-icon" />
+          <q-icon name="inventory" class="info-icon icon-size-sm" />
           <span>{{ orderList.total_items || 0 }} items</span>
         </div>
         <div class="info-item">
-          <q-icon name="euro" size="16px" class="info-icon" />
+          <q-icon name="euro" class="info-icon icon-size-sm" />
           <span>€{{ ((orderList as any).total_value || 0).toFixed(2) }}</span>
         </div>
       </div>

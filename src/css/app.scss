@@ -61,12 +61,15 @@
   --border-secondary: #d6d3d1; // Secondary borders
 
   // Typography - Poppins Font Stack for Medical Platform (Better Font Weights)
-  --font-family-primary: 'Poppins', -apple-system, BlinkMacSystemFont,
-    'Segoe UI', 'San Francisco', 'Helvetica Neue', Arial, sans-serif;
-  --font-family-display: 'Poppins', -apple-system, BlinkMacSystemFont,
-    'Segoe UI', 'San Francisco', 'Helvetica Neue', Arial, sans-serif;
-  --font-family-mono: 'JetBrains Mono', 'SF Mono', 'Monaco', 'Cascadia Code',
-    'Roboto Mono', 'Courier New', monospace;
+  --font-family-primary:
+    'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'San Francisco',
+    'Helvetica Neue', Arial, sans-serif;
+  --font-family-display:
+    'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'San Francisco',
+    'Helvetica Neue', Arial, sans-serif;
+  --font-family-mono:
+    'JetBrains Mono', 'SF Mono', 'Monaco', 'Cascadia Code', 'Roboto Mono',
+    'Courier New', monospace;
 
   // Enhanced Poppins Font Weights - Much Better for Headers & Labels
   --font-weight-light: 300;
@@ -109,6 +112,9 @@
   --icon-lg: 24px;
   --icon-xl: 32px;
   --icon-2xl: 48px;
+  --icon-3xl: 64px;
+  --icon-4xl: 96px;
+  --icon-5xl: 120px;
 
   // Border Radius - More modern and consistent
   --radius-sm: 0.25rem;
@@ -121,14 +127,14 @@
 
   // Enhanced Shadows - More sophisticated depth
   --shadow-xs: 0 1px 2px 0 rgba(0, 0, 0, 0.02);
-  --shadow-sm: 0 1px 3px 0 rgba(0, 0, 0, 0.06),
-    0 1px 2px -1px rgba(0, 0, 0, 0.04);
-  --shadow-base: 0 4px 6px -1px rgba(0, 0, 0, 0.08),
-    0 2px 4px -2px rgba(0, 0, 0, 0.05);
-  --shadow-md: 0 10px 15px -3px rgba(0, 0, 0, 0.08),
-    0 4px 6px -4px rgba(0, 0, 0, 0.05);
-  --shadow-lg: 0 20px 25px -5px rgba(0, 0, 0, 0.08),
-    0 8px 10px -6px rgba(0, 0, 0, 0.05);
+  --shadow-sm:
+    0 1px 3px 0 rgba(0, 0, 0, 0.06), 0 1px 2px -1px rgba(0, 0, 0, 0.04);
+  --shadow-base:
+    0 4px 6px -1px rgba(0, 0, 0, 0.08), 0 2px 4px -2px rgba(0, 0, 0, 0.05);
+  --shadow-md:
+    0 10px 15px -3px rgba(0, 0, 0, 0.08), 0 4px 6px -4px rgba(0, 0, 0, 0.05);
+  --shadow-lg:
+    0 20px 25px -5px rgba(0, 0, 0, 0.08), 0 8px 10px -6px rgba(0, 0, 0, 0.05);
   --shadow-xl: 0 25px 50px -12px rgba(0, 0, 0, 0.12);
   --shadow-2xl: 0 50px 100px -20px rgba(0, 0, 0, 0.15);
 
@@ -229,7 +235,8 @@ body {
   line-height: 1.5;
   color: var(--text-primary);
   background-color: var(--bg-primary);
-  transition: color var(--transition-base),
+  transition:
+    color var(--transition-base),
     background-color var(--transition-base);
   overflow-x: hidden; // Prevent horizontal scrolling
 }
@@ -516,6 +523,17 @@ body .q-icon {
 }
 .icon-size-2xl {
   font-size: var(--icon-2xl);
+}
+
+// Extended icon sizes
+.icon-size-3xl {
+  font-size: var(--icon-3xl);
+}
+.icon-size-4xl {
+  font-size: var(--icon-4xl);
+}
+.icon-size-5xl {
+  font-size: var(--icon-5xl);
 }
 
 // Context-aware icon sizing using CSS custom properties
@@ -1717,8 +1735,10 @@ body.body--dark .q-dialog.q-select__dialog {
   backdrop-filter: blur(20px) saturate(180%);
   -webkit-backdrop-filter: blur(20px) saturate(180%);
   border: 1px solid rgba(255, 255, 255, 0.2);
-  box-shadow: 0 8px 32px rgba(31, 38, 135, 0.15),
-    0 2px 8px rgba(31, 38, 135, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.3);
+  box-shadow:
+    0 8px 32px rgba(31, 38, 135, 0.15),
+    0 2px 8px rgba(31, 38, 135, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.3);
   border-radius: var(--radius-xl);
   padding: var(--space-6);
   transition: all var(--transition-base);
@@ -1740,7 +1760,9 @@ body.body--dark .glass-card {
     rgba(20, 20, 20, 0.2) 100%
   );
   border-color: rgba(255, 255, 255, 0.1);
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3), 0 2px 8px rgba(0, 0, 0, 0.2),
+  box-shadow:
+    0 8px 32px rgba(0, 0, 0, 0.3),
+    0 2px 8px rgba(0, 0, 0, 0.2),
     inset 0 1px 0 rgba(255, 255, 255, 0.1);
 
   &:hover {
@@ -1753,28 +1775,33 @@ body.body--dark .glass-card {
 // Neumorphism utility classes
 .neumorphism-light {
   background: #f0f0f3;
-  box-shadow: 15px 15px 30px rgba(174, 174, 192, 0.4),
+  box-shadow:
+    15px 15px 30px rgba(174, 174, 192, 0.4),
     -15px -15px 30px rgba(255, 255, 255, 0.9);
   border: none;
 
   &:hover {
-    box-shadow: 8px 8px 16px rgba(174, 174, 192, 0.4),
+    box-shadow:
+      8px 8px 16px rgba(174, 174, 192, 0.4),
       -8px -8px 16px rgba(255, 255, 255, 1);
   }
 
   &:active {
-    box-shadow: inset 8px 8px 16px rgba(174, 174, 192, 0.4),
+    box-shadow:
+      inset 8px 8px 16px rgba(174, 174, 192, 0.4),
       inset -8px -8px 16px rgba(255, 255, 255, 0.8);
   }
 }
 
 body.body--dark .neumorphism-light {
   background: #2a2d3e;
-  box-shadow: 15px 15px 30px rgba(0, 0, 0, 0.4),
+  box-shadow:
+    15px 15px 30px rgba(0, 0, 0, 0.4),
     -15px -15px 30px rgba(255, 255, 255, 0.05);
 
   &:hover {
-    box-shadow: 8px 8px 16px rgba(0, 0, 0, 0.4),
+    box-shadow:
+      8px 8px 16px rgba(0, 0, 0, 0.4),
       -8px -8px 16px rgba(255, 255, 255, 0.08);
   }
 }
@@ -1813,7 +1840,11 @@ body.body--dark .neumorphism-light {
     height: 0;
     border-radius: 50%;
     background: rgba(255, 255, 255, 0.3);
-    transition: width 0.3s, height 0.3s, top 0.3s, left 0.3s;
+    transition:
+      width 0.3s,
+      height 0.3s,
+      top 0.3s,
+      left 0.3s;
     transform: translate(-50%, -50%);
     z-index: 0;
   }
@@ -2608,7 +2639,9 @@ html body .q-btn.app-btn-refresh {
   font-weight: 500;
   text-transform: none;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1), 0 1px 2px rgba(0, 0, 0, 0.06);
+  box-shadow:
+    0 1px 3px rgba(0, 0, 0, 0.1),
+    0 1px 2px rgba(0, 0, 0, 0.06);
   position: relative;
   overflow: hidden;
 
@@ -2621,7 +2654,9 @@ html body .q-btn.app-btn-refresh {
     color: #475569;
     border-color: #94a3b8;
     transform: translateY(-2px);
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1), 0 2px 4px rgba(0, 0, 0, 0.06);
+    box-shadow:
+      0 4px 6px rgba(0, 0, 0, 0.1),
+      0 2px 4px rgba(0, 0, 0, 0.06);
 
     .q-icon {
       transform: rotate(90deg);
@@ -2633,7 +2668,8 @@ html body .q-btn.app-btn-refresh {
     background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%);
     color: #1d4ed8;
     border-color: #3b82f6;
-    box-shadow: 0 2px 4px rgba(59, 130, 246, 0.15),
+    box-shadow:
+      0 2px 4px rgba(59, 130, 246, 0.15),
       0 1px 2px rgba(59, 130, 246, 0.1);
 
     .q-icon {
@@ -2646,7 +2682,8 @@ html body .q-btn.app-btn-refresh {
       color: #1e40af;
       border-color: #2563eb;
       transform: translateY(-2px);
-      box-shadow: 0 4px 8px rgba(59, 130, 246, 0.2),
+      box-shadow:
+        0 4px 8px rgba(59, 130, 246, 0.2),
         0 2px 4px rgba(59, 130, 246, 0.1);
     }
   }

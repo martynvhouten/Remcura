@@ -20,7 +20,11 @@
             <div class="auth-header">
               <div class="brand-section">
                 <q-avatar size="64px" class="brand-avatar">
-                  <q-icon name="local_hospital" size="32px" color="primary" />
+                  <q-icon
+                    name="local_hospital"
+                    class="icon-size-xl"
+                    color="primary"
+                  />
                 </q-avatar>
                 <div class="brand-text">
                   <h1 class="brand-title">{{ t('brand.name') }}</h1>
@@ -83,7 +87,7 @@
           >
             <div class="info-content">
               <div class="info-icon">
-                <q-icon name="medical_services" size="48px" />
+                <q-icon name="medical_services" class="icon-size-2xl" />
               </div>
               <h2 id="info-title" class="info-title">
                 {{ t('auth.professionalInventory') }}
@@ -285,7 +289,9 @@
   body.body--dark .auth-card {
     background: rgba(41, 37, 36, 0.95);
     border: 1px solid rgba(255, 255, 255, 0.15);
-    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4), 0 8px 24px rgba(0, 0, 0, 0.2),
+    box-shadow:
+      0 20px 60px rgba(0, 0, 0, 0.4),
+      0 8px 24px rgba(0, 0, 0, 0.2),
       inset 0 1px 0 rgba(255, 255, 255, 0.1);
   }
 
@@ -457,7 +463,9 @@
   body.body--dark .info-panel {
     background: rgba(41, 37, 36, 0.3);
     border: 1px solid rgba(255, 255, 255, 0.2);
-    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4), 0 8px 24px rgba(0, 0, 0, 0.2),
+    box-shadow:
+      0 20px 60px rgba(0, 0, 0, 0.4),
+      0 8px 24px rgba(0, 0, 0, 0.2),
       inset 0 1px 0 rgba(255, 255, 255, 0.1);
   }
 

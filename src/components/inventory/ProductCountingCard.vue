@@ -85,7 +85,7 @@
           </button>
           <button @click="appendDigit(0)" class="numpad-btn">0</button>
           <button @click="clearInput" class="numpad-btn action-btn">
-            <q-icon name="backspace" size="24px" />
+            <q-icon name="backspace" class="icon-size-lg" />
           </button>
         </div>
       </div>
@@ -445,7 +445,9 @@
         border-radius: var(--radius-base);
         padding: 0.5rem 0.75rem;
         background: var(--bg-primary);
-        transition: border-color 0.2s ease, box-shadow 0.2s ease;
+        transition:
+          border-color 0.2s ease,
+          box-shadow 0.2s ease;
         cursor: default;
         font-family: var(--font-family-mono);
 

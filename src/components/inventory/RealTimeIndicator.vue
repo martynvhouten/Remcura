@@ -9,7 +9,7 @@
     />
 
     <div class="last-update" v-if="lastUpdate">
-      <q-icon name="schedule" size="12px" />
+      <q-icon name="schedule" class="icon-size-xs" />
       <span>{{ formatTime(lastUpdate) }}</span>
     </div>
   </div>

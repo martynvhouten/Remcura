@@ -4,7 +4,11 @@
     <div class="card-header">
       <div class="header-left">
         <div class="list-icon">
-          <q-icon :name="getListIcon()" :color="getIconColor()" size="24px" />
+          <q-icon
+            :name="getListIcon()"
+            :color="getIconColor()"
+            class="icon-size-lg"
+          />
         </div>
         <div class="list-info">
           <h3 class="list-title">{{ orderList.name }}</h3>
@@ -27,18 +31,18 @@
     <div class="card-content">
       <!-- Critical Alert (only if critical items exist) -->
       <div v-if="hasCriticalItems" class="critical-alert">
-        <q-icon name="warning" color="negative" size="18px" />
+        <q-icon name="warning" color="negative" class="icon-size-base" />
         <span class="alert-text">{{ criticalItemsCount }} kritieke items</span>
       </div>
 
       <!-- Basic Info -->
       <div class="basic-info">
         <div class="info-item">
-          <q-icon name="inventory" size="16px" class="info-icon" />
+          <q-icon name="inventory" class="info-icon icon-size-sm" />
           <span>{{ orderList.total_items || 0 }} producten</span>
         </div>
         <div v-if="hasItemsToOrder" class="info-item order-ready">
-          <q-icon name="shopping_cart" size="16px" class="info-icon" />
+          <q-icon name="shopping_cart" class="info-icon icon-size-sm" />
           <span>{{ itemsToOrderCount }} te bestellen</span>
         </div>
       </div>
