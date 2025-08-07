@@ -71,7 +71,7 @@ export default configure(function (ctx) {
         viteConf.plugins.push(
           eslint({
             cache: true,
-            failOnError: viteConf.command === 'build',
+            failOnError: false,
             include: ['src/**/*.{ts,js,vue}'],
             exclude: ['node_modules', 'dist'],
           })

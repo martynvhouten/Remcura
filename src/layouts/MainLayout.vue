@@ -43,11 +43,15 @@
             icon="notifications"
             @click="goToNotifications"
             :aria-label="t('nav.notifications')"
+            class="action-btn"
           >
             <q-badge
               v-if="notificationStore.hasUnreadNotifications"
               color="red"
               floating
+              aria-live="polite"
+              aria-atomic="true"
+              role="status"
             >
               {{ notificationStore.unreadCount }}
             </q-badge>
@@ -63,6 +67,7 @@
             :aria-label="
               $q.dark.isActive ? t('nav.lightMode') : t('nav.darkMode')
             "
+            class="action-btn"
           >
             <q-tooltip>{{
               $q.dark.isActive ? t('nav.lightMode') : t('nav.darkMode')
@@ -70,7 +75,13 @@
           </q-btn>
 
           <!-- User Menu -->
-          <q-btn flat round icon="person" :aria-label="t('nav.userMenu')">
+          <q-btn
+            flat
+            round
+            icon="person"
+            :aria-label="t('nav.userMenu')"
+            class="user-menu-btn"
+          >
             <!-- Demo indicator badge -->
             <q-badge
               v-if="isDemoUser"
@@ -588,7 +599,7 @@
     const name = userProfile.value?.full_name || userEmail.value || 'U';
     return name
       .split(' ')
-      .map(n => n[0])
+      .map((n: string) => n[0])
       .join('')
       .toUpperCase()
       .slice(0, 2);
@@ -732,7 +743,9 @@
       .menu-toggle-btn {
         color: var(--neutral-800);
         border-radius: var(--radius-full);
-        transition: transform 180ms ease, background-color 180ms ease,
+        transition:
+          transform 180ms ease,
+          background-color 180ms ease,
           color 180ms ease;
         width: 56px;
         height: 56px;
@@ -782,23 +795,49 @@
         .action-btn {
           color: var(--neutral-700);
           border-radius: var(--radius-lg);
-          transition: all var(--transition-base);
+          transition:
+            transform 180ms ease,
+            background-color 180ms ease,
+            color 180ms ease;
+          width: 56px;
+          height: 56px;
+
+          .q-icon {
+            font-size: 28px;
+          }
 
           &:hover {
-            background-color: rgba(var(--q-primary-rgb), 0.1);
+            background-color: rgba(var(--q-primary-rgb), 0.12);
             color: var(--brand-primary);
-            transform: scale(1.05);
+            transform: translateY(-1px);
+          }
+
+          &:focus-visible {
+            outline: 2px solid rgba(var(--brand-primary-rgb), 0.5);
+            outline-offset: 2px;
+            box-shadow: 0 0 0 2px rgba(var(--brand-primary-rgb), 0.15);
           }
         }
 
         .user-menu-btn {
+          width: 56px;
+          height: 56px;
           border-radius: var(--radius-full);
           padding: var(--space-1);
-          transition: all var(--transition-base);
+          transition:
+            transform 180ms ease,
+            background-color 180ms ease,
+            color 180ms ease;
+
+          .q-icon {
+            font-size: 30px;
+          }
 
           &:hover {
-            transform: scale(1.05);
+            transform: translateY(-1px);
             box-shadow: var(--shadow-sm);
+            background-color: rgba(var(--q-primary-rgb), 0.12);
+            color: var(--brand-primary);
           }
         }
       }
@@ -829,20 +868,20 @@
       }
 
       .menu-toggle-btn {
-        color: var(--neutral-800);
+        color: var(--neutral-200);
 
         &:hover {
-          background-color: rgba(var(--q-primary-rgb), 0.15);
+          background-color: rgba(255, 255, 255, 0.12);
           color: var(--brand-primary-light);
         }
       }
 
       .header-actions {
         .action-btn {
-          color: var(--neutral-800);
+          color: var(--neutral-200);
 
           &:hover {
-            background-color: rgba(var(--q-primary-rgb), 0.15);
+            background-color: rgba(255, 255, 255, 0.12);
             color: var(--brand-primary-light);
           }
         }
@@ -855,11 +894,15 @@
     // Softer dark background and subtle border using design tokens
     background: var(--sidebar-bg);
     border-right: 1px solid var(--sidebar-border);
-    transition: width 220ms ease, transform 220ms ease;
+    transition:
+      width 220ms ease,
+      transform 220ms ease;
 
     :deep(.q-drawer__content) {
       background: var(--sidebar-bg);
-      transition: width 220ms ease, transform 220ms ease;
+      transition:
+        width 220ms ease,
+        transform 220ms ease;
     }
 
     .clinic-info-section {
@@ -911,6 +954,7 @@
 
         &:hover {
           background-color: var(--nav-hover-bg);
+          border-radius: var(--radius-lg);
         }
 
         &:focus {
@@ -1028,6 +1072,7 @@
         &:hover {
           border-left-color: var(--brand-primary);
           background: var(--nav-hover-bg);
+          border-radius: 0 var(--radius-lg) var(--radius-lg) 0;
         }
 
         &.nav-item-active {
@@ -1178,6 +1223,7 @@
       .nav-item:hover,
       .nav-sub-item:hover {
         background: var(--nav-hover-bg);
+        border-radius: var(--radius-lg);
       }
       .nav-item.nav-item-active,
       .nav-sub-item.nav-item-active {
@@ -1190,7 +1236,9 @@
       .nav-item .q-item__section--avatar,
       .nav-sub-item .q-item__section--avatar {
         border-radius: var(--radius-full);
-        transition: background-color 160ms ease, transform 160ms ease;
+        transition:
+          background-color 160ms ease,
+          transform 160ms ease;
       }
       .nav-item:hover .q-item__section--avatar,
       .nav-sub-item:hover .q-item__section--avatar {
@@ -1223,37 +1271,55 @@
   }
 
   .header-actions .q-btn {
-    width: 48px;
-    height: 48px;
     border-radius: 12px;
     color: var(--neutral-600);
     background: rgba(255, 255, 255, 0.8);
     border: 1px solid rgba(255, 255, 255, 0.2);
     backdrop-filter: blur(8px);
-    transition: all 0.3s ease;
+    transition:
+      transform 180ms ease,
+      background-color 180ms ease,
+      color 180ms ease,
+      box-shadow 180ms ease,
+      border-color 180ms ease;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
     padding: 6px; // Extra padding binnen de knop voor badges
 
-    .q-icon {
-      font-size: 22px;
-    }
-
     &:hover {
       color: var(--brand-primary);
-      background: rgba(255, 255, 255, 0.95);
-      border-color: rgba(var(--brand-primary-rgb), 0.3);
+      background: rgba(255, 255, 255, 0.92);
+      border-color: rgba(var(--brand-primary-rgb), 0.25);
       transform: translateY(-1px);
       box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
     }
 
     &:focus {
-      outline: 2px solid var(--brand-primary);
-      outline-offset: 2px;
+      outline: none;
     }
 
     &:active {
       transform: translateY(0);
     }
+
+    &:focus-visible {
+      outline: 2px solid rgba(var(--brand-primary-rgb), 0.5);
+      outline-offset: 2px;
+      box-shadow: 0 0 0 2px rgba(var(--brand-primary-rgb), 0.15);
+      background: rgba(255, 255, 255, 0.95);
+      border-color: rgba(var(--brand-primary-rgb), 0.32);
+    }
+  }
+
+  // Baseline sizes only for buttons without custom sizing classes
+  .header-actions
+    .q-btn:not(.action-btn):not(.user-menu-btn):not(.menu-toggle-btn) {
+    width: 48px;
+    height: 48px;
+  }
+  .header-actions
+    .q-btn:not(.action-btn):not(.user-menu-btn):not(.menu-toggle-btn)
+    .q-icon {
+    font-size: 22px;
   }
 
   // Notification badge styling - floating next to icon
