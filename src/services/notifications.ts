@@ -29,7 +29,10 @@ export class NotificationService {
     if ('serviceWorker' in navigator && 'PushManager' in window) {
       try {
         this.registration = await navigator.serviceWorker.register('/sw.js');
-        notificationLogger.info('Service Worker registered:', this.registration);
+        notificationLogger.info(
+          'Service Worker registered:',
+          this.registration
+        );
       } catch (error) {
         notificationLogger.error('Service Worker registration failed:', error);
       }
@@ -75,7 +78,10 @@ export class NotificationService {
 
       return subscription;
     } catch (error) {
-      notificationLogger.error('Failed to subscribe to push notifications:', error);
+      notificationLogger.error(
+        'Failed to subscribe to push notifications:',
+        error
+      );
       return null;
     }
   }
@@ -89,7 +95,9 @@ export class NotificationService {
     const authStore = useAuthStore();
     const user = authStore.user;
 
-    if (!user) { return; }
+    if (!user) {
+      return;
+    }
 
     const endpoint = subscription.endpoint;
     const keys = subscription.getKey
@@ -107,7 +115,10 @@ export class NotificationService {
     };
 
     // TODO: Implement push_tokens functionality when push notifications are activated
-    notificationLogger.info('Push subscription stored (placeholder):', tokenData);
+    notificationLogger.info(
+      'Push subscription stored (placeholder):',
+      tokenData
+    );
   }
 
   /**
@@ -197,7 +208,9 @@ export class NotificationService {
     const user = authStore.user;
     const practiceId = authStore.selectedPractice?.id;
 
-    if (!user || !practiceId) { return; }
+    if (!user || !practiceId) {
+      return;
+    }
 
     const { data, error } = await supabase
       .from('notification_settings')
@@ -229,7 +242,9 @@ export class NotificationService {
     const user = authStore.user;
     const practiceId = authStore.selectedPractice?.id;
 
-    if (!user || !practiceId) { return; }
+    if (!user || !practiceId) {
+      return;
+    }
 
     const settingData: NotificationSettingsInsert = {
       user_id: user.id,
@@ -397,7 +412,9 @@ export class NotificationService {
     const authStore = useAuthStore();
     const practiceId = authStore.selectedPractice?.id;
 
-    if (!practiceId) { return; }
+    if (!practiceId) {
+      return;
+    }
 
     try {
       const { data: lowStockItems, error } = await supabase
@@ -446,7 +463,9 @@ export class NotificationService {
   }
 
   private arrayBufferToBase64(buffer: ArrayBuffer | null): string {
-    if (!buffer) { return ''; }
+    if (!buffer) {
+      return '';
+    }
     const bytes = new Uint8Array(buffer);
     let binary = '';
     for (let i = 0; i < bytes.byteLength; i++) {

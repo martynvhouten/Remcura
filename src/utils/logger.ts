@@ -67,7 +67,9 @@ class Logger {
     _context?: string,
     _data?: LogData
   ): void {
-    if (!this.isProduction) { return; }
+    if (!this.isProduction) {
+      return;
+    }
 
     // TODO: Integrate with monitoring service (Sentry, LogRocket, etc.)
     // Example:
@@ -88,8 +90,10 @@ class Logger {
     return {
       debug: (message: string, data?: LogData) =>
         this.debug(message, context, data),
-      info: (message: string, data?: LogData) => this.info(message, context, data),
-      warn: (message: string, data?: LogData) => this.warn(message, context, data),
+      info: (message: string, data?: LogData) =>
+        this.info(message, context, data),
+      warn: (message: string, data?: LogData) =>
+        this.warn(message, context, data),
       error: (message: string, error?: Error | LogData) =>
         this.error(message, context, error),
     };

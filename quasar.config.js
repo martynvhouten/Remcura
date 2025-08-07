@@ -10,18 +10,12 @@
 
 import { configure } from 'quasar/wrappers';
 import ESLintPlugin from 'eslint-webpack-plugin';
+import eslint from 'vite-plugin-eslint';
 import { fileURLToPath, URL } from 'node:url';
 
 export default configure(function (ctx) {
   return {
-    eslint: {
-      // fix: true,
-      // include = [],
-      // exclude = [],
-      // rawOptions = {},
-      warnings: false,
-      errors: false,
-    },
+    // eslint overlay is handled via vite-plugin-eslint in Vite config below
 
     // https://v2.quasar.dev/quasar-cli-vite/boot-files
     boot: ['i18n', 'supabase', 'pinia', 'theme'],
@@ -67,10 +61,21 @@ export default configure(function (ctx) {
         // Keep existing alias configuration
         Object.assign(viteConf.resolve.alias, {
           '@': fileURLToPath(new URL('./src', import.meta.url)),
+          src: fileURLToPath(new URL('./src', import.meta.url)),
         });
 
         // Add bundle analysis
         viteConf.define = viteConf.define || {};
+        // Linting in dev/build via Vite (fail on error only during build)
+        viteConf.plugins = viteConf.plugins || [];
+        viteConf.plugins.push(
+          eslint({
+            cache: true,
+            failOnError: viteConf.command === 'build',
+            include: ['src/**/*.{ts,js,vue}'],
+            exclude: ['node_modules', 'dist'],
+          })
+        );
 
         // Advanced optimization settings
         viteConf.build = viteConf.build || {};

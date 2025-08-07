@@ -1,12 +1,14 @@
-# BaseDialog Component - Enterprise Optimization
+# BaseDialog Component - Enterprise Optimization Guide
 
 ## 🎯 **OVERZICHT VAN WIJZIGINGEN**
 
-Het BaseDialog component is volledig geoptimaliseerd voor maximale herbruikbaarheid, consistentie en UX binnen ons bestaande app-CSS design system.
+Het BaseDialog component is volledig geoptimaliseerd voor maximale herbruikbaarheid, consistentie en
+UX binnen ons bestaande app-CSS design system.
 
 ## ✨ **NIEUWE FEATURES**
 
 ### 1. **Verbeterde Props & Configuration**
+
 ```typescript
 interface Props {
   // Core functionality
@@ -14,25 +16,25 @@ interface Props {
   title?: string;
   subtitle?: string;
   icon?: string;
-  
+
   // Advanced UX
   statusColor?: 'primary' | 'success' | 'warning' | 'danger' | 'info';
   primaryAction?: DialogAction;
   secondaryAction?: DialogAction;
   primaryActionLoading?: boolean;
-  
+
   // Multi-step support
   steps?: DialogStep[];
   currentStep?: number;
   showSteps?: boolean;
-  
+
   // Smart behavior
   autoFocus?: boolean;
   isDirty?: boolean;
   confirmCloseMessage?: string;
   keyboardShortcuts?: boolean;
   preventMobileFullscreen?: boolean;
-  
+
   // Loading & states
   loading?: boolean;
   actionsDisabled?: boolean;
@@ -40,16 +42,19 @@ interface Props {
 ```
 
 ### 2. **Smart Mobile Behavior**
+
 - **Automatisch fullscreen op mobiel** (tenzij `preventMobileFullscreen: true`)
 - **Modal op desktop** met responsive sizing
 - **Touch-friendly** close buttons en actions
 
 ### 3. **Keyboard Navigation**
+
 - **Enter (Ctrl/Cmd+Enter)**: Trigger primary action
 - **Escape**: Close dialog (met dirty check)
 - **Auto-focus** eerste input field bij openen
 
 ### 4. **Multi-Step Wizard Support**
+
 ```vue
 <BaseDialog
   :steps="[
@@ -63,6 +68,7 @@ interface Props {
 ```
 
 ### 5. **Async Action Support**
+
 ```vue
 <BaseDialog
   :primary-action="{
@@ -77,6 +83,7 @@ interface Props {
 ```
 
 ### 6. **Dirty State Checking**
+
 ```vue
 <BaseDialog
   :is-dirty="hasUnsavedChanges"
@@ -87,6 +94,7 @@ interface Props {
 ## 🎨 **DESIGN SYSTEM INTEGRATION**
 
 ### **Consistent Styling**
+
 - **CSS Custom Properties**: Volledig gebruik van `--brand-*`, `--neutral-*`, `--space-*` variabelen
 - **App Button Classes**: Integratie met `app-btn-primary`, `app-btn-secondary`, etc.
 - **Typography**: Consistent met `--font-family-primary`, `--text-*` sizes
@@ -94,14 +102,24 @@ interface Props {
 - **Border Radius**: Consistent met `--radius-*` variabelen
 
 ### **Status Colors**
+
 ```scss
-&.header-success { background: var(--brand-success); }
-&.header-warning { background: var(--brand-warning); }
-&.header-danger { background: var(--brand-danger); }
-&.header-info { background: var(--brand-info); }
+&.header-success {
+  background: var(--brand-success);
+}
+&.header-warning {
+  background: var(--brand-warning);
+}
+&.header-danger {
+  background: var(--brand-danger);
+}
+&.header-info {
+  background: var(--brand-info);
+}
 ```
 
 ### **Dark Mode Support**
+
 - Volledig compatible met `body.body--dark`
 - Gebruikt CSS custom properties voor automatische theming
 - Geen hardcoded kleuren
@@ -109,11 +127,13 @@ interface Props {
 ## 🔧 **TECHNISCHE VERBETERINGEN**
 
 ### 1. **Performance Optimizations**
+
 - **Computed Properties**: Efficiënte reactivity
 - **Event Delegation**: Minimale event listeners
 - **CSS Containment**: Betere rendering performance
 
 ### 2. **Accessibility (A11Y)**
+
 ```vue
 <q-dialog
   role="dialog"
@@ -124,11 +144,13 @@ interface Props {
 ```
 
 ### 3. **Focus Management**
+
 - Auto-focus eerste input bij openen
 - Focus trap binnen dialog
 - Restore focus na sluiten
 
 ### 4. **Loading States**
+
 ```vue
 <!-- Global loading overlay -->
 <div v-if="loading" class="dialog-loading-overlay">
@@ -147,6 +169,7 @@ interface Props {
 ## 📱 **RESPONSIVE DESIGN**
 
 ### **Mobile-First Approach**
+
 ```scss
 // Mobile fullscreen
 &.dialog-mobile-fullscreen {
@@ -167,11 +190,12 @@ interface Props {
 ```
 
 ### **Adaptive Actions**
+
 ```scss
 @media (max-width: 640px) {
   .dialog-footer {
     flex-direction: column-reverse;
-    
+
     .app-btn {
       width: 100%;
     }
@@ -182,6 +206,7 @@ interface Props {
 ## 🎯 **GEBRUIK VOORBEELDEN**
 
 ### **1. Form Dialog**
+
 ```vue
 <BaseDialog
   v-model="showForm"
@@ -193,10 +218,10 @@ interface Props {
   :primary-action="{
     label: 'Save',
     icon: 'save',
-    disabled: !formValid
+    disabled: !formValid,
   }"
   :secondary-action="{
-    label: 'Cancel'
+    label: 'Cancel',
   }"
   :is-dirty="formChanged"
   confirm-close-message="Unsaved changes will be lost"
@@ -210,6 +235,7 @@ interface Props {
 ```
 
 ### **2. Confirmation Dialog**
+
 ```vue
 <BaseDialog
   v-model="showConfirm"
@@ -220,10 +246,10 @@ interface Props {
   status-color="danger"
   :primary-action="{
     label: 'Delete',
-    class: 'app-btn-danger'
+    class: 'app-btn-danger',
   }"
   :secondary-action="{
-    label: 'Cancel'
+    label: 'Cancel',
   }"
   @primary-action="confirmDelete"
 >
@@ -232,6 +258,7 @@ interface Props {
 ```
 
 ### **3. Wizard Dialog**
+
 ```vue
 <BaseDialog
   v-model="showWizard"
@@ -255,6 +282,7 @@ interface Props {
 ## 🔄 **MIGRATIE GUIDE**
 
 ### **Van Oude BaseDialog**
+
 ```vue
 <!-- VOOR -->
 <BaseDialog v-model="show" title="Title">
@@ -279,6 +307,7 @@ interface Props {
 ```
 
 ### **Voordelen van Nieuwe Versie**
+
 1. **Minder boilerplate code**
 2. **Consistente button styling**
 3. **Automatische loading states**
@@ -289,6 +318,7 @@ interface Props {
 ## 🎨 **CSS ARCHITECTURE**
 
 ### **Design Token Usage**
+
 ```scss
 .app-dialog-card {
   background: var(--bg-primary);
@@ -299,7 +329,7 @@ interface Props {
 
 .dialog-header {
   padding: var(--space-6) var(--space-8);
-  
+
   .dialog-title {
     font-size: var(--text-2xl);
     font-weight: var(--font-weight-bold);
@@ -309,6 +339,7 @@ interface Props {
 ```
 
 ### **Component Classes**
+
 - `.app-dialog-card` - Main container
 - `.dialog-header` - Header section
 - `.dialog-content` - Content area
@@ -340,14 +371,17 @@ interface Props {
 ## 📋 **BREAKING CHANGES**
 
 ### **Props Renamed**
+
 - `headerVariant` → Blijft hetzelfde, maar nieuwe opties
 - `variant` → Nieuwe opties toegevoegd
 - `size` → Nieuwe `full` optie
 
 ### **New Required Props**
+
 Geen - alle nieuwe props zijn optioneel voor backward compatibility
 
 ### **CSS Classes Changed**
+
 - `.base-dialog-card` → `.app-dialog-card`
 - Nieuwe BEM-style naming convention
 

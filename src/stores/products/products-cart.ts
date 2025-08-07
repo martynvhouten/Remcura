@@ -18,7 +18,7 @@ export function useProductsCart() {
 
   const cartTotal = computed(() => {
     return cart.value.reduce((sum, item) => {
-      return sum + (item.unit_price * item.quantity);
+      return sum + item.unit_price * item.quantity;
     }, 0);
   });
 
@@ -29,15 +29,17 @@ export function useProductsCart() {
     supplierId?: string
   ) => {
     const existingItemIndex = cart.value.findIndex(
-      item => item.product_id === product.id && 
-              (!supplierId || item.supplier_id === supplierId)
+      item =>
+        item.product_id === product.id &&
+        (!supplierId || item.supplier_id === supplierId)
     );
 
     if (existingItemIndex >= 0) {
       // Update existing item
       cart.value[existingItemIndex].quantity += quantity;
-      cart.value[existingItemIndex].total_price = 
-        cart.value[existingItemIndex].quantity * cart.value[existingItemIndex].unit_price;
+      cart.value[existingItemIndex].total_price =
+        cart.value[existingItemIndex].quantity *
+        cart.value[existingItemIndex].unit_price;
     } else {
       // Add new item
       const cartItem: CartItem = {
@@ -63,10 +65,11 @@ export function useProductsCart() {
 
   const removeFromCart = (productId: string, supplierId?: string) => {
     const itemIndex = cart.value.findIndex(
-      item => item.product_id === productId && 
-              (!supplierId || item.supplier_id === supplierId)
+      item =>
+        item.product_id === productId &&
+        (!supplierId || item.supplier_id === supplierId)
     );
-    
+
     if (itemIndex >= 0) {
       const removedItem = cart.value.splice(itemIndex, 1)[0];
       productLogger.info(`Removed ${removedItem.product_name} from cart`);
@@ -79,17 +82,20 @@ export function useProductsCart() {
     supplierId?: string
   ) => {
     const item = cart.value.find(
-      item => item.product_id === productId && 
-              (!supplierId || item.supplier_id === supplierId)
+      item =>
+        item.product_id === productId &&
+        (!supplierId || item.supplier_id === supplierId)
     );
-    
+
     if (item) {
       if (quantity <= 0) {
         removeFromCart(productId, supplierId);
       } else {
         item.quantity = quantity;
         item.total_price = item.unit_price * quantity;
-        productLogger.info(`Updated ${item.product_name} quantity to ${quantity}`);
+        productLogger.info(
+          `Updated ${item.product_name} quantity to ${quantity}`
+        );
       }
     }
   };
@@ -107,7 +113,7 @@ export function useProductsCart() {
   ) => {
     // Find or create order list for the supplier
     let orderList = orderLists.value.find(ol => ol.supplier_id === supplierId);
-    
+
     if (!orderList) {
       orderList = {
         id: `temp-${Date.now()}`,
@@ -130,8 +136,9 @@ export function useProductsCart() {
     if (existingItemIndex >= 0) {
       // Update existing item
       orderList.items[existingItemIndex].quantity += quantity;
-      orderList.items[existingItemIndex].total_price = 
-        orderList.items[existingItemIndex].quantity * orderList.items[existingItemIndex].unit_price;
+      orderList.items[existingItemIndex].total_price =
+        orderList.items[existingItemIndex].quantity *
+        orderList.items[existingItemIndex].unit_price;
     } else {
       // Add new item
       const orderItem: CartItem = {
@@ -153,28 +160,48 @@ export function useProductsCart() {
     }
 
     // Update order list totals
-    orderList.total_items = orderList.items.reduce((sum, item) => sum + item.quantity, 0);
-    orderList.estimated_total = orderList.items.reduce((sum, item) => sum + item.total_price, 0);
+    orderList.total_items = orderList.items.reduce(
+      (sum, item) => sum + item.quantity,
+      0
+    );
+    orderList.estimated_total = orderList.items.reduce(
+      (sum, item) => sum + item.total_price,
+      0
+    );
 
-    productLogger.info(`Added ${quantity} of ${product.name} to order list for ${orderList.supplier_name}`);
+    productLogger.info(
+      `Added ${quantity} of ${product.name} to order list for ${orderList.supplier_name}`
+    );
   };
 
   const removeFromOrderList = (orderListId: string, productId: string) => {
     const orderList = orderLists.value.find(ol => ol.id === orderListId);
     if (orderList) {
-      const itemIndex = orderList.items.findIndex(item => item.product_id === productId);
+      const itemIndex = orderList.items.findIndex(
+        item => item.product_id === productId
+      );
       if (itemIndex >= 0) {
         const removedItem = orderList.items.splice(itemIndex, 1)[0];
-        
+
         // Update totals
-        orderList.total_items = orderList.items.reduce((sum, item) => sum + item.quantity, 0);
-        orderList.estimated_total = orderList.items.reduce((sum, item) => sum + item.total_price, 0);
-        
-        productLogger.info(`Removed ${removedItem.product_name} from order list`);
-        
+        orderList.total_items = orderList.items.reduce(
+          (sum, item) => sum + item.quantity,
+          0
+        );
+        orderList.estimated_total = orderList.items.reduce(
+          (sum, item) => sum + item.total_price,
+          0
+        );
+
+        productLogger.info(
+          `Removed ${removedItem.product_name} from order list`
+        );
+
         // Remove empty order lists
         if (orderList.items.length === 0) {
-          const orderListIndex = orderLists.value.findIndex(ol => ol.id === orderListId);
+          const orderListIndex = orderLists.value.findIndex(
+            ol => ol.id === orderListId
+          );
           if (orderListIndex >= 0) {
             orderLists.value.splice(orderListIndex, 1);
           }

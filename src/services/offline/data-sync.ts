@@ -20,7 +20,13 @@ export interface OfflineData {
 }
 
 export interface SyncProgress {
-  phase: 'bestellijsten' | 'items' | 'products' | 'carts' | 'cart_items' | 'complete';
+  phase:
+    | 'bestellijsten'
+    | 'items'
+    | 'products'
+    | 'carts'
+    | 'cart_items'
+    | 'complete';
   current: number;
   total: number;
   message: string;
@@ -171,7 +177,9 @@ export class DataSyncManager {
   /**
    * Download bestellijsten
    */
-  private async downloadBestellijsten(practiceId: string): Promise<Bestellijst[]> {
+  private async downloadBestellijsten(
+    practiceId: string
+  ): Promise<Bestellijst[]> {
     const { data, error } = await supabase
       .from('product_lists')
       .select('*')
@@ -191,7 +199,9 @@ export class DataSyncManager {
   /**
    * Download bestellijst items
    */
-  private async downloadBestellijstItems(practiceId: string): Promise<BestellijstItem[]> {
+  private async downloadBestellijstItems(
+    practiceId: string
+  ): Promise<BestellijstItem[]> {
     const { data, error } = await supabase
       .from('product_list_items')
       .select(
@@ -210,10 +220,12 @@ export class DataSyncManager {
       });
     }
 
-    return data?.map(item => ({
-      ...item,
-      last_counted: item.last_counted,
-    })) || [];
+    return (
+      data?.map(item => ({
+        ...item,
+        last_counted: item.last_counted,
+      })) || []
+    );
   }
 
   /**
@@ -221,7 +233,7 @@ export class DataSyncManager {
    */
   private async downloadProducts(items: BestellijstItem[]): Promise<Product[]> {
     const productIds = [...new Set(items.map(item => item.product_id))];
-    
+
     if (productIds.length === 0) {
       return [];
     }
@@ -245,7 +257,9 @@ export class DataSyncManager {
   /**
    * Download shopping carts
    */
-  private async downloadShoppingCarts(practiceId: string): Promise<ShoppingCart[]> {
+  private async downloadShoppingCarts(
+    practiceId: string
+  ): Promise<ShoppingCart[]> {
     const { data, error } = await supabase
       .from('shopping_carts')
       .select('*')
@@ -265,9 +279,11 @@ export class DataSyncManager {
   /**
    * Download shopping cart items
    */
-  private async downloadCartItems(carts: ShoppingCart[]): Promise<ShoppingCartItem[]> {
+  private async downloadCartItems(
+    carts: ShoppingCart[]
+  ): Promise<ShoppingCartItem[]> {
     const cartIds = carts.map(cart => cart.id);
-    
+
     if (cartIds.length === 0) {
       return [];
     }
@@ -298,7 +314,7 @@ export class DataSyncManager {
     this.data.shopping_carts = [];
     this.data.shopping_cart_items = [];
     this.data.last_sync = null;
-    
+
     this.saveToStorage();
   }
 
@@ -352,13 +368,15 @@ export class DataSyncManager {
       const stored = localStorage.getItem(this.storageKey);
       if (stored) {
         const parsedData = JSON.parse(stored);
-        
+
         this.data.bestellijsten = parsedData.bestellijsten || [];
         this.data.bestellijst_items = parsedData.bestellijst_items || [];
         this.data.products = parsedData.products || [];
         this.data.shopping_carts = parsedData.shopping_carts || [];
         this.data.shopping_cart_items = parsedData.shopping_cart_items || [];
-        this.data.last_sync = parsedData.last_sync ? new Date(parsedData.last_sync) : null;
+        this.data.last_sync = parsedData.last_sync
+          ? new Date(parsedData.last_sync)
+          : null;
       }
     } catch (error) {
       console.error('Failed to load offline data from storage:', error);
@@ -368,4 +386,4 @@ export class DataSyncManager {
 }
 
 // Export singleton instance
-export const dataSyncManager = new DataSyncManager(); 
+export const dataSyncManager = new DataSyncManager();

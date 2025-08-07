@@ -1,6 +1,11 @@
 import { supabase } from 'src/boot/supabase';
 import { v4 as uuidv4 } from 'uuid';
-import type { PermanentUser, DeviceToken, UserSession, MagicInvite } from 'src/types/supabase';
+import type {
+  PermanentUser,
+  DeviceToken,
+  UserSession,
+  MagicInvite,
+} from 'src/types/supabase';
 
 // 🚀 PERMANENT USERS SERVICE
 // Handles the complete upgrade flow from guest to permanent team member
@@ -35,7 +40,6 @@ export interface LoginResult {
 // Remove duplicate interface - use from types
 
 export class PermanentUserService {
-
   // 🎯 DETECT LOGIN TYPE - Smart detection between invite codes and personal codes
   static async detectLoginType(code: string): Promise<{
     type: 'invite' | 'personal' | 'invalid';
@@ -64,22 +68,34 @@ export class PermanentUserService {
   // 🔐 VALIDATE PERSONAL MAGIC CODE
   static async validatePersonalMagicCode(code: string): Promise<LoginResult> {
     try {
-      const { data, error } = await supabase.rpc('validate_personal_magic_code', {
-        magic_code: code
-      });
+      const { data, error } = await supabase.rpc(
+        'validate_personal_magic_code',
+        {
+          magic_code: code,
+        }
+      );
 
       if (error) throw error;
 
-      if (data && typeof data === 'object' && 'success' in data && data.success) {
+      if (
+        data &&
+        typeof data === 'object' &&
+        'success' in data &&
+        data.success
+      ) {
         // Create session token
         const sessionToken = this.generateSessionToken();
-        await this.createUserSession(data.user_id as string, 'magic_code', sessionToken);
+        await this.createUserSession(
+          data.user_id as string,
+          'magic_code',
+          sessionToken
+        );
 
         return {
           success: true,
           user: data as PermanentUser,
           session_token: sessionToken,
-          login_method: 'personal_magic_code'
+          login_method: 'personal_magic_code',
         };
       }
 
@@ -100,10 +116,12 @@ export class PermanentUserService {
     try {
       const { data, error } = await supabase
         .from('magic_invites')
-        .select(`
+        .select(
+          `
           *,
           practices!inner(id, name)
-        `)
+        `
+        )
         .eq('magic_code', code)
         .eq('is_active', true)
         .gt('max_uses', 'current_uses')
@@ -122,7 +140,9 @@ export class PermanentUserService {
   }
 
   // ⚡ CREATE PERMANENT USER - The upgrade process
-  static async createPermanentUser(request: CreatePermanentUserRequest): Promise<{
+  static async createPermanentUser(
+    request: CreatePermanentUserRequest
+  ): Promise<{
     success: boolean;
     user?: PermanentUser;
     personal_code?: string;
@@ -171,7 +191,7 @@ export class PermanentUserService {
         preferred_login_method: request.login_method,
         created_from_invite_id: request.invite_id,
         timezone: 'Europe/Amsterdam',
-        language: 'nl'
+        language: 'nl',
       };
 
       // @ts-ignore - Supabase type complexity with department null/undefined
@@ -189,19 +209,22 @@ export class PermanentUserService {
         .update({
           converted_to_user_id: newUser.id,
           conversion_completed_at: new Date().toISOString(),
-          updated_at: new Date().toISOString()
+          updated_at: new Date().toISOString(),
         })
         .eq('id', request.invite_id);
 
       // Create device token if device_remember method
-      if (request.login_method === 'device_remember' && request.device_fingerprint) {
+      if (
+        request.login_method === 'device_remember' &&
+        request.device_fingerprint
+      ) {
         await this.createDeviceToken(newUser.id, request.device_fingerprint);
       }
 
       return {
         success: true,
         user: newUser,
-        personal_code: personalMagicCode || ''
+        personal_code: personalMagicCode || '',
       };
     } catch (error) {
       console.error('Error creating permanent user:', error);
@@ -210,12 +233,18 @@ export class PermanentUserService {
   }
 
   // 🎲 GENERATE PERSONAL MAGIC CODE
-  static async generatePersonalMagicCode(fullName: string | undefined, practiceName: string): Promise<string> {
+  static async generatePersonalMagicCode(
+    fullName: string | undefined,
+    practiceName: string
+  ): Promise<string> {
     try {
-      const { data, error } = await supabase.rpc('generate_personal_magic_code', {
-        user_name: fullName || 'USER',
-        practice_name: practiceName
-      });
+      const { data, error } = await supabase.rpc(
+        'generate_personal_magic_code',
+        {
+          user_name: fullName || 'USER',
+          practice_name: practiceName,
+        }
+      );
 
       if (error) throw error;
       return data as string;
@@ -224,7 +253,9 @@ export class PermanentUserService {
       // Fallback generation
       const nameToUse: string = fullName ? fullName.toString() : 'USER';
       const nameParts = nameToUse.split(' ');
-      const cleanName = (nameParts[0] || 'USER').toUpperCase().replace(/[^A-Z]/g, '');
+      const cleanName = (nameParts[0] || 'USER')
+        .toUpperCase()
+        .replace(/[^A-Z]/g, '');
       const year = new Date().getFullYear();
       return `🏥${cleanName}${year}`;
     }
@@ -237,12 +268,15 @@ export class PermanentUserService {
     return btoa(password);
   }
 
-  static async verifyPassword(password: string, hash: string): Promise<boolean> {
+  static async verifyPassword(
+    password: string,
+    hash: string
+  ): Promise<boolean> {
     // In a real implementation, use bcrypt.compare
     return btoa(password) === hash;
   }
 
-    // 📱 DEVICE TOKEN MANAGEMENT - Now handled via permanent_users.device_tokens JSON field
+  // 📱 DEVICE TOKEN MANAGEMENT - Now handled via permanent_users.device_tokens JSON field
   // Legacy device_tokens table has been removed - functionality moved to user JSON field
 
   // 🎫 SESSION MANAGEMENT
@@ -250,7 +284,11 @@ export class PermanentUserService {
     return uuidv4() + '-' + Date.now();
   }
 
-  static async createUserSession(userId: string, loginMethod: string, sessionToken: string): Promise<void> {
+  static async createUserSession(
+    userId: string,
+    loginMethod: string,
+    sessionToken: string
+  ): Promise<void> {
     try {
       // Get practice_id from user
       const { data: user } = await supabase
@@ -269,19 +307,19 @@ export class PermanentUserService {
         ip_address: await this.getClientIP(),
         user_agent: navigator.userAgent,
         expires_at: new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString(), // 24 hours
-        is_active: true
+        is_active: true,
       };
 
-      await supabase
-        .from('user_sessions')
-        .insert([sessionData]);
+      await supabase.from('user_sessions').insert([sessionData]);
     } catch (error) {
       console.error('Error creating user session:', error);
     }
   }
 
   // 👥 GET PRACTICE TEAM
-  static async getPracticeTeam(practiceId: string): Promise<EnhancedPermanentUser[]> {
+  static async getPracticeTeam(
+    practiceId: string
+  ): Promise<EnhancedPermanentUser[]> {
     try {
       const { data, error } = await supabase
         .from('permanent_users')
@@ -320,15 +358,15 @@ export class PermanentUserService {
     ctx!.textBaseline = 'top';
     ctx!.font = '14px Arial';
     ctx!.fillText('Device fingerprint', 2, 2);
-    
+
     const fingerprint = [
       navigator.userAgent,
       navigator.language,
       screen.width + 'x' + screen.height,
       new Date().getTimezoneOffset(),
-      canvas.toDataURL()
+      canvas.toDataURL(),
     ].join('|');
-    
+
     return btoa(fingerprint).substring(0, 32);
   }
 
@@ -347,7 +385,10 @@ export class PermanentUserService {
   }
 
   // 📧 EMAIL LOGIN
-  static async loginWithEmail(email: string, password: string): Promise<LoginResult> {
+  static async loginWithEmail(
+    email: string,
+    password: string
+  ): Promise<LoginResult> {
     try {
       const { data: user, error } = await supabase
         .from('permanent_users')
@@ -361,7 +402,10 @@ export class PermanentUserService {
         return { success: false, error: 'Invalid email or password' };
       }
 
-      const isValidPassword = await this.verifyPassword(password, user.password_hash || '');
+      const isValidPassword = await this.verifyPassword(
+        password,
+        user.password_hash || ''
+      );
       if (!isValidPassword) {
         return { success: false, error: 'Invalid email or password' };
       }
@@ -372,7 +416,7 @@ export class PermanentUserService {
         .update({
           last_login_at: new Date().toISOString(),
           login_count: (user.login_count || 0) + 1,
-          updated_at: new Date().toISOString()
+          updated_at: new Date().toISOString(),
         })
         .eq('id', user.id);
 
@@ -384,7 +428,7 @@ export class PermanentUserService {
         success: true,
         user: user as PermanentUser,
         session_token: sessionToken,
-        login_method: 'email_password'
+        login_method: 'email_password',
       };
     } catch (error) {
       console.error('Error logging in with email:', error);
@@ -393,4 +437,4 @@ export class PermanentUserService {
   }
 }
 
-export default PermanentUserService; 
+export default PermanentUserService;

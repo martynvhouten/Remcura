@@ -2,10 +2,7 @@ import { ref } from 'vue';
 import { supabase } from '@/boot/supabase';
 import { inventoryLogger } from '@/utils/logger';
 import { ErrorHandler } from '@/utils/service-error-handler';
-import type { 
-  StockMovement, 
-  StockUpdateRequest
-} from '@/types/inventory';
+import type { StockMovement, StockUpdateRequest } from '@/types/inventory';
 
 // Movement with product data included
 interface MovementWithRelations extends StockMovement {
@@ -59,11 +56,13 @@ export function useInventoryMovements(
 
           currentStock = (stockLevel as any)?.current_quantity || 0;
           break; // Success, exit retry loop
-
         } catch (error: unknown) {
           retryCount++;
           if (retryCount >= maxRetries) {
-            inventoryLogger.error('Failed to get current stock after retries:', error);
+            inventoryLogger.error(
+              'Failed to get current stock after retries:',
+              error
+            );
             throw new Error($t('inventorym.unabletogetcurrent'));
           }
           // Wait a bit before retrying
@@ -108,7 +107,7 @@ export function useInventoryMovements(
 
       if (movementError) {
         inventoryLogger.error('Error creating stock movement:', movementError);
-        
+
         // Provide more specific error messages
         if (movementError.code === '23503') {
           const detail = movementError.details || movementError.message;
@@ -134,33 +133,40 @@ export function useInventoryMovements(
 
       // Stock level is automatically updated by database triggers
       // No need for manual upsert anymore
-      
+
       // Refresh data to reflect changes
       await fetchStockMovements(request.practice_id);
 
       return insertedMovement;
     } catch (error: unknown) {
-      const result = await ErrorHandler.handleError(error, {
-        service: 'inventory',
-        operation: 'updateStockLevel',
-        practiceId: request.practice_id,
-        userId: currentUserId.value || undefined,
-        metadata: { 
-          request,
-          errorCode: error.code,
-          errorDetails: error.details 
+      const result = await ErrorHandler.handleError(
+        error,
+        {
+          service: 'inventory',
+          operation: 'updateStockLevel',
+          practiceId: request.practice_id,
+          userId: currentUserId.value || undefined,
+          metadata: {
+            request,
+            errorCode: error.code,
+            errorDetails: error.details,
+          },
+        },
+        {
+          showToUser: false, // Let the calling component handle UI feedback
+          logLevel: 'error',
         }
-      }, {
-        showToUser: false, // Let the calling component handle UI feedback
-        logLevel: 'error'
-      });
+      );
 
       // Provide specific error messages for common cases
       if (error.message?.includes('Invalid reference')) {
         throw new Error($t('inventorym.productlocationorpractice'));
       } else if (error.message?.includes('Insufficient stock')) {
         throw error; // This error message is already user-friendly
-      } else if (error.code === '23505' || error.message?.includes('Duplicate')) {
+      } else if (
+        error.code === '23505' ||
+        error.message?.includes('Duplicate')
+      ) {
         throw new Error($t('inventorym.eenandereupdateis'));
       } else {
         // Use the centralized error handler's user message
@@ -182,20 +188,24 @@ export function useInventoryMovements(
       if (error) throw error;
 
       // Transform stock movements to internal format
-      stockMovements.value = (data || []).map((movement: StockMovement & { products?: Product; locations?: Location }) => ({
-        id: movement.id,
-        practice_id: movement.practice_id,
-        location_id: movement.location_id,
-        product_id: movement.product_id,
-        movement_type: movement.movement_type,
-        quantity_change: movement.quantity_change,
-        quantity_before: movement.quantity_before || 0,
-        quantity_after: movement.quantity_after,
-        performed_by: movement.created_by || '',
-        notes: movement.notes,
-        created_at: movement.created_at,
-        product: undefined, // Will be populated separately if needed
-      })) as MovementWithRelations[];
+      stockMovements.value = (data || []).map(
+        (
+          movement: StockMovement & { products?: Product; locations?: Location }
+        ) => ({
+          id: movement.id,
+          practice_id: movement.practice_id,
+          location_id: movement.location_id,
+          product_id: movement.product_id,
+          movement_type: movement.movement_type,
+          quantity_change: movement.quantity_change,
+          quantity_before: movement.quantity_before || 0,
+          quantity_after: movement.quantity_after,
+          performed_by: movement.created_by || '',
+          notes: movement.notes,
+          created_at: movement.created_at,
+          product: undefined, // Will be populated separately if needed
+        })
+      ) as MovementWithRelations[];
     } catch (error) {
       inventoryLogger.error('Error fetching stock movements:', error);
       throw error;
@@ -229,9 +239,10 @@ export function useInventoryMovements(
         .eq('product_id', productId)
         .maybeSingle();
 
-      const fromCurrentStock = (fromStockQuery.data as any)?.current_quantity || 0;
+      const fromCurrentStock =
+        (fromStockQuery.data as any)?.current_quantity || 0;
       const toCurrentStock = (toStockQuery.data as any)?.current_quantity || 0;
-      
+
       // Create transfer out movement
       await supabase.from('stock_movements').insert({
         practice_id: practiceId,
@@ -261,24 +272,27 @@ export function useInventoryMovements(
       });
 
       // Update stock levels for both locations
-      await supabase.from('stock_levels').upsert([
+      await supabase.from('stock_levels').upsert(
+        [
+          {
+            practice_id: practiceId,
+            location_id: fromLocationId,
+            product_id: productId,
+            current_quantity: fromCurrentStock - quantity,
+            updated_at: new Date().toISOString(),
+          },
+          {
+            practice_id: practiceId,
+            location_id: toLocationId,
+            product_id: productId,
+            current_quantity: toCurrentStock + quantity,
+            updated_at: new Date().toISOString(),
+          },
+        ],
         {
-          practice_id: practiceId,
-          location_id: fromLocationId,
-          product_id: productId,
-          current_quantity: fromCurrentStock - quantity,
-          updated_at: new Date().toISOString(),
-        },
-        {
-          practice_id: practiceId,
-          location_id: toLocationId,
-          product_id: productId,
-          current_quantity: toCurrentStock + quantity,
-          updated_at: new Date().toISOString(),
+          onConflict: 'practice_id,location_id,product_id',
         }
-      ], {
-        onConflict: 'practice_id,location_id,product_id'
-      });
+      );
 
       // Refresh movements
       await fetchStockMovements(practiceId);
@@ -288,9 +302,15 @@ export function useInventoryMovements(
     }
   };
 
-  const executeStockTransfer = async (transferData: { from_location_id: string; to_location_id: string; product_id: string; quantity: number; reason?: string }) => {
+  const executeStockTransfer = async (transferData: {
+    from_location_id: string;
+    to_location_id: string;
+    product_id: string;
+    quantity: number;
+    reason?: string;
+  }) => {
     const practiceId = currentPracticeId.value;
-    
+
     if (!practiceId) {
       throw new Error($t('inventorym.nopracticeselected'));
     }

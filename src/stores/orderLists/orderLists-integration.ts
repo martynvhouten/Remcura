@@ -7,7 +7,9 @@ import type { OrderListStatus } from '@/types/inventory';
 import { ServiceErrorHandler } from '@/utils/service-error-handler';
 import type { OrderListWithItems } from './orderLists-core';
 
-export function useOrderListsIntegration(orderLists: Ref<OrderListWithItems[]>) {
+export function useOrderListsIntegration(
+  orderLists: Ref<OrderListWithItems[]>
+) {
   // State
   const saving = ref(false);
 
@@ -21,7 +23,9 @@ export function useOrderListsIntegration(orderLists: Ref<OrderListWithItems[]>) 
   ): Promise<OrderListWithItems> => {
     saving.value = true;
     try {
-      const original = orderLists.value.find((list: OrderListWithItems) => list.id === originalId);
+      const original = orderLists.value.find(
+        (list: OrderListWithItems) => list.id === originalId
+      );
       if (!original) throw new Error($t('orderlists.originalorderlistnot'));
 
       // Create new order list
@@ -35,12 +39,14 @@ export function useOrderListsIntegration(orderLists: Ref<OrderListWithItems[]>) 
           status: 'draft' as OrderListStatus,
           total_items: 0,
           total_value: 0,
-          created_by: authStore.user?.id
+          created_by: authStore.user?.id,
         })
-        .select(`
+        .select(
+          `
           *,
           supplier:suppliers(*)
-        `)
+        `
+        )
         .single();
 
       if (orderListError) throw orderListError;
@@ -54,7 +60,7 @@ export function useOrderListsIntegration(orderLists: Ref<OrderListWithItems[]>) 
           suggested_quantity: item.requested_quantity,
           ordered_quantity: item.requested_quantity,
           unit_price: item.unit_price,
-          notes: item.notes
+          notes: item.notes,
         }));
 
         const { error: itemsError } = await supabase
@@ -66,8 +72,11 @@ export function useOrderListsIntegration(orderLists: Ref<OrderListWithItems[]>) 
 
       const newOrderListWithItems: OrderListWithItems = {
         ...newOrderList,
-        items: original.items.map(item => ({ ...item, order_list_id: newOrderList.id })),
-        supplier: newOrderList.supplier
+        items: original.items.map(item => ({
+          ...item,
+          order_list_id: newOrderList.id,
+        })),
+        supplier: newOrderList.supplier,
       };
 
       orderLists.value.unshift(newOrderListWithItems);
@@ -75,7 +84,7 @@ export function useOrderListsIntegration(orderLists: Ref<OrderListWithItems[]>) 
     } catch (err) {
       const handledError = ServiceErrorHandler.handle(err, {
         service: 'OrderListsStore',
-        operation: 'duplicateOrderList'
+        operation: 'duplicateOrderList',
       });
       orderLogger.error('Error duplicating order list:', handledError);
       throw handledError;
@@ -86,7 +95,9 @@ export function useOrderListsIntegration(orderLists: Ref<OrderListWithItems[]>) 
 
   const addToCart = async (orderListId: string): Promise<void> => {
     try {
-      const orderList = orderLists.value.find((list: OrderListWithItems) => list.id === orderListId);
+      const orderList = orderLists.value.find(
+        (list: OrderListWithItems) => list.id === orderListId
+      );
       if (!orderList) throw new Error($t('orderlists.orderlistnotfound'));
 
       // Clear existing cart
@@ -109,7 +120,7 @@ export function useOrderListsIntegration(orderLists: Ref<OrderListWithItems[]>) 
     } catch (err) {
       const handledError = ServiceErrorHandler.handle(err, {
         service: 'OrderListsStore',
-        operation: 'addToCart'
+        operation: 'addToCart',
       });
       orderLogger.error('Error adding order list to cart:', handledError);
       throw handledError;
@@ -127,7 +138,7 @@ export function useOrderListsIntegration(orderLists: Ref<OrderListWithItems[]>) 
     } catch (err) {
       const handledError = ServiceErrorHandler.handle(err, {
         service: 'OrderListsStore',
-        operation: 'autoFillFromStockLevels'
+        operation: 'autoFillFromStockLevels',
       });
       orderLogger.error('Error auto-filling order list:', handledError);
       throw handledError;

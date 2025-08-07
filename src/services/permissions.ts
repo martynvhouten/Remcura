@@ -1,6 +1,12 @@
 import { supabase } from 'src/boot/supabase';
 import { useAuthStore } from 'src/stores/auth';
-import type { UserRole, PermissionType, ResourceType, Permission, RoleDefinition } from '@/types/permissions';
+import type {
+  UserRole,
+  PermissionType,
+  ResourceType,
+  Permission,
+  RoleDefinition,
+} from '@/types/permissions';
 
 // Role definitions for frontend display
 export const ROLE_DEFINITIONS: Record<UserRole, RoleDefinition> = {
@@ -10,7 +16,7 @@ export const ROLE_DEFINITIONS: Record<UserRole, RoleDefinition> = {
     description: 'Volledige toegang tot alle functies en instellingen',
     permissions: [
       { permission_type: 'admin', resource_type: 'all', source: 'role' },
-    ]
+    ],
   },
   manager: {
     role: 'manager',
@@ -22,7 +28,7 @@ export const ROLE_DEFINITIONS: Record<UserRole, RoleDefinition> = {
       { permission_type: 'write', resource_type: 'orders', source: 'role' },
       { permission_type: 'read', resource_type: 'analytics', source: 'role' },
       { permission_type: 'read', resource_type: 'users', source: 'role' },
-    ]
+    ],
   },
   assistant: {
     role: 'assistant',
@@ -32,8 +38,13 @@ export const ROLE_DEFINITIONS: Record<UserRole, RoleDefinition> = {
       { permission_type: 'write', resource_type: 'products', source: 'role' },
       { permission_type: 'write', resource_type: 'inventory', source: 'role' },
       { permission_type: 'write', resource_type: 'orders', source: 'role' },
-      { permission_type: 'read', resource_type: 'analytics', conditions: { basic_only: true }, source: 'role' },
-    ]
+      {
+        permission_type: 'read',
+        resource_type: 'analytics',
+        conditions: { basic_only: true },
+        source: 'role',
+      },
+    ],
   },
   logistics: {
     role: 'logistics',
@@ -41,9 +52,14 @@ export const ROLE_DEFINITIONS: Record<UserRole, RoleDefinition> = {
     description: 'Beperkt tot voorraadtelling en product viewing',
     permissions: [
       { permission_type: 'read', resource_type: 'products', source: 'role' },
-      { permission_type: 'write', resource_type: 'inventory', conditions: { actions: ['count', 'adjust'] }, source: 'role' },
+      {
+        permission_type: 'write',
+        resource_type: 'inventory',
+        conditions: { actions: ['count', 'adjust'] },
+        source: 'role',
+      },
       { permission_type: 'read', resource_type: 'inventory', source: 'role' },
-    ]
+    ],
   },
   member: {
     role: 'member',
@@ -52,17 +68,32 @@ export const ROLE_DEFINITIONS: Record<UserRole, RoleDefinition> = {
     permissions: [
       { permission_type: 'read', resource_type: 'products', source: 'role' },
       { permission_type: 'read', resource_type: 'inventory', source: 'role' },
-      { permission_type: 'write', resource_type: 'orders', conditions: { own_only: true }, source: 'role' },
-    ]
+      {
+        permission_type: 'write',
+        resource_type: 'orders',
+        conditions: { own_only: true },
+        source: 'role',
+      },
+    ],
   },
   guest: {
     role: 'guest',
     displayName: 'Gast',
     description: 'Zeer beperkte toegang',
     permissions: [
-      { permission_type: 'read', resource_type: 'products', conditions: { limited: true }, source: 'role' },
-      { permission_type: 'read', resource_type: 'inventory', conditions: { limited: true }, source: 'role' },
-    ]
+      {
+        permission_type: 'read',
+        resource_type: 'products',
+        conditions: { limited: true },
+        source: 'role',
+      },
+      {
+        permission_type: 'read',
+        resource_type: 'inventory',
+        conditions: { limited: true },
+        source: 'role',
+      },
+    ],
   },
   platform_owner: {
     role: 'platform_owner',
@@ -70,8 +101,8 @@ export const ROLE_DEFINITIONS: Record<UserRole, RoleDefinition> = {
     description: 'Volledige platform en alle praktijk toegang',
     permissions: [
       { permission_type: 'admin', resource_type: 'all', source: 'role' },
-    ]
-  }
+    ],
+  },
 };
 
 export class PermissionService {
@@ -100,7 +131,10 @@ export class PermissionService {
     if (!practiceId) {
       console.warn('No practice ID - applying magic join fallback permissions');
       // Grant read access to basic resources for magic join users
-      if (permissionType === 'read' && ['products', 'inventory'].includes(resourceType)) {
+      if (
+        permissionType === 'read' &&
+        ['products', 'inventory'].includes(resourceType)
+      ) {
         return true;
       }
       return false;
@@ -112,13 +146,16 @@ export class PermissionService {
         p_practice_id: practiceId,
         p_permission_type: permissionType,
         p_resource_type: resourceType,
-        p_resource_id: resourceId || null
+        p_resource_id: resourceId || null,
       });
 
       if (error) {
         console.error('Error checking permission:', error);
         // Fallback: grant basic read permissions if RPC fails
-        if (permissionType === 'read' && ['products', 'inventory'].includes(resourceType)) {
+        if (
+          permissionType === 'read' &&
+          ['products', 'inventory'].includes(resourceType)
+        ) {
           return true;
         }
         return false;
@@ -128,7 +165,10 @@ export class PermissionService {
     } catch (error) {
       console.error('Error in hasPermission:', error);
       // Fallback: grant basic read permissions if RPC fails
-      if (permissionType === 'read' && ['products', 'inventory'].includes(resourceType)) {
+      if (
+        permissionType === 'read' &&
+        ['products', 'inventory'].includes(resourceType)
+      ) {
         return true;
       }
       return false;
@@ -150,7 +190,7 @@ export class PermissionService {
     try {
       const { data, error } = await supabase.rpc('get_user_permissions', {
         p_user_id: userId,
-        p_practice_id: practiceId
+        p_practice_id: practiceId,
       });
 
       if (error) {
@@ -180,7 +220,9 @@ export class PermissionService {
 
     // If no practiceId, this might be a Magic Join user - give them guest access for now
     if (!practiceId) {
-      console.warn('No practice ID found - granting guest access for magic join user');
+      console.warn(
+        'No practice ID found - granting guest access for magic join user'
+      );
       return 'guest';
     }
 
@@ -202,7 +244,7 @@ export class PermissionService {
         return 'guest';
       }
 
-      return data?.role as UserRole || 'guest';
+      return (data?.role as UserRole) || 'guest';
     } catch (error) {
       console.error('Error in getUserRole:', error);
       return 'guest';
@@ -225,7 +267,13 @@ export class PermissionService {
   }
 
   static canManageInventory(role: UserRole): boolean {
-    return ['owner', 'manager', 'assistant', 'logistics', 'platform_owner'].includes(role);
+    return [
+      'owner',
+      'manager',
+      'assistant',
+      'logistics',
+      'platform_owner',
+    ].includes(role);
   }
 
   static canViewAnalytics(role: UserRole): boolean {
@@ -264,7 +312,11 @@ export function usePermissions() {
     resourceType: ResourceType,
     resourceId?: string
   ) => {
-    return PermissionService.hasPermission(permissionType, resourceType, resourceId);
+    return PermissionService.hasPermission(
+      permissionType,
+      resourceType,
+      resourceId
+    );
   };
 
   const getUserRole = async () => {
@@ -311,4 +363,4 @@ export function usePermissions() {
     canViewAnalytics,
     canManageUsers,
   };
-} 
+}

@@ -1,15 +1,15 @@
-import type { FilterPreset } from 'src/types/filters'
+import type { FilterPreset } from 'src/types/filters';
 
 /**
  * Locations Filter Preset
- * 
+ *
  * Filters for the LocationsPage to search and filter locations.
  */
 export const locationsFilterPreset: FilterPreset = {
   id: 'locations',
   name: 'filters.locations.title',
   description: 'filters.locations.description',
-  
+
   fields: [
     // === Primary Search ===
     {
@@ -21,7 +21,7 @@ export const locationsFilterPreset: FilterPreset = {
       searchFields: ['name', 'type', 'description'],
       clearable: true,
       debounce: 300,
-      priority: 1
+      priority: 1,
     },
 
     // === Location Type Filter ===
@@ -34,14 +34,30 @@ export const locationsFilterPreset: FilterPreset = {
       dataSource: {
         type: 'static',
         options: [
-          { value: 'warehouse', label: 'locations.types.warehouse', icon: 'warehouse' },
-          { value: 'pharmacy', label: 'locations.types.pharmacy', icon: 'local_pharmacy' },
-          { value: 'treatment_room', label: 'locations.types.treatmentRoom', icon: 'meeting_room' },
-          { value: 'storage', label: 'locations.types.storage', icon: 'inventory_2' }
-        ]
+          {
+            value: 'warehouse',
+            label: 'locations.types.warehouse',
+            icon: 'warehouse',
+          },
+          {
+            value: 'pharmacy',
+            label: 'locations.types.pharmacy',
+            icon: 'local_pharmacy',
+          },
+          {
+            value: 'treatment_room',
+            label: 'locations.types.treatmentRoom',
+            icon: 'meeting_room',
+          },
+          {
+            value: 'storage',
+            label: 'locations.types.storage',
+            icon: 'inventory_2',
+          },
+        ],
       },
       clearable: true,
-      priority: 2
+      priority: 2,
     },
 
     // === Main Location Filter ===
@@ -52,21 +68,21 @@ export const locationsFilterPreset: FilterPreset = {
       icon: 'star',
       variant: 'toggle',
       color: 'warning',
-      priority: 3
-    }
+      priority: 3,
+    },
   ],
 
   // === Layout Configuration ===
   layout: {
-    columns: { 
-      desktop: 3, 
-      tablet: 2, 
-      mobile: 1 
+    columns: {
+      desktop: 3,
+      tablet: 2,
+      mobile: 1,
     },
     showMoreThreshold: 3,
     resetButton: true,
     clearAllButton: true,
-    compactMode: true
+    compactMode: true,
   },
 
   // === Default State ===
@@ -75,6 +91,6 @@ export const locationsFilterPreset: FilterPreset = {
   // === Validation ===
   validation: {
     required: [],
-    dependencies: []
-  }
-}
+    dependencies: [],
+  },
+};

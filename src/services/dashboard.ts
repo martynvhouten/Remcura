@@ -14,25 +14,55 @@ class DashboardService {
         title: t('dashboard.titles.assistant'),
         subtitle: t('dashboard.service.subtitles.assistant'),
         primaryColor: 'blue',
-        widgets: ['stock-alerts', 'order-suggestions', 'recent-orders', 'quick-scan'],
-        quickActions: ['scan-product', 'create-order', 'update-stock', 'view-low-stock']
+        widgets: [
+          'stock-alerts',
+          'order-suggestions',
+          'recent-orders',
+          'quick-scan',
+        ],
+        quickActions: [
+          'scan-product',
+          'create-order',
+          'update-stock',
+          'view-low-stock',
+        ],
       },
       manager: {
-        role: 'manager', 
+        role: 'manager',
         title: t('dashboard.titles.manager'),
         subtitle: t('dashboard.service.subtitles.manager'),
         primaryColor: 'purple',
-        widgets: ['analytics-overview', 'cost-analysis', 'supplier-performance', 'team-activity'],
-        quickActions: ['view-analytics', 'manage-suppliers', 'approve-orders', 'export-reports']
+        widgets: [
+          'analytics-overview',
+          'cost-analysis',
+          'supplier-performance',
+          'team-activity',
+        ],
+        quickActions: [
+          'view-analytics',
+          'manage-suppliers',
+          'approve-orders',
+          'export-reports',
+        ],
       },
       owner: {
         role: 'owner',
-        title: t('dashboard.titles.owner'), 
+        title: t('dashboard.titles.owner'),
         subtitle: t('dashboard.service.subtitles.owner'),
         primaryColor: 'green',
-        widgets: ['business-overview', 'financial-summary', 'user-management', 'system-health'],
-        quickActions: ['manage-users', 'system-settings', 'financial-reports', 'backup-data']
-      }
+        widgets: [
+          'business-overview',
+          'financial-summary',
+          'user-management',
+          'system-health',
+        ],
+        quickActions: [
+          'manage-users',
+          'system-settings',
+          'financial-reports',
+          'backup-data',
+        ],
+      },
     };
   }
 
@@ -42,19 +72,23 @@ class DashboardService {
 
     // Use real data with mock fallback for widgets
     dashboardLogger.info(`🎯 Loading dashboard for role: "${userRole}"`);
-    
+
     const roleConfigs = this.getRoleConfigs();
     const config = roleConfigs[userRole] || roleConfigs.assistant;
-    
+
     // Load base metrics
     const metrics = await this.loadMetrics(practiceId);
-    
+
     // Load role-specific widgets
-    const widgets = await this.loadWidgets(config.widgets, practiceId, userRole);
-    
+    const widgets = await this.loadWidgets(
+      config.widgets,
+      practiceId,
+      userRole
+    );
+
     // Load role-specific quick actions
     const quickActions = this.getQuickActions(config.quickActions, userRole);
-    
+
     // Load alerts
     const alerts = await this.loadAlerts(practiceId, userRole);
 
@@ -62,7 +96,7 @@ class DashboardService {
       widgets,
       metrics,
       quickActions,
-      alerts
+      alerts,
     };
   }
 
@@ -73,14 +107,14 @@ class DashboardService {
         stockLevelsResponse,
         ordersResponse,
         productsResponse,
-        inventoryValueResponse
+        inventoryValueResponse,
       ] = await Promise.all([
         // Stock levels for low stock calculation
         supabase
           .from('stock_levels')
           .select('current_quantity, minimum_quantity')
           .eq('practice_id', practiceId),
-        
+
         // Recent orders
         supabase
           .from('orders')
@@ -88,22 +122,24 @@ class DashboardService {
           .eq('practice_id', practiceId)
           .order('created_at', { ascending: false })
           .limit(50),
-        
+
         // Products count (only need count)
         supabase
           .from('products')
           .select('id')
           .eq('practice_id', practiceId)
           .eq('active', true),
-        
+
         // Inventory value with JOIN (single optimized query)
         supabase
           .from('stock_levels')
-          .select(`
+          .select(
+            `
             current_quantity,
             products!inner(price)
-          `)
-          .eq('practice_id', practiceId)
+          `
+          )
+          .eq('practice_id', practiceId),
       ]);
 
       const { data: stockLevels } = stockLevelsResponse;
@@ -112,24 +148,29 @@ class DashboardService {
       const { data: productsWithPrices } = inventoryValueResponse;
 
       // Calculate metrics from parallel data
-      const lowStockCount = stockLevels?.filter(stock => 
-        stock.current_quantity <= (stock.minimum_quantity || 0)
-      ).length || 0;
+      const lowStockCount =
+        stockLevels?.filter(
+          stock => stock.current_quantity <= (stock.minimum_quantity || 0)
+        ).length || 0;
 
-      const pendingOrders = orders?.filter(order => 
-        ['draft', 'submitted', 'confirmed'].includes(order.status)
-      ).length || 0;
-      
-      const totalValue = productsWithPrices?.reduce((sum, stock) => 
-        sum + (stock.current_quantity * (stock.products.price || 0)), 0
-      ) || 0;
+      const pendingOrders =
+        orders?.filter(order =>
+          ['draft', 'submitted', 'confirmed'].includes(order.status)
+        ).length || 0;
+
+      const totalValue =
+        productsWithPrices?.reduce(
+          (sum, stock) =>
+            sum + stock.current_quantity * (stock.products.price || 0),
+          0
+        ) || 0;
 
       return {
         totalProducts: products?.length || 0,
         lowStockCount,
         pendingOrders,
         totalValue,
-        recentActivity: this.calculateRecentActivity(orders, stockLevels)
+        recentActivity: this.calculateRecentActivity(orders, stockLevels),
       };
     } catch (error) {
       dashboardLogger.error('Error loading metrics:', error);
@@ -139,18 +180,18 @@ class DashboardService {
         lowStockCount: 12,
         pendingOrders: 3,
         totalValue: 15420,
-        recentActivity: 8
+        recentActivity: 8,
       };
     }
   }
 
   private async loadWidgets(
-    widgetIds: string[], 
-    practiceId: string, 
+    widgetIds: string[],
+    practiceId: string,
     userRole: string
   ): Promise<DashboardWidget[]> {
     dashboardLogger.info(`🔧 Loading widgets for ${userRole}:`, widgetIds);
-    
+
     // ✅ PERFORMANCE OPTIMIZATION: Load all widgets concurrently instead of sequentially
     const widgetPromises = widgetIds.map(async (widgetId, index) => {
       try {
@@ -163,9 +204,14 @@ class DashboardService {
           throw new Error($t('dashboard.widgetcreationreturnednull'));
         }
       } catch (error) {
-        dashboardLogger.info(`⚠️ Real widget failed for ${widgetId}, using mock:`, error.message);
+        dashboardLogger.info(
+          `⚠️ Real widget failed for ${widgetId}, using mock:`,
+          error.message
+        );
         // Always create mock widget on error - this ensures role-specific content
-        const mockWidget = await this.createRealTimeWidget(widgetId, index, practiceId) || this.createFallbackWidget(widgetId, index);
+        const mockWidget =
+          (await this.createRealTimeWidget(widgetId, index, practiceId)) ||
+          this.createFallbackWidget(widgetId, index);
         if (mockWidget) {
           dashboardLogger.info(`📋 Mock widget created: ${mockWidget.title}`);
           return mockWidget;
@@ -175,33 +221,38 @@ class DashboardService {
     });
 
     // Wait for all widgets to load concurrently
-    const widgets = (await Promise.all(widgetPromises)).filter(Boolean) as DashboardWidget[];
+    const widgets = (await Promise.all(widgetPromises)).filter(
+      Boolean
+    ) as DashboardWidget[];
 
-    dashboardLogger.info(`🎯 Final widget titles for ${userRole}:`, widgets.map(w => w.title));
+    dashboardLogger.info(
+      `🎯 Final widget titles for ${userRole}:`,
+      widgets.map(w => w.title)
+    );
     return widgets;
   }
 
   private async createWidget(
-    widgetId: string, 
-    practiceId: string, 
+    widgetId: string,
+    practiceId: string,
     userRole: string
   ): Promise<DashboardWidget | null> {
     switch (widgetId) {
       case 'stock-alerts':
         return this.createStockAlertsWidget(practiceId);
-      
+
       case 'order-suggestions':
         return this.createOrderSuggestionsWidget(practiceId);
-      
+
       case 'recent-orders':
         return this.createRecentOrdersWidget(practiceId);
-      
+
       case 'analytics-overview':
         return this.createAnalyticsWidget(practiceId);
-      
+
       case 'business-overview':
         return this.createBusinessOverviewWidget(practiceId);
-      
+
       case 'quick-scan':
         return this.createQuickScanWidget();
 
@@ -214,28 +265,32 @@ class DashboardService {
       case 'system-health':
         dashboardLogger.info(`🎨 Using mock for widget: ${widgetId}`);
         return null;
-        
+
       default:
         dashboardLogger.info(`❌ Unknown widget type: ${widgetId}`);
         return null;
     }
   }
 
-  private async createStockAlertsWidget(practiceId: string): Promise<DashboardWidget> {
+  private async createStockAlertsWidget(
+    practiceId: string
+  ): Promise<DashboardWidget> {
     const { data: stockData } = await supabase
       .from('stock_levels')
-      .select(`
+      .select(
+        `
         *,
         products (name, sku, category),
         practice_locations (name)
-      `)
+      `
+      )
       .eq('practice_id', practiceId)
       .order('current_quantity', { ascending: true })
       .limit(50);
 
-    const lowStock = stockData?.filter(item => 
-      item.current_quantity < (item.minimum_quantity || 0)
-    ).slice(0, 10);
+    const lowStock = stockData
+      ?.filter(item => item.current_quantity < (item.minimum_quantity || 0))
+      .slice(0, 10);
 
     return {
       id: 'stock-alerts',
@@ -244,17 +299,21 @@ class DashboardService {
       data: { items: lowStock || [] },
       size: 'medium',
       position: 1,
-      visible: true
+      visible: true,
     };
   }
 
-  private async createOrderSuggestionsWidget(practiceId: string): Promise<DashboardWidget> {
+  private async createOrderSuggestionsWidget(
+    practiceId: string
+  ): Promise<DashboardWidget> {
     const { data: suggestions } = await supabase
       .from('order_suggestions')
-      .select(`
+      .select(
+        `
         *,
         products (name, sku, category)
-      `)
+      `
+      )
       .eq('practice_id', practiceId)
       .order('urgency_level', { ascending: false })
       .limit(5);
@@ -266,11 +325,13 @@ class DashboardService {
       data: { suggestions: suggestions || [] },
       size: 'large',
       position: 2,
-      visible: true
+      visible: true,
     };
   }
 
-  private async createRecentOrdersWidget(practiceId: string): Promise<DashboardWidget> {
+  private async createRecentOrdersWidget(
+    practiceId: string
+  ): Promise<DashboardWidget> {
     const { data: orders } = await supabase
       .from('orders')
       .select('*')
@@ -285,7 +346,7 @@ class DashboardService {
       data: { orders: orders || [] },
       size: 'medium',
       position: 3,
-      visible: true
+      visible: true,
     };
   }
 
@@ -294,23 +355,28 @@ class DashboardService {
       id: 'quick-scan',
       title: t('dashboard.service.widgets.quickScan'),
       type: 'quickAction',
-      data: { 
+      data: {
         action: 'scan',
-        description: t('dashboard.service.widgets.quickScanDescription')
+        description: t('dashboard.service.widgets.quickScanDescription'),
       },
       size: 'small',
       position: 4,
-      visible: true
+      visible: true,
     };
   }
 
-  private async createAnalyticsWidget(practiceId: string): Promise<DashboardWidget> {
+  private async createAnalyticsWidget(
+    practiceId: string
+  ): Promise<DashboardWidget> {
     // Simplified analytics data
     const { data: analytics } = await supabase
       .from('usage_analytics')
       .select('*')
       .eq('practice_id', practiceId)
-      .gte('created_at', new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString())
+      .gte(
+        'created_at',
+        new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString()
+      )
       .order('created_at', { ascending: false });
 
     return {
@@ -320,11 +386,13 @@ class DashboardService {
       data: { analytics: analytics || [] },
       size: 'large',
       position: 1,
-      visible: true
+      visible: true,
     };
   }
 
-  private async createBusinessOverviewWidget(practiceId: string): Promise<DashboardWidget> {
+  private async createBusinessOverviewWidget(
+    practiceId: string
+  ): Promise<DashboardWidget> {
     // Business metrics for owners
     const { data: members } = await supabase
       .from('practice_members')
@@ -335,13 +403,13 @@ class DashboardService {
       id: 'business-overview',
       title: t('dashboard.service.widgets.businessOverview'),
       type: 'metric',
-      data: { 
+      data: {
         teamSize: members?.length || 0,
-        practiceHealth: 95 // Simplified metric
+        practiceHealth: 95, // Simplified metric
       },
       size: 'large',
       position: 1,
-      visible: true
+      visible: true,
     };
   }
 
@@ -352,85 +420,85 @@ class DashboardService {
         label: t('dashboard.service.quickActions.scanProduct'),
         icon: 'qr_code_scanner',
         route: '/scan',
-        color: 'primary'
+        color: 'primary',
       },
       'create-order': {
         id: 'create-order',
         label: t('dashboard.service.quickActions.createOrder'),
         icon: 'add_shopping_cart',
         route: '/orders/new',
-        color: 'positive'
+        color: 'positive',
       },
       'update-stock': {
         id: 'update-stock',
         label: t('dashboard.service.quickActions.updateStock'),
         icon: 'inventory',
         route: '/inventory/levels',
-        color: 'info'
+        color: 'info',
       },
       'view-low-stock': {
         id: 'view-low-stock',
         label: t('dashboard.service.quickActions.viewLowStock'),
         icon: 'warning',
         route: '/inventory/levels?filter=low-stock',
-        color: 'warning'
+        color: 'warning',
       },
       'view-analytics': {
         id: 'view-analytics',
         label: t('dashboard.service.quickActions.viewAnalytics'),
         icon: 'analytics',
         route: '/analytics',
-        color: 'purple'
+        color: 'purple',
       },
       'manage-suppliers': {
         id: 'manage-suppliers',
         label: t('dashboard.service.quickActions.manageSuppliers'),
         icon: 'business',
         route: '/suppliers',
-        color: 'indigo'
+        color: 'indigo',
       },
       'approve-orders': {
         id: 'approve-orders',
         label: t('dashboard.service.quickActions.approveOrders'),
         icon: 'task_alt',
         route: '/orders?status=pending',
-        color: 'orange'
+        color: 'orange',
       },
       'export-reports': {
         id: 'export-reports',
         label: t('dashboard.service.quickActions.exportReports'),
         icon: 'download',
         route: '/reports',
-        color: 'blue-grey'
+        color: 'blue-grey',
       },
       'manage-users': {
         id: 'manage-users',
         label: t('dashboard.service.quickActions.manageUsers'),
         icon: 'people',
         route: '/admin/users',
-        color: 'red'
+        color: 'red',
       },
       'system-settings': {
         id: 'system-settings',
         label: t('dashboard.service.quickActions.systemSettings'),
         icon: 'settings',
         route: '/admin/settings',
-        color: 'grey'
+        color: 'grey',
       },
       'financial-reports': {
         id: 'financial-reports',
         label: t('dashboard.service.quickActions.financialReports'),
         icon: 'account_balance',
         route: '/reports/financial',
-        color: 'green'
+        color: 'green',
       },
       'backup-data': {
         id: 'backup-data',
         label: t('dashboard.service.quickActions.backupData'),
         icon: 'backup',
         route: '/admin/backup',
-        color: 'blue'
-      }
+        color: 'blue',
+      },
     };
 
     return actionIds.map(id => allActions[id]).filter(Boolean);
@@ -448,16 +516,24 @@ class DashboardService {
   getMockDashboardData(userRole: string): DashboardData {
     const roleConfigs = this.getRoleConfigs();
     const config = roleConfigs[userRole] || roleConfigs.assistant;
-    
-    dashboardLogger.info(`🎯 Building ${userRole} dashboard with widgets:`, config.widgets);
-    
-    // Create mock widgets based on role - MUST be role specific
-    const mockWidgets = config.widgets.map((widgetId, index) => {
-      const widget = this.createFallbackWidget(widgetId, index);
-      return widget;
-    }).filter(widget => widget !== null) as DashboardWidget[];
 
-    dashboardLogger.info(`✅ Created ${mockWidgets.length} widgets for ${userRole}:`, mockWidgets.map(w => w.title));
+    dashboardLogger.info(
+      `🎯 Building ${userRole} dashboard with widgets:`,
+      config.widgets
+    );
+
+    // Create mock widgets based on role - MUST be role specific
+    const mockWidgets = config.widgets
+      .map((widgetId, index) => {
+        const widget = this.createFallbackWidget(widgetId, index);
+        return widget;
+      })
+      .filter(widget => widget !== null) as DashboardWidget[];
+
+    dashboardLogger.info(
+      `✅ Created ${mockWidgets.length} widgets for ${userRole}:`,
+      mockWidgets.map(w => w.title)
+    );
 
     // Role-specific metrics
     const metrics = this.getMockMetrics(userRole);
@@ -467,7 +543,7 @@ class DashboardService {
       widgets: mockWidgets,
       metrics,
       quickActions: this.getQuickActions(config.quickActions, userRole),
-      alerts
+      alerts,
     };
   }
 
@@ -479,7 +555,7 @@ class DashboardService {
           lowStockCount: 7,
           pendingOrders: 5,
           totalValue: 23650,
-          recentActivity: 15
+          recentActivity: 15,
         };
       case 'owner':
         return {
@@ -487,7 +563,7 @@ class DashboardService {
           lowStockCount: 3,
           pendingOrders: 8,
           totalValue: 45230,
-          recentActivity: 24
+          recentActivity: 24,
         };
       default: // assistant
         return {
@@ -495,7 +571,7 @@ class DashboardService {
           lowStockCount: 12,
           pendingOrders: 3,
           totalValue: 15420,
-          recentActivity: 8
+          recentActivity: 8,
         };
     }
   }
@@ -507,13 +583,15 @@ class DashboardService {
       // Get low stock items
       const { data: lowStockItems, error: stockError } = await supabase
         .from('stock_levels')
-        .select(`
+        .select(
+          `
           id,
           current_quantity,
           minimum_quantity,
           products!inner(name, sku, category),
           practice_locations!inner(name)
-        `)
+        `
+        )
         .eq('practice_id', practiceId)
         .lt('current_quantity', supabase.rpc('minimum_quantity'))
         .limit(5);
@@ -530,9 +608,11 @@ class DashboardService {
         alerts.push({
           id: 'low-stock-alert',
           type: 'warning' as const,
-          message: t('dashboard.service.alerts.lowStockMessage', { count: lowStockItems.length }),
+          message: t('dashboard.service.alerts.lowStockMessage', {
+            count: lowStockItems.length,
+          }),
           action: '/inventory/levels',
-          actionLabel: t('dashboard.service.alerts.viewStock')
+          actionLabel: t('dashboard.service.alerts.viewStock'),
         });
       }
 
@@ -553,7 +633,7 @@ class DashboardService {
               type: 'info' as const,
               message: t('dashboard.service.alerts.pendingOrdersAvailable'),
               action: '/orders',
-              actionLabel: t('dashboard.service.alerts.reviewOrders')
+              actionLabel: t('dashboard.service.alerts.reviewOrders'),
             });
           }
           break;
@@ -565,13 +645,12 @@ class DashboardService {
             type: 'info' as const,
             message: t('dashboard.service.alerts.systemHealthGood'),
             action: '/admin/monitoring',
-            actionLabel: t('dashboard.service.alerts.viewDetails')
+            actionLabel: t('dashboard.service.alerts.viewDetails'),
           });
           break;
       }
 
       return alerts;
-
     } catch (error) {
       dashboardLogger.error('Error fetching real-time alerts:', error);
       return this.getFallbackAlerts(userRole);
@@ -587,8 +666,8 @@ class DashboardService {
             type: 'info' as const,
             message: t('dashboard.service.alerts.monthlyReportAvailable'),
             action: '/analytics',
-            actionLabel: t('dashboard.service.alerts.viewReport')
-          }
+            actionLabel: t('dashboard.service.alerts.viewReport'),
+          },
         ];
       case 'owner':
         return [
@@ -597,23 +676,29 @@ class DashboardService {
             type: 'warning' as const,
             message: t('dashboard.service.alerts.systemUpdateAvailable'),
             action: '/admin/updates',
-            actionLabel: t('dashboard.service.alerts.updateNow')
-          }
+            actionLabel: t('dashboard.service.alerts.updateNow'),
+          },
         ];
       default: // assistant
         return [
           {
             id: 'assistant-alert-1',
             type: 'warning' as const,
-            message: t('dashboard.service.alerts.lowStockMessage', { count: 0 }),
+            message: t('dashboard.service.alerts.lowStockMessage', {
+              count: 0,
+            }),
             action: '/inventory/levels',
-            actionLabel: t('dashboard.service.alerts.viewStock')
-          }
+            actionLabel: t('dashboard.service.alerts.viewStock'),
+          },
         ];
     }
   }
 
-  private async createRealTimeWidget(widgetId: string, position: number, practiceId?: string): Promise<DashboardWidget | null> {
+  private async createRealTimeWidget(
+    widgetId: string,
+    position: number,
+    practiceId?: string
+  ): Promise<DashboardWidget | null> {
     if (!practiceId) return null;
 
     switch (widgetId) {
@@ -621,13 +706,15 @@ class DashboardService {
         try {
           const { data: lowStockItems, error } = await supabase
             .from('stock_levels')
-            .select(`
+            .select(
+              `
               id,
               current_quantity,
               minimum_quantity,
               products!inner(name, sku, category),
               practice_locations!inner(name)
-            `)
+            `
+            )
             .eq('practice_id', practiceId)
             .lt('current_quantity', supabase.rpc('minimum_quantity'))
             .order('current_quantity', { ascending: true })
@@ -642,12 +729,12 @@ class DashboardService {
             id: 'stock-alerts',
             title: t('dashboard.service.widgets.stockAlerts'),
             type: 'alert',
-            data: { 
-              items: lowStockItems || []
+            data: {
+              items: lowStockItems || [],
             },
             size: 'medium',
             position,
-            visible: true
+            visible: true,
           };
         } catch (error) {
           dashboardLogger.error('Error creating stock alerts widget:', error);
@@ -659,14 +746,16 @@ class DashboardService {
           // Get products that need reordering based on min/max levels
           const { data: reorderSuggestions, error } = await supabase
             .from('stock_levels')
-            .select(`
+            .select(
+              `
               id,
               current_quantity,
               minimum_quantity,
               reorder_point,
               products!inner(name, sku),
               preferred_supplier_id
-            `)
+            `
+            )
             .eq('practice_id', practiceId)
             .lt('current_quantity', supabase.rpc('reorder_point'))
             .order('current_quantity', { ascending: true })
@@ -681,8 +770,13 @@ class DashboardService {
             id: item.id,
             current_stock: item.current_quantity,
             suggested_quantity: Math.max(item.minimum_quantity * 2, 10), // Simple reorder calculation
-            urgency_level: item.current_quantity <= 0 ? 'high' : item.current_quantity <= item.minimum_quantity / 2 ? 'medium' : 'low',
-            products: item.products
+            urgency_level:
+              item.current_quantity <= 0
+                ? 'high'
+                : item.current_quantity <= item.minimum_quantity / 2
+                ? 'medium'
+                : 'low',
+            products: item.products,
           }));
 
           return {
@@ -692,10 +786,13 @@ class DashboardService {
             data: { suggestions },
             size: 'large',
             position,
-            visible: true
+            visible: true,
           };
         } catch (error) {
-          dashboardLogger.error('Error creating order suggestions widget:', error);
+          dashboardLogger.error(
+            'Error creating order suggestions widget:',
+            error
+          );
           return this.createFallbackWidget(widgetId, position);
         }
 
@@ -703,7 +800,8 @@ class DashboardService {
         try {
           const { data: recentOrders, error } = await supabase
             .from('order_lists')
-            .select(`
+            .select(
+              `
               id,
               name,
               status,
@@ -711,7 +809,8 @@ class DashboardService {
               currency,
               created_at,
               suppliers(name)
-            `)
+            `
+            )
             .eq('practice_id', practiceId)
             .order('created_at', { ascending: false })
             .limit(5);
@@ -725,12 +824,12 @@ class DashboardService {
             id: 'recent-orders',
             title: t('dashboard.service.widgets.recentOrders'),
             type: 'list',
-            data: { 
-              orders: recentOrders || []
+            data: {
+              orders: recentOrders || [],
             },
             size: 'medium',
             position,
-            visible: true
+            visible: true,
           };
         } catch (error) {
           dashboardLogger.error('Error creating recent orders widget:', error);
@@ -742,13 +841,14 @@ class DashboardService {
           id: 'quick-scan',
           title: 'Snel Scannen',
           type: 'quickAction',
-          data: { 
+          data: {
             action: 'scan',
-            description: 'Scan een product barcode voor snelle voorraad updates'
+            description:
+              'Scan een product barcode voor snelle voorraad updates',
           },
           size: 'small',
           position,
-          visible: true
+          visible: true,
         };
 
       case 'analytics-overview':
@@ -756,18 +856,18 @@ class DashboardService {
           id: 'analytics-overview',
           title: 'Analytics Overzicht',
           type: 'chart',
-          data: { 
+          data: {
             items: [
               { label: 'Ma', value: 45 },
               { label: 'Di', value: 52 },
               { label: 'Wo', value: 38 },
               { label: 'Do', value: 61 },
-              { label: 'Vr', value: 49 }
-            ]
+              { label: 'Vr', value: 49 },
+            ],
           },
           size: 'large',
           position,
-          visible: true
+          visible: true,
         };
 
       case 'business-overview':
@@ -775,13 +875,13 @@ class DashboardService {
           id: 'business-overview',
           title: 'Business Overzicht',
           type: 'metric',
-          data: { 
+          data: {
             teamSize: 8,
-            practiceHealth: 94
+            practiceHealth: 94,
           },
-          size: 'large', 
+          size: 'large',
           position,
-          visible: true
+          visible: true,
         };
 
       case 'cost-analysis':
@@ -789,18 +889,18 @@ class DashboardService {
           id: 'cost-analysis',
           title: 'Kosten Analyse',
           type: 'chart',
-          data: { 
+          data: {
             items: [
               { label: 'Medicatie', value: 65 },
               { label: 'Materialen', value: 45 },
               { label: 'Instrumenten', value: 30 },
               { label: 'Onderhoud', value: 20 },
-              { label: 'Overig', value: 15 }
-            ]
+              { label: 'Overig', value: 15 },
+            ],
           },
           size: 'medium',
           position,
-          visible: true
+          visible: true,
         };
 
       case 'supplier-performance':
@@ -808,16 +908,28 @@ class DashboardService {
           id: 'supplier-performance',
           title: 'Leverancier Prestaties',
           type: 'list',
-          data: { 
+          data: {
             items: [
-              { title: 'MedSupply NL', subtitle: '98% leverbetrouwbaarheid', icon: 'local_shipping' },
-              { title: 'HealthCorp', subtitle: '95% kwaliteitsscore', icon: 'verified' },
-              { title: 'PharmaDirect', subtitle: '€2.450 besparing dit kwartaal', icon: 'savings' }
-            ]
+              {
+                title: 'MedSupply NL',
+                subtitle: '98% leverbetrouwbaarheid',
+                icon: 'local_shipping',
+              },
+              {
+                title: 'HealthCorp',
+                subtitle: '95% kwaliteitsscore',
+                icon: 'verified',
+              },
+              {
+                title: 'PharmaDirect',
+                subtitle: '€2.450 besparing dit kwartaal',
+                icon: 'savings',
+              },
+            ],
           },
           size: 'medium',
           position,
-          visible: true
+          visible: true,
         };
 
       case 'team-activity':
@@ -825,16 +937,34 @@ class DashboardService {
           id: 'team-activity',
           title: 'Team Activiteit',
           type: 'metric',
-          data: { 
+          data: {
             metrics: [
-              { key: 'scans', value: 147, label: 'Scans vandaag', icon: 'qr_code_scanner', color: 'primary' },
-              { key: 'orders', value: 12, label: 'Bestellingen', icon: 'shopping_cart', color: 'positive' },
-              { key: 'updates', value: 34, label: 'Voorraad updates', icon: 'inventory', color: 'info' }
-            ]
+              {
+                key: 'scans',
+                value: 147,
+                label: 'Scans vandaag',
+                icon: 'qr_code_scanner',
+                color: 'primary',
+              },
+              {
+                key: 'orders',
+                value: 12,
+                label: 'Bestellingen',
+                icon: 'shopping_cart',
+                color: 'positive',
+              },
+              {
+                key: 'updates',
+                value: 34,
+                label: 'Voorraad updates',
+                icon: 'inventory',
+                color: 'info',
+              },
+            ],
           },
           size: 'large',
           position,
-          visible: true
+          visible: true,
         };
 
       case 'financial-summary':
@@ -842,16 +972,34 @@ class DashboardService {
           id: 'financial-summary',
           title: t('dashboard.service.widgets.financialSummary'),
           type: 'metric',
-          data: { 
+          data: {
             metrics: [
-              { key: 'revenue', value: '€45.230', label: t('dashboard.service.widgets.monthlyRevenue'), icon: 'trending_up', color: 'positive' },
-              { key: 'costs', value: '€12.840', label: t('dashboard.service.widgets.inventoryCosts'), icon: 'account_balance', color: 'warning' },
-              { key: 'profit', value: '€32.390', label: t('dashboard.service.widgets.netProfit'), icon: 'savings', color: 'positive' }
-            ]
+              {
+                key: 'revenue',
+                value: '€45.230',
+                label: t('dashboard.service.widgets.monthlyRevenue'),
+                icon: 'trending_up',
+                color: 'positive',
+              },
+              {
+                key: 'costs',
+                value: '€12.840',
+                label: t('dashboard.service.widgets.inventoryCosts'),
+                icon: 'account_balance',
+                color: 'warning',
+              },
+              {
+                key: 'profit',
+                value: '€32.390',
+                label: t('dashboard.service.widgets.netProfit'),
+                icon: 'savings',
+                color: 'positive',
+              },
+            ],
           },
           size: 'large',
           position,
-          visible: true
+          visible: true,
         };
 
       case 'user-management':
@@ -859,16 +1007,32 @@ class DashboardService {
           id: 'user-management',
           title: t('dashboard.service.widgets.userManagement'),
           type: 'list',
-          data: { 
+          data: {
             items: [
-              { title: 'Dr. Sarah Johnson', subtitle: t('dashboard.service.widgets.ownerLastActive', { time: '2 uur geleden' }), icon: 'person' },
-              { title: 'Mark van der Berg', subtitle: t('dashboard.service.widgets.managerOnlineNow'), icon: 'person' },
-              { title: 'Lisa de Vries', subtitle: t('dashboard.service.widgets.assistantLastActive', { time: '1 dag geleden' }), icon: 'person' }
-            ]
+              {
+                title: 'Dr. Sarah Johnson',
+                subtitle: t('dashboard.service.widgets.ownerLastActive', {
+                  time: '2 uur geleden',
+                }),
+                icon: 'person',
+              },
+              {
+                title: 'Mark van der Berg',
+                subtitle: t('dashboard.service.widgets.managerOnlineNow'),
+                icon: 'person',
+              },
+              {
+                title: 'Lisa de Vries',
+                subtitle: t('dashboard.service.widgets.assistantLastActive', {
+                  time: '1 dag geleden',
+                }),
+                icon: 'person',
+              },
+            ],
           },
           size: 'medium',
           position,
-          visible: true
+          visible: true,
         };
 
       case 'system-health':
@@ -876,15 +1040,15 @@ class DashboardService {
           id: 'system-health',
           title: t('dashboard.service.widgets.systemHealth'),
           type: 'metric',
-          data: { 
+          data: {
             value: 98,
             label: t('dashboard.service.widgets.systemStatus'),
             icon: 'health_and_safety',
-            color: 'positive'
+            color: 'positive',
           },
           size: 'small',
           position,
-          visible: true
+          visible: true,
         };
 
       default:
@@ -892,27 +1056,34 @@ class DashboardService {
     }
   }
 
-  private createFallbackWidget(widgetId: string, position: number): DashboardWidget | null {
+  private createFallbackWidget(
+    widgetId: string,
+    position: number
+  ): DashboardWidget | null {
     switch (widgetId) {
       case 'stock-alerts':
         return {
           id: 'stock-alerts',
           title: t('dashboard.service.widgets.stockAlerts'),
           type: 'alert',
-          data: { 
+          data: {
             items: [
               {
                 id: '1',
                 current_quantity: 5,
                 minimum_quantity: 10,
-                products: { name: 'Paracetamol 500mg', sku: 'PAR-500', category: 'Medicatie' },
-                practice_locations: { name: 'Hoofdlocatie' }
-              }
-            ] 
+                products: {
+                  name: 'Paracetamol 500mg',
+                  sku: 'PAR-500',
+                  category: 'Medicatie',
+                },
+                practice_locations: { name: 'Hoofdlocatie' },
+              },
+            ],
           },
           size: 'medium',
           position,
-          visible: true
+          visible: true,
         };
 
       case 'order-suggestions':
@@ -920,20 +1091,20 @@ class DashboardService {
           id: 'order-suggestions',
           title: t('dashboard.service.widgets.orderSuggestions'),
           type: 'list',
-          data: { 
+          data: {
             suggestions: [
               {
                 id: '1',
                 current_stock: 5,
                 suggested_quantity: 50,
                 urgency_level: 'high',
-                products: { name: 'Insuline injecties', sku: 'INS-001' }
-              }
-            ] 
+                products: { name: 'Insuline injecties', sku: 'INS-001' },
+              },
+            ],
           },
           size: 'large',
           position,
-          visible: true
+          visible: true,
         };
 
       case 'recent-orders':
@@ -941,22 +1112,22 @@ class DashboardService {
           id: 'recent-orders',
           title: t('dashboard.service.widgets.recentOrders'),
           type: 'list',
-          data: { 
+          data: {
             orders: [
               {
                 id: '1',
                 name: 'Standaard bestelling',
                 status: 'confirmed',
-                total_amount: 1250.50,
+                total_amount: 1250.5,
                 currency: 'EUR',
                 created_at: new Date().toISOString(),
-                suppliers: { name: 'Medische Groothandel BV' }
-              }
-            ] 
+                suppliers: { name: 'Medische Groothandel BV' },
+              },
+            ],
           },
           size: 'medium',
           position,
-          visible: true
+          visible: true,
         };
 
       default:
@@ -967,29 +1138,34 @@ class DashboardService {
   /**
    * Calculate recent activity score based on recent orders and stock movements
    */
-  private calculateRecentActivity(orders: Order[], stockLevels: StockLevel[]): number {
-    if (!orders || !stockLevels) { return 0; }
-    
+  private calculateRecentActivity(
+    orders: Order[],
+    stockLevels: StockLevel[]
+  ): number {
+    if (!orders || !stockLevels) {
+      return 0;
+    }
+
     const now = new Date();
     const last24Hours = new Date(now.getTime() - 24 * 60 * 60 * 1000);
     const lastWeek = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
-    
+
     // Count recent orders (last 24 hours)
-    const recentOrders = orders.filter(order => 
-      new Date(order.created_at) > last24Hours
+    const recentOrders = orders.filter(
+      order => new Date(order.created_at) > last24Hours
     ).length;
-    
+
     // Count orders from last week for trending
-    const weeklyOrders = orders.filter(order => 
-      new Date(order.created_at) > lastWeek
+    const weeklyOrders = orders.filter(
+      order => new Date(order.created_at) > lastWeek
     ).length;
-    
+
     // Calculate activity score: recent orders get higher weight
-    const activityScore = (recentOrders * 3) + Math.min(weeklyOrders, 50);
-    
+    const activityScore = recentOrders * 3 + Math.min(weeklyOrders, 50);
+
     // Return a normalized score (cap at reasonable number for display)
     return Math.min(activityScore, 99);
   }
 }
 
-export const dashboardService = new DashboardService(); 
+export const dashboardService = new DashboardService();

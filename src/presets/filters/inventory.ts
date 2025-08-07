@@ -1,8 +1,8 @@
-import type { FilterPreset } from 'src/types/filters'
+import type { FilterPreset } from 'src/types/filters';
 
 /**
  * InventoryLevelsPage Filter Preset
- * 
+ *
  * All fields validated against Supabase `stock_levels` table schema:
  * ✅ location_id, product_id (via products relation) exist
  * ⚠️ stock_status is computed from current_quantity vs minimum_quantity
@@ -11,7 +11,7 @@ export const inventoryFilterPreset: FilterPreset = {
   id: 'inventory',
   name: 'filters.inventory.title',
   description: 'filters.inventory.description',
-  
+
   fields: [
     // === Primary Search ===
     {
@@ -23,7 +23,7 @@ export const inventoryFilterPreset: FilterPreset = {
       searchFields: ['products.name', 'products.sku', 'products.brand'],
       clearable: true,
       debounce: 300,
-      priority: 1
+      priority: 1,
     },
 
     // === Location Filter ===
@@ -39,10 +39,10 @@ export const inventoryFilterPreset: FilterPreset = {
         valueField: 'id',
         labelField: 'name',
         filters: [{ field: 'is_active', operator: 'eq', value: true }],
-        orderBy: [{ field: 'name', direction: 'asc' }]
+        orderBy: [{ field: 'name', direction: 'asc' }],
       },
       clearable: true,
-      priority: 2
+      priority: 2,
     },
 
     // === Stock Status Filter ===
@@ -55,18 +55,33 @@ export const inventoryFilterPreset: FilterPreset = {
       dataSource: {
         type: 'static',
         options: [
-          { value: 'in_stock', label: 'filters.inventory.fields.stockStatus.options.inStock', color: 'positive', icon: 'check_circle' },
-          { value: 'low_stock', label: 'filters.inventory.fields.stockStatus.options.lowStock', color: 'warning', icon: 'warning' },
-          { value: 'out_of_stock', label: 'filters.inventory.fields.stockStatus.options.outOfStock', color: 'negative', icon: 'cancel' }
-        ]
+          {
+            value: 'in_stock',
+            label: 'filters.inventory.fields.stockStatus.options.inStock',
+            color: 'positive',
+            icon: 'check_circle',
+          },
+          {
+            value: 'low_stock',
+            label: 'filters.inventory.fields.stockStatus.options.lowStock',
+            color: 'warning',
+            icon: 'warning',
+          },
+          {
+            value: 'out_of_stock',
+            label: 'filters.inventory.fields.stockStatus.options.outOfStock',
+            color: 'negative',
+            icon: 'cancel',
+          },
+        ],
       },
       clearable: true,
       priority: 3,
       // TODO: Implement computed field logic
       computed: {
         source: 'stock_levels',
-        logic: 'current_quantity vs minimum_quantity'
-      }
+        logic: 'current_quantity vs minimum_quantity',
+      },
     },
 
     // === Category Filter ===
@@ -83,10 +98,10 @@ export const inventoryFilterPreset: FilterPreset = {
         labelField: 'category',
         distinct: true,
         filters: [{ field: 'active', operator: 'eq', value: true }],
-        orderBy: [{ field: 'category', direction: 'asc' }]
+        orderBy: [{ field: 'category', direction: 'asc' }],
       },
       clearable: true,
-      priority: 4
+      priority: 4,
     },
 
     // === Quantity Filters ===
@@ -98,7 +113,7 @@ export const inventoryFilterPreset: FilterPreset = {
       icon: 'format_list_numbered',
       step: 1,
       clearable: true,
-      priority: 5
+      priority: 5,
     },
 
     // === Low Stock Toggle ===
@@ -110,33 +125,33 @@ export const inventoryFilterPreset: FilterPreset = {
       icon: 'warning',
       variant: 'toggle',
       color: 'warning',
-      priority: 6
-    }
+      priority: 6,
+    },
   ],
 
   // === Layout Configuration ===
   layout: {
-    columns: { 
-      desktop: 3, 
-      tablet: 2, 
-      mobile: 1 
+    columns: {
+      desktop: 3,
+      tablet: 2,
+      mobile: 1,
     },
     showMoreThreshold: 4,
     resetButton: true,
     clearAllButton: true,
-    compactMode: false
+    compactMode: false,
   },
 
   // === Default State ===
   defaultFilters: {
     location: null,
     stock_status: null,
-    low_stock_only: false
+    low_stock_only: false,
   },
 
   // === Validation ===
   validation: {
     required: [],
-    dependencies: []
-  }
-} 
+    dependencies: [],
+  },
+};

@@ -1,18 +1,18 @@
 /**
  * OrdersPage Filter Preset
- * 
+ *
  * All fields validated against Supabase `orders` table schema:
  * ✅ status, supplier_id, order_date, total_amount exist
  * ✅ expected_delivery_date, actual_delivery_date exist
  */
 
-import type { FilterPreset } from '@/types/filters'
+import type { FilterPreset } from '@/types/filters';
 
 export const ordersFilterPreset: FilterPreset = {
   id: 'orders',
   name: 'filters.orders.title',
   description: 'filters.orders.description',
-  
+
   fields: [
     // === Primary Filters ===
     {
@@ -24,16 +24,46 @@ export const ordersFilterPreset: FilterPreset = {
       dataSource: {
         type: 'static',
         options: [
-          { value: 'draft', label: 'filters.orders.fields.status.options.draft', color: 'grey', icon: 'edit' },
-          { value: 'submitted', label: 'filters.orders.fields.status.options.submitted', color: 'blue', icon: 'send' },
-          { value: 'confirmed', label: 'filters.orders.fields.status.options.confirmed', color: 'orange', icon: 'verified' },
-          { value: 'shipped', label: 'filters.orders.fields.status.options.shipped', color: 'purple', icon: 'local_shipping' },
-          { value: 'delivered', label: 'filters.orders.fields.status.options.delivered', color: 'positive', icon: 'check_circle' },
-          { value: 'cancelled', label: 'filters.orders.fields.status.options.cancelled', color: 'negative', icon: 'cancel' }
-        ]
+          {
+            value: 'draft',
+            label: 'filters.orders.fields.status.options.draft',
+            color: 'grey',
+            icon: 'edit',
+          },
+          {
+            value: 'submitted',
+            label: 'filters.orders.fields.status.options.submitted',
+            color: 'blue',
+            icon: 'send',
+          },
+          {
+            value: 'confirmed',
+            label: 'filters.orders.fields.status.options.confirmed',
+            color: 'orange',
+            icon: 'verified',
+          },
+          {
+            value: 'shipped',
+            label: 'filters.orders.fields.status.options.shipped',
+            color: 'purple',
+            icon: 'local_shipping',
+          },
+          {
+            value: 'delivered',
+            label: 'filters.orders.fields.status.options.delivered',
+            color: 'positive',
+            icon: 'check_circle',
+          },
+          {
+            value: 'cancelled',
+            label: 'filters.orders.fields.status.options.cancelled',
+            color: 'negative',
+            icon: 'cancel',
+          },
+        ],
       },
       clearable: true,
-      priority: 1
+      priority: 1,
     },
 
     {
@@ -48,10 +78,10 @@ export const ordersFilterPreset: FilterPreset = {
         valueField: 'id',
         labelField: 'name',
         filters: [{ field: 'is_active', operator: 'eq', value: true }],
-        orderBy: [{ field: 'name', direction: 'asc' }]
+        orderBy: [{ field: 'name', direction: 'asc' }],
       },
       clearable: true,
-      priority: 2
+      priority: 2,
     },
 
     // === Date Filters ===
@@ -62,7 +92,7 @@ export const ordersFilterPreset: FilterPreset = {
       placeholder: 'filters.orders.fields.orderDateRange.placeholder',
       icon: 'date_range',
       clearable: true,
-      priority: 3
+      priority: 3,
     },
 
     {
@@ -72,7 +102,7 @@ export const ordersFilterPreset: FilterPreset = {
       placeholder: 'filters.orders.fields.expectedDeliveryRange.placeholder',
       icon: 'local_shipping',
       clearable: true,
-      priority: 4
+      priority: 4,
     },
 
     // === Amount Filter ===
@@ -85,31 +115,31 @@ export const ordersFilterPreset: FilterPreset = {
       currency: 'EUR',
       step: 0.01,
       clearable: true,
-      priority: 5
-    }
+      priority: 5,
+    },
   ],
 
   // === Layout Configuration ===
   layout: {
-    columns: { 
-      desktop: 3, 
-      tablet: 2, 
-      mobile: 1 
+    columns: {
+      desktop: 3,
+      tablet: 2,
+      mobile: 1,
     },
     showMoreThreshold: 4,
     resetButton: true,
     clearAllButton: true,
-    compactMode: false
+    compactMode: false,
   },
 
   // === Default State ===
   defaultFilters: {
-    status: null
+    status: null,
   },
 
   // === Validation ===
   validation: {
     required: [],
-    dependencies: []
-  }
-} 
+    dependencies: [],
+  },
+};

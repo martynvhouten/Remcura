@@ -7,7 +7,7 @@ import type { StockLevel } from '@/types/inventory';
 export function useInventoryCore() {
   // Event emitter for store communication
   const eventEmitter = createEventEmitter('inventory-store');
-  
+
   // Current practice ID (from auth events)
   const currentPracticeId = ref<string | null>(null);
   const currentUserId = ref<string | null>(null);
@@ -18,11 +18,14 @@ export function useInventoryCore() {
   const lastSyncAt = ref<Date | null>(null);
 
   // Set up event listeners for auth changes
-  const unsubscribeAuth = eventEmitter.on(StoreEvents.USER_LOGGED_IN, (data: { clinicId: string; user: { id: string } }) => {
-    currentPracticeId.value = data.clinicId;
-    currentUserId.value = data.user?.id;
-    inventoryLogger.info('Auth changed, practice ID updated:', data.clinicId);
-  });
+  const unsubscribeAuth = eventEmitter.on(
+    StoreEvents.USER_LOGGED_IN,
+    (data: { clinicId: string; user: { id: string } }) => {
+      currentPracticeId.value = data.clinicId;
+      currentUserId.value = data.user?.id;
+      inventoryLogger.info('Auth changed, practice ID updated:', data.clinicId);
+    }
+  );
 
   const unsubscribeLogout = eventEmitter.on(StoreEvents.USER_LOGGED_OUT, () => {
     currentPracticeId.value = null;
@@ -71,7 +74,7 @@ export function useInventoryCore() {
     stockLevels,
     loading,
     lastSyncAt,
-    
+
     // Event emitter (shared across modules)
     eventEmitter,
 

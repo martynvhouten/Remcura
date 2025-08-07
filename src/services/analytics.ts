@@ -1,14 +1,17 @@
 import { supabase } from '@/boot/supabase';
 import { useAuthStore } from '@/stores/auth';
 import { analyticsLogger } from '@/utils/logger';
-import { handleSupabaseError, ServiceErrorHandler } from '@/utils/service-error-handler';
+import {
+  handleSupabaseError,
+  ServiceErrorHandler,
+} from '@/utils/service-error-handler';
 import type { AnalyticsEvent } from '@/types/supabase';
-import type { 
-  AnalyticsDateRange, 
-  AnalyticsSummary, 
-  OrderMetrics, 
-  ProductMetrics, 
-  UserActivityMetrics 
+import type {
+  AnalyticsDateRange,
+  AnalyticsSummary,
+  OrderMetrics,
+  ProductMetrics,
+  UserActivityMetrics,
 } from '@/types/analytics';
 
 export class AnalyticsService {
@@ -68,13 +71,17 @@ export class AnalyticsService {
         });
       }
     } catch (error) {
-      ServiceErrorHandler.handle(error, {
-        service: 'AnalyticsService',
-        operation: 'trackEvent',
-        practiceId,
-        userId: authStore.user?.id ?? undefined,
-        metadata: { eventType, eventData },
-      }, { rethrow: false, logLevel: 'error' });
+      ServiceErrorHandler.handle(
+        error,
+        {
+          service: 'AnalyticsService',
+          operation: 'trackEvent',
+          practiceId,
+          userId: authStore.user?.id ?? undefined,
+          metadata: { eventType, eventData },
+        },
+        { rethrow: false, logLevel: 'error' }
+      );
     }
   }
 
@@ -134,7 +141,9 @@ export class AnalyticsService {
       const dailyActivity: Record<string, number> = {};
 
       events?.forEach(event => {
-        if (!event || !event.event_type || !event.created_at) { return; }
+        if (!event || !event.event_type || !event.created_at) {
+          return;
+        }
 
         // Count event types
         eventCounts[event.event_type] =
@@ -430,7 +439,9 @@ export class AnalyticsService {
       >();
 
       analytics?.forEach(event => {
-        if (!event.user_id) { return; }
+        if (!event.user_id) {
+          return;
+        }
 
         const existing = userMap.get(event.user_id);
         if (existing) {
@@ -496,16 +507,21 @@ export class AnalyticsService {
     try {
       const { data: productsData } = await supabase
         .from('products')
-        .select(`
+        .select(
+          `
           *,
           stock_levels!inner(practice_id, current_quantity, minimum_quantity)
-        `)
+        `
+        )
         .eq('stock_levels.practice_id', clinicId)
         .order('stock_levels.current_quantity', { ascending: true });
 
       const products = productsData?.filter(product => {
         const stockLevel = (product.stock_levels as any)[0];
-        return stockLevel && stockLevel.current_quantity <= (stockLevel.minimum_quantity || 0);
+        return (
+          stockLevel &&
+          stockLevel.current_quantity <= (stockLevel.minimum_quantity || 0)
+        );
       });
 
       return products || [];
@@ -531,18 +547,22 @@ export class AnalyticsService {
       // Real implementation based on stock movements and current levels
       const { data: stockData } = await supabase
         .from('stock_levels')
-        .select(`
+        .select(
+          `
           *,
           products!inner(*),
           stock_movements!inner(*)
-        `)
+        `
+        )
         .eq('practice_id', clinicId);
 
-      if (!stockData) { return []; }
+      if (!stockData) {
+        return [];
+      }
 
       // Group by product and calculate real metrics
       const productMetrics = new Map();
-      
+
       stockData.forEach(stock => {
         const productId = stock.product_id;
         if (!productMetrics.has(productId)) {
@@ -551,16 +571,20 @@ export class AnalyticsService {
             product_name: stock.products.name,
             total_used: 0,
             avg_stock: stock.current_quantity || 0,
-            stock_movements: []
+            stock_movements: [],
           });
         }
-        
+
         // Add stock movements for this product
         if (stock.stock_movements) {
-          const movements = Array.isArray(stock.stock_movements) ? stock.stock_movements : [stock.stock_movements];
+          const movements = Array.isArray(stock.stock_movements)
+            ? stock.stock_movements
+            : [stock.stock_movements];
           movements.forEach(movement => {
             if (movement.movement_type === 'usage') {
-              productMetrics.get(productId).total_used += Math.abs(movement.quantity);
+              productMetrics.get(productId).total_used += Math.abs(
+                movement.quantity
+              );
             }
           });
         }
@@ -568,7 +592,8 @@ export class AnalyticsService {
 
       return Array.from(productMetrics.values()).map(metric => ({
         ...metric,
-        turnoverRate: metric.avg_stock > 0 ? metric.total_used / metric.avg_stock : 0
+        turnoverRate:
+          metric.avg_stock > 0 ? metric.total_used / metric.avg_stock : 0,
       }));
     } catch (error) {
       analyticsLogger.error('Error calculating stock turnover rates:', error);
@@ -666,11 +691,13 @@ export class AnalyticsService {
       // Real implementation based on stock movements and waste tracking
       const { data: movements } = await supabase
         .from('stock_movements')
-        .select(`
+        .select(
+          `
           *,
           products!inner(price),
           stock_levels!inner(practice_id)
-        `)
+        `
+        )
         .eq('stock_levels.practice_id', clinicId)
         .gte('created_at', startDate.toISOString())
         .lte('created_at', endDate.toISOString());
@@ -689,9 +716,10 @@ export class AnalyticsService {
       let totalValue = 0;
 
       movements.forEach(movement => {
-        const value = Math.abs(movement.quantity) * (movement.products?.price || 0);
+        const value =
+          Math.abs(movement.quantity) * (movement.products?.price || 0);
         totalValue += value;
-        
+
         if (movement.movement_type === 'waste') {
           totalWaste += Math.abs(movement.quantity);
         } else if (movement.movement_type === 'usage') {
@@ -699,14 +727,17 @@ export class AnalyticsService {
         }
       });
 
-      const wasteReduction = totalUsage > 0 ? (1 - (totalWaste / totalUsage)) * 100 : 0;
-      const efficiencyImprovement = wasteReduction > 0 ? wasteReduction * 0.8 : 0;
+      const wasteReduction =
+        totalUsage > 0 ? (1 - totalWaste / totalUsage) * 100 : 0;
+      const efficiencyImprovement =
+        wasteReduction > 0 ? wasteReduction * 0.8 : 0;
 
       return {
         total_savings: totalValue * (wasteReduction / 100),
         waste_reduction: wasteReduction,
         efficiency_improvement: efficiencyImprovement,
-        cost_per_unit_improvement: totalUsage > 0 ? (totalValue / totalUsage) * 0.1 : 0,
+        cost_per_unit_improvement:
+          totalUsage > 0 ? (totalValue / totalUsage) * 0.1 : 0,
       };
     } catch (error) {
       analyticsLogger.error('Error calculating cost savings:', error);
@@ -729,21 +760,20 @@ export class AnalyticsService {
     try {
       const { data: products } = await supabase
         .from('products')
-        .select(`
+        .select(
+          `
           *,
           stock_levels!inner(practice_id, current_quantity)
-        `)
+        `
+        )
         .eq('stock_levels.practice_id', clinicId);
 
       // Real calculation using product price field
       const totalValue =
-        products?.reduce(
-          (sum, product) => {
-            const stockLevel = (product as any).stock_levels?.[0];
-            return sum + (stockLevel?.current_quantity || 0) * 10;
-          },
-          0
-        ) || 0;
+        products?.reduce((sum, product) => {
+          const stockLevel = (product as any).stock_levels?.[0];
+          return sum + (stockLevel?.current_quantity || 0) * 10;
+        }, 0) || 0;
 
       return {
         current_value: totalValue,
@@ -769,10 +799,12 @@ export class AnalyticsService {
     try {
       const { data: products } = await supabase
         .from('products')
-        .select(`
+        .select(
+          `
           *,
           stock_levels!inner(practice_id, current_quantity)
-        `)
+        `
+        )
         .eq('stock_levels.practice_id', clinicId);
 
       return (
@@ -809,11 +841,13 @@ export class AnalyticsService {
       // Real implementation based on historical vs actual usage patterns
       const { data: movements } = await supabase
         .from('stock_movements')
-        .select(`
+        .select(
+          `
           *,
           products!inner(category),
           stock_levels!inner(practice_id)
-        `)
+        `
+        )
         .eq('stock_levels.practice_id', clinicId)
         .gte('created_at', startDate.toISOString())
         .lte('created_at', endDate.toISOString())
@@ -833,7 +867,7 @@ export class AnalyticsService {
 
       // Calculate accuracy based on consistency of usage patterns
       const categoryStats = new Map();
-      
+
       movements.forEach(movement => {
         const category = movement.products?.category || 'other';
         if (!categoryStats.has(category)) {
@@ -851,18 +885,23 @@ export class AnalyticsService {
       for (const [category, stats] of categoryStats.entries()) {
         // Calculate variance-based accuracy (lower variance = higher accuracy)
         const avgUsage = stats.total / stats.count;
-        const variance = movements
-          .filter(m => m.products?.category === category)
-          .reduce((sum, m) => sum + Math.pow(Math.abs(m.quantity) - avgUsage, 2), 0) / stats.count;
-        
+        const variance =
+          movements
+            .filter(m => m.products?.category === category)
+            .reduce(
+              (sum, m) => sum + Math.pow(Math.abs(m.quantity) - avgUsage, 2),
+              0
+            ) / stats.count;
+
         const accuracy = Math.max(0, 100 - (variance / avgUsage) * 10);
         categoryAccuracy[category.toLowerCase().replace(' ', '_')] = accuracy;
-        
+
         overallTotal += accuracy;
         overallCount += 1;
       }
 
-      const overallAccuracy = overallCount > 0 ? overallTotal / overallCount : 0;
+      const overallAccuracy =
+        overallCount > 0 ? overallTotal / overallCount : 0;
 
       return {
         overall_accuracy: overallAccuracy,
@@ -870,9 +909,14 @@ export class AnalyticsService {
           medical_supplies: categoryAccuracy.medical_supplies || 0,
           pharmaceuticals: categoryAccuracy.pharmaceuticals || 0,
           equipment: categoryAccuracy.equipment || 0,
-          ...categoryAccuracy
+          ...categoryAccuracy,
         },
-        trend: overallAccuracy > 75 ? 'improving' : overallAccuracy > 50 ? 'stable' : 'needs_attention',
+        trend:
+          overallAccuracy > 75
+            ? 'improving'
+            : overallAccuracy > 50
+            ? 'stable'
+            : 'needs_attention',
       };
     } catch (error) {
       analyticsLogger.error('Error calculating forecast accuracy:', error);
@@ -896,12 +940,16 @@ export class AnalyticsService {
     }
   }
 
-  async trackScanEvent(productId: string, scanType: string, metadata?: Record<string, any>) {
+  async trackScanEvent(
+    productId: string,
+    scanType: string,
+    metadata?: Record<string, any>
+  ) {
     // Used by cameraScanner.ts - implement with real event tracking
     return this.trackEvent('scan_event', {
       product_id: productId,
       scan_type: scanType,
-      ...metadata
+      ...metadata,
     });
   }
 

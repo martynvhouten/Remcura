@@ -94,18 +94,17 @@ export interface CreateGuestSessionRequest {
 }
 
 export class MagicInviteService {
-  
   // 🎨 GENERATE VISUAL MAGIC CODE
   static async generateMagicCode(
-    practiceName: string, 
-    department?: string, 
+    practiceName: string,
+    department?: string,
     style: 'friendly' | 'professional' | 'playful' = 'friendly'
   ): Promise<string> {
     try {
       const { data, error } = await supabase.rpc('generate_magic_code', {
         practice_name: practiceName,
         department: department || null,
-        style
+        style,
       });
 
       if (error) throw error;
@@ -115,14 +114,19 @@ export class MagicInviteService {
       // Fallback generation
       const emojis = ['🏥', '💊', '🦷', '👩‍⚕️', '🔬', '🩺', '💉', '⚕️'];
       const randomEmoji = emojis[Math.floor(Math.random() * emojis.length)];
-      const cityPart = practiceName.replace(/[^a-zA-Z]/g, '').toUpperCase().substring(0, 8);
+      const cityPart = practiceName
+        .replace(/[^a-zA-Z]/g, '')
+        .toUpperCase()
+        .substring(0, 8);
       const year = new Date().getFullYear();
       return `${randomEmoji}${cityPart}✨${year}`;
     }
   }
 
   // ✨ CREATE MAGIC INVITE
-  static async createMagicInvite(request: CreateMagicInviteRequest): Promise<MagicInvite> {
+  static async createMagicInvite(
+    request: CreateMagicInviteRequest
+  ): Promise<MagicInvite> {
     try {
       // Generate the magic code
       const magicCode = await this.generateMagicCode(
@@ -146,8 +150,10 @@ export class MagicInviteService {
         ai_role_suggestions: {},
         suggested_avatar_style: 'medical',
         deep_link: `remcura://join/${magicCode}`,
-        expires_at: request.expires_in_days 
-          ? new Date(Date.now() + request.expires_in_days * 24 * 60 * 60 * 1000).toISOString()
+        expires_at: request.expires_in_days
+          ? new Date(
+              Date.now() + request.expires_in_days * 24 * 60 * 60 * 1000
+            ).toISOString()
           : null,
         max_uses: request.max_uses || 1,
         current_uses: 0,
@@ -158,7 +164,7 @@ export class MagicInviteService {
         used_by: [],
         shared_via: [],
         view_count: 0,
-        conversion_rate: 0
+        conversion_rate: 0,
       };
 
       const { data, error } = await supabase
@@ -180,11 +186,14 @@ export class MagicInviteService {
   }
 
   // 🔗 UPDATE INVITE LINKS (QR & WhatsApp)
-  static async updateInviteLinks(inviteId: string, magicCode: string): Promise<void> {
+  static async updateInviteLinks(
+    inviteId: string,
+    magicCode: string
+  ): Promise<void> {
     try {
       const qrCodeData = `https://app.remcura.com/join/${magicCode}`;
-              const whatsappLink = `https://wa.me/?text=${encodeURIComponent(
-          `🏥 Je bent uitgenodigd voor Remcura!\n\nGebruik deze magische code: ${magicCode}\n\nDirect toegang: ${qrCodeData}`
+      const whatsappLink = `https://wa.me/?text=${encodeURIComponent(
+        `🏥 Je bent uitgenodigd voor Remcura!\n\nGebruik deze magische code: ${magicCode}\n\nDirect toegang: ${qrCodeData}`
       )}`;
 
       await supabase
@@ -192,7 +201,7 @@ export class MagicInviteService {
         .update({
           qr_code_data: qrCodeData,
           whatsapp_link: whatsappLink,
-          updated_at: new Date().toISOString()
+          updated_at: new Date().toISOString(),
         })
         .eq('id', inviteId);
     } catch (error) {
@@ -201,7 +210,9 @@ export class MagicInviteService {
   }
 
   // 🔍 VALIDATE MAGIC CODE
-  static async validateMagicCode(magicCode: string): Promise<MagicInvite | null> {
+  static async validateMagicCode(
+    magicCode: string
+  ): Promise<MagicInvite | null> {
     try {
       // Alternative approach: use any to completely bypass TypeScript issues
       const query = supabase.from('magic_invites');
@@ -210,17 +221,22 @@ export class MagicInviteService {
         .eq('magic_code', magicCode)
         .eq('is_active', true)
         .maybeSingle();
-      
+
       const { data, error } = result;
 
-      if (error || !data) { return null; }
+      if (error || !data) {
+        return null;
+      }
 
       // Manual validation of complex conditions that were causing TypeScript issues
       const currentTime = new Date();
-      const isNotExpired = !data.expires_at || new Date(data.expires_at) > currentTime;
+      const isNotExpired =
+        !data.expires_at || new Date(data.expires_at) > currentTime;
       const hasUsesLeft = (data.max_uses || 0) > (data.current_uses || 0);
-      
-      if (!isNotExpired || !hasUsesLeft) { return null; }
+
+      if (!isNotExpired || !hasUsesLeft) {
+        return null;
+      }
 
       // Track view
       await this.trackInviteView(data.id);
@@ -248,7 +264,7 @@ export class MagicInviteService {
         .from('magic_invites')
         .update({
           current_uses: newUses,
-          last_used_at: new Date().toISOString()
+          last_used_at: new Date().toISOString(),
         })
         .eq('id', inviteId);
 
@@ -263,11 +279,13 @@ export class MagicInviteService {
   }
 
   // 🎮 CREATE GUEST SESSION
-  static async createGuestSession(request: CreateGuestSessionRequest): Promise<GuestSession> {
+  static async createGuestSession(
+    request: CreateGuestSessionRequest
+  ): Promise<GuestSession> {
     try {
       // Generate unique session token
       const sessionToken = uuidv4();
-      
+
       // Get invite details
       const { data: invite } = await supabase
         .from('magic_invites')
@@ -284,7 +302,9 @@ export class MagicInviteService {
         display_emoji: request.display_emoji || '👤',
         session_color: this.generateSessionColor(),
         session_token: sessionToken,
-        expires_at: new Date(Date.now() + invite.guest_session_hours * 60 * 60 * 1000).toISOString(),
+        expires_at: new Date(
+          Date.now() + invite.guest_session_hours * 60 * 60 * 1000
+        ).toISOString(),
         is_active: true,
         can_extend: true,
         granted_permissions: this.getGuestPermissions(invite.target_role),
@@ -298,7 +318,7 @@ export class MagicInviteService {
         achievements_unlocked: [invite.welcome_achievement],
         upgrade_prompts_shown: 0,
         showed_upgrade_interest: false,
-        last_activity_at: new Date().toISOString()
+        last_activity_at: new Date().toISOString(),
       };
 
       const { data, error } = await supabase
@@ -313,10 +333,15 @@ export class MagicInviteService {
       await this.incrementInviteUsage(request.magic_invite_id);
 
       // Track conversion
-      await this.trackInviteAnalytics(request.magic_invite_id, invite.practice_id, 'guest_join', {
-        guest_name: request.guest_name,
-        session_id: data.id
-      });
+      await this.trackInviteAnalytics(
+        request.magic_invite_id,
+        invite.practice_id,
+        'guest_join',
+        {
+          guest_name: request.guest_name,
+          session_id: data.id,
+        }
+      );
 
       return data;
     } catch (error) {
@@ -336,23 +361,23 @@ export class MagicInviteService {
   }
 
   static async trackInviteAnalytics(
-        inviteId: string,
+    inviteId: string,
     practiceId: string,
     eventType: string,
     eventData: Record<string, any> = {}
   ): Promise<void> {
     try {
       // Invite analytics now handled by usage_analytics table
-      await supabase
-        .from('usage_analytics')
-        .insert([{
+      await supabase.from('usage_analytics').insert([
+        {
           practice_id: practiceId,
           event_type: `invite_${eventType}`,
           event_data: { magic_invite_id: inviteId, ...eventData },
           user_agent: navigator.userAgent,
           device_type: this.getDeviceType(),
-          created_at: new Date().toISOString()
-        }]);
+          created_at: new Date().toISOString(),
+        },
+      ]);
     } catch (error) {
       console.error('Error tracking analytics:', error);
     }
@@ -360,7 +385,14 @@ export class MagicInviteService {
 
   // 🎨 HELPER METHODS
   static generateSessionColor(): string {
-    const colors = ['#2196F3', '#4CAF50', '#FF9800', '#9C27B0', '#F44336', '#009688'];
+    const colors = [
+      '#2196F3',
+      '#4CAF50',
+      '#FF9800',
+      '#9C27B0',
+      '#F44336',
+      '#009688',
+    ];
     return colors[Math.floor(Math.random() * colors.length)];
   }
 
@@ -368,7 +400,7 @@ export class MagicInviteService {
     const basePermissions = {
       view_inventory: true,
       view_products: true,
-      view_locations: true
+      view_locations: true,
     };
 
     switch (role) {
@@ -377,13 +409,13 @@ export class MagicInviteService {
           ...basePermissions,
           edit_inventory: true,
           manage_orders: true,
-          view_analytics: true
+          view_analytics: true,
         };
       case 'member':
         return {
           ...basePermissions,
           edit_inventory: true,
-          create_orders: true
+          create_orders: true,
         };
       default:
         return basePermissions;
@@ -391,8 +423,12 @@ export class MagicInviteService {
   }
 
   static getRestrictedFeatures(role: string): string[] {
-    const commonRestrictions = ['user_management', 'system_settings', 'billing'];
-    
+    const commonRestrictions = [
+      'user_management',
+      'system_settings',
+      'billing',
+    ];
+
     switch (role) {
       case 'guest':
         return [...commonRestrictions, 'delete_data', 'export_data'];
@@ -405,8 +441,12 @@ export class MagicInviteService {
 
   static getDeviceType(): string {
     const userAgent = navigator.userAgent.toLowerCase();
-    if (userAgent.includes('mobile')) { return 'mobile'; }
-    if (userAgent.includes('tablet')) { return 'tablet'; }
+    if (userAgent.includes('mobile')) {
+      return 'mobile';
+    }
+    if (userAgent.includes('tablet')) {
+      return 'tablet';
+    }
     return 'desktop';
   }
 
@@ -430,15 +470,20 @@ export class MagicInviteService {
   }
 
   // 🔄 EXTEND GUEST SESSION
-  static async extendGuestSession(sessionId: string, additionalHours: number = 4): Promise<void> {
+  static async extendGuestSession(
+    sessionId: string,
+    additionalHours: number = 4
+  ): Promise<void> {
     try {
-      const newExpiryTime = new Date(Date.now() + additionalHours * 60 * 60 * 1000).toISOString();
-      
+      const newExpiryTime = new Date(
+        Date.now() + additionalHours * 60 * 60 * 1000
+      ).toISOString();
+
       await supabase
         .from('guest_sessions')
         .update({
           expires_at: newExpiryTime,
-          updated_at: new Date().toISOString()
+          updated_at: new Date().toISOString(),
         })
         .eq('id', sessionId);
     } catch (error) {
@@ -465,4 +510,4 @@ export class MagicInviteService {
   }
 }
 
-export default MagicInviteService; 
+export default MagicInviteService;

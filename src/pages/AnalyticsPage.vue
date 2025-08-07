@@ -40,20 +40,18 @@
           :label="$t('analyticsPage.period')"
           outlined
           @update:model-value="loadAnalytics"
-
           option-value="value"
           option-label="label"
           emit-value
           map-options
           style="
-            min-width: 200px; 
+            min-width: 200px;
             max-width: 240px;
             border: 2px solid #e5e7eb;
             border-radius: 8px;
             background: #ffffff;
             min-height: 48px;
           "
-
         />
       </div>
     </div>
@@ -113,7 +111,7 @@
     <div class="row q-gutter-md q-mb-lg">
       <!-- Daily Activity Summary -->
       <div class="col-12 col-lg-8">
-        <BaseCard :title="$t('analyticsPage.dailyActivity')" >
+        <BaseCard :title="$t('analyticsPage.dailyActivity')">
           <div
             v-if="!loading && dailyChartData.length > 0"
             class="activity-summary"
@@ -154,7 +152,7 @@
 
       <!-- Top Events Chart -->
       <div class="col-12 col-lg-4">
-        <BaseCard :title="$t('analyticsPage.topEvents')" >
+        <BaseCard :title="$t('analyticsPage.topEvents')">
           <div v-if="summary.topEvents && summary.topEvents.length > 0">
             <div
               v-for="[event, count] in (summary.topEvents || []).slice(0, 5)"
@@ -192,27 +190,26 @@
       <div class="col-12 col-lg-6">
         <BaseCard
           :title="$t('analyticsPage.frequentlyOrderedItems')"
-          
           padding="none"
         >
           <div class="medical-table">
             <q-table
-            :rows="orderMetrics.frequentlyOrderedItems || []"
-            :columns="frequentlyOrderedColumns"
-            row-key="product_id"
-            :loading="loading"
-            flat
-            bordered
-          >
-            <template v-slot:no-data="{ message }">
-              <div class="full-width row flex-center text-grey q-gutter-sm">
-                <q-icon size="2em" name="shopping_cart" />
-                <span>{{
-                  message || 'No frequently ordered items found'
-                }}</span>
-              </div>
-            </template>
-          </q-table>
+              :rows="orderMetrics.frequentlyOrderedItems || []"
+              :columns="frequentlyOrderedColumns"
+              row-key="product_id"
+              :loading="loading"
+              flat
+              bordered
+            >
+              <template v-slot:no-data="{ message }">
+                <div class="full-width row flex-center text-grey q-gutter-sm">
+                  <q-icon size="2em" name="shopping_cart" />
+                  <span>{{
+                    message || 'No frequently ordered items found'
+                  }}</span>
+                </div>
+              </template>
+            </q-table>
           </div>
         </BaseCard>
       </div>
@@ -221,7 +218,6 @@
       <div class="col-12 col-lg-6">
         <BaseCard
           :title="$t('analyticsPage.mostUpdatedProducts')"
-          
           padding="none"
         >
           <q-table
@@ -246,11 +242,7 @@
     <!-- User Activity Table -->
     <div class="row q-gutter-md">
       <div class="col-12">
-        <BaseCard
-          :title="$t('analyticsPage.userActivity')"
-          
-          padding="none"
-        >
+        <BaseCard :title="$t('analyticsPage.userActivity')" padding="none">
           <q-table
             :rows="userActivity.userList || []"
             :columns="userActivityColumns"
@@ -285,7 +277,7 @@
   import PageTitle from 'src/components/PageTitle.vue';
   import PageLayout from 'src/components/PageLayout.vue';
   import { BaseCard, InteractiveCard, AlertCard } from 'src/components/cards';
-  import { 
+  import {
     AnalyticsService,
     type AnalyticsSummary,
     type OrderMetrics,
@@ -383,7 +375,9 @@
       field: 'last_activity',
       sortable: true,
       format: (val: string) => {
-        if (!val) { return '-'; }
+        if (!val) {
+          return '-';
+        }
         return new Date(val).toLocaleDateString();
       },
     },
@@ -576,23 +570,23 @@
   .stats-cards-container {
     gap: 0;
 
-      .stats-card-col {
-    padding: 8px;
+    .stats-card-col {
+      padding: 8px;
 
-    @media (max-width: 640px) {
-      padding: 6px;
+      @media (max-width: 640px) {
+        padding: 6px;
+      }
     }
   }
-}
 
-.stat-display {
-  text-align: center;
-  
-  .stat-value {
-    font-size: 28px;
-    font-weight: 700;
-    color: var(--text-primary);
-    line-height: 1.2;
+  .stat-display {
+    text-align: center;
+
+    .stat-value {
+      font-size: 28px;
+      font-weight: 700;
+      color: var(--text-primary);
+      line-height: 1.2;
+    }
   }
-}
 </style>

@@ -3,8 +3,9 @@
     <div class="style-guide-header">
       <h1>Card Design System</h1>
       <p class="guide-description">
-        Our streamlined card system consists of 3 main categories, each designed for specific use cases.
-        This system provides consistency while maintaining clarity of purpose.
+        Our streamlined card system consists of 3 main categories, each designed
+        for specific use cases. This system provides consistency while
+        maintaining clarity of purpose.
       </p>
     </div>
 
@@ -14,10 +15,11 @@
         <h2>1. Base Card</h2>
         <p class="section-description">
           For static content display. No hover effects or interactive states.
-          Used for information display, content containers, and non-clickable elements.
+          Used for information display, content containers, and non-clickable
+          elements.
         </p>
       </div>
-      
+
       <div class="card-examples">
         <div class="example-group">
           <h4>Basic Example</h4>
@@ -57,7 +59,7 @@
                 <div class="stat-label">Response</div>
               </div>
             </div>
-            
+
             <template #actions>
               <q-btn flat color="primary">Refresh</q-btn>
               <q-btn color="primary">View Details</q-btn>
@@ -82,12 +84,12 @@
       <div class="section-header">
         <h2>2. Interactive Card</h2>
         <p class="section-description">
-          For clickable elements that navigate or trigger actions.
-          Features subtle hover effects with lift and enhanced shadow.
-          Includes accessibility features and loading states.
+          For clickable elements that navigate or trigger actions. Features
+          subtle hover effects with lift and enhanced shadow. Includes
+          accessibility features and loading states.
         </p>
       </div>
-      
+
       <div class="card-examples">
         <div class="example-group">
           <h4>Navigation Card</h4>
@@ -118,7 +120,7 @@
             <div class="example-content">
               <p>Start scanning products for quick inventory updates</p>
             </div>
-            
+
             <template #actions>
               <q-btn flat @click.stop="handleQuickAction">Settings</q-btn>
             </template>
@@ -160,12 +162,12 @@
       <div class="section-header">
         <h2>3. Alert/Status Card</h2>
         <p class="section-description">
-          For status messages, notifications, and alerts.
-          Features colored indicators and appropriate icons.
-          Supports different severity levels and dismissible options.
+          For status messages, notifications, and alerts. Features colored
+          indicators and appropriate icons. Supports different severity levels
+          and dismissible options.
         </p>
       </div>
-      
+
       <div class="card-examples">
         <div class="example-group">
           <h4>Info Alert</h4>
@@ -175,9 +177,12 @@
             :subtitle="$t('cards.examples.newFeatureAvailable.subtitle')"
           >
             <div class="example-content">
-              <p>We've added advanced filtering and batch operations to help you manage inventory more efficiently.</p>
+              <p>
+                We've added advanced filtering and batch operations to help you
+                manage inventory more efficiently.
+              </p>
             </div>
-            
+
             <template #actions>
               <q-btn flat color="primary">Learn More</q-btn>
             </template>
@@ -194,7 +199,9 @@
             @dismiss="handleDismiss('success')"
           >
             <div class="example-content">
-              <p>Successfully synchronized 245 products and updated stock levels.</p>
+              <p>
+                Successfully synchronized 245 products and updated stock levels.
+              </p>
             </div>
           </AlertCard>
         </div>
@@ -214,7 +221,7 @@
                 <li>Antiseptic Solution (2 bottles)</li>
               </ul>
             </div>
-            
+
             <template #actions>
               <q-btn flat color="warning">View All</q-btn>
               <q-btn color="warning">Create Order</q-btn>
@@ -232,9 +239,12 @@
             @dismiss="handleDismiss('error')"
           >
             <div class="example-content">
-              <p>Connection timeout occurred. Please check your internet connection and try again.</p>
+              <p>
+                Connection timeout occurred. Please check your internet
+                connection and try again.
+              </p>
             </div>
-            
+
             <template #actions>
               <q-btn flat color="negative">Retry</q-btn>
             </template>
@@ -263,7 +273,7 @@
           Consistent input field styling across all forms and components.
         </p>
       </div>
-      
+
       <div class="field-examples">
         <div class="example-group">
           <h4>Input Fields</h4>
@@ -273,14 +283,14 @@
               :label="$t('cards.inputs.standardInput')"
               outlined
               :placeholder="$t('cards.inputs.placeholder')"
-              style="margin-bottom: 16px;"
+              style="margin-bottom: 16px"
             />
             <q-select
               v-model="demoSelect"
               :options="['Option 1', 'Option 2', 'Option 3']"
               label="Select Field"
               outlined
-              style="margin-bottom: 16px;"
+              style="margin-bottom: 16px"
             />
             <q-input
               v-model="demoError"
@@ -314,7 +324,7 @@
           Consistent design values used across all card types and form fields.
         </p>
       </div>
-      
+
       <div class="tokens-grid">
         <div class="token-group">
           <h4>Spacing</h4>
@@ -408,293 +418,293 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue';
-import { BaseCard, InteractiveCard, AlertCard } from './index';
+  import { ref } from 'vue';
+  import { BaseCard, InteractiveCard, AlertCard } from './index';
 
-const isScanning = ref(false);
-const demoText = ref('');
-const demoSelect = ref(null);
-const demoError = ref('');
+  const isScanning = ref(false);
+  const demoText = ref('');
+  const demoSelect = ref(null);
+  const demoError = ref('');
 
-const handleCardClick = (type: string) => {
-  console.log(`Card clicked: ${type}`);
-};
+  const handleCardClick = (type: string) => {
+    console.log(`Card clicked: ${type}`);
+  };
 
-const handleScanClick = () => {
-  isScanning.value = true;
-  setTimeout(() => {
-    isScanning.value = false;
-  }, 2000);
-};
+  const handleScanClick = () => {
+    isScanning.value = true;
+    setTimeout(() => {
+      isScanning.value = false;
+    }, 2000);
+  };
 
-const handleQuickAction = () => {
-  console.log('Quick action triggered');
-};
+  const handleQuickAction = () => {
+    console.log('Quick action triggered');
+  };
 
-const handleDismiss = (type: string) => {
-  console.log(`Alert dismissed: ${type}`);
-};
+  const handleDismiss = (type: string) => {
+    console.log(`Alert dismissed: ${type}`);
+  };
 </script>
 
 <style scoped lang="scss">
-.card-style-guide {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 40px 20px;
-  
-  .style-guide-header {
-    margin-bottom: 48px;
-    text-align: center;
-    
-    h1 {
-      font-size: 36px;
-      font-weight: 700;
-      margin: 0 0 16px 0;
-      color: var(--text-primary);
-    }
-    
-    .guide-description {
-      font-size: 18px;
-      color: var(--text-secondary);
-      line-height: 1.6;
-      max-width: 600px;
-      margin: 0 auto;
-    }
-  }
-}
+  .card-style-guide {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 40px 20px;
 
-.card-section {
-  margin-bottom: 64px;
-  
-  .section-header {
-    margin-bottom: 32px;
-    
-    h2 {
-      font-size: 28px;
-      font-weight: 600;
-      margin: 0 0 12px 0;
-      color: var(--text-primary);
-    }
-    
-    .section-description {
-      font-size: 16px;
-      color: var(--text-secondary);
-      line-height: 1.6;
-      margin: 0;
+    .style-guide-header {
+      margin-bottom: 48px;
+      text-align: center;
+
+      h1 {
+        font-size: 36px;
+        font-weight: 700;
+        margin: 0 0 16px 0;
+        color: var(--text-primary);
+      }
+
+      .guide-description {
+        font-size: 18px;
+        color: var(--text-secondary);
+        line-height: 1.6;
+        max-width: 600px;
+        margin: 0 auto;
+      }
     }
   }
-  
-  .card-examples {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-    gap: 24px;
-    margin-bottom: 32px;
-    
-    .example-group {
+
+  .card-section {
+    margin-bottom: 64px;
+
+    .section-header {
+      margin-bottom: 32px;
+
+      h2 {
+        font-size: 28px;
+        font-weight: 600;
+        margin: 0 0 12px 0;
+        color: var(--text-primary);
+      }
+
+      .section-description {
+        font-size: 16px;
+        color: var(--text-secondary);
+        line-height: 1.6;
+        margin: 0;
+      }
+    }
+
+    .card-examples {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+      gap: 24px;
+      margin-bottom: 32px;
+
+      .example-group {
+        h4 {
+          font-size: 16px;
+          font-weight: 600;
+          margin: 0 0 16px 0;
+          color: var(--text-primary);
+        }
+      }
+    }
+
+    .usage-guidelines {
+      background: rgba(59, 130, 246, 0.05);
+      border: 1px solid rgba(59, 130, 246, 0.1);
+      border-radius: 12px;
+      padding: 24px;
+
       h4 {
         font-size: 16px;
         font-weight: 600;
         margin: 0 0 16px 0;
         color: var(--text-primary);
       }
+
+      ul {
+        margin: 0;
+        padding: 0 0 0 20px;
+
+        li {
+          margin-bottom: 8px;
+          color: var(--text-secondary);
+          line-height: 1.5;
+
+          &:last-child {
+            margin-bottom: 0;
+          }
+        }
+      }
+
+      .body--dark & {
+        background: rgba(59, 130, 246, 0.1);
+        border-color: rgba(59, 130, 246, 0.2);
+      }
     }
   }
-  
-  .usage-guidelines {
-    background: rgba(59, 130, 246, 0.05);
-    border: 1px solid rgba(59, 130, 246, 0.1);
-    border-radius: 12px;
-    padding: 24px;
-    
-    h4 {
-      font-size: 16px;
-      font-weight: 600;
-      margin: 0 0 16px 0;
+
+  // Example content styles
+  .example-content {
+    p {
+      margin: 0 0 12px 0;
+      color: var(--text-secondary);
+      line-height: 1.5;
+
+      &:last-child {
+        margin-bottom: 0;
+      }
+    }
+
+    strong {
       color: var(--text-primary);
     }
-    
-    ul {
-      margin: 0;
-      padding: 0 0 0 20px;
-      
-      li {
-        margin-bottom: 8px;
+  }
+
+  .stats-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+
+    .stat-item {
+      text-align: center;
+
+      .stat-value {
+        font-size: 24px;
+        font-weight: 700;
+        color: var(--text-primary);
+        margin-bottom: 4px;
+      }
+
+      .stat-label {
+        font-size: 12px;
         color: var(--text-secondary);
-        line-height: 1.5;
-        
-        &:last-child {
-          margin-bottom: 0;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+      }
+    }
+  }
+
+  .alert-list {
+    margin: 12px 0 0 0;
+    padding: 0 0 0 20px;
+
+    li {
+      margin-bottom: 4px;
+      color: var(--text-secondary);
+
+      &:last-child {
+        margin-bottom: 0;
+      }
+    }
+  }
+
+  // Design tokens section
+  .tokens-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 24px;
+
+    .token-group {
+      background: var(--card-background, #ffffff);
+      border: 1px solid var(--card-border, rgba(0, 0, 0, 0.08));
+      border-radius: 12px;
+      padding: 20px;
+
+      h4 {
+        font-size: 16px;
+        font-weight: 600;
+        margin: 0 0 16px 0;
+        color: var(--text-primary);
+      }
+
+      .body--dark & {
+        background: #1e1e1e;
+        border-color: rgba(255, 255, 255, 0.1);
+      }
+    }
+
+    .token-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+
+      &:last-child {
+        margin-bottom: 0;
+      }
+
+      .token-name {
+        font-size: 14px;
+        color: var(--text-secondary);
+      }
+
+      .token-value {
+        font-size: 14px;
+        font-weight: 500;
+        color: var(--text-primary);
+      }
+    }
+  }
+
+  // Shadow demo
+  .shadow-demo {
+    width: 40px;
+    height: 20px;
+    background: #3b82f6;
+    border-radius: 4px;
+    margin-top: 8px;
+
+    &--base {
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08), 0 1px 2px rgba(0, 0, 0, 0.06);
+    }
+
+    &--interactive {
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.06), 0 1px 2px rgba(0, 0, 0, 0.04);
+    }
+
+    &--hover {
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.12), 0 4px 10px rgba(0, 0, 0, 0.08);
+    }
+  }
+
+  // Responsive adjustments
+  @media (max-width: 768px) {
+    .card-style-guide {
+      padding: 24px 16px;
+
+      .style-guide-header {
+        margin-bottom: 32px;
+
+        h1 {
+          font-size: 28px;
+        }
+
+        .guide-description {
+          font-size: 16px;
         }
       }
     }
-    
-    .body--dark & {
-      background: rgba(59, 130, 246, 0.1);
-      border-color: rgba(59, 130, 246, 0.2);
-    }
-  }
-}
 
-// Example content styles
-.example-content {
-  p {
-    margin: 0 0 12px 0;
-    color: var(--text-secondary);
-    line-height: 1.5;
-    
-    &:last-child {
-      margin-bottom: 0;
-    }
-  }
-  
-  strong {
-    color: var(--text-primary);
-  }
-}
+    .card-section {
+      margin-bottom: 48px;
 
-.stats-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 16px;
-  
-  .stat-item {
-    text-align: center;
-    
-    .stat-value {
-      font-size: 24px;
-      font-weight: 700;
-      color: var(--text-primary);
-      margin-bottom: 4px;
-    }
-    
-    .stat-label {
-      font-size: 12px;
-      color: var(--text-secondary);
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-    }
-  }
-}
-
-.alert-list {
-  margin: 12px 0 0 0;
-  padding: 0 0 0 20px;
-  
-  li {
-    margin-bottom: 4px;
-    color: var(--text-secondary);
-    
-    &:last-child {
-      margin-bottom: 0;
-    }
-  }
-}
-
-// Design tokens section
-.tokens-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-  gap: 24px;
-  
-  .token-group {
-    background: var(--card-background, #ffffff);
-    border: 1px solid var(--card-border, rgba(0, 0, 0, 0.08));
-    border-radius: 12px;
-    padding: 20px;
-    
-    h4 {
-      font-size: 16px;
-      font-weight: 600;
-      margin: 0 0 16px 0;
-      color: var(--text-primary);
-    }
-    
-    .body--dark & {
-      background: #1e1e1e;
-      border-color: rgba(255, 255, 255, 0.1);
-    }
-  }
-  
-  .token-item {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 12px;
-    
-    &:last-child {
-      margin-bottom: 0;
-    }
-    
-    .token-name {
-      font-size: 14px;
-      color: var(--text-secondary);
-    }
-    
-    .token-value {
-      font-size: 14px;
-      font-weight: 500;
-      color: var(--text-primary);
-    }
-  }
-}
-
-// Shadow demo
-.shadow-demo {
-  width: 40px;
-  height: 20px;
-  background: #3b82f6;
-  border-radius: 4px;
-  margin-top: 8px;
-  
-  &--base {
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08), 0 1px 2px rgba(0, 0, 0, 0.06);
-  }
-  
-  &--interactive {
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.06), 0 1px 2px rgba(0, 0, 0, 0.04);
-  }
-  
-  &--hover {
-    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.12), 0 4px 10px rgba(0, 0, 0, 0.08);
-  }
-}
-
-// Responsive adjustments
-@media (max-width: 768px) {
-  .card-style-guide {
-    padding: 24px 16px;
-    
-    .style-guide-header {
-      margin-bottom: 32px;
-      
-      h1 {
-        font-size: 28px;
+      .section-header {
+        h2 {
+          font-size: 24px;
+        }
       }
-      
-      .guide-description {
-        font-size: 16px;
+
+      .card-examples {
+        grid-template-columns: 1fr;
+        gap: 16px;
       }
     }
-  }
-  
-  .card-section {
-    margin-bottom: 48px;
-    
-    .section-header {
-      h2 {
-        font-size: 24px;
-      }
-    }
-    
-    .card-examples {
+
+    .tokens-grid {
       grid-template-columns: 1fr;
       gap: 16px;
     }
   }
-  
-  .tokens-grid {
-    grid-template-columns: 1fr;
-    gap: 16px;
-  }
-}
 </style>

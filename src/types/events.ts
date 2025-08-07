@@ -13,7 +13,11 @@ export interface EventBusOptions {
   captureRejections?: boolean;
 }
 
-export type StoreEventType = 'user:logged_in' | 'user:logged_out' | 'products:loaded' | 'practice:changed';
+export type StoreEventType =
+  | 'user:logged_in'
+  | 'user:logged_out'
+  | 'products:loaded'
+  | 'practice:changed';
 
 export interface UserLoggedInPayload {
   user_id: string;

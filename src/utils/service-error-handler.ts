@@ -43,11 +43,7 @@ export class ServiceErrorHandler {
       includeStack?: boolean;
     } = {}
   ): ServiceError {
-    const {
-      rethrow = true,
-      logLevel = 'error',
-      includeStack = true,
-    } = options;
+    const { rethrow = true, logLevel = 'error', includeStack = true } = options;
 
     // Create enhanced error
     const serviceError = this.createServiceError(error, context);
@@ -76,13 +72,8 @@ export class ServiceErrorHandler {
   ): never {
     const message = customMessage || this.getSupabaseErrorMessage(error);
     const code = this.getSupabaseErrorCode(error);
-    
-    const serviceError = new ServiceError(
-      message,
-      code,
-      context,
-      error
-    );
+
+    const serviceError = new ServiceError(message, code, context, error);
 
     this.logError(serviceError, 'error', true);
     this.captureError(serviceError, context);
@@ -100,13 +91,8 @@ export class ServiceErrorHandler {
   ): never {
     const message = customMessage || this.getApiErrorMessage(error);
     const code = this.getApiErrorCode(error);
-    
-    const serviceError = new ServiceError(
-      message,
-      code,
-      context,
-      error
-    );
+
+    const serviceError = new ServiceError(message, code, context, error);
 
     this.logError(serviceError, 'error', true);
     this.captureError(serviceError, context);
@@ -139,16 +125,14 @@ export class ServiceErrorHandler {
     context: ServiceErrorContext
   ): void {
     const missing = Object.entries(params)
-      .filter(([_, value]) => value === null || value === undefined || value === '')
+      .filter(
+        ([_, value]) => value === null || value === undefined || value === ''
+      )
       .map(([key]) => key);
 
     if (missing.length > 0) {
       const message = `Missing required parameters: ${missing.join(', ')}`;
-      throw new ServiceError(
-        message,
-        'VALIDATION_ERROR',
-        context
-      );
+      throw new ServiceError(message, 'VALIDATION_ERROR', context);
     }
   }
 
@@ -173,10 +157,18 @@ export class ServiceErrorHandler {
    * Extract meaningful error message from various error types
    */
   private static extractErrorMessage(error: ErrorLike): string {
-      if (typeof error === 'string') { return error; }
-  if (error?.message) { return error.message; }
-  if (error?.error?.message) { return error.error.message; }
-  if (error?.details) { return error.details; }
+    if (typeof error === 'string') {
+      return error;
+    }
+    if (error?.message) {
+      return error.message;
+    }
+    if (error?.error?.message) {
+      return error.error.message;
+    }
+    if (error?.details) {
+      return error.details;
+    }
     return 'An unknown error occurred';
   }
 
@@ -184,10 +176,18 @@ export class ServiceErrorHandler {
    * Extract error code from various error types
    */
   private static extractErrorCode(error: ErrorLike): string {
-      if (error?.code) { return error.code; }
-  if (error?.error?.code) { return error.error.code; }
-  if (error?.status) { return `HTTP_${error.status}`; }
-  if (error?.statusCode) { return `HTTP_${error.statusCode}`; }
+    if (error?.code) {
+      return error.code;
+    }
+    if (error?.error?.code) {
+      return error.error.code;
+    }
+    if (error?.status) {
+      return `HTTP_${error.status}`;
+    }
+    if (error?.statusCode) {
+      return `HTTP_${error.statusCode}`;
+    }
     return 'UNKNOWN_ERROR';
   }
 
@@ -196,7 +196,7 @@ export class ServiceErrorHandler {
    */
   private static getSupabaseErrorMessage(error: ErrorLike): string {
     const message = error?.message || 'Database operation failed';
-    
+
     // Common Supabase error translations
     if (message.includes('duplicate key')) {
       return 'Dit item bestaat al in de database';
@@ -221,8 +221,12 @@ export class ServiceErrorHandler {
    * Get error code from Supabase errors
    */
   private static getSupabaseErrorCode(error: ErrorLike): string {
-      if (error?.code) { return `SUPABASE_${error.code}`; }
-  if (error?.error?.code) { return `SUPABASE_${error.error.code}`; }
+    if (error?.code) {
+      return `SUPABASE_${error.code}`;
+    }
+    if (error?.error?.code) {
+      return `SUPABASE_${error.error.code}`;
+    }
     return 'SUPABASE_ERROR';
   }
 
@@ -265,7 +269,7 @@ export class ServiceErrorHandler {
   ): void {
     const logContext = `${error.service}:${error.operation}`;
     const logMessage = `${error.message} [${error.code}]`;
-    
+
     const logData = {
       code: error.code,
       service: error.service,
@@ -305,21 +309,17 @@ export class ServiceErrorHandler {
 }
 
 // Convenience functions for common use cases
-export const handleSupabaseError = ServiceErrorHandler.handleSupabaseError.bind(
-  ServiceErrorHandler
-);
+export const handleSupabaseError =
+  ServiceErrorHandler.handleSupabaseError.bind(ServiceErrorHandler);
 
-export const handleApiError = ServiceErrorHandler.handleApiError.bind(
-  ServiceErrorHandler
-);
+export const handleApiError =
+  ServiceErrorHandler.handleApiError.bind(ServiceErrorHandler);
 
-export const wrapServiceCall = ServiceErrorHandler.wrap.bind(
-  ServiceErrorHandler
-);
+export const wrapServiceCall =
+  ServiceErrorHandler.wrap.bind(ServiceErrorHandler);
 
-export const validateRequired = ServiceErrorHandler.validateRequired.bind(
-  ServiceErrorHandler
-);
+export const validateRequired =
+  ServiceErrorHandler.validateRequired.bind(ServiceErrorHandler);
 
 // Error Categories for better handling
 export enum ErrorCategory {
@@ -331,34 +331,38 @@ export enum ErrorCategory {
   SERVER_ERROR = 'server_error',
   CLIENT_ERROR = 'client_error',
   SUPABASE = 'supabase',
-  UNEXPECTED = 'unexpected'
+  UNEXPECTED = 'unexpected',
 }
 
 // User-friendly error messages
 export const ERROR_MESSAGES: Record<string, string> = {
   // Network errors
-  NETWORK_ERROR: 'Er is een netwerkfout opgetreden. Controleer je internetverbinding.',
+  NETWORK_ERROR:
+    'Er is een netwerkfout opgetreden. Controleer je internetverbinding.',
   TIMEOUT_ERROR: 'De aanvraag duurde te lang. Probeer het opnieuw.',
-  
+
   // Authentication errors
-  AUTH_INVALID_CREDENTIALS: 'Onjuiste inloggegevens. Controleer je e-mailadres en wachtwoord.',
+  AUTH_INVALID_CREDENTIALS:
+    'Onjuiste inloggegevens. Controleer je e-mailadres en wachtwoord.',
   AUTH_SESSION_EXPIRED: 'Je sessie is verlopen. Log opnieuw in.',
   AUTH_UNAUTHORIZED: 'Je hebt geen toegang tot deze functie.',
-  
+
   // Validation errors
   VALIDATION_REQUIRED: 'Dit veld is verplicht.',
   VALIDATION_INVALID_EMAIL: 'Voer een geldig e-mailadres in.',
   VALIDATION_INVALID_FORMAT: 'Ongeldige invoer. Controleer het formaat.',
-  
+
   // Supabase errors
   SUPABASE_CONNECTION: 'Kan geen verbinding maken met de database.',
   SUPABASE_TIMEOUT: 'Database timeout. Probeer het opnieuw.',
   SUPABASE_POLICY: 'Je hebt geen toegang tot deze gegevens.',
-  
+
   // Generic fallbacks
   SERVER_ERROR: 'Er is een serverfout opgetreden. Probeer het later opnieuw.',
-  CLIENT_ERROR: 'Er is een fout opgetreden. Ververs de pagina en probeer opnieuw.',
-  UNEXPECTED_ERROR: 'Er is een onverwachte fout opgetreden. Neem contact op met support als dit probleem aanhoudt.'
+  CLIENT_ERROR:
+    'Er is een fout opgetreden. Ververs de pagina en probeer opnieuw.',
+  UNEXPECTED_ERROR:
+    'Er is een onverwachte fout opgetreden. Neem contact op met support als dit probleem aanhoudt.',
 };
 
 /**
@@ -375,8 +379,12 @@ export class ErrorHandler {
 
     if (error instanceof ServiceError) {
       const code = error.code.toLowerCase();
-      
-      if (code.includes('auth') || code.includes('unauthorized') || code.includes('401')) {
+
+      if (
+        code.includes('auth') ||
+        code.includes('unauthorized') ||
+        code.includes('401')
+      ) {
         return ErrorCategory.AUTHENTICATION;
       }
       if (code.includes('forbidden') || code.includes('403')) {
@@ -397,18 +405,32 @@ export class ErrorHandler {
     }
 
     // Check for network/connection errors
-    if (error?.code === 'NETWORK_ERROR' || error?.message?.includes('network') || error?.message?.includes('fetch')) {
+    if (
+      error?.code === 'NETWORK_ERROR' ||
+      error?.message?.includes('network') ||
+      error?.message?.includes('fetch')
+    ) {
       return ErrorCategory.NETWORK;
     }
 
     // Check HTTP status codes
     const status = error?.status || error?.response?.status;
     if (status) {
-        if (status === 401) { return ErrorCategory.AUTHENTICATION; }
-  if (status === 403) { return ErrorCategory.AUTHORIZATION; }
-  if (status === 404) { return ErrorCategory.NOT_FOUND; }
-  if (status >= 400 && status < 500) { return ErrorCategory.CLIENT_ERROR; }
-  if (status >= 500) { return ErrorCategory.SERVER_ERROR; }
+      if (status === 401) {
+        return ErrorCategory.AUTHENTICATION;
+      }
+      if (status === 403) {
+        return ErrorCategory.AUTHORIZATION;
+      }
+      if (status === 404) {
+        return ErrorCategory.NOT_FOUND;
+      }
+      if (status >= 400 && status < 500) {
+        return ErrorCategory.CLIENT_ERROR;
+      }
+      if (status >= 500) {
+        return ErrorCategory.SERVER_ERROR;
+      }
     }
 
     return ErrorCategory.UNEXPECTED;
@@ -419,11 +441,13 @@ export class ErrorHandler {
    */
   static getUserMessage(error: ErrorLike, category?: ErrorCategory): string {
     const errorCategory = category || this.categorizeError(error);
-    
+
     // Try to get specific error message first
     if (error instanceof ServiceError) {
       const specificMessage = ERROR_MESSAGES[error.code];
-      if (specificMessage) { return specificMessage; }
+      if (specificMessage) {
+        return specificMessage;
+      }
     }
 
     // Fall back to category-based messages
@@ -465,7 +489,11 @@ export class ErrorHandler {
     userMessage: string;
     serviceError: ServiceError;
   }> {
-    const { showToUser = false, logLevel = 'error', includeStack = true } = options;
+    const {
+      showToUser = false,
+      logLevel = 'error',
+      includeStack = true,
+    } = options;
 
     // Create or enhance service error
     let serviceError: ServiceError;
@@ -482,7 +510,7 @@ export class ErrorHandler {
 
     // Categorize the error
     const category = this.categorizeError(serviceError);
-    
+
     // Get user-friendly message
     const userMessage = this.getUserMessage(serviceError, category);
 
@@ -500,18 +528,21 @@ export class ErrorHandler {
     return {
       category,
       userMessage,
-      serviceError
+      serviceError,
     };
   }
 
   /**
    * Show error notification to user (can be extended with toast/notification library)
    */
-  private static showErrorNotification(message: string, category: ErrorCategory): void {
+  private static showErrorNotification(
+    message: string,
+    category: ErrorCategory
+  ): void {
     // For now, use console.warn as a placeholder
     // In a real app, you'd integrate with your notification system (Quasar Notify, etc.)
     console.warn(`[${category.toUpperCase()}] ${message}`);
-    
+
     // Example with Quasar Notify (if available):
     // if (window.$q?.notify) {
     //   window.$q.notify({
@@ -541,12 +572,12 @@ export class ErrorHandler {
       return await fn();
     } catch (error) {
       const result = await this.handleError(error, context, options);
-      
+
       // Return fallback value if provided
       if (options?.fallbackValue !== undefined) {
         return options.fallbackValue;
       }
-      
+
       // Re-throw for caller to handle if needed
       throw result.serviceError;
     }
@@ -557,37 +588,45 @@ export class ErrorHandler {
    */
   static setupGlobalHandlers(): void {
     // Handle unhandled promise rejections
-    window.addEventListener('unhandledrejection', (event) => {
+    window.addEventListener('unhandledrejection', event => {
       const error = event.reason;
-      this.handleError(error, {
-        service: 'global',
-        operation: 'unhandled_rejection',
-        metadata: {
-          url: window.location.href,
-          timestamp: new Date().toISOString()
+      this.handleError(
+        error,
+        {
+          service: 'global',
+          operation: 'unhandled_rejection',
+          metadata: {
+            url: window.location.href,
+            timestamp: new Date().toISOString(),
+          },
+        },
+        {
+          showToUser: true,
+          logLevel: 'error',
         }
-      }, {
-        showToUser: true,
-        logLevel: 'error'
-      });
+      );
     });
 
     // Handle general JavaScript errors
-    window.addEventListener('error', (event) => {
-      this.handleError(event.error || event.message, {
-        service: 'global',
-        operation: 'javascript_error',
-        metadata: {
-          url: window.location.href,
-          filename: event.filename,
-          lineno: event.lineno,
-          colno: event.colno,
-          timestamp: new Date().toISOString()
+    window.addEventListener('error', event => {
+      this.handleError(
+        event.error || event.message,
+        {
+          service: 'global',
+          operation: 'javascript_error',
+          metadata: {
+            url: window.location.href,
+            filename: event.filename,
+            lineno: event.lineno,
+            colno: event.colno,
+            timestamp: new Date().toISOString(),
+          },
+        },
+        {
+          showToUser: false, // Don't show JS errors to users
+          logLevel: 'error',
         }
-      }, {
-        showToUser: false, // Don't show JS errors to users
-        logLevel: 'error'
-      });
+      );
     });
   }
-} 
+}

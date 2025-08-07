@@ -1,7 +1,10 @@
 import { supabase } from '@/boot/supabase';
 import { orderLogger } from '@/utils/logger';
 import { t } from '@/utils/i18n-service';
-import type { SupplierOrder, OrderSendingResult } from '@/stores/orderLists/orderLists-supplier-splitting';
+import type {
+  SupplierOrder,
+  OrderSendingResult,
+} from '@/stores/orderLists/orderLists-supplier-splitting';
 
 export interface APIConfig {
   api_endpoint: string;
@@ -65,9 +68,14 @@ export class APIService {
   /**
    * Send order via API
    */
-  async sendOrderViaAPI(order: SupplierOrder, orderReference: string): Promise<OrderSendingResult> {
+  async sendOrderViaAPI(
+    order: SupplierOrder,
+    orderReference: string
+  ): Promise<OrderSendingResult> {
     try {
-      orderLogger.info(`Sending order ${orderReference} via API to supplier ${order.supplier_name}`);
+      orderLogger.info(
+        `Sending order ${orderReference} via API to supplier ${order.supplier_name}`
+      );
 
       // Get supplier API configuration
       const { data: supplier, error: supplierError } = await supabase
@@ -82,18 +90,24 @@ export class APIService {
 
       const apiConfig = supplier.integration_config as APIConfig;
       if (!apiConfig?.api_endpoint) {
-        throw new Error(t('services.supplierIntegration.apiEndpointNotConfigured'));
+        throw new Error(
+          t('services.supplierIntegration.apiEndpointNotConfigured')
+        );
       }
 
       // Get practice details
       const { data: practice, error: practiceError } = await supabase
         .from('practices')
-        .select('name, address, city, postal_code, country, contact_email, contact_phone')
+        .select(
+          'name, address, city, postal_code, country, contact_email, contact_phone'
+        )
         .eq('id', order.practice_id)
         .single();
 
       if (practiceError || !practice) {
-        throw new Error(t('services.supplierIntegration.practiceDetailsNotFound'));
+        throw new Error(
+          t('services.supplierIntegration.practiceDetailsNotFound')
+        );
       }
 
       // Build API payload
@@ -118,10 +132,12 @@ export class APIService {
         error_message: response.success ? undefined : response.error,
         delivery_expected: order.estimated_delivery_date,
       };
-
     } catch (error: any) {
-      orderLogger.error(`API order sending failed for ${orderReference}:`, error);
-      
+      orderLogger.error(
+        `API order sending failed for ${orderReference}:`,
+        error
+      );
+
       return {
         supplier_id: order.supplier_id,
         supplier_name: order.supplier_name,
@@ -137,7 +153,11 @@ export class APIService {
   /**
    * Build API payload from order data
    */
-  private buildAPIPayload(order: SupplierOrder, orderReference: string, practice: any): APIOrderPayload {
+  private buildAPIPayload(
+    order: SupplierOrder,
+    orderReference: string,
+    practice: any
+  ): APIOrderPayload {
     return {
       order_reference: orderReference,
       order_date: new Date().toISOString(),
@@ -182,7 +202,9 @@ export class APIService {
   /**
    * Get authentication headers based on config
    */
-  private async getAuthHeaders(config: APIConfig): Promise<Record<string, string>> {
+  private async getAuthHeaders(
+    config: APIConfig
+  ): Promise<Record<string, string>> {
     const headers: Record<string, string> = {};
 
     // Add custom headers
@@ -229,21 +251,29 @@ export class APIService {
    * Get OAuth2 token (cached)
    */
   private async getOAuth2Token(config: APIConfig): Promise<string> {
-    if (!config.oauth2_config?.client_id || !config.oauth2_config?.client_secret) {
-      throw new Error(t('services.supplierIntegration.oauth2ConfigurationIncomplete'));
+    if (
+      !config.oauth2_config?.client_id ||
+      !config.oauth2_config?.client_secret
+    ) {
+      throw new Error(
+        t('services.supplierIntegration.oauth2ConfigurationIncomplete')
+      );
     }
 
     const cacheKey = `${config.oauth2_config.client_id}_${config.oauth2_config.token_endpoint}`;
     const cached = this.cache.get(cacheKey);
 
     // Return cached token if still valid
-    if (cached && cached.expires_at > Date.now() + 60000) { // 1 minute buffer
+    if (cached && cached.expires_at > Date.now() + 60000) {
+      // 1 minute buffer
       return cached.token;
     }
 
     try {
-      const tokenEndpoint = config.oauth2_config.token_endpoint || `${config.api_endpoint}/oauth/token`;
-      
+      const tokenEndpoint =
+        config.oauth2_config.token_endpoint ||
+        `${config.api_endpoint}/oauth/token`;
+
       const tokenResponse = await fetch(tokenEndpoint, {
         method: 'POST',
         headers: {
@@ -258,11 +288,15 @@ export class APIService {
       });
 
       if (!tokenResponse.ok) {
-        throw new Error(t('services.supplierIntegration.oauth2TokenRequestFailed', { status: tokenResponse.status }));
+        throw new Error(
+          t('services.supplierIntegration.oauth2TokenRequestFailed', {
+            status: tokenResponse.status,
+          })
+        );
       }
 
       const tokenData = await tokenResponse.json();
-      const expiresAt = Date.now() + (tokenData.expires_in * 1000) - 60000; // 1 minute buffer
+      const expiresAt = Date.now() + tokenData.expires_in * 1000 - 60000; // 1 minute buffer
 
       // Cache the token
       this.cache.set(cacheKey, {
@@ -271,24 +305,31 @@ export class APIService {
       });
 
       return tokenData.access_token;
-
     } catch (error: any) {
       orderLogger.error('OAuth2 token acquisition failed:', error);
-      throw new Error(t('services.supplierIntegration.oauth2AuthenticationFailed', { error: error.message }));
+      throw new Error(
+        t('services.supplierIntegration.oauth2AuthenticationFailed', {
+          error: error.message,
+        })
+      );
     }
   }
 
   /**
    * Send data to API endpoint
    */
-  private async sendToAPI(config: APIConfig, payload: APIOrderPayload, authHeaders: Record<string, string>): Promise<{ success: boolean; error?: string; response?: any }> {
+  private async sendToAPI(
+    config: APIConfig,
+    payload: APIOrderPayload,
+    authHeaders: Record<string, string>
+  ): Promise<{ success: boolean; error?: string; response?: any }> {
     try {
       const headers: Record<string, string> = {
         ...authHeaders,
       };
 
       let body: string | FormData;
-      
+
       switch (config.api_format || 'json') {
         case 'json':
           headers['Content-Type'] = 'application/json';
@@ -309,11 +350,18 @@ export class APIService {
         }
 
         default:
-          throw new Error(t('services.supplierIntegration.unsupportedApiFormat', { format: config.api_format }));
+          throw new Error(
+            t('services.supplierIntegration.unsupportedApiFormat', {
+              format: config.api_format,
+            })
+          );
       }
 
       const controller = new AbortController();
-      const timeoutId = setTimeout(() => controller.abort(), (config.timeout_seconds || 30) * 1000);
+      const timeoutId = setTimeout(
+        () => controller.abort(),
+        (config.timeout_seconds || 30) * 1000
+      );
 
       const response = await fetch(config.api_endpoint, {
         method: 'POST',
@@ -334,11 +382,18 @@ export class APIService {
       }
 
       if (!response.ok) {
-        throw new Error(t('services.supplierIntegration.apiResponseError', { status: response.status, response: responseText }));
+        throw new Error(
+          t('services.supplierIntegration.apiResponseError', {
+            status: response.status,
+            response: responseText,
+          })
+        );
       }
 
-      orderLogger.info(`API order sent successfully, response: ${response.status}`);
-      
+      orderLogger.info(
+        `API order sent successfully, response: ${response.status}`
+      );
+
       return {
         success: true,
         response: {
@@ -347,7 +402,6 @@ export class APIService {
           body: responseData,
         },
       };
-
     } catch (error: any) {
       if (error.name === 'AbortError') {
         orderLogger.error('API request timed out');
@@ -373,7 +427,11 @@ export class APIService {
 <Order>
   <OrderReference>${payload.order_reference}</OrderReference>
   <OrderDate>${payload.order_date}</OrderDate>
-  ${payload.requested_delivery_date ? `<RequestedDeliveryDate>${payload.requested_delivery_date}</RequestedDeliveryDate>` : ''}
+  ${
+    payload.requested_delivery_date
+      ? `<RequestedDeliveryDate>${payload.requested_delivery_date}</RequestedDeliveryDate>`
+      : ''
+  }
   <Customer>
     <ID>${payload.customer.id}</ID>
     <Name><![CDATA[${payload.customer.name}]]></Name>
@@ -383,24 +441,40 @@ export class APIService {
       <PostalCode>${payload.customer.address.postal_code}</PostalCode>
       <Country>${payload.customer.address.country}</Country>
     </Address>
-    ${payload.customer.contact?.email ? `<Email>${payload.customer.contact.email}</Email>` : ''}
-    ${payload.customer.contact?.phone ? `<Phone>${payload.customer.contact.phone}</Phone>` : ''}
+    ${
+      payload.customer.contact?.email
+        ? `<Email>${payload.customer.contact.email}</Email>`
+        : ''
+    }
+    ${
+      payload.customer.contact?.phone
+        ? `<Phone>${payload.customer.contact.phone}</Phone>`
+        : ''
+    }
   </Customer>
   <Items>
-    ${payload.items.map(item => `
+    ${payload.items
+      .map(
+        item => `
     <Item>
       <SKU>${item.sku}</SKU>
       <Name><![CDATA[${item.name || ''}]]></Name>
       <Quantity>${item.quantity}</Quantity>
       <UnitPrice>${item.unit_price}</UnitPrice>
       <LineTotal>${item.line_total}</LineTotal>
-    </Item>`).join('')}
+    </Item>`
+      )
+      .join('')}
   </Items>
   <Totals>
     <Subtotal>${payload.totals.subtotal}</Subtotal>
     <Total>${payload.totals.total}</Total>
     <Currency>${payload.totals.currency}</Currency>
-    ${payload.totals.shipping ? `<Shipping>${payload.totals.shipping}</Shipping>` : ''}
+    ${
+      payload.totals.shipping
+        ? `<Shipping>${payload.totals.shipping}</Shipping>`
+        : ''
+    }
   </Totals>
   ${payload.notes ? `<Notes><![CDATA[${payload.notes}]]></Notes>` : ''}
 </Order>`;
@@ -409,16 +483,28 @@ export class APIService {
   /**
    * Flatten object to FormData
    */
-  private flattenObjectToFormData(obj: any, formData: FormData, prefix = ''): void {
+  private flattenObjectToFormData(
+    obj: any,
+    formData: FormData,
+    prefix = ''
+  ): void {
     for (const key in obj) {
-              if (Object.prototype.hasOwnProperty.call(obj, key)) {
+      if (Object.prototype.hasOwnProperty.call(obj, key)) {
         const formKey = prefix ? `${prefix}[${key}]` : key;
         const value = obj[key];
 
-        if (value !== null && typeof value === 'object' && !(value instanceof Date)) {
+        if (
+          value !== null &&
+          typeof value === 'object' &&
+          !(value instanceof Date)
+        ) {
           if (Array.isArray(value)) {
             value.forEach((item, index) => {
-              this.flattenObjectToFormData(item, formData, `${formKey}[${index}]`);
+              this.flattenObjectToFormData(
+                item,
+                formData,
+                `${formKey}[${index}]`
+              );
             });
           } else {
             this.flattenObjectToFormData(value, formData, formKey);
@@ -433,22 +519,25 @@ export class APIService {
   /**
    * Record order in supplier_orders table
    */
-  private async recordSupplierOrder(order: SupplierOrder, orderReference: string, method: string, response: any): Promise<void> {
-    const { error } = await supabase
-      .from('supplier_orders')
-      .insert({
-        supplier_id: order.supplier_id,
-        order_list_id: null,
-        practice_id: order.practice_id,
-        status: response.success ? 'sent' : 'failed',
-        method_used: method,
-        sent_at: new Date().toISOString(),
-        delivery_expected: order.estimated_delivery_date,
-        total_items: order.total_items,
-        total_value: order.total_value,
-        response_data: response,
-        order_reference: orderReference,
-      });
+  private async recordSupplierOrder(
+    order: SupplierOrder,
+    orderReference: string,
+    method: string,
+    response: any
+  ): Promise<void> {
+    const { error } = await supabase.from('supplier_orders').insert({
+      supplier_id: order.supplier_id,
+      order_list_id: null,
+      practice_id: order.practice_id,
+      status: response.success ? 'sent' : 'failed',
+      method_used: method,
+      sent_at: new Date().toISOString(),
+      delivery_expected: order.estimated_delivery_date,
+      total_items: order.total_items,
+      total_value: order.total_value,
+      response_data: response,
+      order_reference: orderReference,
+    });
 
     if (error) {
       orderLogger.error('Failed to record supplier order:', error);
@@ -459,13 +548,17 @@ export class APIService {
   /**
    * Test API connection
    */
-  async testAPIConnection(config: APIConfig): Promise<{ success: boolean; error?: string; response?: any }> {
+  async testAPIConnection(
+    config: APIConfig
+  ): Promise<{ success: boolean; error?: string; response?: any }> {
     try {
       const headers = await this.getAuthHeaders(config);
-      
+
       // Try a simple GET request to test the connection
-      const testEndpoint = config.api_endpoint.replace(/\/orders?$/, '/health') || `${config.api_endpoint}/test`;
-      
+      const testEndpoint =
+        config.api_endpoint.replace(/\/orders?$/, '/health') ||
+        `${config.api_endpoint}/test`;
+
       const response = await fetch(testEndpoint, {
         method: 'GET',
         headers,
@@ -480,7 +573,6 @@ export class APIService {
           body: responseText,
         },
       };
-
     } catch (error: any) {
       return {
         success: false,

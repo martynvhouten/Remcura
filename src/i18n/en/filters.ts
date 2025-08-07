@@ -18,7 +18,8 @@ export default {
   // Product filters
   products: {
     title: 'Product Filters',
-    description: 'Filter products by categories, suppliers, GS1 data, and stock status',
+    description:
+      'Filter products by categories, suppliers, GS1 data, and stock status',
     fields: {
       search: {
         label: 'Search Products',
@@ -163,7 +164,8 @@ export default {
   // Inventory filters
   inventory: {
     title: 'Inventory Filters',
-    description: 'Filter inventory by location, product, category, and stock status',
+    description:
+      'Filter inventory by location, product, category, and stock status',
     fields: {
       search: {
         label: 'Search Products',
@@ -286,4 +288,4 @@ export default {
     fromDate: 'From date',
     toDate: 'To date',
   },
-}; 
+};

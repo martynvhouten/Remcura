@@ -2,7 +2,9 @@
 
 ## 🎯 Overview
 
-The demo account system allows users to test Remcura with realistic data without impacting production data. The demo account (`demo@remcura.com`) has full access to a pre-configured practice with realistic medical inventory data.
+The demo account system allows users to test Remcura with realistic data without impacting
+production data. The demo account (`demo@remcura.com`) has full access to a pre-configured practice
+with realistic medical inventory data.
 
 ## ✨ Features
 
@@ -59,6 +61,7 @@ The system identifies demo users through:
 ### Reset Process
 
 The demo reset clears and repopulates:
+
 - All stock levels and movements
 - Order lists and order items
 - Counting sessions and entries
@@ -69,17 +72,17 @@ The demo reset clears and repopulates:
 ```typescript
 // Demo reset service
 export async function resetDemoData() {
-  const demoUserId = 'demo-user-uuid'
-  const demoPracticeId = '550e8400-e29b-41d4-a716-446655440000'
-  
+  const demoUserId = 'demo-user-uuid';
+  const demoPracticeId = '550e8400-e29b-41d4-a716-446655440000';
+
   // Clear existing demo data
-  await clearDemoData(demoPracticeId)
-  
+  await clearDemoData(demoPracticeId);
+
   // Repopulate with fresh demo data
-  await populateDemoData(demoPracticeId, demoUserId)
-  
+  await populateDemoData(demoPracticeId, demoUserId);
+
   // Update timestamps
-  await updateDemoTimestamps()
+  await updateDemoTimestamps();
 }
 ```
 
@@ -92,6 +95,7 @@ export async function resetDemoData() {
 ## 📊 Demo Data Structure
 
 ### Products (13 items)
+
 ```json
 {
   "BD Discardit Syringes 5ml": {
@@ -109,6 +113,7 @@ export async function resetDemoData() {
 ```
 
 ### Locations (3 locations)
+
 ```json
 [
   {
@@ -130,6 +135,7 @@ export async function resetDemoData() {
 ```
 
 ### Orders (11 orders)
+
 ```json
 [
   {
@@ -167,12 +173,14 @@ export async function resetDemoData() {
 ### For Developers
 
 1. **Access demo account**:
+
    ```
    Email: demo@remcura.com
    Magic Code: 🏥DEMO2026
    ```
 
 2. **Test scenarios**:
+
    - Stock counting workflows
    - Order management processes
    - Batch tracking and FIFO
@@ -185,6 +193,7 @@ export async function resetDemoData() {
 ### For Sales/Marketing
 
 1. **Demo preparation**:
+
    - Ensure demo data is fresh
    - Verify all features work
    - Prepare realistic scenarios
@@ -198,6 +207,7 @@ export async function resetDemoData() {
 ### For Training
 
 1. **User onboarding**:
+
    - Practice with demo account first
    - Learn core workflows
    - Test error scenarios safely
@@ -226,6 +236,7 @@ export async function resetDemoData() {
 ## 🎭 Demo Scenarios
 
 ### Scenario 1: Daily Stock Count
+
 1. Login with demo account
 2. Navigate to Counting page
 3. Start new counting session
@@ -233,6 +244,7 @@ export async function resetDemoData() {
 5. Review variances and submit
 
 ### Scenario 2: Low Stock Management
+
 1. View dashboard alerts
 2. Check low stock items
 3. Create order suggestions
@@ -240,6 +252,7 @@ export async function resetDemoData() {
 5. Track order status
 
 ### Scenario 3: Batch Management
+
 1. View products with batches
 2. Check expiry dates
 3. Use FIFO allocation
@@ -249,12 +262,14 @@ export async function resetDemoData() {
 ## 📈 Analytics & Insights
 
 ### Demo Usage Metrics
+
 - **Session duration**: Average 15-20 minutes
 - **Feature usage**: Most tested features by users
 - **Conversion rate**: Demo to trial conversion tracking
 - **User feedback**: Demo experience ratings
 
 ### Optimization Opportunities
+
 - **Performance improvements**: Based on demo usage patterns
 - **Feature prioritization**: Most/least used features
 - **User flow optimization**: Common navigation patterns
@@ -262,4 +277,5 @@ export async function resetDemoData() {
 
 ---
 
-**🎯 The demo account provides a safe, realistic environment for users to explore Remcura's capabilities without any risk to production data.**
+**🎯 The demo account provides a safe, realistic environment for users to explore Remcura's
+capabilities without any risk to production data.**

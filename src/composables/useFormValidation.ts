@@ -10,9 +10,12 @@ export function useFormValidation() {
     // Basic validations
     required: (value: any): boolean | string => {
       if (Array.isArray(value)) {
-        return (value.length > 0) || t('validation.required');
+        return value.length > 0 || t('validation.required');
       }
-      return (!!value && value !== '' && value !== null && value !== undefined) || t('validation.required');
+      return (
+        (!!value && value !== '' && value !== null && value !== undefined) ||
+        t('validation.required')
+      );
     },
 
     // String validations
@@ -22,15 +25,19 @@ export function useFormValidation() {
       return emailPattern.test(value) || t('validation.email');
     },
 
-    minLength: (min: number) => (value: string): boolean | string => {
-      if (!value) return true; // Optional unless combined with required
-      return (value.length >= min) || t('validation.minLength', { min });
-    },
+    minLength:
+      (min: number) =>
+      (value: string): boolean | string => {
+        if (!value) return true; // Optional unless combined with required
+        return value.length >= min || t('validation.minLength', { min });
+      },
 
-    maxLength: (max: number) => (value: string): boolean | string => {
-      if (!value) return true;
-      return (value.length <= max) || t('validation.maxLength', { max });
-    },
+    maxLength:
+      (max: number) =>
+      (value: string): boolean | string => {
+        if (!value) return true;
+        return value.length <= max || t('validation.maxLength', { max });
+      },
 
     // Number validations
     numeric: (value: any): boolean | string => {
@@ -62,17 +69,21 @@ export function useFormValidation() {
       return (!isNaN(num) && Number.isInteger(num)) || t('validation.integer');
     },
 
-    minValue: (min: number) => (value: number | string): boolean | string => {
-      if (value === '' || value === null || value === undefined) return true;
-      const num = Number(value);
-      return (!isNaN(num) && num >= min) || t('validation.minValue', { min });
-    },
+    minValue:
+      (min: number) =>
+      (value: number | string): boolean | string => {
+        if (value === '' || value === null || value === undefined) return true;
+        const num = Number(value);
+        return (!isNaN(num) && num >= min) || t('validation.minValue', { min });
+      },
 
-    maxValue: (max: number) => (value: number | string): boolean | string => {
-      if (value === '' || value === null || value === undefined) return true;
-      const num = Number(value);
-      return (!isNaN(num) && num <= max) || t('validation.maxValue', { max });
-    },
+    maxValue:
+      (max: number) =>
+      (value: number | string): boolean | string => {
+        if (value === '' || value === null || value === undefined) return true;
+        const num = Number(value);
+        return (!isNaN(num) && num <= max) || t('validation.maxValue', { max });
+      },
 
     // Date validations
     futureDate: (value: string): boolean | string => {
@@ -80,14 +91,14 @@ export function useFormValidation() {
       const date = new Date(value);
       const today = new Date();
       today.setHours(0, 0, 0, 0); // Reset time for comparison
-      return (date >= today) || t('validation.futureDate');
+      return date >= today || t('validation.futureDate');
     },
 
     pastDate: (value: string): boolean | string => {
       if (!value) return true;
       const date = new Date(value);
       const today = new Date();
-      return (date <= today) || t('validation.pastDate');
+      return date <= today || t('validation.pastDate');
     },
 
     // SKU/Code validations
@@ -117,24 +128,35 @@ export function useFormValidation() {
 
     // Array validations
     arrayNotEmpty: (value: any[]): boolean | string => {
-      return (Array.isArray(value) && value.length > 0) || t('validation.required');
+      return (
+        (Array.isArray(value) && value.length > 0) || t('validation.required')
+      );
     },
 
-    arrayMinLength: (min: number) => (value: any[]): boolean | string => {
-      if (!Array.isArray(value)) return t('validation.required');
-      return (value.length >= min) || t('validation.arrayMinLength', { min });
-    },
+    arrayMinLength:
+      (min: number) =>
+      (value: any[]): boolean | string => {
+        if (!Array.isArray(value)) return t('validation.required');
+        return value.length >= min || t('validation.arrayMinLength', { min });
+      },
 
     // Custom validation helpers
-    requiredIf: (condition: () => boolean) => (value: any): boolean | string => {
-      if (!condition()) return true;
-      return rules.required(value);
-    },
+    requiredIf:
+      (condition: () => boolean) =>
+      (value: any): boolean | string => {
+        if (!condition()) return true;
+        return rules.required(value);
+      },
 
-    oneOf: (options: any[]) => (value: any): boolean | string => {
-      if (!value) return true;
-      return options.includes(value) || t('validation.oneOf', { options: options.join(', ') });
-    },
+    oneOf:
+      (options: any[]) =>
+      (value: any): boolean | string => {
+        if (!value) return true;
+        return (
+          options.includes(value) ||
+          t('validation.oneOf', { options: options.join(', ') })
+        );
+      },
   };
 
   // Enhanced field validation with better error handling
@@ -219,7 +241,11 @@ export function useFormValidation() {
     requiredEmail: () => [rules.required, rules.email],
 
     // Required positive number
-    requiredPositiveNumber: () => [rules.required, rules.numeric, rules.positive],
+    requiredPositiveNumber: () => [
+      rules.required,
+      rules.numeric,
+      rules.positive,
+    ],
 
     // Required quantity field
     requiredQuantity: () => [rules.required, rules.numeric, rules.positive],

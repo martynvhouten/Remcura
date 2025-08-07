@@ -28,7 +28,9 @@
             <q-btn
               flat
               :color="filter === 'all' ? 'primary' : 'grey-6'"
-              :label="`${$t('notificationsPage.all')} (${notifications.length})`"
+              :label="`${$t('notificationsPage.all')} (${
+                notifications.length
+              })`"
               @click="filter = 'all'"
               size="sm"
             />
@@ -40,7 +42,7 @@
               size="sm"
             />
           </q-btn-group>
-          
+
           <div class="q-ml-auto">
             <q-btn
               flat
@@ -210,20 +212,16 @@
   // State
   const filter = ref<'all' | 'unread'>('all');
   const categoryFilter = ref<string | null>(null);
-  
+
   // Use store data
   const loading = computed(() => notificationStore.loading);
   const notifications = computed(() => notificationStore.notifications);
   const error = computed(() => notificationStore.error);
 
-
-
   // Load notifications using store
   const loadNotifications = () => {
     notificationStore.loadNotifications();
   };
-
-
 
   // Computed properties
   const unreadCount = computed(() => notificationStore.unreadCount);
@@ -272,7 +270,7 @@
   const markAsRead = async (notificationId: string) => {
     try {
       await notificationStore.markAsRead(notificationId);
-      
+
       await monitoringService.trackEvent('notification_marked_read', {
         notification_id: notificationId,
       });
@@ -288,7 +286,7 @@
   const markAsUnread = async (notificationId: string) => {
     try {
       await notificationStore.markAsUnread(notificationId);
-      
+
       await monitoringService.trackEvent('notification_marked_unread', {
         notification_id: notificationId,
       });
@@ -372,8 +370,6 @@
     });
   };
 
-
-
   const getCategoryIcon = (category: string) => {
     const icons = {
       stock_alert: 'warning',
@@ -420,12 +416,12 @@
 </script>
 
 <style scoped>
-.notification-filters {
-  display: flex;
-  align-items: center;
-  padding: 12px 16px;
-  background: rgba(var(--q-primary), 0.05);
-  border-radius: 8px;
-  border: 1px solid rgba(var(--q-primary), 0.1);
-}
+  .notification-filters {
+    display: flex;
+    align-items: center;
+    padding: 12px 16px;
+    background: rgba(var(--q-primary), 0.05);
+    border-radius: 8px;
+    border: 1px solid rgba(var(--q-primary), 0.1);
+  }
 </style>

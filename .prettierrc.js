@@ -1,3 +1,4 @@
+// Deprecated in favor of prettier.config.cjs (Prettier v3). Keeping for backward compatibility.
 module.exports = {
   // Basic formatting
   semi: true,

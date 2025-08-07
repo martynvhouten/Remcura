@@ -20,7 +20,7 @@ export const useClinicStore = defineStore('clinic', () => {
       name: location.name,
       code: location.code || location.name.toUpperCase().replace(/\s+/g, '_'),
       description: location.description || '',
-      location_type: location.location_type || 'storage' as const,
+      location_type: location.location_type || ('storage' as const),
       address: location.address || '',
       is_active: location.is_active !== false, // Default to true if not specified
       is_main_location: location.is_main_location || false,

@@ -87,8 +87,6 @@
             </div>
           </template>
 
-
-
           <!-- SKU Cell -->
           <template #body-cell-sku="props">
             <q-td :props="props">
@@ -114,7 +112,9 @@
           <template #body-cell-gs1_status="props">
             <q-td :props="props">
               <q-chip
-                :color="props.row.gs1_status === 'complete' ? 'positive' : 'orange'"
+                :color="
+                  props.row.gs1_status === 'complete' ? 'positive' : 'orange'
+                "
                 text-color="white"
                 size="sm"
                 dense
@@ -140,7 +140,9 @@
           <template #body-cell-batch_status="props">
             <q-td :props="props">
               <q-chip
-                :color="props.row.batch_status === 'batch_tracked' ? 'info' : 'grey'"
+                :color="
+                  props.row.batch_status === 'batch_tracked' ? 'info' : 'grey'
+                "
                 text-color="white"
                 size="sm"
                 dense
@@ -217,8 +219,8 @@
 
           <!-- Row with click handler for expansion -->
           <template #body-cell-name="props">
-            <q-td 
-              :props="props" 
+            <q-td
+              :props="props"
               class="product-name-cell cursor-pointer"
               @click="toggleRowExpansion(props.row.id)"
             >
@@ -263,10 +265,7 @@
     />
 
     <!-- GTIN Barcode Scanner -->
-    <BarcodeScanner
-      v-model="showGtinScanner"
-      @scan="handleGtinScan"
-    />
+    <BarcodeScanner v-model="showGtinScanner" @scan="handleGtinScan" />
 
     <!-- Advanced Search Dialog -->
     <AdvancedSearchDialog
@@ -306,603 +305,635 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted, watch, defineAsyncComponent } from 'vue';
-import { storeToRefs } from 'pinia';
-import { useI18n } from 'vue-i18n';
-import { useQuasar } from 'quasar';
-import { useProductsStore } from 'src/stores/products';
-import { useOrderListsStore } from 'src/stores/orderLists';
-import { useAuthStore } from 'src/stores/auth';
-import PageLayout from 'src/components/PageLayout.vue';
-import PageTitle from 'src/components/PageTitle.vue';
-import FilterPanel from 'src/components/filters/FilterPanel.vue';
-import ConfirmDialog from 'src/components/base/ConfirmDialog.vue';
-import SmartTable from 'src/components/tables/SmartTable.vue';
-// ✅ PERFORMANCE OPTIMIZATION: Dynamic imports for heavy dialogs
+  import { ref, computed, onMounted, watch, defineAsyncComponent } from 'vue';
+  import { storeToRefs } from 'pinia';
+  import { useI18n } from 'vue-i18n';
+  import { useQuasar } from 'quasar';
+  import { useProductsStore } from 'src/stores/products';
+  import { useOrderListsStore } from 'src/stores/orderLists';
+  import { useAuthStore } from 'src/stores/auth';
+  import PageLayout from 'src/components/PageLayout.vue';
+  import PageTitle from 'src/components/PageTitle.vue';
+  import FilterPanel from 'src/components/filters/FilterPanel.vue';
+  import ConfirmDialog from 'src/components/base/ConfirmDialog.vue';
+  import SmartTable from 'src/components/tables/SmartTable.vue';
+  // ✅ PERFORMANCE OPTIMIZATION: Dynamic imports for heavy dialogs
 
-const ProductDetailsDialog = defineAsyncComponent(() => import('src/components/products/ProductDetailsDialog.vue'));
-const ShoppingCartDialog = defineAsyncComponent(() => import('src/components/products/ShoppingCartDialog.vue'));
-const OrderListDialog = defineAsyncComponent(() => import('src/components/products/OrderListDialog.vue'));
-const BarcodeScanner = defineAsyncComponent(() => import('src/components/BarcodeScanner.vue'));
-const AdvancedSearchDialog = defineAsyncComponent(() => import('src/components/products/AdvancedSearchDialog.vue'));
-const ProductFormDialog = defineAsyncComponent(() => import('src/components/products/ProductFormDialog.vue'));
+  const ProductDetailsDialog = defineAsyncComponent(
+    () => import('src/components/products/ProductDetailsDialog.vue')
+  );
+  const ShoppingCartDialog = defineAsyncComponent(
+    () => import('src/components/products/ShoppingCartDialog.vue')
+  );
+  const OrderListDialog = defineAsyncComponent(
+    () => import('src/components/products/OrderListDialog.vue')
+  );
+  const BarcodeScanner = defineAsyncComponent(
+    () => import('src/components/BarcodeScanner.vue')
+  );
+  const AdvancedSearchDialog = defineAsyncComponent(
+    () => import('src/components/products/AdvancedSearchDialog.vue')
+  );
+  const ProductFormDialog = defineAsyncComponent(
+    () => import('src/components/products/ProductFormDialog.vue')
+  );
 
-import { productsFilterPreset } from '@/presets/filters/products';
-import { usePermissions } from 'src/services/permissions';
-import type {
-  ProductWithStock,
-  ProductBatchSummary,
-} from 'src/types/inventory';
-import type { FilterValues, FilterChangeEvent, FilterResetEvent } from '@/types/filters';
+  import { productsFilterPreset } from '@/presets/filters/products';
+  import { usePermissions } from 'src/services/permissions';
+  import type {
+    ProductWithStock,
+    ProductBatchSummary,
+  } from 'src/types/inventory';
+  import type {
+    FilterValues,
+    FilterChangeEvent,
+    FilterResetEvent,
+  } from '@/types/filters';
 
-const { t, locale } = useI18n();
-const $q = useQuasar();
-const productsStore = useProductsStore();
-const orderListsStore = useOrderListsStore();
-const authStore = useAuthStore();
-const permissions = usePermissions();
+  const { t, locale } = useI18n();
+  const $q = useQuasar();
+  const productsStore = useProductsStore();
+  const orderListsStore = useOrderListsStore();
+  const authStore = useAuthStore();
+  const permissions = usePermissions();
 
-// Permission checks - TODO: Connect to proper auth system
-const canCreate = ref(true);
-const canEdit = ref(true);
-const canDelete = ref(true);
+  // Permission checks - TODO: Connect to proper auth system
+  const canCreate = ref(true);
+  const canEdit = ref(true);
+  const canDelete = ref(true);
 
-// Reactive data
-const selectedProduct = ref<ProductWithStock | null>(null);
-const showDetailsDialog = ref(false);
-const showCartDialog = ref(false);
-const showOrderListDialog = ref(false);
-const showGtinScanner = ref(false);
-const showAdvancedSearch = ref(false);
-const showProductFormDialog = ref(false);
-const showDeleteDialog = ref(false);
-const selectedProductForEdit = ref<ProductWithStock | null>(null);
-const productToDelete = ref<ProductWithStock | null>(null);
-const deleting = ref(false);
-const expandedRows = ref<string[]>([]);
-const searchResultsCount = ref<number | null>(null);
+  // Reactive data
+  const selectedProduct = ref<ProductWithStock | null>(null);
+  const showDetailsDialog = ref(false);
+  const showCartDialog = ref(false);
+  const showOrderListDialog = ref(false);
+  const showGtinScanner = ref(false);
+  const showAdvancedSearch = ref(false);
+  const showProductFormDialog = ref(false);
+  const showDeleteDialog = ref(false);
+  const selectedProductForEdit = ref<ProductWithStock | null>(null);
+  const productToDelete = ref<ProductWithStock | null>(null);
+  const deleting = ref(false);
+  const expandedRows = ref<string[]>([]);
+  const searchResultsCount = ref<number | null>(null);
 
-// New filter state for FilterPanel
-const filterValues = ref<FilterValues>({});
+  // New filter state for FilterPanel
+  const filterValues = ref<FilterValues>({});
 
-// Store getters - using storeToRefs for reactivity
-const {
-  products,
-  loading,
-  cart,
-  cartItemsCount,
-  cartTotal,
-  orderLists,
-  filters,
-  availableCategories,
-  availableCountries,
-  availableGpcCodes,
-  availableLifecycleStatuses,
-  availableSuppliers,
-  productStats,
-} = storeToRefs(productsStore);
+  // Store getters - using storeToRefs for reactivity
+  const {
+    products,
+    loading,
+    cart,
+    cartItemsCount,
+    cartTotal,
+    orderLists,
+    filters,
+    availableCategories,
+    availableCountries,
+    availableGpcCodes,
+    availableLifecycleStatuses,
+    availableSuppliers,
+    productStats,
+  } = storeToRefs(productsStore);
 
-// Development mode indicator
-const isDevelopment = computed(() => process.env.NODE_ENV === 'development');
+  // Development mode indicator
+  const isDevelopment = computed(() => process.env.NODE_ENV === 'development');
 
-// Smart table configuration for large datasets
-const smartTableConfig = computed(() => ({
-  clientSideThreshold: 1000,      // Switch to server-side at 1000 products
-  virtualizationThreshold: 5000,  // Switch to virtualization at 5000 products
-  debounceMs: 300,
-  itemHeight: 60,
-  serverSideLoader: async (pagination: any, filters: any) => {
-    // Server-side loading for large datasets
-    const practiceId = authStore.clinicId;
-    if (!practiceId) return { data: [], totalCount: 0 };
-    
-    const result = await productsStore.fetchProductsPaginated({
-      ...pagination,
-      filters,
-      practiceId
+  // Smart table configuration for large datasets
+  const smartTableConfig = computed(() => ({
+    clientSideThreshold: 1000, // Switch to server-side at 1000 products
+    virtualizationThreshold: 5000, // Switch to virtualization at 5000 products
+    debounceMs: 300,
+    itemHeight: 60,
+    serverSideLoader: async (pagination: any, filters: any) => {
+      // Server-side loading for large datasets
+      const practiceId = authStore.clinicId;
+      if (!practiceId) return { data: [], totalCount: 0 };
+
+      const result = await productsStore.fetchProductsPaginated({
+        ...pagination,
+        filters,
+        practiceId,
+      });
+
+      return {
+        data: result.products,
+        totalCount: result.total,
+      };
+    },
+  }));
+
+  // Handle strategy changes
+  const onStrategyChanged = (strategy: string) => {
+    console.log(`Products table strategy changed to: ${strategy}`);
+    $q.notify({
+      type: 'info',
+      message: `Table optimized for ${strategy} mode`,
+      timeout: 2000,
     });
-    
-    return {
-      data: result.products,
-      totalCount: result.total
-    };
-  }
-}));
-
-// Handle strategy changes
-const onStrategyChanged = (strategy: string) => {
-  console.log(`Products table strategy changed to: ${strategy}`);
-  $q.notify({
-    type: 'info',
-    message: `Table optimized for ${strategy} mode`,
-    timeout: 2000
-  });
-};
-
-// Table columns configuration with enhanced sorting support
-const tableColumns = computed(() => [
-  {
-    name: 'name',
-    label: t('productsPage.table.name'),
-    field: 'name',
-    align: 'left' as const,
-    sortable: true,
-    style: 'width: 250px',
-    classes: 'col-name',
-    headerClasses: 'col-name',
-  },
-  {
-    name: 'sku',
-    label: t('productsPage.table.sku'),
-    field: 'sku',
-    align: 'left' as const,
-    sortable: true,
-    style: 'width: 120px',
-  },
-  {
-    name: 'stock_status',
-    label: t('productsPage.table.stockStatus'),
-    field: 'stock_status',
-    align: 'center' as const,
-    sortable: true,
-    style: 'width: 150px',
-    classes: 'col-status',
-    headerClasses: 'col-status',
-  },
-  {
-    name: 'gs1_status',
-    label: t('productsPage.table.gs1Status'),
-    field: 'gs1_status',
-    align: 'center' as const,
-    sortable: false,
-    style: 'width: 140px',
-    classes: 'col-status',
-    headerClasses: 'col-status',
-  },
-  {
-    name: 'price',
-    label: t('productsPage.table.price'),
-    field: 'lowest_price',
-    align: 'right' as const,
-    sortable: true,
-    style: 'width: 120px',
-    classes: 'col-numeric',
-    headerClasses: 'col-numeric',
-  },
-  {
-    name: 'batch_status',
-    label: t('productsPage.table.stockType'),
-    field: 'batch_status',
-    align: 'center' as const,
-    sortable: false,
-    style: 'width: 140px',
-    classes: 'col-status',
-    headerClasses: 'col-status',
-  },
-  {
-    name: 'actions',
-    label: t('productsPage.table.actions'),
-    field: '',
-    align: 'center' as const,
-    sortable: false,
-    style: 'width: 180px',
-    classes: 'col-actions',
-    headerClasses: 'col-actions',
-  },
-]);
-
-// Legacy filter options for compatibility
-const categoryOptions = computed(
-  () =>
-    availableCategories.value?.map((cat: string) => ({ label: cat, value: cat })) ??
-    []
-);
-
-const stockStatusOptions = computed(() => [
-  { label: t('productsPage.stockStatus.in_stock'), value: 'in_stock' },
-  { label: t('productsPage.stockStatus.low_stock'), value: 'low_stock' },
-  {
-    label: t('productsPage.stockStatus.out_of_stock'),
-    value: 'out_of_stock',
-  },
-]);
-
-const countryOptions = computed(() => 
-  availableCountries.value?.map((country: string) => ({
-    label: `${getCountryFlag(country)} ${getCountryName(country)}`,
-    value: country,
-  })) ?? []
-);
-
-const gpcOptions = computed(() => 
-  availableGpcCodes.value?.map((gpc: string) => ({
-    label: `${gpc} - ${getGpcDescription(gpc)}`,
-    value: gpc,
-  })) ?? []
-);
-
-const lifecycleOptions = computed(() => [
-  { label: t('productsPage.lifecycleStatus.active'), value: 'active' },
-  { label: t('productsPage.lifecycleStatus.discontinued'), value: 'discontinued' },
-  { label: t('productsPage.lifecycleStatus.new'), value: 'new' },
-  { label: t('productsPage.lifecycleStatus.phase_out'), value: 'phase_out' },
-]);
-
-const supplierOptions = computed(() => 
-  availableSuppliers.value.map((supplier: string) => ({
-    label: supplier,
-    value: supplier,
-  }))
-);
-
-// Filter event handlers
-const handleFilterChange = (event: FilterChangeEvent) => {
-  // Convert FilterPanel values to store filter format
-  const storeFilters = convertFilterValuesToStoreFormat(filterValues.value);
-  updateFilters(storeFilters);
-};
-
-const handleFilterReset = (event: FilterResetEvent) => {
-  // Reset to default values
-  filterValues.value = { ...productsFilterPreset.defaultFilters } as FilterValues;
-  productsStore.clearFilters();
-};
-
-const handleFilterClear = () => {
-  // Clear all filters
-  filterValues.value = {};
-  productsStore.clearFilters();
-};
-
-// Helper to convert FilterPanel values to store format
-const convertFilterValuesToStoreFormat = (values: FilterValues) => {
-  return {
-    search: String(values.search || ''),
-    category: String(values.category || ''),
-    supplier: String(values.supplier || ''),
-    stock_status: String(values.stock_status || 'all'),
-    gtin: String(values.gtin || ''),
-    country_of_origin: String(values.country_of_origin || ''),
-    gpc_brick_code: String(values.gpc_brick_code || ''),
-    lifecycle_status: String(values.lifecycle_status || ''),
-    orderable_only: Boolean(values.orderable_only || false),
   };
-};
 
-// Helper functions
-const getStockStatusColor = (status: string): string => {
-  switch (status) {
-    case 'in_stock':
-      return 'positive';
-    case 'low_stock':
-      return 'warning';
-    case 'out_of_stock':
-      return 'negative';
-    default:
-      return 'grey';
-  }
-};
+  // Table columns configuration with enhanced sorting support
+  const tableColumns = computed(() => [
+    {
+      name: 'name',
+      label: t('productsPage.table.name'),
+      field: 'name',
+      align: 'left' as const,
+      sortable: true,
+      style: 'width: 250px',
+      classes: 'col-name',
+      headerClasses: 'col-name',
+    },
+    {
+      name: 'sku',
+      label: t('productsPage.table.sku'),
+      field: 'sku',
+      align: 'left' as const,
+      sortable: true,
+      style: 'width: 120px',
+    },
+    {
+      name: 'stock_status',
+      label: t('productsPage.table.stockStatus'),
+      field: 'stock_status',
+      align: 'center' as const,
+      sortable: true,
+      style: 'width: 150px',
+      classes: 'col-status',
+      headerClasses: 'col-status',
+    },
+    {
+      name: 'gs1_status',
+      label: t('productsPage.table.gs1Status'),
+      field: 'gs1_status',
+      align: 'center' as const,
+      sortable: false,
+      style: 'width: 140px',
+      classes: 'col-status',
+      headerClasses: 'col-status',
+    },
+    {
+      name: 'price',
+      label: t('productsPage.table.price'),
+      field: 'lowest_price',
+      align: 'right' as const,
+      sortable: true,
+      style: 'width: 120px',
+      classes: 'col-numeric',
+      headerClasses: 'col-numeric',
+    },
+    {
+      name: 'batch_status',
+      label: t('productsPage.table.stockType'),
+      field: 'batch_status',
+      align: 'center' as const,
+      sortable: false,
+      style: 'width: 140px',
+      classes: 'col-status',
+      headerClasses: 'col-status',
+    },
+    {
+      name: 'actions',
+      label: t('productsPage.table.actions'),
+      field: '',
+      align: 'center' as const,
+      sortable: false,
+      style: 'width: 180px',
+      classes: 'col-actions',
+      headerClasses: 'col-actions',
+    },
+  ]);
 
-const getStockStatusTextColor = (status: string): string => {
-  switch (status) {
-    case 'in_stock':
-      return 'white';
-    case 'low_stock':
-      return 'black';
-    case 'out_of_stock':
-      return 'white';
-    default:
-      return 'black';
-  }
-};
+  // Legacy filter options for compatibility
+  const categoryOptions = computed(
+    () =>
+      availableCategories.value?.map((cat: string) => ({
+        label: cat,
+        value: cat,
+      })) ?? []
+  );
 
-const getStockStatusLabel = (status: string): string => {
-  switch (status) {
-    case 'in_stock':
-      return t('productsPage.stockStatus.in_stock');
-    case 'low_stock':
-      return t('productsPage.stockStatus.low_stock');
-    case 'out_of_stock':
-      return t('productsPage.stockStatus.out_of_stock');
-    default:
-      return t('productsPage.stockStatus.unavailable');
-  }
-};
+  const stockStatusOptions = computed(() => [
+    { label: t('productsPage.stockStatus.in_stock'), value: 'in_stock' },
+    { label: t('productsPage.stockStatus.low_stock'), value: 'low_stock' },
+    {
+      label: t('productsPage.stockStatus.out_of_stock'),
+      value: 'out_of_stock',
+    },
+  ]);
 
-const getCountryFlag = (countryCode: string): string => {
-  // Simple flag implementation - could be enhanced
-  return '🏳️';
-};
+  const countryOptions = computed(
+    () =>
+      availableCountries.value?.map((country: string) => ({
+        label: `${getCountryFlag(country)} ${getCountryName(country)}`,
+        value: country,
+      })) ?? []
+  );
 
-const getCountryName = (countryCode: string): string => {
-  // Simple country name implementation
-  return countryCode;
-};
+  const gpcOptions = computed(
+    () =>
+      availableGpcCodes.value?.map((gpc: string) => ({
+        label: `${gpc} - ${getGpcDescription(gpc)}`,
+        value: gpc,
+      })) ?? []
+  );
 
-const getGpcDescription = (gpcCode: string): string => {
-  // Simple GPC description implementation
-  return 'Product Classification';
-};
+  const lifecycleOptions = computed(() => [
+    { label: t('productsPage.lifecycleStatus.active'), value: 'active' },
+    {
+      label: t('productsPage.lifecycleStatus.discontinued'),
+      value: 'discontinued',
+    },
+    { label: t('productsPage.lifecycleStatus.new'), value: 'new' },
+    { label: t('productsPage.lifecycleStatus.phase_out'), value: 'phase_out' },
+  ]);
 
-const isValidGTIN = (value: string): boolean => {
-  return /^\d{8,14}$/.test(value);
-};
+  const supplierOptions = computed(() =>
+    availableSuppliers.value.map((supplier: string) => ({
+      label: supplier,
+      value: supplier,
+    }))
+  );
 
-const handleGtinScan = (gtin: string) => {
-  // Update filter values
-  filterValues.value = { ...filterValues.value, gtin };
-  
-  // Check if we found a product with this GTIN
-  const gtinMatch = filteredProducts.value.find((product: ProductWithStock) => product.gtin === gtin);
-  if (gtinMatch) {
-    $q.notify({
-      type: 'positive',
-      message: t('productsPage.gtinFound', { product: gtinMatch.name }),
-      icon: 'qr_code_2',
-      position: 'top',
-      actions: [
-        {
-          label: t('productsPage.viewProduct'),
-          color: 'white',
-          handler: () => showProductDetails(gtinMatch)
-        }
-      ]
-    });
-  } else {
-    $q.notify({
-      type: 'warning',
-      message: t('productsPage.gtinNotFound', { gtin }),
-      icon: 'search_off',
-      position: 'top',
-    });
-  }
-};
+  // Filter event handlers
+  const handleFilterChange = (event: FilterChangeEvent) => {
+    // Convert FilterPanel values to store filter format
+    const storeFilters = convertFilterValuesToStoreFormat(filterValues.value);
+    updateFilters(storeFilters);
+  };
 
-const toggleRowExpansion = (productId: string) => {
-  const index = expandedRows.value.indexOf(productId);
-  if (index > -1) {
-    expandedRows.value.splice(index, 1);
-  } else {
-    expandedRows.value.push(productId);
-  }
-};
-
-const showProductDetails = (product: ProductWithStock) => {
-  selectedProduct.value = product;
-  showDetailsDialog.value = true;
-};
-
-const handleAddToCart = (product: ProductWithStock) => {
-  try {
-    productsStore.addToCart(product, 1);
-    $q.notify({
-      type: 'positive',
-      message: t('productsPage.addedToCart', { productName: product.name }),
-      position: 'top',
-    });
-  } catch (error) {
-    $q.notify({
-      type: 'negative',
-      message: t('productsPage.cartAddError'),
-      position: 'top',
-    });
-  }
-};
-
-const handleAddToOrderList = (product: ProductWithStock) => {
-  selectedProduct.value = product;
-  showOrderListDialog.value = true;
-};
-
-const refreshData = async () => {
-  try {
-    const practiceId = authStore.clinicId;
-    if (!practiceId) { return; }
-
-    await productsStore.refreshData(practiceId);
-    $q.notify({
-      type: 'positive',
-      message: t('productsPage.dataRefreshed'),
-    });
-  } catch (error) {
-    $q.notify({
-      type: 'negative',
-      message: t('productsPage.productLoadError'),
-    });
-  }
-};
-
-// Store actions
-const { updateFilters } = productsStore;
-const { updateCartItemQuantity, removeFromCart, clearCart } = productsStore;
-const handleCreateOrderList = orderListsStore.createOrderList;
-const handleAddToExistingOrderList = orderListsStore.addOrderListItem;
-
-const handleCheckout = () => {
-  $q.notify({
-    type: 'info',
-    message: t('common.comingSoon'),
-  });
-};
-
-const handleAdvancedSearch = (criteria: any) => {
-  // Apply advanced search criteria to filters
-  Object.assign(filters, criteria);
-  
-  // Update search results count
-  searchResultsCount.value = filteredProducts.value.length;
-  
-  $q.notify({
-    type: 'positive',
-    message: t('productsPage.advancedSearch.resultsFound', { count: filteredProducts.value.length }),
-  });
-};
-
-const handleSearchPreview = (criteria: any) => {
-  // For preview, we'll simulate the search without actually applying filters
-  const mockCount = Math.floor(Math.random() * products.value.length);
-  searchResultsCount.value = mockCount;
-};
-
-// Product CRUD Methods
-const showCreateProductDialog = () => {
-  selectedProductForEdit.value = null;
-  showProductFormDialog.value = true;
-};
-
-const editProduct = (product: ProductWithStock) => {
-  selectedProductForEdit.value = product;
-  showProductFormDialog.value = true;
-};
-
-const deleteProduct = (product: ProductWithStock) => {
-  productToDelete.value = product;
-  showDeleteDialog.value = true;
-};
-
-const confirmDelete = async () => {
-      if (!productToDelete.value) { return; }
-
-  deleting.value = true;
-  try {
-    await productsStore.deleteProduct(productToDelete.value.id);
-    
-    $q.notify({
-      type: 'positive',
-      message: t('products.deleted', { name: productToDelete.value.name }),
-    });
-    
-    showDeleteDialog.value = false;
-    productToDelete.value = null;
-    
-    // Refresh products list
-    await refreshData();
-  } catch (error) {
-    console.error('Error deleting product:', error);
-    $q.notify({
-      type: 'negative',
-      message: t('products.deleteError'),
-    });
-  } finally {
-    deleting.value = false;
-  }
-};
-
-const onProductSaved = async (product: any) => {
-  showProductFormDialog.value = false;
-  selectedProductForEdit.value = null;
-  
-  // Refresh products list to show the changes
-  await refreshData();
-};
-
-// Table request handler for sorting and pagination
-const onTableRequest = (props: any) => {
-  // Use the composable's handler and then update rowsNumber
-  tableRequestHandler(props);
-  pagination.value.rowsNumber = filteredProducts.value.length;
-};
-
-
-
-// Lifecycle
-onMounted(async () => {
-  const practiceId = authStore.clinicId;
-  
-  if (practiceId) {
-    // Clear any existing filters first
+  const handleFilterReset = (event: FilterResetEvent) => {
+    // Reset to default values
+    filterValues.value = {
+      ...productsFilterPreset.defaultFilters,
+    } as FilterValues;
     productsStore.clearFilters();
-    
-    await productsStore.fetchProducts(practiceId);
-    
-    // If no products loaded on first try, wait and retry once
-    if (products.value.length === 0) {
-              // Retrying product loading...
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      await productsStore.fetchProducts(practiceId);
-    }
-  }
-  
-  // Initialize filter values with defaults
-  if (productsFilterPreset.defaultFilters) {
-    filterValues.value = { ...productsFilterPreset.defaultFilters } as FilterValues;
-  }
+  };
 
-  // Check user permissions
-  try {
-    canCreate.value = await permissions.canCreateProducts();
-    canEdit.value = await permissions.canEditProducts();
-    canDelete.value = await permissions.canDeleteProducts();
-  } catch (error) {
-    console.error('Error checking permissions:', error);
-    // Default to no permissions on error
-    canCreate.value = false;
-    canEdit.value = false;
-    canDelete.value = false;
-  }
-});
+  const handleFilterClear = () => {
+    // Clear all filters
+    filterValues.value = {};
+    productsStore.clearFilters();
+  };
+
+  // Helper to convert FilterPanel values to store format
+  const convertFilterValuesToStoreFormat = (values: FilterValues) => {
+    return {
+      search: String(values.search || ''),
+      category: String(values.category || ''),
+      supplier: String(values.supplier || ''),
+      stock_status: String(values.stock_status || 'all'),
+      gtin: String(values.gtin || ''),
+      country_of_origin: String(values.country_of_origin || ''),
+      gpc_brick_code: String(values.gpc_brick_code || ''),
+      lifecycle_status: String(values.lifecycle_status || ''),
+      orderable_only: Boolean(values.orderable_only || false),
+    };
+  };
+
+  // Helper functions
+  const getStockStatusColor = (status: string): string => {
+    switch (status) {
+      case 'in_stock':
+        return 'positive';
+      case 'low_stock':
+        return 'warning';
+      case 'out_of_stock':
+        return 'negative';
+      default:
+        return 'grey';
+    }
+  };
+
+  const getStockStatusTextColor = (status: string): string => {
+    switch (status) {
+      case 'in_stock':
+        return 'white';
+      case 'low_stock':
+        return 'black';
+      case 'out_of_stock':
+        return 'white';
+      default:
+        return 'black';
+    }
+  };
+
+  const getStockStatusLabel = (status: string): string => {
+    switch (status) {
+      case 'in_stock':
+        return t('productsPage.stockStatus.in_stock');
+      case 'low_stock':
+        return t('productsPage.stockStatus.low_stock');
+      case 'out_of_stock':
+        return t('productsPage.stockStatus.out_of_stock');
+      default:
+        return t('productsPage.stockStatus.unavailable');
+    }
+  };
+
+  const getCountryFlag = (countryCode: string): string => {
+    // Simple flag implementation - could be enhanced
+    return '🏳️';
+  };
+
+  const getCountryName = (countryCode: string): string => {
+    // Simple country name implementation
+    return countryCode;
+  };
+
+  const getGpcDescription = (gpcCode: string): string => {
+    // Simple GPC description implementation
+    return 'Product Classification';
+  };
+
+  const isValidGTIN = (value: string): boolean => {
+    return /^\d{8,14}$/.test(value);
+  };
+
+  const handleGtinScan = (gtin: string) => {
+    // Update filter values
+    filterValues.value = { ...filterValues.value, gtin };
+
+    // Check if we found a product with this GTIN
+    const gtinMatch = filteredProducts.value.find(
+      (product: ProductWithStock) => product.gtin === gtin
+    );
+    if (gtinMatch) {
+      $q.notify({
+        type: 'positive',
+        message: t('productsPage.gtinFound', { product: gtinMatch.name }),
+        icon: 'qr_code_2',
+        position: 'top',
+        actions: [
+          {
+            label: t('productsPage.viewProduct'),
+            color: 'white',
+            handler: () => showProductDetails(gtinMatch),
+          },
+        ],
+      });
+    } else {
+      $q.notify({
+        type: 'warning',
+        message: t('productsPage.gtinNotFound', { gtin }),
+        icon: 'search_off',
+        position: 'top',
+      });
+    }
+  };
+
+  const toggleRowExpansion = (productId: string) => {
+    const index = expandedRows.value.indexOf(productId);
+    if (index > -1) {
+      expandedRows.value.splice(index, 1);
+    } else {
+      expandedRows.value.push(productId);
+    }
+  };
+
+  const showProductDetails = (product: ProductWithStock) => {
+    selectedProduct.value = product;
+    showDetailsDialog.value = true;
+  };
+
+  const handleAddToCart = (product: ProductWithStock) => {
+    try {
+      productsStore.addToCart(product, 1);
+      $q.notify({
+        type: 'positive',
+        message: t('productsPage.addedToCart', { productName: product.name }),
+        position: 'top',
+      });
+    } catch (error) {
+      $q.notify({
+        type: 'negative',
+        message: t('productsPage.cartAddError'),
+        position: 'top',
+      });
+    }
+  };
+
+  const handleAddToOrderList = (product: ProductWithStock) => {
+    selectedProduct.value = product;
+    showOrderListDialog.value = true;
+  };
+
+  const refreshData = async () => {
+    try {
+      const practiceId = authStore.clinicId;
+      if (!practiceId) {
+        return;
+      }
+
+      await productsStore.refreshData(practiceId);
+      $q.notify({
+        type: 'positive',
+        message: t('productsPage.dataRefreshed'),
+      });
+    } catch (error) {
+      $q.notify({
+        type: 'negative',
+        message: t('productsPage.productLoadError'),
+      });
+    }
+  };
+
+  // Store actions
+  const { updateFilters } = productsStore;
+  const { updateCartItemQuantity, removeFromCart, clearCart } = productsStore;
+  const handleCreateOrderList = orderListsStore.createOrderList;
+  const handleAddToExistingOrderList = orderListsStore.addOrderListItem;
+
+  const handleCheckout = () => {
+    $q.notify({
+      type: 'info',
+      message: t('common.comingSoon'),
+    });
+  };
+
+  const handleAdvancedSearch = (criteria: any) => {
+    // Apply advanced search criteria to filters
+    Object.assign(filters, criteria);
+
+    // Update search results count
+    searchResultsCount.value = filteredProducts.value.length;
+
+    $q.notify({
+      type: 'positive',
+      message: t('productsPage.advancedSearch.resultsFound', {
+        count: filteredProducts.value.length,
+      }),
+    });
+  };
+
+  const handleSearchPreview = (criteria: any) => {
+    // For preview, we'll simulate the search without actually applying filters
+    const mockCount = Math.floor(Math.random() * products.value.length);
+    searchResultsCount.value = mockCount;
+  };
+
+  // Product CRUD Methods
+  const showCreateProductDialog = () => {
+    selectedProductForEdit.value = null;
+    showProductFormDialog.value = true;
+  };
+
+  const editProduct = (product: ProductWithStock) => {
+    selectedProductForEdit.value = product;
+    showProductFormDialog.value = true;
+  };
+
+  const deleteProduct = (product: ProductWithStock) => {
+    productToDelete.value = product;
+    showDeleteDialog.value = true;
+  };
+
+  const confirmDelete = async () => {
+    if (!productToDelete.value) {
+      return;
+    }
+
+    deleting.value = true;
+    try {
+      await productsStore.deleteProduct(productToDelete.value.id);
+
+      $q.notify({
+        type: 'positive',
+        message: t('products.deleted', { name: productToDelete.value.name }),
+      });
+
+      showDeleteDialog.value = false;
+      productToDelete.value = null;
+
+      // Refresh products list
+      await refreshData();
+    } catch (error) {
+      console.error('Error deleting product:', error);
+      $q.notify({
+        type: 'negative',
+        message: t('products.deleteError'),
+      });
+    } finally {
+      deleting.value = false;
+    }
+  };
+
+  const onProductSaved = async (product: any) => {
+    showProductFormDialog.value = false;
+    selectedProductForEdit.value = null;
+
+    // Refresh products list to show the changes
+    await refreshData();
+  };
+
+  // Table request handler for sorting and pagination
+  const onTableRequest = (props: any) => {
+    // Use the composable's handler and then update rowsNumber
+    tableRequestHandler(props);
+    pagination.value.rowsNumber = filteredProducts.value.length;
+  };
+
+  // Lifecycle
+  onMounted(async () => {
+    const practiceId = authStore.clinicId;
+
+    if (practiceId) {
+      // Clear any existing filters first
+      productsStore.clearFilters();
+
+      await productsStore.fetchProducts(practiceId);
+
+      // If no products loaded on first try, wait and retry once
+      if (products.value.length === 0) {
+        // Retrying product loading...
+        await new Promise(resolve => setTimeout(resolve, 1000));
+        await productsStore.fetchProducts(practiceId);
+      }
+    }
+
+    // Initialize filter values with defaults
+    if (productsFilterPreset.defaultFilters) {
+      filterValues.value = {
+        ...productsFilterPreset.defaultFilters,
+      } as FilterValues;
+    }
+
+    // Check user permissions
+    try {
+      canCreate.value = await permissions.canCreateProducts();
+      canEdit.value = await permissions.canEditProducts();
+      canDelete.value = await permissions.canDeleteProducts();
+    } catch (error) {
+      console.error('Error checking permissions:', error);
+      // Default to no permissions on error
+      canCreate.value = false;
+      canEdit.value = false;
+      canDelete.value = false;
+    }
+  });
 </script>
 
 <style lang="scss" scoped>
-.products-page {
+  .products-page {
+    .filters-section {
+      margin-bottom: 1.5rem;
 
-  .filters-section {
-    margin-bottom: 1.5rem;
-
-    .products-filter-panel {
-      background: var(--q-card-background);
-      border-radius: 8px;
+      .products-filter-panel {
+        background: var(--q-card-background);
+        border-radius: 8px;
+      }
     }
-  }
 
-  .products-table-container {
-    // Minimal product-specific styling - main table styling handled by global medical-table class
-    .product-info {
-      .product-name {
-        font-weight: var(--font-weight-medium);
-        color: var(--text-primary);
+    .products-table-container {
+      // Minimal product-specific styling - main table styling handled by global medical-table class
+      .product-info {
+        .product-name {
+          font-weight: var(--font-weight-medium);
+          color: var(--text-primary);
+        }
+
+        .product-brand {
+          font-size: var(--text-sm);
+          color: var(--text-secondary);
+          margin-top: var(--space-1);
+        }
       }
 
-      .product-brand {
+      .sku-code {
+        font-family: var(--font-family-mono);
+        background: var(--neutral-100);
+        padding: var(--space-1) var(--space-2);
+        border-radius: var(--radius-sm);
         font-size: var(--text-sm);
         color: var(--text-secondary);
-        margin-top: var(--space-1);
       }
-    }
 
-    .sku-code {
-      font-family: var(--font-family-mono);
-      background: var(--neutral-100);
-      padding: var(--space-1) var(--space-2);
-      border-radius: var(--radius-sm);
-      font-size: var(--text-sm);
-      color: var(--text-secondary);
-    }
+      .price-value {
+        font-weight: var(--font-weight-semibold);
+        color: var(--brand-primary);
+      }
 
-    .price-value {
-      font-weight: var(--font-weight-semibold);
-      color: var(--brand-primary);
-    }
+      .action-buttons {
+        display: flex;
+        gap: var(--space-1);
+        justify-content: center;
 
-    .action-buttons {
-      display: flex;
-      gap: var(--space-1);
-      justify-content: center;
-      
-      .q-btn {
-        min-width: 32px;
-        min-height: 32px;
+        .q-btn {
+          min-width: 32px;
+          min-height: 32px;
+        }
       }
     }
   }
-}
 
-// Mobile responsiveness
-@media (max-width: 768px) {
-  .products-page {
-    .products-table-container {
-      overflow-x: auto;
+  // Mobile responsiveness
+  @media (max-width: 768px) {
+    .products-page {
+      .products-table-container {
+        overflow-x: auto;
+      }
     }
   }
-}
 </style>

@@ -28,7 +28,9 @@ export const useAuthStore = defineStore('auth', () => {
   });
 
   const selectedPractice = computed(() => {
-    if (!userProfile.value?.clinic_id) { return null; }
+    if (!userProfile.value?.clinic_id) {
+      return null;
+    }
     return {
       id: userProfile.value.clinic_id,
       name: userProfile.value.full_name || 'Practice',
@@ -59,7 +61,9 @@ export const useAuthStore = defineStore('auth', () => {
 
   // Actions
   const initialize = async () => {
-    if (initialized.value) { return; }
+    if (initialized.value) {
+      return;
+    }
 
     loading.value = true;
     try {
@@ -69,23 +73,26 @@ export const useAuthStore = defineStore('auth', () => {
       const wasOldDataCleared = checkAndClearOldDemoData();
 
       // First check localStorage for persisted session
-          const savedSession = localStorage.getItem('remcura_auth_session');
-    const savedUser = localStorage.getItem('remcura_auth_user');
-    const savedProfile = localStorage.getItem('remcura_auth_profile');
+      const savedSession = localStorage.getItem('remcura_auth_session');
+      const savedUser = localStorage.getItem('remcura_auth_user');
+      const savedProfile = localStorage.getItem('remcura_auth_profile');
 
       if (savedSession && savedUser && !wasOldDataCleared) {
         try {
           const parsedSession = JSON.parse(savedSession);
-          
+
           // CRITICAL: Set the session in Supabase client first
           // This ensures RLS policies work correctly
           const { error: sessionError } = await supabase.auth.setSession({
             access_token: parsedSession.access_token,
-            refresh_token: parsedSession.refresh_token
+            refresh_token: parsedSession.refresh_token,
           });
-          
+
           if (sessionError) {
-            authLogger.warn('Failed to restore session in Supabase client:', sessionError);
+            authLogger.warn(
+              'Failed to restore session in Supabase client:',
+              sessionError
+            );
             clearAuthData();
           } else {
             // Only set local state if Supabase session was successful
@@ -94,19 +101,21 @@ export const useAuthStore = defineStore('auth', () => {
             if (savedProfile) {
               userProfile.value = JSON.parse(savedProfile);
             }
-            authLogger.info('Restored session from localStorage and updated Supabase client');
+            authLogger.info(
+              'Restored session from localStorage and updated Supabase client'
+            );
 
             // CRITICAL: Fetch profile AFTER setting Supabase session
             if (user.value) {
               await fetchUserProfile(user.value.id);
-              
+
               // Set user context for monitoring
               monitoringService.setUserContext({
                 id: user.value.id,
                 ...(user.value.email && { email: user.value.email }),
               });
             }
-            
+
             // Emit login event after everything is properly configured
             await eventEmitter.emit(StoreEvents.USER_LOGGED_IN, {
               user: user.value,
@@ -163,11 +172,15 @@ export const useAuthStore = defineStore('auth', () => {
         userAgent: navigator.userAgent,
         timestamp: new Date().toISOString(),
       });
-              ServiceErrorHandler.handle(error as Error, {
+      ServiceErrorHandler.handle(
+        error as Error,
+        {
           service: 'AuthStore',
           operation: 'initialize',
-          metadata: { context: 'Auth Initialization' }
-        }, { rethrow: false, logLevel: 'error' });
+          metadata: { context: 'Auth Initialization' },
+        },
+        { rethrow: false, logLevel: 'error' }
+      );
     } finally {
       loading.value = false;
     }
@@ -177,11 +190,6 @@ export const useAuthStore = defineStore('auth', () => {
     loading.value = true;
     try {
       authLogger.info('Starting login process', { email });
-
-      // Demo mode - use real Supabase auth for demo account but log it specially
-      if (email === 'demo@remcura.com' && password === 'demo123') {
-        authLogger.info('Demo login detected - using real Supabase auth for RLS compatibility');
-      }
 
       const { data, error } = await supabase.auth.signInWithPassword({
         email,
@@ -206,15 +214,148 @@ export const useAuthStore = defineStore('auth', () => {
 
       return { success: true };
     } catch (error: unknown) {
-      const result = await ErrorHandler.handleError(error, {
-        service: 'auth',
-        operation: 'login',
-        userId: email, // Using email as identifier for failed login
-        metadata: { email }
-      }, {
-        showToUser: false, // Let the UI handle showing login errors
-        logLevel: 'error'
+      const result = await ServiceErrorHandler.handle(
+        error as Error,
+        {
+          service: 'auth',
+          operation: 'login',
+          metadata: { email },
+        },
+        {
+          showToUser: false, // Let the UI handle showing login errors
+          logLevel: 'error',
+        }
+      );
+
+      return {
+        success: false,
+        error: result.userMessage,
+      };
+    } finally {
+      loading.value = false;
+    }
+  };
+
+  const loginAsDemo = async () => {
+    loading.value = true;
+    try {
+      authLogger.info('Starting demo login process');
+
+      const { data, error } = await supabase.auth.signInWithPassword({
+        email: 'demo@remcura.com',
+        password: 'demo123',
       });
+
+      if (error) {
+        authLogger.warn('Demo login failed', { error: error.message });
+        monitoringService.trackEvent('demo_login_failed', {
+          error: error.message,
+          method: 'supabase',
+        });
+        throw error;
+      }
+
+      if (data.session) {
+        authLogger.info('Demo login successful', {
+          userId: data.session.user.id,
+        });
+        await setAuthData(data.session);
+        monitoringService.trackEvent('demo_login_success', {
+          method: 'supabase',
+        });
+      }
+
+      return { success: true };
+    } catch (error: unknown) {
+      const result = await ServiceErrorHandler.handle(
+        error as Error,
+        {
+          service: 'auth',
+          operation: 'loginAsDemo',
+          metadata: {},
+        },
+        {
+          showToUser: false,
+          logLevel: 'error',
+        }
+      );
+
+      return {
+        success: false,
+        error: result.userMessage,
+      };
+    } finally {
+      loading.value = false;
+    }
+  };
+
+  const loginAsOwner = async () => {
+    loading.value = true;
+    try {
+      authLogger.info('Starting platform owner login process');
+
+      // For development, use the demo account but override the role to platform_owner
+      const { data, error } = await supabase.auth.signInWithPassword({
+        email: 'demo@remcura.com',
+        password: 'demo123',
+      });
+
+      if (error) {
+        authLogger.warn('Platform owner login failed', {
+          error: error.message,
+        });
+        monitoringService.trackEvent('platform_owner_login_failed', {
+          error: error.message,
+          method: 'supabase',
+        });
+        throw error;
+      }
+
+      if (data.session) {
+        authLogger.info('Platform owner login successful', {
+          userId: data.session.user.id,
+        });
+
+        // Set auth data first
+        await setAuthData(data.session);
+
+        // Override the user profile to be platform_owner
+        userProfile.value = {
+          id: data.session.user.id,
+          clinic_id: null, // Platform owners don't belong to a specific practice
+          email: data.session.user.email || 'demo@remcura.com',
+          full_name: 'Platform Owner',
+          role: 'platform_owner',
+          avatar_url: null,
+          created_at: new Date().toISOString(),
+          updated_at: new Date().toISOString(),
+        };
+
+        // Save the platform owner profile
+        localStorage.setItem(
+          'remcura_auth_profile',
+          JSON.stringify(userProfile.value)
+        );
+
+        monitoringService.trackEvent('platform_owner_login_success', {
+          method: 'supabase',
+        });
+      }
+
+      return { success: true };
+    } catch (error: unknown) {
+      const result = await ServiceErrorHandler.handle(
+        error as Error,
+        {
+          service: 'auth',
+          operation: 'loginAsOwner',
+          metadata: {},
+        },
+        {
+          showToUser: false,
+          logLevel: 'error',
+        }
+      );
 
       return {
         success: false,
@@ -240,15 +381,19 @@ export const useAuthStore = defineStore('auth', () => {
       monitoringService.trackEvent('logout_success');
       return { success: true };
     } catch (error: unknown) {
-      const result = await ErrorHandler.handleError(error, {
-        service: 'auth',
-        operation: 'logout',
-        userId: user.value?.id,
-        metadata: {}
-      }, {
-        showToUser: false, // Let the UI handle logout errors
-        logLevel: 'warn' // Logout errors are less critical
-      });
+      const result = await ErrorHandler.handleError(
+        error,
+        {
+          service: 'auth',
+          operation: 'logout',
+          userId: user.value?.id,
+          metadata: {},
+        },
+        {
+          showToUser: false, // Let the UI handle logout errors
+          logLevel: 'warn', // Logout errors are less critical
+        }
+      );
 
       return {
         success: false,
@@ -270,8 +415,8 @@ export const useAuthStore = defineStore('auth', () => {
     });
 
     // Persist to localStorage for page reload persistence
-          localStorage.setItem('remcura_auth_session', JSON.stringify(newSession));
-      localStorage.setItem('remcura_auth_user', JSON.stringify(newSession.user));
+    localStorage.setItem('remcura_auth_session', JSON.stringify(newSession));
+    localStorage.setItem('remcura_auth_user', JSON.stringify(newSession.user));
 
     // Fetch user profile
     if (newSession.user) {
@@ -290,7 +435,7 @@ export const useAuthStore = defineStore('auth', () => {
 
   const clearAuthData = () => {
     const wasAuthenticated = !!user.value;
-    
+
     user.value = null;
     session.value = null;
     userProfile.value = null;
@@ -364,25 +509,48 @@ export const useAuthStore = defineStore('auth', () => {
     };
 
     // Persist demo data to localStorage
-          localStorage.setItem('remcura_auth_session', JSON.stringify(mockSession));
-            localStorage.setItem('remcura_auth_user', JSON.stringify(mockUser));
-      localStorage.setItem(
-        'remcura_auth_profile',
+    localStorage.setItem('remcura_auth_session', JSON.stringify(mockSession));
+    localStorage.setItem('remcura_auth_user', JSON.stringify(mockUser));
+    localStorage.setItem(
+      'remcura_auth_profile',
       JSON.stringify(userProfile.value)
     );
   };
 
   const fetchUserProfile = async (userId: string) => {
     try {
-      // For demo user, use the hardcoded demo profile
+      // For demo user, use practice-based profile
       if (userId === '550e8400-e29b-41d4-a716-446655440001') {
         userProfile.value = {
           id: userId,
           clinic_id: '550e8400-e29b-41d4-a716-446655440000',
           email: 'demo@remcura.com',
           full_name: 'Demo User',
-          role: 'platform_owner',
+          role: 'owner', // Practice role, not platform
           avatar_url: null,
+          created_at: new Date().toISOString(),
+          updated_at: new Date().toISOString(),
+        };
+        localStorage.setItem(
+          'remcura_auth_profile',
+          JSON.stringify(userProfile.value)
+        );
+        return;
+      }
+
+      // Check if this is a platform owner (based on email or user metadata)
+      const currentUser = user.value;
+      if (
+        currentUser?.email === 'owner@remcura.com' ||
+        currentUser?.user_metadata?.role === 'platform_owner'
+      ) {
+        userProfile.value = {
+          id: userId,
+          clinic_id: null, // Platform owners don't belong to a specific practice
+          email: currentUser.email || 'owner@remcura.com',
+          full_name: currentUser.user_metadata?.full_name || 'Platform Owner',
+          role: 'platform_owner',
+          avatar_url: currentUser.user_metadata?.avatar_url || null,
           created_at: new Date().toISOString(),
           updated_at: new Date().toISOString(),
         };
@@ -447,12 +615,16 @@ export const useAuthStore = defineStore('auth', () => {
       );
     } catch (error) {
       authLogger.error('Error fetching user profile', error as Error);
-              ServiceErrorHandler.handle(error as Error, {
+      ServiceErrorHandler.handle(
+        error as Error,
+        {
           service: 'AuthStore',
           operation: 'fetchUserProfile',
           userId: this.user?.id,
-          metadata: { context: 'Fetch User Profile' }
-        }, { rethrow: false, logLevel: 'error' });
+          metadata: { context: 'Fetch User Profile' },
+        },
+        { rethrow: false, logLevel: 'error' }
+      );
     }
   };
 
@@ -473,6 +645,8 @@ export const useAuthStore = defineStore('auth', () => {
     // Actions
     initialize,
     login,
+    loginAsDemo,
+    loginAsOwner,
     logout,
     fetchUserProfile,
   };

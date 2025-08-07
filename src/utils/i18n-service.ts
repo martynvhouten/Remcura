@@ -2,7 +2,7 @@ import { i18n } from 'src/i18n';
 
 /**
  * Translation utility for services that don't have access to useI18n composable
- * 
+ *
  * This allows services to use internationalization by directly accessing
  * the global i18n instance.
  */
@@ -54,5 +54,5 @@ export const hasTranslation = (key: string): boolean => {
 export default {
   t,
   getCurrentLocale,
-  hasTranslation
+  hasTranslation,
 };

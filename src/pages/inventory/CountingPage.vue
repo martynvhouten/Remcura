@@ -4,7 +4,7 @@
       <PageTitle
         :title="$t('counting.title')"
         :subtitle="$t('counting.overview')"
-          icon="checklist"
+        icon="checklist"
       >
         <template #actions>
           <q-btn
@@ -18,7 +18,7 @@
           >
             <q-tooltip>{{ $t('common.refresh') }}</q-tooltip>
           </q-btn>
-          
+
           <q-select
             v-model="selectedStatus"
             :options="statusOptions"
@@ -135,18 +135,18 @@
 
       <!-- Sessions Table -->
       <div v-else class="medical-table">
-          <q-table
-            :rows="sortedSessions"
-            :columns="enhancedColumns"
-            row-key="id"
-            :pagination="pagination"
-            :no-data-label="$t('counting.noSessionsFound')"
-            class="sessions-table"
-            flat
-            bordered
-            separator="cell"
-            @request="onTableRequest"
-          >
+        <q-table
+          :rows="sortedSessions"
+          :columns="enhancedColumns"
+          row-key="id"
+          :pagination="pagination"
+          :no-data-label="$t('counting.noSessionsFound')"
+          class="sessions-table"
+          flat
+          bordered
+          separator="cell"
+          @request="onTableRequest"
+        >
           <!-- Session Name Column -->
           <template v-slot:body-cell-name="props">
             <q-td :props="props">
@@ -212,7 +212,7 @@
                   v-if="props.row.status === 'active'"
                   flat
                   round
-          icon="play_arrow"
+                  icon="play_arrow"
                   size="sm"
                   color="primary"
                   @click="continueSession(props.row)"
@@ -221,7 +221,7 @@
                 <q-btn
                   flat
                   round
-          icon="visibility"
+                  icon="visibility"
                   size="sm"
                   color="info"
                   @click="viewSession(props.row)"
@@ -231,7 +231,7 @@
                   v-if="props.row.status === 'active'"
                   flat
                   round
-          icon="check"
+                  icon="check"
                   size="sm"
                   color="positive"
                   @click="completeSession(props.row)"
@@ -254,7 +254,13 @@
 </template>
 
 <script setup lang="ts">
-  import { ref, computed, onMounted, onBeforeUnmount, defineAsyncComponent } from 'vue';
+  import {
+    ref,
+    computed,
+    onMounted,
+    onBeforeUnmount,
+    defineAsyncComponent,
+  } from 'vue';
   import { useI18n } from 'vue-i18n';
   import { useQuasar } from 'quasar';
   import { useRouter } from 'vue-router';
@@ -284,7 +290,7 @@
   const { pagination, onTableRequest, sortData } = useTableSorting({
     sortBy: 'started_at',
     descending: true,
-    rowsPerPage: 25
+    rowsPerPage: 25,
   });
 
   // Reactive state
@@ -326,7 +332,11 @@
 
   // Apply sorting to filtered sessions
   const sortedSessions = computed(() => {
-    return sortData(filteredSessions.value, pagination.value.sortBy, pagination.value.descending);
+    return sortData(
+      filteredSessions.value,
+      pagination.value.sortBy,
+      pagination.value.descending
+    );
   });
 
   const enhancedColumns = computed(() => [

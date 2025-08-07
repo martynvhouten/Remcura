@@ -38,14 +38,16 @@
             {{ $t('error.pageNotFound') }}
           </h1>
           <p class="error-description">
-            {{
-              $t('error.pageNotFoundDescription')
-            }}
+            {{ $t('error.pageNotFoundDescription') }}
           </p>
         </div>
 
         <!-- Action Buttons -->
-        <div class="error-actions" role="group" :aria-label="$t('common.accessibility.navigationActions')">
+        <div
+          class="error-actions"
+          role="group"
+          :aria-label="$t('common.accessibility.navigationActions')"
+        >
           <q-btn
             color="primary"
             icon="home"
@@ -64,9 +66,7 @@
             class="btn-modern"
             outline
             no-caps
-            :aria-label="
-              $t('error.goBack') + ' - Ga naar de vorige pagina'
-            "
+            :aria-label="$t('error.goBack') + ' - Ga naar de vorige pagina'"
           />
         </div>
 

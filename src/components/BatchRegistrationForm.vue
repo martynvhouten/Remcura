@@ -259,7 +259,7 @@
     batch_number: '',
     supplier_batch_number: '',
     expiry_date: '',
-          received_date: new Date().toISOString().substring(0, 10),
+    received_date: new Date().toISOString().substring(0, 10),
     initial_quantity: 0,
     unit_cost: 0,
     currency: 'EUR',
@@ -303,7 +303,7 @@
     });
   };
 
-    const resetForm = () => {
+  const resetForm = () => {
     form.value = {
       practice_id: 'demo-practice',
       product_id: (props.prefilledProductId ?? '') as string,
@@ -333,14 +333,28 @@
         batch_number: form.value.batch_number,
         expiry_date: form.value.expiry_date,
         initial_quantity: form.value.initial_quantity,
-        ...(form.value.supplier_batch_number && { supplier_batch_number: form.value.supplier_batch_number }),
-        ...(form.value.received_date && { received_date: form.value.received_date }),
-        ...(form.value.unit_cost !== undefined && { unit_cost: form.value.unit_cost }),
+        ...(form.value.supplier_batch_number && {
+          supplier_batch_number: form.value.supplier_batch_number,
+        }),
+        ...(form.value.received_date && {
+          received_date: form.value.received_date,
+        }),
+        ...(form.value.unit_cost !== undefined && {
+          unit_cost: form.value.unit_cost,
+        }),
         ...(form.value.currency && { currency: form.value.currency }),
-        ...(form.value.purchase_order_number && { purchase_order_number: form.value.purchase_order_number }),
-        ...(form.value.invoice_number && { invoice_number: form.value.invoice_number }),
-        ...(form.value.quality_check_passed !== undefined && { quality_check_passed: form.value.quality_check_passed }),
-        ...(form.value.quality_notes && { quality_notes: form.value.quality_notes }),
+        ...(form.value.purchase_order_number && {
+          purchase_order_number: form.value.purchase_order_number,
+        }),
+        ...(form.value.invoice_number && {
+          invoice_number: form.value.invoice_number,
+        }),
+        ...(form.value.quality_check_passed !== undefined && {
+          quality_check_passed: form.value.quality_check_passed,
+        }),
+        ...(form.value.quality_notes && {
+          quality_notes: form.value.quality_notes,
+        }),
       };
 
       const newBatch = await batchStore.createBatch(batchData);

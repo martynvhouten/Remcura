@@ -7,7 +7,11 @@ import { useOrderListsSupplierSplitting } from './orderLists-supplier-splitting'
 import { useOrderListsRealtime } from './orderLists-realtime';
 
 // Re-export types and interfaces
-export type { OrderListWithItems, CreateOrderListRequest, UpdateOrderListRequest } from './orderLists-core';
+export type {
+  OrderListWithItems,
+  CreateOrderListRequest,
+  UpdateOrderListRequest,
+} from './orderLists-core';
 export type { AddOrderListItemRequest } from './orderLists-items';
 
 export const useOrderListsStore = defineStore('orderLists', () => {
@@ -15,7 +19,7 @@ export const useOrderListsStore = defineStore('orderLists', () => {
   const core = useOrderListsCore();
   const items = useOrderListsItems(core.orderLists);
   const integration = useOrderListsIntegration(core.orderLists);
-  
+
   // Initialize advanced modules
   const minmax = useOrderListsMinMax();
   const supplierSplitting = useOrderListsSupplierSplitting();

@@ -6,21 +6,21 @@
         unelevated
         @click="toggleFilters"
         class="filter-toggle-btn app-btn-filter"
-        :class="{ 'active': isFiltersVisible }"
+        :class="{ active: isFiltersVisible }"
         size="md"
         padding="12px 20px"
       >
         <template v-slot:default>
-          <q-icon 
-            :name="updatePending ? 'hourglass_empty' : 'tune'" 
+          <q-icon
+            :name="updatePending ? 'hourglass_empty' : 'tune'"
             :class="updatePending ? 'animate-spin' : ''"
-            size="16px" 
-            class="q-mr-xs" 
+            size="16px"
+            class="q-mr-xs"
           />
           {{ t('filters.filterPanel.filtersButton') }}
-          <q-chip 
-            v-if="activeFiltersCount > 0" 
-            :label="activeFiltersCount" 
+          <q-chip
+            v-if="activeFiltersCount > 0"
+            :label="activeFiltersCount"
             color="red"
             text-color="white"
             size="sm"
@@ -41,9 +41,14 @@
               <FilterField
                 :field="field"
                 :model-value="modelValue[field.id]"
-                @update:model-value="(value) => handleFieldChange(field.id, value)"
-                @change="(value, oldValue) => handleFieldChangeEvent(field, value, oldValue)"
-                @scan="(value) => handleScanEvent(field, value)"
+                @update:model-value="
+                  value => handleFieldChange(field.id, value)
+                "
+                @change="
+                  (value, oldValue) =>
+                    handleFieldChangeEvent(field, value, oldValue)
+                "
+                @scan="value => handleScanEvent(field, value)"
                 :loading="loading"
                 :disabled="disabled"
                 :readonly="readonly"
@@ -57,9 +62,14 @@
               <FilterField
                 :field="field"
                 :model-value="modelValue[field.id]"
-                @update:model-value="(value) => handleFieldChange(field.id, value)"
-                @change="(value, oldValue) => handleFieldChangeEvent(field, value, oldValue)"
-                @scan="(value) => handleScanEvent(field, value)"
+                @update:model-value="
+                  value => handleFieldChange(field.id, value)
+                "
+                @change="
+                  (value, oldValue) =>
+                    handleFieldChangeEvent(field, value, oldValue)
+                "
+                @scan="value => handleScanEvent(field, value)"
                 :loading="loading"
                 :disabled="disabled"
                 :readonly="readonly"
@@ -95,393 +105,408 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref, reactive, watch, onMounted } from 'vue'
-import { useI18n } from 'vue-i18n'
-import FilterField from './FilterField.vue'
-import { useDebounce } from '@/composables/useDebounce'
-import type { 
-  FilterPreset, 
-  FilterValues, 
-  FilterField as FilterFieldType,
-  FilterChangeEvent,
-  FilterResetEvent 
-} from '@/types/filters'
+  import { computed, ref, reactive, watch, onMounted } from 'vue';
+  import { useI18n } from 'vue-i18n';
+  import FilterField from './FilterField.vue';
+  import { useDebounce } from '@/composables/useDebounce';
+  import type {
+    FilterPreset,
+    FilterValues,
+    FilterField as FilterFieldType,
+    FilterChangeEvent,
+    FilterResetEvent,
+  } from '@/types/filters';
 
-interface Props {
-  preset: FilterPreset
-  modelValue: FilterValues
-  loading?: boolean
-  disabled?: boolean
-  readonly?: boolean
-  showHeader?: boolean
-  showFooter?: boolean
-  collapsible?: boolean
-  initiallyCollapsed?: boolean
-}
+  interface Props {
+    preset: FilterPreset;
+    modelValue: FilterValues;
+    loading?: boolean;
+    disabled?: boolean;
+    readonly?: boolean;
+    showHeader?: boolean;
+    showFooter?: boolean;
+    collapsible?: boolean;
+    initiallyCollapsed?: boolean;
+  }
 
-interface Emits {
-  (e: 'update:modelValue', values: FilterValues): void
-  (e: 'change', event: FilterChangeEvent): void
-  (e: 'reset', event: FilterResetEvent): void
-  (e: 'clear'): void
-  (e: 'apply', values: FilterValues): void
-}
+  interface Emits {
+    (e: 'update:modelValue', values: FilterValues): void;
+    (e: 'change', event: FilterChangeEvent): void;
+    (e: 'reset', event: FilterResetEvent): void;
+    (e: 'clear'): void;
+    (e: 'apply', values: FilterValues): void;
+  }
 
-const props = withDefaults(defineProps<Props>(), {
-  loading: false,
-  disabled: false,
-  readonly: false,
-  showHeader: true,
-  showFooter: true,
-  collapsible: true,
-  initiallyCollapsed: true, // Default to collapsed (hidden)
-})
+  const props = withDefaults(defineProps<Props>(), {
+    loading: false,
+    disabled: false,
+    readonly: false,
+    showHeader: true,
+    showFooter: true,
+    collapsible: true,
+    initiallyCollapsed: true, // Default to collapsed (hidden)
+  });
 
-const emit = defineEmits<Emits>()
+  const emit = defineEmits<Emits>();
 
-// Composables
-const { t } = useI18n()
+  // Composables
+  const { t } = useI18n();
 
-// State
-const isFiltersVisible = ref(!props.initiallyCollapsed)
+  // State
+  const isFiltersVisible = ref(!props.initiallyCollapsed);
 
-// Computed - separated regular and boolean fields
-const allFields = computed(() => {
-  return [...props.preset.fields].sort((a, b) => (a.priority || 999) - (b.priority || 999))
-})
+  // Computed - separated regular and boolean fields
+  const allFields = computed(() => {
+    return [...props.preset.fields].sort(
+      (a, b) => (a.priority || 999) - (b.priority || 999)
+    );
+  });
 
-const regularFields = computed(() => {
-  return allFields.value.filter(field => field.type !== 'boolean')
-})
+  const regularFields = computed(() => {
+    return allFields.value.filter(field => field.type !== 'boolean');
+  });
 
-const booleanFields = computed(() => {
-  return allFields.value.filter(field => field.type === 'boolean')
-})
+  const booleanFields = computed(() => {
+    return allFields.value.filter(field => field.type === 'boolean');
+  });
 
-const activeFiltersCount = computed(() => {
-  return Object.values(props.modelValue).filter(value => {
-    if (value === null || value === undefined || value === '') { return false; }
-    if (Array.isArray(value) && value.length === 0) return false
-    if (typeof value === 'object' && Object.keys(value).length === 0) return false
-    // Exclude boolean false values as they are not "active" filters
-    if (typeof value === 'boolean' && value === false) return false
-    return true
-  }).length
-})
+  const activeFiltersCount = computed(() => {
+    return Object.values(props.modelValue).filter(value => {
+      if (value === null || value === undefined || value === '') {
+        return false;
+      }
+      if (Array.isArray(value) && value.length === 0) return false;
+      if (typeof value === 'object' && Object.keys(value).length === 0)
+        return false;
+      // Exclude boolean false values as they are not "active" filters
+      if (typeof value === 'boolean' && value === false) return false;
+      return true;
+    }).length;
+  });
 
-// Methods - New Magento-style 12-column grid system
-const getMagentoFieldClass = (field: FilterFieldType) => {
-  const baseClasses = ['filter-field-magento']
-  
-  // Compact multi-column grid sizing (3-4 fields per row)
-  if (field.size) {
-    switch(field.size) {
-      case 'xs':
-        baseClasses.push('col-span-3') // 4 fields per row (3/12)
-        break
-      case 'sm':
-        baseClasses.push('col-span-3') // 4 fields per row (3/12)
-        break
-      case 'md':
-        baseClasses.push('col-span-4') // 3 fields per row (4/12)
-        break
-      case 'lg':
-        baseClasses.push('col-span-6') // 2 fields per row (6/12)
-        break
-      default:
-        baseClasses.push('col-span-3') // Default: 4 per row
-    }
-  } else {
-    // Auto-sizing based on field type for compact layout
-    if (field.type === 'number_range' || field.type === 'date_range') {
-      baseClasses.push('col-span-6') // Ranges take half width (2 per row)
-    } else if (field.type === 'text' && field.id === 'search') {
-      baseClasses.push('col-span-6') // Search takes half width
-    } else if (field.type === 'boolean') {
-      baseClasses.push('col-span-4') // Checkboxes: 3 per row
+  // Methods - New Magento-style 12-column grid system
+  const getMagentoFieldClass = (field: FilterFieldType) => {
+    const baseClasses = ['filter-field-magento'];
+
+    // Compact multi-column grid sizing (3-4 fields per row)
+    if (field.size) {
+      switch (field.size) {
+        case 'xs':
+          baseClasses.push('col-span-3'); // 4 fields per row (3/12)
+          break;
+        case 'sm':
+          baseClasses.push('col-span-3'); // 4 fields per row (3/12)
+          break;
+        case 'md':
+          baseClasses.push('col-span-4'); // 3 fields per row (4/12)
+          break;
+        case 'lg':
+          baseClasses.push('col-span-6'); // 2 fields per row (6/12)
+          break;
+        default:
+          baseClasses.push('col-span-3'); // Default: 4 per row
+      }
     } else {
-      baseClasses.push('col-span-3') // Default: 4 per row
+      // Auto-sizing based on field type for compact layout
+      if (field.type === 'number_range' || field.type === 'date_range') {
+        baseClasses.push('col-span-6'); // Ranges take half width (2 per row)
+      } else if (field.type === 'text' && field.id === 'search') {
+        baseClasses.push('col-span-6'); // Search takes half width
+      } else if (field.type === 'boolean') {
+        baseClasses.push('col-span-4'); // Checkboxes: 3 per row
+      } else {
+        baseClasses.push('col-span-3'); // Default: 4 per row
+      }
     }
-  }
-  
-  return baseClasses.join(' ')
-}
 
-// Debounced filter updates for better performance
-const { debouncedFn: debouncedEmitUpdate, pending: updatePending } = useDebounce(
-  (newValues: FilterValues) => {
-    emit('update:modelValue', newValues)
-  },
-  300 // 300ms debounce delay
-)
+    return baseClasses.join(' ');
+  };
 
-const handleFieldChange = (fieldId: string, value: any) => {
-  const newValues = { ...props.modelValue, [fieldId]: value }
-  
-  // Clean up null/undefined values
-  if (value === null || value === undefined || value === '') {
-    delete newValues[fieldId]
-  }
-  
-  // Use debounced update for text/search fields to improve performance
-  const field = allFields.value.find(f => f.id === fieldId)
-  const shouldDebounce = field?.type === 'text' || (typeof field?.debounce === 'boolean' && field.debounce === true)
-  
-  if (shouldDebounce) {
-    debouncedEmitUpdate(newValues)
-  } else {
-    // Immediate update for selects, toggles, etc.
-    emit('update:modelValue', newValues)
-  }
-}
+  // Debounced filter updates for better performance
+  const { debouncedFn: debouncedEmitUpdate, pending: updatePending } =
+    useDebounce(
+      (newValues: FilterValues) => {
+        emit('update:modelValue', newValues);
+      },
+      300 // 300ms debounce delay
+    );
 
-const handleFieldChangeEvent = (field: FilterFieldType, value: any, oldValue?: any) => {
-  const changeEvent: FilterChangeEvent = {
-    field: field.id,
-    value,
-    oldValue,
-    preset: props.preset.id
-  }
-  
-  emit('change', changeEvent)
-}
+  const handleFieldChange = (fieldId: string, value: any) => {
+    const newValues = { ...props.modelValue, [fieldId]: value };
 
-const handleScanEvent = (field: FilterFieldType, scannedValue: string) => {
-  // Handle barcode scanning for fields that support it
-  if (field.scannerButton) {
-    handleFieldChange(field.id, scannedValue)
-  }
-}
+    // Clean up null/undefined values
+    if (value === null || value === undefined || value === '') {
+      delete newValues[fieldId];
+    }
 
-const handleClearAll = () => {
-  emit('update:modelValue', {})
-  emit('clear')
-}
+    // Use debounced update for text/search fields to improve performance
+    const field = allFields.value.find(f => f.id === fieldId);
+    const shouldDebounce =
+      field?.type === 'text' ||
+      (typeof field?.debounce === 'boolean' && field.debounce === true);
 
-const handleApplyFilters = () => {
-  // Emit apply event for parent to handle
-  emit('apply', props.modelValue)
-}
+    if (shouldDebounce) {
+      debouncedEmitUpdate(newValues);
+    } else {
+      // Immediate update for selects, toggles, etc.
+      emit('update:modelValue', newValues);
+    }
+  };
 
-const toggleFilters = () => {
-  isFiltersVisible.value = !isFiltersVisible.value
-}
+  const handleFieldChangeEvent = (
+    field: FilterFieldType,
+    value: any,
+    oldValue?: any
+  ) => {
+    const changeEvent: FilterChangeEvent = {
+      field: field.id,
+      value,
+      oldValue,
+      preset: props.preset.id,
+    };
 
-// Apply default filters on mount
-onMounted(() => {
-  if (props.preset.defaultFilters && Object.keys(props.modelValue).length === 0) {
-    emit('update:modelValue', { ...props.preset.defaultFilters })
-  }
-})
+    emit('change', changeEvent);
+  };
+
+  const handleScanEvent = (field: FilterFieldType, scannedValue: string) => {
+    // Handle barcode scanning for fields that support it
+    if (field.scannerButton) {
+      handleFieldChange(field.id, scannedValue);
+    }
+  };
+
+  const handleClearAll = () => {
+    emit('update:modelValue', {});
+    emit('clear');
+  };
+
+  const handleApplyFilters = () => {
+    // Emit apply event for parent to handle
+    emit('apply', props.modelValue);
+  };
+
+  const toggleFilters = () => {
+    isFiltersVisible.value = !isFiltersVisible.value;
+  };
+
+  // Apply default filters on mount
+  onMounted(() => {
+    if (
+      props.preset.defaultFilters &&
+      Object.keys(props.modelValue).length === 0
+    ) {
+      emit('update:modelValue', { ...props.preset.defaultFilters });
+    }
+  });
 </script>
 
 <style lang="scss" scoped>
-// ===================================================================
-// MAGENTO-STYLE FILTER PANEL - CLEAN & CONSISTENT  
-// ===================================================================
+  // ===================================================================
+  // MAGENTO-STYLE FILTER PANEL - CLEAN & CONSISTENT
+  // ===================================================================
 
-.filter-panel-container {
-  width: 100%;
-  background: transparent;
-  position: relative;
-}
-
-// Header with toggle button - top right position
-.filter-panel-header {
-  display: flex;
-  justify-content: flex-end;
-  align-items: center;
-  margin-bottom: 16px;
-  
-  // Filter toggle button styling is now handled by app-btn-filter class in app.scss
-}
-
-// Premium smooth filter slide transition - Optimized for performance
-.filter-slide-enter-active {
-  transition: all 0.35s cubic-bezier(0.25, 0.8, 0.25, 1);
-  will-change: transform, opacity;
-}
-
-.filter-slide-leave-active {
-  transition: all 0.25s cubic-bezier(0.4, 0, 0.6, 1);
-  will-change: transform, opacity;
-}
-
-.filter-slide-enter-from {
-  opacity: 0;
-  transform: translateY(-15px) scale(0.95);
-}
-
-.filter-slide-leave-to {
-  opacity: 0;
-  transform: translateY(-10px) scale(0.98);
-}
-
-.filter-slide-enter-to,
-.filter-slide-leave-from {
-  opacity: 1;
-  transform: translateY(0) scale(1);
-}
-
-// Modern filter content panel
-.filter-content {
-  background: #ffffff;
-  border: 1px solid #e1e5e9;
-  border-radius: 8px; // More rounded for modern look
-  padding: 24px; // Slightly more padding
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08); // Subtle modern shadow
-  overflow: hidden; // Prevent content overflow during animation
-  
-  // Performance optimizations for smooth animation
-  backface-visibility: hidden;
-  transform: translateZ(0); // Force GPU acceleration
-  contain: layout style paint; // Optimize rendering
-}
-
-// Well-balanced grid with proper proportions
-.filter-grid-12col {
-  display: grid;
-  grid-template-columns: repeat(12, 1fr);
-  gap: 12px 8px; // Balanced gaps for good visual spacing
-  margin-bottom: 16px; // Proper margin
-  
-  // Desktop: 3-4 fields per row
-  @media (min-width: 1200px) {
-    grid-template-columns: repeat(12, 1fr); // 4 fields x 3 cols = 12
+  .filter-panel-container {
+    width: 100%;
+    background: transparent;
+    position: relative;
   }
-  
-  // Large tablet: 3 fields per row  
-  @media (min-width: 1025px) and (max-width: 1199px) {
-    grid-template-columns: repeat(9, 1fr); // 3 fields x 3 cols = 9
-  }
-  
-  // Tablet: 2 fields per row
-  @media (min-width: 769px) and (max-width: 1024px) {
-    grid-template-columns: repeat(6, 1fr); // 2 fields x 3 cols = 6
-  }
-  
-  // Mobile: 1 field per row
-  @media (max-width: 768px) {
-    grid-template-columns: 1fr;
-    gap: 10px; // Proper mobile spacing
-  }
-}
 
-// Well-proportioned field containers with perfect alignment
-.filter-field-magento {
-  display: flex;
-  flex-direction: column;
-  min-height: 68px; // Consistent with FilterField.vue updated height
-  margin: 0; // Reset any default margins
-  padding: 0; // Reset any default padding
-  
-  // Grid column span classes for compact layout
-  &.col-span-3 {
-    grid-column: span 3; // 4 fields per row (desktop)
-  }
-  
-  &.col-span-4 {
-    grid-column: span 4; // 3 fields per row (desktop)
-  }
-  
-  &.col-span-6 {
-    grid-column: span 6; // 2 fields per row (desktop)
-  }
-  
-  &.col-span-12 {
-    grid-column: span 12; // Full width
-  }
-  
-  // Responsive behavior for compact layout
-  @media (min-width: 1025px) and (max-width: 1199px) {
-    // Large tablet: adjust for 9-column grid (3 fields per row)
-    &.col-span-3 {
-      grid-column: span 3; // 3 fields per row
-    }
-    
-    &.col-span-4 {
-      grid-column: span 3; // 3 fields per row
-    }
-    
-    &.col-span-6 {
-      grid-column: span 4.5; // Approximate 2 fields per row
-    }
-  }
-  
-  @media (min-width: 769px) and (max-width: 1024px) {
-    // Tablet: adjust for 6-column grid (2 fields per row)
-    &.col-span-3,
-    &.col-span-4 {
-      grid-column: span 3; // 2 fields per row
-    }
-    
-    &.col-span-6 {
-      grid-column: span 6; // Full width on tablet
-    }
-  }
-  
-  @media (max-width: 768px) {
-    // Mobile: all fields full width
-    &.col-span-3,
-    &.col-span-4,
-    &.col-span-6,
-    &.col-span-12 {
-      grid-column: span 1; // Stack on mobile
-    }
-  }
-}
-
-// Action buttons section - larger and clearer
-.filter-actions {
-  display: flex;
-  justify-content: flex-end;
-  align-items: center;
-  gap: 16px; // Increased gap
-  padding-top: 20px; // Increased padding
-  border-top: 1px solid #e0e0e0;
-  margin-top: 20px; // Increased margin
-  
-  // Filter action button styling is now handled by app-btn-primary and app-btn-secondary classes
-  // Filter button styling moved to global button classes for consistency
-}
-
-// Mobile responsiveness
-@media (max-width: 768px) {
+  // Header with toggle button - top right position
   .filter-panel-header {
-    margin-bottom: 12px;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    margin-bottom: 16px;
+
+    // Filter toggle button styling is now handled by app-btn-filter class in app.scss
   }
-  
+
+  // Premium smooth filter slide transition - Optimized for performance
+  .filter-slide-enter-active {
+    transition: all 0.35s cubic-bezier(0.25, 0.8, 0.25, 1);
+    will-change: transform, opacity;
+  }
+
+  .filter-slide-leave-active {
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.6, 1);
+    will-change: transform, opacity;
+  }
+
+  .filter-slide-enter-from {
+    opacity: 0;
+    transform: translateY(-15px) scale(0.95);
+  }
+
+  .filter-slide-leave-to {
+    opacity: 0;
+    transform: translateY(-10px) scale(0.98);
+  }
+
+  .filter-slide-enter-to,
+  .filter-slide-leave-from {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+
+  // Modern filter content panel
   .filter-content {
-    padding: 16px;
+    background: #ffffff;
+    border: 1px solid #e1e5e9;
+    border-radius: 8px; // More rounded for modern look
+    padding: 24px; // Slightly more padding
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08); // Subtle modern shadow
+    overflow: hidden; // Prevent content overflow during animation
+
+    // Performance optimizations for smooth animation
+    backface-visibility: hidden;
+    transform: translateZ(0); // Force GPU acceleration
+    contain: layout style paint; // Optimize rendering
   }
-  
-  .filter-actions {
+
+  // Well-balanced grid with proper proportions
+  .filter-grid-12col {
+    display: grid;
+    grid-template-columns: repeat(12, 1fr);
+    gap: 12px 8px; // Balanced gaps for good visual spacing
+    margin-bottom: 16px; // Proper margin
+
+    // Desktop: 3-4 fields per row
+    @media (min-width: 1200px) {
+      grid-template-columns: repeat(12, 1fr); // 4 fields x 3 cols = 12
+    }
+
+    // Large tablet: 3 fields per row
+    @media (min-width: 1025px) and (max-width: 1199px) {
+      grid-template-columns: repeat(9, 1fr); // 3 fields x 3 cols = 9
+    }
+
+    // Tablet: 2 fields per row
+    @media (min-width: 769px) and (max-width: 1024px) {
+      grid-template-columns: repeat(6, 1fr); // 2 fields x 3 cols = 6
+    }
+
+    // Mobile: 1 field per row
+    @media (max-width: 768px) {
+      grid-template-columns: 1fr;
+      gap: 10px; // Proper mobile spacing
+    }
+  }
+
+  // Well-proportioned field containers with perfect alignment
+  .filter-field-magento {
+    display: flex;
     flex-direction: column;
-    gap: 12px; // Increased gap on mobile
-    padding-top: 16px;
-    
-    .filter-btn {
-      width: 100%;
-      justify-content: center;
-      min-height: 48px; // Larger touch target for mobile
-      
-      // Enhanced touch feedback
-      &:active {
-        transform: scale(0.98);
+    min-height: 68px; // Consistent with FilterField.vue updated height
+    margin: 0; // Reset any default margins
+    padding: 0; // Reset any default padding
+
+    // Grid column span classes for compact layout
+    &.col-span-3 {
+      grid-column: span 3; // 4 fields per row (desktop)
+    }
+
+    &.col-span-4 {
+      grid-column: span 4; // 3 fields per row (desktop)
+    }
+
+    &.col-span-6 {
+      grid-column: span 6; // 2 fields per row (desktop)
+    }
+
+    &.col-span-12 {
+      grid-column: span 12; // Full width
+    }
+
+    // Responsive behavior for compact layout
+    @media (min-width: 1025px) and (max-width: 1199px) {
+      // Large tablet: adjust for 9-column grid (3 fields per row)
+      &.col-span-3 {
+        grid-column: span 3; // 3 fields per row
+      }
+
+      &.col-span-4 {
+        grid-column: span 3; // 3 fields per row
+      }
+
+      &.col-span-6 {
+        grid-column: span 4.5; // Approximate 2 fields per row
+      }
+    }
+
+    @media (min-width: 769px) and (max-width: 1024px) {
+      // Tablet: adjust for 6-column grid (2 fields per row)
+      &.col-span-3,
+      &.col-span-4 {
+        grid-column: span 3; // 2 fields per row
+      }
+
+      &.col-span-6 {
+        grid-column: span 6; // Full width on tablet
+      }
+    }
+
+    @media (max-width: 768px) {
+      // Mobile: all fields full width
+      &.col-span-3,
+      &.col-span-4,
+      &.col-span-6,
+      &.col-span-12 {
+        grid-column: span 1; // Stack on mobile
       }
     }
   }
-}
 
-// Dark mode support now handled by global app.scss classes
-body.body--dark {
-  .filter-content {
-    background: var(--bg-secondary);
-    border-color: var(--border-primary);
-  }
-  
+  // Action buttons section - larger and clearer
   .filter-actions {
-    border-color: var(--border-primary);
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 16px; // Increased gap
+    padding-top: 20px; // Increased padding
+    border-top: 1px solid #e0e0e0;
+    margin-top: 20px; // Increased margin
+
+    // Filter action button styling is now handled by app-btn-primary and app-btn-secondary classes
+    // Filter button styling moved to global button classes for consistency
   }
-}
-</style> 
+
+  // Mobile responsiveness
+  @media (max-width: 768px) {
+    .filter-panel-header {
+      margin-bottom: 12px;
+    }
+
+    .filter-content {
+      padding: 16px;
+    }
+
+    .filter-actions {
+      flex-direction: column;
+      gap: 12px; // Increased gap on mobile
+      padding-top: 16px;
+
+      .filter-btn {
+        width: 100%;
+        justify-content: center;
+        min-height: 48px; // Larger touch target for mobile
+
+        // Enhanced touch feedback
+        &:active {
+          transform: scale(0.98);
+        }
+      }
+    }
+  }
+
+  // Dark mode support now handled by global app.scss classes
+  body.body--dark {
+    .filter-content {
+      background: var(--bg-secondary);
+      border-color: var(--border-primary);
+    }
+
+    .filter-actions {
+      border-color: var(--border-primary);
+    }
+  }
+</style>

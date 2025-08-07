@@ -22,9 +22,11 @@ export class StockMovementService {
   /**
    * Log a stock movement
    */
-  static async logMovement(request: CreateStockMovementRequest): Promise<StockMovement | null> {
+  static async logMovement(
+    request: CreateStockMovementRequest
+  ): Promise<StockMovement | null> {
     const authStore = useAuthStore();
-    
+
     try {
       const movementData = {
         ...request,
@@ -254,11 +256,13 @@ export class StockMovementService {
     try {
       const { data, error } = await supabase
         .from('stock_movements')
-        .select(`
+        .select(
+          `
           *,
           products!inner(name, sku),
           practice_locations!inner(name)
-        `)
+        `
+        )
         .eq('practice_id', practiceId)
         .eq('product_id', productId)
         .order('created_at', { ascending: false })
@@ -287,11 +291,13 @@ export class StockMovementService {
     try {
       const { data, error } = await supabase
         .from('stock_movements')
-        .select(`
+        .select(
+          `
           *,
           products!inner(name, sku),
           practice_locations!inner(name)
-        `)
+        `
+        )
         .eq('practice_id', practiceId)
         .eq('location_id', locationId)
         .order('created_at', { ascending: false })
@@ -320,11 +326,13 @@ export class StockMovementService {
     try {
       let query = supabase
         .from('stock_movements')
-        .select(`
+        .select(
+          `
           *,
           products!inner(name, sku),
           practice_locations!inner(name)
-        `)
+        `
+        )
         .eq('practice_id', practiceId)
         .order('created_at', { ascending: false })
         .limit(limit);
@@ -389,4 +397,4 @@ export function getMovementTypeColor(type: MovementType): string {
     correction: 'grey',
   };
   return colors[type] || 'grey';
-} 
+}

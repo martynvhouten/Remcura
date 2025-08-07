@@ -19,7 +19,11 @@ export interface LogEntry {
   context?: string;
 }
 
-export type ErrorLike = Error | { message?: string; code?: string; status?: number } | string | unknown;
+export type ErrorLike =
+  | Error
+  | { message?: string; code?: string; status?: number }
+  | string
+  | unknown;
 
 export interface ServiceErrorContext {
   service: string;
@@ -43,7 +47,7 @@ export enum ErrorCategory {
   BUSINESS_LOGIC = 'business_logic',
   EXTERNAL_SERVICE = 'external_service',
   SYSTEM = 'system',
-  UNKNOWN = 'unknown'
+  UNKNOWN = 'unknown',
 }
 
 export interface MonitoringConfig {

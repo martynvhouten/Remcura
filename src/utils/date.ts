@@ -3,7 +3,7 @@ export const formatDate = (date: string | Date): string => {
   return d.toLocaleDateString('nl-NL', {
     year: 'numeric',
     month: '2-digit',
-    day: '2-digit'
+    day: '2-digit',
   });
 };
 
@@ -14,7 +14,7 @@ export const formatDateTime = (date: string | Date): string => {
     month: '2-digit',
     day: '2-digit',
     hour: '2-digit',
-    minute: '2-digit'
+    minute: '2-digit',
   });
 };
 
@@ -27,4 +27,4 @@ export const getDaysUntilExpiry = (date: string | Date): number => {
   const today = new Date();
   const diffTime = expiryDate.getTime() - today.getTime();
   return Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-}; 
+};

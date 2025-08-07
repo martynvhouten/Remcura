@@ -242,7 +242,9 @@ export const useSuppliersStore = defineStore('suppliers', () => {
       sp => sp.product_id === productId && sp.is_available
     );
 
-    if (productSuppliers.length === 0) { return null; }
+    if (productSuppliers.length === 0) {
+      return null;
+    }
 
     // Sort by price (lowest first), then by lead time
     return productSuppliers.sort((a, b) => {

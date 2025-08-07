@@ -10,8 +10,8 @@ export const useNotificationStore = defineStore('notifications', () => {
   const error = ref<string | null>(null);
 
   // Getters
-  const unreadCount = computed(() => 
-    notifications.value.filter(n => !n.is_read).length
+  const unreadCount = computed(
+    () => notifications.value.filter(n => !n.is_read).length
   );
 
   const hasUnreadNotifications = computed(() => unreadCount.value > 0);
@@ -20,14 +20,14 @@ export const useNotificationStore = defineStore('notifications', () => {
   const loadNotifications = async () => {
     const authStore = useAuthStore();
     const practiceId = authStore.clinicId || authStore.selectedPractice?.id;
-    
+
     if (!practiceId) {
       return;
     }
 
     loading.value = true;
     error.value = null;
-    
+
     try {
       const { data, error: fetchError } = await supabase
         .from('notifications')
@@ -52,9 +52,9 @@ export const useNotificationStore = defineStore('notifications', () => {
     try {
       const { error: updateError } = await supabase
         .from('notifications')
-        .update({ 
+        .update({
           is_read: true,
-          read_at: new Date().toISOString()
+          read_at: new Date().toISOString(),
         })
         .eq('id', notificationId);
 
@@ -63,7 +63,9 @@ export const useNotificationStore = defineStore('notifications', () => {
       }
 
       // Update local state
-      const notification = notifications.value.find(n => n.id === notificationId);
+      const notification = notifications.value.find(
+        n => n.id === notificationId
+      );
       if (notification) {
         notification.is_read = true;
         notification.read_at = new Date().toISOString();
@@ -78,9 +80,9 @@ export const useNotificationStore = defineStore('notifications', () => {
     try {
       const { error: updateError } = await supabase
         .from('notifications')
-        .update({ 
+        .update({
           is_read: false,
-          read_at: null
+          read_at: null,
         })
         .eq('id', notificationId);
 
@@ -89,7 +91,9 @@ export const useNotificationStore = defineStore('notifications', () => {
       }
 
       // Update local state
-      const notification = notifications.value.find(n => n.id === notificationId);
+      const notification = notifications.value.find(
+        n => n.id === notificationId
+      );
       if (notification) {
         notification.is_read = false;
         notification.read_at = null;
@@ -103,15 +107,15 @@ export const useNotificationStore = defineStore('notifications', () => {
   const markAllAsRead = async () => {
     const authStore = useAuthStore();
     const practiceId = authStore.clinicId || authStore.selectedPractice?.id;
-    
+
     if (!practiceId) return;
 
     try {
       const { error: updateError } = await supabase
         .from('notifications')
-        .update({ 
+        .update({
           is_read: true,
-          read_at: new Date().toISOString()
+          read_at: new Date().toISOString(),
         })
         .eq('practice_id', practiceId)
         .eq('is_read', false);
@@ -157,7 +161,7 @@ export const useNotificationStore = defineStore('notifications', () => {
   const clearAllNotifications = async () => {
     const authStore = useAuthStore();
     const practiceId = authStore.clinicId || authStore.selectedPractice?.id;
-    
+
     if (!practiceId) return;
 
     try {
@@ -183,17 +187,17 @@ export const useNotificationStore = defineStore('notifications', () => {
     notifications,
     loading,
     error,
-    
+
     // Getters
     unreadCount,
     hasUnreadNotifications,
-    
+
     // Actions
     loadNotifications,
     markAsRead,
     markAsUnread,
     markAllAsRead,
     deleteNotification,
-    clearAllNotifications
+    clearAllNotifications,
   };
 });

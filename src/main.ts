@@ -23,19 +23,23 @@ const myApp = createApp(App);
 
 // Enhanced global error handler using centralized error handling
 myApp.config.errorHandler = (error, instance, info) => {
-  ErrorHandler.handleError(error, {
-    service: 'vue',
-    operation: 'vue_error_handler',
-    metadata: {
-      info,
-      componentName: instance?.$options.name || 'unknown',
-      url: window.location.href,
-      timestamp: new Date().toISOString(),
+  ErrorHandler.handleError(
+    error,
+    {
+      service: 'vue',
+      operation: 'vue_error_handler',
+      metadata: {
+        info,
+        componentName: instance?.$options.name || 'unknown',
+        url: window.location.href,
+        timestamp: new Date().toISOString(),
+      },
+    },
+    {
+      showToUser: false, // Don't show Vue errors to users by default
+      logLevel: 'error',
     }
-  }, {
-    showToUser: false, // Don't show Vue errors to users by default
-    logLevel: 'error'
-  });
+  );
 };
 
 // Lazy initialize monitoring service only when needed

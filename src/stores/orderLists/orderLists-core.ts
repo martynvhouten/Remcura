@@ -9,7 +9,11 @@ import type {
   OrderListStatus,
 } from '@/types/inventory';
 import { ServiceErrorHandler } from '@/utils/service-error-handler';
-import type { OrderListWithItems, CreateOrderListRequest, UpdateOrderListRequest } from '@/types/stores';
+import type {
+  OrderListWithItems,
+  CreateOrderListRequest,
+  UpdateOrderListRequest,
+} from '@/types/stores';
 
 export interface UpdateOrderListRequest {
   id: string;
@@ -66,7 +70,8 @@ export function useOrderListsCore() {
     try {
       const { data, error } = await supabase
         .from('order_lists')
-        .select(`
+        .select(
+          `
           *,
           supplier:suppliers(*),
           items:order_list_items(
@@ -74,7 +79,8 @@ export function useOrderListsCore() {
             product:products(*),
             supplier_product:supplier_products(*)
           )
-        `)
+        `
+        )
         .eq('practice_id', practiceId)
         .order('created_at', { ascending: false });
 
@@ -84,12 +90,12 @@ export function useOrderListsCore() {
         ...orderList,
         items: orderList.items || [],
         total_amount: orderList.total_value || orderList.total_cost || 0,
-        total_items: orderList.items?.length || 0
+        total_items: orderList.items?.length || 0,
       }));
     } catch (err) {
       const handledError = ServiceErrorHandler.handle(err, {
         service: 'OrderListsStore',
-        operation: 'fetchOrderLists'
+        operation: 'fetchOrderLists',
       });
       orderLogger.error('Error fetching order lists:', handledError);
       throw handledError;
@@ -111,16 +117,18 @@ export function useOrderListsCore() {
         status: 'draft' as OrderListStatus,
         total_items: 0,
         total_value: 0,
-        created_by: authStore.user?.id
+        created_by: authStore.user?.id,
       };
 
       const { data, error } = await supabase
         .from('order_lists')
         .insert(orderListData)
-        .select(`
+        .select(
+          `
           *,
           supplier:suppliers(*)
-        `)
+        `
+        )
         .single();
 
       if (error) throw error;
@@ -128,7 +136,7 @@ export function useOrderListsCore() {
       const newOrderList: OrderListWithItems = {
         ...data,
         items: [],
-        supplier: data.supplier
+        supplier: data.supplier,
       };
 
       orderLists.value.unshift(newOrderList);
@@ -136,7 +144,7 @@ export function useOrderListsCore() {
     } catch (err) {
       const handledError = ServiceErrorHandler.handle(err, {
         service: 'OrderListsStore',
-        operation: 'createOrderList'
+        operation: 'createOrderList',
       });
       orderLogger.error('Error creating order list:', handledError);
       throw handledError;
@@ -156,7 +164,7 @@ export function useOrderListsCore() {
           ...(request.name && { name: request.name }),
           ...(request.description && { description: request.description }),
           ...(request.supplier_id && { supplier_id: request.supplier_id }),
-          updated_at: new Date().toISOString()
+          updated_at: new Date().toISOString(),
         })
         .eq('id', request.id);
 
@@ -166,23 +174,25 @@ export function useOrderListsCore() {
       const index = orderLists.value.findIndex(list => list.id === request.id);
       if (index !== -1) {
         const orderList = orderLists.value[index];
-        if (!orderList) { return; }
-        
+        if (!orderList) {
+          return;
+        }
+
         if (request.name !== undefined) orderList.name = request.name;
         if (request.description !== undefined)
           orderList.description = request.description;
         if (request.supplier_id !== undefined) {
           orderList.supplier_id = request.supplier_id;
-          orderList.supplier = suppliersStore.suppliers.find(
-            s => s.id === request.supplier_id
-          ) || undefined;
+          orderList.supplier =
+            suppliersStore.suppliers.find(s => s.id === request.supplier_id) ||
+            undefined;
         }
         orderList.updated_at = new Date().toISOString();
       }
     } catch (err) {
       const handledError = ServiceErrorHandler.handle(err, {
         service: 'OrderListsStore',
-        operation: 'updateOrderList'
+        operation: 'updateOrderList',
       });
       orderLogger.error('Error updating order list:', handledError);
       throw handledError;
@@ -209,7 +219,7 @@ export function useOrderListsCore() {
     } catch (err) {
       const handledError = ServiceErrorHandler.handle(err, {
         service: 'OrderListsStore',
-        operation: 'deleteOrderList'
+        operation: 'deleteOrderList',
       });
       orderLogger.error('Error deleting order list:', handledError);
       throw handledError;
@@ -224,7 +234,7 @@ export function useOrderListsCore() {
   ): Promise<void> => {
     try {
       saving.value = true;
-      
+
       // Prepare update data
       const updateData: Partial<OrderList> = {
         status,
@@ -249,11 +259,10 @@ export function useOrderListsCore() {
       if (orderList) {
         Object.assign(orderList, updateData);
       }
-
     } catch (err) {
       const handledError = ServiceErrorHandler.handle(err, {
         service: 'OrderListsStore',
-        operation: 'changeOrderListStatus'
+        operation: 'changeOrderListStatus',
       });
       orderLogger.error('Error changing order list status:', handledError);
       throw handledError;

@@ -1,5 +1,9 @@
 import { RouteRecordRaw } from 'vue-router';
-import type { UserRole, PermissionType, ResourceType } from '@/services/permissions';
+import type {
+  UserRole,
+  PermissionType,
+  ResourceType,
+} from '@/services/permissions';
 
 // Extend Vue Router meta interface
 declare module 'vue-router' {
@@ -22,45 +26,45 @@ const routes: RouteRecordRaw[] = [
     component: () => import('layouts/MainLayout.vue'),
     meta: { requiresAuth: true },
     children: [
-      { 
-        path: '', 
-        redirect: '/dashboard' 
+      {
+        path: '',
+        redirect: '/dashboard',
       },
-      { 
-        path: 'dashboard', 
+      {
+        path: 'dashboard',
         name: 'dashboard',
         component: () => import('pages/DashboardPage.vue'),
-        meta: { 
-          requiresAuth: true, 
+        meta: {
+          requiresAuth: true,
           title: 'Dashboard',
-          icon: 'dashboard'
-        }
+          icon: 'dashboard',
+        },
       },
-      { 
-        path: 'products', 
+      {
+        path: 'products',
         name: 'products',
         component: () => import('pages/ProductsPage.vue'),
-        meta: { 
+        meta: {
           requiresAuth: true,
           requiresPermission: {
             permission: 'read',
-            resource: 'products'
+            resource: 'products',
           },
           title: 'Products',
-          icon: 'inventory_2'
-        }
+          icon: 'inventory_2',
+        },
       },
       {
         path: 'inventory',
         name: 'inventory',
-        meta: { 
+        meta: {
           requiresAuth: true,
           requiresPermission: {
             permission: 'read',
-            resource: 'inventory'
+            resource: 'inventory',
           },
           title: 'Inventory',
-          icon: 'warehouse'
+          icon: 'warehouse',
         },
         children: [
           {
@@ -70,37 +74,56 @@ const routes: RouteRecordRaw[] = [
             meta: {
               requiresPermission: {
                 permission: 'read',
-                resource: 'inventory'
+                resource: 'inventory',
               },
-              title: 'Stock Levels'
-            }
+              title: 'Stock Levels',
+            },
           },
           {
             path: 'counting',
             name: 'inventory-counting',
             component: () => import('pages/inventory/CountingPage.vue'),
             meta: {
-              requiresRole: ['owner', 'manager', 'assistant', 'logistics', 'platform_owner'],
-              title: 'Stock Counting'
-            }
+              requiresRole: [
+                'owner',
+                'manager',
+                'assistant',
+                'logistics',
+                'platform_owner',
+              ],
+              title: 'Stock Counting',
+            },
           },
           {
             path: 'counting/:sessionId',
             name: 'counting-session',
             component: () => import('pages/inventory/CountingSessionPage.vue'),
             meta: {
-              requiresRole: ['owner', 'manager', 'assistant', 'logistics', 'platform_owner'],
-              title: 'Counting Session'
-            }
+              requiresRole: [
+                'owner',
+                'manager',
+                'assistant',
+                'logistics',
+                'platform_owner',
+              ],
+              title: 'Counting Session',
+            },
           },
           {
             path: 'mobile-counting-test',
             name: 'mobile-counting-test',
-            component: () => import('pages/inventory/MobileCountingTestPage.vue'),
+            component: () =>
+              import('pages/inventory/MobileCountingTestPage.vue'),
             meta: {
-              requiresRole: ['owner', 'manager', 'assistant', 'logistics', 'platform_owner'],
-              title: 'Mobile Counting Test'
-            }
+              requiresRole: [
+                'owner',
+                'manager',
+                'assistant',
+                'logistics',
+                'platform_owner',
+              ],
+              title: 'Mobile Counting Test',
+            },
           },
           {
             path: 'movements',
@@ -109,10 +132,10 @@ const routes: RouteRecordRaw[] = [
             meta: {
               requiresPermission: {
                 permission: 'read',
-                resource: 'inventory'
+                resource: 'inventory',
               },
-              title: 'Stock Movements'
-            }
+              title: 'Stock Movements',
+            },
           },
           {
             path: 'locations',
@@ -120,134 +143,134 @@ const routes: RouteRecordRaw[] = [
             component: () => import('pages/inventory/LocationsPage.vue'),
             meta: {
               requiresRole: ['owner', 'manager', 'assistant', 'platform_owner'],
-              title: 'Locations'
-            }
-          }
-        ]
+              title: 'Locations',
+            },
+          },
+        ],
       },
-      { 
-        path: 'orders', 
+      {
+        path: 'orders',
         name: 'orders',
         component: () => import('pages/OrdersPage.vue'),
-        meta: { 
+        meta: {
           requiresAuth: true,
           requiresPermission: {
             permission: 'read',
-            resource: 'orders'
+            resource: 'orders',
           },
           title: 'Orders',
-          icon: 'shopping_cart'
-        }
+          icon: 'shopping_cart',
+        },
       },
-      { 
-        path: 'order-lists', 
+      {
+        path: 'order-lists',
         name: 'order-lists',
         component: () => import('pages/OrderListsPage.vue'),
-        meta: { 
+        meta: {
           requiresAuth: true,
           requiresPermission: {
             permission: 'read',
-            resource: 'orders'
+            resource: 'orders',
           },
           title: 'Bestellijsten',
-          icon: 'list_alt'
-        }
+          icon: 'list_alt',
+        },
       },
-      { 
-        path: 'order-lists/:id', 
+      {
+        path: 'order-lists/:id',
         name: 'order-list-detail',
         component: () => import('pages/OrderListDetailPage.vue'),
-        meta: { 
+        meta: {
           requiresAuth: true,
           requiresPermission: {
             permission: 'read',
-            resource: 'orders'
+            resource: 'orders',
           },
           title: 'Bestellijst Details',
-          icon: 'list_alt'
-        }
+          icon: 'list_alt',
+        },
       },
-      { 
-        path: 'suppliers', 
+      {
+        path: 'suppliers',
         name: 'suppliers',
         component: () => import('pages/SuppliersPage.vue'),
-        meta: { 
+        meta: {
           requiresAuth: true,
           requiresRole: ['owner', 'manager', 'assistant', 'platform_owner'],
           title: 'Suppliers',
-          icon: 'business'
-        }
+          icon: 'business',
+        },
       },
-      { 
-        path: 'analytics', 
+      {
+        path: 'analytics',
         name: 'analytics',
         component: () => import('pages/AnalyticsPage.vue'),
-        meta: { 
+        meta: {
           requiresAuth: true,
           requiresPermission: {
             permission: 'read',
-            resource: 'analytics'
+            resource: 'analytics',
           },
           title: 'Analytics',
-          icon: 'analytics'
-        }
+          icon: 'analytics',
+        },
       },
-      { 
-        path: 'notifications', 
+      {
+        path: 'notifications',
         name: 'notifications',
         component: () => import('pages/NotificationsPage.vue'),
-        meta: { 
+        meta: {
           requiresAuth: true,
           title: 'Notifications',
-          icon: 'notifications'
-        }
+          icon: 'notifications',
+        },
       },
-      { 
-        path: 'settings', 
+      {
+        path: 'settings',
         name: 'settings',
         component: () => import('pages/SettingsPage.vue'),
-        meta: { 
+        meta: {
           requiresAuth: true,
           requiresRole: ['owner', 'manager', 'platform_owner'],
           title: 'Settings',
-          icon: 'settings'
-        }
+          icon: 'settings',
+        },
       },
-      { 
-        path: 'admin', 
+      {
+        path: 'admin',
         name: 'admin',
         component: () => import('pages/AdminDashboard.vue'),
-        meta: { 
+        meta: {
           requiresAuth: true,
           requiresRole: ['owner', 'platform_owner'],
           title: 'Admin Dashboard',
-          icon: 'admin_panel_settings'
-        }
+          icon: 'admin_panel_settings',
+        },
       },
-      { 
-        path: 'batch-management', 
+      {
+        path: 'batch-management',
         name: 'batch-management',
         component: () => import('pages/BatchManagementPage.vue'),
-        meta: { 
+        meta: {
           requiresAuth: true,
           requiresPermission: {
             permission: 'read',
-            resource: 'inventory'
+            resource: 'inventory',
           },
           title: 'Batch Management',
-          icon: 'inventory'
-        }
+          icon: 'inventory',
+        },
       },
-      { 
-        path: 'style-guide', 
+      {
+        path: 'style-guide',
         name: 'style-guide',
         component: () => import('pages/StyleGuidePage.vue'),
-        meta: { 
+        meta: {
           requiresAuth: true,
           requiresRole: ['owner', 'platform_owner'],
-          title: 'Style Guide'
-        }
-      }
+          title: 'Style Guide',
+        },
+      },
     ],
   },
 
@@ -256,17 +279,17 @@ const routes: RouteRecordRaw[] = [
     path: '/auth',
     component: () => import('layouts/AuthLayout.vue'),
     children: [
-      { 
-        path: 'login', 
+      {
+        path: 'login',
         name: 'login',
         component: () => import('pages/auth/LoginPage.vue'),
-        meta: { title: 'Login' }
+        meta: { title: 'Login' },
       },
-      { 
-        path: 'magic-join', 
+      {
+        path: 'magic-join',
         name: 'magic-join',
         component: () => import('pages/auth/MagicJoinPage.vue'),
-        meta: { title: 'Magic Join' }
+        meta: { title: 'Magic Join' },
       },
     ],
   },
@@ -275,9 +298,9 @@ const routes: RouteRecordRaw[] = [
   {
     path: '/platform',
     component: () => import('layouts/MainLayout.vue'),
-    meta: { 
+    meta: {
       requiresAuth: true,
-      requiresRole: 'platform_owner'
+      requiresRole: 'platform_owner',
     },
     children: [
       {
@@ -288,8 +311,8 @@ const routes: RouteRecordRaw[] = [
           requiresAuth: true,
           requiresRole: 'platform_owner',
           title: 'Platform Dashboard',
-          icon: 'settings'
-        }
+          icon: 'settings',
+        },
       },
       {
         path: 'practices',
@@ -299,8 +322,8 @@ const routes: RouteRecordRaw[] = [
           requiresAuth: true,
           requiresRole: 'platform_owner',
           title: 'Practice Management',
-          icon: 'business'
-        }
+          icon: 'business',
+        },
       },
       {
         path: 'practices/create',
@@ -310,8 +333,8 @@ const routes: RouteRecordRaw[] = [
           requiresAuth: true,
           requiresRole: 'platform_owner',
           title: 'Create Practice',
-          icon: 'add_business'
-        }
+          icon: 'add_business',
+        },
       },
       {
         path: 'logs',
@@ -321,8 +344,8 @@ const routes: RouteRecordRaw[] = [
           requiresAuth: true,
           requiresRole: 'platform_owner',
           title: 'System Logs',
-          icon: 'description'
-        }
+          icon: 'description',
+        },
       },
       {
         path: 'database',
@@ -332,8 +355,8 @@ const routes: RouteRecordRaw[] = [
           requiresAuth: true,
           requiresRole: 'platform_owner',
           title: 'Database Admin',
-          icon: 'storage'
-        }
+          icon: 'storage',
+        },
       },
       {
         path: 'api-docs',
@@ -343,8 +366,8 @@ const routes: RouteRecordRaw[] = [
           requiresAuth: true,
           requiresRole: 'platform_owner',
           title: 'API Documentation',
-          icon: 'api'
-        }
+          icon: 'api',
+        },
       },
       {
         path: 'monitoring',
@@ -354,8 +377,8 @@ const routes: RouteRecordRaw[] = [
           requiresAuth: true,
           requiresRole: 'platform_owner',
           title: 'System Monitoring',
-          icon: 'monitoring'
-        }
+          icon: 'monitoring',
+        },
       },
       {
         path: 'backup',
@@ -365,13 +388,11 @@ const routes: RouteRecordRaw[] = [
           requiresAuth: true,
           requiresRole: 'platform_owner',
           title: 'Backup & Restore',
-          icon: 'backup'
-        }
-      }
-    ]
+          icon: 'backup',
+        },
+      },
+    ],
   },
-
-
 
   // Always leave this as last one,
   // but you can also remove it

@@ -44,7 +44,9 @@
         >
           <div class="stat-display">
             <div class="stat-value">{{ stats.totalUsers }}</div>
-            <div class="stat-trend">{{ stats.activeUsers }} {{ $t('admin.stats.activeToday') }}</div>
+            <div class="stat-trend">
+              {{ stats.activeUsers }} {{ $t('admin.stats.activeToday') }}
+            </div>
           </div>
         </BaseCard>
       </div>
@@ -57,7 +59,9 @@
         >
           <div class="stat-display">
             <div class="stat-value">{{ stats.totalLocations }}</div>
-            <div class="stat-trend">{{ stats.activeLocations }} {{ $t('admin.stats.active') }}</div>
+            <div class="stat-trend">
+              {{ stats.activeLocations }} {{ $t('admin.stats.active') }}
+            </div>
           </div>
         </BaseCard>
       </div>
@@ -70,7 +74,9 @@
         >
           <div class="stat-display">
             <div class="stat-value">{{ stats.pendingSync }}</div>
-            <div class="stat-trend">{{ $t('admin.stats.lastSync') }}: {{ formatDate(stats.lastSync) }}</div>
+            <div class="stat-trend">
+              {{ $t('admin.stats.lastSync') }}: {{ formatDate(stats.lastSync) }}
+            </div>
           </div>
         </BaseCard>
       </div>
@@ -83,7 +89,9 @@
         >
           <div class="stat-display">
             <div class="stat-value">{{ stats.todayEvents }}</div>
-            <div class="stat-trend">+{{ stats.eventsGrowth }}% {{ $t('admin.stats.fromYesterday') }}</div>
+            <div class="stat-trend">
+              +{{ stats.eventsGrowth }}% {{ $t('admin.stats.fromYesterday') }}
+            </div>
           </div>
         </BaseCard>
       </div>
@@ -91,10 +99,9 @@
 
     <!-- Quick Actions -->
     <BaseCard
-      
       :title="$t('admin.quickActions')"
-          icon="admin_panel_settings"
-          icon-color="primary"
+      icon="admin_panel_settings"
+      icon-color="primary"
       class="q-mb-lg"
     >
       <div class="row q-gutter-md">
@@ -144,10 +151,9 @@
 
     <!-- 🎭 Revolutionary Magic Invite System -->
     <BaseCard
-      
       :title="$t('magicInvite.revolutionaryUserSystem')"
-          icon="auto_awesome"
-          icon-color="secondary"
+      icon="auto_awesome"
+      icon-color="secondary"
       class="q-mb-lg"
     >
       <MagicInviteManager />
@@ -155,10 +161,9 @@
 
     <!-- 👥 Team Overview - Auto-Upgrade System -->
     <BaseCard
-      
       :title="$t('admin.teamOverview')"
-          icon="group"
-          icon-color="primary"
+      icon="group"
+      icon-color="primary"
       class="q-mb-lg"
     >
       <TeamOverview />
@@ -177,12 +182,12 @@
       <q-tab
         name="locations"
         :label="$t('admin.locations')"
-          icon="location_on"
+        icon="location_on"
       />
       <q-tab
         name="permissions"
         :label="$t('admin.permissions')"
-          icon="security"
+        icon="security"
       />
       <q-tab name="analytics" :label="$t('admin.analytics')" icon="analytics" />
     </q-tabs>
@@ -198,73 +203,70 @@
 
         <div class="medical-table">
           <q-table
-          :rows="users"
-          :columns="userColumns"
-          :loading="loadingUsers"
-          row-key="id"
-          :pagination="{ rowsPerPage: 10 }"
-        >
-          <template v-slot:body-cell-role="props">
-            <q-td :props="props">
-              <q-chip
-                :color="getRoleColor(props.value)"
-                text-color="white"
-                size="sm"
-              >
-                {{ $t(`permissions.templates.${props.value}`) }}
-              </q-chip>
-            </q-td>
-          </template>
+            :rows="users"
+            :columns="userColumns"
+            :loading="loadingUsers"
+            row-key="id"
+            :pagination="{ rowsPerPage: 10 }"
+          >
+            <template v-slot:body-cell-role="props">
+              <q-td :props="props">
+                <q-chip
+                  :color="getRoleColor(props.value)"
+                  text-color="white"
+                  size="sm"
+                >
+                  {{ $t(`permissions.templates.${props.value}`) }}
+                </q-chip>
+              </q-td>
+            </template>
 
-          <template v-slot:body-cell-lastActive="props">
-            <q-td :props="props">
-              {{ props.value ? formatDate(props.value) : '-' }}
-            </q-td>
-          </template>
+            <template v-slot:body-cell-lastActive="props">
+              <q-td :props="props">
+                {{ props.value ? formatDate(props.value) : '-' }}
+              </q-td>
+            </template>
 
-          <template v-slot:body-cell-actions="props">
-            <q-td :props="props">
-              <q-btn-group dense>
-                <q-btn icon="edit" dense flat @click="editUser(props.row)" />
-                <q-btn
-          icon="security"
-                  dense
-                  flat
-                  @click="manageUserPermissions(props.row)"
-                />
-                <q-btn icon="more_vert" dense flat>
-                  <q-menu>
-                    <q-list dense>
-                      <q-item clickable @click="resetUserPassword(props.row)">
-                        <q-item-section avatar>
-                          <q-icon name="lock_reset" />
-                        </q-item-section>
-                        <q-item-section>Reset Password</q-item-section>
-                      </q-item>
-                      <q-item clickable @click="toggleUserStatus(props.row)">
-                        <q-item-section avatar>
-                          <q-icon
-                            :name="props.row.active ? 'block' : 'check'"
-                          />
-                        </q-item-section>
-                        <q-item-section>
-                          {{ props.row.active ? 'Deactivate' : 'Activate' }}
-                        </q-item-section>
-                      </q-item>
-                    </q-list>
-                  </q-menu>
-                </q-btn>
-              </q-btn-group>
-            </q-td>
-          </template>
-        </q-table>
+            <template v-slot:body-cell-actions="props">
+              <q-td :props="props">
+                <q-btn-group dense>
+                  <q-btn icon="edit" dense flat @click="editUser(props.row)" />
+                  <q-btn
+                    icon="security"
+                    dense
+                    flat
+                    @click="manageUserPermissions(props.row)"
+                  />
+                  <q-btn icon="more_vert" dense flat>
+                    <q-menu>
+                      <q-list dense>
+                        <q-item clickable @click="resetUserPassword(props.row)">
+                          <q-item-section avatar>
+                            <q-icon name="lock_reset" />
+                          </q-item-section>
+                          <q-item-section>Reset Password</q-item-section>
+                        </q-item>
+                        <q-item clickable @click="toggleUserStatus(props.row)">
+                          <q-item-section avatar>
+                            <q-icon
+                              :name="props.row.active ? 'block' : 'check'"
+                            />
+                          </q-item-section>
+                          <q-item-section>
+                            {{ props.row.active ? 'Deactivate' : 'Activate' }}
+                          </q-item-section>
+                        </q-item>
+                      </q-list>
+                    </q-menu>
+                  </q-btn>
+                </q-btn-group>
+              </q-td>
+            </template>
+          </q-table>
         </div>
 
         <!-- Demo Reset Card (only for demo user) -->
-        <div
-          v-if="authStore.userEmail === 'demo@remcura.com'"
-          class="q-mt-lg"
-        >
+        <div v-if="authStore.userEmail === 'demo@remcura.com'" class="q-mt-lg">
           <DemoResetCard />
         </div>
       </q-tab-panel>
@@ -275,64 +277,66 @@
 
         <div class="medical-table">
           <q-table
-          :rows="locations"
-          :columns="locationColumns"
-          :loading="loadingLocations"
-          row-key="id"
-          :pagination="{ rowsPerPage: 10 }"
-        >
-          <template v-slot:body-cell-isMain="props">
-            <q-td :props="props">
-              <q-chip
-                v-if="props.value"
-                color="primary"
-                text-color="white"
-                size="sm"
-          icon="star"
-              >
-                {{ $t('locations.isMain') }}
-              </q-chip>
-            </q-td>
-          </template>
+            :rows="locations"
+            :columns="locationColumns"
+            :loading="loadingLocations"
+            row-key="id"
+            :pagination="{ rowsPerPage: 10 }"
+          >
+            <template v-slot:body-cell-isMain="props">
+              <q-td :props="props">
+                <q-chip
+                  v-if="props.value"
+                  color="primary"
+                  text-color="white"
+                  size="sm"
+                  icon="star"
+                >
+                  {{ $t('locations.isMain') }}
+                </q-chip>
+              </q-td>
+            </template>
 
-          <template v-slot:body-cell-isActive="props">
-            <q-td :props="props">
-              <q-chip
-                :color="props.value ? 'positive' : 'negative'"
-                text-color="white"
-                size="sm"
-              >
-                {{ props.value ? $t('common.active') : $t('common.inactive') }}
-              </q-chip>
-            </q-td>
-          </template>
+            <template v-slot:body-cell-isActive="props">
+              <q-td :props="props">
+                <q-chip
+                  :color="props.value ? 'positive' : 'negative'"
+                  text-color="white"
+                  size="sm"
+                >
+                  {{
+                    props.value ? $t('common.active') : $t('common.inactive')
+                  }}
+                </q-chip>
+              </q-td>
+            </template>
 
-          <template v-slot:body-cell-actions="props">
-            <q-td :props="props">
-              <q-btn-group dense>
-                <q-btn
-          icon="edit"
-                  size="sm"
-                  flat
-                  @click="editLocation(props.row)"
-                />
-                <q-btn
-                  v-if="!props.row.is_main"
-          icon="star"
-                  size="sm"
-                  flat
-                  @click="setMainLocation(props.row)"
-                />
-                <q-btn
-          icon="people"
-                  size="sm"
-                  flat
-                  @click="manageLocationAccess(props.row)"
-                />
-              </q-btn-group>
-            </q-td>
-          </template>
-        </q-table>
+            <template v-slot:body-cell-actions="props">
+              <q-td :props="props">
+                <q-btn-group dense>
+                  <q-btn
+                    icon="edit"
+                    size="sm"
+                    flat
+                    @click="editLocation(props.row)"
+                  />
+                  <q-btn
+                    v-if="!props.row.is_main"
+                    icon="star"
+                    size="sm"
+                    flat
+                    @click="setMainLocation(props.row)"
+                  />
+                  <q-btn
+                    icon="people"
+                    size="sm"
+                    flat
+                    @click="manageLocationAccess(props.row)"
+                  />
+                </q-btn-group>
+              </q-td>
+            </template>
+          </q-table>
         </div>
       </q-tab-panel>
 
@@ -340,7 +344,7 @@
       <q-tab-panel name="permissions">
         <div class="text-h6 q-mb-md">{{ $t('permissions.title') }}</div>
 
-        <BaseCard :title="$t('permissions.templates.title')" >
+        <BaseCard :title="$t('permissions.templates.title')">
           <div class="row q-gutter-md">
             <q-btn
               v-for="template in permissionTemplates"
@@ -355,55 +359,55 @@
 
         <div class="medical-table">
           <q-table
-          :rows="permissions"
-          :columns="permissionColumns"
-          :loading="loadingPermissions"
-          row-key="id"
-          :pagination="{ rowsPerPage: 15 }"
-          class="q-mt-md"
-        >
-          <template v-slot:body-cell-permissionType="props">
-            <q-td :props="props">
-              <q-chip
-                :color="getPermissionColor(props.value)"
-                text-color="white"
-                size="sm"
-              >
-                {{ $t(`permissions.types.${props.value}`) }}
-              </q-chip>
-            </q-td>
-          </template>
-
-          <template v-slot:body-cell-expiresAt="props">
-            <q-td :props="props">
-              <span v-if="props.value">
-                {{ formatDate(props.value) }}
+            :rows="permissions"
+            :columns="permissionColumns"
+            :loading="loadingPermissions"
+            row-key="id"
+            :pagination="{ rowsPerPage: 15 }"
+            class="q-mt-md"
+          >
+            <template v-slot:body-cell-permissionType="props">
+              <q-td :props="props">
                 <q-chip
-                  v-if="isExpiringSoon(props.value)"
-                  color="warning"
+                  :color="getPermissionColor(props.value)"
                   text-color="white"
                   size="sm"
-          icon="warning"
                 >
-                  Expiring Soon
+                  {{ $t(`permissions.types.${props.value}`) }}
                 </q-chip>
-              </span>
-              <span v-else class="text-grey-6">No Expiry</span>
-            </q-td>
-          </template>
+              </q-td>
+            </template>
 
-          <template v-slot:body-cell-actions="props">
-            <q-td :props="props">
-              <q-btn
-          icon="delete"
-                size="sm"
-                flat
-                color="negative"
-                @click="revokePermission(props.row)"
-              />
-            </q-td>
-          </template>
-        </q-table>
+            <template v-slot:body-cell-expiresAt="props">
+              <q-td :props="props">
+                <span v-if="props.value">
+                  {{ formatDate(props.value) }}
+                  <q-chip
+                    v-if="isExpiringSoon(props.value)"
+                    color="warning"
+                    text-color="white"
+                    size="sm"
+                    icon="warning"
+                  >
+                    Expiring Soon
+                  </q-chip>
+                </span>
+                <span v-else class="text-grey-6">No Expiry</span>
+              </q-td>
+            </template>
+
+            <template v-slot:body-cell-actions="props">
+              <q-td :props="props">
+                <q-btn
+                  icon="delete"
+                  size="sm"
+                  flat
+                  color="negative"
+                  @click="revokePermission(props.row)"
+                />
+              </q-td>
+            </template>
+          </q-table>
         </div>
       </q-tab-panel>
 
@@ -413,7 +417,7 @@
 
         <div class="row q-gutter-md">
           <div class="col-12 col-md-6">
-            <BaseCard :title="$t('analytics.usage')" >
+            <BaseCard :title="$t('analytics.usage')">
               <div class="q-mt-md">
                 <div
                   v-for="event in topEvents"
@@ -438,7 +442,7 @@
           </div>
 
           <div class="col-12 col-md-6">
-            <BaseCard :title="$t('analytics.patterns')" >
+            <BaseCard :title="$t('analytics.patterns')">
               <div class="q-mt-md">
                 <div class="text-h6">
                   {{ analyticsData.averageSessionTime }}min
@@ -774,7 +778,9 @@
 
   // Helper methods
   const formatDate = (date: string | Date | null): string => {
-    if (!date) { return '-'; }
+    if (!date) {
+      return '-';
+    }
     return new Date(date).toLocaleDateString();
   };
 
@@ -799,7 +805,9 @@
   };
 
   const isExpiringSoon = (expiryDate: string): boolean => {
-    if (!expiryDate) { return false; }
+    if (!expiryDate) {
+      return false;
+    }
     const expiry = new Date(expiryDate);
     const now = new Date();
     const daysUntilExpiry =
@@ -809,13 +817,18 @@
 
   // Action handlers (simplified for brevity)
   const editUser = (user: PracticeMember) => {
-    $q.notify({ type: 'info', message: $t('admin.userManagement.editingUser', { userId: user.user_id }) });
+    $q.notify({
+      type: 'info',
+      message: $t('admin.userManagement.editingUser', { userId: user.user_id }),
+    });
   };
 
   const manageUserPermissions = (user: PracticeMember) => {
     $q.notify({
       type: 'info',
-      message: $t('admin.userManagement.managingPermissions', { userId: user.user_id }),
+      message: $t('admin.userManagement.managingPermissions', {
+        userId: user.user_id,
+      }),
     });
   };
 
@@ -824,14 +837,19 @@
     try {
       $q.dialog({
         title: 'Reset Password',
-        message: $t('admin.userManagement.resetPasswordConfirm', { userId: user.user_id }),
+        message: $t('admin.userManagement.resetPasswordConfirm', {
+          userId: user.user_id,
+        }),
         cancel: true,
         persistent: true,
       }).onOk(async () => {
         await adminService.resetUserPassword(user.user_id);
         $q.notify({
           type: 'positive',
-          message: t('admin.userManagement.resetPassword') + ' - ' + t('common.success'),
+          message:
+            t('admin.userManagement.resetPassword') +
+            ' - ' +
+            t('common.success'),
         });
       });
     } catch (error) {
@@ -848,7 +866,10 @@
       const action = user.role === 'inactive' ? 'activate' : 'deactivate';
       $q.dialog({
         title: `${action.charAt(0).toUpperCase() + action.slice(1)} User`,
-        message: $t('admin.userManagement.actionConfirm', { action, userId: user.user_id }),
+        message: $t('admin.userManagement.actionConfirm', {
+          action,
+          userId: user.user_id,
+        }),
         cancel: true,
         persistent: true,
       }).onOk(async () => {
@@ -859,7 +880,8 @@
         await loadUsers();
         $q.notify({
           type: 'positive',
-          message: t('admin.userManagement.' + action) + ' - ' + t('common.success'),
+          message:
+            t('admin.userManagement.' + action) + ' - ' + t('common.success'),
         });
       });
     } catch (error) {
@@ -874,7 +896,9 @@
   const manageLocationAccess = (location: Location) => {
     $q.notify({
       type: 'info',
-      message: $t('admin.locationManagement.managingAccess', { locationName: location.name }),
+      message: $t('admin.locationManagement.managingAccess', {
+        locationName: location.name,
+      }),
     });
     // TODO: Implement location access management dialog
   };
@@ -886,13 +910,20 @@
   }) => {
     $q.notify({
       type: 'info',
-      message: $t('admin.permissionTemplates.showing', { templateKey: template.key }),
+      message: $t('admin.permissionTemplates.showing', {
+        templateKey: template.key,
+      }),
     });
     // TODO: Implement permission template display dialog
   };
 
   const editLocation = (location: Location) => {
-    $q.notify({ type: 'info', message: $t('admin.locationManagement.editing', { locationName: location.name }) });
+    $q.notify({
+      type: 'info',
+      message: $t('admin.locationManagement.editing', {
+        locationName: location.name,
+      }),
+    });
   };
 
   const setMainLocation = async (location: Location) => {

@@ -36,299 +36,306 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref, watch, onMounted, onUnmounted } from 'vue';
-import { useI18n } from 'vue-i18n';
+  import { computed, ref, watch, onMounted, onUnmounted } from 'vue';
+  import { useI18n } from 'vue-i18n';
 
-// Types
-interface TableColumn {
-  name: string;
-  label: string;
-  field: string | ((row: any) => any);
-  align?: 'left' | 'right' | 'center';
-  sortable?: boolean;
-  style?: string;
-  headerStyle?: string;
-  classes?: string;
-  headerClasses?: string;
-  format?: (val: any, row: any) => string;
-}
+  // Types
+  interface TableColumn {
+    name: string;
+    label: string;
+    field: string | ((row: any) => any);
+    align?: 'left' | 'right' | 'center';
+    sortable?: boolean;
+    style?: string;
+    headerStyle?: string;
+    classes?: string;
+    headerClasses?: string;
+    format?: (val: any, row: any) => string;
+  }
 
-interface TablePagination {
-  sortBy?: string;
-  descending?: boolean;
-  page: number;
-  rowsPerPage: number;
-  rowsNumber?: number;
-}
+  interface TablePagination {
+    sortBy?: string;
+    descending?: boolean;
+    page: number;
+    rowsPerPage: number;
+    rowsNumber?: number;
+  }
 
-// Props
-interface Props {
-  rows: any[];
-  columns: TableColumn[];
-  loading?: boolean;
-  pagination?: TablePagination;
-  noDataMessage?: string;
-  sortable?: boolean;
-}
+  // Props
+  interface Props {
+    rows: any[];
+    columns: TableColumn[];
+    loading?: boolean;
+    pagination?: TablePagination;
+    noDataMessage?: string;
+    sortable?: boolean;
+  }
 
-const props = withDefaults(defineProps<Props>(), {
-  loading: false,
-  pagination: () => ({
-    sortBy: undefined,
-    descending: false,
-    page: 1,
-    rowsPerPage: 25,
-    rowsNumber: 0,
-  }),
-  sortable: true,
-});
+  const props = withDefaults(defineProps<Props>(), {
+    loading: false,
+    pagination: () => ({
+      sortBy: undefined,
+      descending: false,
+      page: 1,
+      rowsPerPage: 25,
+      rowsNumber: 0,
+    }),
+    sortable: true,
+  });
 
-// Emits
-const emit = defineEmits<{
-  'update:pagination': [pagination: TablePagination];
-  'request': [requestProps: any];
-}>();
+  // Emits
+  const emit = defineEmits<{
+    'update:pagination': [pagination: TablePagination];
+    request: [requestProps: any];
+  }>();
 
-const { t } = useI18n();
+  const { t } = useI18n();
 
-// Template ref for the table container
-const tableContainer = ref<HTMLElement>();
+  // Template ref for the table container
+  const tableContainer = ref<HTMLElement>();
 
-// Internal pagination state
-const internalPagination = ref<TablePagination>({ ...props.pagination });
+  // Internal pagination state
+  const internalPagination = ref<TablePagination>({ ...props.pagination });
 
-// Watch for external pagination changes
-watch(
-  () => props.pagination,
-  (newPagination) => {
+  // Watch for external pagination changes
+  watch(
+    () => props.pagination,
+    newPagination => {
+      internalPagination.value = { ...newPagination };
+    },
+    { deep: true }
+  );
+
+  // Enhanced columns with consistent styling and sortable defaults
+  const enhancedColumns = computed(() => {
+    return props.columns.map(column => ({
+      ...column,
+      sortable: column.sortable !== false && props.sortable,
+      headerClasses: `unified-table-header ${column.headerClasses || ''}`,
+      classes: `unified-table-cell ${column.classes || ''}`,
+      headerStyle: column.headerStyle || '',
+      style: column.style || '',
+    }));
+  });
+
+  // Handle pagination updates
+  const onPaginationUpdate = (newPagination: TablePagination) => {
     internalPagination.value = { ...newPagination };
-  },
-  { deep: true }
-);
+    emit('update:pagination', newPagination);
+  };
 
-// Enhanced columns with consistent styling and sortable defaults
-const enhancedColumns = computed(() => {
-  return props.columns.map(column => ({
-    ...column,
-    sortable: column.sortable !== false && props.sortable,
-    headerClasses: `unified-table-header ${column.headerClasses || ''}`,
-    classes: `unified-table-cell ${column.classes || ''}`,
-    headerStyle: column.headerStyle || '',
-    style: column.style || '',
-  }));
-});
+  // Handle table requests (sorting, pagination)
+  const onTableRequest = (requestProps: any) => {
+    const { pagination } = requestProps;
+    internalPagination.value = { ...pagination };
+    emit('request', requestProps);
+  };
 
-// Handle pagination updates
-const onPaginationUpdate = (newPagination: TablePagination) => {
-  internalPagination.value = { ...newPagination };
-  emit('update:pagination', newPagination);
-};
+  // Enable horizontal scroll with mouse wheel
+  const handleWheelScroll = (event: WheelEvent) => {
+    if (!tableContainer.value) return;
 
-// Handle table requests (sorting, pagination)
-const onTableRequest = (requestProps: any) => {
-  const { pagination } = requestProps;
-  internalPagination.value = { ...pagination };
-  emit('request', requestProps);
-};
+    // Check if horizontal scroll is needed
+    const { scrollWidth, clientWidth, scrollLeft } = tableContainer.value;
+    const canScrollHorizontally = scrollWidth > clientWidth;
 
-// Enable horizontal scroll with mouse wheel
-const handleWheelScroll = (event: WheelEvent) => {
-  if (!tableContainer.value) return;
-  
-  // Check if horizontal scroll is needed
-  const { scrollWidth, clientWidth, scrollLeft } = tableContainer.value;
-  const canScrollHorizontally = scrollWidth > clientWidth;
-  
-  // Only handle horizontal scroll when:
-  // 1. Shift key is held (explicit horizontal scroll intent)
-  // 2. Table needs horizontal scroll AND we're already scrolled horizontally
-  if (canScrollHorizontally && event.shiftKey && event.deltaY !== 0) {
-    event.preventDefault();
-    tableContainer.value.scrollLeft += event.deltaY;
-  }
-  
-  // For normal vertical scroll, let the browser handle it naturally
-  // This ensures smooth transitions between horizontal and vertical scrolling
-};
+    // Only handle horizontal scroll when:
+    // 1. Shift key is held (explicit horizontal scroll intent)
+    // 2. Table needs horizontal scroll AND we're already scrolled horizontally
+    if (canScrollHorizontally && event.shiftKey && event.deltaY !== 0) {
+      event.preventDefault();
+      tableContainer.value.scrollLeft += event.deltaY;
+    }
 
-// Lifecycle hooks
-onMounted(() => {
-  if (tableContainer.value) {
-    // Use passive: true for better performance unless we need to preventDefault
-    tableContainer.value.addEventListener('wheel', handleWheelScroll, { passive: false });
-  }
-});
+    // For normal vertical scroll, let the browser handle it naturally
+    // This ensures smooth transitions between horizontal and vertical scrolling
+  };
 
-onUnmounted(() => {
-  if (tableContainer.value) {
-    tableContainer.value.removeEventListener('wheel', handleWheelScroll);
-  }
-});
+  // Lifecycle hooks
+  onMounted(() => {
+    if (tableContainer.value) {
+      // Use passive: true for better performance unless we need to preventDefault
+      tableContainer.value.addEventListener('wheel', handleWheelScroll, {
+        passive: false,
+      });
+    }
+  });
+
+  onUnmounted(() => {
+    if (tableContainer.value) {
+      tableContainer.value.removeEventListener('wheel', handleWheelScroll);
+    }
+  });
 </script>
 
 <style lang="scss" scoped>
-.unified-table-container {
-  overflow-x: auto; // Enable horizontal scroll
-  overflow-y: visible;
-  
-  .unified-table {
-    border-radius: var(--radius-lg);
-    box-shadow: var(--shadow-sm);
-    border: 1px solid var(--border-primary);
-    min-width: 100%; // Ensure table can grow beyond container
+  .unified-table-container {
+    overflow-x: auto; // Enable horizontal scroll
+    overflow-y: visible;
 
-    // Enhanced headers with consistent styling
-    :deep(.unified-table-header) {
-      background: var(--brand-primary) !important; // Consistent hoofdblauwe kleur
-      color: white !important;
-      font-family: var(--font-family-primary);
-      font-weight: var(--font-weight-bold);
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-      font-size: var(--text-xs);
-      padding: var(--space-3) var(--space-4);
-      border-right: 1px solid rgba(255, 255, 255, 0.2);
-      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-      
-      &:last-child {
-        border-right: none;
-      }
-      
-      // Sortable column hover effect
-      &.sortable {
-        cursor: pointer;
-        transition: background var(--transition-base);
-        
-        &:hover {
-          background: var(--brand-primary-dark) !important;
+    .unified-table {
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-sm);
+      border: 1px solid var(--border-primary);
+      min-width: 100%; // Ensure table can grow beyond container
+
+      // Enhanced headers with consistent styling
+      :deep(.unified-table-header) {
+        background: var(--brand-primary); // Consistent hoofdblauwe kleur
+        color: white;
+        font-family: var(--font-family-primary);
+        font-weight: var(--font-weight-bold);
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        font-size: var(--text-xs);
+        padding: var(--space-3) var(--space-4);
+        border-right: 1px solid rgba(255, 255, 255, 0.2);
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+
+        &:last-child {
+          border-right: none;
+        }
+
+        // Sortable column hover effect
+        &.sortable {
+          cursor: pointer;
+          transition: background var(--transition-base);
+
+          &:hover {
+            background: var(--brand-primary-dark);
+          }
         }
       }
+
+      // Consistent row styling with alternating colors
+      :deep(.q-tr) {
+        border-bottom: 1px solid var(--border-primary);
+        transition: all var(--transition-fast);
+
+        // Alternating row colors
+        &:nth-child(even) {
+          background: var(--neutral-50);
+        }
+
+        &:nth-child(odd) {
+          background: white;
+        }
+
+        &:hover {
+          background: rgba(
+            30,
+            58,
+            138,
+            0.05
+          ); // Subtle blue hover using brand primary
+          box-shadow: 0 2px 8px rgba(30, 58, 138, 0.08);
+        }
+      }
+
+      // Cell styling
+      :deep(.unified-table-cell) {
+        padding: var(--space-3) var(--space-4);
+        border-right: 1px solid var(--border-primary);
+        vertical-align: middle;
+
+        &:last-child {
+          border-right: none;
+        }
+
+        // Numeric columns
+        &.col-numeric {
+          font-variant-numeric: tabular-nums;
+          font-weight: var(--font-weight-semibold);
+          text-align: right;
+        }
+
+        // Status columns
+        &.col-status {
+          text-align: center;
+          font-weight: var(--font-weight-medium);
+        }
+
+        // Product/name columns
+        &.col-product,
+        &.col-name {
+          font-weight: var(--font-weight-medium);
+          color: var(--text-primary);
+        }
+
+        // Action columns
+        &.col-actions {
+          text-align: center;
+        }
+      }
+
+      // Loading and empty states
+      :deep(.q-table__bottom) {
+        padding: var(--space-3) var(--space-4);
+        border-top: 1px solid var(--border-primary);
+      }
+
+      :deep(.q-table__top) {
+        padding: var(--space-3) var(--space-4);
+        border-bottom: 1px solid var(--border-primary);
+      }
     }
+  }
 
-    // Consistent row styling with alternating colors
-    :deep(.q-tr) {
-      border-bottom: 1px solid var(--border-primary);
-      transition: all var(--transition-fast);
+  // Dark mode support
+  body.body--dark .unified-table-container {
+    .unified-table {
+      background: var(--bg-secondary);
+      border-color: var(--border-primary);
 
-      // Alternating row colors
-      &:nth-child(even) {
-        background: var(--neutral-50);
+      :deep(.unified-table-header) {
+        background: var(--brand-primary);
+        color: white;
+
+        &.sortable:hover {
+          background: var(--brand-primary-dark);
+        }
       }
 
-      &:nth-child(odd) {
-        background: white;
+      :deep(.q-tr) {
+        border-bottom-color: var(--border-primary);
+
+        &:nth-child(even) {
+          background: var(--bg-tertiary);
+        }
+
+        &:nth-child(odd) {
+          background: var(--bg-secondary);
+        }
+
+        &:hover {
+          background: rgba(30, 58, 138, 0.08);
+          box-shadow: 0 2px 8px rgba(30, 58, 138, 0.08);
+        }
       }
 
-      &:hover {
-        background: rgba(30, 58, 138, 0.05) !important; // Subtle blue hover using brand primary
-        box-shadow: 0 2px 8px rgba(30, 58, 138, 0.08);
-      }
-    }
-
-    // Cell styling
-    :deep(.unified-table-cell) {
-      padding: var(--space-3) var(--space-4);
-      border-right: 1px solid var(--border-primary);
-      vertical-align: middle;
-      
-      &:last-child {
-        border-right: none;
-      }
-
-      // Numeric columns
-      &.col-numeric {
-        font-variant-numeric: tabular-nums;
-        font-weight: var(--font-weight-semibold);
-        text-align: right;
-      }
-
-      // Status columns
-      &.col-status {
-        text-align: center;
-        font-weight: var(--font-weight-medium);
-      }
-
-      // Product/name columns
-      &.col-product,
-      &.col-name {
-        font-weight: var(--font-weight-medium);
+      :deep(.unified-table-cell) {
+        border-right-color: var(--border-primary);
         color: var(--text-primary);
       }
 
-      // Action columns
-      &.col-actions {
-        text-align: center;
-      }
-    }
-
-    // Loading and empty states
-    :deep(.q-table__bottom) {
-      padding: var(--space-3) var(--space-4);
-      border-top: 1px solid var(--border-primary);
-    }
-
-    :deep(.q-table__top) {
-      padding: var(--space-3) var(--space-4);
-      border-bottom: 1px solid var(--border-primary);
-    }
-  }
-}
-
-// Dark mode support
-body.body--dark .unified-table-container {
-  .unified-table {
-    background: var(--bg-secondary);
-    border-color: var(--border-primary);
-
-    :deep(.unified-table-header) {
-      background: var(--brand-primary) !important;
-      color: white !important;
-      
-      &.sortable:hover {
-        background: var(--brand-primary-dark) !important;
-      }
-    }
-
-    :deep(.q-tr) {
-      border-bottom-color: var(--border-primary);
-
-      &:nth-child(even) {
-        background: var(--bg-tertiary);
-      }
-
-      &:nth-child(odd) {
+      :deep(.q-table__bottom),
+      :deep(.q-table__top) {
+        border-color: var(--border-primary);
         background: var(--bg-secondary);
       }
-
-      &:hover {
-        background: rgba(30, 58, 138, 0.08) !important;
-        box-shadow: 0 2px 8px rgba(30, 58, 138, 0.08);
-      }
-    }
-
-    :deep(.unified-table-cell) {
-      border-right-color: var(--border-primary);
-      color: var(--text-primary);
-    }
-
-    :deep(.q-table__bottom),
-    :deep(.q-table__top) {
-      border-color: var(--border-primary);
-      background: var(--bg-secondary);
     }
   }
-}
 
-// Responsive adjustments
-@media (max-width: 768px) {
-  .unified-table-container {
-    .unified-table {
-      :deep(.unified-table-header),
-      :deep(.unified-table-cell) {
-        padding: var(--space-2) var(--space-3);
-        font-size: var(--text-sm);
+  // Responsive adjustments
+  @media (max-width: 768px) {
+    .unified-table-container {
+      .unified-table {
+        :deep(.unified-table-header),
+        :deep(.unified-table-cell) {
+          padding: var(--space-2) var(--space-3);
+          font-size: var(--text-sm);
+        }
       }
     }
   }
-}
 </style>

@@ -166,7 +166,10 @@ export class OrderProcessingService {
     status: string,
     notes?: string
   ): Promise<void> {
-    const updateData: Partial<Order> = { status, updated_at: new Date().toISOString() };
+    const updateData: Partial<Order> = {
+      status,
+      updated_at: new Date().toISOString(),
+    };
     if (notes) {
       updateData.notes = notes;
     }
@@ -404,8 +407,7 @@ export class OrderProcessingService {
       throw new Error($t('orderproce.ordernotfound'));
     }
 
-    const emailSubject =
-      subject || `Order ${order.order_number} - Remcura`;
+    const emailSubject = subject || `Order ${order.order_number} - Remcura`;
     const emailBody = this.generateOrderHTML(order);
 
     // In a real implementation, you would call your email service here
@@ -485,7 +487,10 @@ export class OrderProcessingService {
   /**
    * Log activity
    */
-  private async logActivity(activityType: string, data: Record<string, any>): Promise<void> {
+  private async logActivity(
+    activityType: string,
+    data: Record<string, any>
+  ): Promise<void> {
     const authStore = useAuthStore();
     const practiceId = authStore.clinicId;
     const userId = authStore.user?.id;

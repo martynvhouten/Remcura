@@ -2,6 +2,8 @@ import { supabase } from '../supabase';
 import { dashboardLogger } from '@/utils/logger';
 import { t } from '@/utils/i18n-service';
 import { ServiceErrorHandler } from '@/utils/service-error-handler';
+import { roleDashboardConfig, type RoleDashboardConfig } from './role-config';
+import type { UserRole } from '@/types/permissions';
 
 export interface PracticeWidget {
   id: string;
@@ -30,6 +32,7 @@ export interface PracticeDashboardData {
     icon: string;
     route: string;
     color: string;
+    type: string;
     permission?: string;
   }>;
   alerts: Array<{
@@ -41,80 +44,49 @@ export interface PracticeDashboardData {
   }>;
 }
 
-export type PracticeRole = 'assistant' | 'manager' | 'owner';
-
 class PracticeDashboardService {
-  getRoleConfig(role: PracticeRole) {
-    const configs = {
-      assistant: {
-        title: t('dashboard.roles.assistant'),
-        subtitle: t('dashboard.roles.assistantDescription'),
-        widgets: this.getWidgetConfig('assistant'),
-        color: 'blue'
-      },
-      manager: {
-        title: t('dashboard.roles.manager'),
-        subtitle: t('dashboard.roles.managerDescription'),
-        widgets: this.getWidgetConfig('manager'),
-        color: 'purple'
-      },
-      owner: {
-        title: t('dashboard.roles.owner'),
-        subtitle: t('dashboard.roles.ownerDescription'),
-        widgets: this.getWidgetConfig('owner'),
-        color: 'green'
-      }
+  /**
+   * Krijg role configuratie via de centrale role config service
+   */
+  getRoleConfig(role: UserRole) {
+    const config = roleDashboardConfig.getRoleConfig(role);
+
+    return {
+      title: t(config.titleKey),
+      subtitle: t(config.subtitleKey),
+      widgets: config.widgets.map(w => w.id),
+      color: config.color,
+      icon: config.icon,
     };
-
-    return configs[role] || configs.assistant;
   }
 
-  private getWidgetConfig(role: PracticeRole): string[] {
-    switch (role) {
-      case 'assistant':
-        return [
-          'low-stock-alerts',
-          'expiring-products', 
-          'order-suggestions',
-          'active-order-lists',
-          'pending-deliveries'
-        ];
-      case 'manager':
-        return [
-          'stock-trends',
-          'supplier-performance',
-          'cost-analysis',
-          'error-alerts',
-          'pending-orders'
-        ];
-      case 'owner':
-        return [
-          'inventory-value',
-          'batch-compliance',
-          'supplier-contracts',
-          'stock-rotation',
-          'audit-notifications'
-        ];
-      default:
-        return ['low-stock-alerts', 'order-suggestions'];
-    }
+  /**
+   * Krijg widget configuratie via de centrale config
+   */
+  private getWidgetConfig(role: UserRole): string[] {
+    return roleDashboardConfig.getWidgetIds(role);
   }
 
-  async getDashboardData(role: PracticeRole, practiceId: string): Promise<PracticeDashboardData> {
+  async getDashboardData(
+    role: UserRole,
+    practiceId: string
+  ): Promise<PracticeDashboardData> {
     try {
-      dashboardLogger.info(`🎯 Loading practice dashboard for role: "${role}", practice: "${practiceId}"`);
-      
+      dashboardLogger.info(
+        `🎯 Loading practice dashboard for role: "${role}", practice: "${practiceId}"`
+      );
+
       const widgetIds = this.getWidgetConfig(role);
-      
+
       // Load base metrics
       const metrics = await this.loadMetrics(practiceId);
-      
+
       // Load role-specific widgets
       const widgets = await this.loadWidgets(widgetIds, practiceId, role);
-      
+
       // Load role-specific quick actions
       const quickActions = this.getQuickActions(role);
-      
+
       // Load alerts
       const alerts = await this.loadAlerts(practiceId, role);
 
@@ -122,7 +94,7 @@ class PracticeDashboardService {
         widgets,
         metrics,
         quickActions,
-        alerts
+        alerts,
       };
     } catch (error) {
       dashboardLogger.error('Error loading practice dashboard:', error);
@@ -138,14 +110,14 @@ class PracticeDashboardService {
         ordersResponse,
         productsResponse,
         inventoryValueResponse,
-        recentActivityResponse
+        recentActivityResponse,
       ] = await Promise.all([
         // Stock levels for low stock calculation
         supabase
           .from('stock_levels')
           .select('current_quantity, minimum_quantity')
           .eq('practice_id', practiceId),
-        
+
         // Orders for pending count
         supabase
           .from('order_lists')
@@ -153,66 +125,78 @@ class PracticeDashboardService {
           .eq('practice_id', practiceId)
           .order('created_at', { ascending: false })
           .limit(50),
-        
+
         // Products count
         supabase
           .from('products')
           .select('id')
           .eq('practice_id', practiceId)
           .eq('active', true),
-        
+
         // Inventory value with JOIN optimization
         supabase
           .from('stock_levels')
-          .select(`
+          .select(
+            `
             current_quantity,
             products!inner(price)
-          `)
+          `
+          )
           .eq('practice_id', practiceId),
-        
+
         // Recent activity count
         supabase
           .from('activity_log')
           .select('id')
           .eq('practice_id', practiceId)
-          .gte('created_at', new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString())
+          .gte(
+            'created_at',
+            new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString()
+          ),
       ]);
 
       // Check for errors
       const { data: stockLevels, error: stockError } = stockLevelsResponse;
       const { data: orders, error: ordersError } = ordersResponse;
       const { data: products, error: productsError } = productsResponse;
-      const { data: inventoryValue, error: inventoryError } = inventoryValueResponse;
-      const { data: recentActivity, error: activityError } = recentActivityResponse;
+      const { data: inventoryValue, error: inventoryError } =
+        inventoryValueResponse;
+      const { data: recentActivity, error: activityError } =
+        recentActivityResponse;
 
       if (stockError) console.error('Error fetching stock levels:', stockError);
       if (ordersError) console.error('Error fetching orders:', ordersError);
-      if (productsError) console.error('Error fetching products:', productsError);
-      if (inventoryError) console.error('Error fetching inventory value:', inventoryError);
-      if (activityError) console.error('Error fetching recent activity:', activityError);
+      if (productsError)
+        console.error('Error fetching products:', productsError);
+      if (inventoryError)
+        console.error('Error fetching inventory value:', inventoryError);
+      if (activityError)
+        console.error('Error fetching recent activity:', activityError);
 
       // 🚀 PERFORMANCE: Calculate metrics from parallel data
-      const lowStockCount = stockLevels?.filter(stock => 
-        stock.current_quantity <= (stock.minimum_quantity || 0)
-      ).length || 0;
+      const lowStockCount =
+        stockLevels?.filter(
+          stock => stock.current_quantity <= (stock.minimum_quantity || 0)
+        ).length || 0;
 
-      const pendingOrders = orders?.filter(order => 
-        ['draft', 'active'].includes(order.status)
-      ).length || 0;
+      const pendingOrders =
+        orders?.filter(order => ['draft', 'active'].includes(order.status))
+          .length || 0;
 
       const totalProducts = products?.length || 0;
 
-      const totalValue = inventoryValue?.reduce((total, item) => {
-        const price = (item.products as any)?.price || 0;
-        return total + (item.current_quantity * price);
-      }, 0) || 0;
+      const totalValue =
+        inventoryValue?.reduce((total, item) => {
+          const price = (item.products as any)?.price || 0;
+          return total + item.current_quantity * price;
+        }, 0) || 0;
 
       return {
         totalProducts,
         lowStockCount,
         pendingOrders,
         totalValue: Math.round(totalValue),
-        recentActivity: recentActivity?.length || 0
+        recentActivity: recentActivity?.length || 0,
       };
     } catch (error) {
       dashboardLogger.error('Error loading metrics:', error);
@@ -222,39 +206,56 @@ class PracticeDashboardService {
         lowStockCount: 0,
         pendingOrders: 0,
         totalValue: 0,
-        recentActivity: 0
+        recentActivity: 0,
       };
     }
   }
 
-  private async loadWidgets(widgetIds: string[], practiceId: string, role: PracticeRole): Promise<PracticeWidget[]> {
+  private async loadWidgets(
+    widgetIds: string[],
+    practiceId: string,
+    role: UserRole
+  ): Promise<PracticeWidget[]> {
     const widgets: PracticeWidget[] = [];
+    const roleConfig = roleDashboardConfig.getRoleConfig(role);
 
     for (let i = 0; i < widgetIds.length; i++) {
       const widgetId = widgetIds[i];
       try {
-        const widget = await this.loadWidget(widgetId, practiceId, i);
+        // Krijg widget config voor titel en eigenschappen
+        const widgetConfig = roleConfig.widgets.find(w => w.id === widgetId);
+        const widget = await this.loadWidget(
+          widgetId,
+          practiceId,
+          widgetConfig?.position || i,
+          widgetConfig
+        );
         if (widget) {
           widgets.push(widget);
         }
       } catch (error) {
-        ServiceErrorHandler.handle(error, {
-          service: 'PracticeDashboardService',
-          operation: 'loadWidget',
-          practiceId,
-          metadata: { widgetId, role, position: i }
-        }, { rethrow: false, logLevel: 'error' });
-        
+        ServiceErrorHandler.handle(
+          error,
+          {
+            service: 'PracticeDashboardService',
+            operation: 'loadWidget',
+            practiceId,
+            metadata: { widgetId, role, position: i },
+          },
+          { rethrow: false, logLevel: 'error' }
+        );
+
         // Add error widget
+        const widgetConfig = roleConfig.widgets.find(w => w.id === widgetId);
         widgets.push({
           id: widgetId,
-          title: this.getWidgetTitle(widgetId),
+          title: t(widgetConfig?.titleKey || 'dashboard.widgets.error'),
           type: 'alert',
           data: { error: 'Failed to load widget data' },
-          size: 'medium',
-          position: i,
+          size: widgetConfig?.size || 'medium',
+          position: widgetConfig?.position || i,
           visible: true,
-          error: error instanceof Error ? error.message : 'Unknown error'
+          error: error instanceof Error ? error.message : 'Unknown error',
         });
       }
     }
@@ -262,13 +263,20 @@ class PracticeDashboardService {
     return widgets;
   }
 
-  private async loadWidget(widgetId: string, practiceId: string, position: number): Promise<PracticeWidget | null> {
+  private async loadWidget(
+    widgetId: string,
+    practiceId: string,
+    position: number,
+    widgetConfig?: any
+  ): Promise<PracticeWidget | null> {
     const baseWidget = {
       id: widgetId,
-      title: this.getWidgetTitle(widgetId),
+      title: widgetConfig
+        ? t(widgetConfig.titleKey)
+        : this.getWidgetTitle(widgetId),
       position,
       visible: true,
-      loading: false
+      loading: false,
     };
 
     switch (widgetId) {
@@ -277,7 +285,7 @@ class PracticeDashboardService {
           ...baseWidget,
           type: 'list' as const,
           size: 'medium' as const,
-          data: await this.loadLowStockAlerts(practiceId)
+          data: await this.loadLowStockAlerts(practiceId),
         };
 
       case 'expiring-products':
@@ -285,7 +293,7 @@ class PracticeDashboardService {
           ...baseWidget,
           type: 'list' as const,
           size: 'medium' as const,
-          data: await this.loadExpiringProducts(practiceId)
+          data: await this.loadExpiringProducts(practiceId),
         };
 
       case 'order-suggestions':
@@ -293,7 +301,7 @@ class PracticeDashboardService {
           ...baseWidget,
           type: 'list' as const,
           size: 'medium' as const,
-          data: await this.loadOrderSuggestions(practiceId)
+          data: await this.loadOrderSuggestions(practiceId),
         };
 
       case 'active-order-lists':
@@ -301,7 +309,7 @@ class PracticeDashboardService {
           ...baseWidget,
           type: 'table' as const,
           size: 'large' as const,
-          data: await this.loadActiveOrderLists(practiceId)
+          data: await this.loadActiveOrderLists(practiceId),
         };
 
       case 'pending-deliveries':
@@ -309,7 +317,7 @@ class PracticeDashboardService {
           ...baseWidget,
           type: 'list' as const,
           size: 'medium' as const,
-          data: await this.loadPendingDeliveries(practiceId)
+          data: await this.loadPendingDeliveries(practiceId),
         };
 
       case 'stock-trends':
@@ -317,7 +325,7 @@ class PracticeDashboardService {
           ...baseWidget,
           type: 'chart' as const,
           size: 'large' as const,
-          data: await this.loadStockTrends(practiceId)
+          data: await this.loadStockTrends(practiceId),
         };
 
       case 'supplier-performance':
@@ -325,7 +333,7 @@ class PracticeDashboardService {
           ...baseWidget,
           type: 'table' as const,
           size: 'large' as const,
-          data: await this.loadSupplierPerformance(practiceId)
+          data: await this.loadSupplierPerformance(practiceId),
         };
 
       case 'cost-analysis':
@@ -333,7 +341,7 @@ class PracticeDashboardService {
           ...baseWidget,
           type: 'chart' as const,
           size: 'medium' as const,
-          data: await this.loadCostAnalysis(practiceId)
+          data: await this.loadCostAnalysis(practiceId),
         };
 
       case 'error-alerts':
@@ -341,7 +349,7 @@ class PracticeDashboardService {
           ...baseWidget,
           type: 'alert' as const,
           size: 'medium' as const,
-          data: await this.loadErrorAlerts(practiceId)
+          data: await this.loadErrorAlerts(practiceId),
         };
 
       case 'pending-orders':
@@ -349,7 +357,7 @@ class PracticeDashboardService {
           ...baseWidget,
           type: 'metric' as const,
           size: 'small' as const,
-          data: await this.loadPendingOrdersMetric(practiceId)
+          data: await this.loadPendingOrdersMetric(practiceId),
         };
 
       case 'inventory-value':
@@ -357,7 +365,7 @@ class PracticeDashboardService {
           ...baseWidget,
           type: 'metric' as const,
           size: 'medium' as const,
-          data: await this.loadInventoryValue(practiceId)
+          data: await this.loadInventoryValue(practiceId),
         };
 
       case 'batch-compliance':
@@ -365,7 +373,7 @@ class PracticeDashboardService {
           ...baseWidget,
           type: 'metric' as const,
           size: 'medium' as const,
-          data: await this.loadBatchCompliance(practiceId)
+          data: await this.loadBatchCompliance(practiceId),
         };
 
       case 'supplier-contracts':
@@ -373,7 +381,7 @@ class PracticeDashboardService {
           ...baseWidget,
           type: 'table' as const,
           size: 'large' as const,
-          data: await this.loadSupplierContracts()
+          data: await this.loadSupplierContracts(),
         };
 
       case 'stock-rotation':
@@ -381,7 +389,7 @@ class PracticeDashboardService {
           ...baseWidget,
           type: 'chart' as const,
           size: 'medium' as const,
-          data: await this.loadStockRotation(practiceId)
+          data: await this.loadStockRotation(practiceId),
         };
 
       case 'audit-notifications':
@@ -389,7 +397,91 @@ class PracticeDashboardService {
           ...baseWidget,
           type: 'list' as const,
           size: 'medium' as const,
-          data: await this.loadAuditNotifications(practiceId)
+          data: await this.loadAuditNotifications(practiceId),
+        };
+
+      // LOGISTICS role widgets
+      case 'stock-movements':
+        return {
+          ...baseWidget,
+          type: 'list' as const,
+          size: 'medium' as const,
+          data: await this.loadStockMovements(practiceId),
+        };
+
+      case 'location-overview':
+        return {
+          ...baseWidget,
+          type: 'chart' as const,
+          size: 'medium' as const,
+          data: await this.loadLocationOverview(practiceId),
+        };
+
+      case 'transport-status':
+        return {
+          ...baseWidget,
+          type: 'metric' as const,
+          size: 'small' as const,
+          data: await this.loadTransportStatus(practiceId),
+        };
+
+      // MEMBER role widgets
+      case 'stock-overview':
+        return {
+          ...baseWidget,
+          type: 'metric' as const,
+          size: 'medium' as const,
+          data: await this.loadStockOverview(practiceId),
+        };
+
+      case 'my-tasks':
+        return {
+          ...baseWidget,
+          type: 'list' as const,
+          size: 'medium' as const,
+          data: await this.loadMyTasks(practiceId),
+        };
+
+      // GUEST role widgets
+      case 'public-info':
+        return {
+          ...baseWidget,
+          type: 'metric' as const,
+          size: 'medium' as const,
+          data: await this.loadPublicInfo(practiceId),
+        };
+
+      // PLATFORM_OWNER role widgets
+      case 'system-overview':
+        return {
+          ...baseWidget,
+          type: 'metric' as const,
+          size: 'large' as const,
+          data: await this.loadSystemOverview(),
+        };
+
+      case 'user-analytics':
+        return {
+          ...baseWidget,
+          type: 'chart' as const,
+          size: 'medium' as const,
+          data: await this.loadUserAnalytics(),
+        };
+
+      case 'platform-health':
+        return {
+          ...baseWidget,
+          type: 'alert' as const,
+          size: 'medium' as const,
+          data: await this.loadPlatformHealth(),
+        };
+
+      case 'subscription-status':
+        return {
+          ...baseWidget,
+          type: 'table' as const,
+          size: 'large' as const,
+          data: await this.loadSubscriptionStatus(),
         };
 
       default:
@@ -401,12 +493,14 @@ class PracticeDashboardService {
   private async loadLowStockAlerts(practiceId: string) {
     const { data, error } = await supabase
       .from('stock_levels')
-      .select(`
+      .select(
+        `
         current_quantity,
         minimum_quantity,
         products!inner(name, category),
         practice_locations!inner(name)
-      `)
+      `
+      )
       .eq('practice_id', practiceId)
       .order('current_quantity', { ascending: true })
       .limit(10);
@@ -417,31 +511,39 @@ class PracticeDashboardService {
     }
 
     return {
-      items: data?.filter((item: any) => 
-        item.current_quantity <= (item.minimum_quantity || 0)
-      ).map((item: any) => ({
-        product_name: item.products?.name || 'Unknown Product',
-        category: item.products?.category || 'Unknown Category', 
-        location: item.practice_locations?.name || 'Unknown Location',
-        current: item.current_quantity || 0,
-        minimum: item.minimum_quantity || 0,
-        urgency: (item.current_quantity || 0) === 0 ? 'critical' : 'high'
-      })) || []
+      items:
+        data
+          ?.filter(
+            (item: any) => item.current_quantity <= (item.minimum_quantity || 0)
+          )
+          .map((item: any) => ({
+            product_name: item.products?.name || 'Unknown Product',
+            category: item.products?.category || 'Unknown Category',
+            location: item.practice_locations?.name || 'Unknown Location',
+            current: item.current_quantity || 0,
+            minimum: item.minimum_quantity || 0,
+            urgency: (item.current_quantity || 0) === 0 ? 'critical' : 'high',
+          })) || [],
     };
   }
 
   private async loadExpiringProducts(practiceId: string) {
     const { data, error } = await supabase
       .from('product_batches')
-      .select(`
+      .select(
+        `
         batch_number,
         expiry_date,
         current_quantity,
         products!inner(name),
         practice_locations!inner(name)
-      `)
+      `
+      )
       .eq('practice_id', practiceId)
-      .lte('expiry_date', new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString())
+      .lte(
+        'expiry_date',
+        new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString()
+      )
       .order('expiry_date', { ascending: true })
       .limit(10);
 
@@ -451,55 +553,66 @@ class PracticeDashboardService {
     }
 
     return {
-      items: data?.map((item: any) => ({
-        product_name: item.products?.name || 'Unknown Product',
-        batch_number: item.batch_number || 'N/A',
-        expiry_date: item.expiry_date || null,
-        quantity: item.current_quantity || 0,
-        location: item.practice_locations?.name || 'Unknown Location',
-        days_until_expiry: item.expiry_date ? Math.ceil((new Date(item.expiry_date).getTime() - Date.now()) / (1000 * 60 * 60 * 24)) : 0
-      })) || []
+      items:
+        data?.map((item: any) => ({
+          product_name: item.products?.name || 'Unknown Product',
+          batch_number: item.batch_number || 'N/A',
+          expiry_date: item.expiry_date || null,
+          quantity: item.current_quantity || 0,
+          location: item.practice_locations?.name || 'Unknown Location',
+          days_until_expiry: item.expiry_date
+            ? Math.ceil(
+                (new Date(item.expiry_date).getTime() - Date.now()) /
+                  (1000 * 60 * 60 * 24)
+              )
+            : 0,
+        })) || [],
     };
   }
 
   private async loadOrderSuggestions(practiceId: string) {
     const { data } = await supabase
       .from('order_suggestions')
-      .select(`
+      .select(
+        `
         current_stock,
         minimum_stock,
         suggested_quantity,
         urgency_level,
         products!inner(name, category)
-      `)
+      `
+      )
       .eq('practice_id', practiceId)
       .gt('expires_at', new Date().toISOString())
       .order('urgency_level', { ascending: false })
       .limit(10);
 
     return {
-      items: data?.map(item => ({
-        product_name: (item.products as any).name,
-        category: (item.products as any).category,
-        current_stock: item.current_stock,
-        minimum_stock: item.minimum_stock,
-        suggested_quantity: item.suggested_quantity,
-        urgency: item.urgency_level
-      })) || []
+      items:
+        data?.map(item => ({
+          product_name: (item.products as any).name,
+          category: (item.products as any).category,
+          current_stock: item.current_stock,
+          minimum_stock: item.minimum_stock,
+          suggested_quantity: item.suggested_quantity,
+          urgency: item.urgency_level,
+        })) || [],
     };
   }
 
   private async loadActiveOrderLists(practiceId: string) {
     const { data } = await supabase
       .from('order_lists')
-      .select(`
+      .select(
+        `
         name,
         status,
         total_items,
         total_value,
         created_at,
         suppliers(name)
-      `)
+      `
+      )
       .eq('practice_id', practiceId)
       .in('status', ['draft', 'active'])
       .order('updated_at', { ascending: false })
@@ -507,42 +620,50 @@ class PracticeDashboardService {
 
     return {
       headers: ['Name', 'Supplier', 'Items', 'Value', 'Status', 'Created'],
-      rows: data?.map(item => [
-        item.name,
-        (item.suppliers as any)?.name || 'No supplier',
-        item.total_items,
-        `€${item.total_value}`,
-        item.status,
-        new Date(item.created_at).toLocaleDateString()
-      ]) || []
+      rows:
+        data?.map(item => [
+          item.name,
+          (item.suppliers as any)?.name || 'No supplier',
+          item.total_items,
+          `€${item.total_value}`,
+          item.status,
+          new Date(item.created_at).toLocaleDateString(),
+        ]) || [],
     };
   }
 
   private async loadPendingDeliveries(practiceId: string) {
     const { data } = await supabase
       .from('supplier_orders')
-      .select(`
+      .select(
+        `
         delivery_expected,
         total_items,
         total_value,
         suppliers!inner(name),
         order_lists!inner(name, practice_id)
-      `)
+      `
+      )
       .eq('order_lists.practice_id', practiceId)
       .in('status', ['sent', 'confirmed'])
       .order('delivery_expected', { ascending: true })
       .limit(10);
 
     return {
-      items: data?.map(item => ({
-        supplier_name: (item.suppliers as any).name,
-        order_name: (item.order_lists as any).name,
-        expected_date: item.delivery_expected,
-        total_items: item.total_items,
-        total_value: item.total_value,
-        days_until_delivery: item.delivery_expected ? 
-          Math.ceil((new Date(item.delivery_expected).getTime() - Date.now()) / (1000 * 60 * 60 * 24)) : null
-      })) || []
+      items:
+        data?.map(item => ({
+          supplier_name: (item.suppliers as any).name,
+          order_name: (item.order_lists as any).name,
+          expected_date: item.delivery_expected,
+          total_items: item.total_items,
+          total_value: item.total_value,
+          days_until_delivery: item.delivery_expected
+            ? Math.ceil(
+                (new Date(item.delivery_expected).getTime() - Date.now()) /
+                  (1000 * 60 * 60 * 24)
+              )
+            : null,
+        })) || [],
     };
   }
 
@@ -552,17 +673,23 @@ class PracticeDashboardService {
       .from('stock_movements')
       .select('created_at, movement_type, quantity_change')
       .eq('practice_id', practiceId)
-      .gte('created_at', new Date(Date.now() - 90 * 24 * 60 * 60 * 1000).toISOString())
+      .gte(
+        'created_at',
+        new Date(Date.now() - 90 * 24 * 60 * 60 * 1000).toISOString()
+      )
       .order('created_at', { ascending: true });
 
     // Group by week and movement type
     const weeklyData: Record<string, Record<string, number>> = {};
-    
+
     data?.forEach(movement => {
       const week = new Date(movement.created_at).toISOString().split('T')[0]; // Simplified to daily for now
       if (!weeklyData[week]) weeklyData[week] = {};
-      if (!weeklyData[week][movement.movement_type]) weeklyData[week][movement.movement_type] = 0;
-      weeklyData[week][movement.movement_type] += Number(movement.quantity_change);
+      if (!weeklyData[week][movement.movement_type])
+        weeklyData[week][movement.movement_type] = 0;
+      weeklyData[week][movement.movement_type] += Number(
+        movement.quantity_change
+      );
     });
 
     return {
@@ -571,57 +698,77 @@ class PracticeDashboardService {
       datasets: [
         {
           label: 'In',
-          data: Object.keys(weeklyData).slice(-14).map(week => weeklyData[week]['in'] || 0),
-          color: '#4CAF50'
+          data: Object.keys(weeklyData)
+            .slice(-14)
+            .map(week => weeklyData[week]['in'] || 0),
+          color: '#4CAF50',
         },
         {
-          label: 'Out', 
-          data: Object.keys(weeklyData).slice(-14).map(week => Math.abs(weeklyData[week]['out'] || 0)),
-          color: '#F44336'
-        }
-      ]
+          label: 'Out',
+          data: Object.keys(weeklyData)
+            .slice(-14)
+            .map(week => Math.abs(weeklyData[week]['out'] || 0)),
+          color: '#F44336',
+        },
+      ],
     };
   }
 
   private async loadSupplierPerformance(practiceId: string) {
     const { data } = await supabase.rpc('get_supplier_performance', {
-      practice_id_param: practiceId
+      practice_id_param: practiceId,
     });
 
     return {
-      headers: ['Supplier', 'Integration', 'Orders', 'Avg Delivery', 'Failed', 'Last Sync'],
-      rows: data?.map((item: any) => [
-        item.supplier_name,
-        item.integration_type,
-        item.total_orders,
-        item.avg_delivery_days ? `${item.avg_delivery_days} days` : 'N/A',
-        item.failed_orders,
-        item.last_sync_at ? new Date(item.last_sync_at).toLocaleDateString() : 'Never'
-      ]) || []
+      headers: [
+        'Supplier',
+        'Integration',
+        'Orders',
+        'Avg Delivery',
+        'Failed',
+        'Last Sync',
+      ],
+      rows:
+        data?.map((item: any) => [
+          item.supplier_name,
+          item.integration_type,
+          item.total_orders,
+          item.avg_delivery_days ? `${item.avg_delivery_days} days` : 'N/A',
+          item.failed_orders,
+          item.last_sync_at
+            ? new Date(item.last_sync_at).toLocaleDateString()
+            : 'Never',
+        ]) || [],
     };
   }
 
   private async loadCostAnalysis(practiceId: string) {
     const { data } = await supabase
       .from('product_batches')
-      .select(`
+      .select(
+        `
         total_cost,
         products!inner(category)
-      `)
+      `
+      )
       .eq('practice_id', practiceId)
-      .gte('created_at', new Date(Date.now() - 90 * 24 * 60 * 60 * 1000).toISOString());
+      .gte(
+        'created_at',
+        new Date(Date.now() - 90 * 24 * 60 * 60 * 1000).toISOString()
+      );
 
     const categoryTotals: Record<string, number> = {};
     data?.forEach(batch => {
       const category = (batch.products as any).category || 'Unknown';
-      categoryTotals[category] = (categoryTotals[category] || 0) + Number(batch.total_cost || 0);
+      categoryTotals[category] =
+        (categoryTotals[category] || 0) + Number(batch.total_cost || 0);
     });
 
     return {
       chart_type: 'doughnut',
       labels: Object.keys(categoryTotals),
       data: Object.values(categoryTotals),
-      total: Object.values(categoryTotals).reduce((sum, val) => sum + val, 0)
+      total: Object.values(categoryTotals).reduce((sum, val) => sum + val, 0),
     };
   }
 
@@ -631,17 +778,21 @@ class PracticeDashboardService {
       .select('activity_type, description, created_at')
       .eq('practice_id', practiceId)
       .ilike('activity_type', '%error%')
-      .gte('created_at', new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString())
+      .gte(
+        'created_at',
+        new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString()
+      )
       .order('created_at', { ascending: false })
       .limit(5);
 
     return {
-      alerts: data?.map(alert => ({
-        type: 'error' as const,
-        title: alert.activity_type,
-        message: alert.description,
-        timestamp: alert.created_at
-      })) || []
+      alerts:
+        data?.map(alert => ({
+          type: 'error' as const,
+          title: alert.activity_type,
+          message: alert.description,
+          timestamp: alert.created_at,
+        })) || [],
     };
   }
 
@@ -652,12 +803,14 @@ class PracticeDashboardService {
       .eq('practice_id', practiceId)
       .in('status', ['draft', 'active']);
 
-    const totalValue = data?.reduce((sum, order) => sum + Number(order.total_value || 0), 0) || 0;
+    const totalValue =
+      data?.reduce((sum, order) => sum + Number(order.total_value || 0), 0) ||
+      0;
 
     return {
       count: count || 0,
       total_value: totalValue,
-      trend: 'stable' // Could be calculated from historical data
+      trend: 'stable', // Could be calculated from historical data
     };
   }
 
@@ -665,10 +818,12 @@ class PracticeDashboardService {
   private async loadInventoryValue(practiceId: string) {
     const { data } = await supabase
       .from('stock_levels')
-      .select(`
+      .select(
+        `
         current_quantity,
         products!inner(price, category)
-      `)
+      `
+      )
       .eq('practice_id', practiceId);
 
     let totalValue = 0;
@@ -679,10 +834,10 @@ class PracticeDashboardService {
       const price = Number((item.products as any).price || 0);
       const quantity = Number(item.current_quantity || 0);
       const value = price * quantity;
-      
+
       totalValue += value;
       totalProducts++;
-      
+
       const category = (item.products as any).category || 'Unknown';
       categoryValues[category] = (categoryValues[category] || 0) + value;
     });
@@ -691,7 +846,8 @@ class PracticeDashboardService {
       total_value: totalValue,
       total_products: totalProducts,
       category_breakdown: categoryValues,
-      average_value_per_product: totalProducts > 0 ? totalValue / totalProducts : 0
+      average_value_per_product:
+        totalProducts > 0 ? totalValue / totalProducts : 0,
     };
   }
 
@@ -703,7 +859,9 @@ class PracticeDashboardService {
       .eq('status', 'active');
 
     const now = new Date();
-    const thirtyDaysFromNow = new Date(now.getTime() + 30 * 24 * 60 * 60 * 1000);
+    const thirtyDaysFromNow = new Date(
+      now.getTime() + 30 * 24 * 60 * 60 * 1000
+    );
 
     let totalBatches = 0;
     let expiringSoon = 0;
@@ -712,11 +870,11 @@ class PracticeDashboardService {
 
     data?.forEach(batch => {
       totalBatches++;
-      
+
       const expiryDate = new Date(batch.expiry_date);
       if (expiryDate <= now) expired++;
       else if (expiryDate <= thirtyDaysFromNow) expiringSoon++;
-      
+
       if (batch.quality_check_passed === false) qualityIssues++;
     });
 
@@ -725,14 +883,18 @@ class PracticeDashboardService {
       expiring_soon: expiringSoon,
       expired: expired,
       quality_issues: qualityIssues,
-      compliance_rate: totalBatches > 0 ? ((totalBatches - expired - qualityIssues) / totalBatches) * 100 : 100
+      compliance_rate:
+        totalBatches > 0
+          ? ((totalBatches - expired - qualityIssues) / totalBatches) * 100
+          : 100,
     };
   }
 
   private async loadSupplierContracts() {
     const { data } = await supabase
       .from('suppliers')
-      .select(`
+      .select(
+        `
         name,
         integration_type,
         order_method,
@@ -740,49 +902,70 @@ class PracticeDashboardService {
         minimum_order_amount,
         payment_terms,
         supplier_products(id)
-      `)
+      `
+      )
       .eq('is_active', true)
       .limit(10);
 
     return {
-      headers: ['Supplier', 'Type', 'Method', 'Products', 'Min Order', 'Payment Terms', 'Last Sync'],
-      rows: data?.map(supplier => [
-        supplier.name,
-        supplier.integration_type,
-        supplier.order_method,
-        (supplier.supplier_products as any[])?.length || 0,
-        `€${supplier.minimum_order_amount || 0}`,
-        `${supplier.payment_terms || 30} days`,
-        supplier.last_sync_at ? new Date(supplier.last_sync_at).toLocaleDateString() : 'Never'
-      ]) || []
+      headers: [
+        'Supplier',
+        'Type',
+        'Method',
+        'Products',
+        'Min Order',
+        'Payment Terms',
+        'Last Sync',
+      ],
+      rows:
+        data?.map(supplier => [
+          supplier.name,
+          supplier.integration_type,
+          supplier.order_method,
+          (supplier.supplier_products as any[])?.length || 0,
+          `€${supplier.minimum_order_amount || 0}`,
+          `${supplier.payment_terms || 30} days`,
+          supplier.last_sync_at
+            ? new Date(supplier.last_sync_at).toLocaleDateString()
+            : 'Never',
+        ]) || [],
     };
   }
 
   private async loadStockRotation(practiceId: string) {
     const { data } = await supabase
       .from('product_batches')
-      .select(`
+      .select(
+        `
         created_at,
         received_date,
         products!inner(category)
-      `)
+      `
+      )
       .eq('practice_id', practiceId)
       .eq('status', 'depleted')
-      .gte('created_at', new Date(Date.now() - 180 * 24 * 60 * 60 * 1000).toISOString());
+      .gte(
+        'created_at',
+        new Date(Date.now() - 180 * 24 * 60 * 60 * 1000).toISOString()
+      );
 
-    const categoryRotation: Record<string, { total_days: number; count: number }> = {};
+    const categoryRotation: Record<
+      string,
+      { total_days: number; count: number }
+    > = {};
 
     data?.forEach(batch => {
       const category = (batch.products as any).category || 'Unknown';
       const shelfLifeDays = Math.ceil(
-        (new Date(batch.created_at).getTime() - new Date(batch.received_date).getTime()) / 
-        (1000 * 60 * 60 * 24)
+        (new Date(batch.created_at).getTime() -
+          new Date(batch.received_date).getTime()) /
+          (1000 * 60 * 60 * 24)
       );
 
       if (!categoryRotation[category]) {
         categoryRotation[category] = { total_days: 0, count: 0 };
       }
-      
+
       categoryRotation[category].total_days += shelfLifeDays;
       categoryRotation[category].count++;
     });
@@ -790,17 +973,18 @@ class PracticeDashboardService {
     return {
       chart_type: 'bar',
       labels: Object.keys(categoryRotation),
-      data: Object.values(categoryRotation).map(cat => 
+      data: Object.values(categoryRotation).map(cat =>
         cat.count > 0 ? Math.round(cat.total_days / cat.count) : 0
       ),
-      title: 'Average Shelf Life by Category (days)'
+      title: 'Average Shelf Life by Category (days)',
     };
   }
 
   private async loadAuditNotifications(practiceId: string) {
     const { data } = await supabase
       .from('counting_sessions')
-      .select(`
+      .select(
+        `
         name,
         status,
         total_products_counted,
@@ -808,23 +992,28 @@ class PracticeDashboardService {
         total_variance_value,
         completed_at,
         practice_locations!inner(name)
-      `)
+      `
+      )
       .eq('practice_id', practiceId)
       .eq('status', 'completed')
-      .gte('completed_at', new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString())
+      .gte(
+        'completed_at',
+        new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString()
+      )
       .order('completed_at', { ascending: false })
       .limit(10);
 
     return {
-      items: data?.map(session => ({
-        session_name: session.name,
-        location: (session.practice_locations as any).name,
-        products_counted: session.total_products_counted,
-        variances: session.products_with_variance,
-        variance_value: session.total_variance_value,
-        completed_at: session.completed_at,
-        status: session.products_with_variance > 0 ? 'warning' : 'success'
-      })) || []
+      items:
+        data?.map(session => ({
+          session_name: session.name,
+          location: (session.practice_locations as any).name,
+          products_counted: session.total_products_counted,
+          variances: session.products_with_variance,
+          variance_value: session.total_variance_value,
+          completed_at: session.completed_at,
+          status: session.products_with_variance > 0 ? 'warning' : 'success',
+        })) || [],
     };
   }
 
@@ -844,88 +1033,26 @@ class PracticeDashboardService {
       'batch-compliance': t('dashboard.widgets.batchCompliance'),
       'supplier-contracts': t('dashboard.widgets.supplierContracts'),
       'stock-rotation': t('dashboard.widgets.stockRotation'),
-      'audit-notifications': t('dashboard.widgets.auditNotifications')
+      'audit-notifications': t('dashboard.widgets.auditNotifications'),
     };
 
     return titles[widgetId] || widgetId;
   }
 
-  private getQuickActions(role: PracticeRole) {
-    const baseActions = [
-      {
-        id: 'scan-product',
-        label: t('dashboard.quickActions.scanProduct'),
-        icon: 'qr_code_scanner',
-        route: '/scan',
-        color: 'primary'
-      },
-      {
-        id: 'view-stock',
-        label: t('dashboard.quickActions.viewStock'),
-        icon: 'inventory',
-        route: '/inventory/levels',
-        color: 'info'
-      }
-    ];
+  private getQuickActions(role: UserRole) {
+    const quickActions = roleDashboardConfig.getQuickActions(role);
 
-    const roleSpecificActions: Record<PracticeRole, typeof baseActions> = {
-      assistant: [
-        ...baseActions,
-        {
-          id: 'create-order',
-          label: t('dashboard.quickActions.createOrder'),
-          icon: 'add_shopping_cart',
-          route: '/orders/create',
-          color: 'success'
-        },
-        {
-          id: 'count-stock',
-          label: t('dashboard.quickActions.countStock'),
-          icon: 'fact_check',
-          route: '/inventory/counting',
-          color: 'warning'
-        }
-      ],
-      manager: [
-        ...baseActions,
-        {
-          id: 'view-analytics',
-          label: t('dashboard.quickActions.viewAnalytics'),
-          icon: 'analytics',
-          route: '/analytics',
-          color: 'purple'
-        },
-        {
-          id: 'manage-suppliers',
-          label: t('dashboard.quickActions.manageSuppliers'),
-          icon: 'business',
-          route: '/suppliers',
-          color: 'indigo'
-        }
-      ],
-      owner: [
-        ...baseActions,
-        {
-          id: 'financial-reports',
-          label: t('dashboard.quickActions.financialReports'),
-          icon: 'account_balance',
-          route: '/reports/financial',
-          color: 'green'
-        },
-        {
-          id: 'manage-users',
-          label: t('dashboard.quickActions.manageUsers'),
-          icon: 'people',
-          route: '/admin/users',
-          color: 'red'
-        }
-      ]
-    };
-
-    return roleSpecificActions[role] || baseActions;
+    return quickActions.map(action => ({
+      id: action.id,
+      label: t(action.labelKey),
+      icon: action.icon,
+      route: action.route,
+      color: action.color,
+      type: action.type,
+    }));
   }
 
-  private async loadAlerts(practiceId: string, role: PracticeRole) {
+  private async loadAlerts(practiceId: string, role: UserRole) {
     const alerts = [];
 
     try {
@@ -943,7 +1070,7 @@ class PracticeDashboardService {
           type: 'warning' as const,
           message: t('dashboard.alerts.lowStockMessage'),
           action: '/inventory/levels',
-          actionLabel: t('dashboard.alerts.viewStock')
+          actionLabel: t('dashboard.alerts.viewStock'),
         });
       }
 
@@ -961,7 +1088,7 @@ class PracticeDashboardService {
             type: 'error' as const,
             message: t('dashboard.alerts.failedOrdersMessage'),
             action: '/orders',
-            actionLabel: t('dashboard.alerts.viewOrders')
+            actionLabel: t('dashboard.alerts.viewOrders'),
           });
         }
       }
@@ -981,7 +1108,7 @@ class PracticeDashboardService {
             type: 'error' as const,
             message: t('dashboard.alerts.expiredBatchesMessage'),
             action: '/inventory/batches',
-            actionLabel: t('dashboard.alerts.viewBatches')
+            actionLabel: t('dashboard.alerts.viewBatches'),
           });
         }
       }
@@ -990,6 +1117,258 @@ class PracticeDashboardService {
     }
 
     return alerts;
+  }
+
+  // Additional widget loaders for new roles
+
+  // LOGISTICS role widget loaders
+  private async loadStockMovements(practiceId: string) {
+    const { data } = await supabase
+      .from('stock_movements')
+      .select(
+        `
+        movement_type,
+        quantity_change,
+        reason,
+        created_at,
+        products!inner(name),
+        practice_locations!inner(name)
+      `
+      )
+      .eq('practice_id', practiceId)
+      .order('created_at', { ascending: false })
+      .limit(10);
+
+    return {
+      items:
+        data?.map(movement => ({
+          product_name: (movement.products as any).name,
+          location: (movement.practice_locations as any).name,
+          movement_type: movement.movement_type,
+          quantity_change: movement.quantity_change,
+          reason: movement.reason || 'Manual adjustment',
+          timestamp: movement.created_at,
+        })) || [],
+    };
+  }
+
+  private async loadLocationOverview(practiceId: string) {
+    const { data } = await supabase
+      .from('stock_levels')
+      .select(
+        `
+        current_quantity,
+        practice_locations!inner(name)
+      `
+      )
+      .eq('practice_id', practiceId);
+
+    const locationTotals: Record<string, number> = {};
+    data?.forEach(item => {
+      const location = (item.practice_locations as any).name;
+      locationTotals[location] =
+        (locationTotals[location] || 0) + Number(item.current_quantity);
+    });
+
+    return {
+      chart_type: 'doughnut',
+      labels: Object.keys(locationTotals),
+      data: Object.values(locationTotals),
+      total: Object.values(locationTotals).reduce((sum, val) => sum + val, 0),
+    };
+  }
+
+  private async loadTransportStatus(practiceId: string) {
+    const { data } = await supabase
+      .from('supplier_orders')
+      .select(
+        `
+        status,
+        order_lists!inner(practice_id)
+      `
+      )
+      .eq('order_lists.practice_id', practiceId)
+      .in('status', ['sent', 'in_transit', 'delivered']);
+
+    const statusCounts =
+      data?.reduce((acc: Record<string, number>, order) => {
+        acc[order.status] = (acc[order.status] || 0) + 1;
+        return acc;
+      }, {}) || {};
+
+    return {
+      in_transit: statusCounts.in_transit || 0,
+      delivered_today: statusCounts.delivered || 0,
+      pending_delivery: statusCounts.sent || 0,
+      total_active: Object.values(statusCounts).reduce(
+        (sum: number, val) => sum + val,
+        0
+      ),
+    };
+  }
+
+  // MEMBER role widget loaders
+  private async loadStockOverview(practiceId: string) {
+    const { data } = await supabase
+      .from('stock_levels')
+      .select('current_quantity, minimum_quantity')
+      .eq('practice_id', practiceId);
+
+    const totalItems = data?.length || 0;
+    const lowStockItems =
+      data?.filter(
+        item => item.current_quantity <= (item.minimum_quantity || 0)
+      ).length || 0;
+    const outOfStockItems =
+      data?.filter(item => item.current_quantity <= 0).length || 0;
+
+    return {
+      total_items: totalItems,
+      low_stock_items: lowStockItems,
+      out_of_stock_items: outOfStockItems,
+      healthy_stock: totalItems - lowStockItems - outOfStockItems,
+    };
+  }
+
+  private async loadMyTasks(practiceId: string) {
+    // Deze zou gekoppeld kunnen worden aan een task systeem
+    // Voor nu simuleren we enkele basis taken
+    const tasks = [
+      {
+        id: 'count-location-1',
+        title: 'Voorraad tellen locatie 1',
+        priority: 'high',
+        due_date: new Date(Date.now() + 2 * 24 * 60 * 60 * 1000).toISOString(),
+        type: 'counting',
+      },
+      {
+        id: 'receive-order-123',
+        title: 'Bestelling #123 ontvangen',
+        priority: 'medium',
+        due_date: new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString(),
+        type: 'receiving',
+      },
+    ];
+
+    return {
+      items: tasks.map(task => ({
+        ...task,
+        days_until_due: Math.ceil(
+          (new Date(task.due_date).getTime() - Date.now()) /
+            (1000 * 60 * 60 * 24)
+        ),
+      })),
+    };
+  }
+
+  // GUEST role widget loaders
+  private async loadPublicInfo(practiceId: string) {
+    return {
+      practice_name: 'Demo Practice',
+      status: 'Active',
+      last_updated: new Date().toISOString(),
+      public_info: 'Welcome to our inventory system',
+    };
+  }
+
+  // PLATFORM_OWNER role widget loaders
+  private async loadSystemOverview() {
+    // Deze zouden echte platform metrics moeten zijn
+    return {
+      total_practices: 150,
+      active_users: 1200,
+      total_transactions: 50000,
+      system_uptime: 99.9,
+      storage_used: '85%',
+      api_calls_today: 25000,
+    };
+  }
+
+  private async loadUserAnalytics() {
+    // Simulatie van user analytics data
+    const lastWeek = Array.from({ length: 7 }, (_, i) => {
+      const date = new Date();
+      date.setDate(date.getDate() - (6 - i));
+      return date.toISOString().split('T')[0];
+    });
+
+    return {
+      chart_type: 'line',
+      labels: lastWeek,
+      datasets: [
+        {
+          label: 'Active Users',
+          data: [850, 920, 1100, 980, 1200, 1150, 1180],
+          color: '#2196F3',
+        },
+        {
+          label: 'New Registrations',
+          data: [12, 18, 25, 15, 30, 22, 28],
+          color: '#4CAF50',
+        },
+      ],
+    };
+  }
+
+  private async loadPlatformHealth() {
+    // Platform health check alerts
+    const alerts = [
+      {
+        type: 'success' as const,
+        title: 'System Status',
+        message: 'All systems operational',
+        timestamp: new Date().toISOString(),
+      },
+      {
+        type: 'warning' as const,
+        title: 'Database Performance',
+        message: 'Slightly elevated response times detected',
+        timestamp: new Date(Date.now() - 30 * 60 * 1000).toISOString(),
+      },
+    ];
+
+    return { alerts };
+  }
+
+  private async loadSubscriptionStatus() {
+    // Platform subscription overview
+    const subscriptions = [
+      {
+        practice_name: 'Practice A',
+        plan: 'Professional',
+        status: 'Active',
+        billing_period: 'Monthly',
+        amount: '€99',
+        next_billing: '2024-02-15',
+      },
+      {
+        practice_name: 'Practice B',
+        plan: 'Enterprise',
+        status: 'Active',
+        billing_period: 'Yearly',
+        amount: '€999',
+        next_billing: '2024-05-20',
+      },
+    ];
+
+    return {
+      headers: [
+        'Practice',
+        'Plan',
+        'Status',
+        'Billing',
+        'Amount',
+        'Next Billing',
+      ],
+      rows: subscriptions.map(sub => [
+        sub.practice_name,
+        sub.plan,
+        sub.status,
+        sub.billing_period,
+        sub.amount,
+        sub.next_billing,
+      ]),
+    };
   }
 }
 

@@ -1,10 +1,10 @@
 /**
  * Order Lists Filter Preset
- * 
+ *
  * FilterPreset configuratie voor OrderListsPage met search, supplier en status filters
  */
 
-import type { FilterPreset } from '@/types/filters'
+import type { FilterPreset } from '@/types/filters';
 
 export const orderListsFilterPreset: FilterPreset = {
   id: 'orderLists',
@@ -24,7 +24,7 @@ export const orderListsFilterPreset: FilterPreset = {
       clearable: true,
       debounce: 300,
       size: 'md',
-      searchFields: ['name', 'description', 'supplier.name']
+      searchFields: ['name', 'description', 'supplier.name'],
     },
 
     // Supplier Filter - prioriteit 2
@@ -43,8 +43,8 @@ export const orderListsFilterPreset: FilterPreset = {
         valueField: 'id',
         labelField: 'name',
         orderBy: [{ field: 'name', direction: 'asc' }],
-        filters: [{ field: 'active', operator: 'eq', value: true }]
-      }
+        filters: [{ field: 'active', operator: 'eq', value: true }],
+      },
     },
 
     // Status Filter - prioriteit 3
@@ -60,14 +60,44 @@ export const orderListsFilterPreset: FilterPreset = {
       dataSource: {
         type: 'static',
         options: [
-          { value: 'draft', label: 'orderLists.statusDraft', icon: 'edit', color: 'grey' },
-          { value: 'ready', label: 'orderLists.statusReady', icon: 'check_circle', color: 'blue' },
-          { value: 'submitted', label: 'orderLists.statusSubmitted', icon: 'send', color: 'orange' },
-          { value: 'confirmed', label: 'orderLists.statusConfirmed', icon: 'verified', color: 'green' },
-          { value: 'delivered', label: 'orderLists.statusDelivered', icon: 'local_shipping', color: 'positive' },
-          { value: 'cancelled', label: 'orderLists.statusCancelled', icon: 'cancel', color: 'negative' }
-        ]
-      }
+          {
+            value: 'draft',
+            label: 'orderLists.statusDraft',
+            icon: 'edit',
+            color: 'grey',
+          },
+          {
+            value: 'ready',
+            label: 'orderLists.statusReady',
+            icon: 'check_circle',
+            color: 'blue',
+          },
+          {
+            value: 'submitted',
+            label: 'orderLists.statusSubmitted',
+            icon: 'send',
+            color: 'orange',
+          },
+          {
+            value: 'confirmed',
+            label: 'orderLists.statusConfirmed',
+            icon: 'verified',
+            color: 'green',
+          },
+          {
+            value: 'delivered',
+            label: 'orderLists.statusDelivered',
+            icon: 'local_shipping',
+            color: 'positive',
+          },
+          {
+            value: 'cancelled',
+            label: 'orderLists.statusCancelled',
+            icon: 'cancel',
+            color: 'negative',
+          },
+        ],
+      },
     },
 
     // Date Range Filter - prioriteit 4
@@ -77,12 +107,12 @@ export const orderListsFilterPreset: FilterPreset = {
       label: 'orderLists.dateRange',
       placeholder: {
         start: 'orderLists.dateFrom',
-        end: 'orderLists.dateTo'
+        end: 'orderLists.dateTo',
       },
       icon: 'date_range',
       priority: 4,
       clearable: true,
-      size: 'md'
+      size: 'md',
     },
 
     // Total Amount Range - prioriteit 5
@@ -92,14 +122,14 @@ export const orderListsFilterPreset: FilterPreset = {
       label: 'orderLists.amountRange',
       placeholder: {
         min: 'orderLists.minAmount',
-        max: 'orderLists.maxAmount'
+        max: 'orderLists.maxAmount',
       },
       icon: 'euro',
       priority: 5,
       clearable: true,
       currency: '€',
       step: 0.01,
-      size: 'md'
+      size: 'md',
     },
 
     // Only lists with items
@@ -110,22 +140,22 @@ export const orderListsFilterPreset: FilterPreset = {
       icon: 'inventory',
       priority: 6,
       variant: 'checkbox',
-      size: 'md'
-    }
+      size: 'md',
+    },
   ],
 
   layout: {
     columns: {
       desktop: 3,
       tablet: 2,
-      mobile: 1
+      mobile: 1,
     },
     showMoreThreshold: 4,
     resetButton: true,
     clearAllButton: true,
     compactMode: false,
-    spacing: 'md'
-  }
+    spacing: 'md',
+  },
 
   // No default filters - all fields start empty
-} 
+};

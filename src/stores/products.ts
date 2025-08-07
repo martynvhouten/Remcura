@@ -1,6 +1,6 @@
 // Re-export the modular products store for backward compatibility
 export { useProductsStore } from './products/index';
-export type { 
+export type {
   ProductWithStock,
   ProductCategory,
   ProductFilter,

@@ -1,105 +1,153 @@
 <template>
   <div class="login-form-container">
     <q-form @submit.prevent="handleLogin" class="login-form" novalidate>
-      <!-- Email Input -->
-      <div class="form-field">
-        <q-input
-          v-model="email.value.value"
-          type="email"
-          :label="$t('auth.email')"
-          outlined
-          :error="!!email.error.value"
-          :error-message="email.error.value"
-          class="input-modern"
-          autocomplete="email"
-          required
-          :aria-describedby="email.error.value ? 'email-error' : undefined"
-        >
-          <template v-slot:prepend>
-            <q-icon name="email" aria-hidden="true" />
-          </template>
-        </q-input>
-        <div v-if="email.error.value" id="email-error" class="sr-only">
-          {{ email.error.value }}
-        </div>
-      </div>
+      <!-- Manual Login Form (collapsible) -->
+      <q-slide-transition>
+        <div v-show="showManualLogin" class="manual-login-form">
+          <!-- Email Input -->
+          <div class="form-field">
+            <q-input
+              v-model="email.value.value"
+              type="email"
+              :label="$t('auth.email')"
+              outlined
+              :error="!!email.error.value"
+              :error-message="email.error.value"
+              class="input-modern"
+              autocomplete="email"
+              required
+              :aria-describedby="email.error.value ? 'email-error' : undefined"
+            >
+              <template v-slot:prepend>
+                <q-icon name="email" aria-hidden="true" />
+              </template>
+            </q-input>
+            <div v-if="email.error.value" id="email-error" class="sr-only">
+              {{ email.error.value }}
+            </div>
+          </div>
 
-      <!-- Password Input -->
-      <div class="form-field">
-        <q-input
-          v-model="password.value.value"
-          :type="showPassword ? 'text' : 'password'"
-          :label="$t('auth.password')"
-          outlined
-          :error="!!password.error.value"
-          :error-message="password.error.value"
-          class="input-modern"
-          autocomplete="current-password"
-          required
-          :aria-describedby="
-            password.error.value ? 'password-error' : 'password-help'
-          "
-        >
-          <template v-slot:prepend>
-            <q-icon name="lock" aria-hidden="true" />
-          </template>
-          <template v-slot:append>
-            <q-btn
-              flat
-              round
-              dense
-              :icon="showPassword ? 'visibility_off' : 'visibility'"
-              @click="showPassword = !showPassword"
-              class="password-toggle"
-              tabindex="-1"
-              :aria-label="
-                showPassword ? $t('auth.hidePassword') : $t('auth.showPassword')
+          <!-- Password Input -->
+          <div class="form-field">
+            <q-input
+              v-model="password.value.value"
+              :type="showPassword ? 'text' : 'password'"
+              :label="$t('auth.password')"
+              outlined
+              :error="!!password.error.value"
+              :error-message="password.error.value"
+              class="input-modern"
+              autocomplete="current-password"
+              required
+              :aria-describedby="
+                password.error.value ? 'password-error' : 'password-help'
               "
+            >
+              <template v-slot:prepend>
+                <q-icon name="lock" aria-hidden="true" />
+              </template>
+              <template v-slot:append>
+                <q-btn
+                  flat
+                  round
+                  dense
+                  :icon="showPassword ? 'visibility_off' : 'visibility'"
+                  @click="showPassword = !showPassword"
+                  class="password-toggle"
+                  tabindex="-1"
+                  :aria-label="
+                    showPassword
+                      ? $t('auth.hidePassword')
+                      : $t('auth.showPassword')
+                  "
+                />
+              </template>
+            </q-input>
+            <div
+              v-if="password.error.value"
+              id="password-error"
+              class="sr-only"
+            >
+              {{ password.error.value }}
+            </div>
+            <div id="password-help" class="sr-only">
+              {{ $t('auth.passwordHelp') }}
+            </div>
+          </div>
+
+          <!-- Login Button -->
+          <div class="form-actions">
+            <q-btn
+              :loading="loading"
+              type="submit"
+              class="app-btn-primary login-btn"
+              :label="$t('auth.login')"
+              unelevated
+              no-caps
+              :aria-describedby="loading ? 'login-loading' : undefined"
             />
-          </template>
-        </q-input>
-        <div v-if="password.error.value" id="password-error" class="sr-only">
-          {{ password.error.value }}
-        </div>
-        <div id="password-help" class="sr-only">
-          {{ $t('auth.passwordHelp') }}
-        </div>
-      </div>
+            <div v-if="loading" id="login-loading" class="sr-only">
+              {{ $t('auth.signingIn') }}
+            </div>
+          </div>
 
-      <!-- Login Button -->
-      <div class="form-actions">
-        <q-btn
-          :loading="loading"
-          type="submit"
-          class="app-btn-primary login-btn"
-          :label="$t('auth.login')"
-          unelevated
-          no-caps
-          :aria-describedby="loading ? 'login-loading' : undefined"
-        />
-        <div v-if="loading" id="login-loading" class="sr-only">
-          {{ $t('auth.signingIn') }}
+          <!-- Separator -->
+          <div class="form-separator" role="separator" aria-label="or">
+            <q-separator class="separator-line" />
+            <span class="separator-text">{{ $t('auth.or') }}</span>
+            <q-separator class="separator-line" />
+          </div>
         </div>
-      </div>
+      </q-slide-transition>
 
-      <!-- Separator -->
-      <div class="form-separator" role="separator" aria-label="or">
-        <q-separator class="separator-line" />
-        <span class="separator-text">{{ $t('auth.or') }}</span>
-        <q-separator class="separator-line" />
+      <!-- Quick Login Options -->
+      <div class="quick-login-section">
+        <div class="quick-login-title">
+          <h3>{{ $t('auth.quickLogin.title') }}</h3>
+          <p>{{ $t('auth.quickLogin.subtitle') }}</p>
+        </div>
+
+        <div class="quick-login-buttons">
+          <q-btn
+            :label="$t('auth.quickLogin.demo')"
+            @click="handleDemoLogin"
+            class="app-btn-primary demo-login-btn"
+            icon="medical_services"
+            unelevated
+            no-caps
+            :loading="demoLoading"
+            size="lg"
+          >
+            <q-tooltip>{{ $t('auth.quickLogin.demoTooltip') }}</q-tooltip>
+          </q-btn>
+
+          <q-btn
+            :label="$t('auth.quickLogin.owner')"
+            @click="handleOwnerLogin"
+            class="app-btn-success owner-login-btn"
+            icon="admin_panel_settings"
+            unelevated
+            no-caps
+            :loading="ownerLoading"
+            size="lg"
+          >
+            <q-tooltip>{{ $t('auth.quickLogin.ownerTooltip') }}</q-tooltip>
+          </q-btn>
+        </div>
       </div>
 
       <!-- Additional Actions -->
       <div class="form-footer">
         <div class="footer-actions">
           <q-btn
-            :label="$t('auth.demoAccount')"
-            @click="fillDemoCredentials"
-            class="app-btn-secondary demo-btn"
-            icon="person"
+            :label="$t('auth.manualLogin')"
+            @click="showManualLogin = !showManualLogin"
+            class="app-btn-secondary manual-login-btn"
+            :icon="
+              showManualLogin ? 'keyboard_arrow_up' : 'keyboard_arrow_down'
+            "
             unelevated
             no-caps
-            :aria-describedby="'demo-help'"
           />
 
           <q-btn
@@ -109,12 +157,6 @@
             unelevated
             no-caps
           />
-        </div>
-
-        <div id="demo-help" class="sr-only">
-          {{
-            $t('auth.demoHelp')
-          }}
         </div>
 
         <!-- Security Notice -->
@@ -151,6 +193,9 @@
   // UI state
   const showPassword = ref(false);
   const loading = ref(false);
+  const demoLoading = ref(false);
+  const ownerLoading = ref(false);
+  const showManualLogin = ref(false);
 
   // Methods
   const handleLogin = async () => {
@@ -177,8 +222,8 @@
         });
 
         // Check for intended route from sessionStorage
-            const intendedRoute = sessionStorage.getItem('remcura_intended_route');
-    sessionStorage.removeItem('remcura_intended_route');
+        const intendedRoute = sessionStorage.getItem('remcura_intended_route');
+        sessionStorage.removeItem('remcura_intended_route');
 
         // Redirect to intended page or dashboard
         const redirectPath = intendedRoute || '/';
@@ -199,17 +244,70 @@
     }
   };
 
-  const fillDemoCredentials = () => {
-    email.value.value = 'demo@remcura.com';
-    password.value.value = 'demo123';
+  const handleDemoLogin = async () => {
+    demoLoading.value = true;
 
-    $q.notify({
-      type: 'info',
-      message: t('auth.demoCredentialsFilled'),
-      timeout: 3000,
-      position: 'top-right',
-      icon: 'info',
-    });
+    try {
+      const result = await authStore.loginAsDemo();
+
+      if (result.success) {
+        $q.notify({
+          type: 'positive',
+          message: t('auth.demoLoginSuccess'),
+          position: 'top-right',
+          timeout: 3000,
+          icon: 'medical_services',
+        });
+
+        // Redirect to dashboard
+        await router.push('/');
+      } else {
+        $q.notify({
+          type: 'negative',
+          message: result.error || t('auth.loginError'),
+          position: 'top-right',
+          timeout: 4000,
+          icon: 'error',
+        });
+      }
+    } catch (error) {
+      handleError(error as Error, t('auth.demoLogin'));
+    } finally {
+      demoLoading.value = false;
+    }
+  };
+
+  const handleOwnerLogin = async () => {
+    ownerLoading.value = true;
+
+    try {
+      const result = await authStore.loginAsOwner();
+
+      if (result.success) {
+        $q.notify({
+          type: 'positive',
+          message: t('auth.ownerLoginSuccess'),
+          position: 'top-right',
+          timeout: 3000,
+          icon: 'admin_panel_settings',
+        });
+
+        // Redirect to platform dashboard
+        await router.push('/platform');
+      } else {
+        $q.notify({
+          type: 'negative',
+          message: result.error || t('auth.loginError'),
+          position: 'top-right',
+          timeout: 4000,
+          icon: 'error',
+        });
+      }
+    } catch (error) {
+      handleError(error as Error, t('auth.ownerLogin'));
+    } finally {
+      ownerLoading.value = false;
+    }
   };
 
   const handleForgotPassword = () => {
@@ -287,6 +385,68 @@
       }
     }
 
+    // Quick Login Section
+    .quick-login-section {
+      text-align: center;
+      margin: var(--space-6) 0;
+
+      .quick-login-title {
+        margin-bottom: var(--space-6);
+
+        h3 {
+          margin: 0 0 var(--space-2) 0;
+          color: var(--text-primary);
+          font-size: var(--text-lg);
+          font-weight: var(--font-weight-semibold);
+        }
+
+        p {
+          margin: 0;
+          color: var(--text-muted);
+          font-size: var(--text-sm);
+        }
+      }
+
+      .quick-login-buttons {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: var(--space-4);
+
+        .demo-login-btn,
+        .owner-login-btn {
+          height: 64px;
+          border-radius: var(--radius-lg);
+          transition: all 0.2s ease;
+
+          :deep(.q-btn__content) {
+            flex-direction: column;
+            gap: var(--space-1);
+
+            .q-icon {
+              font-size: 1.5rem;
+            }
+          }
+
+          &:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+          }
+
+          &:active {
+            transform: translateY(0);
+          }
+        }
+      }
+    }
+
+    // Manual Login Form
+    .manual-login-form {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-6);
+      margin-bottom: var(--space-6);
+    }
+
     // Form footer
     .form-footer {
       display: flex;
@@ -299,10 +459,10 @@
         gap: var(--space-3);
 
         // Let the global app-btn-* classes handle the styling
-        .demo-btn,
+        .manual-login-btn,
         .forgot-btn {
           height: 48px;
-          
+
           :deep(.q-btn__content) {
             gap: var(--space-2);
           }
@@ -324,30 +484,9 @@
     }
   }
 
-    // Dark mode adjustments
+  // Dark mode adjustments (minimal; rely on global field/button system)
   body.body--dark {
     .login-form {
-      .input-modern {
-        :deep(.q-field__control) {
-          background: var(--bg-secondary);
-          border-color: var(--border-primary);
-        }
-        
-        :deep(.q-field__native) {
-          color: var(--text-primary);
-        }
-
-        // Border styling handled by global field system
-
-        :deep(.q-field__label) {
-          // Color handled by global dark mode styles to prevent conflicts
-        }
-
-        :deep(.q-field__prepend) {
-          color: var(--neutral-400);
-        }
-      }
-
       .password-toggle {
         color: var(--neutral-400);
 
@@ -359,13 +498,9 @@
       .separator-line {
         border-color: var(--neutral-600);
       }
-
       .separator-text {
         color: var(--neutral-400);
       }
-
-      // Dark mode styles handled by global button classes
-
       .security-notice {
         color: var(--neutral-400);
       }
@@ -384,9 +519,19 @@
       .footer-actions {
         grid-template-columns: 1fr;
 
-        .demo-btn,
+        .manual-login-btn,
         .forgot-btn {
           height: 44px;
+        }
+      }
+
+      .quick-login-buttons {
+        grid-template-columns: 1fr;
+        gap: var(--space-3);
+
+        .demo-login-btn,
+        .owner-login-btn {
+          height: 56px;
         }
       }
     }

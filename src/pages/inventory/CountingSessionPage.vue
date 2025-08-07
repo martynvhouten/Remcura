@@ -4,7 +4,7 @@
       <PageTitle
         :title="sessionName"
         :subtitle="sessionType"
-          icon="checklist"
+        icon="checklist"
         :back-button="true"
         @back="handleBack"
       >
@@ -40,7 +40,7 @@
             <q-btn
               v-if="session?.status === 'active'"
               color="positive"
-          icon="check"
+              icon="check"
               :label="$t('counting.completeSession')"
               @click="completeSession"
               :disable="!canComplete"
@@ -50,7 +50,7 @@
             <q-btn
               v-if="session?.status === 'completed'"
               color="info"
-          icon="verified"
+              icon="verified"
               :label="$t('counting.approveSession')"
               @click="approveSession"
               unelevated
@@ -69,7 +69,7 @@
       </div>
 
       <!-- Session Not Found -->
-      <BaseCard v-else-if="!session"  icon-color="negative">
+      <BaseCard v-else-if="!session" icon-color="negative">
         <q-card-section class="text-center">
           <q-icon name="error_outline" size="xl" color="negative" />
           <div class="text-h6 q-mt-md">
@@ -91,7 +91,7 @@
       <!-- Session Content -->
       <template v-else>
         <!-- Session Summary -->
-        <BaseCard  class="session-summary">
+        <BaseCard class="session-summary">
           <template #header>
             <q-card-section class="session-header">
               <div class="text-h6">{{ $t('counting.sessionSummary') }}</div>
@@ -166,7 +166,7 @@
         />
 
         <!-- Counting Results Table (for completed sessions) -->
-        <BaseCard v-else  class="counting-results">
+        <BaseCard v-else class="counting-results">
           <template #header>
             <q-card-section class="results-header">
               <div class="text-h6">{{ $t('counting.countingResults') }}</div>
@@ -176,53 +176,55 @@
 
           <div class="medical-table">
             <q-table
-            :rows="countingEntries"
-            :columns="resultsColumns"
-            row-key="id"
-            :pagination="pagination"
-            :loading="entriesLoading"
-            :no-data-label="$t('counting.noResultsFound')"
-            class="results-table"
-            flat
-          >
-            <!-- Product Column -->
-            <template v-slot:body-cell-product="props">
-              <q-td :props="props">
-                <div class="product-info">
-                  <div class="product-name">
-                    {{ props.row.product?.name || t('common.unknownProduct') }}
+              :rows="countingEntries"
+              :columns="resultsColumns"
+              row-key="id"
+              :pagination="pagination"
+              :loading="entriesLoading"
+              :no-data-label="$t('counting.noResultsFound')"
+              class="results-table"
+              flat
+            >
+              <!-- Product Column -->
+              <template v-slot:body-cell-product="props">
+                <q-td :props="props">
+                  <div class="product-info">
+                    <div class="product-name">
+                      {{
+                        props.row.product?.name || t('common.unknownProduct')
+                      }}
+                    </div>
+                    <div class="product-sku">
+                      {{ props.row.product?.sku || '-' }}
+                    </div>
                   </div>
-                  <div class="product-sku">
-                    {{ props.row.product?.sku || '-' }}
-                  </div>
-                </div>
-              </q-td>
-            </template>
+                </q-td>
+              </template>
 
-            <!-- Variance Column -->
-            <template v-slot:body-cell-variance="props">
-              <q-td :props="props">
-                <q-chip
-                  :color="varianceColor(props.value)"
-                  :icon="varianceIcon(props.value)"
-                  text-color="white"
-                  :label="formatVariance(props.value)"
-                  size="sm"
-                />
-              </q-td>
-            </template>
+              <!-- Variance Column -->
+              <template v-slot:body-cell-variance="props">
+                <q-td :props="props">
+                  <q-chip
+                    :color="varianceColor(props.value)"
+                    :icon="varianceIcon(props.value)"
+                    text-color="white"
+                    :label="formatVariance(props.value)"
+                    size="sm"
+                  />
+                </q-td>
+              </template>
 
-            <!-- Status Column -->
-            <template v-slot:body-cell-status="props">
-              <q-td :props="props">
-                <q-chip
-                  :color="entryStatusColor(props.value)"
-                  :label="formatEntryStatus(props.value)"
-                  size="sm"
-                />
-              </q-td>
-            </template>
-          </q-table>
+              <!-- Status Column -->
+              <template v-slot:body-cell-status="props">
+                <q-td :props="props">
+                  <q-chip
+                    :color="entryStatusColor(props.value)"
+                    :label="formatEntryStatus(props.value)"
+                    size="sm"
+                  />
+                </q-td>
+              </template>
+            </q-table>
           </div>
         </BaseCard>
       </template>
@@ -231,7 +233,13 @@
 </template>
 
 <script setup lang="ts">
-  import { ref, computed, onMounted, onBeforeUnmount, defineAsyncComponent } from 'vue';
+  import {
+    ref,
+    computed,
+    onMounted,
+    onBeforeUnmount,
+    defineAsyncComponent,
+  } from 'vue';
   import { useI18n } from 'vue-i18n';
   import { useQuasar } from 'quasar';
   import { useRouter, useRoute } from 'vue-router';

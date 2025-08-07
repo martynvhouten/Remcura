@@ -1,5 +1,5 @@
 import { createClient } from '@supabase/supabase-js';
-import type { 
+import type {
   Database,
   Practice,
   UserProfile,
@@ -59,10 +59,14 @@ export const practiceService = {
       .single();
 
     if (error) {
-      handleSupabaseError(error, {
-        service: 'practiceService',
-        operation: 'create',
-      }, 'Failed to create practice');
+      handleSupabaseError(
+        error,
+        {
+          service: 'practiceService',
+          operation: 'create',
+        },
+        'Failed to create practice'
+      );
     }
 
     return data;
@@ -77,11 +81,15 @@ export const practiceService = {
       .single();
 
     if (error) {
-      handleSupabaseError(error, {
-        service: 'practiceService',
-        operation: 'update',
-        metadata: { practiceId: id },
-      }, 'Failed to update practice');
+      handleSupabaseError(
+        error,
+        {
+          service: 'practiceService',
+          operation: 'update',
+          metadata: { practiceId: id },
+        },
+        'Failed to update practice'
+      );
     }
 
     return data;
@@ -93,23 +101,29 @@ export const userProfileService = {
   async getById(id: string): Promise<UserProfile | null> {
     const { data, error } = await supabase
       .from('practice_members')
-      .select(`
+      .select(
+        `
         *,
         practices:practice_id (
           id,
           name,
           settings
         )
-      `)
+      `
+      )
       .eq('user_id', id)
       .single();
 
     if (error) {
-      handleSupabaseError(error, {
-        service: 'userProfileService',
-        operation: 'getById',
-        metadata: { userId: id },
-      }, 'Failed to fetch user profile');
+      handleSupabaseError(
+        error,
+        {
+          service: 'userProfileService',
+          operation: 'getById',
+          metadata: { userId: id },
+        },
+        'Failed to fetch user profile'
+      );
     }
 
     return data;
@@ -119,35 +133,46 @@ export const userProfileService = {
     // Get practice member data with user auth data
     const { data: memberData, error: memberError } = await supabase
       .from('practice_members')
-      .select(`
+      .select(
+        `
         *,
         practices:practice_id (
           id,
           name,
           settings
         )
-      `)
+      `
+      )
       .eq('user_id', id)
       .single();
 
     if (memberError) {
-      handleSupabaseError(memberError, {
-        service: 'userProfileService',
-        operation: 'getByIdWithUserData',
-        metadata: { userId: id },
-      }, 'Failed to fetch user profile');
+      handleSupabaseError(
+        memberError,
+        {
+          service: 'userProfileService',
+          operation: 'getByIdWithUserData',
+          metadata: { userId: id },
+        },
+        'Failed to fetch user profile'
+      );
       return null;
     }
 
     // Get user auth data
-    const { data: userData, error: userError } = await supabase.auth.admin.getUserById(id);
-    
+    const { data: userData, error: userError } =
+      await supabase.auth.admin.getUserById(id);
+
     if (userError) {
-      handleSupabaseError(userError, {
-        service: 'userProfileService',
-        operation: 'getByIdWithUserData',
-        metadata: { userId: id },
-      }, 'Failed to fetch user auth data');
+      handleSupabaseError(
+        userError,
+        {
+          service: 'userProfileService',
+          operation: 'getByIdWithUserData',
+          metadata: { userId: id },
+        },
+        'Failed to fetch user auth data'
+      );
       return null;
     }
 
@@ -162,20 +187,26 @@ export const userProfileService = {
   async create(profile: UserProfileInsert): Promise<UserProfile | null> {
     const { data, error } = await supabase
       .from('practice_members')
-      .insert([{
-        user_id: profile.id,
-        practice_id: profile.practice_id,
-        role: profile.role || 'guest',
-        joined_at: new Date().toISOString(),
-      }])
+      .insert([
+        {
+          user_id: profile.id,
+          practice_id: profile.practice_id,
+          role: profile.role || 'guest',
+          joined_at: new Date().toISOString(),
+        },
+      ])
       .select()
       .single();
 
     if (error) {
-      handleSupabaseError(error, {
-        service: 'userProfileService',
-        operation: 'create',
-      }, 'Failed to create user profile');
+      handleSupabaseError(
+        error,
+        {
+          service: 'userProfileService',
+          operation: 'create',
+        },
+        'Failed to create user profile'
+      );
     }
 
     return data;
@@ -196,11 +227,15 @@ export const userProfileService = {
       .single();
 
     if (error) {
-      handleSupabaseError(error, {
-        service: 'userProfileService',
-        operation: 'update',
-        metadata: { userId: id },
-      }, 'Failed to update user profile');
+      handleSupabaseError(
+        error,
+        {
+          service: 'userProfileService',
+          operation: 'update',
+          metadata: { userId: id },
+        },
+        'Failed to update user profile'
+      );
     }
 
     return data;
@@ -212,20 +247,26 @@ export const productService = {
   async getAll(practiceId: string): Promise<ProductListItem[]> {
     const { data, error } = await supabase
       .from('products')
-      .select(`
+      .select(
+        `
         id, name, sku, category, brand, unit, price, image_url,
         stock_levels!inner(practice_id)
-      `)
+      `
+      )
       .eq('stock_levels.practice_id', practiceId)
       .eq('active', true)
       .order('name');
 
     if (error) {
-      handleSupabaseError(error, {
-        service: 'productService',
-        operation: 'getAll',
-        metadata: { practiceId },
-      }, 'Failed to fetch products');
+      handleSupabaseError(
+        error,
+        {
+          service: 'productService',
+          operation: 'getAll',
+          metadata: { practiceId },
+        },
+        'Failed to fetch products'
+      );
     }
 
     return data || [];
@@ -239,11 +280,15 @@ export const productService = {
       .single();
 
     if (error) {
-      handleSupabaseError(error, {
-        service: 'productService',
-        operation: 'getById',
-        metadata: { productId: id },
-      }, 'Failed to fetch product');
+      handleSupabaseError(
+        error,
+        {
+          service: 'productService',
+          operation: 'getById',
+          metadata: { productId: id },
+        },
+        'Failed to fetch product'
+      );
     }
 
     return data;
@@ -257,11 +302,15 @@ export const productService = {
       .single();
 
     if (error) {
-      handleSupabaseError(error, {
-        service: 'productService',
-        operation: 'create',
-        metadata: { productSku: product.sku },
-      }, 'Failed to create product');
+      handleSupabaseError(
+        error,
+        {
+          service: 'productService',
+          operation: 'create',
+          metadata: { productSku: product.sku },
+        },
+        'Failed to create product'
+      );
     }
 
     return data;
@@ -276,11 +325,15 @@ export const productService = {
       .single();
 
     if (error) {
-      handleSupabaseError(error, {
-        service: 'productService',
-        operation: 'update',
-        metadata: { productId: id },
-      }, 'Failed to update product');
+      handleSupabaseError(
+        error,
+        {
+          service: 'productService',
+          operation: 'update',
+          metadata: { productId: id },
+        },
+        'Failed to update product'
+      );
     }
 
     return data;
@@ -316,11 +369,15 @@ export const productService = {
     });
 
     if (error) {
-      handleSupabaseError(error, {
-        service: 'productService',
-        operation: 'getOutOfStock',
-        practiceId,
-      }, 'Failed to fetch out of stock products');
+      handleSupabaseError(
+        error,
+        {
+          service: 'productService',
+          operation: 'getOutOfStock',
+          practiceId,
+        },
+        'Failed to fetch out of stock products'
+      );
     }
 
     return (data || []).filter((item: StockLevel) => item.current_stock === 0);
@@ -329,7 +386,10 @@ export const productService = {
 
 // Real-time subscriptions
 export const realtimeService = {
-  subscribeToProducts(practiceId: string, callback: (payload: RealtimePayload) => void) {
+  subscribeToProducts(
+    practiceId: string,
+    callback: (payload: RealtimePayload) => void
+  ) {
     return supabase
       .channel(`products:${practiceId}`)
       .on(
@@ -353,7 +413,10 @@ export const realtimeService = {
       .subscribe();
   },
 
-  subscribeToUserProfile(userId: string, callback: (payload: RealtimePayload) => void) {
+  subscribeToUserProfile(
+    userId: string,
+    callback: (payload: RealtimePayload) => void
+  ) {
     return supabase
       .channel(`user_profile:${userId}`)
       .on(
@@ -370,7 +433,10 @@ export const realtimeService = {
   },
 
   // 🔄 NEW: Real-time inventory subscriptions
-  subscribeToInventory(practiceId: string, callback: (payload: RealtimePayload) => void) {
+  subscribeToInventory(
+    practiceId: string,
+    callback: (payload: RealtimePayload) => void
+  ) {
     return supabase
       .channel(`inventory:${practiceId}`)
       .on(
@@ -397,7 +463,10 @@ export const realtimeService = {
   },
 
   // 🔄 NEW: Real-time stock movements subscription
-  subscribeToStockMovements(practiceId: string, callback: (payload: RealtimePayload) => void) {
+  subscribeToStockMovements(
+    practiceId: string,
+    callback: (payload: RealtimePayload) => void
+  ) {
     return supabase
       .channel(`stock_movements:${practiceId}`)
       .on(
@@ -414,7 +483,10 @@ export const realtimeService = {
   },
 
   // 🔄 NEW: Real-time counting sessions subscription
-  subscribeToCountingSessions(practiceId: string, callback: (payload: RealtimePayload) => void) {
+  subscribeToCountingSessions(
+    practiceId: string,
+    callback: (payload: RealtimePayload) => void
+  ) {
     return supabase
       .channel(`counting:${practiceId}`)
       .on(

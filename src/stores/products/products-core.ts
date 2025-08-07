@@ -3,7 +3,12 @@ import { supabase } from '@/boot/supabase';
 import { magentoApi } from '@/services/magento';
 import { productService } from '@/services/supabase';
 import { productLogger } from '@/utils/logger';
-import { createEventEmitter, StoreEvents, type UserLoggedInPayload, type UserLoggedOutPayload } from '@/utils/eventBus';
+import {
+  createEventEmitter,
+  StoreEvents,
+  type UserLoggedInPayload,
+  type UserLoggedOutPayload,
+} from '@/utils/eventBus';
 import { useApiCache } from '@/composables/useCache';
 import type {
   Product,
@@ -33,17 +38,21 @@ type StockLevel = {
 // RPC response interface for get_products_with_stock_levels
 interface ProductWithStockRPC {
   product: Product;
-  stock_levels: Array<{ location_id: string; current_quantity: number; minimum_quantity: number }>;
+  stock_levels: Array<{
+    location_id: string;
+    current_quantity: number;
+    minimum_quantity: number;
+  }>;
   total_stock: number;
 }
 
 export function useProductsCore() {
   // Event emitter for store communication
   const eventEmitter = createEventEmitter('products-core');
-  
+
   // ✅ PERFORMANCE OPTIMIZATION: API Cache for faster data loading
   const cache = useApiCache();
-  
+
   // Current practice ID (from auth events)
   const currentPracticeId = ref<string | null>(null);
 
@@ -62,15 +71,21 @@ export function useProductsCore() {
   });
 
   // Set up event listeners for auth changes
-  const unsubscribeAuth = eventEmitter.on(StoreEvents.USER_LOGGED_IN, async (data: UserLoggedInPayload) => {
-    currentPracticeId.value = data.clinicId;
-    productLogger.info('Auth changed, auto-loading products for practice:', data.clinicId);
-    
-    // Auto-load products when user logs in
-    if (data.clinicId) {
-      await fetchProducts(data.clinicId);
+  const unsubscribeAuth = eventEmitter.on(
+    StoreEvents.USER_LOGGED_IN,
+    async (data: UserLoggedInPayload) => {
+      currentPracticeId.value = data.clinicId;
+      productLogger.info(
+        'Auth changed, auto-loading products for practice:',
+        data.clinicId
+      );
+
+      // Auto-load products when user logs in
+      if (data.clinicId) {
+        await fetchProducts(data.clinicId);
+      }
     }
-  });
+  );
 
   const unsubscribeLogout = eventEmitter.on(StoreEvents.USER_LOGGED_OUT, () => {
     currentPracticeId.value = null;
@@ -96,7 +111,11 @@ export function useProductsCore() {
     };
 
     products.value.forEach(product => {
-      const totalStock = product.stock_levels?.reduce((sum, level) => sum + level.current_quantity, 0) || 0;
+      const totalStock =
+        product.stock_levels?.reduce(
+          (sum, level) => sum + level.current_quantity,
+          0
+        ) || 0;
       if (totalStock > ((product as any).minimum_stock || 0)) {
         stats.inStock++;
       } else if (totalStock > 0) {
@@ -110,42 +129,55 @@ export function useProductsCore() {
   });
 
   const availableCategories = computed(() => {
-    const categorySet = new Set(products.value.map(p => p.category).filter(Boolean));
+    const categorySet = new Set(
+      products.value.map(p => p.category).filter(Boolean)
+    );
     return Array.from(categorySet).sort();
   });
 
   const availableCountries = computed(() => {
-    const countrySet = new Set(products.value.map(p => p.country_of_origin).filter(Boolean));
+    const countrySet = new Set(
+      products.value.map(p => p.country_of_origin).filter(Boolean)
+    );
     return Array.from(countrySet).sort();
   });
 
   const availableGpcCodes = computed(() => {
-    const gpcSet = new Set(products.value.map(p => (p as any).gpc_code).filter(Boolean));
+    const gpcSet = new Set(
+      products.value.map(p => (p as any).gpc_code).filter(Boolean)
+    );
     return Array.from(gpcSet).sort();
   });
 
   const availableLifecycleStatuses = computed(() => {
-    const statusSet = new Set(products.value.map(p => (p as any).lifecycle_status).filter(Boolean));
+    const statusSet = new Set(
+      products.value.map(p => (p as any).lifecycle_status).filter(Boolean)
+    );
     return Array.from(statusSet).sort();
   });
 
   // Core actions
   const fetchProducts = async (practiceId: string, forceRefresh = false) => {
-    if (loading.value) { return; }
-    
+    if (loading.value) {
+      return;
+    }
+
     // ✅ PERFORMANCE OPTIMIZATION: Check cache first
     const cacheKey = `products:${practiceId}`;
     if (!forceRefresh) {
       const cachedProducts = cache.get(cacheKey);
       if (cachedProducts) {
         products.value = cachedProducts;
-        productLogger.info('🎯 Using cached products for practice:', practiceId);
+        productLogger.info(
+          '🎯 Using cached products for practice:',
+          practiceId
+        );
         return;
       }
     }
-    
+
     loading.value = true;
-    
+
     try {
       productLogger.info('Fetching products from all sources');
 
@@ -155,14 +187,24 @@ export function useProductsCore() {
 
       try {
         magentoProducts = await fetchProductsFromMagento();
-        productLogger.info(`Fetched ${magentoProducts.length} products from Magento`);
+        productLogger.info(
+          `Fetched ${magentoProducts.length} products from Magento`
+        );
       } catch (error) {
-        productLogger.warn('⚠️ Magento sync failed, using Supabase data only:', error);
+        productLogger.warn(
+          '⚠️ Magento sync failed, using Supabase data only:',
+          error
+        );
       }
 
       try {
-        supabaseProducts = await fetchProductsFromSupabase(practiceId, !!magentoProducts.length);
-        productLogger.info(`Fetched ${supabaseProducts.length} products from Supabase`);
+        supabaseProducts = await fetchProductsFromSupabase(
+          practiceId,
+          !!magentoProducts.length
+        );
+        productLogger.info(
+          `Fetched ${supabaseProducts.length} products from Supabase`
+        );
       } catch (error) {
         productLogger.error('❌ Error fetching products:', error);
         throw error;
@@ -172,12 +214,14 @@ export function useProductsCore() {
       const mergedProducts = mergeProducts(magentoProducts, supabaseProducts);
       products.value = mergedProducts;
       lastSyncAt.value = new Date();
-      
+
       // ✅ Cache the results for 5 minutes
       cache.set(cacheKey, mergedProducts, 5 * 60 * 1000);
-      
-      productLogger.info(`✅ Successfully loaded ${mergedProducts.length} products`);
-      
+
+      productLogger.info(
+        `✅ Successfully loaded ${mergedProducts.length} products`
+      );
+
       // Emit event that products have been loaded
       await eventEmitter.emit(StoreEvents.PRODUCTS_LOADED, {
         practiceId,
@@ -201,26 +245,46 @@ export function useProductsCore() {
       );
 
       if (rpcData && rpcData.length > 0) {
-        productLogger.info('✅ RPC function succeeded, got', rpcData.length, 'products');
+        productLogger.info(
+          '✅ RPC function succeeded, got',
+          rpcData.length,
+          'products'
+        );
         return rpcData.map((item: ProductWithStockRPC) => {
           const product = item.product;
           const stockLevels = item.stock_levels || [];
           const totalStock = item.total_stock || 0;
-          
+
           // Calculate aggregate stock properties
-          const availableStock = stockLevels.reduce((sum, level) => 
-            sum + Math.max(0, (level.current_quantity || 0) - (level.reserved_quantity || 0)), 0
+          const availableStock = stockLevels.reduce(
+            (sum, level) =>
+              sum +
+              Math.max(
+                0,
+                (level.current_quantity || 0) - (level.reserved_quantity || 0)
+              ),
+            0
           );
-          const reservedStock = stockLevels.reduce((sum, level) => 
-            sum + (level.reserved_quantity || 0), 0
+          const reservedStock = stockLevels.reduce(
+            (sum, level) => sum + (level.reserved_quantity || 0),
+            0
           );
-          const overallStockStatus = totalStock === 0 ? 'out_of_stock' : 
-            (totalStock < ((product as any).minimum_stock || 0) ? 'low_stock' : 'in_stock');
+          const overallStockStatus =
+            totalStock === 0
+              ? 'out_of_stock'
+              : totalStock < ((product as any).minimum_stock || 0)
+              ? 'low_stock'
+              : 'in_stock';
 
           // Calculate derived fields for UI display
           const lowestPrice = product.price || null;
-          const gs1Status = (product.gtin || product.gpc_brick_code || product.country_of_origin) ? 'complete' : 'incomplete';
-          const batchStatus = product.requires_batch_tracking ? 'batch_tracked' : 'manual_stock';
+          const gs1Status =
+            product.gtin || product.gpc_brick_code || product.country_of_origin
+              ? 'complete'
+              : 'incomplete';
+          const batchStatus = product.requires_batch_tracking
+            ? 'batch_tracked'
+            : 'manual_stock';
 
           return {
             ...product,
@@ -233,23 +297,32 @@ export function useProductsCore() {
             gs1_status: gs1Status,
             batch_status: batchStatus,
             unit_price: product.price || 0,
-            minimum_stock: stockLevels.reduce((min, level) => 
-              Math.min(min, level.minimum_quantity || 0), Infinity) || 0,
+            minimum_stock:
+              stockLevels.reduce(
+                (min, level) => Math.min(min, level.minimum_quantity || 0),
+                Infinity
+              ) || 0,
           } as ProductWithStock;
         });
       } else {
-        productLogger.info('⚠️ RPC function failed or returned no data:', rpcError);
-        
+        productLogger.info(
+          '⚠️ RPC function failed or returned no data:',
+          rpcError
+        );
+
         // Fallback to direct query
-        productLogger.warn('⚠️ RPC function failed, using fallback query:', rpcError);
+        productLogger.warn(
+          '⚠️ RPC function failed, using fallback query:',
+          rpcError
+        );
       }
 
       productLogger.info('🔍 Using fallback direct query...');
 
       // Fallback: Direct query with joins
-      const { data: products, error: productsError } = await supabase
-        .from('products')
-        .select(`
+      const { data: products, error: productsError } = await supabase.from(
+        'products'
+      ).select(`
           *,
           stock_levels:stock_levels(*)
         `);
@@ -264,59 +337,81 @@ export function useProductsCore() {
         return [];
       }
 
-      productLogger.info('✅ Fallback query succeeded, got', products.length, 'products');
+      productLogger.info(
+        '✅ Fallback query succeeded, got',
+        products.length,
+        'products'
+      );
 
       // ✅ PERFORMANCE OPTIMIZATION: Transform with optimized mapping
-      const productsWithStock: ProductWithStock[] = (products as any[]).map((product: any) => {
-        const stockLevels = product.stock_levels || [];
-        const totalStock = stockLevels.reduce((sum: number, level: any) => 
-          sum + (level.current_quantity || 0), 0
-        );
+      const productsWithStock: ProductWithStock[] = (products as any[]).map(
+        (product: any) => {
+          const stockLevels = product.stock_levels || [];
+          const totalStock = stockLevels.reduce(
+            (sum: number, level: any) => sum + (level.current_quantity || 0),
+            0
+          );
 
-        // Optimize stock level processing
-        const processedStockLevels = stockLevels.map((stock: any) => ({
-          ...stock,
-          practice_id: practiceId,
-          product_id: product.id,
-          available_quantity: Math.max(0, 
-            (stock.current_quantity || 0) - (stock.reserved_quantity || 0)
-          ),
-          stock_status: determineStockStatus(
-            stock.current_quantity || 0,
-            stock.minimum_quantity || 0
-          )
-        }));
+          // Optimize stock level processing
+          const processedStockLevels = stockLevels.map((stock: any) => ({
+            ...stock,
+            practice_id: practiceId,
+            product_id: product.id,
+            available_quantity: Math.max(
+              0,
+              (stock.current_quantity || 0) - (stock.reserved_quantity || 0)
+            ),
+            stock_status: determineStockStatus(
+              stock.current_quantity || 0,
+              stock.minimum_quantity || 0
+            ),
+          }));
 
-        // Calculate aggregate stock properties
-        const availableStock = processedStockLevels.reduce((sum, level) => 
-          sum + (level.available_quantity || 0), 0
-        );
-        const reservedStock = processedStockLevels.reduce((sum, level) => 
-          sum + (level.reserved_quantity || 0), 0
-        );
-        const overallStockStatus = totalStock === 0 ? 'out_of_stock' : 
-          (totalStock < ((product as any).minimum_stock || 0) ? 'low_stock' : 'in_stock');
+          // Calculate aggregate stock properties
+          const availableStock = processedStockLevels.reduce(
+            (sum, level) => sum + (level.available_quantity || 0),
+            0
+          );
+          const reservedStock = processedStockLevels.reduce(
+            (sum, level) => sum + (level.reserved_quantity || 0),
+            0
+          );
+          const overallStockStatus =
+            totalStock === 0
+              ? 'out_of_stock'
+              : totalStock < ((product as any).minimum_stock || 0)
+              ? 'low_stock'
+              : 'in_stock';
 
-        // Calculate derived fields for UI display
-        const lowestPrice = product.price || null;
-        const gs1Status = (product.gtin || product.gpc_brick_code || product.country_of_origin) ? 'complete' : 'incomplete';
-        const batchStatus = product.requires_batch_tracking ? 'batch_tracked' : 'manual_stock';
+          // Calculate derived fields for UI display
+          const lowestPrice = product.price || null;
+          const gs1Status =
+            product.gtin || product.gpc_brick_code || product.country_of_origin
+              ? 'complete'
+              : 'incomplete';
+          const batchStatus = product.requires_batch_tracking
+            ? 'batch_tracked'
+            : 'manual_stock';
 
-        return {
-          ...product,
-          stock_levels: processedStockLevels,
-          total_stock: totalStock,
-          available_stock: availableStock,
-          reserved_stock: reservedStock,
-          stock_status: overallStockStatus,
-          lowest_price: lowestPrice,
-          gs1_status: gs1Status,
-          batch_status: batchStatus,
-          unit_price: product.price || 0,
-          minimum_stock: processedStockLevels.reduce((min, level) => 
-            Math.min(min, level.minimum_quantity || 0), Infinity) || 0,
-        } as ProductWithStock;
-      });
+          return {
+            ...product,
+            stock_levels: processedStockLevels,
+            total_stock: totalStock,
+            available_stock: availableStock,
+            reserved_stock: reservedStock,
+            stock_status: overallStockStatus,
+            lowest_price: lowestPrice,
+            gs1_status: gs1Status,
+            batch_status: batchStatus,
+            unit_price: product.price || 0,
+            minimum_stock:
+              processedStockLevels.reduce(
+                (min, level) => Math.min(min, level.minimum_quantity || 0),
+                Infinity
+              ) || 0,
+          } as ProductWithStock;
+        }
+      );
 
       return productsWithStock;
     } catch (error) {
@@ -328,19 +423,25 @@ export function useProductsCore() {
   const fetchProductsFromMagento = async (): Promise<ProductWithStock[]> => {
     try {
       const magentoProducts = await magentoApi.getProducts();
-      return magentoProducts.map(product => ({
-        ...product,
-        id: product.id.toString(), // Convert number to string
-        stock_levels: [],
-        total_stock: (product as any).quantity || 0,
-        available_stock: (product as any).quantity || 0,
-        reserved_stock: 0,
-        stock_status: ((product as any).quantity || 0) > 0 ? 'in_stock' as const : 'out_of_stock' as const,
-        is_active: product.status === 1,
-        requires_batch_tracking: false, // Default for Magento products
-        created_at: new Date().toISOString(),
-        updated_at: new Date().toISOString(),
-      } as ProductWithStock));
+      return magentoProducts.map(
+        product =>
+          ({
+            ...product,
+            id: product.id.toString(), // Convert number to string
+            stock_levels: [],
+            total_stock: (product as any).quantity || 0,
+            available_stock: (product as any).quantity || 0,
+            reserved_stock: 0,
+            stock_status:
+              ((product as any).quantity || 0) > 0
+                ? ('in_stock' as const)
+                : ('out_of_stock' as const),
+            is_active: product.status === 1,
+            requires_batch_tracking: false, // Default for Magento products
+            created_at: new Date().toISOString(),
+            updated_at: new Date().toISOString(),
+          } as ProductWithStock)
+      );
     } catch (error) {
       productLogger.warn('Magento API unavailable, using Supabase data only');
       return [];
@@ -372,8 +473,12 @@ export function useProductsCore() {
     currentStock: number,
     minimumStock: number
   ): 'in_stock' | 'low_stock' | 'out_of_stock' => {
-    if (currentStock <= 0) { return 'out_of_stock'; }
-    if (currentStock <= minimumStock) { return 'low_stock'; }
+    if (currentStock <= 0) {
+      return 'out_of_stock';
+    }
+    if (currentStock <= minimumStock) {
+      return 'low_stock';
+    }
     return 'in_stock';
   };
 
@@ -405,10 +510,7 @@ export function useProductsCore() {
 
   const refreshData = async (practiceId: string) => {
     try {
-      await Promise.all([
-        fetchProducts(practiceId),
-        fetchCategories(),
-      ]);
+      await Promise.all([fetchProducts(practiceId), fetchCategories()]);
     } catch (error) {
       productLogger.error('Error refreshing product data:', error);
       throw error;

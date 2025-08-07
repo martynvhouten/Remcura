@@ -12,7 +12,7 @@
       <!-- Basic Information Section -->
       <div class="form-section">
         <h3 class="section-title">{{ $t('products.basicInfo') }}</h3>
-        
+
         <!-- Product Name -->
         <q-input
           v-model="form.name"
@@ -43,7 +43,7 @@
       <!-- Product Details Section -->
       <div class="form-section">
         <h3 class="section-title">{{ $t('products.details') }}</h3>
-        
+
         <!-- Category and Brand Row -->
         <div class="row q-gutter-md">
           <div class="col">
@@ -91,7 +91,7 @@
       <!-- Additional Information Section -->
       <div class="form-section">
         <h3 class="section-title">{{ $t('products.additionalInfo') }}</h3>
-        
+
         <!-- Barcode -->
         <q-input
           v-model="form.barcode"
@@ -120,10 +120,7 @@
             />
           </div>
           <div class="col">
-            <q-checkbox
-              v-model="form.active"
-              :label="$t('products.active')"
-            />
+            <q-checkbox v-model="form.active" :label="$t('products.active')" />
           </div>
         </div>
       </div>
@@ -185,222 +182,225 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, watch, nextTick } from 'vue';
-import { useI18n } from 'vue-i18n';
-import { useQuasar } from 'quasar';
-import { useAuthStore } from 'src/stores/auth';
-import { productService } from 'src/services/supabase';
-import FormDialog from 'src/components/base/FormDialog.vue';
-import type { Product } from 'src/types/inventory';
+  import { ref, computed, watch, nextTick } from 'vue';
+  import { useI18n } from 'vue-i18n';
+  import { useQuasar } from 'quasar';
+  import { useAuthStore } from 'src/stores/auth';
+  import { productService } from 'src/services/supabase';
+  import FormDialog from 'src/components/base/FormDialog.vue';
+  import type { Product } from 'src/types/inventory';
 
-// Props
-interface Props {
-  modelValue: boolean;
-  product?: Product | null;
-}
-
-const props = withDefaults(defineProps<Props>(), {
-  product: null,
-});
-
-// Emits
-const emit = defineEmits<{
-  'update:modelValue': [value: boolean];
-  'saved': [product: Product];
-  'scan-barcode': [];
-}>();
-
-// Composables
-const { t } = useI18n();
-const $q = useQuasar();
-const authStore = useAuthStore();
-
-// Refs
-const nameInput = ref<any>(null);
-const saving = ref(false);
-
-// State
-const dialogModel = computed({
-  get: () => props.modelValue,
-  set: (value) => emit('update:modelValue', value),
-});
-
-const isEdit = computed(() => !!props.product);
-
-// Form data
-const defaultForm = () => ({
-  name: '',
-  sku: '',
-  description: '',
-  category: '',
-  brand: '',
-  unit: 'stuk',
-  price: 0,
-  currency: 'EUR',
-  barcode: '',
-  active: true,
-  requires_batch_tracking: false,
-  gtin: '',
-  gpc_brick_code: '',
-  country_of_origin: '',
-  product_lifecycle_status: 'active',
-});
-
-const form = ref(defaultForm());
-
-// Options
-const unitOptions = [
-  { label: t('products.units.piece'), value: 'stuk' },
-  { label: t('products.units.pack'), value: 'pak' },
-  { label: t('products.units.box'), value: 'doos' },
-  { label: t('products.units.bottle'), value: 'fles' },
-  { label: t('products.units.tube'), value: 'tube' },
-  { label: t('products.units.liter'), value: 'liter' },
-  { label: t('products.units.kg'), value: 'kg' },
-  { label: t('products.units.gram'), value: 'gram' },
-];
-
-const lifecycleOptions = [
-  { label: t('products.lifecycle.active'), value: 'active' },
-  { label: t('products.lifecycle.discontinued'), value: 'discontinued' },
-  { label: t('products.lifecycle.new'), value: 'new' },
-  { label: t('products.lifecycle.phaseOut'), value: 'phase_out' },
-];
-
-// Validation rules
-const rules = {
-  required: (val: string) => !!val || t('validation.required'),
-};
-
-// Methods
-const populateForm = () => {
-  if (props.product) {
-    form.value = {
-      name: props.product.name || '',
-      sku: props.product.sku || '',
-      description: props.product.description || '',
-      category: props.product.category || '',
-      brand: props.product.brand || '',
-      unit: props.product.unit || 'stuk',
-      price: props.product.price || 0,
-      currency: props.product.currency || 'EUR',
-      barcode: props.product.barcode || '',
-      active: props.product.active !== false,
-      requires_batch_tracking: props.product.requires_batch_tracking || false,
-      gtin: (props.product as any).gtin || '',
-      gpc_brick_code: (props.product as any).gpc_brick_code || '',
-      country_of_origin: (props.product as any).country_of_origin || '',
-      product_lifecycle_status: (props.product as any).product_lifecycle_status || 'active',
-    };
-  } else {
-    form.value = defaultForm();
-  }
-};
-
-const resetForm = () => {
-  form.value = defaultForm();
-};
-
-const onSubmit = async () => {
-  if (!authStore.clinicId) {
-    $q.notify({
-      type: 'negative',
-      message: t('errors.noPracticeSelected'),
-    });
-    return;
+  // Props
+  interface Props {
+    modelValue: boolean;
+    product?: Product | null;
   }
 
-  saving.value = true;
-  try {
-    const productData = {
-      practice_id: authStore.clinicId,
-      name: form.value.name,
-      sku: form.value.sku || null,
-      description: form.value.description || null,
-      category: form.value.category || null,
-      brand: form.value.brand || null,
-      unit: form.value.unit,
-      price: form.value.price,
-      currency: form.value.currency,
-      barcode: form.value.barcode || null,
-      active: form.value.active,
-      requires_batch_tracking: form.value.requires_batch_tracking,
-      gtin: form.value.gtin || null,
-      gpc_brick_code: form.value.gpc_brick_code || null,
-      country_of_origin: form.value.country_of_origin || null,
-      product_lifecycle_status: form.value.product_lifecycle_status,
-    };
+  const props = withDefaults(defineProps<Props>(), {
+    product: null,
+  });
 
-    let result;
-    if (isEdit.value && props.product) {
-      result = await productService.update(props.product.id, productData);
+  // Emits
+  const emit = defineEmits<{
+    'update:modelValue': [value: boolean];
+    saved: [product: Product];
+    'scan-barcode': [];
+  }>();
+
+  // Composables
+  const { t } = useI18n();
+  const $q = useQuasar();
+  const authStore = useAuthStore();
+
+  // Refs
+  const nameInput = ref<any>(null);
+  const saving = ref(false);
+
+  // State
+  const dialogModel = computed({
+    get: () => props.modelValue,
+    set: value => emit('update:modelValue', value),
+  });
+
+  const isEdit = computed(() => !!props.product);
+
+  // Form data
+  const defaultForm = () => ({
+    name: '',
+    sku: '',
+    description: '',
+    category: '',
+    brand: '',
+    unit: 'stuk',
+    price: 0,
+    currency: 'EUR',
+    barcode: '',
+    active: true,
+    requires_batch_tracking: false,
+    gtin: '',
+    gpc_brick_code: '',
+    country_of_origin: '',
+    product_lifecycle_status: 'active',
+  });
+
+  const form = ref(defaultForm());
+
+  // Options
+  const unitOptions = [
+    { label: t('products.units.piece'), value: 'stuk' },
+    { label: t('products.units.pack'), value: 'pak' },
+    { label: t('products.units.box'), value: 'doos' },
+    { label: t('products.units.bottle'), value: 'fles' },
+    { label: t('products.units.tube'), value: 'tube' },
+    { label: t('products.units.liter'), value: 'liter' },
+    { label: t('products.units.kg'), value: 'kg' },
+    { label: t('products.units.gram'), value: 'gram' },
+  ];
+
+  const lifecycleOptions = [
+    { label: t('products.lifecycle.active'), value: 'active' },
+    { label: t('products.lifecycle.discontinued'), value: 'discontinued' },
+    { label: t('products.lifecycle.new'), value: 'new' },
+    { label: t('products.lifecycle.phaseOut'), value: 'phase_out' },
+  ];
+
+  // Validation rules
+  const rules = {
+    required: (val: string) => !!val || t('validation.required'),
+  };
+
+  // Methods
+  const populateForm = () => {
+    if (props.product) {
+      form.value = {
+        name: props.product.name || '',
+        sku: props.product.sku || '',
+        description: props.product.description || '',
+        category: props.product.category || '',
+        brand: props.product.brand || '',
+        unit: props.product.unit || 'stuk',
+        price: props.product.price || 0,
+        currency: props.product.currency || 'EUR',
+        barcode: props.product.barcode || '',
+        active: props.product.active !== false,
+        requires_batch_tracking: props.product.requires_batch_tracking || false,
+        gtin: (props.product as any).gtin || '',
+        gpc_brick_code: (props.product as any).gpc_brick_code || '',
+        country_of_origin: (props.product as any).country_of_origin || '',
+        product_lifecycle_status:
+          (props.product as any).product_lifecycle_status || 'active',
+      };
     } else {
-      result = await productService.create(productData);
+      form.value = defaultForm();
     }
+  };
 
-    if (result) {
+  const resetForm = () => {
+    form.value = defaultForm();
+  };
+
+  const onSubmit = async () => {
+    if (!authStore.clinicId) {
       $q.notify({
-        type: 'positive',
-        message: isEdit.value ? t('products.updated') : t('products.created'),
+        type: 'negative',
+        message: t('errors.noPracticeSelected'),
       });
-      emit('saved', result);
-      closeDialog();
+      return;
     }
-  } catch (error) {
-    console.error('Error saving product:', error);
-    $q.notify({
-      type: 'negative',
-      message: isEdit.value ? t('products.updateError') : t('products.createError'),
-    });
-  } finally {
-    saving.value = false;
-  }
-};
 
-const closeDialog = () => {
-  emit('update:modelValue', false);
-};
+    saving.value = true;
+    try {
+      const productData = {
+        practice_id: authStore.clinicId,
+        name: form.value.name,
+        sku: form.value.sku || null,
+        description: form.value.description || null,
+        category: form.value.category || null,
+        brand: form.value.brand || null,
+        unit: form.value.unit,
+        price: form.value.price,
+        currency: form.value.currency,
+        barcode: form.value.barcode || null,
+        active: form.value.active,
+        requires_batch_tracking: form.value.requires_batch_tracking,
+        gtin: form.value.gtin || null,
+        gpc_brick_code: form.value.gpc_brick_code || null,
+        country_of_origin: form.value.country_of_origin || null,
+        product_lifecycle_status: form.value.product_lifecycle_status,
+      };
 
-const onDialogHide = () => {
-  resetForm();
-};
+      let result;
+      if (isEdit.value && props.product) {
+        result = await productService.update(props.product.id, productData);
+      } else {
+        result = await productService.create(productData);
+      }
 
-// Watchers
-watch(
-  () => props.modelValue,
-  (newVal) => {
-    if (newVal) {
-      populateForm();
-      nextTick(() => {
-        nameInput.value?.focus();
+      if (result) {
+        $q.notify({
+          type: 'positive',
+          message: isEdit.value ? t('products.updated') : t('products.created'),
+        });
+        emit('saved', result);
+        closeDialog();
+      }
+    } catch (error) {
+      console.error('Error saving product:', error);
+      $q.notify({
+        type: 'negative',
+        message: isEdit.value
+          ? t('products.updateError')
+          : t('products.createError'),
       });
+    } finally {
+      saving.value = false;
     }
-  }
-);
+  };
+
+  const closeDialog = () => {
+    emit('update:modelValue', false);
+  };
+
+  const onDialogHide = () => {
+    resetForm();
+  };
+
+  // Watchers
+  watch(
+    () => props.modelValue,
+    newVal => {
+      if (newVal) {
+        populateForm();
+        nextTick(() => {
+          nameInput.value?.focus();
+        });
+      }
+    }
+  );
 </script>
 
 <style lang="scss" scoped>
-.product-form {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-6);
-}
-
-.form-section {
-  margin-bottom: var(--space-6);
-
-  .section-title {
-    font-size: var(--text-lg);
-    font-weight: var(--font-weight-semibold);
-    color: var(--text-primary);
-    margin: 0 0 var(--space-4) 0;
-    padding-bottom: var(--space-2);
-    border-bottom: 1px solid var(--border-primary);
+  .product-form {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-6);
   }
-}
 
-.advanced-expansion {
-  border: 1px solid var(--border-primary);
-  border-radius: 4px;
-}
-</style> 
+  .form-section {
+    margin-bottom: var(--space-6);
+
+    .section-title {
+      font-size: var(--text-lg);
+      font-weight: var(--font-weight-semibold);
+      color: var(--text-primary);
+      margin: 0 0 var(--space-4) 0;
+      padding-bottom: var(--space-2);
+      border-bottom: 1px solid var(--border-primary);
+    }
+  }
+
+  .advanced-expansion {
+    border: 1px solid var(--border-primary);
+    border-radius: 4px;
+  }
+</style>

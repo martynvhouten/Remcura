@@ -1,6 +1,10 @@
 import { supabase } from '@/boot/supabase';
 import { orderLogger } from '@/utils/logger';
-import { useOrderListsSupplierSplitting, type SupplierOrder, type OrderSendingResult } from '@/stores/orderLists/orderLists-supplier-splitting';
+import {
+  useOrderListsSupplierSplitting,
+  type SupplierOrder,
+  type OrderSendingResult,
+} from '@/stores/orderLists/orderLists-supplier-splitting';
 import { useInventoryMovements } from '@/stores/inventory/inventory-movements';
 import type { ReorderSuggestion } from '@/stores/orderLists/orderLists-minmax';
 
@@ -28,7 +32,13 @@ export interface OrderStatus {
   supplierOrderId: string;
   supplierId: string;
   supplierName: string;
-  status: 'pending' | 'sent' | 'confirmed' | 'shipped' | 'delivered' | 'cancelled';
+  status:
+    | 'pending'
+    | 'sent'
+    | 'confirmed'
+    | 'shipped'
+    | 'delivered'
+    | 'cancelled';
   orderReference: string;
   trackingNumber?: string;
   estimatedDelivery?: string;
@@ -38,7 +48,7 @@ export interface OrderStatus {
 
 /**
  * Central Order Orchestration Service
- * 
+ *
  * This service provides a unified interface for:
  * - Automatic reorder processing
  * - Multi-supplier order creation and management
@@ -52,13 +62,20 @@ export class CentralOrderService {
    * Process automatic reorder for a practice
    * Analyzes stock levels and creates orders where needed
    */
-  async processAutomaticReorder(config: AutoReorderConfig): Promise<OrderResult> {
+  async processAutomaticReorder(
+    config: AutoReorderConfig
+  ): Promise<OrderResult> {
     try {
-      orderLogger.info(`Starting automatic reorder for practice ${config.practiceId}`);
+      orderLogger.info(
+        `Starting automatic reorder for practice ${config.practiceId}`
+      );
 
       // 1. Get low stock items that need reordering
-      const lowStockItems = await this.getLowStockItems(config.practiceId, config.locationId);
-      
+      const lowStockItems = await this.getLowStockItems(
+        config.practiceId,
+        config.locationId
+      );
+
       if (lowStockItems.length === 0) {
         orderLogger.info('No items need reordering');
         return {
@@ -68,25 +85,34 @@ export class CentralOrderService {
           totalItems: 0,
           totalValue: 0,
           status: 'success',
-          errors: []
+          errors: [],
         };
       }
 
       // 2. Generate reorder suggestions
-      const reorderSuggestions = await this.generateReorderSuggestions(lowStockItems);
+      const reorderSuggestions = await this.generateReorderSuggestions(
+        lowStockItems
+      );
 
       // 3. Check approval requirements
-      const totalValue = reorderSuggestions.reduce((sum, item) => 
-        sum + (item.calculated_order_quantity * item.unit_price), 0);
+      const totalValue = reorderSuggestions.reduce(
+        (sum, item) => sum + item.calculated_order_quantity * item.unit_price,
+        0
+      );
 
-      if (config.approvalRequired || (config.maxOrderValue && totalValue > config.maxOrderValue)) {
+      if (
+        config.approvalRequired ||
+        (config.maxOrderValue && totalValue > config.maxOrderValue)
+      ) {
         // Create draft order list for approval
-        return await this.createDraftOrderForApproval(config.practiceId, reorderSuggestions);
+        return await this.createDraftOrderForApproval(
+          config.practiceId,
+          reorderSuggestions
+        );
       }
 
       // 4. Process automatic order
       return await this.createMultiSupplierOrder(reorderSuggestions);
-
     } catch (error) {
       orderLogger.error('Error in automatic reorder process:', error);
       throw error;
@@ -96,30 +122,47 @@ export class CentralOrderService {
   /**
    * Create multi-supplier order from reorder suggestions
    */
-  async createMultiSupplierOrder(items: ReorderSuggestion[]): Promise<OrderResult> {
+  async createMultiSupplierOrder(
+    items: ReorderSuggestion[]
+  ): Promise<OrderResult> {
     try {
-      orderLogger.info(`Creating multi-supplier order for ${items.length} items`);
+      orderLogger.info(
+        `Creating multi-supplier order for ${items.length} items`
+      );
 
       // 1. Split items by supplier
-      const splitResult = await this.supplierSplittingService.splitOrderBySuppliers(items);
-      
+      const splitResult =
+        await this.supplierSplittingService.splitOrderBySuppliers(items);
+
       if (!splitResult.success) {
         throw new Error('Failed to split order by suppliers');
       }
 
       // 2. Send orders to suppliers
-      const sendingResults = await this.sendOrdersToSuppliers(splitResult.supplierOrders);
+      const sendingResults = await this.sendOrdersToSuppliers(
+        splitResult.supplierOrders
+      );
 
       // 3. Record orders in database
-      await this.recordSupplierOrders(splitResult.supplierOrders, sendingResults);
+      await this.recordSupplierOrders(
+        splitResult.supplierOrders,
+        sendingResults
+      );
 
       // 4. Update stock reservations
       await this.updateStockReservations(items, 'reserve');
 
-      const totalItems = splitResult.supplierOrders.reduce((sum, order) => sum + order.total_items, 0);
-      const totalValue = splitResult.supplierOrders.reduce((sum, order) => sum + order.total_value, 0);
-      
-      const errors = sendingResults.filter(result => result.status === 'failed')
+      const totalItems = splitResult.supplierOrders.reduce(
+        (sum, order) => sum + order.total_items,
+        0
+      );
+      const totalValue = splitResult.supplierOrders.reduce(
+        (sum, order) => sum + order.total_value,
+        0
+      );
+
+      const errors = sendingResults
+        .filter(result => result.status === 'failed')
         .map(result => result.error_message || 'Unknown error');
 
       return {
@@ -128,11 +171,14 @@ export class CentralOrderService {
         sendingResults,
         totalItems,
         totalValue,
-        status: errors.length === 0 ? 'success' : 
-                errors.length < sendingResults.length ? 'partial' : 'failed',
-        errors
+        status:
+          errors.length === 0
+            ? 'success'
+            : errors.length < sendingResults.length
+            ? 'partial'
+            : 'failed',
+        errors,
       };
-
     } catch (error) {
       orderLogger.error('Error creating multi-supplier order:', error);
       throw error;
@@ -142,10 +188,14 @@ export class CentralOrderService {
   /**
    * Send orders to multiple suppliers
    */
-  async sendOrdersToSuppliers(orders: SupplierOrder[]): Promise<OrderSendingResult[]> {
+  async sendOrdersToSuppliers(
+    orders: SupplierOrder[]
+  ): Promise<OrderSendingResult[]> {
     try {
-      const results = await this.supplierSplittingService.sendOrdersToSuppliers(orders);
-      
+      const results = await this.supplierSplittingService.sendOrdersToSuppliers(
+        orders
+      );
+
       // Create notifications for successful orders
       for (const result of results) {
         if (result.status === 'sent' || result.status === 'confirmed') {
@@ -180,7 +230,8 @@ export class CentralOrderService {
     try {
       const { data, error } = await supabase
         .from('supplier_orders')
-        .select(`
+        .select(
+          `
           id,
           order_reference,
           status,
@@ -189,7 +240,8 @@ export class CentralOrderService {
           actual_delivery_date,
           updated_at,
           suppliers(id, name)
-        `)
+        `
+        )
         .in('id', orderIds);
 
       if (error) throw error;
@@ -204,9 +256,8 @@ export class CentralOrderService {
         trackingNumber: order.tracking_number,
         estimatedDelivery: order.estimated_delivery_date,
         actualDelivery: order.actual_delivery_date,
-        lastUpdated: order.updated_at
+        lastUpdated: order.updated_at,
       }));
-
     } catch (error) {
       orderLogger.error('Error tracking order status:', error);
       throw error;
@@ -223,12 +274,14 @@ export class CentralOrderService {
       // Get order items
       const { data: orderItems, error } = await supabase
         .from('supplier_order_items')
-        .select(`
+        .select(
+          `
           product_id,
           quantity_ordered,
           quantity_received,
           supplier_orders!inner(practice_id, location_id)
-        `)
+        `
+        )
         .eq('supplier_order_id', orderId);
 
       if (error) throw error;
@@ -246,8 +299,9 @@ export class CentralOrderService {
       );
 
       for (const item of orderItems) {
-        const quantityReceived = item.quantity_received || item.quantity_ordered;
-        
+        const quantityReceived =
+          item.quantity_received || item.quantity_ordered;
+
         await inventoryMovements.updateStockLevel({
           practice_id: item.supplier_orders.practice_id,
           location_id: item.supplier_orders.location_id,
@@ -258,7 +312,7 @@ export class CentralOrderService {
           reference_id: orderId,
           reason: `Stock received from supplier order ${orderId}`,
           batch_number: null,
-          expiry_date: null
+          expiry_date: null,
         });
       }
 
@@ -268,7 +322,7 @@ export class CentralOrderService {
           product_id: item.product_id,
           calculated_order_quantity: item.quantity_ordered,
           practice_id: item.supplier_orders.practice_id,
-          location_id: item.supplier_orders.location_id
+          location_id: item.supplier_orders.location_id,
         })) as ReorderSuggestion[],
         'unreserve'
       );
@@ -281,11 +335,12 @@ export class CentralOrderService {
         category: 'order_update',
         priority: 'normal',
         action_url: '/inventory/levels',
-        action_label: 'Bekijk voorraad'
+        action_label: 'Bekijk voorraad',
       });
 
-      orderLogger.info(`Successfully updated stock for ${orderItems.length} items`);
-
+      orderLogger.info(
+        `Successfully updated stock for ${orderItems.length} items`
+      );
     } catch (error) {
       orderLogger.error('Error updating stock after delivery:', error);
       throw error;
@@ -294,10 +349,14 @@ export class CentralOrderService {
 
   // Private helper methods
 
-  private async getLowStockItems(practiceId: string, locationId?: string): Promise<any[]> {
+  private async getLowStockItems(
+    practiceId: string,
+    locationId?: string
+  ): Promise<any[]> {
     let query = supabase
       .from('stock_levels')
-      .select(`
+      .select(
+        `
         id,
         product_id,
         location_id,
@@ -307,7 +366,8 @@ export class CentralOrderService {
         preferred_supplier_id,
         products!inner(name, sku, unit_price),
         practice_locations!inner(name)
-      `)
+      `
+      )
       .eq('practice_id', practiceId)
       .lt('current_quantity', supabase.rpc('minimum_quantity'));
 
@@ -321,7 +381,9 @@ export class CentralOrderService {
     return data || [];
   }
 
-  private async generateReorderSuggestions(lowStockItems: any[]): Promise<ReorderSuggestion[]> {
+  private async generateReorderSuggestions(
+    lowStockItems: any[]
+  ): Promise<ReorderSuggestion[]> {
     return lowStockItems.map(item => ({
       product_id: item.product_id,
       product_name: item.products.name,
@@ -338,18 +400,22 @@ export class CentralOrderService {
       unit_price: item.products.unit_price || 0,
       preferred_supplier_id: item.preferred_supplier_id,
       preferred_supplier_name: '', // Will be populated by supplier splitting
-      urgency_level: item.current_quantity <= 0 ? 'urgent' :
-                    item.current_quantity <= item.minimum_quantity / 2 ? 'high' : 'medium',
+      urgency_level:
+        item.current_quantity <= 0
+          ? 'urgent'
+          : item.current_quantity <= item.minimum_quantity / 2
+          ? 'high'
+          : 'medium',
       estimated_cost: 0, // Will be calculated
       lead_time_days: 7, // Default
       practice_id: '', // Will be set by caller
       last_ordered_at: null,
-      stock_trend: 'decreasing'
+      stock_trend: 'decreasing',
     }));
   }
 
   private async createDraftOrderForApproval(
-    practiceId: string, 
+    practiceId: string,
     items: ReorderSuggestion[]
   ): Promise<OrderResult> {
     // Create draft order list for manual approval
@@ -361,9 +427,11 @@ export class CentralOrderService {
         description: 'Automatic reorder requiring approval',
         status: 'draft',
         total_items: items.length,
-        estimated_total: items.reduce((sum, item) => 
-          sum + (item.calculated_order_quantity * item.unit_price), 0),
-        auto_calculate_quantities: true
+        estimated_total: items.reduce(
+          (sum, item) => sum + item.calculated_order_quantity * item.unit_price,
+          0
+        ),
+        auto_calculate_quantities: true,
       })
       .select()
       .single();
@@ -379,7 +447,7 @@ export class CentralOrderService {
       suggested_quantity: item.calculated_order_quantity,
       ordered_quantity: item.calculated_order_quantity,
       unit_cost: item.unit_price,
-      priority: item.urgency_level === 'urgent' ? 'urgent' : 'normal'
+      priority: item.urgency_level === 'urgent' ? 'urgent' : 'normal',
     }));
 
     await supabase.from('order_list_items').insert(orderItems);
@@ -391,12 +459,12 @@ export class CentralOrderService {
       totalItems: items.length,
       totalValue: orderList.estimated_total,
       status: 'success',
-      errors: []
+      errors: [],
     };
   }
 
   private async recordSupplierOrders(
-    supplierOrders: SupplierOrder[], 
+    supplierOrders: SupplierOrder[],
     sendingResults: OrderSendingResult[]
   ): Promise<void> {
     // Record orders in supplier_orders table for tracking
@@ -415,24 +483,25 @@ export class CentralOrderService {
         order_method: order.order_method,
         estimated_delivery_date: order.estimated_delivery_date,
         sent_at: result.sent_at,
-        tracking_number: result.tracking_number
+        tracking_number: result.tracking_number,
       });
     }
   }
 
   private async updateStockReservations(
-    items: ReorderSuggestion[], 
+    items: ReorderSuggestion[],
     action: 'reserve' | 'unreserve'
   ): Promise<void> {
     for (const item of items) {
-      const quantityChange = action === 'reserve' 
-        ? item.calculated_order_quantity 
-        : -item.calculated_order_quantity;
+      const quantityChange =
+        action === 'reserve'
+          ? item.calculated_order_quantity
+          : -item.calculated_order_quantity;
 
       await supabase
         .from('stock_levels')
         .update({
-          reserved_quantity: supabase.rpc('reserved_quantity') + quantityChange
+          reserved_quantity: supabase.rpc('reserved_quantity') + quantityChange,
         })
         .eq('product_id', item.product_id)
         .eq('location_id', item.location_id);
@@ -446,13 +515,13 @@ export class CentralOrderService {
     type: 'success' | 'error',
     errorMessage?: string
   ): Promise<void> {
-    const title = type === 'success' 
-      ? 'Bestelling verzonden'
-      : 'Bestelling mislukt';
-    
-    const message = type === 'success'
-      ? `Bestelling ${orderReference} is succesvol verzonden naar ${supplierName}`
-      : `Bestelling naar ${supplierName} is mislukt: ${errorMessage}`;
+    const title =
+      type === 'success' ? 'Bestelling verzonden' : 'Bestelling mislukt';
+
+    const message =
+      type === 'success'
+        ? `Bestelling ${orderReference} is succesvol verzonden naar ${supplierName}`
+        : `Bestelling naar ${supplierName} is mislukt: ${errorMessage}`;
 
     await supabase.from('notifications').insert({
       practice_id: '', // Will be set from context
@@ -461,7 +530,7 @@ export class CentralOrderService {
       category: 'order_update',
       priority: type === 'error' ? 'high' : 'normal',
       action_url: '/orders',
-      action_label: 'Bekijk bestellingen'
+      action_label: 'Bekijk bestellingen',
     });
   }
 

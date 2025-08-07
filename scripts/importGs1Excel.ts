@@ -70,7 +70,9 @@ const supabaseUrl = process.env.SUPABASE_URL;
 const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
 
 if (!supabaseUrl || !supabaseKey) {
-  console.error('❌ Missing required environment variables: SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY');
+  console.error(
+    '❌ Missing required environment variables: SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY'
+  );
   process.exit(1);
 }
 
@@ -81,10 +83,10 @@ const supabase = createClient(supabaseUrl, supabaseKey);
  */
 function validateGTIN(gtin: string): boolean {
   if (!gtin) return false;
-  
+
   // Remove any non-numeric characters
   const cleanGtin = gtin.toString().replace(/\D/g, '');
-  
+
   // Check if it's a valid length (8, 12, 13, or 14 digits)
   const validLengths = [8, 12, 13, 14];
   return validLengths.includes(cleanGtin.length);
@@ -97,7 +99,9 @@ function parseBoolean(value: any): boolean {
   if (typeof value === 'boolean') return value;
   if (typeof value === 'string') {
     const lower = value.toLowerCase().trim();
-    return lower === 'true' || lower === 'yes' || lower === '1' || lower === 'y';
+    return (
+      lower === 'true' || lower === 'yes' || lower === '1' || lower === 'y'
+    );
   }
   return false;
 }
@@ -107,10 +111,10 @@ function parseBoolean(value: any): boolean {
  */
 function parseDate(dateValue: any): string | undefined {
   if (!dateValue) return undefined;
-  
+
   try {
     let date: Date;
-    
+
     if (dateValue instanceof Date) {
       date = dateValue;
     } else if (typeof dateValue === 'number') {
@@ -119,9 +123,9 @@ function parseDate(dateValue: any): string | undefined {
     } else {
       date = new Date(dateValue);
     }
-    
+
     if (isNaN(date.getTime())) return undefined;
-    
+
     return date.toISOString().split('T')[0]; // Return YYYY-MM-DD format
   } catch {
     return undefined;
@@ -133,23 +137,23 @@ function parseDate(dateValue: any): string | undefined {
  */
 function parseNetContent(netContent: string): { value?: number; uom?: string } {
   if (!netContent) return {};
-  
+
   const contentStr = netContent.toString().trim();
   const match = contentStr.match(/^(\d+(?:\.\d+)?)\s*([a-zA-Z]+)?$/);
-  
+
   if (match && match[1]) {
     return {
       value: parseFloat(match[1]),
-      uom: match[2] ? match[2].toLowerCase() : undefined
+      uom: match[2] ? match[2].toLowerCase() : undefined,
     };
   }
-  
+
   // Try to extract just the number if no unit
   const numberMatch = contentStr.match(/(\d+(?:\.\d+)?)/);
   if (numberMatch && numberMatch[1]) {
     return { value: parseFloat(numberMatch[1]) };
   }
-  
+
   return {};
 }
 
@@ -164,7 +168,9 @@ function mapGS1ToProduct(row: GS1Row, rowIndex: number): ProductInsert | null {
   }
 
   if (!validateGTIN(row.GTIN)) {
-    console.warn(`⚠️  Row ${rowIndex}: Invalid GTIN format (${row.GTIN}), skipping`);
+    console.warn(
+      `⚠️  Row ${rowIndex}: Invalid GTIN format (${row.GTIN}), skipping`
+    );
     return null;
   }
 
@@ -197,14 +203,21 @@ function mapGS1ToProduct(row: GS1Row, rowIndex: number): ProductInsert | null {
     net_content_uom: netContentUom,
     gross_weight: row['Gross Weight'],
     net_weight: row['Net Weight'],
-    base_unit_indicator: row['Base Unit'] !== undefined ? parseBoolean(row['Base Unit']) : true,
-    orderable_unit_indicator: row['Orderable Unit'] !== undefined ? parseBoolean(row['Orderable Unit']) : true,
-    despatch_unit_indicator: row['Despatch Unit'] !== undefined ? parseBoolean(row['Despatch Unit']) : true,
+    base_unit_indicator:
+      row['Base Unit'] !== undefined ? parseBoolean(row['Base Unit']) : true,
+    orderable_unit_indicator:
+      row['Orderable Unit'] !== undefined
+        ? parseBoolean(row['Orderable Unit'])
+        : true,
+    despatch_unit_indicator:
+      row['Despatch Unit'] !== undefined
+        ? parseBoolean(row['Despatch Unit'])
+        : true,
     country_of_origin: row['Country of Origin'],
     effective_from_date: parseDate(row['Effective From']),
     effective_to_date: parseDate(row['Effective To']),
     product_lifecycle_status: row['Product Lifecycle Status'],
-    active: true
+    active: true,
   };
 
   return product;
@@ -213,7 +226,9 @@ function mapGS1ToProduct(row: GS1Row, rowIndex: number): ProductInsert | null {
 /**
  * Upserts a product into the Supabase products table
  */
-async function upsertProduct(product: ProductInsert): Promise<{ success: boolean; isUpdate: boolean; error?: string }> {
+async function upsertProduct(
+  product: ProductInsert
+): Promise<{ success: boolean; isUpdate: boolean; error?: string }> {
   try {
     // Check if product exists
     const { data: existing } = await supabase
@@ -225,12 +240,10 @@ async function upsertProduct(product: ProductInsert): Promise<{ success: boolean
     const isUpdate = !!existing;
 
     // Upsert the product
-    const { error } = await supabase
-      .from('products')
-      .upsert(product, {
-        onConflict: 'gtin',
-        ignoreDuplicates: false
-      });
+    const { error } = await supabase.from('products').upsert(product, {
+      onConflict: 'gtin',
+      ignoreDuplicates: false,
+    });
 
     if (error) {
       return { success: false, isUpdate, error: error.message };
@@ -238,10 +251,10 @@ async function upsertProduct(product: ProductInsert): Promise<{ success: boolean
 
     return { success: true, isUpdate };
   } catch (error) {
-    return { 
-      success: false, 
-      isUpdate: false, 
-      error: error instanceof Error ? error.message : 'Unknown error' 
+    return {
+      success: false,
+      isUpdate: false,
+      error: error instanceof Error ? error.message : 'Unknown error',
     };
   }
 }
@@ -249,33 +262,40 @@ async function upsertProduct(product: ProductInsert): Promise<{ success: boolean
 /**
  * Main import function
  */
-async function importGS1Excel(filePath: string, sheetName: string = 'NL'): Promise<ImportStats> {
+async function importGS1Excel(
+  filePath: string,
+  sheetName: string = 'NL'
+): Promise<ImportStats> {
   const stats: ImportStats = {
     totalRows: 0,
     processed: 0,
     inserted: 0,
     updated: 0,
     skipped: 0,
-    errors: []
+    errors: [],
   };
 
   try {
     console.log(`📂 Loading Excel file: ${filePath}`);
-    
+
     // Read the Excel file
     const workbook = XLSX.readFile(filePath);
-    
+
     if (!workbook.SheetNames.includes(sheetName)) {
-      throw new Error(`Sheet "${sheetName}" not found. Available sheets: ${workbook.SheetNames.join(', ')}`);
+      throw new Error(
+        `Sheet "${sheetName}" not found. Available sheets: ${workbook.SheetNames.join(
+          ', '
+        )}`
+      );
     }
 
     console.log(`📊 Reading sheet: ${sheetName}`);
     const worksheet = workbook.Sheets[sheetName];
-    
+
     if (!worksheet) {
       throw new Error(`Failed to read worksheet "${sheetName}"`);
     }
-    
+
     // Convert sheet to JSON
     const rawData: GS1Row[] = XLSX.utils.sheet_to_json(worksheet);
     stats.totalRows = rawData.length;
@@ -287,13 +307,13 @@ async function importGS1Excel(filePath: string, sheetName: string = 'NL'): Promi
     for (let i = 0; i < rawData.length; i++) {
       const row = rawData[i];
       if (!row) continue;
-      
+
       const rowIndex = i + 2; // Excel row number (accounting for header)
 
       try {
         // Map and validate the row
         const product = mapGS1ToProduct(row, rowIndex);
-        
+
         if (!product) {
           stats.skipped++;
           continue;
@@ -301,7 +321,7 @@ async function importGS1Excel(filePath: string, sheetName: string = 'NL'): Promi
 
         // Upsert to database
         const result = await upsertProduct(product);
-        
+
         if (result.success) {
           stats.processed++;
           if (result.isUpdate) {
@@ -318,18 +338,19 @@ async function importGS1Excel(filePath: string, sheetName: string = 'NL'): Promi
 
         // Progress indicator for large files
         if ((i + 1) % 100 === 0) {
-          console.log(`📈 Progress: ${i + 1}/${stats.totalRows} rows processed`);
+          console.log(
+            `📈 Progress: ${i + 1}/${stats.totalRows} rows processed`
+          );
         }
-
       } catch (error) {
-        const errorMsg = error instanceof Error ? error.message : 'Unknown error';
+        const errorMsg =
+          error instanceof Error ? error.message : 'Unknown error';
         stats.errors.push(`Row ${rowIndex}: ${errorMsg}`);
         console.error(`❌ Error processing row ${rowIndex}: ${errorMsg}`);
       }
     }
 
     return stats;
-
   } catch (error) {
     const errorMsg = error instanceof Error ? error.message : 'Unknown error';
     stats.errors.push(`File processing error: ${errorMsg}`);
@@ -349,16 +370,16 @@ function printStats(stats: ImportStats) {
   console.log(`Existing products updated: ${stats.updated}`);
   console.log(`Rows skipped:          ${stats.skipped}`);
   console.log(`Errors encountered:    ${stats.errors.length}`);
-  
+
   if (stats.errors.length > 0) {
     console.log('\n❌ Errors:');
     stats.errors.forEach((error, index) => {
       console.log(`${index + 1}. ${error}`);
     });
   }
-  
+
   console.log('═'.repeat(40));
-  
+
   if (stats.processed > 0) {
     console.log('✅ Import completed successfully!');
   } else {
@@ -387,18 +408,19 @@ async function main() {
     const { error: connectionError } = await supabase
       .from('products')
       .select('count', { count: 'exact', head: true });
-    
+
     if (connectionError) {
-      throw new Error(`Failed to connect to Supabase: ${connectionError.message}`);
+      throw new Error(
+        `Failed to connect to Supabase: ${connectionError.message}`
+      );
     }
     console.log('✅ Supabase connection successful\n');
 
     // Run the import
     const stats = await importGS1Excel(filePath, sheetName);
-    
+
     // Print results
     printStats(stats);
-
   } catch (error) {
     console.error('\n💥 Import failed:');
     console.error(error instanceof Error ? error.message : error);
@@ -411,4 +433,11 @@ if (require.main === module) {
   main();
 }
 
-export { importGS1Excel, mapGS1ToProduct, validateGTIN, parseBoolean, parseDate, parseNetContent }; 
+export {
+  importGS1Excel,
+  mapGS1ToProduct,
+  validateGTIN,
+  parseBoolean,
+  parseDate,
+  parseNetContent,
+};

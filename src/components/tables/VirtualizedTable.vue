@@ -1,9 +1,13 @@
 <template>
-  <div ref="tableContainer" class="virtualized-table-container" @wheel="handleWheelScroll">
+  <div
+    ref="tableContainer"
+    class="virtualized-table-container"
+    @wheel="handleWheelScroll"
+  >
     <!-- Table Header -->
     <div class="table-header">
-      <div 
-        v-for="column in columns" 
+      <div
+        v-for="column in columns"
         :key="column.name"
         class="header-cell"
         :style="{ width: getColumnWidth(column) }"
@@ -22,7 +26,7 @@
     </div>
 
     <!-- Virtualized Body -->
-    <div 
+    <div
       ref="scrollContainer"
       class="table-body"
       :style="{ height: `${containerHeight}px` }"
@@ -30,7 +34,7 @@
     >
       <!-- Virtual spacer for items above visible area -->
       <div :style="{ height: `${offsetY}px` }"></div>
-      
+
       <!-- Visible items -->
       <div
         v-for="(row, index) in visibleItems"
@@ -46,7 +50,7 @@
           :style="{ width: getColumnWidth(column) }"
         >
           <!-- Custom cell content via slots -->
-          <slot 
+          <slot
             :name="`body-cell-${column.name}`"
             :props="{ row, column, value: row[column.field] }"
           >
@@ -68,300 +72,314 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted, onUnmounted, watch, nextTick } from 'vue'
+  import { ref, computed, onMounted, onUnmounted, watch, nextTick } from 'vue';
 
-interface Column {
-  name: string
-  label: string
-  field: string
-  sortable?: boolean
-  align?: 'left' | 'center' | 'right'
-  width?: string
-  format?: (val: any) => string
-}
-
-interface Props {
-  rows: any[]
-  columns: Column[]
-  rowKey: string
-  loading?: boolean
-  itemHeight?: number
-  containerHeight?: number
-  bufferSize?: number
-}
-
-const props = withDefaults(defineProps<Props>(), {
-  loading: false,
-  itemHeight: 60,
-  containerHeight: 600,
-  bufferSize: 5
-})
-
-interface Emits {
-  (e: 'sort', column: string, direction: 'asc' | 'desc'): void
-}
-
-const emit = defineEmits<Emits>()
-
-// Refs
-const tableContainer = ref<HTMLElement>()
-const scrollContainer = ref<HTMLElement>()
-const scrollTop = ref(0)
-const sortColumn = ref<string>('')
-const sortDirection = ref<'asc' | 'desc'>('asc')
-
-// Computed properties for virtualization
-const totalItems = computed(() => props.rows.length)
-
-const itemsPerPage = computed(() => 
-  Math.ceil(props.containerHeight / props.itemHeight) + props.bufferSize * 2
-)
-
-const startIndex = computed(() => 
-  Math.max(0, Math.floor(scrollTop.value / props.itemHeight) - props.bufferSize)
-)
-
-const endIndex = computed(() => 
-  Math.min(totalItems.value, startIndex.value + itemsPerPage.value)
-)
-
-const visibleItems = computed(() => 
-  props.rows.slice(startIndex.value, endIndex.value)
-)
-
-const offsetY = computed(() => startIndex.value * props.itemHeight)
-
-const bottomSpacerHeight = computed(() => 
-  (totalItems.value - endIndex.value) * props.itemHeight
-)
-
-// Methods
-const handleScroll = () => {
-  if (scrollContainer.value) {
-    scrollTop.value = scrollContainer.value.scrollTop
+  interface Column {
+    name: string;
+    label: string;
+    field: string;
+    sortable?: boolean;
+    align?: 'left' | 'center' | 'right';
+    width?: string;
+    format?: (val: any) => string;
   }
-}
 
-const toggleSort = (columnName: string) => {
-  if (sortColumn.value === columnName) {
-    sortDirection.value = sortDirection.value === 'asc' ? 'desc' : 'asc'
-  } else {
-    sortColumn.value = columnName
-    sortDirection.value = 'asc'
+  interface Props {
+    rows: any[];
+    columns: Column[];
+    rowKey: string;
+    loading?: boolean;
+    itemHeight?: number;
+    containerHeight?: number;
+    bufferSize?: number;
   }
-  emit('sort', columnName, sortDirection.value)
-}
 
-const getSortIcon = (columnName: string) => {
-  if (sortColumn.value !== columnName) return 'unfold_more'
-  return sortDirection.value === 'asc' ? 'keyboard_arrow_up' : 'keyboard_arrow_down'
-}
+  const props = withDefaults(defineProps<Props>(), {
+    loading: false,
+    itemHeight: 60,
+    containerHeight: 600,
+    bufferSize: 5,
+  });
 
-const getColumnWidth = (column: Column) => {
-  return column.width || 'auto'
-}
-
-const getRowKey = (row: any) => {
-  return row[props.rowKey]
-}
-
-const formatCellValue = (row: any, column: Column) => {
-  const value = row[column.field]
-  if (column.format) {
-    return column.format(value)
+  interface Emits {
+    (e: 'sort', column: string, direction: 'asc' | 'desc'): void;
   }
-  return value ?? '-'
-}
 
-// Enable horizontal scroll with mouse wheel
-const handleWheelScroll = (event: WheelEvent) => {
-  if (!tableContainer.value) return;
-  
-  // Check if horizontal scroll is needed
-  const { scrollWidth, clientWidth, scrollLeft } = tableContainer.value;
-  const canScrollHorizontally = scrollWidth > clientWidth;
-  
-  // Only handle horizontal scroll when:
-  // 1. Shift key is held (explicit horizontal scroll intent)
-  // 2. Table needs horizontal scroll AND we're already scrolled horizontally
-  if (canScrollHorizontally && event.shiftKey && event.deltaY !== 0) {
-    event.preventDefault();
-    tableContainer.value.scrollLeft += event.deltaY;
-  }
-  
-  // For normal vertical scroll, let the browser handle it naturally
-  // This ensures smooth transitions between horizontal and vertical scrolling
-}
+  const emit = defineEmits<Emits>();
 
-// Performance optimization: Throttled scroll handling
-let scrollTimeout: NodeJS.Timeout | null = null
-const throttledHandleScroll = () => {
-  if (scrollTimeout) clearTimeout(scrollTimeout)
-  scrollTimeout = setTimeout(handleScroll, 16) // ~60fps
-}
+  // Refs
+  const tableContainer = ref<HTMLElement>();
+  const scrollContainer = ref<HTMLElement>();
+  const scrollTop = ref(0);
+  const sortColumn = ref<string>('');
+  const sortDirection = ref<'asc' | 'desc'>('asc');
 
-// Lifecycle
-onMounted(() => {
-  if (scrollContainer.value) {
-    scrollContainer.value.addEventListener('scroll', throttledHandleScroll, { passive: true })
-  }
-})
+  // Computed properties for virtualization
+  const totalItems = computed(() => props.rows.length);
 
-onUnmounted(() => {
-  if (scrollContainer.value) {
-    scrollContainer.value.removeEventListener('scroll', throttledHandleScroll)
-  }
-  if (scrollTimeout) clearTimeout(scrollTimeout)
-})
+  const itemsPerPage = computed(
+    () =>
+      Math.ceil(props.containerHeight / props.itemHeight) + props.bufferSize * 2
+  );
 
-// Watch for data changes and reset scroll
-watch(() => props.rows.length, () => {
-  scrollTop.value = 0
-  if (scrollContainer.value) {
-    scrollContainer.value.scrollTop = 0
-  }
-})
+  const startIndex = computed(() =>
+    Math.max(
+      0,
+      Math.floor(scrollTop.value / props.itemHeight) - props.bufferSize
+    )
+  );
+
+  const endIndex = computed(() =>
+    Math.min(totalItems.value, startIndex.value + itemsPerPage.value)
+  );
+
+  const visibleItems = computed(() =>
+    props.rows.slice(startIndex.value, endIndex.value)
+  );
+
+  const offsetY = computed(() => startIndex.value * props.itemHeight);
+
+  const bottomSpacerHeight = computed(
+    () => (totalItems.value - endIndex.value) * props.itemHeight
+  );
+
+  // Methods
+  const handleScroll = () => {
+    if (scrollContainer.value) {
+      scrollTop.value = scrollContainer.value.scrollTop;
+    }
+  };
+
+  const toggleSort = (columnName: string) => {
+    if (sortColumn.value === columnName) {
+      sortDirection.value = sortDirection.value === 'asc' ? 'desc' : 'asc';
+    } else {
+      sortColumn.value = columnName;
+      sortDirection.value = 'asc';
+    }
+    emit('sort', columnName, sortDirection.value);
+  };
+
+  const getSortIcon = (columnName: string) => {
+    if (sortColumn.value !== columnName) return 'unfold_more';
+    return sortDirection.value === 'asc'
+      ? 'keyboard_arrow_up'
+      : 'keyboard_arrow_down';
+  };
+
+  const getColumnWidth = (column: Column) => {
+    return column.width || 'auto';
+  };
+
+  const getRowKey = (row: any) => {
+    return row[props.rowKey];
+  };
+
+  const formatCellValue = (row: any, column: Column) => {
+    const value = row[column.field];
+    if (column.format) {
+      return column.format(value);
+    }
+    return value ?? '-';
+  };
+
+  // Enable horizontal scroll with mouse wheel
+  const handleWheelScroll = (event: WheelEvent) => {
+    if (!tableContainer.value) return;
+
+    // Check if horizontal scroll is needed
+    const { scrollWidth, clientWidth, scrollLeft } = tableContainer.value;
+    const canScrollHorizontally = scrollWidth > clientWidth;
+
+    // Only handle horizontal scroll when:
+    // 1. Shift key is held (explicit horizontal scroll intent)
+    // 2. Table needs horizontal scroll AND we're already scrolled horizontally
+    if (canScrollHorizontally && event.shiftKey && event.deltaY !== 0) {
+      event.preventDefault();
+      tableContainer.value.scrollLeft += event.deltaY;
+    }
+
+    // For normal vertical scroll, let the browser handle it naturally
+    // This ensures smooth transitions between horizontal and vertical scrolling
+  };
+
+  // Performance optimization: Throttled scroll handling
+  let scrollTimeout: NodeJS.Timeout | null = null;
+  const throttledHandleScroll = () => {
+    if (scrollTimeout) clearTimeout(scrollTimeout);
+    scrollTimeout = setTimeout(handleScroll, 16); // ~60fps
+  };
+
+  // Lifecycle
+  onMounted(() => {
+    if (scrollContainer.value) {
+      scrollContainer.value.addEventListener('scroll', throttledHandleScroll, {
+        passive: true,
+      });
+    }
+  });
+
+  onUnmounted(() => {
+    if (scrollContainer.value) {
+      scrollContainer.value.removeEventListener(
+        'scroll',
+        throttledHandleScroll
+      );
+    }
+    if (scrollTimeout) clearTimeout(scrollTimeout);
+  });
+
+  // Watch for data changes and reset scroll
+  watch(
+    () => props.rows.length,
+    () => {
+      scrollTop.value = 0;
+      if (scrollContainer.value) {
+        scrollContainer.value.scrollTop = 0;
+      }
+    }
+  );
 </script>
 
 <style lang="scss" scoped>
-.virtualized-table-container {
-  position: relative;
-  border: 1px solid #e0e0e0;
-  border-radius: 8px;
-  overflow-x: auto; // Enable horizontal scroll
-  overflow-y: hidden;
-  background: white;
-}
-
-.table-header {
-  display: flex;
-  background: var(--brand-primary);
-  border-bottom: 1px solid #e0e0e0;
-  position: sticky;
-  top: 0;
-  z-index: 10;
-  min-width: max-content; // Ensure header matches body width
-  
-  .header-cell {
-    padding: 12px 16px;
-    font-weight: 600;
-    font-size: 14px;
-    color: white;
-    border-right: 1px solid rgba(255, 255, 255, 0.2);
-    
-    &:last-child {
-      border-right: none;
-    }
-    
-    .sort-btn {
-      padding: 0;
-      min-height: auto;
-      color: inherit;
-      font-weight: inherit;
-      text-transform: none;
-      justify-content: flex-start;
-    }
+  .virtualized-table-container {
+    position: relative;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    overflow-x: auto; // Enable horizontal scroll
+    overflow-y: hidden;
+    background: white;
   }
-}
 
-.table-body {
-  overflow-y: auto;
-  overflow-x: hidden; // Body doesn't need horizontal scroll, parent handles it
-  position: relative;
-  
-  .table-row {
+  .table-header {
     display: flex;
-    border-bottom: 1px solid #f0f0f0;
-    transition: background-color 0.2s ease;
-    min-width: max-content; // Ensure rows can grow with content
-    
-    &:hover {
-      background-color: #fafafa;
-    }
-    
-    &.row-even {
-      background-color: #f9f9f9;
-      
-      &:hover {
-        background-color: #f0f0f0;
-      }
-    }
-    
-    .table-cell {
+    background: var(--brand-primary);
+    border-bottom: 1px solid #e0e0e0;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    min-width: max-content; // Ensure header matches body width
+
+    .header-cell {
       padding: 12px 16px;
-      display: flex;
-      align-items: center;
+      font-weight: 600;
       font-size: 14px;
-      color: #424242;
-      border-right: 1px solid #f0f0f0;
-      
+      color: white;
+      border-right: 1px solid rgba(255, 255, 255, 0.2);
+
       &:last-child {
         border-right: none;
       }
-    }
-  }
-}
 
-.loading-overlay {
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: rgba(255, 255, 255, 0.8);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 20;
-}
-
-// Dark mode support
-body.body--dark .virtualized-table-container {
-  background: #1e1e1e;
-  border-color: #333;
-  
-  .table-header {
-    background: var(--brand-primary);
-    border-bottom-color: #333;
-    
-    .header-cell {
-      color: white;
-      border-right-color: rgba(255, 255, 255, 0.2);
-    }
-  }
-  
-  .table-body {
-    .table-row {
-      border-bottom-color: #333;
-      
-      &:hover {
-        background-color: #2a2a2a;
+      .sort-btn {
+        padding: 0;
+        min-height: auto;
+        color: inherit;
+        font-weight: inherit;
+        text-transform: none;
+        justify-content: flex-start;
       }
-      
+    }
+  }
+
+  .table-body {
+    overflow-y: auto;
+    overflow-x: hidden; // Body doesn't need horizontal scroll, parent handles it
+    position: relative;
+
+    .table-row {
+      display: flex;
+      border-bottom: 1px solid #f0f0f0;
+      transition: background-color 0.2s ease;
+      min-width: max-content; // Ensure rows can grow with content
+
+      &:hover {
+        background-color: #fafafa;
+      }
+
       &.row-even {
-        background-color: #252525;
-        
+        background-color: #f9f9f9;
+
+        &:hover {
+          background-color: #f0f0f0;
+        }
+      }
+
+      .table-cell {
+        padding: 12px 16px;
+        display: flex;
+        align-items: center;
+        font-size: 14px;
+        color: #424242;
+        border-right: 1px solid #f0f0f0;
+
+        &:last-child {
+          border-right: none;
+        }
+      }
+    }
+  }
+
+  .loading-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(255, 255, 255, 0.8);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 20;
+  }
+
+  // Dark mode support
+  body.body--dark .virtualized-table-container {
+    background: #1e1e1e;
+    border-color: #333;
+
+    .table-header {
+      background: var(--brand-primary);
+      border-bottom-color: #333;
+
+      .header-cell {
+        color: white;
+        border-right-color: rgba(255, 255, 255, 0.2);
+      }
+    }
+
+    .table-body {
+      .table-row {
+        border-bottom-color: #333;
+
         &:hover {
           background-color: #2a2a2a;
         }
-      }
-      
-      .table-cell {
-        color: #e0e0e0;
-        border-right-color: #333;
+
+        &.row-even {
+          background-color: #252525;
+
+          &:hover {
+            background-color: #2a2a2a;
+          }
+        }
+
+        .table-cell {
+          color: #e0e0e0;
+          border-right-color: #333;
+        }
       }
     }
   }
-}
 
-// Performance optimizations
-.table-row {
-  will-change: transform;
-  contain: layout style paint;
-}
+  // Performance optimizations
+  .table-row {
+    will-change: transform;
+    contain: layout style paint;
+  }
 
-.table-body {
-  will-change: scroll-position;
-  contain: layout;
-}
+  .table-body {
+    will-change: scroll-position;
+    contain: layout;
+  }
 </style>

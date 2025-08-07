@@ -93,7 +93,6 @@ export class MultiSupplierOrderListService {
         ...orderList,
         items: [],
       };
-
     } catch (error: any) {
       orderLogger.error('❌ Failed to create order list:', error);
       throw new Error(`Failed to create order list: ${error.message}`);
@@ -103,26 +102,34 @@ export class MultiSupplierOrderListService {
   /**
    * Add a product to an order list with supplier selection
    */
-  async addProductToOrderList(orderListId: string, data: {
-    product_id: string;
-    supplier_id: string;
-    minimum_stock: number;
-    maximum_stock: number;
-    is_preferred_supplier?: boolean;
-  }): Promise<MultiSupplierOrderListItem> {
+  async addProductToOrderList(
+    orderListId: string,
+    data: {
+      product_id: string;
+      supplier_id: string;
+      minimum_stock: number;
+      maximum_stock: number;
+      is_preferred_supplier?: boolean;
+    }
+  ): Promise<MultiSupplierOrderListItem> {
     try {
-      orderLogger.info('Adding product to order list:', { orderListId, productId: data.product_id });
+      orderLogger.info('Adding product to order list:', {
+        orderListId,
+        productId: data.product_id,
+      });
 
       // Get product and supplier details
-      const [productResult, supplierProductResult, stockResult] = await Promise.all([
-        supabase
-          .from('products')
-          .select('name, sku')
-          .eq('id', data.product_id)
-          .single(),
-        supabase
-          .from('supplier_products')
-          .select(`
+      const [productResult, supplierProductResult, stockResult] =
+        await Promise.all([
+          supabase
+            .from('products')
+            .select('name, sku')
+            .eq('id', data.product_id)
+            .single(),
+          supabase
+            .from('supplier_products')
+            .select(
+              `
             supplier_sku,
             cost_price,
             currency,
@@ -130,18 +137,19 @@ export class MultiSupplierOrderListService {
             order_multiple,
             lead_time_days,
             suppliers (id, name)
-          `)
-          .eq('product_id', data.product_id)
-          .eq('supplier_id', data.supplier_id)
-          .single(),
-        supabase
-          .from('stock_levels')
-          .select('current_quantity')
-          .eq('product_id', data.product_id)
-          .order('created_at', { ascending: false })
-          .limit(1)
-          .maybeSingle()
-      ]);
+          `
+            )
+            .eq('product_id', data.product_id)
+            .eq('supplier_id', data.supplier_id)
+            .single(),
+          supabase
+            .from('stock_levels')
+            .select('current_quantity')
+            .eq('product_id', data.product_id)
+            .order('created_at', { ascending: false })
+            .limit(1)
+            .maybeSingle(),
+        ]);
 
       if (productResult.error) throw productResult.error;
       if (supplierProductResult.error) throw supplierProductResult.error;
@@ -181,7 +189,6 @@ export class MultiSupplierOrderListService {
         order_multiple: supplierProduct.order_multiple || 1,
         lead_time_days: supplierProduct.lead_time_days || 1,
       };
-
     } catch (error: any) {
       orderLogger.error('❌ Failed to add product to order list:', error);
       throw new Error(`Failed to add product to order list: ${error.message}`);
@@ -191,9 +198,15 @@ export class MultiSupplierOrderListService {
   /**
    * Update supplier for an existing order list item
    */
-  async updateItemSupplier(itemId: string, newSupplierId: string): Promise<MultiSupplierOrderListItem> {
+  async updateItemSupplier(
+    itemId: string,
+    newSupplierId: string
+  ): Promise<MultiSupplierOrderListItem> {
     try {
-      orderLogger.info('Updating supplier for order list item:', { itemId, newSupplierId });
+      orderLogger.info('Updating supplier for order list item:', {
+        itemId,
+        newSupplierId,
+      });
 
       // Get current item
       const { data: currentItem, error: currentError } = await supabase
@@ -207,7 +220,8 @@ export class MultiSupplierOrderListService {
       // Get new supplier product details
       const { data: supplierProduct, error: supplierError } = await supabase
         .from('supplier_products')
-        .select(`
+        .select(
+          `
           supplier_sku,
           cost_price,
           currency,
@@ -215,7 +229,8 @@ export class MultiSupplierOrderListService {
           order_multiple,
           lead_time_days,
           suppliers (id, name)
-        `)
+        `
+        )
         .eq('product_id', currentItem.product_id)
         .eq('supplier_id', newSupplierId)
         .single();
@@ -231,10 +246,12 @@ export class MultiSupplierOrderListService {
           updated_at: new Date().toISOString(),
         })
         .eq('id', itemId)
-        .select(`
+        .select(
+          `
           *,
           products (name, sku)
-        `)
+        `
+        )
         .single();
 
       if (updateError) throw updateError;
@@ -252,7 +269,6 @@ export class MultiSupplierOrderListService {
         order_multiple: supplierProduct.order_multiple || 1,
         lead_time_days: supplierProduct.lead_time_days || 1,
       };
-
     } catch (error: any) {
       orderLogger.error('❌ Failed to update item supplier:', error);
       throw new Error(`Failed to update item supplier: ${error.message}`);
@@ -262,20 +278,23 @@ export class MultiSupplierOrderListService {
   /**
    * Get alternative suppliers for a product
    */
-  async getAlternativeSuppliers(productId: string): Promise<Array<{
-    supplier_id: string;
-    supplier_name: string;
-    supplier_sku?: string;
-    cost_price: number;
-    currency: string;
-    lead_time_days: number;
-    is_available: boolean;
-    price_difference_percent: number;
-  }>> {
+  async getAlternativeSuppliers(productId: string): Promise<
+    Array<{
+      supplier_id: string;
+      supplier_name: string;
+      supplier_sku?: string;
+      cost_price: number;
+      currency: string;
+      lead_time_days: number;
+      is_available: boolean;
+      price_difference_percent: number;
+    }>
+  > {
     try {
       const { data: supplierProducts, error } = await supabase
         .from('supplier_products')
-        .select(`
+        .select(
+          `
           supplier_id,
           supplier_sku,
           cost_price,
@@ -283,7 +302,8 @@ export class MultiSupplierOrderListService {
           lead_time_days,
           is_available,
           suppliers (id, name)
-        `)
+        `
+        )
         .eq('product_id', productId)
         .eq('is_available', true)
         .order('cost_price', { ascending: true });
@@ -300,11 +320,11 @@ export class MultiSupplierOrderListService {
         currency: sp.currency || 'EUR',
         lead_time_days: sp.lead_time_days || 1,
         is_available: sp.is_available,
-        price_difference_percent: lowestPrice > 0 
-          ? ((sp.cost_price - lowestPrice) / lowestPrice) * 100 
-          : 0,
+        price_difference_percent:
+          lowestPrice > 0
+            ? ((sp.cost_price - lowestPrice) / lowestPrice) * 100
+            : 0,
       }));
-
     } catch (error: any) {
       orderLogger.error('❌ Failed to get alternative suppliers:', error);
       throw new Error(`Failed to get alternative suppliers: ${error.message}`);
@@ -314,28 +334,37 @@ export class MultiSupplierOrderListService {
   /**
    * Get analytics for an order list
    */
-  async getOrderListAnalytics(orderListId: string): Promise<OrderListAnalytics> {
+  async getOrderListAnalytics(
+    orderListId: string
+  ): Promise<OrderListAnalytics> {
     try {
       const { data: items, error } = await supabase
         .from('order_list_items')
-        .select(`
+        .select(
+          `
           minimum_stock,
           maximum_stock,
           current_stock,
           unit_price,
           lead_time_days,
           suppliers (id, name)
-        `)
+        `
+        )
         .eq('order_list_id', orderListId);
 
       if (error) throw error;
 
       const totalItems = items.length;
       const suppliersCount = new Set(items.map(item => item.suppliers.id)).size;
-      const lowStockItems = items.filter(item => item.current_stock <= item.minimum_stock).length;
-      const outOfStockItems = items.filter(item => item.current_stock === 0).length;
+      const lowStockItems = items.filter(
+        item => item.current_stock <= item.minimum_stock
+      ).length;
+      const outOfStockItems = items.filter(
+        item => item.current_stock === 0
+      ).length;
       const totalValue = items.reduce((sum, item) => sum + item.unit_price, 0);
-      const avgLeadTime = items.reduce((sum, item) => sum + item.lead_time_days, 0) / totalItems;
+      const avgLeadTime =
+        items.reduce((sum, item) => sum + item.lead_time_days, 0) / totalItems;
 
       // Supplier breakdown
       const supplierMap = new Map();
@@ -356,10 +385,12 @@ export class MultiSupplierOrderListService {
         supplier.total_lead_time += item.lead_time_days;
       });
 
-      const supplierBreakdown = Array.from(supplierMap.values()).map(supplier => ({
-        ...supplier,
-        avg_lead_time: supplier.total_lead_time / supplier.item_count,
-      }));
+      const supplierBreakdown = Array.from(supplierMap.values()).map(
+        supplier => ({
+          ...supplier,
+          avg_lead_time: supplier.total_lead_time / supplier.item_count,
+        })
+      );
 
       return {
         total_items: totalItems,
@@ -370,7 +401,6 @@ export class MultiSupplierOrderListService {
         avg_lead_time: avgLeadTime || 0,
         supplier_breakdown: supplierBreakdown,
       };
-
     } catch (error: any) {
       orderLogger.error('❌ Failed to get order list analytics:', error);
       throw new Error(`Failed to get order list analytics: ${error.message}`);
@@ -380,11 +410,14 @@ export class MultiSupplierOrderListService {
   /**
    * Optimize supplier selection for better pricing and lead times
    */
-  async optimizeSupplierSelection(orderListId: string, criteria: {
-    prioritize: 'price' | 'lead_time' | 'balanced';
-    max_price_increase_percent?: number;
-    max_lead_time_days?: number;
-  }): Promise<{
+  async optimizeSupplierSelection(
+    orderListId: string,
+    criteria: {
+      prioritize: 'price' | 'lead_time' | 'balanced';
+      max_price_increase_percent?: number;
+      max_lead_time_days?: number;
+    }
+  ): Promise<{
     recommendations: Array<{
       item_id: string;
       current_supplier: string;
@@ -397,18 +430,23 @@ export class MultiSupplierOrderListService {
     avg_lead_time_improvement: number;
   }> {
     try {
-      orderLogger.info('Optimizing supplier selection for order list:', orderListId);
+      orderLogger.info(
+        'Optimizing supplier selection for order list:',
+        orderListId
+      );
 
       // Get current order list items
       const { data: items, error: itemsError } = await supabase
         .from('order_list_items')
-        .select(`
+        .select(
+          `
           id,
           product_id,
           supplier_id,
           unit_price,
           suppliers (name, lead_time_days)
-        `)
+        `
+        )
         .eq('order_list_id', orderListId);
 
       if (itemsError) throw itemsError;
@@ -418,15 +456,17 @@ export class MultiSupplierOrderListService {
       let totalLeadTimeImprovement = 0;
 
       for (const item of items) {
-        const alternatives = await this.getAlternativeSuppliers(item.product_id);
-        
+        const alternatives = await this.getAlternativeSuppliers(
+          item.product_id
+        );
+
         if (alternatives.length <= 1) continue; // No alternatives
 
         const currentPrice = item.unit_price;
         const currentLeadTime = item.suppliers?.lead_time_days || 7;
 
         let bestAlternative;
-        
+
         switch (criteria.prioritize) {
           case 'price':
             bestAlternative = alternatives
@@ -434,23 +474,24 @@ export class MultiSupplierOrderListService {
               .filter(alt => alt.cost_price < currentPrice)
               .sort((a, b) => a.cost_price - b.cost_price)[0];
             break;
-            
+
           case 'lead_time':
             bestAlternative = alternatives
               .filter(alt => alt.supplier_id !== item.supplier_id)
               .filter(alt => alt.lead_time_days < currentLeadTime)
               .sort((a, b) => a.lead_time_days - b.lead_time_days)[0];
             break;
-            
+
           case 'balanced':
             bestAlternative = alternatives
               .filter(alt => alt.supplier_id !== item.supplier_id)
               .map(alt => ({
                 ...alt,
-                score: (
-                  (currentPrice - alt.cost_price) / currentPrice * 0.6 + // 60% weight on price
-                  (currentLeadTime - alt.lead_time_days) / currentLeadTime * 0.4 // 40% weight on lead time
-                )
+                // 40% weight on lead time
+                score:
+                  ((currentPrice - alt.cost_price) / currentPrice) * 0.6 + // 60% weight on price
+                  ((currentLeadTime - alt.lead_time_days) / currentLeadTime) *
+                    0.4,
               }))
               .filter(alt => alt.score > 0)
               .sort((a, b) => b.score - a.score)[0];
@@ -459,16 +500,23 @@ export class MultiSupplierOrderListService {
 
         if (bestAlternative) {
           const priceSavings = currentPrice - bestAlternative.cost_price;
-          const leadTimeImprovement = currentLeadTime - bestAlternative.lead_time_days;
+          const leadTimeImprovement =
+            currentLeadTime - bestAlternative.lead_time_days;
 
           // Apply criteria filters
-          if (criteria.max_price_increase_percent && 
-              priceSavings < 0 && 
-              Math.abs(priceSavings / currentPrice * 100) > criteria.max_price_increase_percent) {
+          if (
+            criteria.max_price_increase_percent &&
+            priceSavings < 0 &&
+            Math.abs((priceSavings / currentPrice) * 100) >
+              criteria.max_price_increase_percent
+          ) {
             continue;
           }
 
-          if (criteria.max_lead_time_days && bestAlternative.lead_time_days > criteria.max_lead_time_days) {
+          if (
+            criteria.max_lead_time_days &&
+            bestAlternative.lead_time_days > criteria.max_lead_time_days
+          ) {
             continue;
           }
 
@@ -478,9 +526,10 @@ export class MultiSupplierOrderListService {
             recommended_supplier: bestAlternative.supplier_name,
             price_savings: priceSavings,
             lead_time_improvement: leadTimeImprovement,
-            reason: priceSavings > 0 
-              ? `Save €${priceSavings.toFixed(2)} per unit`
-              : `Improve lead time by ${leadTimeImprovement} days`,
+            reason:
+              priceSavings > 0
+                ? `Save €${priceSavings.toFixed(2)} per unit`
+                : `Improve lead time by ${leadTimeImprovement} days`,
           });
 
           totalSavings += priceSavings;
@@ -493,33 +542,39 @@ export class MultiSupplierOrderListService {
       return {
         recommendations,
         total_savings: totalSavings,
-        avg_lead_time_improvement: recommendations.length > 0 
-          ? totalLeadTimeImprovement / recommendations.length 
-          : 0,
+        avg_lead_time_improvement:
+          recommendations.length > 0
+            ? totalLeadTimeImprovement / recommendations.length
+            : 0,
       };
-
     } catch (error: any) {
       orderLogger.error('❌ Failed to optimize supplier selection:', error);
-      throw new Error(`Failed to optimize supplier selection: ${error.message}`);
+      throw new Error(
+        `Failed to optimize supplier selection: ${error.message}`
+      );
     }
   }
 
   /**
    * Duplicate an order list to another department/location
    */
-  async duplicateOrderList(orderListId: string, newData: {
-    name: string;
-    description?: string;
-    department?: string;
-    location?: string;
-  }): Promise<SupplierAgnosticOrderList> {
+  async duplicateOrderList(
+    orderListId: string,
+    newData: {
+      name: string;
+      description?: string;
+      department?: string;
+      location?: string;
+    }
+  ): Promise<SupplierAgnosticOrderList> {
     try {
       orderLogger.info('Duplicating order list:', orderListId);
 
       // Get original order list
       const { data: originalList, error: listError } = await supabase
         .from('order_lists')
-        .select(`
+        .select(
+          `
           practice_id,
           auto_reorder,
           order_list_items (
@@ -529,7 +584,8 @@ export class MultiSupplierOrderListService {
             maximum_stock,
             is_preferred_supplier
           )
-        `)
+        `
+        )
         .eq('id', orderListId)
         .single();
 
@@ -557,14 +613,13 @@ export class MultiSupplierOrderListService {
       );
 
       const items = await Promise.all(itemPromises);
-      
+
       orderLogger.info('✅ Order list duplicated successfully');
 
       return {
         ...newOrderList,
         items,
       };
-
     } catch (error: any) {
       orderLogger.error('❌ Failed to duplicate order list:', error);
       throw new Error(`Failed to duplicate order list: ${error.message}`);
@@ -572,4 +627,5 @@ export class MultiSupplierOrderListService {
   }
 }
 
-export const multiSupplierOrderListService = new MultiSupplierOrderListService();
+export const multiSupplierOrderListService =
+  new MultiSupplierOrderListService();

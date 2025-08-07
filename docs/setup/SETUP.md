@@ -4,8 +4,8 @@ This guide helps you set up Remcura in your development environment and producti
 
 ## Overview
 
-Remcura is a professional inventory management system for medical clinics, built with Vue 3,
-Quasar Framework, and Supabase. The system is designed as a comprehensive standalone application.
+Remcura is a professional inventory management system for medical clinics, built with Vue 3, Quasar
+Framework, and Supabase. The system is designed as a comprehensive standalone application.
 
 ## Requirements
 
@@ -80,39 +80,39 @@ ALTER TABLE practice_locations ENABLE ROW LEVEL SECURITY;
 CREATE TABLE products (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   practice_id UUID NOT NULL REFERENCES practices(id) ON DELETE CASCADE,
-  
+
   -- Basic Information
   name VARCHAR(200) NOT NULL,
   description TEXT,
   brand VARCHAR(100),
   category VARCHAR(100),
-  
+
   -- GS1 Compliance Fields
   gtin VARCHAR(14) UNIQUE, -- Global Trade Item Number
   gpc_brick_code VARCHAR(20), -- GS1 Global Product Classification
   gln_manufacturer VARCHAR(13), -- Global Location Number
-  
+
   -- Pricing
   cost_price DECIMAL(10,2),
   selling_price DECIMAL(10,2),
-  
+
   -- Packaging & Measurements
   net_content_value DECIMAL(10,3),
   net_content_uom VARCHAR(10), -- Unit of measure
   gross_weight DECIMAL(10,3),
   net_weight DECIMAL(10,3),
-  
+
   -- GS1 Indicators
   base_unit_indicator BOOLEAN DEFAULT false,
   orderable_unit_indicator BOOLEAN DEFAULT true,
   despatch_unit_indicator BOOLEAN DEFAULT false,
-  
+
   -- Regulatory
   country_of_origin VARCHAR(3), -- ISO 3166-1 alpha-3
   effective_from_date DATE,
   effective_to_date DATE,
   product_lifecycle_status VARCHAR(20) DEFAULT 'Active',
-  
+
   -- System Fields
   is_active BOOLEAN DEFAULT true,
   created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
@@ -132,12 +132,12 @@ CREATE TABLE suppliers (
   email VARCHAR(255),
   phone VARCHAR(50),
   website VARCHAR(255),
-  
+
   -- Integration settings
   integration_type VARCHAR(50) DEFAULT 'manual', -- manual, magento, api
   api_endpoint VARCHAR(500),
   api_key VARCHAR(255),
-  
+
   is_active BOOLEAN DEFAULT true,
     created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
     updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
@@ -151,21 +151,21 @@ CREATE TABLE stock_levels (
   practice_id UUID NOT NULL REFERENCES practices(id) ON DELETE CASCADE,
   product_id UUID NOT NULL REFERENCES products(id) ON DELETE CASCADE,
   location_id UUID NOT NULL REFERENCES practice_locations(id) ON DELETE CASCADE,
-  
+
   current_quantity INTEGER NOT NULL DEFAULT 0,
   minimum_quantity INTEGER DEFAULT 0,
   maximum_quantity INTEGER DEFAULT 100,
-  
+
   -- Batch tracking
   batch_number VARCHAR(100),
   expiry_date DATE,
-  
+
   last_counted_at TIMESTAMP WITH TIME ZONE,
   last_counted_by UUID REFERENCES auth.users(id),
-  
+
   created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
   updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
-  
+
   UNIQUE(product_id, location_id, batch_number)
 );
 
@@ -181,7 +181,7 @@ Create security policies for data isolation:
 CREATE POLICY "products_tenant_isolation" ON products
   FOR ALL USING (
     practice_id IN (
-      SELECT practice_id FROM practice_members 
+      SELECT practice_id FROM practice_members
       WHERE user_id = auth.uid()
     )
   );
@@ -190,7 +190,7 @@ CREATE POLICY "products_tenant_isolation" ON products
 CREATE POLICY "suppliers_tenant_isolation" ON suppliers
   FOR ALL USING (
     practice_id IN (
-      SELECT practice_id FROM practice_members 
+      SELECT practice_id FROM practice_members
       WHERE user_id = auth.uid()
     )
   );
@@ -198,7 +198,7 @@ CREATE POLICY "suppliers_tenant_isolation" ON suppliers
 CREATE POLICY "stock_levels_tenant_isolation" ON stock_levels
   FOR ALL USING (
     practice_id IN (
-      SELECT practice_id FROM practice_members 
+      SELECT practice_id FROM practice_members
       WHERE user_id = auth.uid()
     )
   );
@@ -206,7 +206,7 @@ CREATE POLICY "stock_levels_tenant_isolation" ON stock_levels
 CREATE POLICY "practice_locations_tenant_isolation" ON practice_locations
   FOR ALL USING (
     practice_id IN (
-      SELECT practice_id FROM practice_members 
+      SELECT practice_id FROM practice_members
       WHERE user_id = auth.uid()
     )
   );
@@ -341,21 +341,25 @@ npx serve dist/spa -p 3000
 ### Common Issues
 
 #### 1. Supabase Connection Issues
+
 - Check environment variables
 - Verify project URL and API keys
 - Check CORS configuration
 
 #### 2. Authentication Problems
+
 - Ensure RLS policies are correctly configured
 - Check redirect URLs
 - Verify email settings in Supabase
 
 #### 3. Build Errors
+
 - Clear node_modules and reinstall
 - Check TypeScript errors
 - Verify environment variables
 
 #### 4. Performance Issues
+
 - Enable compression in hosting platform
 - Optimize images and assets
 - Check network requests
@@ -363,6 +367,7 @@ npx serve dist/spa -p 3000
 ### Support
 
 For technical support:
+
 - Check documentation in `docs/` directory
 - Review error logs in Supabase dashboard
 - Contact development team
@@ -380,6 +385,7 @@ For technical support:
 **🚀 Your Remcura installation is now ready for use!**
 
 For additional configuration options, see:
+
 - [Deployment Guide](./DEPLOYMENT.md)
 - [Testing Guide](./TESTING.md)
 - [Production Readiness Audit](../reports/PRODUCTION_READINESS_AUDIT.md)

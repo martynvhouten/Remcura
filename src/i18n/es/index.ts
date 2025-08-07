@@ -89,7 +89,7 @@ export default {
     submit: 'Enviar',
     fromDate: 'Fecha desde',
     toDate: 'Fecha hasta',
-    
+
     // Accessibility labels
     accessibility: {
       mainNavigation: 'Navegación principal',
@@ -141,15 +141,25 @@ export default {
     shoppingCart: 'Carrito de compras',
     styleGuide: 'Guía de estilo',
     designSystem: 'Referencia del sistema de diseño',
-    
+
+    // Platform navigation
+    platformDashboard: 'Panel de Plataforma',
+    practiceManagement: 'Gestión de Consultas',
+    systemMonitoring: 'Monitoreo del Sistema',
+    databaseAdmin: 'Administración de Base de Datos',
+    systemLogs: 'Registros del Sistema',
+    apiDocumentation: 'Documentación API',
+    backupRestore: 'Respaldo y Restauración',
+
     sections: {
       main: 'Resumen',
       inventory: 'Gestión de inventario',
       supplyChain: 'Cadena de suministro',
       analytics: 'Análisis e informes',
       administration: 'Administración',
+      platform: 'Plataforma',
     },
-    
+
     inventoryLevels: 'Niveles de inventario',
     currentStock: 'Resumen de stock actual',
     locations: 'Ubicaciones',
@@ -171,25 +181,43 @@ export default {
     hidePassword: 'Ocultar contraseña',
     showPassword: 'Mostrar contraseña',
     loginError: 'Error al iniciar sesión. Verifica tus credenciales.',
-    sessionExpired: 'Tu sesión ha expirado. Por favor, inicia sesión nuevamente.',
+    sessionExpired:
+      'Tu sesión ha expirado. Por favor, inicia sesión nuevamente.',
     loginSuccess: 'Inicio de sesión exitoso',
     logoutSuccess: 'Cierre de sesión exitoso',
     pleaseLogin: 'Por favor, inicia sesión para continuar',
     demoAccount: 'Cuenta demo',
+    manualLogin: 'Inicio manual',
+    demoLoginSuccess: 'Cuenta demo iniciada exitosamente',
+    ownerLoginSuccess: 'Propietario de plataforma iniciado exitosamente',
+    demoLogin: 'Inicio demo',
+    ownerLogin: 'Inicio propietario',
     or: 'o',
+
+    quickLogin: {
+      title: 'Elige tu tipo de inicio',
+      subtitle: 'Selecciona la opción correcta para tu rol',
+      demo: 'Iniciar como demo',
+      owner: 'Iniciar como propietario',
+      demoTooltip: 'Acceso a paneles de práctica y funciones demo',
+      ownerTooltip: 'Acceso completo a plataforma y gestión del sistema',
+    },
     secureConnection: 'Conexión segura',
     privacyPolicy: 'Política de privacidad',
     termsOfService: 'Términos de servicio',
     support: 'Soporte',
     allRightsReserved: 'Todos los derechos reservados',
     professionalInventory: 'Gestión profesional de inventario médico',
-    platformDescription: 'Optimiza tu gestión de inventario médico con nuestra plataforma de nivel empresarial. Rastrea stock, gestiona pedidos y asegura el cumplimiento con facilidad.',
+    platformDescription:
+      'Optimiza tu gestión de inventario médico con nuestra plataforma de nivel empresarial. Rastrea stock, gestiona pedidos y asegura el cumplimiento con facilidad.',
     realtimeTracking: 'Seguimiento de inventario en tiempo real',
     automatedAlerts: 'Alertas automatizadas de reorden',
     complianceReporting: 'Informes de cumplimiento',
     multilocationSupport: 'Soporte para múltiples ubicaciones',
-    demoCredentialsFilled: 'Credenciales demo completadas. Haz clic en Iniciar sesión para continuar.',
-    passwordResetComingSoon: 'La funcionalidad de restablecimiento de contraseña estará disponible pronto.',
+    demoCredentialsFilled:
+      'Credenciales demo completadas. Haz clic en Iniciar sesión para continuar.',
+    passwordResetComingSoon:
+      'La funcionalidad de restablecimiento de contraseña estará disponible pronto.',
     copyright: '© {year} {company}. Todos los derechos reservados.',
     passwordHelp: 'Ingresa tu contraseña para iniciar sesión de forma segura',
     demoHelp: 'Usa demo@remcura.com con contraseña demo123 para demostración',
@@ -202,16 +230,21 @@ export default {
     title: 'Cuenta demo',
     subtitle: 'Has iniciado sesión con la cuenta demo',
     resetData: 'Restablecer datos demo',
-    resetDataConfirm: '¿Estás seguro de que quieres restablecer todos los datos demo?',
+    resetDataConfirm:
+      '¿Estás seguro de que quieres restablecer todos los datos demo?',
     resetDataSuccess: 'Datos demo restablecidos exitosamente',
     resetDataError: 'Error al restablecer datos demo',
     limitations: 'Limitaciones demo',
-    limitationsText: 'Esta es una cuenta demo. Todos los cambios son visibles pero pueden ser restablecidos.',
+    limitationsText:
+      'Esta es una cuenta demo. Todos los cambios son visibles pero pueden ser restablecidos.',
     practice: 'Clínica demo Remka',
-    practiceDescription: 'Entorno demo completamente funcional con datos realistas',
+    practiceDescription:
+      'Entorno demo completamente funcional con datos realistas',
     resetInfo: 'Esto eliminará todos los datos demo y creará datos frescos',
-    onlyDemoUserCanReset: 'Solo el usuario demo puede restablecer los datos demo',
-    changesCanBeReset: 'Todos los cambios se guardan pero pueden ser restablecidos a través de la página Admin.',
+    onlyDemoUserCanReset:
+      'Solo el usuario demo puede restablecer los datos demo',
+    changesCanBeReset:
+      'Todos los cambios se guardan pero pueden ser restablecidos a través de la página Admin.',
     resetInProgress: 'Restableciendo datos demo...',
     reloadingAfterReset: 'Recargando página con datos frescos...',
   },
@@ -247,7 +280,8 @@ export default {
     viewAnalytics: 'Ver análisis',
     welcomeTitle: 'Bienvenido a Remcura',
     welcomeSubtitle: 'Tu sistema profesional de gestión de inventario médico',
-    welcomeDescription: 'Gestiona tu inventario eficientemente con nuestras herramientas avanzadas y seguimiento en tiempo real.',
+    welcomeDescription:
+      'Gestiona tu inventario eficientemente con nuestras herramientas avanzadas y seguimiento en tiempo real.',
     systemStatus: 'Estado del sistema',
     systemStatusSubtitle: 'Estado actual de tu sistema',
     systemOnline: 'Sistema en línea',
@@ -281,9 +315,87 @@ export default {
     // Role titles
     titles: {
       assistant: 'Panel de asistente',
-      manager: 'Panel de gerente', 
+      manager: 'Panel de gerente',
       owner: 'Panel de propietario',
       default: 'Panel de control',
+    },
+
+    // Roles
+    roles: {
+      assistant: '🩺 Asistente - Inventario y pedidos',
+      manager: '📊 Gerente - Análisis y resúmenes',
+      owner: '👑 Propietario - Control completo',
+      logistics: '🚚 Logística - Transporte y movimientos',
+      member: '👤 Miembro - Acceso básico',
+      guest: '👁️ Invitado - Solo lectura',
+      platformOwner: '⚙️ Propietario de plataforma - Gestión del sistema',
+      assistantDescription: 'Enfoque en tareas diarias de inventario y pedidos',
+      managerDescription: 'Resumen de rendimiento y análisis',
+      ownerDescription: 'Control completo y resúmenes financieros',
+      logisticsDescription: 'Transporte, entregas y movimientos de stock',
+      memberDescription: 'Acceso básico a información de inventario',
+      guestDescription: 'Acceso de solo lectura a información pública',
+      platformOwnerDescription:
+        'Gestión completa de la plataforma y configuración',
+    },
+
+    widgets: {
+      // Widgets existentes
+      lowStockAlerts: 'Alertas de stock bajo',
+      expiringProducts: 'Productos que caducan',
+      orderSuggestions: 'Sugerencias de pedidos',
+      activeOrderLists: 'Listas de pedidos activas',
+      pendingDeliveries: 'Entregas pendientes',
+      stockTrends: 'Tendencias de stock',
+      supplierPerformance: 'Rendimiento de proveedores',
+      costAnalysis: 'Análisis de costos',
+      errorAlerts: 'Alertas de error',
+      pendingOrders: 'Pedidos pendientes',
+      inventoryValue: 'Valor del inventario',
+      batchCompliance: 'Cumplimiento de lotes',
+      supplierContracts: 'Contratos de proveedores',
+      stockRotation: 'Rotación de stock',
+      auditNotifications: 'Notificaciones de auditoría',
+
+      // Nuevos widgets para rol de logística
+      stockMovements: 'Movimientos de stock',
+      locationOverview: 'Resumen de ubicaciones',
+      transportStatus: 'Estado del transporte',
+
+      // Nuevos widgets para rol de miembro
+      stockOverview: 'Resumen de stock',
+      myTasks: 'Mis tareas',
+
+      // Nuevos widgets para rol de invitado
+      publicInfo: 'Información pública',
+
+      // Nuevos widgets para propietario de plataforma
+      systemOverview: 'Resumen del sistema',
+      userAnalytics: 'Análisis de usuarios',
+      platformHealth: 'Salud de la plataforma',
+      subscriptionStatus: 'Estado de suscripción',
+
+      // Fallback de error
+      error: 'Error del widget',
+    },
+
+    alerts: {
+      noWarnings: 'Sin advertencias',
+      allStockLevelsOk: 'Todos los niveles de stock están bien',
+      lowStockMessage: 'Hay artículos con stock bajo',
+      viewStock: 'Ver stock',
+      failedOrdersMessage: 'Hay pedidos fallidos',
+      viewOrders: 'Ver pedidos',
+      expiredBatchesMessage: 'Hay lotes caducados',
+      viewBatches: 'Ver lotes',
+    },
+
+    // Platform Owner messages
+    platformOwner: {
+      title: 'Panel de propietario de plataforma',
+      description:
+        'Como propietario de la plataforma, tienes acceso al panel especial con funciones de gestión del sistema.',
+      goToPlatform: 'Ir al panel de plataforma',
     },
 
     // Actions
@@ -291,27 +403,6 @@ export default {
       refresh: 'Actualizar panel',
       customize: 'Personalizar panel',
       refreshed: 'Panel actualizado',
-    },
-
-    // Role switching
-    roleSwitch: {
-      success: 'Rol cambiado exitosamente',
-      caption: 'El panel se ha adaptado a tu nuevo rol',
-    },
-
-    // Error messages
-    errors: {
-      loadFailed: 'Error al cargar panel',
-      tryRefresh: 'Intenta refrescar la página',
-      switchFailed: 'Error al cambiar rol',
-      tryAgain: 'Por favor intenta de nuevo',
-    },
-
-    // Roles
-    roles: {
-      assistant: '🩺 Asistente - Inventario y pedidos',
-      manager: '📊 Gerente - Análisis y resúmenes',
-      owner: '👑 Propietario - Control total',
     },
 
     // Service layer translations
@@ -326,7 +417,8 @@ export default {
         orderSuggestions: 'Sugerencias de pedido',
         recentOrders: 'Pedidos recientes',
         quickScan: 'Escaneo rápido',
-        quickScanDescription: 'Escanea un código de barras de producto para actualizaciones rápidas de inventario',
+        quickScanDescription:
+          'Escanea un código de barras de producto para actualizaciones rápidas de inventario',
         analyticsOverview: 'Resumen de análisis',
         businessOverview: 'Resumen de negocio',
         financialSummary: 'Resumen financiero',
@@ -384,10 +476,12 @@ export default {
   // Error pages
   error: {
     pageNotFound: 'Página no encontrada',
-    pageNotFoundDescription: 'Lo sentimos, la página que buscas no se puede encontrar. Puede haber sido movida, eliminada, o ingresaste una URL incorrecta.',
+    pageNotFoundDescription:
+      'Lo sentimos, la página que buscas no se puede encontrar. Puede haber sido movida, eliminada, o ingresaste una URL incorrecta.',
     goHome: 'Ir al inicio',
     goBack: 'Volver',
-    tryThesePages: 'Intenta visitar una de estas páginas populares en su lugar:',
+    tryThesePages:
+      'Intenta visitar una de estas páginas populares en su lugar:',
   },
 
   // Validation
@@ -529,7 +623,8 @@ export default {
     spotCheck: 'Verificación puntual',
     cycleCount: 'Conteo cíclico',
     partialCountDescription: 'Contar solo productos seleccionados',
-    fullCountDescription: 'Contar todos los productos en ubicaciones seleccionadas',
+    fullCountDescription:
+      'Contar todos los productos en ubicaciones seleccionadas',
     spotCheckDescription: 'Verificación rápida de artículos específicos',
     cycleCountDescription: 'Conteo sistemático según programa',
     defaultSessionName: 'Conteo {date} {time}',
@@ -571,7 +666,8 @@ export default {
     noProductsFound: 'No se encontraron productos',
     overStockItems: 'Artículos con exceso de stock',
     batchTrackingWarning: 'Este producto requiere seguimiento por lotes',
-    cannotAdjustBatchTrackedProduct: 'No se puede ajustar manualmente producto con seguimiento por lotes',
+    cannotAdjustBatchTrackedProduct:
+      'No se puede ajustar manualmente producto con seguimiento por lotes',
     redirectingToBatchManagement: 'Redirigiendo a gestión de lotes',
 
     movement: {
@@ -599,7 +695,8 @@ export default {
   // Counting System
   counting: {
     title: 'Conteo de stock',
-    overview: 'Gestiona tus sesiones de conteo de inventario y rastrea la precisión del stock',
+    overview:
+      'Gestiona tus sesiones de conteo de inventario y rastrea la precisión del stock',
     sessionStatus: 'Estado de sesión',
     startSession: 'Iniciar sesión de conteo',
     activeSession: 'Sesión de conteo activa',
@@ -618,7 +715,8 @@ export default {
     countedProducts: 'Productos contados',
     loadingSession: 'Cargando sesión de conteo...',
     sessionNotFound: 'Sesión no encontrada',
-    sessionNotFoundDescription: 'La sesión de conteo que buscas no se pudo encontrar',
+    sessionNotFoundDescription:
+      'La sesión de conteo que buscas no se pudo encontrar',
     countingResults: 'Resultados de conteo',
     viewResults: 'Ver resultados de conteo y discrepancias',
     noResultsFound: 'No se encontraron resultados de conteo',
@@ -630,7 +728,8 @@ export default {
   // Batch Management
   batch: {
     batchManagement: 'Gestión de lotes',
-    manageBatchesSubtitle: 'Gestiona los lotes de tus productos y fechas de vencimiento efectivamente',
+    manageBatchesSubtitle:
+      'Gestiona los lotes de tus productos y fechas de vencimiento efectivamente',
     title: 'Gestión de lotes',
     batchNumber: 'Número de lote',
     lotNumber: 'Número de lote',
@@ -694,7 +793,8 @@ export default {
     fifoSuggestionGenerated: 'Sugerencia FIFO generada exitosamente',
     applyFifoSuggestion: 'Aplicar sugerencia FIFO',
     confirmFifoApplication: 'Confirmar aplicación FIFO',
-    confirmFifoMessage: '¿Estás seguro de que quieres aplicar esta sugerencia FIFO?',
+    confirmFifoMessage:
+      '¿Estás seguro de que quieres aplicar esta sugerencia FIFO?',
     fifoAppliedSuccessfully: 'Sugerencia FIFO aplicada exitosamente',
     useQuantity: 'Cantidad a usar',
     selectReport: 'Seleccionar informe',
@@ -807,7 +907,8 @@ export default {
   // Products Page
   productsPage: {
     title: 'Productos',
-    subtitle: 'Resumen de todos los productos disponibles de Remka y proveedores externos',
+    subtitle:
+      'Resumen de todos los productos disponibles de Remka y proveedores externos',
 
     table: {
       name: 'Nombre',
@@ -891,7 +992,8 @@ export default {
     dataRefreshed: 'Datos actualizados exitosamente',
     productLoadError: 'Error al cargar productos',
     noProductsFound: 'No se encontraron productos',
-    noProductsForFilter: 'No se encontraron productos para los filtros actuales',
+    noProductsForFilter:
+      'No se encontraron productos para los filtros actuales',
     loadingProducts: 'Cargando productos...',
 
     details: {
@@ -1009,7 +1111,8 @@ export default {
       cancelFailed: 'Error al cancelar pedido',
       exportFailed: 'Error al exportar pedidos',
       noOrdersToExport: 'No hay pedidos para exportar',
-      noPracticeSelected: 'Por favor selecciona una práctica primero para ver pedidos',
+      noPracticeSelected:
+        'Por favor selecciona una práctica primero para ver pedidos',
     },
 
     exportFilteredNote: 'Exportar {count} pedidos filtrados',
@@ -1023,7 +1126,8 @@ export default {
     title: 'Listas de pedidos',
     subtitle: 'Gestiona las listas de pedidos de tu práctica',
     advancedTitle: 'Listas de Pedidos Avanzadas',
-    advancedSubtitle: 'Sistema de pedidos independiente de proveedores impulsado por min/max',
+    advancedSubtitle:
+      'Sistema de pedidos independiente de proveedores impulsado por min/max',
     create: 'Nueva lista de pedidos',
     edit: 'Editar lista de pedidos',
     duplicate: 'Duplicar',
@@ -1057,7 +1161,8 @@ export default {
     details: 'Detalles',
     summary: 'Resumen',
     deleteDialog: 'Eliminar lista de pedidos',
-    deleteConfirm: '¿Estás seguro de que quieres eliminar esta lista de pedidos?',
+    deleteConfirm:
+      '¿Estás seguro de que quieres eliminar esta lista de pedidos?',
     duplicateDialog: 'Duplicar lista de pedidos',
     duplicateName: 'Copia de {name}',
 
@@ -1124,7 +1229,8 @@ export default {
     mainLocations: 'Ubicaciones principales',
     allLocations: 'Todas las ubicaciones',
     search: 'Buscar ubicaciones...',
-    comingSoonDescription: 'Las funciones de gestión de ubicaciones estarán disponibles pronto. Podrás crear y gestionar diferentes áreas de almacenamiento para tu inventario.',
+    comingSoonDescription:
+      'Las funciones de gestión de ubicaciones estarán disponibles pronto. Podrás crear y gestionar diferentes áreas de almacenamiento para tu inventario.',
     capacityItems: '{count} artículos',
     samples: {
       emergencyStock: 'Gabinete de emergencia',
@@ -1162,7 +1268,8 @@ export default {
     title: 'Análisis',
     subtitle: 'Informes e insights completos para tu inventario',
     comingSoon: 'Próximamente',
-    comingSoonDescription: 'Las funciones avanzadas de análisis e informes se agregarán pronto.',
+    comingSoonDescription:
+      'Las funciones avanzadas de análisis e informes se agregarán pronto.',
     overview: 'Resumen',
     trends: 'Tendencias',
     reports: 'Informes',
@@ -1176,11 +1283,11 @@ export default {
     orderFrequency: 'Frecuencia de pedidos',
     supplierPerformance: 'Rendimiento de proveedores',
     costAnalysis: 'Análisis de costos',
-    
+
     dashboard: 'Análisis del panel',
     usage: 'Estadísticas de uso',
     patterns: 'Patrones de uso',
-    
+
     events: {
       login: 'Iniciar sesión',
       logout: 'Cerrar sesión',
@@ -1199,10 +1306,11 @@ export default {
   // Offline Services
   offline: {
     title: 'Modo sin conexión',
-    
+
     data: {
       download: 'Descargar datos sin conexión',
-      downloadDescription: 'Descargar datos más recientes para uso sin conexión',
+      downloadDescription:
+        'Descargar datos más recientes para uso sin conexión',
       lastDownload: 'Última descarga',
       dataSize: 'Tamaño de datos',
     },
@@ -1230,8 +1338,9 @@ export default {
       downloadFailed: 'Error al descargar datos sin conexión',
       networkUnavailable: 'Red no disponible',
     },
-    
-    newVersionAvailable: 'Una nueva versión de la aplicación está disponible. ¿Te gustaría recargar ahora?',
+
+    newVersionAvailable:
+      'Una nueva versión de la aplicación está disponible. ¿Te gustaría recargar ahora?',
   },
 
   // Exports
@@ -1242,7 +1351,7 @@ export default {
     selectData: 'Seleccionar datos',
     generateExport: 'Generar exportación',
     downloadExport: 'Descargar exportación',
-    
+
     formats: {
       csv: 'Archivo CSV',
       pdf: 'Documento PDF',
@@ -1280,7 +1389,7 @@ export default {
     mostUpdatedProducts: 'Productos más actualizados',
     userActivity: 'Actividad del usuario',
     export: 'Exportar',
-    
+
     periods: {
       '7d': 'Últimos 7 días',
       '30d': 'Últimos 30 días',
@@ -1326,25 +1435,31 @@ export default {
     saveError: 'Error al guardar configuración',
     reset: 'Restablecer',
     resetToDefaults: 'Restablecer a valores predeterminados',
-    confirmReset: '¿Estás seguro de que quieres restablecer a valores predeterminados?',
-    
-    manageSettingsSubtitle: 'Gestiona la configuración de tu sistema y preferencias para una experiencia óptima',
+    confirmReset:
+      '¿Estás seguro de que quieres restablecer a valores predeterminados?',
+
+    manageSettingsSubtitle:
+      'Gestiona la configuración de tu sistema y preferencias para una experiencia óptima',
     profile: 'Perfil',
     profileSubtitle: 'Tu información personal de usuario',
     appearanceTitle: 'Apariencia',
     appearanceSubtitle: 'Personaliza la apariencia de la aplicación',
-    darkModeDescription: 'Cambia entre modo claro y oscuro para mejor visibilidad',
+    darkModeDescription:
+      'Cambia entre modo claro y oscuro para mejor visibilidad',
     selectLanguage: 'Elige tu idioma preferido para la interfaz',
     colorSchemeTitle: 'Esquema de colores',
-    colorSchemeDescription: 'Selecciona el esquema de colores que se adapte a tu preferencia',
+    colorSchemeDescription:
+      'Selecciona el esquema de colores que se adapte a tu preferencia',
     clinic: 'Clínica',
     clinicInfoSubtitle: 'Detalles de contacto e información empresarial',
-    contactSettingsNotice: 'Los detalles de contacto solo pueden ser modificados por un administrador',
+    contactSettingsNotice:
+      'Los detalles de contacto solo pueden ser modificados por un administrador',
     notificationSettingsSubtitle: 'Gestiona tus alertas y notificaciones',
     stockAlertsLabel: 'Alertas de stock',
     stockAlertsDescription: 'Recibe notificaciones cuando el stock esté bajo',
     emailNotificationsLabel: 'Notificaciones por email',
-    emailNotificationsDescription: 'Recibe actualizaciones importantes por email',
+    emailNotificationsDescription:
+      'Recibe actualizaciones importantes por email',
     browserNotificationsLabel: 'Notificaciones del navegador',
     browserNotificationsDescription: 'Notificaciones push en tu navegador',
     systemInfoTitle: 'Información del sistema',
@@ -1365,7 +1480,8 @@ export default {
     saveSettings: 'Guardar configuración',
 
     styleGuideTitle: 'Guía de estilo de Remcura',
-    styleGuideSubtitle: 'Referencia completa del sistema de diseño y showcase de componentes',
+    styleGuideSubtitle:
+      'Referencia completa del sistema de diseño y showcase de componentes',
     colorsSection: 'Colores',
     primaryColors: 'Colores primarios',
     neutralColors: 'Colores neutros',
@@ -1393,37 +1509,43 @@ export default {
       defaultCard: {
         title: 'Tarjeta predeterminada',
         subtitle: 'Tarjeta estándar para contenido general',
-        description: 'Esta es la variante de tarjeta predeterminada con estilo estándar. Usa fondos neutros que se adaptan bien a los modos claro y oscuro.',
+        description:
+          'Esta es la variante de tarjeta predeterminada con estilo estándar. Usa fondos neutros que se adaptan bien a los modos claro y oscuro.',
         action: 'Acción',
       },
       modernCard: {
         title: 'Tarjeta moderna',
         subtitle: 'Estilo moderno mejorado con bordes',
-        description: 'Variante de tarjeta moderna con estilo mejorado y bordes sutiles para una apariencia contemporánea.',
+        description:
+          'Variante de tarjeta moderna con estilo mejorado y bordes sutiles para una apariencia contemporánea.',
         action: 'Acción primaria',
       },
       elevatedCard: {
         title: 'Tarjeta elevada',
         subtitle: 'Tarjeta con sombra mejorada para énfasis',
-        description: 'Esta tarjeta tiene estilo elevado con sombras mejoradas para crear profundidad y jerarquía.',
+        description:
+          'Esta tarjeta tiene estilo elevado con sombras mejoradas para crear profundidad y jerarquía.',
         action: 'Acción elevada',
       },
       glassCard: {
         title: 'Tarjeta de vidrio',
         subtitle: 'Efecto glassmorphism con transparencia',
-        description: 'Tarjeta glassmorphism con desenfoque de fondo y efectos de transparencia para una apariencia moderna y elegante.',
+        description:
+          'Tarjeta glassmorphism con desenfoque de fondo y efectos de transparencia para una apariencia moderna y elegante.',
         action: 'Acción de vidrio',
       },
       outlinedCard: {
         title: 'Tarjeta delineada',
         subtitle: 'Tarjeta con énfasis en bordes',
-        description: 'Esta tarjeta usa bordes en lugar de sombras para definición, perfecta para diseños minimalistas.',
+        description:
+          'Esta tarjeta usa bordes en lugar de sombras para definición, perfecta para diseños minimalistas.',
         action: 'Acción delineada',
       },
       warningCard: {
         title: 'Tarjeta de advertencia',
         subtitle: 'Tarjeta con tema de color de advertencia',
-        description: 'Ejemplo de uso de colores de encabezado para crear tarjetas temáticas para diferentes tipos de contenido.',
+        description:
+          'Ejemplo de uso de colores de encabezado para crear tarjetas temáticas para diferentes tipos de contenido.',
         action: 'Acción de advertencia',
       },
     },
@@ -1492,7 +1614,7 @@ export default {
     permissions: 'Permisos',
     analytics: 'Análisis',
     quickActions: 'Acciones rápidas',
-    
+
     stats: {
       totalUsers: 'Total de usuarios',
       activeUsers: 'Usuarios activos',
@@ -1520,25 +1642,28 @@ export default {
       loadUsersFailed: 'Error al cargar usuarios',
       loadLocationsFailed: 'Error al cargar ubicaciones',
       loadPermissionsFailed: 'Error al cargar permisos',
-      
+
       // Common admin errors
       noPracticeSelected: 'No hay práctica seleccionada',
       practiceOrUserNotFound: 'Práctica o usuario no encontrado',
       userNotFoundInPractice: 'Usuario no encontrado en la práctica',
       userEmailNotFound: 'Email del usuario no encontrado',
-      cannotDeactivatePracticeOwner: 'No se puede desactivar el propietario de la práctica',
+      cannotDeactivatePracticeOwner:
+        'No se puede desactivar el propietario de la práctica',
       cannotDeleteMainLocation: 'No se puede eliminar la ubicación principal',
-      
+
       // Permission errors
       insufficientPermissionsToCreate: 'Permisos insuficientes para crear',
       insufficientPermissionsToUpdate: 'Permisos insuficientes para actualizar',
       insufficientPermissionsToDelete: 'Permisos insuficientes para eliminar',
       insufficientPermissionsToView: 'Permisos insuficientes para ver',
-      insufficientPermissionsToGrant: 'Permisos insuficientes para otorgar permisos',
-      insufficientPermissionsToRevoke: 'Permisos insuficientes para revocar permisos',
+      insufficientPermissionsToGrant:
+        'Permisos insuficientes para otorgar permisos',
+      insufficientPermissionsToRevoke:
+        'Permisos insuficientes para revocar permisos',
       insufficientPermissionsToReset: 'Permisos insuficientes para resetear',
       insufficientPermissionsToToggle: 'Permisos insuficientes para cambiar',
-      
+
       // Operation errors
       failedToCreate: 'Error al crear',
       failedToUpdate: 'Error al actualizar',
@@ -1558,7 +1683,7 @@ export default {
     permissionType: 'Tipo de permiso',
     resourceType: 'Tipo de recurso',
     expiresAt: 'Expira en',
-    
+
     templates: {
       title: 'Plantillas de permisos',
       assistant: 'Asistente',
@@ -1591,7 +1716,7 @@ export default {
     isMain: 'Ubicación principal',
     setAsMain: 'Establecer como principal',
     manageAccess: 'Gestionar acceso',
-    
+
     notifications: {
       mainLocationSet: 'Ubicación principal establecida',
       accessUpdated: 'Acceso actualizado',
@@ -1606,7 +1731,8 @@ export default {
   // Suppliers Page
   suppliersPage: {
     title: 'Proveedores',
-    subtitle: 'Gestiona las relaciones con tus proveedores e información de vendedores',
+    subtitle:
+      'Gestiona las relaciones con tus proveedores e información de vendedores',
     searchSuppliers: 'Buscar proveedores...',
     filterByStatus: 'Filtrar por estado',
     importSuppliers: 'Importar proveedores',
@@ -1639,9 +1765,11 @@ export default {
     save: 'Guardar',
     nameRequired: 'El nombre es requerido',
     linkToMagento: 'Vincular a Magento',
-    linkToMagentoPrompt: 'Ingresa el ID de proveedor Magento para vincular este proveedor:',
+    linkToMagentoPrompt:
+      'Ingresa el ID de proveedor Magento para vincular este proveedor:',
     confirmDelete: 'Confirmar eliminación',
-    confirmDeleteMessage: '¿Estás seguro de que quieres eliminar "{name}"? Esta acción no se puede deshacer.',
+    confirmDeleteMessage:
+      '¿Estás seguro de que quieres eliminar "{name}"? Esta acción no se puede deshacer.',
     supplierCreated: 'Proveedor creado exitosamente',
     supplierUpdated: 'Proveedor actualizado exitosamente',
     supplierDeleted: 'Proveedor eliminado exitosamente',
@@ -1676,13 +1804,15 @@ export default {
     markAsReadTooltip: 'Marcar como leída',
     deleteTooltip: 'Eliminar',
     clearAllConfirm: 'Limpiar todas las notificaciones',
-    clearAllConfirmMessage: '¿Estás seguro de que quieres eliminar todas las notificaciones? Esta acción no se puede deshacer.',
+    clearAllConfirmMessage:
+      '¿Estás seguro de que quieres eliminar todas las notificaciones? Esta acción no se puede deshacer.',
     allMarkedAsRead: 'Todas las notificaciones marcadas como leídas',
     notificationDeleted: 'Notificación eliminada',
     allNotificationsCleared: 'Todas las notificaciones limpiadas',
     testStockAlertCreated: 'Alerta de stock de prueba creada',
     testOrderUpdateCreated: 'Actualización de pedido de prueba creada',
-    settingsFeatureComingSoon: '¡Función de configuración de notificaciones próximamente!',
+    settingsFeatureComingSoon:
+      '¡Función de configuración de notificaciones próximamente!',
     loadNotificationsError: 'Error al cargar notificaciones',
 
     categories: {
@@ -1706,7 +1836,8 @@ export default {
       },
       orderUpdate: {
         title: 'Actualización de pedido de prueba',
-        message: 'Esta es una notificación de actualización de pedido de prueba',
+        message:
+          'Esta es una notificación de actualización de pedido de prueba',
       },
     },
   },
@@ -1714,19 +1845,21 @@ export default {
   // Messages for user feedback
   messages: {
     addToCartComingSoon: 'Función agregar al carrito próximamente',
-    addAllSuggestionsComingSoon: 'Función agregar todas las sugerencias próximamente',
+    addAllSuggestionsComingSoon:
+      'Función agregar todas las sugerencias próximamente',
     cartCleared: 'Carrito limpiado',
     cartSaved: 'Carrito guardado',
   },
 
-  // Confirm dialog translations  
+  // Confirm dialog translations
   dialogs: {
     typeToConfirm: 'Escribe {text} para confirmar',
-    confirmClose: '¿Estás seguro de que quieres cerrar? Los cambios no guardados se perderán.',
+    confirmClose:
+      '¿Estás seguro de que quieres cerrar? Los cambios no guardados se perderán.',
   },
 
   // === MISSING TRANSLATIONS ADDED ===
-  
+
   // Dashboard translations
 
   // Inventory scanning and adjustments
@@ -1734,24 +1867,24 @@ export default {
   // Products page
 
   // === CRITICAL MISSING TRANSLATIONS ===
-  'retry': 'Intentar de nuevo',
-  'assistantDashboard': 'Panel de Asistente',
-  'managerDashboard': 'Panel de Gerente',
-  'ownerDashboard': 'Panel de Propietario',
-  'orderSuggestions': 'Sugerencias de Pedidos',
-  'recentOrders': 'Pedidos Recientes',
-  'quickScan': 'Escaneo Rápido',
-  'analyticsOverview': 'Resumen de Análisis',
-  'businessOverview': 'Resumen del Negocio',
-  'teamActivity': 'Actividad del Equipo',
-  'financialSummary': 'Resumen Financiero',
-  'userManagement': 'Gestión de Usuarios',
-  'systemHealth': 'Salud del Sistema',
-  'scanProduct': 'Escanear Producto',
-  'costAnalysis': 'Análisis de Costos',
-  'supplierPerformance': 'Rendimiento de Proveedores',
-  'createOrder': 'Crear Pedido',
-  'noAlerts': 'Sin Alertas',
+  retry: 'Intentar de nuevo',
+  assistantDashboard: 'Panel de Asistente',
+  managerDashboard: 'Panel de Gerente',
+  ownerDashboard: 'Panel de Propietario',
+  orderSuggestions: 'Sugerencias de Pedidos',
+  recentOrders: 'Pedidos Recientes',
+  quickScan: 'Escaneo Rápido',
+  analyticsOverview: 'Resumen de Análisis',
+  businessOverview: 'Resumen del Negocio',
+  teamActivity: 'Actividad del Equipo',
+  financialSummary: 'Resumen Financiero',
+  userManagement: 'Gestión de Usuarios',
+  systemHealth: 'Salud del Sistema',
+  scanProduct: 'Escanear Producto',
+  costAnalysis: 'Análisis de Costos',
+  supplierPerformance: 'Rendimiento de Proveedores',
+  createOrder: 'Crear Pedido',
+  noAlerts: 'Sin Alertas',
   'dashboard.title': 'Título',
   'dashboard.welcome': 'Bienvenido',
   'dashboard.user': 'Usuario',
@@ -1764,11 +1897,10 @@ export default {
   'dashboard.lowStock': 'Poco Stock',
   'dashboard.inStock': 'En Stock',
 
-
   // === PROPERLY TRANSLATED KEYS ===
   'inventory.finalQuantity': 'Cantidad final',
   'dashboard.assistantDashboard': 'Panel de Asistente',
-  'dashboard.managerDashboard': 'Panel de Gerente', 
+  'dashboard.managerDashboard': 'Panel de Gerente',
   'dashboard.ownerDashboard': 'Panel de Propietario',
   'dashboard.orderSuggestions': 'Sugerencias de Pedidos',
   'dashboard.recentOrders': 'Pedidos Recientes',
@@ -1784,214 +1916,225 @@ export default {
   'dashboard.supplierPerformance': 'Rendimiento de Proveedores',
   'dashboard.createOrder': 'Crear Pedido',
   'dashboard.noAlerts': 'Sin Alertas',
-  'updateStock': 'Actualizar Inventario',
-  'viewLowStock': 'Ver Inventario Bajo',
-  'manageSuppliers': 'Gestionar Proveedores',
-  'approveOrders': 'Aprobar Pedidos',
-  'exportReports': 'Exportar Reportes',
-  'manageUsers': 'Gestionar Usuarios',
-  'systemSettings': 'Configuración del Sistema',
-  'financialReports': 'Reportes Financieros',
-  'backupData': 'Respaldar Datos',
-  'allStockLevelsOk': 'Todos los niveles de inventario están bien',
-  'lowStockAlert': '{count} Productoen hebben lage voorraad',
-  'viewAllAlerts': 'Bekijk alle waarschuwingen',
-  'noOrderSuggestions': 'Geen bestel suggesties',
-  'noRecentOrders': 'Geen Recientee bestellingen',
-  'loadingWidgets': 'Widgets laden...',
-  'errorLoadingWidget': 'Fout bij laden widget',
-  'tryAgain': 'Probeer opnieuw',
-  'lowStockCount': 'Lage Voorraad',
-  'pendingOrders': 'Openstaande Bestellingen',
-  'teamSize': 'Team Grootte',
-  'practiceHealth': 'Praktijk Gezondheid',
-  'tryDifferentSearchTerm': 'Probeer een andere zoekterm',
-  'realTimeConnected': 'Live updates',
-  'realTimeDisconnected': 'Offline modus',
-  'stockUpdated': 'Voorraad Bijgewerkt',
-  'stockUpdatedMessage': '{Producto}: nieuwe voorraad {quantity}',
-  'adjustStockLevels': 'Voorraden aanpassen en bijwerken',
-  'quickAmounts': 'Snelle hoeveelheden',
-  'reasonRequired': 'Reden is verplicht',
-  'quantityMustBePositive': 'Hoeveelheid moet positief zijn',
-  'completeRequiredFields': 'Vul alle verplichte velden in',
-  'selectProductFirst': 'Selecteer eerst een Producto',
-  'selectLocationFirst': 'Selecteer eerst een locatie',
-  'noLocationSelected': 'Geen locatie geselecteerd',
-  'selectReason': 'Kies een reden',
-  'adjusting': 'Aanpassen...',
-  'adjust': 'Aanpassen',
-  'savingChanges': 'Wijzigingen opslaan...',
-  'current': 'Huidig',
-  'newQuantity': 'Nieuwe hoeveelheid',
-  'preview': 'Voorbeeld',
-  'change': 'Verandering',
-  'notesPlaceholder': 'Optionele notities voor deze aanpassing...',
-  'errorUpdatingStock': 'Fout bij bijwerken voorraad',
-  'errorProductNotFound': 'Producto, locatie of praktijk niet gevonden. Ververs de pagina en probeer opnieuw.',
-  'errorUpdateInProgress': 'Een andere update is bezig. Wacht even en probeer opnieuw.',
-  'errorInvalidData': 'Ongeldige gegevens. Controleer de invoer en probeer opnieuw.',
-  'errorNegativeStock': 'Negatieve voorraad is niet toegestaan voor dit Producto.',
-  'stockUpdatedRealtime': 'Voorraad live bijgewerkt voor {Producto}',
-  'productInfoCard': 'Producto informatie',
-  'productImageAlt': 'Productoafbeelding voor {Producto}',
-  'productPrice': 'Prijs',
-  'euro': '€',
-  'selectProductTitle': 'Selecteer een Producto om de voorraad aan te passen',
-  'scanBarcodeTitle': 'Escaneo barcode van het Producto',
-  'adjustmentPreviewTitle': 'Bekijk de voorgestelde voorraadaanpassing',
-  'currentStockLevel': 'Huidige voorraadniveau',
-  'newStockLevel': 'Nieuwe voorraadniveau',
-  'stockDifference': 'Voorraadverschil',
-  'damage': 'Beschadigd',
-  'recount': 'Hertelling',
-  'correction': 'Correctie',
-  'stockTransfer': 'Voorraad Transfer',
-  'quantityToTransfer': 'Hoeveelheid om over te dragen',
-  'transferReason': 'Reden voor transfer',
-  'executeTransfer': 'Transfer uitvoeren',
-  'transferPreview': 'Transfer voorbeeld',
-  'remaining': 'resterend',
-  'newTotal': 'nieuw totaal',
-  'selectBatch': 'Selecteer batch',
-  'expiresSoon': 'Vervalt binnenkort',
-  'expiresThisMonth': 'Vervalt deze maand',
-  'fresh': 'Vers',
-  'maxAvailable': 'Maximaal beschikbaar',
-  'locationRebalance': 'Locatie herbalancering',
-  'stockReplenishment': 'Voorraad aanvulling',
-  'emergencyTransfer': 'Spoed transfer',
-  'expiryManagement': 'Vervaldatum gestión',
-  'maintenanceRelocation': 'Onderhoud verplaatsing',
-  'teamOverview': 'Team Overzicht',
-  'teamOverviewSubtitle': 'Beheer teamleden en hun toegangsmethoden',
-  'totalMembers': 'Totaal leden',
-  'onlineNow': 'Nu online',
-  'loadingTeam': 'Team laden...',
-  'noTeamMembers': 'Geen teamleden',
-  'noTeamMembersDescription': 'Er zijn nog geen teamleden uitgenodigd',
-  'viewProfile': 'Profiel bekijken',
-  'editMember': 'Lid bewerken',
-  'loginMethods': 'Inlogmethoden',
-  'magicCode': 'Magic Code',
-  'emailPassword': 'Email + Wachtwoord',
-  'deviceRemember': 'Apparaat Onthouden',
-  'trustedDevices': '{count} vertrouwde apparaten',
-  'lastLogin': 'Laatste login',
-  'loginCount': 'Aantal logins',
-  'preferredMethod': 'Voorkeur methode',
-  'sendMessage': 'Bericht sturen',
-  'viewSessions': 'Sessies bekijken',
-  'personalMagicCode': 'Persoonlijke Magic Code',
-  'magicCodeExplanation': 'Deze code kan gebruikt worden om direct in te loggen zonder wachtwoord',
-  'loadTeamError': 'Fout bij laden team',
-  'never': 'Nooit',
-  'minutesAgo': '{count} minuten geleden',
-  'hoursAgo': '{count} uur geleden',
-  'daysAgo': '{count} dagen geleden',
-  'confirmDeactivate': 'Lid deactiveren?',
-  'confirmActivate': 'Lid activeren?',
-  'confirmDeactivateMessage': 'Weet je zeker dat je {name} wilt deactiveren?',
-  'confirmActivateMessage': 'Weet je zeker dat je {name} wilt activeren?',
-  'deactivateSuccess': '{name} is gedeactiveerd',
-  'activateSuccess': '{name} is geactiveerd',
-  'statusChangeError': 'Fout bij wijzigen status',
-  'codeCopied': 'Code gekopieerd naar klembord',
-  'copyError': 'Fout bij kopiëren',
-  'magic_code': 'Magic Code',
-  'email_password': 'Email/Wachtwoord',
-  'device_token': 'Apparaat',
-  'simpleTitle': 'Mensen uitnodigen',
-  'simpleDescription': 'Geef collega\'s toegang',
-  'howItWorks': 'Hoe werkt het?',
-  'stepCreate': 'Maak uitnodiging',
-  'stepCreateDetail': 'Klik hieronder om een unieke code te maken voor je collega',
-  'stepShare': 'Deel de code',
-  'stepShareDetail': 'Stuur de code via WhatsApp, e-mail, of gewoon mondeling',
-  'stepJoin': 'Direct toegang',
-  'stepJoinDetail': 'Je collega gaat naar remcura.com/join en voert de code in',
-  'createInvite': 'Nieuwe uitnodiging maken',
-  'whoAreYouInviting': 'Wie nodig je uit?',
-  'department': 'Afdeling (optioneel)',
-  'departmentPlaceholder': 'Bijv. Apotheek, Receptie, Behandeling',
-  'generateInviteCode': 'Maak uitnodigingscode',
-  'inviteReady': '✅ Uitnodiging klaar!',
-  'shareThisCode': 'Deel deze code:',
-  'tellThem': 'Vertel ze:',
-  'shareMessage': 'Ga naar remcura.com/join en voer deze code in: {code}',
-  'shareWhatsApp': 'WhatsApp',
-  'showQR': 'QR Code',
-  'shareEmail': 'E-mail',
-  'qrCode': 'QR Code',
-  'qrInstructions': 'Laat ze deze QR code Escaneonen met hun telefoon',
-  'activeInvites': 'Actieve uitnodigingen',
-  'doctorNurse': 'Dokter/Verpleegkundige',
-  'temporary': 'Tijdelijke toegang',
-  'inviteCreated': 'Uitnodiging gemaakt!',
-  'createError': 'Fout bij maken uitnodiging',
-  'deleteInvite': 'Uitnodiging verwijderen',
-  'inviteDeleted': 'Uitnodiging verwijderd',
-  'whatsappMessage': 'Hoi! Je bent uitgenodigd voor Remcura.\n\nGa naar: {url}\nVoer deze code in: {code}\n\nDan heb je direct toegang! 👍',
-  'emailSubject': 'Uitnodiging Remcura',
-  'emailMessage': 'Hoi!\n\nJe bent uitgenodigd om Remcura te gebruiken.\n\nStap 1: Ga naar {url}\nStap 2: Voer deze code in: {code}\n\nDan heb je meteen toegang tot het systeem!\n\nGroet',
-  'enterCode': 'Voer je uitnodigingscode in',
-  'codeExplanation': 'Heb je een code ontvangen? Voer deze hier in voor directa toegang.',
-  'placeholder': '🏥DEMO✨2024',
-  'joinNow': 'Nu deelnemen',
-  'scanQR': 'QR Code Escaneonen',
-  'tryDemo': 'Probeer demo',
-  'step1': 'Ontvang uitnodiging',
-  'step1Detail': 'Je krijgt een simpele code van je kliniek, bijvoorbeeld: 🏥AMSTERDAM✨2024',
-  'step2': 'Voer code in',
-  'step2Detail': 'Typ de code hierboven in - geen wachtwoord of account nodig!',
-  'step3': 'Direct toegang',
-  'step3Detail': 'Je bent meteen ingelogd en kunt aan de slag in het systeem.',
-  'scanTitle': 'QR Code Escaneonen',
-  'scanInstructions': 'Richt je camera op de QR code die je hebt ontvangen',
-  'demoAccess': 'Demo toegang - bekijk alle functies',
-  'memberAccess': 'Volledige toegang tot het systeem',
-  'invalidCode': 'Ongeldige code - controleer de spelling',
-  'joinError': 'Er ging iets mis bij het inloggen',
-  'welcomeMessage': 'Je hebt nu toegang tot {practice}',
-  'getStarted': 'Aan de slag!',
-  'welcomeBack': 'Welkom terug, {name}!',
-  'personalCodeSuccess': 'Succesvol ingelogd met persoonlijke code',
-  'personalCodeError': 'Ongeldige persoonlijke code',
-  'permanentInviteDetected': 'Je bent uitgenodigd als permanent teamlid!',
-  'guestAccessGranted': 'Gasttoegang verleend',
-  'welcomeToTeam': 'Welkom bij het team!',
-  'benefit1': 'Permanente toegang tot het systeem',
-  'benefit2': 'Volledige functionaliteit beschikbaar',
-  'benefit3': 'Deel van het team voor dagelijks gebruik',
-  'magicCodeTitle': '⚡ Persoonlijke Code',
-  'magicCodeDescription': 'Krijg je eigen unieke code die je altijd kunt gebruiken',
-  'yourPersonalCode': 'Jouw persoonlijke code wordt:',
-  'magicBenefit1': 'Super snel inloggen',
-  'magicBenefit2': 'Makkelijk te onthouden',
-  'magicBenefit3': 'Werkt op elk apparaat',
-  'emailTitle': '🔐 Email + Wachtwoord',
-  'emailDescription': 'Traditioneel inloggen zoals je gewend bent',
-  'yourEmail': 'Je email adres',
-  'choosePassword': 'Kies een wachtwoord',
-  'emailBenefit1': 'Extra beveiligd',
-  'emailBenefit2': 'Bekend systeem',
-  'emailBenefit3': 'Wachtwoord herstel',
-  'deviceTitle': '📱 Onthoud Apparaat',
-  'deviceDescription': 'Blijf automatisch ingelogd op dit apparaat',
-  'deviceBenefit1': 'Automatisch inloggen',
-  'deviceBenefit2': 'Veilig per apparaat',
-  'deviceBenefit3': '90 dagen geldig',
-  'yourFullName': 'Je volledige naam',
-  'chooseThis': 'Kies deze optie',
-  'createAccount': 'Account aanmaken',
-  'stayGuest': 'Blijf gast (tijdelijk)',
-  'accountCreated': 'Account succesvol aangemaakt! Je kunt nu altijd inloggen.',
-  'creatingAccount': 'Account wordt aangemaakt...',
-  'yourCodeIs': 'Je persoonlijke code is',
-  'reasons': 'reasons',
-  'magicInvite': 'magicInvite',
-  'magicJoin': 'magicJoin',
-  'upgrade': 'upgrade',
+  updateStock: 'Actualizar Inventario',
+  viewLowStock: 'Ver Inventario Bajo',
+  manageSuppliers: 'Gestionar Proveedores',
+  approveOrders: 'Aprobar Pedidos',
+  exportReports: 'Exportar Reportes',
+  manageUsers: 'Gestionar Usuarios',
+  systemSettings: 'Configuración del Sistema',
+  financialReports: 'Reportes Financieros',
+  backupData: 'Respaldar Datos',
+  allStockLevelsOk: 'Todos los niveles de inventario están bien',
+  lowStockAlert: '{count} Productoen hebben lage voorraad',
+  viewAllAlerts: 'Bekijk alle waarschuwingen',
+  noOrderSuggestions: 'Geen bestel suggesties',
+  noRecentOrders: 'Geen Recientee bestellingen',
+  loadingWidgets: 'Widgets laden...',
+  errorLoadingWidget: 'Fout bij laden widget',
+  tryAgain: 'Probeer opnieuw',
+  lowStockCount: 'Lage Voorraad',
+  pendingOrders: 'Openstaande Bestellingen',
+  teamSize: 'Team Grootte',
+  practiceHealth: 'Praktijk Gezondheid',
+  tryDifferentSearchTerm: 'Probeer een andere zoekterm',
+  realTimeConnected: 'Live updates',
+  realTimeDisconnected: 'Offline modus',
+  stockUpdated: 'Voorraad Bijgewerkt',
+  stockUpdatedMessage: '{Producto}: nieuwe voorraad {quantity}',
+  adjustStockLevels: 'Voorraden aanpassen en bijwerken',
+  quickAmounts: 'Snelle hoeveelheden',
+  reasonRequired: 'Reden is verplicht',
+  quantityMustBePositive: 'Hoeveelheid moet positief zijn',
+  completeRequiredFields: 'Vul alle verplichte velden in',
+  selectProductFirst: 'Selecteer eerst een Producto',
+  selectLocationFirst: 'Selecteer eerst een locatie',
+  noLocationSelected: 'Geen locatie geselecteerd',
+  selectReason: 'Kies een reden',
+  adjusting: 'Aanpassen...',
+  adjust: 'Aanpassen',
+  savingChanges: 'Wijzigingen opslaan...',
+  current: 'Huidig',
+  newQuantity: 'Nieuwe hoeveelheid',
+  preview: 'Voorbeeld',
+  change: 'Verandering',
+  notesPlaceholder: 'Optionele notities voor deze aanpassing...',
+  errorUpdatingStock: 'Fout bij bijwerken voorraad',
+  errorProductNotFound:
+    'Producto, locatie of praktijk niet gevonden. Ververs de pagina en probeer opnieuw.',
+  errorUpdateInProgress:
+    'Een andere update is bezig. Wacht even en probeer opnieuw.',
+  errorInvalidData:
+    'Ongeldige gegevens. Controleer de invoer en probeer opnieuw.',
+  errorNegativeStock:
+    'Negatieve voorraad is niet toegestaan voor dit Producto.',
+  stockUpdatedRealtime: 'Voorraad live bijgewerkt voor {Producto}',
+  productInfoCard: 'Producto informatie',
+  productImageAlt: 'Productoafbeelding voor {Producto}',
+  productPrice: 'Prijs',
+  euro: '€',
+  selectProductTitle: 'Selecteer een Producto om de voorraad aan te passen',
+  scanBarcodeTitle: 'Escaneo barcode van het Producto',
+  adjustmentPreviewTitle: 'Bekijk de voorgestelde voorraadaanpassing',
+  currentStockLevel: 'Huidige voorraadniveau',
+  newStockLevel: 'Nieuwe voorraadniveau',
+  stockDifference: 'Voorraadverschil',
+  damage: 'Beschadigd',
+  recount: 'Hertelling',
+  correction: 'Correctie',
+  stockTransfer: 'Voorraad Transfer',
+  quantityToTransfer: 'Hoeveelheid om over te dragen',
+  transferReason: 'Reden voor transfer',
+  executeTransfer: 'Transfer uitvoeren',
+  transferPreview: 'Transfer voorbeeld',
+  remaining: 'resterend',
+  newTotal: 'nieuw totaal',
+  selectBatch: 'Selecteer batch',
+  expiresSoon: 'Vervalt binnenkort',
+  expiresThisMonth: 'Vervalt deze maand',
+  fresh: 'Vers',
+  maxAvailable: 'Maximaal beschikbaar',
+  locationRebalance: 'Locatie herbalancering',
+  stockReplenishment: 'Voorraad aanvulling',
+  emergencyTransfer: 'Spoed transfer',
+  expiryManagement: 'Vervaldatum gestión',
+  maintenanceRelocation: 'Onderhoud verplaatsing',
+  teamOverview: 'Team Overzicht',
+  teamOverviewSubtitle: 'Beheer teamleden en hun toegangsmethoden',
+  totalMembers: 'Totaal leden',
+  onlineNow: 'Nu online',
+  loadingTeam: 'Team laden...',
+  noTeamMembers: 'Geen teamleden',
+  noTeamMembersDescription: 'Er zijn nog geen teamleden uitgenodigd',
+  viewProfile: 'Profiel bekijken',
+  editMember: 'Lid bewerken',
+  loginMethods: 'Inlogmethoden',
+  magicCode: 'Magic Code',
+  emailPassword: 'Email + Wachtwoord',
+  deviceRemember: 'Apparaat Onthouden',
+  trustedDevices: '{count} vertrouwde apparaten',
+  lastLogin: 'Laatste login',
+  loginCount: 'Aantal logins',
+  preferredMethod: 'Voorkeur methode',
+  sendMessage: 'Bericht sturen',
+  viewSessions: 'Sessies bekijken',
+  personalMagicCode: 'Persoonlijke Magic Code',
+  magicCodeExplanation:
+    'Deze code kan gebruikt worden om direct in te loggen zonder wachtwoord',
+  loadTeamError: 'Fout bij laden team',
+  never: 'Nooit',
+  minutesAgo: '{count} minuten geleden',
+  hoursAgo: '{count} uur geleden',
+  daysAgo: '{count} dagen geleden',
+  confirmDeactivate: 'Lid deactiveren?',
+  confirmActivate: 'Lid activeren?',
+  confirmDeactivateMessage: 'Weet je zeker dat je {name} wilt deactiveren?',
+  confirmActivateMessage: 'Weet je zeker dat je {name} wilt activeren?',
+  deactivateSuccess: '{name} is gedeactiveerd',
+  activateSuccess: '{name} is geactiveerd',
+  statusChangeError: 'Fout bij wijzigen status',
+  codeCopied: 'Code gekopieerd naar klembord',
+  copyError: 'Fout bij kopiëren',
+  magic_code: 'Magic Code',
+  email_password: 'Email/Wachtwoord',
+  device_token: 'Apparaat',
+  simpleTitle: 'Mensen uitnodigen',
+  simpleDescription: "Geef collega's toegang",
+  howItWorks: 'Hoe werkt het?',
+  stepCreate: 'Maak uitnodiging',
+  stepCreateDetail:
+    'Klik hieronder om een unieke code te maken voor je collega',
+  stepShare: 'Deel de code',
+  stepShareDetail: 'Stuur de code via WhatsApp, e-mail, of gewoon mondeling',
+  stepJoin: 'Direct toegang',
+  stepJoinDetail: 'Je collega gaat naar remcura.com/join en voert de code in',
+  createInvite: 'Nieuwe uitnodiging maken',
+  whoAreYouInviting: 'Wie nodig je uit?',
+  department: 'Afdeling (optioneel)',
+  departmentPlaceholder: 'Bijv. Apotheek, Receptie, Behandeling',
+  generateInviteCode: 'Maak uitnodigingscode',
+  inviteReady: '✅ Uitnodiging klaar!',
+  shareThisCode: 'Deel deze code:',
+  tellThem: 'Vertel ze:',
+  shareMessage: 'Ga naar remcura.com/join en voer deze code in: {code}',
+  shareWhatsApp: 'WhatsApp',
+  showQR: 'QR Code',
+  shareEmail: 'E-mail',
+  qrCode: 'QR Code',
+  qrInstructions: 'Laat ze deze QR code Escaneonen met hun telefoon',
+  activeInvites: 'Actieve uitnodigingen',
+  doctorNurse: 'Dokter/Verpleegkundige',
+  temporary: 'Tijdelijke toegang',
+  inviteCreated: 'Uitnodiging gemaakt!',
+  createError: 'Fout bij maken uitnodiging',
+  deleteInvite: 'Uitnodiging verwijderen',
+  inviteDeleted: 'Uitnodiging verwijderd',
+  whatsappMessage:
+    'Hoi! Je bent uitgenodigd voor Remcura.\n\nGa naar: {url}\nVoer deze code in: {code}\n\nDan heb je direct toegang! 👍',
+  emailSubject: 'Uitnodiging Remcura',
+  emailMessage:
+    'Hoi!\n\nJe bent uitgenodigd om Remcura te gebruiken.\n\nStap 1: Ga naar {url}\nStap 2: Voer deze code in: {code}\n\nDan heb je meteen toegang tot het systeem!\n\nGroet',
+  enterCode: 'Voer je uitnodigingscode in',
+  codeExplanation:
+    'Heb je een code ontvangen? Voer deze hier in voor directa toegang.',
+  placeholder: '🏥DEMO✨2024',
+  joinNow: 'Nu deelnemen',
+  scanQR: 'QR Code Escaneonen',
+  tryDemo: 'Probeer demo',
+  step1: 'Ontvang uitnodiging',
+  step1Detail:
+    'Je krijgt een simpele code van je kliniek, bijvoorbeeld: 🏥AMSTERDAM✨2024',
+  step2: 'Voer code in',
+  step2Detail: 'Typ de code hierboven in - geen wachtwoord of account nodig!',
+  step3: 'Direct toegang',
+  step3Detail: 'Je bent meteen ingelogd en kunt aan de slag in het systeem.',
+  scanTitle: 'QR Code Escaneonen',
+  scanInstructions: 'Richt je camera op de QR code die je hebt ontvangen',
+  demoAccess: 'Demo toegang - bekijk alle functies',
+  memberAccess: 'Volledige toegang tot het systeem',
+  invalidCode: 'Ongeldige code - controleer de spelling',
+  joinError: 'Er ging iets mis bij het inloggen',
+  welcomeMessage: 'Je hebt nu toegang tot {practice}',
+  getStarted: 'Aan de slag!',
+  welcomeBack: 'Welkom terug, {name}!',
+  personalCodeSuccess: 'Succesvol ingelogd met persoonlijke code',
+  personalCodeError: 'Ongeldige persoonlijke code',
+  permanentInviteDetected: 'Je bent uitgenodigd als permanent teamlid!',
+  guestAccessGranted: 'Gasttoegang verleend',
+  welcomeToTeam: 'Welkom bij het team!',
+  benefit1: 'Permanente toegang tot het systeem',
+  benefit2: 'Volledige functionaliteit beschikbaar',
+  benefit3: 'Deel van het team voor dagelijks gebruik',
+  magicCodeTitle: '⚡ Persoonlijke Code',
+  magicCodeDescription:
+    'Krijg je eigen unieke code die je altijd kunt gebruiken',
+  yourPersonalCode: 'Jouw persoonlijke code wordt:',
+  magicBenefit1: 'Super snel inloggen',
+  magicBenefit2: 'Makkelijk te onthouden',
+  magicBenefit3: 'Werkt op elk apparaat',
+  emailTitle: '🔐 Email + Wachtwoord',
+  emailDescription: 'Traditioneel inloggen zoals je gewend bent',
+  yourEmail: 'Je email adres',
+  choosePassword: 'Kies een wachtwoord',
+  emailBenefit1: 'Extra beveiligd',
+  emailBenefit2: 'Bekend systeem',
+  emailBenefit3: 'Wachtwoord herstel',
+  deviceTitle: '📱 Onthoud Apparaat',
+  deviceDescription: 'Blijf automatisch ingelogd op dit apparaat',
+  deviceBenefit1: 'Automatisch inloggen',
+  deviceBenefit2: 'Veilig per apparaat',
+  deviceBenefit3: '90 dagen geldig',
+  yourFullName: 'Je volledige naam',
+  chooseThis: 'Kies deze optie',
+  createAccount: 'Account aanmaken',
+  stayGuest: 'Blijf gast (tijdelijk)',
+  accountCreated: 'Account succesvol aangemaakt! Je kunt nu altijd inloggen.',
+  creatingAccount: 'Account wordt aangemaakt...',
+  yourCodeIs: 'Je persoonlijke code is',
+  reasons: 'reasons',
+  magicInvite: 'magicInvite',
+  magicJoin: 'magicJoin',
+  upgrade: 'upgrade',
   'dashboard.stockAlerts': 'panel',
   'dashboard.updateStock': 'panel',
   'dashboard.viewLowStock': 'panel',
@@ -2038,162 +2181,303 @@ export default {
   'inventory.barcodeFound.barcodeNotFound.adjust': 'inventario',
   'inventory.barcodeFound.barcodeNotFound.savingChanges': 'inventario',
   'inventory.barcodeFound.barcodeNotFound.current': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.barcodeScanned.changeProduct': 'inventario',
+  'inventory.barcodeFound.barcodeNotFound.barcodeScanned.changeProduct':
+    'inventario',
   'inventory.barcodeFound.barcodeNotFound.barcodeScanned.inStock': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.barcodeScanned.lowStock': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.barcodeScanned.outOfStock': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.barcodeScanned.overStock': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.barcodeScanned.recentActivity': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.barcodeScanned.recentMovements': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.barcodeScanned.noRecentActivity': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.barcodeScanned.stockAlerts': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.barcodeScanned.criticalAlerts': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.barcodeScanned.urgentAttention': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.barcodeScanned.noAlerts': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.barcodeScanned.countingStatus': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.barcodeScanned.activeSession': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.barcodeScanned.noActiveSession': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.barcodeScanned.syncStatus': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.barcodeScanned.lastSync': 'inventario',
+  'inventory.barcodeFound.barcodeNotFound.barcodeScanned.lowStock':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.barcodeScanned.outOfStock':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.barcodeScanned.overStock':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.barcodeScanned.recentActivity':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.barcodeScanned.recentMovements':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.barcodeScanned.noRecentActivity':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.barcodeScanned.stockAlerts':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.barcodeScanned.criticalAlerts':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.barcodeScanned.urgentAttention':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.barcodeScanned.noAlerts':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.barcodeScanned.countingStatus':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.barcodeScanned.activeSession':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.barcodeScanned.noActiveSession':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.barcodeScanned.syncStatus':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.barcodeScanned.lastSync':
+    'inventario',
   'inventory.barcodeFound.barcodeNotFound.barcodeScanned.syncNow': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.barcodeScanned.loadingData': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.barcodeScanned.refreshingData': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.barcodeScanned.manualOrder': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.barcodeScanned.apiOrder': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.barcodeScanned.downloadPdf': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.barcodeScanned.placeOrder': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.barcodeScanned.setMinimum': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.barcodeScanned.setMaximum': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.barcodeScanned.reorderPoint': 'inventario',
+  'inventory.barcodeFound.barcodeNotFound.barcodeScanned.loadingData':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.barcodeScanned.refreshingData':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.barcodeScanned.manualOrder':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.barcodeScanned.apiOrder':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.barcodeScanned.downloadPdf':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.barcodeScanned.placeOrder':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.barcodeScanned.setMinimum':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.barcodeScanned.setMaximum':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.barcodeScanned.reorderPoint':
+    'inventario',
   'inventory.barcodeFound.barcodeNotFound.barcodeScanned.pieces': 'inventario',
   'inventory.barcodeFound.barcodeNotFound.barcodeScanned.units': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.barcodeScanned.quantity': 'inventario',
+  'inventory.barcodeFound.barcodeNotFound.barcodeScanned.quantity':
+    'inventario',
   'inventory.barcodeFound.barcodeNotFound.barcodeScanned.today': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.barcodeScanned.yesterday': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.barcodeScanned.thisWeek': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.barcodeScanned.thisMonth': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.barcodeScanned.neverCounted': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.barcodeScanned.sessionName': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.barcodeScanned.sessionNamePlaceholder': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.barcodeScanned.sessionType': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.barcodeScanned.selectLocations': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.barcodeScanned.allowNegativeCounts': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.barcodeScanned.requireApproval': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.barcodeScanned.autoAdjustStock': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.barcodeScanned.sessionNotesPlaceholder': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.barcodeScanned.partialCount': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.barcodeScanned.fullCount': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.barcodeScanned.spotCheck': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.barcodeScanned.cycleCount': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.barcodeScanned.partialCountDescription': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.barcodeScanned.fullCountDescription': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.barcodeScanned.spotCheckDescription': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.barcodeScanned.cycleCountDescription': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.barcodeScanned.defaultSessionName': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.barcodeScanned.sessionCreated': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.barcodeScanned.sessionCreationFailed': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.barcodeScanned.searchProductPlaceholder': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.barcodeScanned.quantityMustNotBeZero': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.barcodeScanned.quantityChangeHint': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.barcodeScanned.adjustmentNotesPlaceholder': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.barcodeScanned.stockAdjusted': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.barcodeScanned.adjustmentFailed': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.barcodeScanned.fromLocation': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.barcodeScanned.toLocation': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.barcodeScanned.locationsMustBeDifferent': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.barcodeScanned.enterQuantity': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.barcodeScanned.transferNotesPlaceholder': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.barcodeScanned.stockTransferred': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.barcodeScanned.transferFailed': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.barcodeScanned.movementHistory': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.barcodeScanned.movementType': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.barcodeScanned.movementDetails': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.barcodeScanned.quantityChange': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.barcodeScanned.quantityBefore': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.barcodeScanned.quantityAfter': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.barcodeScanned.reasonCode': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.barcodeScanned.loadingMovements': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.barcodeScanned.noMovementsFound': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.barcodeScanned.stockFilter': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.barcodeScanned.currentStock': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.barcodeScanned.thresholds': 'inventario',
+  'inventory.barcodeFound.barcodeNotFound.barcodeScanned.yesterday':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.barcodeScanned.thisWeek':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.barcodeScanned.thisMonth':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.barcodeScanned.neverCounted':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.barcodeScanned.sessionName':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.barcodeScanned.sessionNamePlaceholder':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.barcodeScanned.sessionType':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.barcodeScanned.selectLocations':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.barcodeScanned.allowNegativeCounts':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.barcodeScanned.requireApproval':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.barcodeScanned.autoAdjustStock':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.barcodeScanned.sessionNotesPlaceholder':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.barcodeScanned.partialCount':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.barcodeScanned.fullCount':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.barcodeScanned.spotCheck':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.barcodeScanned.cycleCount':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.barcodeScanned.partialCountDescription':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.barcodeScanned.fullCountDescription':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.barcodeScanned.spotCheckDescription':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.barcodeScanned.cycleCountDescription':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.barcodeScanned.defaultSessionName':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.barcodeScanned.sessionCreated':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.barcodeScanned.sessionCreationFailed':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.barcodeScanned.searchProductPlaceholder':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.barcodeScanned.quantityMustNotBeZero':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.barcodeScanned.quantityChangeHint':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.barcodeScanned.adjustmentNotesPlaceholder':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.barcodeScanned.stockAdjusted':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.barcodeScanned.adjustmentFailed':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.barcodeScanned.fromLocation':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.barcodeScanned.toLocation':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.barcodeScanned.locationsMustBeDifferent':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.barcodeScanned.enterQuantity':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.barcodeScanned.transferNotesPlaceholder':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.barcodeScanned.stockTransferred':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.barcodeScanned.transferFailed':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.barcodeScanned.movementHistory':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.barcodeScanned.movementType':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.barcodeScanned.movementDetails':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.barcodeScanned.quantityChange':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.barcodeScanned.quantityBefore':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.barcodeScanned.quantityAfter':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.barcodeScanned.reasonCode':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.barcodeScanned.loadingMovements':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.barcodeScanned.noMovementsFound':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.barcodeScanned.stockFilter':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.barcodeScanned.currentStock':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.barcodeScanned.thresholds':
+    'inventario',
   'inventory.barcodeFound.barcodeNotFound.barcodeScanned.min': 'inventario',
   'inventory.barcodeFound.barcodeNotFound.barcodeScanned.max': 'inventario',
   'inventory.barcodeFound.barcodeNotFound.barcodeScanned.value': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.barcodeScanned.lastMovement': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.barcodeScanned.noMovements': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.barcodeScanned.viewHistory': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.barcodeScanned.overStockItems': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.barcodeScanned.batchTrackingWarning': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.barcodeScanned.cannotAdjustBatchTrackedProduct': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.barcodeScanned.redirectingToBatchManagement': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.barcodeScanned.adjustmentType': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.barcodeScanned.increase': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.barcodeScanned.decrease': 'inventario',
+  'inventory.barcodeFound.barcodeNotFound.barcodeScanned.lastMovement':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.barcodeScanned.noMovements':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.barcodeScanned.viewHistory':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.barcodeScanned.overStockItems':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.barcodeScanned.batchTrackingWarning':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.barcodeScanned.cannotAdjustBatchTrackedProduct':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.barcodeScanned.redirectingToBatchManagement':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.barcodeScanned.adjustmentType':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.barcodeScanned.increase':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.barcodeScanned.decrease':
+    'inventario',
   'inventory.barcodeFound.barcodeNotFound.barcodeScanned.setTo': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.barcodeScanned.quantityToAdd': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.barcodeScanned.quantityToRemove': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.barcodeScanned.newQuantity': 'inventario',
+  'inventory.barcodeFound.barcodeNotFound.barcodeScanned.quantityToAdd':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.barcodeScanned.quantityToRemove':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.barcodeScanned.newQuantity':
+    'inventario',
   'inventory.barcodeFound.barcodeNotFound.barcodeScanned.preview': 'inventario',
   'inventory.barcodeFound.barcodeNotFound.barcodeScanned.change': 'inventario',
   'inventory.barcodeFound.barcodeNotFound.barcodeScanned.reason': 'inventario',
   'inventory.barcodeFound.barcodeNotFound.barcodeScanned.notes': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.barcodeScanned.notesPlaceholder': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.barcodeScanned.errorUpdatingStock': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.barcodeScanned.errorProductNotFound': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.barcodeScanned.errorUpdateInProgress': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.barcodeScanned.errorInvalidData': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.barcodeScanned.errorNegativeStock': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.barcodeScanned.dataRefreshed': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.barcodeScanned.stockUpdatedRealtime': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.barcodeScanned.productInfoCard': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.barcodeScanned.productImageAlt': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.barcodeScanned.productPrice': 'inventario',
+  'inventory.barcodeFound.barcodeNotFound.barcodeScanned.notesPlaceholder':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.barcodeScanned.errorUpdatingStock':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.barcodeScanned.errorProductNotFound':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.barcodeScanned.errorUpdateInProgress':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.barcodeScanned.errorInvalidData':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.barcodeScanned.errorNegativeStock':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.barcodeScanned.dataRefreshed':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.barcodeScanned.stockUpdatedRealtime':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.barcodeScanned.productInfoCard':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.barcodeScanned.productImageAlt':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.barcodeScanned.productPrice':
+    'inventario',
   'inventory.barcodeFound.barcodeNotFound.barcodeScanned.euro': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.barcodeScanned.selectProductTitle': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.barcodeScanned.scanBarcodeTitle': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.barcodeScanned.adjustmentPreviewTitle': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.barcodeScanned.currentStockLevel': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.barcodeScanned.newStockLevel': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.barcodeScanned.stockDifference': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.barcodeScanned.movement.receipt': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.barcodeScanned.movement.usage': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.barcodeScanned.movement.transfer': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.barcodeScanned.movement.adjustment': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.barcodeScanned.movement.count': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.barcodeScanned.movement.waste': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.barcodeScanned.reasons.normal_usage': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.barcodeScanned.reasons.expired': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.barcodeScanned.reasons.damage': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.barcodeScanned.reasons.damaged': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.barcodeScanned.reasons.lost': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.barcodeScanned.reasons.found': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.barcodeScanned.reasons.transfer_in': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.barcodeScanned.reasons.transfer_out': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.barcodeScanned.reasons.adjustment': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.barcodeScanned.reasons.recount': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.barcodeScanned.reasons.correction': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.barcodeScanned.reasons.other': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.barcodeScanned.reasons.count_correction': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.barcodeScanned.stockTransfer': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.barcodeScanned.quantityToTransfer': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.barcodeScanned.transferReason': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.barcodeScanned.executeTransfer': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.barcodeScanned.transferPreview': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.barcodeScanned.remaining': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.barcodeScanned.newTotal': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.barcodeScanned.selectBatch': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.barcodeScanned.expiryDate': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.barcodeScanned.available': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.barcodeScanned.expiresSoon': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.barcodeScanned.expiresThisMonth': 'inventario',
+  'inventory.barcodeFound.barcodeNotFound.barcodeScanned.selectProductTitle':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.barcodeScanned.scanBarcodeTitle':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.barcodeScanned.adjustmentPreviewTitle':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.barcodeScanned.currentStockLevel':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.barcodeScanned.newStockLevel':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.barcodeScanned.stockDifference':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.barcodeScanned.movement.receipt':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.barcodeScanned.movement.usage':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.barcodeScanned.movement.transfer':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.barcodeScanned.movement.adjustment':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.barcodeScanned.movement.count':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.barcodeScanned.movement.waste':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.barcodeScanned.reasons.normal_usage':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.barcodeScanned.reasons.expired':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.barcodeScanned.reasons.damage':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.barcodeScanned.reasons.damaged':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.barcodeScanned.reasons.lost':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.barcodeScanned.reasons.found':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.barcodeScanned.reasons.transfer_in':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.barcodeScanned.reasons.transfer_out':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.barcodeScanned.reasons.adjustment':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.barcodeScanned.reasons.recount':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.barcodeScanned.reasons.correction':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.barcodeScanned.reasons.other':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.barcodeScanned.reasons.count_correction':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.barcodeScanned.stockTransfer':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.barcodeScanned.quantityToTransfer':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.barcodeScanned.transferReason':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.barcodeScanned.executeTransfer':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.barcodeScanned.transferPreview':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.barcodeScanned.remaining':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.barcodeScanned.newTotal':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.barcodeScanned.selectBatch':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.barcodeScanned.expiryDate':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.barcodeScanned.available':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.barcodeScanned.expiresSoon':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.barcodeScanned.expiresThisMonth':
+    'inventario',
   'inventory.barcodeFound.barcodeNotFound.barcodeScanned.fresh': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.barcodeScanned.maxAvailable': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.barcodeScanned.locationRebalance': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.barcodeScanned.stockReplenishment': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.barcodeScanned.emergencyTransfer': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.barcodeScanned.expiryManagement': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.barcodeScanned.maintenanceRelocation': 'inventario',
+  'inventory.barcodeFound.barcodeNotFound.barcodeScanned.maxAvailable':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.barcodeScanned.locationRebalance':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.barcodeScanned.stockReplenishment':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.barcodeScanned.emergencyTransfer':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.barcodeScanned.expiryManagement':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.barcodeScanned.maintenanceRelocation':
+    'inventario',
   'inventory.barcodeFound.barcodeNotFound.counting.title': 'inventario',
   'inventory.barcodeFound.barcodeNotFound.counting.overview': 'inventario',
   'inventory.barcodeFound.barcodeNotFound.counting.sessionStatus': 'inventario',
@@ -2202,38 +2486,54 @@ export default {
   'inventory.barcodeFound.barcodeNotFound.counting.progress': 'inventario',
   'inventory.barcodeFound.barcodeNotFound.counting.sessionType': 'inventario',
   'inventory.barcodeFound.barcodeNotFound.counting.discrepancies': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.counting.continueSession': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.counting.completeSession': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.counting.sessionsOverview': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.counting.loadingSessions': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.counting.noSessionsFound': 'inventario',
+  'inventory.barcodeFound.barcodeNotFound.counting.continueSession':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.counting.completeSession':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.counting.sessionsOverview':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.counting.loadingSessions':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.counting.noSessionsFound':
+    'inventario',
   'inventory.barcodeFound.barcodeNotFound.counting.sessionName': 'inventario',
   'inventory.barcodeFound.barcodeNotFound.counting.status': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.counting.sessionSummary': 'inventario',
+  'inventory.barcodeFound.barcodeNotFound.counting.sessionSummary':
+    'inventario',
   'inventory.barcodeFound.barcodeNotFound.counting.totalProducts': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.counting.countedProducts': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.counting.loadingSession': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.counting.sessionNotFound': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.counting.sessionNotFoundDescription': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.counting.countingResults': 'inventario',
+  'inventory.barcodeFound.barcodeNotFound.counting.countedProducts':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.counting.loadingSession':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.counting.sessionNotFound':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.counting.sessionNotFoundDescription':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.counting.countingResults':
+    'inventario',
   'inventory.barcodeFound.barcodeNotFound.counting.viewResults': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.counting.noResultsFound': 'inventario',
+  'inventory.barcodeFound.barcodeNotFound.counting.noResultsFound':
+    'inventario',
   'inventory.barcodeFound.barcodeNotFound.counting.product': 'inventario',
   'inventory.barcodeFound.barcodeNotFound.counting.variance': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.counting.approveSession': 'inventario',
+  'inventory.barcodeFound.barcodeNotFound.counting.approveSession':
+    'inventario',
   'inventory.barcodeFound.barcodeNotFound.batch.batchManagement': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.batch.manageBatchesSubtitle': 'inventario',
+  'inventory.barcodeFound.barcodeNotFound.batch.manageBatchesSubtitle':
+    'inventario',
   'inventory.barcodeFound.barcodeNotFound.batch.title': 'inventario',
   'inventory.barcodeFound.barcodeNotFound.batch.batchNumber': 'inventario',
   'inventory.barcodeFound.barcodeNotFound.batch.lotNumber': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.batch.supplierBatchNumber': 'inventario',
+  'inventory.barcodeFound.barcodeNotFound.batch.supplierBatchNumber':
+    'inventario',
   'inventory.barcodeFound.barcodeNotFound.batch.supplierBatch': 'inventario',
   'inventory.barcodeFound.barcodeNotFound.batch.expiryDate': 'inventario',
   'inventory.barcodeFound.barcodeNotFound.batch.houdbaarheidstot': 'inventario',
   'inventory.barcodeFound.barcodeNotFound.batch.receivedDate': 'inventario',
   'inventory.barcodeFound.barcodeNotFound.batch.initialQuantity': 'inventario',
   'inventory.barcodeFound.barcodeNotFound.batch.currentQuantity': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.batch.availableQuantity': 'inventario',
+  'inventory.barcodeFound.barcodeNotFound.batch.availableQuantity':
+    'inventario',
   'inventory.barcodeFound.barcodeNotFound.batch.available': 'inventario',
   'inventory.barcodeFound.barcodeNotFound.batch.reservedQuantity': 'inventario',
   'inventory.barcodeFound.barcodeNotFound.batch.batchStatus': 'inventario',
@@ -2256,8 +2556,10 @@ export default {
   'inventory.barcodeFound.barcodeNotFound.batch.exportBatches': 'inventario',
   'inventory.barcodeFound.barcodeNotFound.batch.criticalAlert': 'inventario',
   'inventory.barcodeFound.barcodeNotFound.batch.nearExpiry': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.batch.criticalExpiryText': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.batch.criticalBatchesFound': 'inventario',
+  'inventory.barcodeFound.barcodeNotFound.batch.criticalExpiryText':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.batch.criticalBatchesFound':
+    'inventario',
   'inventory.barcodeFound.barcodeNotFound.batch.viewCritical': 'inventario',
   'inventory.barcodeFound.barcodeNotFound.batch.manageExpiring': 'inventario',
   'inventory.barcodeFound.barcodeNotFound.batch.fifoManagement': 'inventario',
@@ -2274,42 +2576,54 @@ export default {
   'inventory.barcodeFound.barcodeNotFound.batch.exportSuccess': 'inventario',
   'inventory.barcodeFound.barcodeNotFound.batch.batchNotFound': 'inventario',
   'inventory.barcodeFound.barcodeNotFound.batch.quarantine': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.batch.quarantineSuccess': 'inventario',
+  'inventory.barcodeFound.barcodeNotFound.batch.quarantineSuccess':
+    'inventario',
   'inventory.barcodeFound.barcodeNotFound.batch.expiredDaysAgo': 'inventario',
   'inventory.barcodeFound.barcodeNotFound.batch.expiresToday': 'inventario',
   'inventory.barcodeFound.barcodeNotFound.batch.expiresTomorrow': 'inventario',
   'inventory.barcodeFound.barcodeNotFound.batch.expiresInDays': 'inventario',
   'inventory.barcodeFound.barcodeNotFound.batch.fifoSuggestion': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.batch.generateFifoSuggestion': 'inventario',
+  'inventory.barcodeFound.barcodeNotFound.batch.generateFifoSuggestion':
+    'inventario',
   'inventory.barcodeFound.barcodeNotFound.batch.fifoResults': 'inventario',
   'inventory.barcodeFound.barcodeNotFound.batch.noFifoResults': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.batch.fifoSuggestionGenerated': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.batch.applyFifoSuggestion': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.batch.confirmFifoApplication': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.batch.confirmFifoMessage': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.batch.fifoAppliedSuccessfully': 'inventario',
+  'inventory.barcodeFound.barcodeNotFound.batch.fifoSuggestionGenerated':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.batch.applyFifoSuggestion':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.batch.confirmFifoApplication':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.batch.confirmFifoMessage':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.batch.fifoAppliedSuccessfully':
+    'inventario',
   'inventory.barcodeFound.barcodeNotFound.batch.useQuantity': 'inventario',
   'inventory.barcodeFound.barcodeNotFound.batch.selectReport': 'inventario',
   'inventory.barcodeFound.barcodeNotFound.batch.generateReport': 'inventario',
   'inventory.barcodeFound.barcodeNotFound.batch.exportReport': 'inventario',
   'inventory.barcodeFound.barcodeNotFound.batch.reportResults': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.batch.reportConfiguration': 'inventario',
+  'inventory.barcodeFound.barcodeNotFound.batch.reportConfiguration':
+    'inventario',
   'inventory.barcodeFound.barcodeNotFound.batch.reportGenerated': 'inventario',
   'inventory.barcodeFound.barcodeNotFound.batch.reportExported': 'inventario',
   'inventory.barcodeFound.barcodeNotFound.batch.expiredBatches': 'inventario',
   'inventory.barcodeFound.barcodeNotFound.batch.expiryAnalysis': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.batch.expiryAnalysisDesc': 'inventario',
+  'inventory.barcodeFound.barcodeNotFound.batch.expiryAnalysisDesc':
+    'inventario',
   'inventory.barcodeFound.barcodeNotFound.batch.batchUsage': 'inventario',
   'inventory.barcodeFound.barcodeNotFound.batch.batchUsageDesc': 'inventario',
   'inventory.barcodeFound.barcodeNotFound.batch.fifoCompliance': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.batch.fifoComplianceDesc': 'inventario',
+  'inventory.barcodeFound.barcodeNotFound.batch.fifoComplianceDesc':
+    'inventario',
   'inventory.barcodeFound.barcodeNotFound.batch.batchCosts': 'inventario',
   'inventory.barcodeFound.barcodeNotFound.batch.batchCostsDesc': 'inventario',
   'inventory.barcodeFound.barcodeNotFound.batch.batchDetails': 'inventario',
   'inventory.barcodeFound.barcodeNotFound.batch.batchInformation': 'inventario',
   'inventory.barcodeFound.barcodeNotFound.batch.quantityStatus': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.batch.expiryInformation': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.batch.statusInformation': 'inventario',
+  'inventory.barcodeFound.barcodeNotFound.batch.expiryInformation':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.batch.statusInformation':
+    'inventario',
   'inventory.barcodeFound.barcodeNotFound.batch.costInformation': 'inventario',
   'inventory.barcodeFound.barcodeNotFound.batch.currentValue': 'inventario',
   'inventory.barcodeFound.barcodeNotFound.batch.quantityToUse': 'inventario',
@@ -2319,31 +2633,41 @@ export default {
   'inventory.barcodeFound.barcodeNotFound.batch.useAll': 'inventario',
   'inventory.barcodeFound.barcodeNotFound.batch.usageSummary': 'inventario',
   'inventory.barcodeFound.barcodeNotFound.batch.quantityUsed': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.batch.remainingQuantity': 'inventario',
+  'inventory.barcodeFound.barcodeNotFound.batch.remainingQuantity':
+    'inventario',
   'inventory.barcodeFound.barcodeNotFound.batch.costImpact': 'inventario',
   'inventory.barcodeFound.barcodeNotFound.batch.newStatus': 'inventario',
   'inventory.barcodeFound.barcodeNotFound.batch.confirmUsage': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.batch.purchaseInformation': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.batch.purchaseOrderNumber': 'inventario',
+  'inventory.barcodeFound.barcodeNotFound.batch.purchaseInformation':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.batch.purchaseOrderNumber':
+    'inventario',
   'inventory.barcodeFound.barcodeNotFound.batch.invoiceNumber': 'inventario',
   'inventory.barcodeFound.barcodeNotFound.batch.currency': 'inventario',
   'inventory.barcodeFound.barcodeNotFound.batch.registerNewBatch': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.batch.batchRegisteredSuccessfully': 'inventario',
+  'inventory.barcodeFound.barcodeNotFound.batch.batchRegisteredSuccessfully':
+    'inventario',
   'inventory.barcodeFound.barcodeNotFound.batch.urgencyLevel': 'inventario',
   'inventory.barcodeFound.barcodeNotFound.batch.expiryAlert': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.batch.batchesExpiringSoon': 'inventario',
+  'inventory.barcodeFound.barcodeNotFound.batch.batchesExpiringSoon':
+    'inventario',
   'inventory.barcodeFound.barcodeNotFound.batch.noBatchesFound': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.batch.noExpiringBatches': 'inventario',
+  'inventory.barcodeFound.barcodeNotFound.batch.noExpiringBatches':
+    'inventario',
   'inventory.barcodeFound.barcodeNotFound.batch.daysUntilExpiry': 'inventario',
   'inventory.barcodeFound.barcodeNotFound.batch.filterByStatus': 'inventario',
   'inventory.barcodeFound.barcodeNotFound.batch.filterByExpiry': 'inventario',
   'inventory.barcodeFound.barcodeNotFound.batch.showExpiring': 'inventario',
   'inventory.barcodeFound.barcodeNotFound.batch.showExpired': 'inventario',
   'inventory.barcodeFound.barcodeNotFound.batch.showActive': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.batch.requestedQuantity': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.batch.validation.expiryDateInPast': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.batch.validation.exceededAvailable': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.batch.validation.mustBePositive': 'inventario',
+  'inventory.barcodeFound.barcodeNotFound.batch.requestedQuantity':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.batch.validation.expiryDateInPast':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.batch.validation.exceededAvailable':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.batch.validation.mustBePositive':
+    'inventario',
   'inventory.barcodeFound.barcodeNotFound.batch.urgency.expired': 'inventario',
   'inventory.barcodeFound.barcodeNotFound.batch.urgency.critical': 'inventario',
   'inventory.barcodeFound.barcodeNotFound.batch.urgency.warning': 'inventario',
@@ -2351,11 +2675,13 @@ export default {
   'inventory.barcodeFound.barcodeNotFound.batch.status.available': 'inventario',
   'inventory.barcodeFound.barcodeNotFound.batch.status.reserved': 'inventario',
   'inventory.barcodeFound.barcodeNotFound.batch.status.expired': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.batch.status.quarantine': 'inventario',
+  'inventory.barcodeFound.barcodeNotFound.batch.status.quarantine':
+    'inventario',
   'inventory.barcodeFound.barcodeNotFound.batch.status.used': 'inventario',
   'inventory.barcodeFound.barcodeNotFound.batch.status.active': 'inventario',
   'inventory.barcodeFound.barcodeNotFound.batch.status.inactive': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.batch.usage.consumption': 'inventario',
+  'inventory.barcodeFound.barcodeNotFound.batch.usage.consumption':
+    'inventario',
   'inventory.barcodeFound.barcodeNotFound.batch.usage.expired': 'inventario',
   'inventory.barcodeFound.barcodeNotFound.batch.usage.damaged': 'inventario',
   'inventory.barcodeFound.barcodeNotFound.batch.usage.transfer': 'inventario',
@@ -2374,100 +2700,179 @@ export default {
   'inventory.barcodeFound.barcodeNotFound.products.minimumStock': 'inventario',
   'inventory.barcodeFound.barcodeNotFound.products.maximumStock': 'inventario',
   'inventory.barcodeFound.barcodeNotFound.products.reorderPoint': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.products.preferredSupplier': 'inventario',
+  'inventory.barcodeFound.barcodeNotFound.products.preferredSupplier':
+    'inventario',
   'inventory.barcodeFound.barcodeNotFound.products.active': 'inventario',
   'inventory.barcodeFound.barcodeNotFound.products.inactive': 'inventario',
   'inventory.barcodeFound.barcodeNotFound.products.discontinued': 'inventario',
   'inventory.barcodeFound.barcodeNotFound.productsPage.title': 'inventario',
   'inventory.barcodeFound.barcodeNotFound.productsPage.subtitle': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.productsPage.table.name': 'inventario',
+  'inventory.barcodeFound.barcodeNotFound.productsPage.table.name':
+    'inventario',
   'inventory.barcodeFound.barcodeNotFound.productsPage.table.sku': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.productsPage.table.description': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.productsPage.table.stockStatus': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.productsPage.table.supplier': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.productsPage.table.price': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.productsPage.table.actions': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.productsPage.table.category': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.productsPage.table.currentStock': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.productsPage.table.lastUpdated': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.productsPage.table.batchStatus': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.productsPage.searchPlaceholder': 'inventario',
+  'inventory.barcodeFound.barcodeNotFound.productsPage.table.description':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.productsPage.table.stockStatus':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.productsPage.table.supplier':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.productsPage.table.price':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.productsPage.table.actions':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.productsPage.table.category':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.productsPage.table.currentStock':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.productsPage.table.lastUpdated':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.productsPage.table.batchStatus':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.productsPage.searchPlaceholder':
+    'inventario',
   'inventory.barcodeFound.barcodeNotFound.productsPage.viewCart': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.productsPage.filterByCategory': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.productsPage.filterBySupplier': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.productsPage.filterByStockStatus': 'inventario',
+  'inventory.barcodeFound.barcodeNotFound.productsPage.filterByCategory':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.productsPage.filterBySupplier':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.productsPage.filterByStockStatus':
+    'inventario',
   'inventory.barcodeFound.barcodeNotFound.productsPage.sortBy': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.productsPage.clearFilters': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.productsPage.filters.title': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.productsPage.filters.category': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.productsPage.filters.stockStatus': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.productsPage.filters.supplier': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.productsPage.filters.priceRange': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.productsPage.filters.selectCategory': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.productsPage.filters.selectStockStatus': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.productsPage.filters.selectSupplier': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.productsPage.filters.minPrice': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.productsPage.filters.maxPrice': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.productsPage.filters.all': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.productsPage.filters.allCategories': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.productsPage.filters.allSuppliers': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.productsPage.filters.remka': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.productsPage.filters.external': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.productsPage.stats.totalProducts': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.productsPage.stats.inStockProducts': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.productsPage.stats.lowStockProducts': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.productsPage.stats.outOfStockProducts': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.productsPage.stats.suppliersCount': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.productsPage.stats.categoriesCount': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.productsPage.stockStatus.in_stock': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.productsPage.stockStatus.low_stock': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.productsPage.stockStatus.out_of_stock': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.productsPage.stockStatus.unavailable': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.productsPage.batchStatus.good': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.productsPage.batchStatus.expiring': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.productsPage.batchStatus.expired': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.productsPage.productDetails': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.productsPage.description': 'inventario',
+  'inventory.barcodeFound.barcodeNotFound.productsPage.clearFilters':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.productsPage.filters.title':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.productsPage.filters.category':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.productsPage.filters.stockStatus':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.productsPage.filters.supplier':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.productsPage.filters.priceRange':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.productsPage.filters.selectCategory':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.productsPage.filters.selectStockStatus':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.productsPage.filters.selectSupplier':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.productsPage.filters.minPrice':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.productsPage.filters.maxPrice':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.productsPage.filters.all':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.productsPage.filters.allCategories':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.productsPage.filters.allSuppliers':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.productsPage.filters.remka':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.productsPage.filters.external':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.productsPage.stats.totalProducts':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.productsPage.stats.inStockProducts':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.productsPage.stats.lowStockProducts':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.productsPage.stats.outOfStockProducts':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.productsPage.stats.suppliersCount':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.productsPage.stats.categoriesCount':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.productsPage.stockStatus.in_stock':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.productsPage.stockStatus.low_stock':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.productsPage.stockStatus.out_of_stock':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.productsPage.stockStatus.unavailable':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.productsPage.batchStatus.good':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.productsPage.batchStatus.expiring':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.productsPage.batchStatus.expired':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.productsPage.productDetails':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.productsPage.description':
+    'inventario',
   'inventory.barcodeFound.barcodeNotFound.productsPage.category': 'inventario',
   'inventory.barcodeFound.barcodeNotFound.productsPage.unit': 'inventario',
   'inventory.barcodeFound.barcodeNotFound.productsPage.suppliers': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.productsPage.stockLevels': 'inventario',
+  'inventory.barcodeFound.barcodeNotFound.productsPage.stockLevels':
+    'inventario',
   'inventory.barcodeFound.barcodeNotFound.productsPage.batches': 'inventario',
   'inventory.barcodeFound.barcodeNotFound.productsPage.noBatches': 'inventario',
   'inventory.barcodeFound.barcodeNotFound.productsPage.bestPrice': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.productsPage.viewDetails': 'inventario',
+  'inventory.barcodeFound.barcodeNotFound.productsPage.viewDetails':
+    'inventario',
   'inventory.barcodeFound.barcodeNotFound.productsPage.addToCart': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.productsPage.addToOrderList': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.productsPage.expandDetails': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.productsPage.addedToCart': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.productsPage.cartAddError': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.productsPage.dataRefreshed': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.productsPage.productLoadError': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.productsPage.noProductsForFilter': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.productsPage.loadingProducts': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.productsPage.details.title': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.productsPage.details.basicInfo': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.productsPage.details.stockInfo': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.productsPage.details.supplierInfo': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.productsPage.details.orderHistory': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.productsPage.details.sku': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.productsPage.details.name': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.productsPage.details.description': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.productsPage.details.category': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.productsPage.details.brand': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.productsPage.details.unit': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.productsPage.details.price': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.productsPage.details.currentStock': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.productsPage.details.minimumStock': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.productsPage.details.locations': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.productsPage.details.suppliers': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.productsPage.details.lastOrderDate': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.productsPage.details.averageOrderQuantity': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.productsPage.details.totalOrdered': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.productsPage.details.image': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.productsPage.details.noImage': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.productsPage.details.noDescription': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.productsPage.details.priceNotAvailable': 'inventario',
+  'inventory.barcodeFound.barcodeNotFound.productsPage.addToOrderList':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.productsPage.expandDetails':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.productsPage.addedToCart':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.productsPage.cartAddError':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.productsPage.dataRefreshed':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.productsPage.productLoadError':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.productsPage.noProductsForFilter':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.productsPage.loadingProducts':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.productsPage.details.title':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.productsPage.details.basicInfo':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.productsPage.details.stockInfo':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.productsPage.details.supplierInfo':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.productsPage.details.orderHistory':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.productsPage.details.sku':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.productsPage.details.name':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.productsPage.details.description':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.productsPage.details.category':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.productsPage.details.brand':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.productsPage.details.unit':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.productsPage.details.price':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.productsPage.details.currentStock':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.productsPage.details.minimumStock':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.productsPage.details.locations':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.productsPage.details.suppliers':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.productsPage.details.lastOrderDate':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.productsPage.details.averageOrderQuantity':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.productsPage.details.totalOrdered':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.productsPage.details.image':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.productsPage.details.noImage':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.productsPage.details.noDescription':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.productsPage.details.priceNotAvailable':
+    'inventario',
   'inventory.barcodeFound.barcodeNotFound.orders.title': 'inventario',
   'inventory.barcodeFound.barcodeNotFound.orders.export': 'inventario',
   'inventory.barcodeFound.barcodeNotFound.orders.createOrder': 'inventario',
@@ -2480,761 +2885,1502 @@ export default {
   'inventory.barcodeFound.barcodeNotFound.orders.duplicate': 'inventario',
   'inventory.barcodeFound.barcodeNotFound.orders.cancel': 'inventario',
   'inventory.barcodeFound.barcodeNotFound.orders.status.draft': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.status.submitted': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.status.confirmed': 'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.status.submitted':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.status.confirmed':
+    'inventario',
   'inventory.barcodeFound.barcodeNotFound.orders.status.shipped': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.status.delivered': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.status.cancelled': 'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.status.delivered':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.status.cancelled':
+    'inventario',
   'inventory.barcodeFound.barcodeNotFound.orders.filters.title': 'inventario',
   'inventory.barcodeFound.barcodeNotFound.orders.filters.status': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.filters.supplier': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.filters.dateFrom': 'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.filters.supplier':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.filters.dateFrom':
+    'inventario',
   'inventory.barcodeFound.barcodeNotFound.orders.filters.dateTo': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.filters.allSuppliers': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.columns.orderNumber': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.columns.orderDate': 'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.filters.allSuppliers':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.columns.orderNumber':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.columns.orderDate':
+    'inventario',
   'inventory.barcodeFound.barcodeNotFound.orders.columns.status': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.columns.supplier': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.columns.totalItems': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.columns.totalAmount': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.exportFormat.csv': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.exportFormat.pdf': 'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.columns.supplier':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.columns.totalItems':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.columns.totalAmount':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.exportFormat.csv':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.exportFormat.pdf':
+    'inventario',
   'inventory.barcodeFound.barcodeNotFound.orders.exportScope.all': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.exportScope.filtered': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.exportScope.selected': 'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.exportScope.filtered':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.exportScope.selected':
+    'inventario',
   'inventory.barcodeFound.barcodeNotFound.orders.email.recipient': 'inventario',
   'inventory.barcodeFound.barcodeNotFound.orders.email.subject': 'inventario',
   'inventory.barcodeFound.barcodeNotFound.orders.email.message': 'inventario',
   'inventory.barcodeFound.barcodeNotFound.orders.email.send': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.analytics.totalOrders': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.analytics.totalValue': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.analytics.avgOrderSize': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.analytics.orderFrequency': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.analytics.orderTrends': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.analytics.chartsComingSoon': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.pdfDownloaded': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.csvDownloaded': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.emailSent': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.magentoSubmitted.orderCancelled': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.magentoSubmitted.exportCompleted.pdfBulkNotSupported': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.magentoSubmitted.exportCompleted.bulkEmailComingSoon': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.magentoSubmitted.errors.loadFailed': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.magentoSubmitted.errors.pdfFailed': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.magentoSubmitted.errors.csvFailed': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.magentoSubmitted.errors.emailFailed': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.magentoSubmitted.errors.magentoFailed': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.magentoSubmitted.errors.cancelFailed': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.magentoSubmitted.errors.exportFailed': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.magentoSubmitted.errors.noOrdersToExport': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.magentoSubmitted.errors.noPracticeSelected': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.magentoSubmitted.exportFilteredNote': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.magentoSubmitted.exportSelectedNote': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.magentoSubmitted.emailRequired': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.magentoSubmitted.noPracticeSelected': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.orderLists.title': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.orderLists.subtitle': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.orderLists.create': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.orderLists.edit': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.orderLists.duplicate': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.orderLists.delete': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.orderLists.noLists': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.orderLists.createNew': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.orderLists.name': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.orderLists.description': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.orderLists.supplier': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.orderLists.totalItems': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.orderLists.totalAmount': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.orderLists.status': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.orderLists.createdAt': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.orderLists.updatedAt': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.orderLists.draft': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.orderLists.ready': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.orderLists.submitted': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.orderLists.confirmed': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.orderLists.delivered': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.orderLists.cancelled': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.orderLists.addToCart': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.orderLists.processOrder': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.orderLists.autoFill': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.orderLists.autoFillDescription': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.orderLists.createDialog': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.orderLists.editDialog': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.orderLists.details': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.orderLists.summary': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.orderLists.deleteDialog': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.orderLists.deleteConfirm': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.orderLists.duplicateDialog': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.orderLists.duplicateName': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.orderLists.nameRequired': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.orderLists.nameMinLength': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.orderLists.selectSupplier': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.orderLists.supplierRequired': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.orderLists.addProduct': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.orderLists.removeProduct': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.orderLists.productName': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.orderLists.quantity': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.orderLists.unitPrice': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.orderLists.totalPrice': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.orderLists.notes': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.orderLists.urgent': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.orderLists.exportOrderList': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.orderLists.noProducts': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.orderLists.selectProduct': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.orderLists.created': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.orderLists.updated': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.orderLists.deleted': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.orderLists.duplicated': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.orderLists.addedToCart': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.orderLists.autoFilled': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.orderLists.loadError': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.orderLists.saveError': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.orderLists.deleteError': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.orderLists.cartError': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.orderLists.autoFillError': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.locations.title': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.locations.manage': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.locations.add': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.locations.edit': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.locations.delete': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.locations.name': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.locations.description': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.locations.type': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.locations.capacity': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.locations.sampleData.mainWarehouse.name': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.locations.sampleData.mainWarehouse.type': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.locations.sampleData.mainWarehouse.description': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.locations.sampleData.pharmacy.name': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.locations.sampleData.pharmacy.type': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.locations.sampleData.pharmacy.description': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.locations.sampleData.treatmentRoom.name': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.locations.sampleData.treatmentRoom.type': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.locations.sampleData.treatmentRoom.description': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.locations.noLocations': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.locations.mainLocations': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.locations.allLocations': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.locations.search': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.locations.comingSoonDescription': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.locations.capacityItems': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.locations.samples.emergencyStock': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.movements.title': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.movements.movementType': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.movements.quantityChange': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.movements.quantityBefore': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.movements.quantityAfter': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.movements.performedBy': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.movements.reasonCode': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.movements.count': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.movements.receipt': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.movements.usage': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.movements.transfer': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.movements.adjustment': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.movements.waste': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.movements.normalUsage': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.movements.expired': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.movements.damaged': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.movements.lost': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.movements.found': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.movements.transferred': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.movements.corrected': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.analytics.title': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.analytics.subtitle': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.analytics.comingSoon': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.analytics.comingSoonDescription': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.analytics.overview': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.analytics.trends': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.analytics.reports': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.analytics.insights': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.analytics.period': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.analytics.lastWeek': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.analytics.lastMonth': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.analytics.lastQuarter': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.analytics.lastYear': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.analytics.stockTurnover': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.analytics.orderFrequency': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.analytics.supplierPerformance': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.analytics.costAnalysis': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.analytics.dashboard': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.analytics.usage': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.analytics.patterns': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.analytics.events.login': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.analytics.events.logout': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.analytics.events.stock_update': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.analytics.events.order_create': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.analytics.events.product_view': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.analytics.events.batch_register': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.analytics.metrics.averageSession': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.analytics.metrics.peakHours': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.offline.title': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.offline.data.download': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.offline.data.downloadDescription': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.offline.data.lastDownload': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.offline.data.dataSize': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.offline.sync.forceSync': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.offline.sync.syncNow': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.offline.sync.autoSync': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.offline.sync.syncStatus': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.offline.sync.lastSync': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.offline.sync.pendingActions': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.offline.messages.syncCompleted': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.offline.messages.syncFailed': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.offline.messages.downloadCompleted': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.offline.messages.downloadFailed': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.offline.messages.offlineMode': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.offline.messages.onlineMode': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.offline.errors.syncFailed': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.offline.errors.downloadFailed': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.offline.errors.networkUnavailable': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.offline.newVersionAvailable': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.exports.title': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.exports.subtitle': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.exports.selectFormat': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.exports.selectData': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.exports.generateExport': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.exports.downloadExport': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.exports.formats.csv': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.exports.formats.pdf': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.exports.formats.excel': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.exports.formats.json': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.exports.dataTypes.inventory': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.exports.dataTypes.orders': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.exports.dataTypes.suppliers': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.exports.dataTypes.analytics': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.exports.dataTypes.users': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.exports.messages.exportGenerated': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.exports.messages.exportFailed': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.exports.messages.exportDownloaded': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.analyticsPage.title': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.analyticsPage.subtitle': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.analyticsPage.period': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.analyticsPage.totalEvents': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.analyticsPage.activeUsers': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.analyticsPage.totalOrders': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.analyticsPage.productUpdates': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.analyticsPage.dailyActivity': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.analyticsPage.topEvents': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.analyticsPage.frequentlyOrderedItems': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.analyticsPage.mostUpdatedProducts': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.analyticsPage.userActivity': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.analyticsPage.export': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.analyticsPage.periods.7d': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.analyticsPage.periods.30d': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.analyticsPage.periods.90d': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.analyticsPage.periods.1y': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.analyticsPage.user': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.analyticsPage.activityCount': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.analyticsPage.lastActivity': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.analyticsPage.product': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.analyticsPage.totalQuantity': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.analyticsPage.orderCount': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.analyticsPage.updates': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.analyticsPage.loadError': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.analyticsPage.exportSuccess': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.analyticsPage.exportError': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.settings.title': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.settings.subtitle': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.settings.general': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.settings.notifications': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.settings.integrations': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.settings.users': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.settings.backup': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.settings.language': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.settings.theme': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.settings.timezone': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.settings.currency': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.settings.dateFormat': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.settings.timeFormat': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.settings.emailNotifications': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.settings.pushNotifications': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.settings.stockAlerts': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.settings.orderAlerts': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.settings.systemAlerts': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.settings.save': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.settings.saved': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.settings.saveError': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.settings.reset': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.settings.resetToDefaults': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.settings.confirmReset': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.settings.manageSettingsSubtitle': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.settings.profile': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.settings.profileSubtitle': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.settings.appearanceTitle': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.settings.appearanceSubtitle': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.settings.darkModeDescription': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.settings.selectLanguage': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.settings.colorSchemeTitle': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.settings.colorSchemeDescription': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.settings.clinic': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.settings.clinicInfoSubtitle': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.settings.contactSettingsNotice': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.settings.notificationSettingsSubtitle': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.settings.stockAlertsLabel': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.settings.stockAlertsDescription': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.settings.emailNotificationsLabel': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.settings.emailNotificationsDescription': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.settings.browserNotificationsLabel': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.settings.browserNotificationsDescription': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.settings.systemInfoTitle': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.settings.systemInfoSubtitle': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.settings.versionLabel': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.settings.lastUpdateLabel': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.settings.supportLabel': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.settings.languageChanged': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.settings.clinicName': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.settings.contactEmail': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.settings.phoneNumber': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.settings.address': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.settings.role': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.settings.darkModeEnabled': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.settings.lightModeEnabled': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.settings.settingsSaved': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.settings.settingsSaveError': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.settings.saveSettings': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.settings.styleGuideTitle': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.settings.styleGuideSubtitle': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.settings.colorsSection': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.settings.primaryColors': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.settings.neutralColors': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.settings.typographySection': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.settings.buttonsSection': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.settings.solidButtons': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.settings.outlinedButtons': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.settings.flatButtons': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.settings.iconButtons': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.settings.cardsSection': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.settings.primaryButton': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.settings.secondaryButton': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.settings.successButton': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.settings.warningButton': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.settings.dangerButton': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.settings.infoButton': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.settings.addProductButton': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.settings.editButton': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.settings.deleteButton': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.settings.saveButton': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.settings.downloadButton': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.settings.cards.defaultCard.title': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.settings.cards.defaultCard.subtitle': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.settings.cards.defaultCard.description': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.settings.cards.defaultCard.action': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.settings.cards.modernCard.title': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.settings.cards.modernCard.subtitle': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.settings.cards.modernCard.description': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.settings.cards.modernCard.action': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.settings.cards.elevatedCard.title': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.settings.cards.elevatedCard.subtitle': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.settings.cards.elevatedCard.description': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.settings.cards.elevatedCard.action': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.settings.cards.glassCard.title': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.settings.cards.glassCard.subtitle': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.settings.cards.glassCard.description': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.settings.cards.glassCard.action': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.settings.cards.outlinedCard.title': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.settings.cards.outlinedCard.subtitle': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.settings.cards.outlinedCard.description': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.settings.cards.outlinedCard.action': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.settings.cards.warningCard.title': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.settings.cards.warningCard.subtitle': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.settings.cards.warningCard.description': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.settings.cards.warningCard.action': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.suppliers.title': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.suppliers.name': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.suppliers.contactEmail': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.suppliers.contactPhone': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.suppliers.website': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.suppliers.address': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.suppliers.city': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.suppliers.postalCode': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.suppliers.country': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.suppliers.status': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.suppliers.active': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.suppliers.inactive': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.suppliers.notes': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.suppliers.products': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.suppliers.orders': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.suppliers.lastOrder': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.suppliers.totalOrders': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.suppliers.averageDeliveryTime': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.suppliers.reliability': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.suppliers.qualityRating': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.suppliers.priceCompetitiveness': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.suppliers.communicationRating': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.suppliers.paymentTerms': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.suppliers.deliveryTerms': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.suppliers.minimumOrderAmount': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.suppliers.leadTime': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.suppliers.packSize': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.suppliers.availability': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.suppliers.backorderAllowed': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.suppliers.addSupplier': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.suppliers.editSupplier': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.suppliers.supplierDetails': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.suppliers.supplierCode': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.suppliers.contactPerson': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.suppliers.paymentTermsDetailed': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.suppliers.minimumOrder': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.suppliers.shippingCost': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.suppliers.freeShippingThreshold': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.suppliers.preferredOrderDay': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.suppliers.orderCutoffTime': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.suppliers.apiIntegration': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.suppliers.syncEnabled': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.suppliers.lastSyncTime': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.suppliers.supplierProducts': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.suppliers.supplierSKU': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.suppliers.supplierName': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.suppliers.unitPrice': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.suppliers.minimumOrderQty': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.suppliers.leadTimeDays': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.admin.title': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.admin.settings': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.admin.audit': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.admin.users': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.admin.locations': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.admin.permissions': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.admin.analytics': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.admin.quickActions': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.admin.stats.totalUsers': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.admin.stats.activeUsers': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.admin.stats.activeToday': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.admin.stats.totalLocations': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.admin.stats.active': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.admin.stats.pendingSync': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.admin.stats.lastSync': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.admin.stats.todayEvents': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.admin.stats.fromYesterday': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.admin.userManagement.title': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.admin.userManagement.invite': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.admin.userManagement.email': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.admin.userManagement.roles': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.admin.userManagement.lastActive': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.admin.userManagement.resetPassword': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.admin.userManagement.activate': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.admin.userManagement.deactivate': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.admin.errors.loadUsersFailed': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.admin.errors.loadLocationsFailed': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.admin.errors.loadPermissionsFailed': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.admin.errors.noPracticeSelected': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.admin.errors.practiceOrUserNotFound': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.admin.errors.userNotFoundInPractice': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.admin.errors.userEmailNotFound': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.admin.errors.cannotDeactivatePracticeOwner': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.admin.errors.cannotDeleteMainLocation': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.admin.errors.insufficientPermissionsToCreate': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.admin.errors.insufficientPermissionsToUpdate': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.admin.errors.insufficientPermissionsToDelete': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.admin.errors.insufficientPermissionsToView': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.admin.errors.insufficientPermissionsToGrant': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.admin.errors.insufficientPermissionsToRevoke': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.admin.errors.insufficientPermissionsToReset': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.admin.errors.insufficientPermissionsToToggle': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.admin.errors.failedToCreate': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.admin.errors.failedToUpdate': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.admin.errors.failedToDelete': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.admin.errors.failedToGet': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.admin.errors.failedToGrant': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.admin.errors.failedToRevoke': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.admin.errors.failedToSend': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.admin.errors.failedToSet': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.admin.teamOverview': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.admin.teamOverviewSubtitle': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.admin.totalMembers': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.admin.onlineNow': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.admin.loadingTeam': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.admin.noTeamMembers': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.admin.noTeamMembersDescription': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.admin.viewProfile': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.admin.editMember': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.admin.loginMethods': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.admin.magicCode': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.admin.emailPassword': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.admin.deviceRemember': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.admin.trustedDevices': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.admin.lastLogin': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.admin.loginCount': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.admin.preferredMethod': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.admin.sendMessage': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.admin.viewSessions': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.admin.personalMagicCode': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.admin.magicCodeExplanation': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.admin.loadTeamError': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.admin.never': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.admin.minutesAgo': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.admin.hoursAgo': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.admin.daysAgo': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.admin.confirmDeactivate': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.admin.confirmActivate': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.admin.confirmDeactivateMessage': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.admin.confirmActivateMessage': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.admin.deactivateSuccess': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.admin.activateSuccess': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.admin.statusChangeError': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.admin.codeCopied': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.admin.copyError': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.admin.magic_code': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.admin.email_password': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.admin.device_token': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.permissions.title': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.permissions.user': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.permissions.permissionType': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.permissions.resourceType': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.permissions.expiresAt': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.permissions.templates.title': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.permissions.templates.assistant': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.permissions.templates.manager': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.permissions.templates.admin': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.permissions.templates.owner': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.permissions.templates.viewer': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.permissions.types.read': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.permissions.types.write': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.permissions.types.delete': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.permissions.types.admin': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.permissions.notifications.revoked': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.permissions.notifications.granted': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.permissions.errors.revokeFailed': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.permissions.errors.grantFailed': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.locationsAdmin.isMain': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.locationsAdmin.setAsMain': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.locationsAdmin.manageAccess': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.locationsAdmin.notifications.mainLocationSet': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.locationsAdmin.notifications.accessUpdated': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.locationsAdmin.errors.setMainFailed': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.locationsAdmin.errors.accessUpdateFailed': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.suppliersPage.title': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.suppliersPage.subtitle': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.suppliersPage.searchSuppliers': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.suppliersPage.filterByStatus': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.suppliersPage.importSuppliers': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.suppliersPage.addSupplier': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.suppliersPage.editSupplier': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.suppliersPage.addNewSupplier': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.suppliersPage.supplierName': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.suppliersPage.contactEmail': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.suppliersPage.contactPhone': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.suppliersPage.website': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.suppliersPage.address': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.suppliersPage.city': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.suppliersPage.postalCode': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.suppliersPage.country': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.suppliersPage.magentoVendorId': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.suppliersPage.notes': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.suppliersPage.activeSupplier': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.suppliersPage.contactInformation': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.suppliersPage.locationInfo': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.suppliersPage.magentoLink': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.suppliersPage.status': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.suppliersPage.actions': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.suppliersPage.active': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.suppliersPage.inactive': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.suppliersPage.notLinked': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.suppliersPage.editSupplierTooltip': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.suppliersPage.linkToMagentoTooltip': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.suppliersPage.deleteSupplierTooltip': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.suppliersPage.cancel': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.suppliersPage.save': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.suppliersPage.nameRequired': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.suppliersPage.linkToMagento': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.suppliersPage.linkToMagentoPrompt': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.suppliersPage.confirmDelete': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.suppliersPage.confirmDeleteMessage': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.suppliersPage.supplierCreated': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.suppliersPage.supplierUpdated': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.suppliersPage.supplierDeleted': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.suppliersPage.supplierLinkedToMagento': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.suppliersPage.loadSuppliersError': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.suppliersPage.saveSupplierError': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.suppliersPage.deleteSupplierError': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.suppliersPage.linkMagentoError': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.suppliersPage.importFeatureComingSoon': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.notificationsPage.title': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.notificationsPage.subtitle': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.notificationsPage.all': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.notificationsPage.unread': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.notificationsPage.read': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.notificationsPage.filterByCategory': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.notificationsPage.markAllRead': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.notificationsPage.settings': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.notificationsPage.noNotifications': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.notificationsPage.allCaughtUp': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.notificationsPage.notificationStatistics': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.notificationsPage.unreadCount': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.notificationsPage.total': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.notificationsPage.byCategory': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.notificationsPage.quickActions': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.notificationsPage.testStockAlert': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.notificationsPage.testOrderUpdate': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.notificationsPage.clearAllNotifications': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.notificationsPage.markAsReadTooltip': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.notificationsPage.deleteTooltip': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.notificationsPage.clearAllConfirm': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.notificationsPage.clearAllConfirmMessage': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.notificationsPage.allMarkedAsRead': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.notificationsPage.notificationDeleted': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.notificationsPage.allNotificationsCleared': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.notificationsPage.testStockAlertCreated': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.notificationsPage.testOrderUpdateCreated': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.notificationsPage.settingsFeatureComingSoon': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.notificationsPage.loadNotificationsError': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.notificationsPage.categories.stockAlert': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.notificationsPage.categories.orderUpdate': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.notificationsPage.categories.systemNotification': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.notificationsPage.categories.reminder': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.notificationsPage.types.stock_alert': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.notificationsPage.types.order_update': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.notificationsPage.types.system_notification': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.notificationsPage.types.reminder': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.notificationsPage.testMessages.stockAlert.title': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.notificationsPage.testMessages.stockAlert.message': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.notificationsPage.testMessages.orderUpdate.title': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.notificationsPage.testMessages.orderUpdate.message': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.messages.addToCartComingSoon': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.messages.addAllSuggestionsComingSoon': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.messages.cartCleared': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.messages.cartSaved': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.dialogs.typeToConfirm': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.dialogs.confirmClose': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.magicInvite.simpleTitle': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.magicInvite.simpleDescription': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.magicInvite.howItWorks': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.magicInvite.stepCreate': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.magicInvite.stepCreateDetail': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.magicInvite.stepShare': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.magicInvite.stepShareDetail': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.magicInvite.stepJoin': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.magicInvite.stepJoinDetail': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.magicInvite.createInvite': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.magicInvite.whoAreYouInviting': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.magicInvite.department': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.magicInvite.departmentPlaceholder': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.magicInvite.generateInviteCode': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.magicInvite.inviteReady': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.magicInvite.shareThisCode': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.magicInvite.tellThem': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.magicInvite.shareMessage.shareWhatsApp': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.magicInvite.shareMessage.showQR': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.magicInvite.shareMessage.shareEmail': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.magicInvite.shareMessage.qrCode': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.magicInvite.shareMessage.qrInstructions': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.magicInvite.shareMessage.activeInvites': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.magicInvite.shareMessage.created': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.magicInvite.shareMessage.doctorNurse': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.magicInvite.shareMessage.assistant': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.magicInvite.shareMessage.admin': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.magicInvite.shareMessage.temporary': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.magicInvite.shareMessage.inviteCreated': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.magicInvite.shareMessage.createError': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.magicInvite.shareMessage.codeCopied': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.magicInvite.shareMessage.deleteInvite': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.magicInvite.shareMessage.deleteConfirm': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.magicInvite.shareMessage.inviteDeleted': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.magicInvite.shareMessage.whatsappMessage.emailSubject': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.magicInvite.shareMessage.whatsappMessage.magicJoin.subtitle': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.magicInvite.shareMessage.whatsappMessage.magicJoin.enterCode': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.magicInvite.shareMessage.whatsappMessage.magicJoin.codeExplanation': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.magicInvite.shareMessage.whatsappMessage.magicJoin.placeholder': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.magicInvite.shareMessage.whatsappMessage.magicJoin.joinNow': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.magicInvite.shareMessage.whatsappMessage.magicJoin.scanQR': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.magicInvite.shareMessage.whatsappMessage.magicJoin.tryDemo': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.magicInvite.shareMessage.whatsappMessage.magicJoin.howItWorks': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.magicInvite.shareMessage.whatsappMessage.magicJoin.step1': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.magicInvite.shareMessage.whatsappMessage.magicJoin.step1Detail': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.magicInvite.shareMessage.whatsappMessage.magicJoin.step2': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.magicInvite.shareMessage.whatsappMessage.magicJoin.step2Detail': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.magicInvite.shareMessage.whatsappMessage.magicJoin.step3': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.magicInvite.shareMessage.whatsappMessage.magicJoin.step3Detail': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.magicInvite.shareMessage.whatsappMessage.magicJoin.scanTitle': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.magicInvite.shareMessage.whatsappMessage.magicJoin.scanInstructions': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.magicInvite.shareMessage.whatsappMessage.magicJoin.demoAccess': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.magicInvite.shareMessage.whatsappMessage.magicJoin.memberAccess': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.magicInvite.shareMessage.whatsappMessage.magicJoin.invalidCode': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.magicInvite.shareMessage.whatsappMessage.magicJoin.joinError': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.magicInvite.shareMessage.whatsappMessage.magicJoin.welcomeTitle': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.magicInvite.shareMessage.whatsappMessage.magicJoin.welcomeMessage': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.magicInvite.shareMessage.whatsappMessage.magicJoin.getStarted': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.magicInvite.shareMessage.whatsappMessage.magicJoin.welcomeBack': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.magicInvite.shareMessage.whatsappMessage.magicJoin.personalCodeSuccess': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.magicInvite.shareMessage.whatsappMessage.magicJoin.personalCodeError': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.magicInvite.shareMessage.whatsappMessage.magicJoin.permanentInviteDetected': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.magicInvite.shareMessage.whatsappMessage.magicJoin.guestAccessGranted': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.magicInvite.shareMessage.whatsappMessage.upgrade.welcomeToTeam': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.magicInvite.shareMessage.whatsappMessage.upgrade.subtitle': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.magicInvite.shareMessage.whatsappMessage.upgrade.benefit1': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.magicInvite.shareMessage.whatsappMessage.upgrade.benefit2': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.magicInvite.shareMessage.whatsappMessage.upgrade.benefit3': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.magicInvite.shareMessage.whatsappMessage.upgrade.magicCodeTitle': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.magicInvite.shareMessage.whatsappMessage.upgrade.magicCodeDescription': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.magicInvite.shareMessage.whatsappMessage.upgrade.yourPersonalCode': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.magicInvite.shareMessage.whatsappMessage.upgrade.magicBenefit1': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.magicInvite.shareMessage.whatsappMessage.upgrade.magicBenefit2': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.magicInvite.shareMessage.whatsappMessage.upgrade.magicBenefit3': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.magicInvite.shareMessage.whatsappMessage.upgrade.emailTitle': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.magicInvite.shareMessage.whatsappMessage.upgrade.emailDescription': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.magicInvite.shareMessage.whatsappMessage.upgrade.yourEmail': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.magicInvite.shareMessage.whatsappMessage.upgrade.choosePassword': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.magicInvite.shareMessage.whatsappMessage.upgrade.emailBenefit1': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.magicInvite.shareMessage.whatsappMessage.upgrade.emailBenefit2': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.magicInvite.shareMessage.whatsappMessage.upgrade.emailBenefit3': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.magicInvite.shareMessage.whatsappMessage.upgrade.deviceTitle': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.magicInvite.shareMessage.whatsappMessage.upgrade.deviceDescription': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.magicInvite.shareMessage.whatsappMessage.upgrade.deviceBenefit1': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.magicInvite.shareMessage.whatsappMessage.upgrade.deviceBenefit2': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.magicInvite.shareMessage.whatsappMessage.upgrade.deviceBenefit3': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.magicInvite.shareMessage.whatsappMessage.upgrade.yourFullName': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.magicInvite.shareMessage.whatsappMessage.upgrade.nameRequired': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.magicInvite.shareMessage.whatsappMessage.upgrade.chooseThis': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.magicInvite.shareMessage.whatsappMessage.upgrade.createAccount': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.magicInvite.shareMessage.whatsappMessage.upgrade.stayGuest': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.magicInvite.shareMessage.whatsappMessage.upgrade.accountCreated': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.magicInvite.shareMessage.whatsappMessage.upgrade.createError': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.magicInvite.shareMessage.whatsappMessage.upgrade.creatingAccount': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.magicInvite.shareMessage.whatsappMessage.upgrade.yourCodeIs': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.magicInvite.shareMessage.whatsappMessage.productsPage.noProductsFound': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.magicInvite.shareMessage.whatsappMessage.inventory.finalQuantity': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.magicInvite.shareMessage.whatsappMessage.inventory.refreshFailed': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.magicInvite.shareMessage.whatsappMessage.inventory.reason.normal_usage': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.magicInvite.shareMessage.whatsappMessage.inventory.reason.expired': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.magicInvite.shareMessage.whatsappMessage.inventory.reason.damaged': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.magicInvite.shareMessage.whatsappMessage.inventory.reason.lost': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.magicInvite.shareMessage.whatsappMessage.inventory.reason.found': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.magicInvite.shareMessage.whatsappMessage.inventory.reason.transfer_in': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.magicInvite.shareMessage.whatsappMessage.inventory.reason.transfer_out': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.magicInvite.shareMessage.whatsappMessage.common.retry': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.magicInvite.shareMessage.whatsappMessage.dashboard.assistantDashboard': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.magicInvite.shareMessage.whatsappMessage.dashboard.managerDashboard': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.magicInvite.shareMessage.whatsappMessage.dashboard.ownerDashboard': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.magicInvite.shareMessage.whatsappMessage.dashboard.orderSuggestions': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.magicInvite.shareMessage.whatsappMessage.dashboard.recentOrders': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.magicInvite.shareMessage.whatsappMessage.dashboard.quickScan': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.magicInvite.shareMessage.whatsappMessage.dashboard.analyticsOverview': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.magicInvite.shareMessage.whatsappMessage.dashboard.businessOverview': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.magicInvite.shareMessage.whatsappMessage.dashboard.teamActivity': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.magicInvite.shareMessage.whatsappMessage.dashboard.financialSummary': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.magicInvite.shareMessage.whatsappMessage.dashboard.userManagement': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.magicInvite.shareMessage.whatsappMessage.dashboard.systemHealth': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.magicInvite.shareMessage.whatsappMessage.dashboard.scanProduct': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.magicInvite.shareMessage.whatsappMessage.dashboard.costAnalysis': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.magicInvite.shareMessage.whatsappMessage.dashboard.supplierPerformance': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.magicInvite.shareMessage.whatsappMessage.dashboard.createOrder': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.magicInvite.shareMessage.whatsappMessage.dashboard.noAlerts': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.magicInvite.shareMessage.whatsappMessage.retry': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.magicInvite.shareMessage.whatsappMessage.assistantDashboard': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.magicInvite.shareMessage.whatsappMessage.managerDashboard': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.magicInvite.shareMessage.whatsappMessage.ownerDashboard': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.magicInvite.shareMessage.whatsappMessage.orderSuggestions': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.magicInvite.shareMessage.whatsappMessage.recentOrders': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.magicInvite.shareMessage.whatsappMessage.quickScan': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.magicInvite.shareMessage.whatsappMessage.analyticsOverview': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.magicInvite.shareMessage.whatsappMessage.businessOverview': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.magicInvite.shareMessage.whatsappMessage.teamActivity': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.magicInvite.shareMessage.whatsappMessage.financialSummary': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.magicInvite.shareMessage.whatsappMessage.userManagement': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.magicInvite.shareMessage.whatsappMessage.systemHealth': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.magicInvite.shareMessage.whatsappMessage.scanProduct': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.magicInvite.shareMessage.whatsappMessage.costAnalysis': 'inventario',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.magicInvite.shareMessage.whatsappMessage.supplierPerformance': 'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.analytics.totalOrders':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.analytics.totalValue':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.analytics.avgOrderSize':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.analytics.orderFrequency':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.analytics.orderTrends':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.analytics.chartsComingSoon':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.pdfDownloaded':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.csvDownloaded':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.emailSent':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.magentoSubmitted.orderCancelled':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.magentoSubmitted.exportCompleted.pdfBulkNotSupported':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.magentoSubmitted.exportCompleted.bulkEmailComingSoon':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.magentoSubmitted.errors.loadFailed':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.magentoSubmitted.errors.pdfFailed':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.magentoSubmitted.errors.csvFailed':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.magentoSubmitted.errors.emailFailed':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.magentoSubmitted.errors.magentoFailed':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.magentoSubmitted.errors.cancelFailed':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.magentoSubmitted.errors.exportFailed':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.magentoSubmitted.errors.noOrdersToExport':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.magentoSubmitted.errors.noPracticeSelected':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.magentoSubmitted.exportFilteredNote':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.magentoSubmitted.exportSelectedNote':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.magentoSubmitted.emailRequired':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.magentoSubmitted.noPracticeSelected':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.orderLists.title':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.orderLists.subtitle':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.orderLists.create':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.orderLists.edit':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.orderLists.duplicate':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.orderLists.delete':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.orderLists.noLists':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.orderLists.createNew':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.orderLists.name':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.orderLists.description':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.orderLists.supplier':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.orderLists.totalItems':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.orderLists.totalAmount':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.orderLists.status':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.orderLists.createdAt':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.orderLists.updatedAt':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.orderLists.draft':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.orderLists.ready':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.orderLists.submitted':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.orderLists.confirmed':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.orderLists.delivered':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.orderLists.cancelled':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.orderLists.addToCart':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.orderLists.processOrder':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.orderLists.autoFill':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.orderLists.autoFillDescription':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.orderLists.createDialog':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.orderLists.editDialog':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.orderLists.details':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.orderLists.summary':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.orderLists.deleteDialog':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.orderLists.deleteConfirm':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.orderLists.duplicateDialog':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.orderLists.duplicateName':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.orderLists.nameRequired':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.orderLists.nameMinLength':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.orderLists.selectSupplier':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.orderLists.supplierRequired':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.orderLists.addProduct':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.orderLists.removeProduct':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.orderLists.productName':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.orderLists.quantity':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.orderLists.unitPrice':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.orderLists.totalPrice':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.orderLists.notes':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.orderLists.urgent':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.orderLists.exportOrderList':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.orderLists.noProducts':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.orderLists.selectProduct':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.orderLists.created':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.orderLists.updated':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.orderLists.deleted':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.orderLists.duplicated':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.orderLists.addedToCart':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.orderLists.autoFilled':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.orderLists.loadError':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.orderLists.saveError':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.orderLists.deleteError':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.orderLists.cartError':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.orderLists.autoFillError':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.locations.title':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.locations.manage':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.locations.add':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.locations.edit':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.locations.delete':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.locations.name':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.locations.description':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.locations.type':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.locations.capacity':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.locations.sampleData.mainWarehouse.name':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.locations.sampleData.mainWarehouse.type':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.locations.sampleData.mainWarehouse.description':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.locations.sampleData.pharmacy.name':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.locations.sampleData.pharmacy.type':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.locations.sampleData.pharmacy.description':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.locations.sampleData.treatmentRoom.name':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.locations.sampleData.treatmentRoom.type':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.locations.sampleData.treatmentRoom.description':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.locations.noLocations':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.locations.mainLocations':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.locations.allLocations':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.locations.search':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.locations.comingSoonDescription':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.locations.capacityItems':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.locations.samples.emergencyStock':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.movements.title':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.movements.movementType':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.movements.quantityChange':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.movements.quantityBefore':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.movements.quantityAfter':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.movements.performedBy':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.movements.reasonCode':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.movements.count':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.movements.receipt':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.movements.usage':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.movements.transfer':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.movements.adjustment':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.movements.waste':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.movements.normalUsage':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.movements.expired':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.movements.damaged':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.movements.lost':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.movements.found':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.movements.transferred':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.movements.corrected':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.analytics.title':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.analytics.subtitle':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.analytics.comingSoon':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.analytics.comingSoonDescription':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.analytics.overview':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.analytics.trends':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.analytics.reports':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.analytics.insights':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.analytics.period':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.analytics.lastWeek':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.analytics.lastMonth':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.analytics.lastQuarter':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.analytics.lastYear':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.analytics.stockTurnover':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.analytics.orderFrequency':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.analytics.supplierPerformance':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.analytics.costAnalysis':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.analytics.dashboard':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.analytics.usage':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.analytics.patterns':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.analytics.events.login':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.analytics.events.logout':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.analytics.events.stock_update':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.analytics.events.order_create':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.analytics.events.product_view':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.analytics.events.batch_register':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.analytics.metrics.averageSession':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.analytics.metrics.peakHours':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.offline.title':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.offline.data.download':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.offline.data.downloadDescription':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.offline.data.lastDownload':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.offline.data.dataSize':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.offline.sync.forceSync':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.offline.sync.syncNow':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.offline.sync.autoSync':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.offline.sync.syncStatus':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.offline.sync.lastSync':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.offline.sync.pendingActions':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.offline.messages.syncCompleted':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.offline.messages.syncFailed':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.offline.messages.downloadCompleted':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.offline.messages.downloadFailed':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.offline.messages.offlineMode':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.offline.messages.onlineMode':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.offline.errors.syncFailed':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.offline.errors.downloadFailed':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.offline.errors.networkUnavailable':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.offline.newVersionAvailable':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.exports.title':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.exports.subtitle':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.exports.selectFormat':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.exports.selectData':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.exports.generateExport':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.exports.downloadExport':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.exports.formats.csv':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.exports.formats.pdf':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.exports.formats.excel':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.exports.formats.json':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.exports.dataTypes.inventory':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.exports.dataTypes.orders':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.exports.dataTypes.suppliers':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.exports.dataTypes.analytics':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.exports.dataTypes.users':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.exports.messages.exportGenerated':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.exports.messages.exportFailed':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.exports.messages.exportDownloaded':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.analyticsPage.title':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.analyticsPage.subtitle':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.analyticsPage.period':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.analyticsPage.totalEvents':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.analyticsPage.activeUsers':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.analyticsPage.totalOrders':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.analyticsPage.productUpdates':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.analyticsPage.dailyActivity':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.analyticsPage.topEvents':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.analyticsPage.frequentlyOrderedItems':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.analyticsPage.mostUpdatedProducts':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.analyticsPage.userActivity':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.analyticsPage.export':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.analyticsPage.periods.7d':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.analyticsPage.periods.30d':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.analyticsPage.periods.90d':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.analyticsPage.periods.1y':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.analyticsPage.user':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.analyticsPage.activityCount':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.analyticsPage.lastActivity':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.analyticsPage.product':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.analyticsPage.totalQuantity':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.analyticsPage.orderCount':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.analyticsPage.updates':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.analyticsPage.loadError':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.analyticsPage.exportSuccess':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.analyticsPage.exportError':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.settings.title':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.settings.subtitle':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.settings.general':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.settings.notifications':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.settings.integrations':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.settings.users':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.settings.backup':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.settings.language':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.settings.theme':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.settings.timezone':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.settings.currency':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.settings.dateFormat':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.settings.timeFormat':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.settings.emailNotifications':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.settings.pushNotifications':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.settings.stockAlerts':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.settings.orderAlerts':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.settings.systemAlerts':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.settings.save':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.settings.saved':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.settings.saveError':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.settings.reset':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.settings.resetToDefaults':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.settings.confirmReset':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.settings.manageSettingsSubtitle':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.settings.profile':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.settings.profileSubtitle':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.settings.appearanceTitle':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.settings.appearanceSubtitle':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.settings.darkModeDescription':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.settings.selectLanguage':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.settings.colorSchemeTitle':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.settings.colorSchemeDescription':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.settings.clinic':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.settings.clinicInfoSubtitle':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.settings.contactSettingsNotice':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.settings.notificationSettingsSubtitle':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.settings.stockAlertsLabel':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.settings.stockAlertsDescription':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.settings.emailNotificationsLabel':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.settings.emailNotificationsDescription':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.settings.browserNotificationsLabel':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.settings.browserNotificationsDescription':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.settings.systemInfoTitle':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.settings.systemInfoSubtitle':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.settings.versionLabel':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.settings.lastUpdateLabel':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.settings.supportLabel':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.settings.languageChanged':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.settings.clinicName':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.settings.contactEmail':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.settings.phoneNumber':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.settings.address':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.settings.role':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.settings.darkModeEnabled':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.settings.lightModeEnabled':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.settings.settingsSaved':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.settings.settingsSaveError':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.settings.saveSettings':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.settings.styleGuideTitle':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.settings.styleGuideSubtitle':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.settings.colorsSection':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.settings.primaryColors':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.settings.neutralColors':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.settings.typographySection':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.settings.buttonsSection':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.settings.solidButtons':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.settings.outlinedButtons':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.settings.flatButtons':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.settings.iconButtons':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.settings.cardsSection':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.settings.primaryButton':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.settings.secondaryButton':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.settings.successButton':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.settings.warningButton':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.settings.dangerButton':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.settings.infoButton':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.settings.addProductButton':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.settings.editButton':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.settings.deleteButton':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.settings.saveButton':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.settings.downloadButton':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.settings.cards.defaultCard.title':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.settings.cards.defaultCard.subtitle':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.settings.cards.defaultCard.description':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.settings.cards.defaultCard.action':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.settings.cards.modernCard.title':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.settings.cards.modernCard.subtitle':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.settings.cards.modernCard.description':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.settings.cards.modernCard.action':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.settings.cards.elevatedCard.title':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.settings.cards.elevatedCard.subtitle':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.settings.cards.elevatedCard.description':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.settings.cards.elevatedCard.action':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.settings.cards.glassCard.title':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.settings.cards.glassCard.subtitle':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.settings.cards.glassCard.description':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.settings.cards.glassCard.action':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.settings.cards.outlinedCard.title':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.settings.cards.outlinedCard.subtitle':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.settings.cards.outlinedCard.description':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.settings.cards.outlinedCard.action':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.settings.cards.warningCard.title':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.settings.cards.warningCard.subtitle':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.settings.cards.warningCard.description':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.settings.cards.warningCard.action':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.suppliers.title':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.suppliers.name':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.suppliers.contactEmail':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.suppliers.contactPhone':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.suppliers.website':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.suppliers.address':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.suppliers.city':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.suppliers.postalCode':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.suppliers.country':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.suppliers.status':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.suppliers.active':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.suppliers.inactive':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.suppliers.notes':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.suppliers.products':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.suppliers.orders':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.suppliers.lastOrder':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.suppliers.totalOrders':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.suppliers.averageDeliveryTime':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.suppliers.reliability':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.suppliers.qualityRating':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.suppliers.priceCompetitiveness':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.suppliers.communicationRating':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.suppliers.paymentTerms':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.suppliers.deliveryTerms':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.suppliers.minimumOrderAmount':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.suppliers.leadTime':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.suppliers.packSize':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.suppliers.availability':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.suppliers.backorderAllowed':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.suppliers.addSupplier':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.suppliers.editSupplier':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.suppliers.supplierDetails':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.suppliers.supplierCode':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.suppliers.contactPerson':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.suppliers.paymentTermsDetailed':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.suppliers.minimumOrder':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.suppliers.shippingCost':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.suppliers.freeShippingThreshold':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.suppliers.preferredOrderDay':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.suppliers.orderCutoffTime':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.suppliers.apiIntegration':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.suppliers.syncEnabled':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.suppliers.lastSyncTime':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.suppliers.supplierProducts':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.suppliers.supplierSKU':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.suppliers.supplierName':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.suppliers.unitPrice':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.suppliers.minimumOrderQty':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.suppliers.leadTimeDays':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.admin.title':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.admin.settings':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.admin.audit':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.admin.users':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.admin.locations':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.admin.permissions':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.admin.analytics':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.admin.quickActions':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.admin.stats.totalUsers':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.admin.stats.activeUsers':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.admin.stats.activeToday':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.admin.stats.totalLocations':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.admin.stats.active':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.admin.stats.pendingSync':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.admin.stats.lastSync':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.admin.stats.todayEvents':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.admin.stats.fromYesterday':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.admin.userManagement.title':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.admin.userManagement.invite':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.admin.userManagement.email':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.admin.userManagement.roles':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.admin.userManagement.lastActive':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.admin.userManagement.resetPassword':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.admin.userManagement.activate':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.admin.userManagement.deactivate':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.admin.errors.loadUsersFailed':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.admin.errors.loadLocationsFailed':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.admin.errors.loadPermissionsFailed':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.admin.errors.noPracticeSelected':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.admin.errors.practiceOrUserNotFound':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.admin.errors.userNotFoundInPractice':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.admin.errors.userEmailNotFound':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.admin.errors.cannotDeactivatePracticeOwner':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.admin.errors.cannotDeleteMainLocation':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.admin.errors.insufficientPermissionsToCreate':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.admin.errors.insufficientPermissionsToUpdate':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.admin.errors.insufficientPermissionsToDelete':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.admin.errors.insufficientPermissionsToView':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.admin.errors.insufficientPermissionsToGrant':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.admin.errors.insufficientPermissionsToRevoke':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.admin.errors.insufficientPermissionsToReset':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.admin.errors.insufficientPermissionsToToggle':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.admin.errors.failedToCreate':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.admin.errors.failedToUpdate':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.admin.errors.failedToDelete':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.admin.errors.failedToGet':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.admin.errors.failedToGrant':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.admin.errors.failedToRevoke':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.admin.errors.failedToSend':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.admin.errors.failedToSet':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.admin.teamOverview':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.admin.teamOverviewSubtitle':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.admin.totalMembers':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.admin.onlineNow':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.admin.loadingTeam':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.admin.noTeamMembers':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.admin.noTeamMembersDescription':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.admin.viewProfile':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.admin.editMember':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.admin.loginMethods':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.admin.magicCode':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.admin.emailPassword':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.admin.deviceRemember':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.admin.trustedDevices':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.admin.lastLogin':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.admin.loginCount':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.admin.preferredMethod':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.admin.sendMessage':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.admin.viewSessions':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.admin.personalMagicCode':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.admin.magicCodeExplanation':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.admin.loadTeamError':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.admin.never':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.admin.minutesAgo':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.admin.hoursAgo':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.admin.daysAgo':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.admin.confirmDeactivate':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.admin.confirmActivate':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.admin.confirmDeactivateMessage':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.admin.confirmActivateMessage':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.admin.deactivateSuccess':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.admin.activateSuccess':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.admin.statusChangeError':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.admin.codeCopied':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.admin.copyError':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.admin.magic_code':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.admin.email_password':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.admin.device_token':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.permissions.title':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.permissions.user':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.permissions.permissionType':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.permissions.resourceType':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.permissions.expiresAt':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.permissions.templates.title':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.permissions.templates.assistant':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.permissions.templates.manager':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.permissions.templates.admin':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.permissions.templates.owner':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.permissions.templates.viewer':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.permissions.types.read':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.permissions.types.write':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.permissions.types.delete':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.permissions.types.admin':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.permissions.notifications.revoked':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.permissions.notifications.granted':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.permissions.errors.revokeFailed':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.permissions.errors.grantFailed':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.locationsAdmin.isMain':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.locationsAdmin.setAsMain':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.locationsAdmin.manageAccess':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.locationsAdmin.notifications.mainLocationSet':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.locationsAdmin.notifications.accessUpdated':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.locationsAdmin.errors.setMainFailed':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.locationsAdmin.errors.accessUpdateFailed':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.suppliersPage.title':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.suppliersPage.subtitle':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.suppliersPage.searchSuppliers':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.suppliersPage.filterByStatus':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.suppliersPage.importSuppliers':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.suppliersPage.addSupplier':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.suppliersPage.editSupplier':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.suppliersPage.addNewSupplier':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.suppliersPage.supplierName':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.suppliersPage.contactEmail':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.suppliersPage.contactPhone':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.suppliersPage.website':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.suppliersPage.address':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.suppliersPage.city':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.suppliersPage.postalCode':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.suppliersPage.country':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.suppliersPage.magentoVendorId':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.suppliersPage.notes':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.suppliersPage.activeSupplier':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.suppliersPage.contactInformation':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.suppliersPage.locationInfo':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.suppliersPage.magentoLink':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.suppliersPage.status':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.suppliersPage.actions':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.suppliersPage.active':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.suppliersPage.inactive':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.suppliersPage.notLinked':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.suppliersPage.editSupplierTooltip':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.suppliersPage.linkToMagentoTooltip':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.suppliersPage.deleteSupplierTooltip':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.suppliersPage.cancel':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.suppliersPage.save':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.suppliersPage.nameRequired':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.suppliersPage.linkToMagento':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.suppliersPage.linkToMagentoPrompt':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.suppliersPage.confirmDelete':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.suppliersPage.confirmDeleteMessage':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.suppliersPage.supplierCreated':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.suppliersPage.supplierUpdated':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.suppliersPage.supplierDeleted':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.suppliersPage.supplierLinkedToMagento':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.suppliersPage.loadSuppliersError':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.suppliersPage.saveSupplierError':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.suppliersPage.deleteSupplierError':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.suppliersPage.linkMagentoError':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.suppliersPage.importFeatureComingSoon':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.notificationsPage.title':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.notificationsPage.subtitle':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.notificationsPage.all':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.notificationsPage.unread':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.notificationsPage.read':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.notificationsPage.filterByCategory':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.notificationsPage.markAllRead':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.notificationsPage.settings':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.notificationsPage.noNotifications':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.notificationsPage.allCaughtUp':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.notificationsPage.notificationStatistics':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.notificationsPage.unreadCount':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.notificationsPage.total':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.notificationsPage.byCategory':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.notificationsPage.quickActions':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.notificationsPage.testStockAlert':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.notificationsPage.testOrderUpdate':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.notificationsPage.clearAllNotifications':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.notificationsPage.markAsReadTooltip':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.notificationsPage.deleteTooltip':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.notificationsPage.clearAllConfirm':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.notificationsPage.clearAllConfirmMessage':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.notificationsPage.allMarkedAsRead':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.notificationsPage.notificationDeleted':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.notificationsPage.allNotificationsCleared':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.notificationsPage.testStockAlertCreated':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.notificationsPage.testOrderUpdateCreated':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.notificationsPage.settingsFeatureComingSoon':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.notificationsPage.loadNotificationsError':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.notificationsPage.categories.stockAlert':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.notificationsPage.categories.orderUpdate':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.notificationsPage.categories.systemNotification':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.notificationsPage.categories.reminder':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.notificationsPage.types.stock_alert':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.notificationsPage.types.order_update':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.notificationsPage.types.system_notification':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.notificationsPage.types.reminder':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.notificationsPage.testMessages.stockAlert.title':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.notificationsPage.testMessages.stockAlert.message':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.notificationsPage.testMessages.orderUpdate.title':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.notificationsPage.testMessages.orderUpdate.message':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.messages.addToCartComingSoon':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.messages.addAllSuggestionsComingSoon':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.messages.cartCleared':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.messages.cartSaved':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.dialogs.typeToConfirm':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.dialogs.confirmClose':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.magicInvite.simpleTitle':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.magicInvite.simpleDescription':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.magicInvite.howItWorks':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.magicInvite.stepCreate':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.magicInvite.stepCreateDetail':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.magicInvite.stepShare':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.magicInvite.stepShareDetail':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.magicInvite.stepJoin':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.magicInvite.stepJoinDetail':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.magicInvite.createInvite':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.magicInvite.whoAreYouInviting':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.magicInvite.department':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.magicInvite.departmentPlaceholder':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.magicInvite.generateInviteCode':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.magicInvite.inviteReady':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.magicInvite.shareThisCode':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.magicInvite.tellThem':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.magicInvite.shareMessage.shareWhatsApp':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.magicInvite.shareMessage.showQR':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.magicInvite.shareMessage.shareEmail':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.magicInvite.shareMessage.qrCode':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.magicInvite.shareMessage.qrInstructions':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.magicInvite.shareMessage.activeInvites':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.magicInvite.shareMessage.created':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.magicInvite.shareMessage.doctorNurse':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.magicInvite.shareMessage.assistant':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.magicInvite.shareMessage.admin':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.magicInvite.shareMessage.temporary':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.magicInvite.shareMessage.inviteCreated':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.magicInvite.shareMessage.createError':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.magicInvite.shareMessage.codeCopied':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.magicInvite.shareMessage.deleteInvite':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.magicInvite.shareMessage.deleteConfirm':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.magicInvite.shareMessage.inviteDeleted':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.magicInvite.shareMessage.whatsappMessage.emailSubject':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.magicInvite.shareMessage.whatsappMessage.magicJoin.subtitle':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.magicInvite.shareMessage.whatsappMessage.magicJoin.enterCode':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.magicInvite.shareMessage.whatsappMessage.magicJoin.codeExplanation':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.magicInvite.shareMessage.whatsappMessage.magicJoin.placeholder':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.magicInvite.shareMessage.whatsappMessage.magicJoin.joinNow':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.magicInvite.shareMessage.whatsappMessage.magicJoin.scanQR':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.magicInvite.shareMessage.whatsappMessage.magicJoin.tryDemo':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.magicInvite.shareMessage.whatsappMessage.magicJoin.howItWorks':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.magicInvite.shareMessage.whatsappMessage.magicJoin.step1':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.magicInvite.shareMessage.whatsappMessage.magicJoin.step1Detail':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.magicInvite.shareMessage.whatsappMessage.magicJoin.step2':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.magicInvite.shareMessage.whatsappMessage.magicJoin.step2Detail':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.magicInvite.shareMessage.whatsappMessage.magicJoin.step3':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.magicInvite.shareMessage.whatsappMessage.magicJoin.step3Detail':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.magicInvite.shareMessage.whatsappMessage.magicJoin.scanTitle':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.magicInvite.shareMessage.whatsappMessage.magicJoin.scanInstructions':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.magicInvite.shareMessage.whatsappMessage.magicJoin.demoAccess':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.magicInvite.shareMessage.whatsappMessage.magicJoin.memberAccess':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.magicInvite.shareMessage.whatsappMessage.magicJoin.invalidCode':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.magicInvite.shareMessage.whatsappMessage.magicJoin.joinError':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.magicInvite.shareMessage.whatsappMessage.magicJoin.welcomeTitle':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.magicInvite.shareMessage.whatsappMessage.magicJoin.welcomeMessage':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.magicInvite.shareMessage.whatsappMessage.magicJoin.getStarted':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.magicInvite.shareMessage.whatsappMessage.magicJoin.welcomeBack':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.magicInvite.shareMessage.whatsappMessage.magicJoin.personalCodeSuccess':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.magicInvite.shareMessage.whatsappMessage.magicJoin.personalCodeError':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.magicInvite.shareMessage.whatsappMessage.magicJoin.permanentInviteDetected':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.magicInvite.shareMessage.whatsappMessage.magicJoin.guestAccessGranted':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.magicInvite.shareMessage.whatsappMessage.upgrade.welcomeToTeam':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.magicInvite.shareMessage.whatsappMessage.upgrade.subtitle':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.magicInvite.shareMessage.whatsappMessage.upgrade.benefit1':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.magicInvite.shareMessage.whatsappMessage.upgrade.benefit2':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.magicInvite.shareMessage.whatsappMessage.upgrade.benefit3':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.magicInvite.shareMessage.whatsappMessage.upgrade.magicCodeTitle':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.magicInvite.shareMessage.whatsappMessage.upgrade.magicCodeDescription':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.magicInvite.shareMessage.whatsappMessage.upgrade.yourPersonalCode':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.magicInvite.shareMessage.whatsappMessage.upgrade.magicBenefit1':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.magicInvite.shareMessage.whatsappMessage.upgrade.magicBenefit2':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.magicInvite.shareMessage.whatsappMessage.upgrade.magicBenefit3':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.magicInvite.shareMessage.whatsappMessage.upgrade.emailTitle':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.magicInvite.shareMessage.whatsappMessage.upgrade.emailDescription':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.magicInvite.shareMessage.whatsappMessage.upgrade.yourEmail':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.magicInvite.shareMessage.whatsappMessage.upgrade.choosePassword':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.magicInvite.shareMessage.whatsappMessage.upgrade.emailBenefit1':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.magicInvite.shareMessage.whatsappMessage.upgrade.emailBenefit2':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.magicInvite.shareMessage.whatsappMessage.upgrade.emailBenefit3':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.magicInvite.shareMessage.whatsappMessage.upgrade.deviceTitle':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.magicInvite.shareMessage.whatsappMessage.upgrade.deviceDescription':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.magicInvite.shareMessage.whatsappMessage.upgrade.deviceBenefit1':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.magicInvite.shareMessage.whatsappMessage.upgrade.deviceBenefit2':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.magicInvite.shareMessage.whatsappMessage.upgrade.deviceBenefit3':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.magicInvite.shareMessage.whatsappMessage.upgrade.yourFullName':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.magicInvite.shareMessage.whatsappMessage.upgrade.nameRequired':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.magicInvite.shareMessage.whatsappMessage.upgrade.chooseThis':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.magicInvite.shareMessage.whatsappMessage.upgrade.createAccount':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.magicInvite.shareMessage.whatsappMessage.upgrade.stayGuest':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.magicInvite.shareMessage.whatsappMessage.upgrade.accountCreated':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.magicInvite.shareMessage.whatsappMessage.upgrade.createError':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.magicInvite.shareMessage.whatsappMessage.upgrade.creatingAccount':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.magicInvite.shareMessage.whatsappMessage.upgrade.yourCodeIs':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.magicInvite.shareMessage.whatsappMessage.productsPage.noProductsFound':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.magicInvite.shareMessage.whatsappMessage.inventory.finalQuantity':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.magicInvite.shareMessage.whatsappMessage.inventory.refreshFailed':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.magicInvite.shareMessage.whatsappMessage.inventory.reason.normal_usage':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.magicInvite.shareMessage.whatsappMessage.inventory.reason.expired':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.magicInvite.shareMessage.whatsappMessage.inventory.reason.damaged':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.magicInvite.shareMessage.whatsappMessage.inventory.reason.lost':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.magicInvite.shareMessage.whatsappMessage.inventory.reason.found':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.magicInvite.shareMessage.whatsappMessage.inventory.reason.transfer_in':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.magicInvite.shareMessage.whatsappMessage.inventory.reason.transfer_out':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.magicInvite.shareMessage.whatsappMessage.common.retry':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.magicInvite.shareMessage.whatsappMessage.dashboard.assistantDashboard':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.magicInvite.shareMessage.whatsappMessage.dashboard.managerDashboard':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.magicInvite.shareMessage.whatsappMessage.dashboard.ownerDashboard':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.magicInvite.shareMessage.whatsappMessage.dashboard.orderSuggestions':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.magicInvite.shareMessage.whatsappMessage.dashboard.recentOrders':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.magicInvite.shareMessage.whatsappMessage.dashboard.quickScan':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.magicInvite.shareMessage.whatsappMessage.dashboard.analyticsOverview':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.magicInvite.shareMessage.whatsappMessage.dashboard.businessOverview':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.magicInvite.shareMessage.whatsappMessage.dashboard.teamActivity':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.magicInvite.shareMessage.whatsappMessage.dashboard.financialSummary':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.magicInvite.shareMessage.whatsappMessage.dashboard.userManagement':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.magicInvite.shareMessage.whatsappMessage.dashboard.systemHealth':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.magicInvite.shareMessage.whatsappMessage.dashboard.scanProduct':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.magicInvite.shareMessage.whatsappMessage.dashboard.costAnalysis':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.magicInvite.shareMessage.whatsappMessage.dashboard.supplierPerformance':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.magicInvite.shareMessage.whatsappMessage.dashboard.createOrder':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.magicInvite.shareMessage.whatsappMessage.dashboard.noAlerts':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.magicInvite.shareMessage.whatsappMessage.retry':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.magicInvite.shareMessage.whatsappMessage.assistantDashboard':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.magicInvite.shareMessage.whatsappMessage.managerDashboard':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.magicInvite.shareMessage.whatsappMessage.ownerDashboard':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.magicInvite.shareMessage.whatsappMessage.orderSuggestions':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.magicInvite.shareMessage.whatsappMessage.recentOrders':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.magicInvite.shareMessage.whatsappMessage.quickScan':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.magicInvite.shareMessage.whatsappMessage.analyticsOverview':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.magicInvite.shareMessage.whatsappMessage.businessOverview':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.magicInvite.shareMessage.whatsappMessage.teamActivity':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.magicInvite.shareMessage.whatsappMessage.financialSummary':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.magicInvite.shareMessage.whatsappMessage.userManagement':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.magicInvite.shareMessage.whatsappMessage.systemHealth':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.magicInvite.shareMessage.whatsappMessage.scanProduct':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.magicInvite.shareMessage.whatsappMessage.costAnalysis':
+    'inventario',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.magicInvite.shareMessage.whatsappMessage.supplierPerformance':
+    'inventario',
 
-  
   // Inventory specific
-  'inventory.tryDifferentSearchTerm': 'Intenta un término de búsqueda diferente',
+  'inventory.tryDifferentSearchTerm':
+    'Intenta un término de búsqueda diferente',
   'inventory.realTimeConnected': 'Conectado en tiempo real',
   'inventory.realTimeDisconnected': 'Desconectado en tiempo real',
   'inventory.stockUpdatedMessage': 'Inventario actualizado exitosamente',
@@ -3262,377 +4408,379 @@ export default {
   'inventory.reason.found': 'Encontrado',
   'inventory.reason.transfer_in': 'Transferencia entrante',
   'inventory.reason.transfer_out': 'Transferencia saliente',
-  
+
   // Products page
   'productsPage.noProductsFound': 'No se encontraron productos',
 
-    'batch.batchManagement': 'Gestión de lotes',
+  'batch.batchManagement': 'Gestión de lotes',
 
-    'orderLists.title': 'Listas de pedidos',
+  'orderLists.title': 'Listas de pedidos',
 
-    'dashboard.actions.refresh': 'Actualizar dashboard',
+  'dashboard.actions.refresh': 'Actualizar dashboard',
 
-    'dashboard.actions.customize': 'Personalizar dashboard',
+  'dashboard.actions.customize': 'Personalizar dashboard',
 
-    'dashboard.demoRoleSwitch.label': 'Cambiar rol de demo',
+  'dashboard.demoRoleSwitch.label': 'Cambiar rol de demo',
 
-    'dashboard.roles.assistant': '🩺 Asistente - inventario y pedidos',
+  'dashboard.roles.assistant': '🩺 Asistente - inventario y pedidos',
 
-    'dashboard.roles.manager': '📊 Gerente - análisis e informes',
+  'dashboard.roles.manager': '📊 Gerente - análisis e informes',
 
-    'dashboard.roles.owner': '👑 Propietario - control total',
+  'dashboard.roles.owner': '👑 Propietario - control total',
 
-    'dashboard.quickActionLabels.scan': 'Escaneo rápido',
+  'dashboard.quickActionLabels.scan': 'Escaneo rápido',
 
-    'dashboard.quickActionLabels.order': 'Nuevo pedido',
+  'dashboard.quickActionLabels.order': 'Nuevo pedido',
 
-    'dashboard.quickActionLabels.update': 'Actualizar inventario',
+  'dashboard.quickActionLabels.update': 'Actualizar inventario',
 
-    'dashboard.quickActionLabels.export': 'Exportar datos',
+  'dashboard.quickActionLabels.export': 'Exportar datos',
 
-    'dashboard.quickActionLabels.default': 'Acción',
+  'dashboard.quickActionLabels.default': 'Acción',
 
-    'dashboard.alerts.noWarnings': 'Sin advertencias',
+  'dashboard.alerts.noWarnings': 'Sin advertencias',
 
-    'dashboard.alerts.allStockLevelsOk': 'Todos los niveles de stock están bien',
+  'dashboard.alerts.allStockLevelsOk': 'Todos los niveles de stock están bien',
 
-    'dashboard.notifications.roleSwitch': 'El dashboard se ha adaptado a tu nuevo rol',
+  'dashboard.notifications.roleSwitch':
+    'El dashboard se ha adaptado a tu nuevo rol',
   'quickAdjustment.noProduct': 'Sin producto',
 
-    'common.live': 'En vivo',
+  'common.live': 'En vivo',
 
-    'app.name': 'Remcura',
+  'app.name': 'Remcura',
 
-    'barcodeScanner.scanLabel': 'Escanear producto',
+  'barcodeScanner.scanLabel': 'Escanear producto',
 
-    'nav.dashboard': 'Panel',
+  'nav.dashboard': 'Panel',
 
-    'nav.products': 'Productos',
+  'nav.products': 'Productos',
 
-    'nav.orders': 'Pedidos',
+  'nav.orders': 'Pedidos',
 
-    'barcodeScanner.enterBarcode': 'Ingrese código de barras',
+  'barcodeScanner.enterBarcode': 'Ingrese código de barras',
 
-    'exports.formats.excel': 'Excel (.xlsx)',
+  'exports.formats.excel': 'Excel (.xlsx)',
 
-    'exports.formats.csv': 'CSV (.csv)',
+  'exports.formats.csv': 'CSV (.csv)',
 
-    'exports.formats.pdf': 'PDF (.pdf)',
+  'exports.formats.pdf': 'PDF (.pdf)',
 
-    'settings.languages.dutch': 'Neerlandés',
+  'settings.languages.dutch': 'Neerlandés',
 
-    'settings.languages.english': 'Inglés',
+  'settings.languages.english': 'Inglés',
 
-    'settings.languages.spanish': 'Español',
+  'settings.languages.spanish': 'Español',
 
-    'dashboard.widgets.teamMembers': 'Miembros del equipo',
+  'dashboard.widgets.teamMembers': 'Miembros del equipo',
 
-    'dashboard.widgets.systemStatus': 'Estado del sistema',
+  'dashboard.widgets.systemStatus': 'Estado del sistema',
 
-      'currencies.eur': 'EUR (€)',
+  'currencies.eur': 'EUR (€)',
   'currencies.usd': 'USD ($)',
   'currencies.gbp': 'GBP (£)',
 
-    'productsPage.title': 'Productos',
+  'productsPage.title': 'Productos',
 
-    'productsPage.subtitle': 'Gestiona tu catálogo de productos e inventario',
+  'productsPage.subtitle': 'Gestiona tu catálogo de productos e inventario',
 
-    'common.refresh': 'Actualizar',
+  'common.refresh': 'Actualizar',
 
-    'products.createProduct': 'Crear producto',
+  'products.createProduct': 'Crear producto',
 
-    'productsPage.viewCart': 'Ver carrito',
+  'productsPage.viewCart': 'Ver carrito',
 
-    'productsPage.noGs1Data': 'Datos GS1 no disponibles',
+  'productsPage.noGs1Data': 'Datos GS1 no disponibles',
 
-    'productsPage.viewDetails': 'Ver detalles',
+  'productsPage.viewDetails': 'Ver detalles',
 
-    'products.editProduct': 'Editar producto',
+  'products.editProduct': 'Editar producto',
 
-    'products.deleteProduct': 'Eliminar producto',
+  'products.deleteProduct': 'Eliminar producto',
 
-    'productsPage.addToCart': 'Agregar al carrito',
+  'productsPage.addToCart': 'Agregar al carrito',
 
-    'productsPage.addToOrderList': 'Agregar a lista de pedidos',
+  'productsPage.addToOrderList': 'Agregar a lista de pedidos',
 
-    'productsPage.productDetails': 'Detalles del producto',
+  'productsPage.productDetails': 'Detalles del producto',
 
-    'productsPage.description': 'Descripción',
+  'productsPage.description': 'Descripción',
 
-    'productsPage.unit': 'Unidad',
+  'productsPage.unit': 'Unidad',
 
-    'productsPage.category': 'Categoría',
+  'productsPage.category': 'Categoría',
 
-    'productsPage.gs1Information': 'Información GS1',
+  'productsPage.gs1Information': 'Información GS1',
 
-    'productsPage.lifecycle': 'Ciclo de vida',
+  'productsPage.lifecycle': 'Ciclo de vida',
 
-    'productsPage.suppliers': 'Proveedores',
+  'productsPage.suppliers': 'Proveedores',
 
-    'productsPage.stockLevels': 'Niveles de inventario',
+  'productsPage.stockLevels': 'Niveles de inventario',
 
-    'products.deleteConfirm': 'Eliminar producto',
+  'products.deleteConfirm': 'Eliminar producto',
 
-    'common.cancel': 'Cancelar',
+  'common.cancel': 'Cancelar',
 
-    'common.delete': 'Eliminar',
+  'common.delete': 'Eliminar',
 
-    'orders.title': 'Title',
+  'orders.title': 'Title',
 
-    'orders.bulkExport': 'BulkExport',
+  'orders.bulkExport': 'BulkExport',
 
-    'orders.bulkEmail': 'BulkEmail',
+  'orders.bulkEmail': 'BulkEmail',
 
-    'orders.viewOrder': 'ViewOrder',
+  'orders.viewOrder': 'ViewOrder',
 
-    'orders.editOrder': 'EditOrder',
+  'orders.editOrder': 'EditOrder',
 
-    'orders.downloadOrder': 'DownloadOrder',
+  'orders.downloadOrder': 'DownloadOrder',
 
-    'orders.export.title': 'Title',
+  'orders.export.title': 'Title',
 
-    'orders.export.format': 'Format',
+  'orders.export.format': 'Format',
 
-    'orders.export.dateFrom': 'DateFrom',
+  'orders.export.dateFrom': 'DateFrom',
 
-    'orders.export.dateTo': 'DateTo',
+  'orders.export.dateTo': 'DateTo',
 
-    'orders.export.export': 'Export',
+  'orders.export.export': 'Export',
 
-    'orders.analytics.title': 'Title',
+  'orders.analytics.title': 'Title',
 
-    'orders.analytics.comingSoon': 'ComingSoon',
+  'orders.analytics.comingSoon': 'ComingSoon',
 
-    'common.close': 'Close',
+  'common.close': 'Close',
 
-    'orderLists.subtitle': 'Gestiona tus listas de pedidos y envía a proveedores',
+  'orderLists.subtitle': 'Gestiona tus listas de pedidos y envía a proveedores',
 
-    'orderLists.create': 'Crear lista de pedidos',
+  'orderLists.create': 'Crear lista de pedidos',
 
-    'orderLists.supplier': 'Proveedor',
+  'orderLists.supplier': 'Proveedor',
 
-    'orderLists.totalItems': 'Total artículos',
+  'orderLists.totalItems': 'Total artículos',
 
-    'orderLists.totalAmount': 'Monto total',
+  'orderLists.totalAmount': 'Monto total',
 
-    'orderLists.updatedAt': 'Actualizado en',
+  'orderLists.updatedAt': 'Actualizado en',
 
-    'orderLists.edit': 'Editar',
+  'orderLists.edit': 'Editar',
 
-    'orderLists.submit': 'Enviar',
+  'orderLists.submit': 'Enviar',
 
-    'orderLists.sendToSupplier': 'Enviar al proveedor',
+  'orderLists.sendToSupplier': 'Enviar al proveedor',
 
-    'orderLists.addToCart': 'Agregar al carrito',
+  'orderLists.addToCart': 'Agregar al carrito',
 
-    'orderLists.duplicate': 'Duplicar',
+  'orderLists.duplicate': 'Duplicar',
 
-    'orderLists.autoFill': 'Llenar automáticamente',
+  'orderLists.autoFill': 'Llenar automáticamente',
 
-    'orderLists.delete': 'Eliminar',
+  'orderLists.delete': 'Eliminar',
 
-    'orderLists.noLists': 'No se encontraron listas de pedidos',
+  'orderLists.noLists': 'No se encontraron listas de pedidos',
 
-    'orderLists.createNew': 'Crea tu primera lista de pedidos',
+  'orderLists.createNew': 'Crea tu primera lista de pedidos',
 
-    'orderLists.deleteDialog': 'Eliminar lista de pedidos',
+  'orderLists.deleteDialog': 'Eliminar lista de pedidos',
 
-    'orderLists.deleteConfirm': '¿Estás seguro de que quieres eliminar esta lista de pedidos?',
+  'orderLists.deleteConfirm':
+    '¿Estás seguro de que quieres eliminar esta lista de pedidos?',
 
-    'inventory.stockLevels': 'Niveles de inventario',
+  'inventory.stockLevels': 'Niveles de inventario',
 
-    'inventory.overview': 'Resumen',
+  'inventory.overview': 'Resumen',
 
-    'inventory.totalProducts': 'Total productos',
+  'inventory.totalProducts': 'Total productos',
 
-    'inventory.products': 'Productos',
+  'inventory.products': 'Productos',
 
-    'inventory.stockLocations': 'Ubicaciones de inventario',
+  'inventory.stockLocations': 'Ubicaciones de inventario',
 
-    'inventory.activeLocations': 'Ubicaciones activas',
+  'inventory.activeLocations': 'Ubicaciones activas',
 
-    'inventory.locations': 'Ubicaciones',
+  'inventory.locations': 'Ubicaciones',
 
-    'inventory.dataLoaded': 'Datos cargados',
+  'inventory.dataLoaded': 'Datos cargados',
 
-    'inventory.upToDate': 'Actualizado',
+  'inventory.upToDate': 'Actualizado',
 
-    'inventory.status': 'Estado',
+  'inventory.status': 'Estado',
 
-    'inventory.lastUpdated': 'Última actualización',
+  'inventory.lastUpdated': 'Última actualización',
 
-    'inventory.refreshData': 'Actualizar datos',
+  'inventory.refreshData': 'Actualizar datos',
 
-    'inventory.lastSync': 'Última sincronización',
+  'inventory.lastSync': 'Última sincronización',
 
-    'inventory.noStockLevels': 'No se encontraron niveles de inventario',
+  'inventory.noStockLevels': 'No se encontraron niveles de inventario',
 
-    'inventory.adjustStock': 'Ajustar inventario',
+  'inventory.adjustStock': 'Ajustar inventario',
 
-    'inventory.viewHistory': 'Ver historial',
+  'inventory.viewHistory': 'Ver historial',
 
-    'inventory.countStock': 'Contar inventario',
+  'inventory.countStock': 'Contar inventario',
 
-    'inventory.currentStock': 'Inventario actual',
+  'inventory.currentStock': 'Inventario actual',
 
-    'inventory.adjustmentType': 'Tipo de ajuste',
+  'inventory.adjustmentType': 'Tipo de ajuste',
 
-    'inventory.quantity': 'Cantidad',
+  'inventory.quantity': 'Cantidad',
 
-    'validation.required': 'Este campo es obligatorio',
+  'validation.required': 'Este campo es obligatorio',
 
-    'inventory.reason': 'Razón',
+  'inventory.reason': 'Razón',
 
-    'counting.title': 'Conteo de inventario',
+  'counting.title': 'Conteo de inventario',
 
-    'counting.overview': 'Resumen de sesiones de conteo',
+  'counting.overview': 'Resumen de sesiones de conteo',
 
-    'counting.sessionStatus': 'Estado de sesión',
+  'counting.sessionStatus': 'Estado de sesión',
 
-    'counting.startSession': 'Iniciar nueva sesión',
+  'counting.startSession': 'Iniciar nueva sesión',
 
-    'counting.activeSession': 'Sesión activa',
+  'counting.activeSession': 'Sesión activa',
 
-    'counting.progress': 'Progreso',
+  'counting.progress': 'Progreso',
 
-    'counting.sessionType': 'Tipo de sesión',
+  'counting.sessionType': 'Tipo de sesión',
 
-    'common.startedAt': 'Iniciado en',
+  'common.startedAt': 'Iniciado en',
 
-    'counting.discrepancies': 'Discrepancias',
+  'counting.discrepancies': 'Discrepancias',
 
-    'counting.continueSession': 'Continuar sesión',
+  'counting.continueSession': 'Continuar sesión',
 
-    'counting.completeSession': 'Completar sesión',
+  'counting.completeSession': 'Completar sesión',
 
-    'counting.sessionsOverview': 'Resumen de sesiones',
+  'counting.sessionsOverview': 'Resumen de sesiones',
 
-    'counting.loadingSessions': 'Cargando sesiones...',
+  'counting.loadingSessions': 'Cargando sesiones...',
 
-    'counting.noSessionsFound': 'No se encontraron sesiones',
+  'counting.noSessionsFound': 'No se encontraron sesiones',
 
-    'common.view': 'Ver',
+  'common.view': 'Ver',
 
-    'counting.approveSession': 'Aprobar sesión',
+  'counting.approveSession': 'Aprobar sesión',
 
-    'counting.loadingSession': 'Cargando sesión...',
+  'counting.loadingSession': 'Cargando sesión...',
 
-    'counting.sessionNotFound': 'Sesión no encontrada',
+  'counting.sessionNotFound': 'Sesión no encontrada',
 
-    'counting.sessionNotFoundDescription': 'La sesión solicitada no existe o ha sido eliminada',
+  'counting.sessionNotFoundDescription':
+    'La sesión solicitada no existe o ha sido eliminada',
 
-    'common.goBack': 'Volver',
+  'common.goBack': 'Volver',
 
-    'counting.sessionSummary': 'Resumen de sesión',
+  'counting.sessionSummary': 'Resumen de sesión',
 
-    'counting.totalProducts': 'Total productos',
+  'counting.totalProducts': 'Total productos',
 
-    'counting.countedProducts': 'Productos contados',
+  'counting.countedProducts': 'Productos contados',
 
-    'common.completedAt': 'Completado en',
+  'common.completedAt': 'Completado en',
 
-    'counting.countingResults': 'Resultados del conteo',
+  'counting.countingResults': 'Resultados del conteo',
 
-    'counting.viewResults': 'Ver los resultados de este conteo',
+  'counting.viewResults': 'Ver los resultados de este conteo',
 
-    'counting.noResultsFound': 'No se encontraron resultados',
+  'counting.noResultsFound': 'No se encontraron resultados',
 
-    'locations.title': 'Ubicaciones',
+  'locations.title': 'Ubicaciones',
 
-    'locations.manage': 'Gestionar ubicaciones',
+  'locations.manage': 'Gestionar ubicaciones',
 
-    'locations.allLocations': 'Todas las ubicaciones',
+  'locations.allLocations': 'Todas las ubicaciones',
 
-    'locations.mainLocations': 'Ubicaciones principales',
+  'locations.mainLocations': 'Ubicaciones principales',
 
-    'locations.comingSoonDescription': 'Gestión de ubicaciones próximamente',
+  'locations.comingSoonDescription': 'Gestión de ubicaciones próximamente',
 
-    'locations.add': 'Agregar ubicación',
+  'locations.add': 'Agregar ubicación',
 
-    'locations.noLocations': 'No se encontraron ubicaciones',
+  'locations.noLocations': 'No se encontraron ubicaciones',
 
-    'inventory.stockMovements': 'Movimientos de inventario',
+  'inventory.stockMovements': 'Movimientos de inventario',
 
-    'inventory.movementHistory': 'Historial de movimientos',
+  'inventory.movementHistory': 'Historial de movimientos',
 
-    'common.export': 'Exportar',
+  'common.export': 'Exportar',
 
-    'inventory.loadingMovements': 'Cargando movimientos...',
+  'inventory.loadingMovements': 'Cargando movimientos...',
 
-    'inventory.noMovementsFound': 'No se encontraron movimientos',
+  'inventory.noMovementsFound': 'No se encontraron movimientos',
 
-    'common.unknownProduct': 'Producto desconocido',
+  'common.unknownProduct': 'Producto desconocido',
 
-    'common.unknownLocation': 'Ubicación desconocida',
+  'common.unknownLocation': 'Ubicación desconocida',
 
-    'inventory.movementDetails': 'Detalles del movimiento',
+  'inventory.movementDetails': 'Detalles del movimiento',
 
-    'inventory.movementType': 'Tipo de movimiento',
+  'inventory.movementType': 'Tipo de movimiento',
 
-    'inventory.product': 'Producto',
+  'inventory.product': 'Producto',
 
-    'common.noSku': 'Sin SKU',
+  'common.noSku': 'Sin SKU',
 
-    'inventory.location': 'Ubicación',
+  'inventory.location': 'Ubicación',
 
-    'inventory.quantityChange': 'Cambio de cantidad',
+  'inventory.quantityChange': 'Cambio de cantidad',
 
-    'inventory.quantityBefore': 'Cantidad antes',
+  'inventory.quantityBefore': 'Cantidad antes',
 
-    'inventory.quantityAfter': 'Cantidad después',
+  'inventory.quantityAfter': 'Cantidad después',
 
-    'inventory.reasonCode': 'Código de razón',
+  'inventory.reasonCode': 'Código de razón',
 
-    'common.notes': 'Notas',
+  'common.notes': 'Notas',
 
-    'common.date': 'Fecha',
+  'common.date': 'Fecha',
 
-    'inventory.minimumStock': 'Stock mínimo',
+  'inventory.minimumStock': 'Stock mínimo',
 
-    'productsPage.table.stockType': 'Tipo de stock',
+  'productsPage.table.stockType': 'Tipo de stock',
 
-    'orderLists.searchPlaceholder': 'Buscar listas de pedidos...',
+  'orderLists.searchPlaceholder': 'Buscar listas de pedidos...',
 
-    'orderLists.dateRange': 'Rango de fechas',
+  'orderLists.dateRange': 'Rango de fechas',
 
-    'orderLists.amountRange': 'Rango de monto',
+  'orderLists.amountRange': 'Rango de monto',
 
-    'orderLists.onlyWithItems': 'Solo con artículos',
+  'orderLists.onlyWithItems': 'Solo con artículos',
 
-    'filters.search.placeholder': 'Buscar...',
+  'filters.search.placeholder': 'Buscar...',
 
-    'filters.location.label': 'Ubicación',
+  'filters.location.label': 'Ubicación',
 
-    'filters.category.label': 'Categoría',
+  'filters.category.label': 'Categoría',
 
-    'filters.status.label': 'Estado',
+  'filters.status.label': 'Estado',
 
-    'orders.status.draft': 'Borrador',
+  'orders.status.draft': 'Borrador',
 
-    'orders.status.pending': 'Pendiente',
+  'orders.status.pending': 'Pendiente',
 
-    'orders.status.confirmed': 'Confirmado',
+  'orders.status.confirmed': 'Confirmado',
 
-    'orders.status.shipped': 'Enviado',
+  'orders.status.shipped': 'Enviado',
 
-    'orders.status.delivered': 'Entregado',
+  'orders.status.delivered': 'Entregado',
 
-    'orders.status.cancelled': 'Cancelado',
+  'orders.status.cancelled': 'Cancelado',
 
-    'orders.status.returned': 'Devuelto',
+  'orders.status.returned': 'Devuelto',
 
-    'orders.table.orderNumber': 'Número de pedido',
+  'orders.table.orderNumber': 'Número de pedido',
 
-    'orders.table.supplier': 'Proveedor',
+  'orders.table.supplier': 'Proveedor',
 
-    'orders.table.orderDate': 'Fecha del pedido',
+  'orders.table.orderDate': 'Fecha del pedido',
 
-    'orders.table.status': 'Estado',
+  'orders.table.status': 'Estado',
 
-    'orders.table.totalAmount': 'Monto total',
+  'orders.table.totalAmount': 'Monto total',
 
-    'orders.table.expectedDelivery': 'Entrega esperada',
+  'orders.table.expectedDelivery': 'Entrega esperada',
 
-    'orders.table.actions': 'Acciones',
-
+  'orders.table.actions': 'Acciones',
 };

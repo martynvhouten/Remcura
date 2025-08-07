@@ -90,14 +90,18 @@ export class ActionQueue {
    * Get failed actions (those that have reached max retries)
    */
   get failedActions(): OfflineAction[] {
-    return this.actions.value.filter(action => action.retry_count >= this.maxRetries);
+    return this.actions.value.filter(
+      action => action.retry_count >= this.maxRetries
+    );
   }
 
   /**
    * Get pending actions (those that haven't reached max retries)
    */
   get pendingActions(): OfflineAction[] {
-    return this.actions.value.filter(action => action.retry_count < this.maxRetries);
+    return this.actions.value.filter(
+      action => action.retry_count < this.maxRetries
+    );
   }
 
   /**
@@ -125,18 +129,24 @@ export class ActionQueue {
   /**
    * Execute a single action
    */
-  private async executeAction(action: OfflineAction): Promise<ActionSyncResult> {
+  private async executeAction(
+    action: OfflineAction
+  ): Promise<ActionSyncResult> {
     const executor = this.executors.get(action.table);
-    
+
     if (!executor) {
       const error = new Error($t('actionqueu.noexecutorregisteredfor'));
-      ServiceErrorHandler.handle(error, {
-        service: 'ActionQueue',
-        operation: 'executeAction',
-        practiceId: action.practice_id,
-        userId: action.user_id,
-        metadata: { actionId: action.id, table: action.table },
-      }, { rethrow: false });
+      ServiceErrorHandler.handle(
+        error,
+        {
+          service: 'ActionQueue',
+          operation: 'executeAction',
+          practiceId: action.practice_id,
+          userId: action.user_id,
+          metadata: { actionId: action.id, table: action.table },
+        },
+        { rethrow: false }
+      );
 
       return {
         success: false,
@@ -152,13 +162,21 @@ export class ActionQueue {
         action,
       };
     } catch (error) {
-      ServiceErrorHandler.handle(error, {
-        service: 'ActionQueue',
-        operation: 'executeAction',
-        practiceId: action.practice_id,
-        userId: action.user_id,
-        metadata: { actionId: action.id, table: action.table, retryCount: action.retry_count },
-      }, { rethrow: false });
+      ServiceErrorHandler.handle(
+        error,
+        {
+          service: 'ActionQueue',
+          operation: 'executeAction',
+          practiceId: action.practice_id,
+          userId: action.user_id,
+          metadata: {
+            actionId: action.id,
+            table: action.table,
+            retryCount: action.retry_count,
+          },
+        },
+        { rethrow: false }
+      );
 
       return {
         success: false,
@@ -172,7 +190,9 @@ export class ActionQueue {
    * Remove action from queue
    */
   removeAction(actionId: string): boolean {
-    const index = this.actions.value.findIndex(action => action.id === actionId);
+    const index = this.actions.value.findIndex(
+      action => action.id === actionId
+    );
     if (index !== -1) {
       this.actions.value.splice(index, 1);
       this.saveToStorage();
@@ -188,7 +208,7 @@ export class ActionQueue {
     const action = this.actions.value.find(a => a.id === actionId);
     if (action) {
       action.retry_count++;
-      
+
       // If max retries reached, log it
       if (action.retry_count >= this.maxRetries) {
         console.error('Max retries reached for action:', action);
@@ -243,11 +263,11 @@ export class ActionQueue {
     this.actions.value.sort((a, b) => {
       const priorityA = a.priority || 5;
       const priorityB = b.priority || 5;
-      
+
       if (priorityA !== priorityB) {
         return priorityA - priorityB;
       }
-      
+
       // If same priority, sort by timestamp (older first)
       return a.timestamp.getTime() - b.timestamp.getTime();
     });
@@ -290,4 +310,4 @@ export class ActionQueue {
 }
 
 // Export singleton instance
-export const actionQueue = new ActionQueue(); 
+export const actionQueue = new ActionQueue();

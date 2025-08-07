@@ -14,23 +14,24 @@ Een herbruikbare basiscomponent voor alle dashboard- en platform-widgets in het 
 
 ## Props
 
-| Prop | Type | Default | Beschrijving |
-|------|------|---------|--------------|
-| `title` | `string` | `undefined` | Optionele widget titel |
-| `loading` | `boolean` | `false` | Toont loading overlay |
-| `hideHeader` | `boolean` | `false` | Verbergt header sectie |
-| `cardClass` | `string` | `''` | Extra CSS classes |
+| Prop         | Type      | Default     | Beschrijving           |
+| ------------ | --------- | ----------- | ---------------------- |
+| `title`      | `string`  | `undefined` | Optionele widget titel |
+| `loading`    | `boolean` | `false`     | Toont loading overlay  |
+| `hideHeader` | `boolean` | `false`     | Verbergt header sectie |
+| `cardClass`  | `string`  | `''`        | Extra CSS classes      |
 
 ## Slots
 
-| Slot | Beschrijving |
-|------|--------------|
-| `default` | Hoofdinhoud van de widget |
+| Slot      | Beschrijving                             |
+| --------- | ---------------------------------------- |
+| `default` | Hoofdinhoud van de widget                |
 | `actions` | Acties in header (buttons, menu's, etc.) |
 
 ## Gebruik
 
 ### Basic gebruik
+
 ```vue
 <template>
   <BaseDashboardWidget title="Recent Orders">
@@ -46,6 +47,7 @@ import { BaseDashboardWidget } from '@/components/cards';
 ```
 
 ### Met acties
+
 ```vue
 <template>
   <BaseDashboardWidget title="Stock Alerts">
@@ -53,7 +55,7 @@ import { BaseDashboardWidget } from '@/components/cards';
       <q-btn flat round dense icon="refresh" @click="refresh" />
       <q-btn flat round dense icon="settings" @click="configure" />
     </template>
-    
+
     <div class="p-4">
       <!-- Widget content -->
     </div>
@@ -62,12 +64,10 @@ import { BaseDashboardWidget } from '@/components/cards';
 ```
 
 ### Loading state
+
 ```vue
 <template>
-  <BaseDashboardWidget 
-    title="Analytics" 
-    :loading="isLoading"
-  >
+  <BaseDashboardWidget title="Analytics" :loading="isLoading">
     <div class="p-4">
       <!-- Content wordt automatisch geblokkeerd tijdens loading -->
     </div>
@@ -82,6 +82,7 @@ const isLoading = ref(true);
 ```
 
 ### Zonder header
+
 ```vue
 <template>
   <BaseDashboardWidget hide-header>
@@ -96,11 +97,13 @@ const isLoading = ref(true);
 ## Styling
 
 De component gebruikt:
+
 - **Tailwind CSS**: Voor utility classes en responsive design
 - **CSS Custom Properties**: Voor theming en dark mode
 - **Quasar Components**: Voor consistent UI elementen
 
 ### CSS Variables
+
 ```css
 :root {
   --widget-background: var(--surface, #ffffff);
@@ -114,6 +117,7 @@ De component gebruikt:
 ## Migratie
 
 ### Van bestaande DashboardWidget
+
 ```vue
 <!-- Voor -->
 <DashboardWidget :widget="widgetData" :loading="loading">
@@ -121,15 +125,13 @@ De component gebruikt:
 </DashboardWidget>
 
 <!-- Na -->
-<BaseDashboardWidget 
-  :title="widgetData.title" 
-  :loading="loading"
->
+<BaseDashboardWidget :title="widgetData.title" :loading="loading">
   <!-- content -->
 </BaseDashboardWidget>
 ```
 
 ### Van bestaande PlatformWidget
+
 ```vue
 <!-- Voor -->
 <PlatformWidget :widget="widgetData">
@@ -137,10 +139,7 @@ De component gebruikt:
 </PlatformWidget>
 
 <!-- Na -->
-<BaseDashboardWidget 
-  :title="widgetData.title"
-  :loading="widgetData.loading"
->
+<BaseDashboardWidget :title="widgetData.title" :loading="widgetData.loading">
   <template #actions>
     <q-btn flat round dense icon="refresh" />
   </template>
@@ -160,6 +159,7 @@ const props = defineProps<BaseDashboardWidgetProps>();
 ## Design Tokens
 
 De component volgt de bestaande Remcura design tokens:
+
 - **Border radius**: `12px` (rounded-xl)
 - **Shadow**: Consistent met andere cards
 - **Spacing**: Tailwind spacing scale

@@ -1,13 +1,17 @@
 // Enhanced Magento API service with full implementation
-import { handleApiError, ServiceErrorHandler, validateRequired } from 'src/utils/service-error-handler';
+import {
+  handleApiError,
+  ServiceErrorHandler,
+  validateRequired,
+} from 'src/utils/service-error-handler';
 import { supabase } from 'src/services/supabase';
 import { useAuthStore } from 'src/stores/auth';
-import type { 
-  MagentoConfig, 
-  MagentoOrder, 
-  MagentoOrderItem, 
+import type {
+  MagentoConfig,
+  MagentoOrder,
+  MagentoOrderItem,
   MagentoProduct,
-  MagentoSearchCriteria
+  MagentoSearchCriteria,
 } from '@/types/magento';
 
 export interface MagentoOrder {
@@ -119,13 +123,16 @@ class MagentoApiService {
    * Configure the Magento API service
    */
   configure(config: MagentoConfig): void {
-    validateRequired({
-      baseUrl: config.baseUrl,
-      token: config.token,
-    }, {
-      service: 'MagentoApiService',
-      operation: 'configure',
-    });
+    validateRequired(
+      {
+        baseUrl: config.baseUrl,
+        token: config.token,
+      },
+      {
+        service: 'MagentoApiService',
+        operation: 'configure',
+      }
+    );
 
     this.config = {
       ...config,
@@ -146,14 +153,17 @@ class MagentoApiService {
 
     try {
       const controller = new AbortController();
-      const timeoutId = setTimeout(() => controller.abort(), this.config.timeout);
+      const timeoutId = setTimeout(
+        () => controller.abort(),
+        this.config.timeout
+      );
 
       const response = await fetch(url, {
         ...options,
         headers: {
           Authorization: `Bearer ${this.config.token}`,
           'Content-Type': 'application/json',
-          'Store': this.config.storeCode || 'default',
+          Store: this.config.storeCode || 'default',
           ...options.headers,
         },
         signal: controller.signal,
@@ -168,7 +178,11 @@ class MagentoApiService {
           {
             service: 'MagentoApiService',
             operation: 'makeRequest',
-            metadata: { endpoint, method: options.method || 'GET', status: response.status },
+            metadata: {
+              endpoint,
+              method: options.method || 'GET',
+              status: response.status,
+            },
           }
         );
       }
@@ -176,16 +190,13 @@ class MagentoApiService {
       return response.json();
     } catch (error) {
       if (error.name === 'AbortError') {
-        handleApiError(
-          new Error($t('index.requesttimeout')),
-          {
-            service: 'MagentoApiService',
-            operation: 'makeRequest',
-            metadata: { endpoint, timeout: this.config.timeout },
-          }
-        );
+        handleApiError(new Error($t('index.requesttimeout')), {
+          service: 'MagentoApiService',
+          operation: 'makeRequest',
+          metadata: { endpoint, timeout: this.config.timeout },
+        });
       }
-      
+
       handleApiError(error, {
         service: 'MagentoApiService',
         operation: 'makeRequest',
@@ -230,7 +241,7 @@ class MagentoApiService {
     lastTested?: Date;
   }> {
     const configured = this.isConfigured();
-    
+
     if (!configured) {
       return {
         configured: false,
@@ -240,7 +251,7 @@ class MagentoApiService {
     }
 
     const connectionTest = await this.testConnection();
-    
+
     return {
       configured: true,
       connected: connectionTest.success,
@@ -253,7 +264,11 @@ class MagentoApiService {
    * Create search criteria helper
    */
   createSearchCriteria(options: {
-    filters?: Array<{ field: string; value: string | number; condition?: string }>;
+    filters?: Array<{
+      field: string;
+      value: string | number;
+      condition?: string;
+    }>;
     sortBy?: string;
     sortDirection?: 'ASC' | 'DESC';
     pageSize?: number;
@@ -262,20 +277,24 @@ class MagentoApiService {
     const criteria: MagentoSearchCriteria = {};
 
     if (options.filters && options.filters.length > 0) {
-      criteria.filterGroups = [{
-        filters: options.filters.map(filter => ({
-          field: filter.field,
-          value: filter.value,
-          condition_type: filter.condition || 'eq',
-        })),
-      }];
+      criteria.filterGroups = [
+        {
+          filters: options.filters.map(filter => ({
+            field: filter.field,
+            value: filter.value,
+            condition_type: filter.condition || 'eq',
+          })),
+        },
+      ];
     }
 
     if (options.sortBy) {
-      criteria.sortOrders = [{
-        field: options.sortBy,
-        direction: options.sortDirection || 'ASC',
-      }];
+      criteria.sortOrders = [
+        {
+          field: options.sortBy,
+          direction: options.sortDirection || 'ASC',
+        },
+      ];
     }
 
     if (options.pageSize) {
@@ -290,21 +309,36 @@ class MagentoApiService {
   }
 
   // Order management
-  async getOrders(searchCriteria?: MagentoSearchCriteria): Promise<MagentoOrder[]> {
+  async getOrders(
+    searchCriteria?: MagentoSearchCriteria
+  ): Promise<MagentoOrder[]> {
     const endpoint = '/orders';
     const params: string[] = [];
     if (searchCriteria) {
-      if (searchCriteria.filterGroups && searchCriteria.filterGroups.length > 0) {
-        params.push(`searchCriteria[filter_groups]=${JSON.stringify(searchCriteria.filterGroups)}`);
+      if (
+        searchCriteria.filterGroups &&
+        searchCriteria.filterGroups.length > 0
+      ) {
+        params.push(
+          `searchCriteria[filter_groups]=${JSON.stringify(
+            searchCriteria.filterGroups
+          )}`
+        );
       }
       if (searchCriteria.sortOrders && searchCriteria.sortOrders.length > 0) {
-        params.push(`searchCriteria[sort_orders]=${JSON.stringify(searchCriteria.sortOrders)}`);
+        params.push(
+          `searchCriteria[sort_orders]=${JSON.stringify(
+            searchCriteria.sortOrders
+          )}`
+        );
       }
       if (searchCriteria.pageSize) {
         params.push(`searchCriteria[page_size]=${searchCriteria.pageSize}`);
       }
       if (searchCriteria.currentPage) {
-        params.push(`searchCriteria[current_page]=${searchCriteria.currentPage}`);
+        params.push(
+          `searchCriteria[current_page]=${searchCriteria.currentPage}`
+        );
       }
     }
     const queryString = params.length > 0 ? `?${params.join('&')}` : '';
@@ -318,26 +352,41 @@ class MagentoApiService {
   async createOrder(orderData: MagentoOrder): Promise<MagentoOrder> {
     return this.makeRequest('/orders', {
       method: 'POST',
-      body: JSON.stringify({ entity: orderData })
+      body: JSON.stringify({ entity: orderData }),
     });
   }
 
   // Invoice management
-  async getInvoices(searchCriteria?: MagentoSearchCriteria): Promise<MagentoInvoice[]> {
+  async getInvoices(
+    searchCriteria?: MagentoSearchCriteria
+  ): Promise<MagentoInvoice[]> {
     const endpoint = '/invoices';
     const params: string[] = [];
     if (searchCriteria) {
-      if (searchCriteria.filterGroups && searchCriteria.filterGroups.length > 0) {
-        params.push(`searchCriteria[filter_groups]=${JSON.stringify(searchCriteria.filterGroups)}`);
+      if (
+        searchCriteria.filterGroups &&
+        searchCriteria.filterGroups.length > 0
+      ) {
+        params.push(
+          `searchCriteria[filter_groups]=${JSON.stringify(
+            searchCriteria.filterGroups
+          )}`
+        );
       }
       if (searchCriteria.sortOrders && searchCriteria.sortOrders.length > 0) {
-        params.push(`searchCriteria[sort_orders]=${JSON.stringify(searchCriteria.sortOrders)}`);
+        params.push(
+          `searchCriteria[sort_orders]=${JSON.stringify(
+            searchCriteria.sortOrders
+          )}`
+        );
       }
       if (searchCriteria.pageSize) {
         params.push(`searchCriteria[page_size]=${searchCriteria.pageSize}`);
       }
       if (searchCriteria.currentPage) {
-        params.push(`searchCriteria[current_page]=${searchCriteria.currentPage}`);
+        params.push(
+          `searchCriteria[current_page]=${searchCriteria.currentPage}`
+        );
       }
     }
     const queryString = params.length > 0 ? `?${params.join('&')}` : '';
@@ -349,33 +398,54 @@ class MagentoApiService {
   }
 
   // Product management
-  async getProducts(searchCriteria?: MagentoSearchCriteria): Promise<MagentoProduct[]> {
+  async getProducts(
+    searchCriteria?: MagentoSearchCriteria
+  ): Promise<MagentoProduct[]> {
     // If Magento API is configured, try to use it first
     if (this.isConfigured()) {
       try {
         const endpoint = '/products';
         const params: string[] = [];
         if (searchCriteria) {
-          if (searchCriteria.filterGroups && searchCriteria.filterGroups.length > 0) {
-            params.push(`searchCriteria[filter_groups]=${JSON.stringify(searchCriteria.filterGroups)}`);
+          if (
+            searchCriteria.filterGroups &&
+            searchCriteria.filterGroups.length > 0
+          ) {
+            params.push(
+              `searchCriteria[filter_groups]=${JSON.stringify(
+                searchCriteria.filterGroups
+              )}`
+            );
           }
-          if (searchCriteria.sortOrders && searchCriteria.sortOrders.length > 0) {
-            params.push(`searchCriteria[sort_orders]=${JSON.stringify(searchCriteria.sortOrders)}`);
+          if (
+            searchCriteria.sortOrders &&
+            searchCriteria.sortOrders.length > 0
+          ) {
+            params.push(
+              `searchCriteria[sort_orders]=${JSON.stringify(
+                searchCriteria.sortOrders
+              )}`
+            );
           }
           if (searchCriteria.pageSize) {
             params.push(`searchCriteria[page_size]=${searchCriteria.pageSize}`);
           }
           if (searchCriteria.currentPage) {
-            params.push(`searchCriteria[current_page]=${searchCriteria.currentPage}`);
+            params.push(
+              `searchCriteria[current_page]=${searchCriteria.currentPage}`
+            );
           }
         }
         const queryString = params.length > 0 ? `?${params.join('&')}` : '';
         return this.makeRequest(`${endpoint}${queryString}`);
       } catch (error) {
-        console.warn('Magento API failed, falling back to Supabase data:', error);
+        console.warn(
+          'Magento API failed, falling back to Supabase data:',
+          error
+        );
       }
     }
-    
+
     // Fallback to Supabase data
     return magentoDataService.getProducts();
   }
@@ -386,16 +456,17 @@ class MagentoApiService {
       try {
         return this.makeRequest(`/products/${encodeURIComponent(sku)}`);
       } catch (error) {
-        console.warn('Magento API failed for single product, checking Supabase:', error);
+        console.warn(
+          'Magento API failed for single product, checking Supabase:',
+          error
+        );
       }
     }
-    
+
     // Fallback: search in Supabase products
     const products = await magentoDataService.getProducts();
     return products.find(p => p.sku === sku) || null;
   }
-
-
 
   // Utility methods
   isConfigured(): boolean {
@@ -441,7 +512,7 @@ export const magentoDataService = {
   async getOrders(practiceId?: string): Promise<MagentoOrder[]> {
     const authStore = useAuthStore();
     const currentPracticeId = practiceId || authStore.clinicId;
-    
+
     if (!currentPracticeId) {
       throw new Error($t('index.nopracticeidavailable'));
     }
@@ -449,37 +520,44 @@ export const magentoDataService = {
     try {
       const { data: orders, error } = await supabase
         .from('orders')
-        .select(`
+        .select(
+          `
           *,
           order_items (
             *,
             products (*)
           )
-        `)
+        `
+        )
         .eq('practice_id', currentPracticeId)
         .order('created_at', { ascending: false });
 
       if (error) throw error;
 
-      return orders?.map(order => ({
-        id: parseInt(order.id) || 0,
-        increment_id: order.order_number || `ORD-${order.id}`,
-        status: this.mapOrderStatus(order.status),
-        created_at: order.created_at,
-        updated_at: order.updated_at,
-        grand_total: order.order_items?.reduce((sum, item) => 
-          sum + (item.total_price || 0), 0
-        ) || 0,
-        items: order.order_items?.map(item => ({
-          id: parseInt(item.id) || 0,
-          product_id: parseInt(item.product_id) || 0,
-          name: item.products?.name || '',
-          sku: item.products?.sku || '',
-          qty_ordered: item.quantity,
-          price: item.unit_price || 0,
-          product_type: 'simple'
+      return (
+        orders?.map(order => ({
+          id: parseInt(order.id) || 0,
+          increment_id: order.order_number || `ORD-${order.id}`,
+          status: this.mapOrderStatus(order.status),
+          created_at: order.created_at,
+          updated_at: order.updated_at,
+          grand_total:
+            order.order_items?.reduce(
+              (sum, item) => sum + (item.total_price || 0),
+              0
+            ) || 0,
+          items:
+            order.order_items?.map(item => ({
+              id: parseInt(item.id) || 0,
+              product_id: parseInt(item.product_id) || 0,
+              name: item.products?.name || '',
+              sku: item.products?.sku || '',
+              qty_ordered: item.quantity,
+              price: item.unit_price || 0,
+              product_type: 'simple',
+            })) || [],
         })) || []
-      })) || [];
+      );
     } catch (error) {
       console.error('Error fetching orders for Magento:', error);
       return [];
@@ -492,7 +570,7 @@ export const magentoDataService = {
   async getProducts(practiceId?: string): Promise<MagentoProduct[]> {
     const authStore = useAuthStore();
     const currentPracticeId = practiceId || authStore.clinicId;
-    
+
     if (!currentPracticeId) {
       throw new Error($t('index.nopracticeidavailable'));
     }
@@ -506,14 +584,16 @@ export const magentoDataService = {
 
       if (error) throw error;
 
-      return products?.map(product => ({
-        id: parseInt(product.id) || 0,
-        sku: product.sku || '',
-        name: product.name || '',
-        price: parseFloat(product.price || '0'),
-        status: product.is_active ? 1 : 0,
-        type_id: 'simple'
-      })) || [];
+      return (
+        products?.map(product => ({
+          id: parseInt(product.id) || 0,
+          sku: product.sku || '',
+          name: product.name || '',
+          price: parseFloat(product.price || '0'),
+          status: product.is_active ? 1 : 0,
+          type_id: 'simple',
+        })) || []
+      );
     } catch (error) {
       console.error('Error fetching products for Magento:', error);
       return [];
@@ -526,7 +606,7 @@ export const magentoDataService = {
   async getInvoices(practiceId?: string): Promise<MagentoInvoice[]> {
     const authStore = useAuthStore();
     const currentPracticeId = practiceId || authStore.clinicId;
-    
+
     if (!currentPracticeId) {
       throw new Error($t('index.nopracticeidavailable'));
     }
@@ -534,27 +614,33 @@ export const magentoDataService = {
     try {
       const { data: orders, error } = await supabase
         .from('orders')
-        .select(`
+        .select(
+          `
           *,
           order_items (
             *
           )
-        `)
+        `
+        )
         .eq('practice_id', currentPracticeId)
         .in('status', ['completed', 'delivered', 'invoiced'])
         .order('created_at', { ascending: false });
 
       if (error) throw error;
 
-      return orders?.map(order => ({
-        id: parseInt(order.id) || 0,
-        order_id: parseInt(order.id) || 0,
-        increment_id: `INV-${order.order_number || order.id}`,
-        created_at: order.updated_at || order.created_at,
-        grand_total: order.order_items?.reduce((sum, item) => 
-          sum + (item.total_price || 0), 0
-        ) || 0
-      })) || [];
+      return (
+        orders?.map(order => ({
+          id: parseInt(order.id) || 0,
+          order_id: parseInt(order.id) || 0,
+          increment_id: `INV-${order.order_number || order.id}`,
+          created_at: order.updated_at || order.created_at,
+          grand_total:
+            order.order_items?.reduce(
+              (sum, item) => sum + (item.total_price || 0),
+              0
+            ) || 0,
+        })) || []
+      );
     } catch (error) {
       console.error('Error fetching invoices for Magento:', error);
       return [];
@@ -566,15 +652,15 @@ export const magentoDataService = {
    */
   mapOrderStatus(status: string): string {
     const statusMap: Record<string, string> = {
-      'draft': 'pending',
-      'submitted': 'processing',
-      'confirmed': 'processing',
-      'shipped': 'shipped',
-      'delivered': 'complete',
-      'completed': 'complete',
-      'cancelled': 'canceled',
-      'refunded': 'refunded'
+      draft: 'pending',
+      submitted: 'processing',
+      confirmed: 'processing',
+      shipped: 'shipped',
+      delivered: 'complete',
+      completed: 'complete',
+      cancelled: 'canceled',
+      refunded: 'refunded',
     };
     return statusMap[status] || 'pending';
-  }
+  },
 };

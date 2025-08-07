@@ -18,7 +18,8 @@ export default {
   // Product filters
   products: {
     title: 'Filtros de Productos',
-    description: 'Filtrar productos por categorías, proveedores, datos GS1 y estado de inventario',
+    description:
+      'Filtrar productos por categorías, proveedores, datos GS1 y estado de inventario',
     fields: {
       search: {
         label: 'Buscar Productos',
@@ -81,7 +82,8 @@ export default {
   // Supplier filters
   suppliers: {
     title: 'Filtros de Proveedores',
-    description: 'Filtrar proveedores por nombre, información de contacto, ubicación y estado',
+    description:
+      'Filtrar proveedores por nombre, información de contacto, ubicación y estado',
     fields: {
       search: {
         label: 'Buscar Proveedores',
@@ -118,7 +120,8 @@ export default {
   // Order filters
   orders: {
     title: 'Filtros de Pedidos',
-    description: 'Filtrar pedidos por estado, proveedor, rango de fechas y monto',
+    description:
+      'Filtrar pedidos por estado, proveedor, rango de fechas y monto',
     fields: {
       status: {
         label: 'Estado del Pedido',
@@ -163,7 +166,8 @@ export default {
   // Inventory filters
   inventory: {
     title: 'Filtros de Inventario',
-    description: 'Filtrar inventario por ubicación, producto, categoría y estado de stock',
+    description:
+      'Filtrar inventario por ubicación, producto, categoría y estado de stock',
     fields: {
       search: {
         label: 'Buscar Productos',
@@ -229,7 +233,8 @@ export default {
   // Stock Movements filters
   movements: {
     title: 'Filtros de Movimientos de Stock',
-    description: 'Filtrar movimientos de stock por tipo, ubicación, fecha y producto',
+    description:
+      'Filtrar movimientos de stock por tipo, ubicación, fecha y producto',
     fields: {
       movementType: {
         label: 'Tipo de Movimiento',
@@ -286,4 +291,4 @@ export default {
     fromDate: 'Desde fecha',
     toDate: 'Hasta fecha',
   },
-}; 
+};

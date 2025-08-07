@@ -1,16 +1,14 @@
 import { computed, type Ref } from 'vue';
-import type {
-  ProductWithStock,
-  StockAlert,
-} from '@/types/inventory';
+import type { ProductWithStock, StockAlert } from '@/types/inventory';
 
 export function useProductsInventory(products: Ref<ProductWithStock[]>) {
   // Total stock value across all products
   const totalStockValue = computed(() => {
     return products.value.reduce((total, product) => {
-      const productValue = product.stock_levels?.reduce((sum, level) => {
-        return sum + (level.current_quantity * (product.unit_price || 0));
-      }, 0) || 0;
+      const productValue =
+        product.stock_levels?.reduce((sum, level) => {
+          return sum + level.current_quantity * (product.unit_price || 0);
+        }, 0) || 0;
       return total + productValue;
     }, 0);
   });
@@ -18,7 +16,11 @@ export function useProductsInventory(products: Ref<ProductWithStock[]>) {
   // Products with low stock levels
   const lowStockProducts = computed(() => {
     return products.value.filter(product => {
-      const totalStock = product.stock_levels?.reduce((sum, level) => sum + level.current_quantity, 0) || 0;
+      const totalStock =
+        product.stock_levels?.reduce(
+          (sum, level) => sum + level.current_quantity,
+          0
+        ) || 0;
       return totalStock > 0 && totalStock <= product.minimum_stock;
     });
   });
@@ -26,7 +28,11 @@ export function useProductsInventory(products: Ref<ProductWithStock[]>) {
   // Products that are completely out of stock
   const outOfStockProducts = computed(() => {
     return products.value.filter(product => {
-      const totalStock = product.stock_levels?.reduce((sum, level) => sum + level.current_quantity, 0) || 0;
+      const totalStock =
+        product.stock_levels?.reduce(
+          (sum, level) => sum + level.current_quantity,
+          0
+        ) || 0;
       return totalStock <= 0;
     });
   });
@@ -42,8 +48,12 @@ export function useProductsInventory(products: Ref<ProductWithStock[]>) {
     };
 
     products.value.forEach(product => {
-      const totalStock = product.stock_levels?.reduce((sum, level) => sum + level.current_quantity, 0) || 0;
-      
+      const totalStock =
+        product.stock_levels?.reduce(
+          (sum, level) => sum + level.current_quantity,
+          0
+        ) || 0;
+
       if (totalStock <= 0) {
         summary.out_of_stock++;
       } else if (totalStock <= product.minimum_stock) {
@@ -63,8 +73,9 @@ export function useProductsInventory(products: Ref<ProductWithStock[]>) {
     products.value.forEach(product => {
       product.stock_levels?.forEach(stockLevel => {
         const currentStock = stockLevel.current_quantity || 0;
-        const minimumStock = stockLevel.minimum_stock || product.minimum_stock || 0;
-        
+        const minimumStock =
+          stockLevel.minimum_stock || product.minimum_stock || 0;
+
         if (currentStock <= 0) {
           alerts.push({
             id: `${product.id}-${stockLevel.location_id}`,
@@ -111,7 +122,11 @@ export function useProductsInventory(products: Ref<ProductWithStock[]>) {
   // Products that need reordering
   const productsNeedingReorder = computed(() => {
     return products.value.filter(product => {
-      const totalStock = product.stock_levels?.reduce((sum, level) => sum + level.current_quantity, 0) || 0;
+      const totalStock =
+        product.stock_levels?.reduce(
+          (sum, level) => sum + level.current_quantity,
+          0
+        ) || 0;
       const reorderLevel = product.reorder_level || product.minimum_stock || 0;
       return totalStock <= reorderLevel;
     });
@@ -132,14 +147,19 @@ export function useProductsInventory(products: Ref<ProductWithStock[]>) {
       supplierBreakdown: new Map<string, number>(),
     };
 
-    metrics.averageStockValue = metrics.totalProducts > 0 
-      ? metrics.totalStockValue / metrics.totalProducts 
-      : 0;
+    metrics.averageStockValue =
+      metrics.totalProducts > 0
+        ? metrics.totalStockValue / metrics.totalProducts
+        : 0;
 
     products.value.forEach(product => {
-      const totalStock = product.stock_levels?.reduce((sum, level) => sum + level.current_quantity, 0) || 0;
+      const totalStock =
+        product.stock_levels?.reduce(
+          (sum, level) => sum + level.current_quantity,
+          0
+        ) || 0;
       const productValue = totalStock * (product.unit_price || 0);
-      
+
       // Stock status distribution
       if (totalStock <= 0) {
         metrics.stockDistribution.out_of_stock++;
@@ -151,14 +171,22 @@ export function useProductsInventory(products: Ref<ProductWithStock[]>) {
 
       // Category breakdown
       if (product.category) {
-        const currentCategoryValue = metrics.categoryBreakdown.get(product.category) || 0;
-        metrics.categoryBreakdown.set(product.category, currentCategoryValue + productValue);
+        const currentCategoryValue =
+          metrics.categoryBreakdown.get(product.category) || 0;
+        metrics.categoryBreakdown.set(
+          product.category,
+          currentCategoryValue + productValue
+        );
       }
 
       // Supplier breakdown
       if (product.supplier_name) {
-        const currentSupplierValue = metrics.supplierBreakdown.get(product.supplier_name) || 0;
-        metrics.supplierBreakdown.set(product.supplier_name, currentSupplierValue + productValue);
+        const currentSupplierValue =
+          metrics.supplierBreakdown.get(product.supplier_name) || 0;
+        metrics.supplierBreakdown.set(
+          product.supplier_name,
+          currentSupplierValue + productValue
+        );
       }
     });
 
@@ -167,14 +195,25 @@ export function useProductsInventory(products: Ref<ProductWithStock[]>) {
 
   // Top categories by value
   const topCategoriesByValue = computed(() => {
-    const categoryMap = new Map<string, { name: string; value: number; count: number }>();
+    const categoryMap = new Map<
+      string,
+      { name: string; value: number; count: number }
+    >();
 
     products.value.forEach(product => {
       if (product.category) {
-        const totalStock = product.stock_levels?.reduce((sum, level) => sum + level.current_quantity, 0) || 0;
+        const totalStock =
+          product.stock_levels?.reduce(
+            (sum, level) => sum + level.current_quantity,
+            0
+          ) || 0;
         const productValue = totalStock * (product.unit_price || 0);
-        
-        const existing = categoryMap.get(product.category) || { name: product.category, value: 0, count: 0 };
+
+        const existing = categoryMap.get(product.category) || {
+          name: product.category,
+          value: 0,
+          count: 0,
+        };
         existing.value += productValue;
         existing.count += 1;
         categoryMap.set(product.category, existing);
@@ -190,7 +229,11 @@ export function useProductsInventory(products: Ref<ProductWithStock[]>) {
   const topProductsByValue = computed(() => {
     return products.value
       .map(product => {
-        const totalStock = product.stock_levels?.reduce((sum, level) => sum + level.current_quantity, 0) || 0;
+        const totalStock =
+          product.stock_levels?.reduce(
+            (sum, level) => sum + level.current_quantity,
+            0
+          ) || 0;
         return {
           ...product,
           total_stock: totalStock,
@@ -211,7 +254,9 @@ export function useProductsInventory(products: Ref<ProductWithStock[]>) {
     }> = [];
 
     const today = new Date();
-    const thirtyDaysFromNow = new Date(today.getTime() + (30 * 24 * 60 * 60 * 1000));
+    const thirtyDaysFromNow = new Date(
+      today.getTime() + 30 * 24 * 60 * 60 * 1000
+    );
 
     products.value.forEach(product => {
       if (product.requires_batch_tracking) {
@@ -220,7 +265,9 @@ export function useProductsInventory(products: Ref<ProductWithStock[]>) {
         if (product.expiry_date) {
           const expiryDate = new Date(product.expiry_date);
           if (expiryDate <= thirtyDaysFromNow && expiryDate >= today) {
-            const daysUntilExpiry = Math.ceil((expiryDate.getTime() - today.getTime()) / (24 * 60 * 60 * 1000));
+            const daysUntilExpiry = Math.ceil(
+              (expiryDate.getTime() - today.getTime()) / (24 * 60 * 60 * 1000)
+            );
             expiringProducts.push({
               product,
               expiry_date: product.expiry_date,
@@ -231,7 +278,9 @@ export function useProductsInventory(products: Ref<ProductWithStock[]>) {
       }
     });
 
-    return expiringProducts.sort((a, b) => a.days_until_expiry - b.days_until_expiry);
+    return expiringProducts.sort(
+      (a, b) => a.days_until_expiry - b.days_until_expiry
+    );
   });
 
   return {

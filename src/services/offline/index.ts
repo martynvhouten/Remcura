@@ -108,7 +108,14 @@ export class OfflineService {
       throw new Error($t('index.cannotaddofflineaction'));
     }
 
-    const actionId = actionQueue.addAction(type, table, data, practiceId, userId, priority);
+    const actionId = actionQueue.addAction(
+      type,
+      table,
+      data,
+      practiceId,
+      userId,
+      priority
+    );
 
     // Try to sync immediately if online
     if (this.isOnline) {
@@ -149,8 +156,8 @@ export class OfflineService {
       const successCount = results.filter(r => r.success).length;
       const failureCount = results.filter(r => !r.success).length;
 
-              // Sync completed - debug logging removed
-      
+      // Sync completed - debug logging removed
+
       return failureCount === 0;
     } catch (error) {
       console.error('Error during action sync:', error);
@@ -216,7 +223,7 @@ export class OfflineService {
    * Handle network status changes
    */
   private handleNetworkChange(status: NetworkStatus): void {
-            // Network status change handled
+    // Network status change handled
 
     if (status === 'online') {
       // When coming back online, sync actions and optionally refresh data
@@ -229,7 +236,7 @@ export class OfflineService {
    */
   private registerActionExecutors(): void {
     // Product list items executor
-    actionQueue.registerExecutor('product_list_items', async (action) => {
+    actionQueue.registerExecutor('product_list_items', async action => {
       switch (action.type) {
         case 'create':
           await supabase.from('product_list_items').insert([action.data]);
@@ -250,7 +257,7 @@ export class OfflineService {
     });
 
     // Shopping cart items executor
-    actionQueue.registerExecutor('shopping_cart_items', async (action) => {
+    actionQueue.registerExecutor('shopping_cart_items', async action => {
       switch (action.type) {
         case 'create':
           await supabase.from('shopping_cart_items').insert([action.data]);
@@ -271,7 +278,7 @@ export class OfflineService {
     });
 
     // Shopping carts executor
-    actionQueue.registerExecutor('shopping_carts', async (action) => {
+    actionQueue.registerExecutor('shopping_carts', async action => {
       switch (action.type) {
         case 'create':
           await supabase.from('shopping_carts').insert([action.data]);
@@ -301,7 +308,7 @@ export class OfflineService {
     }
 
     const intervalMs = (this.config.autoSyncInterval || 15) * 60 * 1000;
-    
+
     this.periodicSyncTimer = setInterval(() => {
       if (this.isOnline && actionQueue.count > 0) {
         // Periodic sync triggered
@@ -336,4 +343,4 @@ export const offlineService = new OfflineService();
 export { networkMonitor } from './network-monitor';
 export { actionQueue } from './action-queue';
 export { dataSyncManager } from './data-sync';
-export type { OfflineAction, SyncProgressCallback }; 
+export type { OfflineAction, SyncProgressCallback };

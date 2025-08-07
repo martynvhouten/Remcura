@@ -151,7 +151,7 @@ self.addEventListener('push', event => {
     body: notificationData.body || 'You have a new notification',
     icon: notificationData.icon || '/icons/icon-192x192.png',
     badge: notificationData.badge || '/icons/icon-192x192.png',
-          tag: notificationData.tag || 'remcura-notification',
+    tag: notificationData.tag || 'remcura-notification',
     data: notificationData.data || {},
     requireInteraction: notificationData.requireInteraction || false,
     actions: notificationData.actions || [

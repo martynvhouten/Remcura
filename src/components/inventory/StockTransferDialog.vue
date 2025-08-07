@@ -5,7 +5,7 @@
     persistent
     maximized-on-mobile
   >
-    <q-card style="min-width: 600px; max-width: 800px;">
+    <q-card style="min-width: 600px; max-width: 800px">
       <!-- Header -->
       <q-card-section class="row items-center q-pb-none">
         <div class="text-h6">
@@ -18,7 +18,9 @@
 
       <!-- Product Selector (when no product selected) -->
       <q-card-section v-if="!selectedProduct" class="q-pt-none">
-        <div class="text-subtitle2 q-mb-md">{{ $t('inventory.selectProduct') }}</div>
+        <div class="text-subtitle2 q-mb-md">
+          {{ $t('inventory.selectProduct') }}
+        </div>
         <div class="row q-gutter-md">
           <div class="col">
             <q-select
@@ -114,7 +116,8 @@
                   <q-item-section>
                     <q-item-label>{{ scope.opt.name }}</q-item-label>
                     <q-item-label caption>
-                      {{ $t('inventory.availableStock') }}: {{ getLocationStock(scope.opt.id) }}
+                      {{ $t('inventory.availableStock') }}:
+                      {{ getLocationStock(scope.opt.id) }}
                     </q-item-label>
                   </q-item-section>
                 </q-item>
@@ -139,7 +142,12 @@
           </div>
 
           <!-- Batch Selection (if product requires batch tracking) -->
-          <div v-if="selectedProduct?.requires_batch_tracking && availableBatches.length > 0">
+          <div
+            v-if="
+              selectedProduct?.requires_batch_tracking &&
+              availableBatches.length > 0
+            "
+          >
             <label class="text-subtitle2 q-mb-sm block">
               {{ $t('inventory.selectBatch') }}
             </label>
@@ -157,8 +165,10 @@
                   <q-item-section>
                     <q-item-label>{{ scope.opt.batch_number }}</q-item-label>
                     <q-item-label caption>
-                      {{ $t('inventory.expiryDate') }}: {{ formatDate(scope.opt.expiry_date) }} • 
-                      {{ $t('inventory.available') }}: {{ scope.opt.available_quantity }}
+                      {{ $t('inventory.expiryDate') }}:
+                      {{ formatDate(scope.opt.expiry_date) }} •
+                      {{ $t('inventory.available') }}:
+                      {{ scope.opt.available_quantity }}
                     </q-item-label>
                   </q-item-section>
                   <q-item-section side>
@@ -212,8 +222,12 @@
                 </q-btn-group>
               </div>
             </div>
-            <div v-if="maxTransferQuantity > 0" class="text-caption text-grey-6 q-mt-xs">
-              {{ $t('inventory.maxAvailable') }}: {{ maxTransferQuantity }} {{ selectedProduct?.unit }}
+            <div
+              v-if="maxTransferQuantity > 0"
+              class="text-caption text-grey-6 q-mt-xs"
+            >
+              {{ $t('inventory.maxAvailable') }}: {{ maxTransferQuantity }}
+              {{ selectedProduct?.unit }}
             </div>
           </div>
 
@@ -249,26 +263,38 @@
           <!-- Transfer Preview -->
           <div v-if="isValidTransfer" class="transfer-preview">
             <q-separator class="q-my-md" />
-            <div class="text-subtitle2 q-mb-sm">{{ $t('inventory.transferPreview') }}</div>
+            <div class="text-subtitle2 q-mb-sm">
+              {{ $t('inventory.transferPreview') }}
+            </div>
             <div class="preview-card">
               <q-card flat bordered>
                 <q-card-section class="q-pa-sm">
                   <div class="row items-center q-gutter-sm">
                     <div class="col text-center">
-                      <div class="text-body2 text-weight-medium">{{ fromLocation?.name }}</div>
-                      <div class="text-h6 text-negative">-{{ transferQuantity }}</div>
+                      <div class="text-body2 text-weight-medium">
+                        {{ fromLocation?.name }}
+                      </div>
+                      <div class="text-h6 text-negative">
+                        -{{ transferQuantity }}
+                      </div>
                       <div class="text-caption">
-                        {{ getCurrentStock() - transferQuantity }} {{ $t('inventory.remaining') }}
+                        {{ getCurrentStock() - transferQuantity }}
+                        {{ $t('inventory.remaining') }}
                       </div>
                     </div>
                     <div class="col-auto">
                       <q-icon name="arrow_forward" size="md" color="primary" />
                     </div>
                     <div class="col text-center">
-                      <div class="text-body2 text-weight-medium">{{ toLocation?.name }}</div>
-                      <div class="text-h6 text-positive">+{{ transferQuantity }}</div>
+                      <div class="text-body2 text-weight-medium">
+                        {{ toLocation?.name }}
+                      </div>
+                      <div class="text-h6 text-positive">
+                        +{{ transferQuantity }}
+                      </div>
                       <div class="text-caption">
-                        {{ getToLocationCurrentStock() + transferQuantity }} {{ $t('inventory.newTotal') }}
+                        {{ getToLocationCurrentStock() + transferQuantity }}
+                        {{ $t('inventory.newTotal') }}
                       </div>
                     </div>
                   </div>
@@ -297,10 +323,7 @@
     </q-card>
 
     <!-- Barcode Scanner -->
-    <BarcodeScanner
-      v-model="showBarcodeScanner"
-      @scan="handleBarcodeScan"
-    />
+    <BarcodeScanner v-model="showBarcodeScanner" @scan="handleBarcodeScan" />
   </q-dialog>
 </template>
 
@@ -344,7 +367,7 @@
   const transferReason = ref('location_rebalance');
   const notes = ref('');
   const transferLoading = ref(false);
-  
+
   // Product selection state
   const internalSelectedProduct = ref<any>(null);
   const availableProducts = ref<any[]>([]);
@@ -359,13 +382,16 @@
     { label: t('inventory.stockReplenishment'), value: 'stock_replenishment' },
     { label: t('inventory.emergencyTransfer'), value: 'emergency_transfer' },
     { label: t('inventory.expiryManagement'), value: 'expiry_management' },
-    { label: t('inventory.maintenanceRelocation'), value: 'maintenance_relocation' },
+    {
+      label: t('inventory.maintenanceRelocation'),
+      value: 'maintenance_relocation',
+    },
   ]);
 
   // Available locations
   const availableFromLocations = computed(() => {
     if (!props.selectedProduct) return [];
-    
+
     return clinicStore.locations.filter(location => {
       const stock = getLocationStock(location.id);
       return stock > 0;
@@ -374,26 +400,35 @@
 
   const availableToLocations = computed(() => {
     if (!fromLocation.value) return [];
-    
-    return clinicStore.locations.filter(location => 
-      location.id !== fromLocation.value?.id
+
+    return clinicStore.locations.filter(
+      location => location.id !== fromLocation.value?.id
     );
   });
 
   // Available batches for the selected product and location
   const availableBatches = computed(() => {
-    if (!props.selectedProduct?.requires_batch_tracking || !fromLocation.value) {
+    if (
+      !props.selectedProduct?.requires_batch_tracking ||
+      !fromLocation.value
+    ) {
       return [];
     }
 
     // Get batches for this product at the from location
-    return inventoryStore.getProductBatches(props.selectedProduct.id, fromLocation.value.id)
+    return inventoryStore
+      .getProductBatches(props.selectedProduct.id, fromLocation.value.id)
       .filter((batch: any) => batch.available_quantity > 0)
       .map((batch: any) => ({
         ...batch,
-        batchDisplay: `${batch.batch_number} (${formatDate(batch.expiry_date)})`
+        batchDisplay: `${batch.batch_number} (${formatDate(
+          batch.expiry_date
+        )})`,
       }))
-      .sort((a: any, b: any) => new Date(a.expiry_date).getTime() - new Date(b.expiry_date).getTime());
+      .sort(
+        (a: any, b: any) =>
+          new Date(a.expiry_date).getTime() - new Date(b.expiry_date).getTime()
+      );
   });
 
   // Max transfer quantity
@@ -409,18 +444,23 @@
 
   // Validation
   const isValidTransfer = computed(() => {
-    return fromLocation.value &&
-           toLocation.value &&
-           transferQuantity.value > 0 &&
-           transferQuantity.value <= maxTransferQuantity.value &&
-           transferReason.value &&
-           (!props.selectedProduct?.requires_batch_tracking || selectedBatch.value);
+    return (
+      fromLocation.value &&
+      toLocation.value &&
+      transferQuantity.value > 0 &&
+      transferQuantity.value <= maxTransferQuantity.value &&
+      transferReason.value &&
+      (!props.selectedProduct?.requires_batch_tracking || selectedBatch.value)
+    );
   });
 
   // Methods
   const getLocationStock = (locationId: string): number => {
     if (!props.selectedProduct) return 0;
-    return inventoryStore.getProductStockAtLocation(props.selectedProduct.id, locationId);
+    return inventoryStore.getProductStockAtLocation(
+      props.selectedProduct.id,
+      locationId
+    );
   };
 
   const getCurrentStock = (): number => {
@@ -442,9 +482,10 @@
 
   const getBatchStatusColor = (batch: any): string => {
     const daysToExpiry = Math.ceil(
-      (new Date(batch.expiry_date).getTime() - new Date().getTime()) / (1000 * 60 * 60 * 24)
+      (new Date(batch.expiry_date).getTime() - new Date().getTime()) /
+        (1000 * 60 * 60 * 24)
     );
-    
+
     if (daysToExpiry < 0) return 'negative';
     if (daysToExpiry <= 7) return 'warning';
     if (daysToExpiry <= 30) return 'orange';
@@ -453,9 +494,10 @@
 
   const getBatchStatusText = (batch: any): string => {
     const daysToExpiry = Math.ceil(
-      (new Date(batch.expiry_date).getTime() - new Date().getTime()) / (1000 * 60 * 60 * 24)
+      (new Date(batch.expiry_date).getTime() - new Date().getTime()) /
+        (1000 * 60 * 60 * 24)
     );
-    
+
     if (daysToExpiry < 0) return t('inventory.expired');
     if (daysToExpiry <= 7) return t('inventory.expiresSoon');
     if (daysToExpiry <= 30) return t('inventory.expiresThisMonth');
@@ -487,7 +529,7 @@
           quantity: transferQuantity.value,
           product: props.selectedProduct.name,
           from: fromLocation.value.name,
-          to: toLocation.value.name
+          to: toLocation.value.name,
         }),
       });
 
@@ -496,13 +538,13 @@
 
       // Reset form
       resetForm();
-
     } catch (error) {
       console.error('Transfer failed:', error);
       $q.notify({
         type: 'negative',
         message: t('inventory.transferFailed'),
-        caption: (error as Error).message || t('inventory.transferFailedDetails'),
+        caption:
+          (error as Error).message || t('inventory.transferFailedDetails'),
       });
     } finally {
       transferLoading.value = false;
@@ -549,7 +591,7 @@
       $q.notify({
         type: 'info',
         message: t('inventory.barcodeScanned', { barcode }),
-        icon: 'qr_code_scanner'
+        icon: 'qr_code_scanner',
       });
     } catch (error) {
       console.error('Error processing barcode:', error);
@@ -561,18 +603,25 @@
   };
 
   // Initialize with current location if provided
-  watch(() => props.currentLocation, (newLocation) => {
-    if (newLocation && !fromLocation.value) {
-      fromLocation.value = newLocation;
-    }
-  }, { immediate: true });
+  watch(
+    () => props.currentLocation,
+    newLocation => {
+      if (newLocation && !fromLocation.value) {
+        fromLocation.value = newLocation;
+      }
+    },
+    { immediate: true }
+  );
 
   // Reset form when dialog closes
-  watch(() => props.modelValue, (isOpen) => {
-    if (!isOpen) {
-      resetForm();
+  watch(
+    () => props.modelValue,
+    isOpen => {
+      if (!isOpen) {
+        resetForm();
+      }
     }
-  });
+  );
 </script>
 
 <style scoped>

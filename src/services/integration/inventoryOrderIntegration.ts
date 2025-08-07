@@ -5,15 +5,14 @@ import { orderLogger } from '@/utils/logger';
 
 /**
  * Integration Service for Inventory & Order Management
- * 
+ *
  * This service provides high-level integration between:
  * - Inventory automation
- * - Order orchestration  
+ * - Order orchestration
  * - Real-time notifications
  * - Dashboard updates
  */
 export class InventoryOrderIntegrationService {
-
   /**
    * Initialize automated inventory management for a practice
    */
@@ -27,8 +26,9 @@ export class InventoryOrderIntegrationService {
       orderLogger.info(`Initializing automation for practice ${practiceId}`);
 
       // 1. Run initial inventory health check
-      const healthCheck = await inventoryAutomationService.runInventoryHealthCheck(practiceId);
-      
+      const healthCheck =
+        await inventoryAutomationService.runInventoryHealthCheck(practiceId);
+
       // 2. Check if automation is already enabled
       const { data: settings } = await supabase
         .from('practice_inventory_settings')
@@ -40,15 +40,13 @@ export class InventoryOrderIntegrationService {
 
       // 3. Enable automation if not already enabled and there are actionable items
       if (!automationEnabled && healthCheck.lowStockCount > 0) {
-        await supabase
-          .from('practice_inventory_settings')
-          .upsert({
-            practice_id: practiceId,
-            auto_reorder_enabled: true,
-            low_stock_threshold_percent: 20,
-            notify_on_low_stock: true,
-            notify_on_stock_out: true
-          });
+        await supabase.from('practice_inventory_settings').upsert({
+          practice_id: practiceId,
+          auto_reorder_enabled: true,
+          low_stock_threshold_percent: 20,
+          notify_on_low_stock: true,
+          notify_on_stock_out: true,
+        });
         automationEnabled = true;
       }
 
@@ -63,20 +61,25 @@ export class InventoryOrderIntegrationService {
         await supabase.from('automation_schedules').insert({
           practice_id: practiceId,
           name: 'Daily Low Stock Check',
-          description: 'Automatically check for low stock items and create orders',
+          description:
+            'Automatically check for low stock items and create orders',
           schedule_type: 'daily',
           schedule_time: '09:00',
           auto_approve: false,
           max_order_value: 1000,
-          min_urgency_level: 'medium'
+          min_urgency_level: 'medium',
         });
         schedulesCreated = 1;
       }
 
       // 5. Create initial notifications for critical items
-      const criticalItems = await inventoryAutomationService.checkLowStockItems(practiceId);
-      const urgentItems = criticalItems.filter(item => item.urgencyLevel === 'critical');
-      
+      const criticalItems = await inventoryAutomationService.checkLowStockItems(
+        practiceId
+      );
+      const urgentItems = criticalItems.filter(
+        item => item.urgencyLevel === 'critical'
+      );
+
       if (urgentItems.length > 0) {
         await supabase.from('notifications').insert({
           practice_id: practiceId,
@@ -85,7 +88,7 @@ export class InventoryOrderIntegrationService {
           category: 'stock_alert',
           priority: 'urgent',
           action_url: '/inventory/levels',
-          action_label: 'Bekijk voorraad'
+          action_label: 'Bekijk voorraad',
         });
       }
 
@@ -93,9 +96,8 @@ export class InventoryOrderIntegrationService {
         lowStockItems: healthCheck.lowStockCount,
         automationEnabled,
         schedulesCreated,
-        notificationsEnabled: true
+        notificationsEnabled: true,
       };
-
     } catch (error) {
       orderLogger.error('Error initializing automation:', error);
       throw error;
@@ -122,23 +124,28 @@ export class InventoryOrderIntegrationService {
     details: string[];
   }> {
     try {
-      orderLogger.info(`Processing complete reorder workflow for practice ${practiceId}`);
+      orderLogger.info(
+        `Processing complete reorder workflow for practice ${practiceId}`
+      );
 
       // 1. Generate reorder suggestions
-      const suggestions = await inventoryAutomationService.generateReorderSuggestions(practiceId);
-      
+      const suggestions =
+        await inventoryAutomationService.generateReorderSuggestions(practiceId);
+
       // 2. Apply filters
       let filteredSuggestions = suggestions;
-      
+
       if (options.locationId) {
-        filteredSuggestions = filteredSuggestions.filter(s => s.locationId === options.locationId);
+        filteredSuggestions = filteredSuggestions.filter(
+          s => s.locationId === options.locationId
+        );
       }
-      
+
       if (options.urgencyFilter) {
         const urgencyLevels = ['low', 'medium', 'high', 'critical'];
         const minIndex = urgencyLevels.indexOf(options.urgencyFilter);
-        filteredSuggestions = filteredSuggestions.filter(s => 
-          urgencyLevels.indexOf(s.urgencyLevel) >= minIndex
+        filteredSuggestions = filteredSuggestions.filter(
+          s => urgencyLevels.indexOf(s.urgencyLevel) >= minIndex
         );
       }
 
@@ -149,16 +156,19 @@ export class InventoryOrderIntegrationService {
           ordersCreated: 0,
           totalValue: 0,
           status: 'success',
-          details: ['No items need reordering with current filters']
+          details: ['No items need reordering with current filters'],
         };
       }
 
       // 3. Calculate total value and check approval requirements
-      const totalValue = filteredSuggestions.reduce((sum, item) => 
-        sum + (item.suggestedQuantity * item.estimatedCost), 0);
+      const totalValue = filteredSuggestions.reduce(
+        (sum, item) => sum + item.suggestedQuantity * item.estimatedCost,
+        0
+      );
 
-      const needsApproval = !options.autoApprove || 
-                           (options.maxOrderValue && totalValue > options.maxOrderValue);
+      const needsApproval =
+        !options.autoApprove ||
+        (options.maxOrderValue && totalValue > options.maxOrderValue);
 
       // 4. Transform suggestions to reorder format
       const reorderItems = filteredSuggestions.map(suggestion => ({
@@ -179,23 +189,27 @@ export class InventoryOrderIntegrationService {
         lead_time_days: suggestion.leadTimeDays,
         practice_id: practiceId,
         last_ordered_at: null,
-        stock_trend: 'decreasing'
+        stock_trend: 'decreasing',
       }));
 
       // 5. Process the order
       if (needsApproval) {
         // Create draft order for approval
-        const result = await centralOrderService.createMultiSupplierOrder(reorderItems);
-        
+        const result = await centralOrderService.createMultiSupplierOrder(
+          reorderItems
+        );
+
         // Create notification for approval
         await supabase.from('notifications').insert({
           practice_id: practiceId,
           title: 'Bestelling wacht op goedkeuring',
-          message: `Automatische bestelling van €${totalValue.toFixed(2)} wacht op goedkeuring`,
+          message: `Automatische bestelling van €${totalValue.toFixed(
+            2
+          )} wacht op goedkeuring`,
           category: 'order_update',
           priority: 'normal',
           action_url: '/orders',
-          action_label: 'Bekijk bestelling'
+          action_label: 'Bekijk bestelling',
         });
 
         return {
@@ -204,12 +218,13 @@ export class InventoryOrderIntegrationService {
           ordersCreated: result.supplierOrders.length,
           totalValue,
           status: 'success',
-          details: ['Order created and waiting for approval']
+          details: ['Order created and waiting for approval'],
         };
-
       } else {
         // Process automatic order
-        const result = await centralOrderService.createMultiSupplierOrder(reorderItems);
+        const result = await centralOrderService.createMultiSupplierOrder(
+          reorderItems
+        );
 
         return {
           itemsAnalyzed: suggestions.length,
@@ -217,10 +232,12 @@ export class InventoryOrderIntegrationService {
           ordersCreated: result.supplierOrders.length,
           totalValue,
           status: result.status,
-          details: result.errors.length > 0 ? result.errors : ['Orders processed successfully']
+          details:
+            result.errors.length > 0
+              ? result.errors
+              : ['Orders processed successfully'],
         };
       }
-
     } catch (error) {
       orderLogger.error('Error in complete reorder workflow:', error);
       return {
@@ -229,7 +246,7 @@ export class InventoryOrderIntegrationService {
         ordersCreated: 0,
         totalValue: 0,
         status: 'failed',
-        details: [error instanceof Error ? error.message : 'Unknown error']
+        details: [error instanceof Error ? error.message : 'Unknown error'],
       };
     }
   }
@@ -247,18 +264,21 @@ export class InventoryOrderIntegrationService {
       orderLogger.info('Processing delivery updates');
 
       // 1. Process incoming deliveries
-      const deliveryResults = await inventoryAutomationService.processIncomingDeliveries();
+      const deliveryResults =
+        await inventoryAutomationService.processIncomingDeliveries();
 
       // 2. Check for overdue orders and send notifications
       const { data: overdueOrders } = await supabase
         .from('supplier_orders')
-        .select(`
+        .select(
+          `
           id,
           order_reference,
           estimated_delivery_date,
           practice_id,
           suppliers(name)
-        `)
+        `
+        )
         .eq('status', 'shipped')
         .lt('estimated_delivery_date', new Date().toISOString().split('T')[0]);
 
@@ -271,20 +291,24 @@ export class InventoryOrderIntegrationService {
           category: 'order_update',
           priority: 'normal',
           action_url: '/orders',
-          action_label: 'Bekijk bestelling'
+          action_label: 'Bekijk bestelling',
         });
       }
 
-      const successfulDeliveries = deliveryResults.filter(r => r.stockUpdated).length;
-      const totalErrors = deliveryResults.reduce((sum, r) => sum + r.errors.length, 0);
+      const successfulDeliveries = deliveryResults.filter(
+        r => r.stockUpdated
+      ).length;
+      const totalErrors = deliveryResults.reduce(
+        (sum, r) => sum + r.errors.length,
+        0
+      );
 
       return {
         ordersChecked: deliveryResults.length + (overdueOrders?.length || 0),
         deliveriesProcessed: successfulDeliveries,
         stockUpdates: successfulDeliveries,
-        errors: deliveryResults.flatMap(r => r.errors)
+        errors: deliveryResults.flatMap(r => r.errors),
       };
-
     } catch (error) {
       orderLogger.error('Error processing delivery updates:', error);
       throw error;
@@ -303,7 +327,9 @@ export class InventoryOrderIntegrationService {
     automationStatus: any;
   }> {
     try {
-      orderLogger.info(`Generating inventory dashboard data for practice ${practiceId}`);
+      orderLogger.info(
+        `Generating inventory dashboard data for practice ${practiceId}`
+      );
 
       // Run all data collection in parallel for better performance
       const [
@@ -312,14 +338,14 @@ export class InventoryOrderIntegrationService {
         reorderSuggestions,
         recentOrders,
         pendingDeliveries,
-        automationSettings
+        automationSettings,
       ] = await Promise.all([
         inventoryAutomationService.runInventoryHealthCheck(practiceId),
         inventoryAutomationService.checkLowStockItems(practiceId),
         inventoryAutomationService.generateReorderSuggestions(practiceId),
         this.getRecentOrders(practiceId),
         this.getPendingDeliveries(practiceId),
-        this.getAutomationStatus(practiceId)
+        this.getAutomationStatus(practiceId),
       ]);
 
       return {
@@ -328,9 +354,8 @@ export class InventoryOrderIntegrationService {
         reorderSuggestions: reorderSuggestions.slice(0, 10), // Top 10 suggestions
         recentOrders,
         pendingDeliveries,
-        automationStatus: automationSettings
+        automationStatus: automationSettings,
       };
-
     } catch (error) {
       orderLogger.error('Error generating inventory dashboard data:', error);
       throw error;
@@ -342,14 +367,16 @@ export class InventoryOrderIntegrationService {
   private async getRecentOrders(practiceId: string): Promise<any[]> {
     const { data } = await supabase
       .from('supplier_orders')
-      .select(`
+      .select(
+        `
         id,
         order_reference,
         status,
         total_amount,
         created_at,
         suppliers(name)
-      `)
+      `
+      )
       .eq('practice_id', practiceId)
       .order('created_at', { ascending: false })
       .limit(5);
@@ -360,13 +387,15 @@ export class InventoryOrderIntegrationService {
   private async getPendingDeliveries(practiceId: string): Promise<any[]> {
     const { data } = await supabase
       .from('supplier_orders')
-      .select(`
+      .select(
+        `
         id,
         order_reference,
         estimated_delivery_date,
         tracking_number,
         suppliers(name)
-      `)
+      `
+      )
       .eq('practice_id', practiceId)
       .in('status', ['sent', 'confirmed', 'shipped'])
       .order('estimated_delivery_date', { ascending: true });
@@ -392,7 +421,7 @@ export class InventoryOrderIntegrationService {
       notificationsEnabled: settings?.notify_on_low_stock || false,
       activeSchedules: schedules?.length || 0,
       lastRunAt: schedules?.[0]?.last_run_at,
-      nextRunAt: schedules?.[0]?.next_run_at
+      nextRunAt: schedules?.[0]?.next_run_at,
     };
   }
 }

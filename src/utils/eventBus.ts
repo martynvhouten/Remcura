@@ -1,6 +1,11 @@
 import { reactive } from 'vue';
 import { logger } from './logger';
-import type { EventCallback, EventUnsubscribe, StoreEvent, EventBusOptions } from '@/types/events';
+import type {
+  EventCallback,
+  EventUnsubscribe,
+  StoreEvent,
+  EventBusOptions,
+} from '@/types/events';
 
 class EventBus {
   private listeners = new Map<string, Set<EventCallback>>();
@@ -25,10 +30,12 @@ class EventBus {
     }
 
     const eventListeners = this.listeners.get(eventType)!;
-    
+
     // Check max listeners limit
     if (eventListeners.size >= (this.options.maxListeners || 10)) {
-      logger.warn(`Max listeners (${this.options.maxListeners}) reached for event: ${eventType}`);
+      logger.warn(
+        `Max listeners (${this.options.maxListeners}) reached for event: ${eventType}`
+      );
     }
 
     eventListeners.add(callback);
@@ -43,7 +50,7 @@ class EventBus {
       if (eventListeners.size === 0) {
         this.listeners.delete(eventType);
       }
-      
+
       if (this.options.enableLogging) {
         logger.debug(`Unsubscribed from event: ${eventType}`, 'EventBus');
       }
@@ -53,7 +60,10 @@ class EventBus {
   /**
    * Subscribe to an event only once
    */
-  once<T = any>(eventType: string, callback: EventCallback<T>): EventUnsubscribe {
+  once<T = any>(
+    eventType: string,
+    callback: EventCallback<T>
+  ): EventUnsubscribe {
     const unsubscribe = this.on(eventType, async (data: T) => {
       unsubscribe();
       await callback(data);
@@ -64,7 +74,11 @@ class EventBus {
   /**
    * Emit an event
    */
-  async emit<T = any>(eventType: string, data?: T, source = 'unknown'): Promise<void> {
+  async emit<T = any>(
+    eventType: string,
+    data?: T,
+    source = 'unknown'
+  ): Promise<void> {
     const event: StoreEvent = {
       type: eventType,
       source,
@@ -79,7 +93,10 @@ class EventBus {
     }
 
     if (this.options.enableLogging) {
-      logger.debug(`Emitting event: ${eventType}`, 'EventBus', { source, data });
+      logger.debug(`Emitting event: ${eventType}`, 'EventBus', {
+        source,
+        data,
+      });
     }
 
     const listeners = this.listeners.get(eventType);
@@ -151,7 +168,7 @@ class EventBus {
     if (eventType) {
       return this.listeners.get(eventType)?.size || 0;
     }
-    
+
     let total = 0;
     this.listeners.forEach(listeners => {
       total += listeners.size;
@@ -176,27 +193,27 @@ export const StoreEvents = {
   USER_LOGGED_IN: 'user:logged_in',
   USER_LOGGED_OUT: 'user:logged_out',
   USER_PROFILE_UPDATED: 'user:profile_updated',
-  
+
   // Data refresh events
   DATA_REFRESH_REQUESTED: 'data:refresh_requested',
   DATA_REFRESH_COMPLETED: 'data:refresh_completed',
-  
+
   // Product events
   PRODUCT_CREATED: 'product:created',
   PRODUCT_UPDATED: 'product:updated',
   PRODUCT_DELETED: 'product:deleted',
   PRODUCTS_LOADED: 'products:loaded',
-  
+
   // Inventory events
   STOCK_UPDATED: 'stock:updated',
   STOCK_TRANSFER: 'stock:transfer',
   LOW_STOCK_ALERT: 'stock:low_stock_alert',
-  
+
   // Order events
   ORDER_CREATED: 'order:created',
   ORDER_UPDATED: 'order:updated',
   ORDER_STATUS_CHANGED: 'order:status_changed',
-  
+
   // Order List events (advanced min/max system)
   ORDER_LIST_CREATED: 'order_list:created',
   ORDER_LIST_UPDATED: 'order_list:updated',
@@ -206,11 +223,11 @@ export const StoreEvents = {
   ORDER_SPLIT_COMPLETED: 'order_list:split_completed',
   ORDERS_SENT_TO_SUPPLIERS: 'order_list:sent_to_suppliers',
   STOCK_LEVEL_UPDATED: 'order_list:stock_level_updated',
-  
+
   // Supplier events
   SUPPLIER_CREATED: 'supplier:created',
   SUPPLIER_UPDATED: 'supplier:updated',
-  
+
   // System events
   PRACTICE_CHANGED: 'system:practice_changed',
   OFFLINE_MODE_CHANGED: 'system:offline_mode_changed',
@@ -218,7 +235,7 @@ export const StoreEvents = {
 } as const;
 
 // Type for store event types
-export type StoreEventType = typeof StoreEvents[keyof typeof StoreEvents];
+export type StoreEventType = (typeof StoreEvents)[keyof typeof StoreEvents];
 
 // Type-safe event payload interfaces
 export interface UserLoggedInPayload {
@@ -240,9 +257,12 @@ export interface ProductsLoadedPayload {
 // Helper function to create typed event emitters
 export function createEventEmitter<T = any>(source: string) {
   return {
-    emit: (eventType: string, data?: T) => eventBus.emit(eventType, data, source),
-    on: <U = T>(eventType: string, callback: EventCallback<U>) => eventBus.on(eventType, callback),
-    once: <U = T>(eventType: string, callback: EventCallback<U>) => eventBus.once(eventType, callback),
+    emit: (eventType: string, data?: T) =>
+      eventBus.emit(eventType, data, source),
+    on: <U = T>(eventType: string, callback: EventCallback<U>) =>
+      eventBus.on(eventType, callback),
+    once: <U = T>(eventType: string, callback: EventCallback<U>) =>
+      eventBus.once(eventType, callback),
     off: (eventType: string) => eventBus.off(eventType),
   };
 }

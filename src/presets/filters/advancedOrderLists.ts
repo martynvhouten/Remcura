@@ -12,7 +12,7 @@ export const advancedOrderListsFilterPreset: FilterPreset = {
       icon: 'search',
       priority: 1,
       variant: 'outlined',
-      size: 'md'
+      size: 'md',
     },
     {
       id: 'status',
@@ -27,7 +27,7 @@ export const advancedOrderListsFilterPreset: FilterPreset = {
       ],
       priority: 2,
       variant: 'outlined',
-      size: 'md'
+      size: 'md',
     },
     {
       id: 'supplier',
@@ -36,7 +36,7 @@ export const advancedOrderListsFilterPreset: FilterPreset = {
       options: [], // Will be populated dynamically
       priority: 3,
       variant: 'outlined',
-      size: 'md'
+      size: 'md',
     },
     {
       id: 'urgency',
@@ -50,7 +50,7 @@ export const advancedOrderListsFilterPreset: FilterPreset = {
       ],
       priority: 4,
       variant: 'outlined',
-      size: 'md'
+      size: 'md',
     },
     {
       id: 'viewMode',
@@ -58,24 +58,24 @@ export const advancedOrderListsFilterPreset: FilterPreset = {
       type: 'toggle',
       options: [
         { label: 'Kaarten', value: 'cards', icon: 'view_module' },
-        { label: 'Lijst', value: 'list', icon: 'view_list' }
+        { label: 'Lijst', value: 'list', icon: 'view_list' },
       ],
       priority: 5,
       variant: 'outlined',
-      size: 'md'
-    }
+      size: 'md',
+    },
   ],
 
   layout: {
     columns: {
       desktop: 4,
       tablet: 2,
-      mobile: 1
+      mobile: 1,
     },
     showMoreThreshold: 4,
     resetButton: true,
     clearAllButton: true,
     compactMode: false,
-    spacing: 'md'
-  }
+    spacing: 'md',
+  },
 };

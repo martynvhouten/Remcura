@@ -60,7 +60,9 @@ export const useCountingStore = defineStore('counting', () => {
   );
 
   const nextProductToCount = computed(() => {
-    if (!availableProducts.value.length) { return null; }
+    if (!availableProducts.value.length) {
+      return null;
+    }
 
     const countedProductIds = countingEntries.value.map(
       entry => entry.product_id
@@ -136,18 +138,20 @@ export const useCountingStore = defineStore('counting', () => {
       if (error) throw error;
 
       // Transform to CountingProduct format
-      availableProducts.value = (data || []).map((item: Product & { stock_levels?: StockLevel[] }) => ({
-        id: item.product.id,
-        name: item.product.name,
-        sku: item.product.sku,
-        category: item.product.category,
-        brand: item.product.brand,
-        unit: item.product.unit,
-        current_system_quantity: item.current_quantity,
-        last_counted_at: item.last_counted_at,
-        location_name: item.location.name,
-        image_url: item.product.image_url,
-      }));
+      availableProducts.value = (data || []).map(
+        (item: Product & { stock_levels?: StockLevel[] }) => ({
+          id: item.product.id,
+          name: item.product.name,
+          sku: item.product.sku,
+          category: item.product.category,
+          brand: item.product.brand,
+          unit: item.product.unit,
+          current_system_quantity: item.current_quantity,
+          last_counted_at: item.last_counted_at,
+          location_name: item.location.name,
+          image_url: item.product.image_url,
+        })
+      );
 
       // Update session with product count
       if (currentSession.value) {
@@ -175,7 +179,8 @@ export const useCountingStore = defineStore('counting', () => {
     } = {}
   ) => {
     try {
-      if (!currentSession.value) throw new Error($t('counting.noactivecountingsession'));
+      if (!currentSession.value)
+        throw new Error($t('counting.noactivecountingsession'));
 
       // Get current system quantity
       const { data: stockLevel, error: stockError } = await supabase
@@ -268,7 +273,8 @@ export const useCountingStore = defineStore('counting', () => {
 
   const completeCountingSession = async () => {
     try {
-      if (!currentSession.value) throw new Error($t('counting.noactivecountingsession'));
+      if (!currentSession.value)
+        throw new Error($t('counting.noactivecountingsession'));
 
       await updateSession(currentSession.value.id, {
         status: 'completed',
@@ -331,7 +337,9 @@ export const useCountingStore = defineStore('counting', () => {
           p_reference_type: 'counting_session',
           p_reference_id: sessionId,
           p_reason_code: 'inventory_count',
-          p_notes: `Stock count adjustment: ${entry.variance > 0 ? '+' : ''}${entry.variance}`,
+          p_notes: `Stock count adjustment: ${entry.variance > 0 ? '+' : ''}${
+            entry.variance
+          }`,
         });
       }
 
@@ -415,7 +423,8 @@ export const useCountingStore = defineStore('counting', () => {
 
   const cancelCountingSession = async () => {
     try {
-      if (!currentSession.value) throw new Error($t('counting.noactivecountingsession'));
+      if (!currentSession.value)
+        throw new Error($t('counting.noactivecountingsession'));
 
       await updateSession(currentSession.value.id, {
         status: 'cancelled',

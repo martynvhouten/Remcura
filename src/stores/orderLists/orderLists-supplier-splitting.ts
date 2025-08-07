@@ -62,24 +62,42 @@ export function useOrderListsSupplierSplitting() {
   const eventEmitter = createEventEmitter('order-lists-supplier-splitting');
 
   // State
-  const splittingProgress = ref<{ current: number; total: number; status: string } | null>(null);
-  const sendingProgress = ref<{ current: number; total: number; status: string } | null>(null);
+  const splittingProgress = ref<{
+    current: number;
+    total: number;
+    status: string;
+  } | null>(null);
+  const sendingProgress = ref<{
+    current: number;
+    total: number;
+    status: string;
+  } | null>(null);
 
   // Actions
-  const splitOrderBySuppliers = async (items: ReorderSuggestion[]): Promise<SplitOrderResult> => {
-    splittingProgress.value = { current: 0, total: items.length, status: 'Analyzing items...' };
+  const splitOrderBySuppliers = async (
+    items: ReorderSuggestion[]
+  ): Promise<SplitOrderResult> => {
+    splittingProgress.value = {
+      current: 0,
+      total: items.length,
+      status: 'Analyzing items...',
+    };
 
     try {
       orderLogger.info(`Starting supplier splitting for ${items.length} items`);
 
       // Get all suppliers involved
-      const supplierIds = [...new Set(
-        items
-          .map(item => item.preferred_supplier_name)
-          .filter(Boolean)
-      )];
+      const supplierIds = [
+        ...new Set(
+          items.map(item => item.preferred_supplier_name).filter(Boolean)
+        ),
+      ];
 
-      splittingProgress.value = { current: 10, total: 100, status: 'Fetching supplier details...' };
+      splittingProgress.value = {
+        current: 10,
+        total: 100,
+        status: 'Fetching supplier details...',
+      };
 
       // Fetch full supplier details
       const { data: suppliers, error: suppliersError } = await supabase
@@ -89,22 +107,33 @@ export function useOrderListsSupplierSplitting() {
 
       if (suppliersError) throw suppliersError;
 
-      splittingProgress.value = { current: 30, total: 100, status: 'Fetching supplier products...' };
+      splittingProgress.value = {
+        current: 30,
+        total: 100,
+        status: 'Fetching supplier products...',
+      };
 
       // Fetch supplier-specific product details
       const productIds = items.map(item => item.product_id);
-      const { data: supplierProducts, error: supplierProductsError } = await supabase
-        .from('supplier_products')
-        .select(`
+      const { data: supplierProducts, error: supplierProductsError } =
+        await supabase
+          .from('supplier_products')
+          .select(
+            `
           *,
           supplier:suppliers(id, name, code, order_method, minimum_order_amount, shipping_cost, free_shipping_threshold, payment_terms),
           product:products(id, name, sku)
-        `)
-        .in('product_id', productIds);
+        `
+          )
+          .in('product_id', productIds);
 
       if (supplierProductsError) throw supplierProductsError;
 
-      splittingProgress.value = { current: 50, total: 100, status: 'Creating supplier orders...' };
+      splittingProgress.value = {
+        current: 50,
+        total: 100,
+        status: 'Creating supplier orders...',
+      };
 
       const supplierOrdersMap = new Map<string, SupplierOrder>();
       const itemsWithoutSupplier: OrderItemForSupplier[] = [];
@@ -112,16 +141,17 @@ export function useOrderListsSupplierSplitting() {
       // Process each item
       for (let i = 0; i < items.length; i++) {
         const item = items[i];
-        splittingProgress.value = { 
-          current: 50 + (i / items.length) * 40, 
-          total: 100, 
-          status: `Processing ${item.product_name}...` 
+        splittingProgress.value = {
+          current: 50 + (i / items.length) * 40,
+          total: 100,
+          status: `Processing ${item.product_name}...`,
         };
 
         // Find supplier product details
-        const supplierProduct = supplierProducts?.find(sp => 
-          sp.product_id === item.product_id && 
-          sp.supplier?.name === item.preferred_supplier_name
+        const supplierProduct = supplierProducts?.find(
+          sp =>
+            sp.product_id === item.product_id &&
+            sp.supplier?.name === item.preferred_supplier_name
         );
 
         if (!supplierProduct || !supplierProduct.supplier) {
@@ -133,7 +163,8 @@ export function useOrderListsSupplierSplitting() {
             supplier_sku: '',
             quantity: item.calculated_order_quantity,
             unit_price: item.preferred_unit_price || 0,
-            total_price: item.calculated_order_quantity * (item.preferred_unit_price || 0),
+            total_price:
+              item.calculated_order_quantity * (item.preferred_unit_price || 0),
             minimum_order_quantity: 1,
             order_multiple: 1,
             urgency_level: item.urgency_level,
@@ -148,7 +179,10 @@ export function useOrderListsSupplierSplitting() {
         // Initialize supplier order if not exists
         if (!supplierOrdersMap.has(supplierId)) {
           const estimatedDeliveryDate = new Date();
-          estimatedDeliveryDate.setDate(estimatedDeliveryDate.getDate() + (supplierProduct.lead_time_days || 7));
+          estimatedDeliveryDate.setDate(
+            estimatedDeliveryDate.getDate() +
+              (supplierProduct.lead_time_days || 7)
+          );
 
           supplierOrdersMap.set(supplierId, {
             supplier_id: supplierId,
@@ -157,7 +191,9 @@ export function useOrderListsSupplierSplitting() {
             items: [],
             total_items: 0,
             total_value: 0,
-            estimated_delivery_date: estimatedDeliveryDate.toISOString().split('T')[0],
+            estimated_delivery_date: estimatedDeliveryDate
+              .toISOString()
+              .split('T')[0],
             order_method: supplier.order_method || 'manual',
             minimum_order_amount: supplier.minimum_order_amount || 0,
             shipping_cost: supplier.shipping_cost || 0,
@@ -171,15 +207,17 @@ export function useOrderListsSupplierSplitting() {
 
         // Adjust quantity based on supplier constraints
         let adjustedQuantity = item.calculated_order_quantity;
-        
+
         // Apply minimum order quantity
         if (adjustedQuantity < supplierProduct.minimum_order_quantity) {
           adjustedQuantity = supplierProduct.minimum_order_quantity;
         }
-        
+
         // Apply order multiple
         if (supplierProduct.order_multiple > 1) {
-          adjustedQuantity = Math.ceil(adjustedQuantity / supplierProduct.order_multiple) * supplierProduct.order_multiple;
+          adjustedQuantity =
+            Math.ceil(adjustedQuantity / supplierProduct.order_multiple) *
+            supplierProduct.order_multiple;
         }
 
         const orderItem: OrderItemForSupplier = {
@@ -188,14 +226,18 @@ export function useOrderListsSupplierSplitting() {
           product_sku: item.product_sku,
           supplier_sku: supplierProduct.supplier_sku,
           quantity: adjustedQuantity,
-          unit_price: supplierProduct.cost_price || item.preferred_unit_price || 0,
-          total_price: adjustedQuantity * (supplierProduct.cost_price || item.preferred_unit_price || 0),
+          unit_price:
+            supplierProduct.cost_price || item.preferred_unit_price || 0,
+          total_price:
+            adjustedQuantity *
+            (supplierProduct.cost_price || item.preferred_unit_price || 0),
           minimum_order_quantity: supplierProduct.minimum_order_quantity || 1,
           order_multiple: supplierProduct.order_multiple || 1,
           urgency_level: item.urgency_level,
-          notes: adjustedQuantity !== item.calculated_order_quantity 
-            ? `Adjusted from ${item.calculated_order_quantity} due to supplier constraints`
-            : undefined,
+          notes:
+            adjustedQuantity !== item.calculated_order_quantity
+              ? `Adjusted from ${item.calculated_order_quantity} due to supplier constraints`
+              : undefined,
         };
 
         supplierOrder.items.push(orderItem);
@@ -203,47 +245,76 @@ export function useOrderListsSupplierSplitting() {
         supplierOrder.total_value += orderItem.total_price;
       }
 
-      splittingProgress.value = { current: 90, total: 100, status: 'Optimizing orders...' };
+      splittingProgress.value = {
+        current: 90,
+        total: 100,
+        status: 'Optimizing orders...',
+      };
 
       // Convert map to array and optimize
       const supplierOrders = Array.from(supplierOrdersMap.values());
 
       // Generate shipping optimization suggestions
       const shippingOptimizations: string[] = [];
-      
+
       supplierOrders.forEach(order => {
-        if (order.total_value < order.minimum_order_amount && order.minimum_order_amount > 0) {
+        if (
+          order.total_value < order.minimum_order_amount &&
+          order.minimum_order_amount > 0
+        ) {
           shippingOptimizations.push(
-            `${order.supplier_name}: Add €${(order.minimum_order_amount - order.total_value).toFixed(2)} to reach minimum order amount`
+            `${order.supplier_name}: Add €${(
+              order.minimum_order_amount - order.total_value
+            ).toFixed(2)} to reach minimum order amount`
           );
         }
-        
-        if (order.total_value < order.free_shipping_threshold && order.free_shipping_threshold > 0) {
+
+        if (
+          order.total_value < order.free_shipping_threshold &&
+          order.free_shipping_threshold > 0
+        ) {
           const needed = order.free_shipping_threshold - order.total_value;
           shippingOptimizations.push(
-            `${order.supplier_name}: Add €${needed.toFixed(2)} to qualify for free shipping (save €${order.shipping_cost})`
+            `${order.supplier_name}: Add €${needed.toFixed(
+              2
+            )} to qualify for free shipping (save €${order.shipping_cost})`
           );
         }
       });
 
       // Calculate delivery date range
-      const deliveryDates = supplierOrders.map(order => new Date(order.estimated_delivery_date));
-      const earliestDelivery = new Date(Math.min(...deliveryDates.map(d => d.getTime())));
-      const latestDelivery = new Date(Math.max(...deliveryDates.map(d => d.getTime())));
+      const deliveryDates = supplierOrders.map(
+        order => new Date(order.estimated_delivery_date)
+      );
+      const earliestDelivery = new Date(
+        Math.min(...deliveryDates.map(d => d.getTime()))
+      );
+      const latestDelivery = new Date(
+        Math.max(...deliveryDates.map(d => d.getTime()))
+      );
 
       const result: SplitOrderResult = {
         supplier_orders: supplierOrders,
         items_without_supplier: itemsWithoutSupplier,
         total_suppliers: supplierOrders.length,
-        total_estimated_cost: supplierOrders.reduce((sum, order) => sum + order.total_value, 0),
+        total_estimated_cost: supplierOrders.reduce(
+          (sum, order) => sum + order.total_value,
+          0
+        ),
         earliest_delivery_date: earliestDelivery.toISOString().split('T')[0],
         latest_delivery_date: latestDelivery.toISOString().split('T')[0],
         shipping_optimization_suggestions: shippingOptimizations,
       };
 
-      splittingProgress.value = { current: 100, total: 100, status: 'Complete!' };
+      splittingProgress.value = {
+        current: 100,
+        total: 100,
+        status: 'Complete!',
+      };
 
-      orderLogger.info(`✅ Successfully split order into ${supplierOrders.length} supplier orders`);
+      orderLogger.info(
+        `✅ Successfully split order into ${supplierOrders.length} supplier orders`
+      );
 
       // Emit event
       await eventEmitter.emit(StoreEvents.ORDER_SPLIT_COMPLETED, {
@@ -260,7 +331,6 @@ export function useOrderListsSupplierSplitting() {
       }, 2000);
 
       return result;
-
     } catch (error) {
       splittingProgress.value = null;
       orderLogger.error('Error splitting order by suppliers:', error);
@@ -268,8 +338,14 @@ export function useOrderListsSupplierSplitting() {
     }
   };
 
-  const sendOrdersToSuppliers = async (supplierOrders: SupplierOrder[]): Promise<OrderSendingResult[]> => {
-    sendingProgress.value = { current: 0, total: supplierOrders.length, status: 'Preparing to send orders...' };
+  const sendOrdersToSuppliers = async (
+    supplierOrders: SupplierOrder[]
+  ): Promise<OrderSendingResult[]> => {
+    sendingProgress.value = {
+      current: 0,
+      total: supplierOrders.length,
+      status: 'Preparing to send orders...',
+    };
 
     const results: OrderSendingResult[] = [];
 
@@ -279,25 +355,31 @@ export function useOrderListsSupplierSplitting() {
         sendingProgress.value = {
           current: i,
           total: supplierOrders.length,
-          status: `Sending order to ${order.supplier_name}...`
+          status: `Sending order to ${order.supplier_name}...`,
         };
 
         try {
           const result = await sendOrderToSupplier(order);
           results.push(result);
-          
-          orderLogger.info(`✅ Successfully sent order to ${order.supplier_name} via ${result.method_used}`);
+
+          orderLogger.info(
+            `✅ Successfully sent order to ${order.supplier_name} via ${result.method_used}`
+          );
         } catch (error) {
           const failedResult: OrderSendingResult = {
             supplier_id: order.supplier_id,
             supplier_name: order.supplier_name,
             status: 'failed',
             method_used: order.order_method,
-            error_message: error instanceof Error ? error.message : 'Unknown error',
+            error_message:
+              error instanceof Error ? error.message : 'Unknown error',
           };
           results.push(failedResult);
-          
-          orderLogger.error(`❌ Failed to send order to ${order.supplier_name}:`, error);
+
+          orderLogger.error(
+            `❌ Failed to send order to ${order.supplier_name}:`,
+            error
+          );
         }
 
         // Small delay between sends to avoid overwhelming APIs
@@ -309,7 +391,7 @@ export function useOrderListsSupplierSplitting() {
       sendingProgress.value = {
         current: supplierOrders.length,
         total: supplierOrders.length,
-        status: 'All orders processed!'
+        status: 'All orders processed!',
       };
 
       // Emit completion event
@@ -326,7 +408,6 @@ export function useOrderListsSupplierSplitting() {
       }, 3000);
 
       return results;
-
     } catch (error) {
       sendingProgress.value = null;
       orderLogger.error('Error sending orders to suppliers:', error);
@@ -334,22 +415,24 @@ export function useOrderListsSupplierSplitting() {
     }
   };
 
-  const sendOrderToSupplier = async (order: SupplierOrder): Promise<OrderSendingResult> => {
+  const sendOrderToSupplier = async (
+    order: SupplierOrder
+  ): Promise<OrderSendingResult> => {
     const orderReference = `ORD-${Date.now()}-${order.supplier_code}`;
 
     switch (order.order_method) {
       case 'api':
         return await sendOrderViaAPI(order, orderReference);
-      
+
       case 'email':
         return await sendOrderViaEmail(order, orderReference);
-      
+
       case 'pdf':
         return await sendOrderViaPDF(order, orderReference);
 
       case 'edi':
         return await sendOrderViaEDI(order, orderReference);
-      
+
       default:
         return {
           supplier_id: order.supplier_id,
@@ -362,24 +445,44 @@ export function useOrderListsSupplierSplitting() {
     }
   };
 
-  const sendOrderViaAPI = async (order: SupplierOrder, orderReference: string): Promise<OrderSendingResult> => {
-    const { apiService } = await import('@/services/supplierIntegration/apiService');
+  const sendOrderViaAPI = async (
+    order: SupplierOrder,
+    orderReference: string
+  ): Promise<OrderSendingResult> => {
+    const { apiService } = await import(
+      '@/services/supplierIntegration/apiService'
+    );
     return apiService.sendOrderViaAPI(order, orderReference);
   };
 
-  const sendOrderViaEmail = async (order: SupplierOrder, orderReference: string): Promise<OrderSendingResult> => {
+  const sendOrderViaEmail = async (
+    order: SupplierOrder,
+    orderReference: string
+  ): Promise<OrderSendingResult> => {
     // For email orders, we use the PDF service which sends via email
-    const { pdfService } = await import('@/services/supplierIntegration/pdfService');
+    const { pdfService } = await import(
+      '@/services/supplierIntegration/pdfService'
+    );
     return pdfService.sendOrderViaPDF(order, orderReference);
   };
 
-  const sendOrderViaPDF = async (order: SupplierOrder, orderReference: string): Promise<OrderSendingResult> => {
-    const { pdfService } = await import('@/services/supplierIntegration/pdfService');
+  const sendOrderViaPDF = async (
+    order: SupplierOrder,
+    orderReference: string
+  ): Promise<OrderSendingResult> => {
+    const { pdfService } = await import(
+      '@/services/supplierIntegration/pdfService'
+    );
     return pdfService.sendOrderViaPDF(order, orderReference);
   };
 
-  const sendOrderViaEDI = async (order: SupplierOrder, orderReference: string): Promise<OrderSendingResult> => {
-    const { ediService } = await import('@/services/supplierIntegration/ediService');
+  const sendOrderViaEDI = async (
+    order: SupplierOrder,
+    orderReference: string
+  ): Promise<OrderSendingResult> => {
+    const { ediService } = await import(
+      '@/services/supplierIntegration/ediService'
+    );
     return ediService.sendOrderViaEDI(order, orderReference);
   };
 

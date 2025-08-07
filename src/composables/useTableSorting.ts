@@ -28,13 +28,13 @@ export function useTableSorting(
 
   const onTableRequest = (props: any) => {
     const { page, rowsPerPage, sortBy, descending } = props.pagination;
-    
+
     // Update pagination state - this triggers reactivity
     pagination.value.page = page;
     pagination.value.rowsPerPage = rowsPerPage;
     pagination.value.sortBy = sortBy;
     pagination.value.descending = descending;
-    
+
     // Keep existing rowsNumber if not provided
     if (props.pagination.rowsNumber !== undefined) {
       pagination.value.rowsNumber = props.pagination.rowsNumber;
@@ -42,8 +42,8 @@ export function useTableSorting(
   };
 
   const sortData = <T>(
-    data: T[], 
-    sortBy?: string, 
+    data: T[],
+    sortBy?: string,
     descending?: boolean,
     customSorter?: (a: T, b: T, sortBy: string, descending: boolean) => number
   ): T[] => {
@@ -60,7 +60,11 @@ export function useTableSorting(
       let bVal = getFieldValue(b, sortBy);
 
       // Handle null/undefined values
-      if ((aVal === null || aVal === undefined) && (bVal === null || bVal === undefined)) return 0;
+      if (
+        (aVal === null || aVal === undefined) &&
+        (bVal === null || bVal === undefined)
+      )
+        return 0;
       if (aVal === null || aVal === undefined) return descending ? 1 : -1;
       if (bVal === null || bVal === undefined) return descending ? -1 : 1;
 
@@ -103,7 +107,7 @@ export function useTableSorting(
     if (typeof field === 'function') {
       return field(obj);
     }
-    
+
     // Support nested field access (e.g., 'product.name')
     return field.split('.').reduce((current, key) => {
       return current && current[key] !== undefined ? current[key] : null;
@@ -114,9 +118,12 @@ export function useTableSorting(
   const isDate = (value: any): boolean => {
     if (!value) return false;
     const date = new Date(value);
-    return !isNaN(date.getTime()) && 
-           (typeof value === 'string' && /^\d{4}-\d{2}-\d{2}/.test(value)) ||
-           value instanceof Date;
+    return (
+      (!isNaN(date.getTime()) &&
+        typeof value === 'string' &&
+        /^\d{4}-\d{2}-\d{2}/.test(value)) ||
+      value instanceof Date
+    );
   };
 
   // Helper function to check if value is numeric

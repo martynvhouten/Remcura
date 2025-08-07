@@ -1,6 +1,9 @@
 import { supabase } from '@/boot/supabase';
 import { inventoryLogger } from '@/utils/logger';
-import { centralOrderService, type AutoReorderConfig } from '@/services/orderOrchestration/centralOrderService';
+import {
+  centralOrderService,
+  type AutoReorderConfig,
+} from '@/services/orderOrchestration/centralOrderService';
 
 export interface LowStockItem {
   id: string;
@@ -38,7 +41,7 @@ export interface DeliveryProcessingResult {
 
 /**
  * Inventory Automation Service
- * 
+ *
  * Handles automated inventory operations:
  * - Low stock detection and alerts
  * - Scheduled automatic reordering
@@ -46,17 +49,22 @@ export interface DeliveryProcessingResult {
  * - Inventory analytics and reporting
  */
 export class InventoryAutomationService {
-  
   /**
    * Check for low stock items across all locations
    */
-  async checkLowStockItems(practiceId: string, locationId?: string): Promise<LowStockItem[]> {
+  async checkLowStockItems(
+    practiceId: string,
+    locationId?: string
+  ): Promise<LowStockItem[]> {
     try {
-      inventoryLogger.info(`Checking low stock items for practice ${practiceId}`);
+      inventoryLogger.info(
+        `Checking low stock items for practice ${practiceId}`
+      );
 
       let query = supabase
         .from('stock_levels')
-        .select(`
+        .select(
+          `
           id,
           product_id,
           location_id,
@@ -67,7 +75,8 @@ export class InventoryAutomationService {
           last_movement_at,
           products!inner(name, sku),
           practice_locations!inner(name)
-        `)
+        `
+        )
         .eq('practice_id', practiceId);
 
       if (locationId) {
@@ -75,9 +84,13 @@ export class InventoryAutomationService {
       }
 
       // Get items where current quantity is below minimum or reorder point
-      query = query.or('current_quantity.lt.minimum_quantity,current_quantity.lt.reorder_point');
+      query = query.or(
+        'current_quantity.lt.minimum_quantity,current_quantity.lt.reorder_point'
+      );
 
-      const { data, error } = await query.order('current_quantity', { ascending: true });
+      const { data, error } = await query.order('current_quantity', {
+        ascending: true,
+      });
 
       if (error) throw error;
 
@@ -88,9 +101,10 @@ export class InventoryAutomationService {
           item.reorder_point
         );
 
-        const daysOutOfStock = item.current_quantity <= 0 
-          ? this.calculateDaysOutOfStock(item.last_movement_at)
-          : undefined;
+        const daysOutOfStock =
+          item.current_quantity <= 0
+            ? this.calculateDaysOutOfStock(item.last_movement_at)
+            : undefined;
 
         return {
           id: item.id,
@@ -104,10 +118,9 @@ export class InventoryAutomationService {
           reorderPoint: item.reorder_point,
           preferredSupplierId: item.preferred_supplier_id,
           urgencyLevel,
-          daysOutOfStock
+          daysOutOfStock,
         };
       });
-
     } catch (error) {
       inventoryLogger.error('Error checking low stock items:', error);
       throw error;
@@ -119,10 +132,12 @@ export class InventoryAutomationService {
    */
   async generateReorderSuggestions(practiceId: string): Promise<any[]> {
     try {
-      inventoryLogger.info(`Generating reorder suggestions for practice ${practiceId}`);
+      inventoryLogger.info(
+        `Generating reorder suggestions for practice ${practiceId}`
+      );
 
       const lowStockItems = await this.checkLowStockItems(practiceId);
-      
+
       if (lowStockItems.length === 0) {
         return [];
       }
@@ -144,7 +159,7 @@ export class InventoryAutomationService {
       // Generate suggestions with supplier information
       const suggestions = lowStockItems.map(item => {
         const supplier = suppliers.find(s => s.id === item.preferredSupplierId);
-        
+
         // Calculate suggested order quantity
         const suggestedQuantity = this.calculateOrderQuantity(
           item.currentQuantity,
@@ -159,12 +174,11 @@ export class InventoryAutomationService {
           minimumOrderAmount: supplier?.minimum_order_amount || 0,
           leadTimeDays: supplier?.lead_time_days || 7,
           estimatedCost: suggestedQuantity * 10, // Placeholder - would need product pricing
-          priority: item.urgencyLevel === 'critical' ? 'urgent' : 'normal'
+          priority: item.urgencyLevel === 'critical' ? 'urgent' : 'normal',
         };
       });
 
       return suggestions;
-
     } catch (error) {
       inventoryLogger.error('Error generating reorder suggestions:', error);
       throw error;
@@ -181,11 +195,13 @@ export class InventoryAutomationService {
       // Get all practices with automation enabled
       const { data: practices, error } = await supabase
         .from('practice_inventory_settings')
-        .select(`
+        .select(
+          `
           practice_id,
           auto_reorder_enabled,
           practices!inner(id, name)
-        `)
+        `
+        )
         .eq('auto_reorder_enabled', true);
 
       if (error) throw error;
@@ -203,28 +219,32 @@ export class InventoryAutomationService {
             enableLowStockReorder: true,
             enableScheduledReorder: true,
             approvalRequired: false, // For scheduled orders, we assume approval is not required
-            maxOrderValue: 1000 // Default limit for automatic orders
+            maxOrderValue: 1000, // Default limit for automatic orders
           };
 
-          const result = await centralOrderService.processAutomaticReorder(config);
-          
+          const result = await centralOrderService.processAutomaticReorder(
+            config
+          );
+
           if (result.status === 'success' && result.totalItems > 0) {
             inventoryLogger.info(
               `Successfully processed automatic reorder for ${practice.practices.name}: ` +
-              `${result.totalItems} items, €${result.totalValue.toFixed(2)}`
+                `${result.totalItems} items, €${result.totalValue.toFixed(2)}`
             );
 
             // Create success notification
             await this.createAutomationNotification(
               practice.practice_id,
               'Automatische bestelling geplaatst',
-              `${result.totalItems} producten besteld voor €${result.totalValue.toFixed(2)}`,
+              `${
+                result.totalItems
+              } producten besteld voor €${result.totalValue.toFixed(2)}`,
               'success'
             );
           } else if (result.errors.length > 0) {
             inventoryLogger.warn(
               `Partial success for automatic reorder for ${practice.practices.name}: ` +
-              `${result.errors.length} errors`
+                `${result.errors.length} errors`
             );
 
             // Create warning notification
@@ -235,7 +255,6 @@ export class InventoryAutomationService {
               'warning'
             );
           }
-
         } catch (practiceError) {
           inventoryLogger.error(
             `Error processing automatic reorder for practice ${practice.practice_id}:`,
@@ -251,7 +270,6 @@ export class InventoryAutomationService {
           );
         }
       }
-
     } catch (error) {
       inventoryLogger.error('Error in scheduled automatic reorders:', error);
       throw error;
@@ -268,14 +286,16 @@ export class InventoryAutomationService {
       // Get orders that are marked as delivered but not yet processed
       const { data: deliveredOrders, error } = await supabase
         .from('supplier_orders')
-        .select(`
+        .select(
+          `
           id,
           order_reference,
           supplier_id,
           practice_id,
           status,
           suppliers(name)
-        `)
+        `
+        )
         .eq('status', 'delivered')
         .is('stock_updated_at', null); // Not yet processed
 
@@ -296,9 +316,9 @@ export class InventoryAutomationService {
           // Mark order as stock updated
           await supabase
             .from('supplier_orders')
-            .update({ 
+            .update({
               stock_updated_at: new Date().toISOString(),
-              status: 'completed'
+              status: 'completed',
             })
             .eq('id', order.id);
 
@@ -307,14 +327,13 @@ export class InventoryAutomationService {
             itemsProcessed: 0, // Would need to count items
             stockUpdated: true,
             notificationSent: true,
-            errors: []
+            errors: [],
           });
 
           inventoryLogger.info(
             `Successfully processed delivery for order ${order.order_reference} ` +
-            `from ${order.suppliers.name}`
+              `from ${order.suppliers.name}`
           );
-
         } catch (orderError) {
           inventoryLogger.error(
             `Error processing delivery for order ${order.id}:`,
@@ -326,13 +345,16 @@ export class InventoryAutomationService {
             itemsProcessed: 0,
             stockUpdated: false,
             notificationSent: false,
-            errors: [orderError instanceof Error ? orderError.message : 'Unknown error']
+            errors: [
+              orderError instanceof Error
+                ? orderError.message
+                : 'Unknown error',
+            ],
           });
         }
       }
 
       return results;
-
     } catch (error) {
       inventoryLogger.error('Error processing incoming deliveries:', error);
       throw error;
@@ -351,11 +373,15 @@ export class InventoryAutomationService {
     recommendations: string[];
   }> {
     try {
-      inventoryLogger.info(`Running inventory health check for practice ${practiceId}`);
+      inventoryLogger.info(
+        `Running inventory health check for practice ${practiceId}`
+      );
 
       // Check low stock items
       const lowStockItems = await this.checkLowStockItems(practiceId);
-      const zeroStockItems = lowStockItems.filter(item => item.currentQuantity <= 0);
+      const zeroStockItems = lowStockItems.filter(
+        item => item.currentQuantity <= 0
+      );
 
       // Check expired batches
       const { data: expiredBatches } = await supabase
@@ -368,7 +394,7 @@ export class InventoryAutomationService {
       // Check expiring batches (next 30 days)
       const futureDate = new Date();
       futureDate.setDate(futureDate.getDate() + 30);
-      
+
       const { data: expiringBatches } = await supabase
         .from('product_batches')
         .select('id')
@@ -387,25 +413,35 @@ export class InventoryAutomationService {
 
       // Generate recommendations
       const recommendations = [];
-      
+
       if (lowStockItems.length > 0) {
-        recommendations.push(`${lowStockItems.length} producten hebben lage voorraad en moeten worden besteld`);
+        recommendations.push(
+          `${lowStockItems.length} producten hebben lage voorraad en moeten worden besteld`
+        );
       }
-      
+
       if (zeroStockItems.length > 0) {
-        recommendations.push(`${zeroStockItems.length} producten zijn uitverkocht - prioriteit bestelling nodig`);
+        recommendations.push(
+          `${zeroStockItems.length} producten zijn uitverkocht - prioriteit bestelling nodig`
+        );
       }
-      
+
       if (expiredBatches?.length) {
-        recommendations.push(`${expiredBatches.length} batches zijn verlopen en moeten worden weggegooid`);
+        recommendations.push(
+          `${expiredBatches.length} batches zijn verlopen en moeten worden weggegooid`
+        );
       }
-      
+
       if (expiringBatches?.length) {
-        recommendations.push(`${expiringBatches.length} batches verlopen binnen 30 dagen - gebruik eerst`);
+        recommendations.push(
+          `${expiringBatches.length} batches verlopen binnen 30 dagen - gebruik eerst`
+        );
       }
-      
+
       if (overStockItems?.length) {
-        recommendations.push(`${overStockItems.length} producten hebben overvoorraad - overweeg minder te bestellen`);
+        recommendations.push(
+          `${overStockItems.length} producten hebben overvoorraad - overweeg minder te bestellen`
+        );
       }
 
       return {
@@ -414,9 +450,8 @@ export class InventoryAutomationService {
         expiringBatchCount: expiringBatches?.length || 0,
         zeroStockCount: zeroStockItems.length,
         overStockCount: overStockItems?.length || 0,
-        recommendations
+        recommendations,
       };
-
     } catch (error) {
       inventoryLogger.error('Error running inventory health check:', error);
       throw error;
@@ -440,7 +475,9 @@ export class InventoryAutomationService {
   private calculateDaysOutOfStock(lastMovementAt: string): number {
     const lastMovement = new Date(lastMovementAt);
     const now = new Date();
-    return Math.floor((now.getTime() - lastMovement.getTime()) / (1000 * 60 * 60 * 24));
+    return Math.floor(
+      (now.getTime() - lastMovement.getTime()) / (1000 * 60 * 60 * 24)
+    );
   }
 
   private calculateOrderQuantity(
@@ -459,7 +496,8 @@ export class InventoryAutomationService {
     message: string,
     type: 'success' | 'warning' | 'error'
   ): Promise<void> {
-    const priority = type === 'error' ? 'high' : type === 'warning' ? 'normal' : 'low';
+    const priority =
+      type === 'error' ? 'high' : type === 'warning' ? 'normal' : 'low';
 
     await supabase.from('notifications').insert({
       practice_id: practiceId,
@@ -468,7 +506,7 @@ export class InventoryAutomationService {
       category: 'system_notification',
       priority,
       action_url: '/inventory/levels',
-      action_label: 'Bekijk voorraad'
+      action_label: 'Bekijk voorraad',
     });
   }
 }

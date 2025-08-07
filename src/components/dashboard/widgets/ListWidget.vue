@@ -7,7 +7,7 @@
         <p>{{ t('dashboard.noOrderSuggestions') }}</p>
       </div>
       <div v-else class="suggestion-items">
-        <div 
+        <div
           v-for="suggestion in data.suggestions"
           :key="suggestion.id"
           class="suggestion-item"
@@ -15,7 +15,7 @@
           <div class="suggestion-content">
             <div class="suggestion-header">
               <h6 class="product-name">{{ suggestion.products?.name }}</h6>
-              <q-chip 
+              <q-chip
                 :color="getUrgencyColor(suggestion.urgency_level)"
                 text-color="white"
                 size="sm"
@@ -62,15 +62,11 @@
         <p>{{ t('dashboard.noRecentOrders') }}</p>
       </div>
       <div v-else class="order-items">
-        <div 
-          v-for="order in data.orders"
-          :key="order.id"
-          class="order-item"
-        >
+        <div v-for="order in data.orders" :key="order.id" class="order-item">
           <div class="order-content">
             <div class="order-header">
               <span class="order-number">#{{ order.order_number }}</span>
-              <q-chip 
+              <q-chip
                 :color="getStatusColor(order.status)"
                 text-color="white"
                 size="sm"
@@ -85,7 +81,9 @@
               </div>
               <div class="order-amount" v-if="order.total_amount">
                 <span class="label">Bedrag:</span>
-                <span class="value">{{ formatCurrency(order.total_amount) }}</span>
+                <span class="value">{{
+                  formatCurrency(order.total_amount)
+                }}</span>
               </div>
             </div>
             <div class="order-actions">
@@ -105,7 +103,7 @@
     <!-- Generic List (fallback) -->
     <div v-else class="generic-list">
       <div class="list-items">
-        <div 
+        <div
           v-for="(item, index) in genericItems"
           :key="index"
           class="list-item"
@@ -113,7 +111,9 @@
           <q-icon :name="item.icon || 'info'" color="primary" />
           <div class="item-content">
             <div class="item-title">{{ item.title || item.name }}</div>
-            <div class="item-subtitle">{{ item.subtitle || item.description }}</div>
+            <div class="item-subtitle">
+              {{ item.subtitle || item.description }}
+            </div>
           </div>
         </div>
       </div>
@@ -122,312 +122,336 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue';
-import { useRouter } from 'vue-router';
-import { useI18n } from 'vue-i18n';
-import { useFormatting } from '@/composables/useFormatting';
-import { BaseDashboardWidget } from '@/components/cards';
+  import { computed } from 'vue';
+  import { useRouter } from 'vue-router';
+  import { useI18n } from 'vue-i18n';
+  import { useFormatting } from '@/composables/useFormatting';
+  import { BaseDashboardWidget } from '@/components/cards';
 
-const { t } = useI18n();
+  const { t } = useI18n();
 
-interface ListData {
-  suggestions?: Array<{
-    id: string;
-    current_stock: number;
-    suggested_quantity: number;
-    urgency_level: string;
-    products?: {
-      name: string;
-      sku: string;
-    };
-  }>;
-  orders?: Array<{
-    id: string;
-    order_number: string;
-    status: string;
-    order_date: string;
-    total_amount?: number;
-  }>;
-  items?: Array<{
-    id?: string;
-    title?: string;
-    name?: string;
-    subtitle?: string;
-    description?: string;
-    icon?: string;
-  }>;
-}
-
-interface Props {
-  data: ListData;
-  widgetId: string;
-}
-
-const props = defineProps<Props>();
-const router = useRouter();
-const { formatDate, formatCurrency } = useFormatting();
-
-const genericItems = computed(() => props.data.items || []);
-
-function getUrgencyColor(urgency: string): string {
-  switch (urgency.toLowerCase()) {
-    case 'critical': return 'red';
-    case 'high': return 'deep-orange';
-    case 'medium': return 'orange';
-    case 'low': return 'blue';
-    default: return 'grey';
+  interface ListData {
+    suggestions?: Array<{
+      id: string;
+      current_stock: number;
+      suggested_quantity: number;
+      urgency_level: string;
+      products?: {
+        name: string;
+        sku: string;
+      };
+    }>;
+    orders?: Array<{
+      id: string;
+      order_number: string;
+      status: string;
+      order_date: string;
+      total_amount?: number;
+    }>;
+    items?: Array<{
+      id?: string;
+      title?: string;
+      name?: string;
+      subtitle?: string;
+      description?: string;
+      icon?: string;
+    }>;
   }
-}
 
-function getUrgencyLabel(urgency: string): string {
-  switch (urgency.toLowerCase()) {
-    case 'critical': return t('priority.critical');
-    case 'high': return t('priority.high');
-    case 'medium': return t('priority.medium');
-    case 'low': return t('priority.low');
-    default: return urgency;
+  interface Props {
+    data: ListData;
+    widgetId: string;
   }
-}
 
-function getStatusColor(status: string): string {
-  switch (status.toLowerCase()) {
-    case 'delivered': return 'positive';
-    case 'shipped': return 'info';
-    case 'confirmed': return 'primary';
-    case 'submitted': return 'warning';
-    case 'draft': return 'grey';
-    case 'cancelled': return 'negative';
-    default: return 'grey';
-  }
-}
+  const props = defineProps<Props>();
+  const router = useRouter();
+  const { formatDate, formatCurrency } = useFormatting();
 
-function getStatusLabel(status: string): string {
-  switch (status.toLowerCase()) {
-    case 'delivered': return t('orderStatus.delivered');
-    case 'shipped': return t('orderStatus.shipped');
-    case 'confirmed': return t('orderStatus.confirmed');
-    case 'submitted': return t('orderStatus.submitted');
-    case 'draft': return t('orderStatus.draft');
-    case 'cancelled': return t('orderStatus.cancelled');
-    default: return status;
-  }
-}
+  const genericItems = computed(() => props.data.items || []);
 
-function createOrder(suggestion: any) {
-  router.push({
-    path: '/orders/new',
-    query: { 
-      product: suggestion.products?.sku,
-      quantity: suggestion.suggested_quantity
+  function getUrgencyColor(urgency: string): string {
+    switch (urgency.toLowerCase()) {
+      case 'critical':
+        return 'red';
+      case 'high':
+        return 'deep-orange';
+      case 'medium':
+        return 'orange';
+      case 'low':
+        return 'blue';
+      default:
+        return 'grey';
     }
-  });
-}
+  }
 
-function viewProduct(suggestion: any) {
-  router.push({
-    path: '/inventory/levels',
-    query: { search: suggestion.products?.sku }
-  });
-}
+  function getUrgencyLabel(urgency: string): string {
+    switch (urgency.toLowerCase()) {
+      case 'critical':
+        return t('priority.critical');
+      case 'high':
+        return t('priority.high');
+      case 'medium':
+        return t('priority.medium');
+      case 'low':
+        return t('priority.low');
+      default:
+        return urgency;
+    }
+  }
 
-function viewOrder(order: any) {
-  router.push(`/orders/${order.id}`);
-}
+  function getStatusColor(status: string): string {
+    switch (status.toLowerCase()) {
+      case 'delivered':
+        return 'positive';
+      case 'shipped':
+        return 'info';
+      case 'confirmed':
+        return 'primary';
+      case 'submitted':
+        return 'warning';
+      case 'draft':
+        return 'grey';
+      case 'cancelled':
+        return 'negative';
+      default:
+        return 'grey';
+    }
+  }
+
+  function getStatusLabel(status: string): string {
+    switch (status.toLowerCase()) {
+      case 'delivered':
+        return t('orderStatus.delivered');
+      case 'shipped':
+        return t('orderStatus.shipped');
+      case 'confirmed':
+        return t('orderStatus.confirmed');
+      case 'submitted':
+        return t('orderStatus.submitted');
+      case 'draft':
+        return t('orderStatus.draft');
+      case 'cancelled':
+        return t('orderStatus.cancelled');
+      default:
+        return status;
+    }
+  }
+
+  function createOrder(suggestion: any) {
+    router.push({
+      path: '/orders/new',
+      query: {
+        product: suggestion.products?.sku,
+        quantity: suggestion.suggested_quantity,
+      },
+    });
+  }
+
+  function viewProduct(suggestion: any) {
+    router.push({
+      path: '/inventory/levels',
+      query: { search: suggestion.products?.sku },
+    });
+  }
+
+  function viewOrder(order: any) {
+    router.push(`/orders/${order.id}`);
+  }
 </script>
 
 <style lang="scss" scoped>
-// List widget content styling (wrapper now handled by BaseDashboardWidget)
+  // List widget content styling (wrapper now handled by BaseDashboardWidget)
 
-.empty-state {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
-  color: var(--text-muted);
-  padding: var(--space-6);
-  
-  p {
-    margin: var(--space-3) 0 0 0;
-    font-size: var(--text-base);
-  }
-}
-
-// Suggestions List
-.suggestions-list,
-.orders-list {
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  
-  .suggestion-items,
-  .order-items {
+  .empty-state {
     flex: 1;
-    overflow-y: auto;
-    
-    .suggestion-item,
-    .order-item {
-      padding: var(--space-4);
-      border-bottom: 1px solid var(--neutral-200);
-      
-      &:hover {
-        background: var(--neutral-50);
-      }
-      
-      &:last-child {
-        border-bottom: none;
-      }
-      
-      .suggestion-content,
-      .order-content {
-        .suggestion-header,
-        .order-header {
-          display: flex;
-          justify-content: space-between;
-          align-items: center;
-          margin-bottom: var(--space-3);
-          
-          .product-name {
-            margin: 0;
-            font-size: var(--text-base);
-            font-weight: var(--font-weight-semibold);
-            color: var(--text-primary);
-          }
-          
-          .order-number {
-            font-weight: var(--font-weight-semibold);
-            color: var(--text-primary);
-          }
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    color: var(--text-muted);
+    padding: var(--space-6);
+
+    p {
+      margin: var(--space-3) 0 0 0;
+      font-size: var(--text-base);
+    }
+  }
+
+  // Suggestions List
+  .suggestions-list,
+  .orders-list {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+
+    .suggestion-items,
+    .order-items {
+      flex: 1;
+      overflow-y: auto;
+
+      .suggestion-item,
+      .order-item {
+        padding: var(--space-4);
+        border-bottom: 1px solid var(--neutral-200);
+
+        &:hover {
+          background: var(--neutral-50);
         }
-        
-        .suggestion-details,
-        .order-details {
-          display: grid;
-          grid-template-columns: 1fr 1fr;
-          gap: var(--space-2);
-          margin-bottom: var(--space-4);
-          
-          > div {
+
+        &:last-child {
+          border-bottom: none;
+        }
+
+        .suggestion-content,
+        .order-content {
+          .suggestion-header,
+          .order-header {
             display: flex;
             justify-content: space-between;
-            font-size: var(--text-sm);
-            
-            .label {
-              color: var(--text-muted);
+            align-items: center;
+            margin-bottom: var(--space-3);
+
+            .product-name {
+              margin: 0;
+              font-size: var(--text-base);
+              font-weight: var(--font-weight-semibold);
+              color: var(--text-primary);
             }
-            
-            .value {
-              font-weight: var(--font-weight-medium);
+
+            .order-number {
+              font-weight: var(--font-weight-semibold);
               color: var(--text-primary);
             }
           }
-        }
-        
-        .suggestion-actions,
-        .order-actions {
-          display: flex;
-          gap: var(--space-2);
+
+          .suggestion-details,
+          .order-details {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: var(--space-2);
+            margin-bottom: var(--space-4);
+
+            > div {
+              display: flex;
+              justify-content: space-between;
+              font-size: var(--text-sm);
+
+              .label {
+                color: var(--text-muted);
+              }
+
+              .value {
+                font-weight: var(--font-weight-medium);
+                color: var(--text-primary);
+              }
+            }
+          }
+
+          .suggestion-actions,
+          .order-actions {
+            display: flex;
+            gap: var(--space-2);
+          }
         }
       }
     }
   }
-}
 
-// Generic List
-.generic-list {
-  .list-items {
+  // Generic List
+  .generic-list {
+    .list-items {
+      .list-item {
+        display: flex;
+        align-items: center;
+        gap: var(--space-3);
+        padding: var(--space-3);
+        border-bottom: 1px solid var(--neutral-200);
+
+        &:hover {
+          background: var(--neutral-50);
+        }
+
+        &:last-child {
+          border-bottom: none;
+        }
+
+        .item-content {
+          flex: 1;
+
+          .item-title {
+            font-weight: var(--font-weight-medium);
+            color: var(--text-primary);
+            margin-bottom: var(--space-1);
+          }
+
+          .item-subtitle {
+            font-size: var(--text-sm);
+            color: var(--text-muted);
+          }
+        }
+      }
+    }
+  }
+
+  // Dark mode
+  body.body--dark {
+    .suggestion-item,
+    .order-item,
     .list-item {
-      display: flex;
-      align-items: center;
-      gap: var(--space-3);
-      padding: var(--space-3);
-      border-bottom: 1px solid var(--neutral-200);
-      
-      &:hover {
-        background: var(--neutral-50);
-      }
-      
-      &:last-child {
-        border-bottom: none;
-      }
-      
-      .item-content {
-        flex: 1;
-        
-        .item-title {
-          font-weight: var(--font-weight-medium);
-          color: var(--text-primary);
-          margin-bottom: var(--space-1);
-        }
-        
-        .item-subtitle {
-          font-size: var(--text-sm);
-          color: var(--text-muted);
-        }
-      }
-    }
-  }
-}
+      border-color: var(--neutral-700);
 
-// Dark mode
-body.body--dark {
-  .suggestion-item,
-  .order-item,
-  .list-item {
-    border-color: var(--neutral-700);
-    
-    &:hover {
-      background: var(--neutral-800);
+      &:hover {
+        background: var(--neutral-800);
+      }
     }
-  }
-  
-  .suggestion-content,
-  .order-content {
-    .suggestion-header .product-name,
-    .order-header .order-number {
-      color: var(--text-primary-dark);
-    }
-    
-    .suggestion-details,
-    .order-details {
-      .value {
+
+    .suggestion-content,
+    .order-content {
+      .suggestion-header .product-name,
+      .order-header .order-number {
         color: var(--text-primary-dark);
       }
-    }
-  }
-  
-  .list-item .item-content .item-title {
-    color: var(--text-primary-dark);
-  }
-  
-  .empty-state {
-    color: var(--text-muted-dark);
-  }
-}
 
-// Mobile optimizations
-@media (max-width: 768px) {
-  .suggestion-details,
-  .order-details {
-    grid-template-columns: 1fr;
-    gap: var(--space-1);
-  }
-  
-  .suggestion-actions,
-  .order-actions {
-    flex-direction: column;
-    
-    .q-btn {
-      justify-content: center;
+      .suggestion-details,
+      .order-details {
+        .value {
+          color: var(--text-primary-dark);
+        }
+      }
+    }
+
+    .list-item .item-content .item-title {
+      color: var(--text-primary-dark);
+    }
+
+    .empty-state {
+      color: var(--text-muted-dark);
     }
   }
-  
-  .suggestion-header,
-  .order-header {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: var(--space-2);
+
+  // Mobile optimizations
+  @media (max-width: 768px) {
+    .suggestion-details,
+    .order-details {
+      grid-template-columns: 1fr;
+      gap: var(--space-1);
+    }
+
+    .suggestion-actions,
+    .order-actions {
+      flex-direction: column;
+
+      .q-btn {
+        justify-content: center;
+      }
+    }
+
+    .suggestion-header,
+    .order-header {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: var(--space-2);
+    }
   }
-}
-</style> 
+</style>

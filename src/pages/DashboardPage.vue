@@ -13,9 +13,11 @@
             :options="demoRoleOptions"
             option-value="value"
             option-label="label"
+            emit-value
+            map-options
             dense
             outlined
-            style="min-width: 250px; margin-right: 12px;"
+            style="min-width: 250px; margin-right: 12px"
             :label="$t('dashboard.demoRoleSwitch.label')"
             @update:model-value="switchDemoRole"
             color="primary"
@@ -25,7 +27,7 @@
             <template #prepend>
               <q-icon name="swap_horiz" />
             </template>
-            
+
             <template #option="scope">
               <q-item v-bind="scope.itemProps" class="role-option-item">
                 <q-item-section avatar>
@@ -36,15 +38,15 @@
                 </q-item-section>
               </q-item>
             </template>
-            
-            <template #selected-item="scope">
+
+            <template #selected>
               <div class="row items-center q-gutter-xs">
-                <q-icon :name="scope.opt.icon" size="sm" />
-                <span>{{ scope.opt.label }}</span>
+                <q-icon :name="selectedRoleIcon" size="sm" />
+                <span>{{ selectedRoleLabel }}</span>
               </div>
             </template>
           </q-select>
-          
+
           <q-btn
             flat
             round
@@ -98,8 +100,8 @@
           class="alert-banner"
         >
           <template #avatar>
-            <q-icon 
-              :name="getAlertIcon(alert.type)" 
+            <q-icon
+              :name="getAlertIcon(alert.type)"
               :color="alert.type === 'warning' ? 'warning' : alert.type"
             />
           </template>
@@ -132,8 +134,36 @@
         </div>
       </transition>
 
+      <!-- Platform Owner Message -->
+      <div
+        v-if="selectedDemoRole === 'platform_owner'"
+        class="platform-owner-message"
+      >
+        <q-banner class="bg-deep-purple-1 text-deep-purple-8" rounded>
+          <template #avatar>
+            <q-icon name="settings" color="deep-purple" />
+          </template>
+          <div class="text-weight-medium">
+            {{ $t('dashboard.platformOwner.title') }}
+          </div>
+          <div class="text-body2 q-mt-xs">
+            {{ $t('dashboard.platformOwner.description') }}
+          </div>
+
+          <template #action>
+            <q-btn
+              :label="$t('dashboard.platformOwner.goToPlatform')"
+              color="deep-purple"
+              to="/platform"
+              unelevated
+              no-caps
+            />
+          </template>
+        </q-banner>
+      </div>
+
       <!-- Empty State -->
-      <div v-if="!widgets.length && !loading" class="empty-dashboard">
+      <div v-else-if="!widgets.length && !loading" class="empty-dashboard">
         <q-icon name="widgets" size="4rem" color="grey-5" />
         <h5>{{ $t('dashboard.empty.title') }}</h5>
         <p>{{ $t('dashboard.empty.subtitle') }}</p>
@@ -175,8 +205,15 @@
   import { ref, computed, onMounted, watch } from 'vue';
   import { useI18n } from 'vue-i18n';
   import { useQuasar } from 'quasar';
+  import { useRouter } from 'vue-router';
   import { useAuthStore } from 'src/stores/auth';
-  import { practiceDashboardService, type PracticeDashboardData, type PracticeWidget as DashboardWidgetType, type PracticeRole } from '@/services/dashboard/practice-dashboard';
+  import {
+    practiceDashboardService,
+    type PracticeDashboardData,
+    type PracticeWidget as DashboardWidgetType,
+  } from '@/services/dashboard/practice-dashboard';
+  import { roleDashboardConfig } from '@/services/dashboard/role-config';
+  import type { UserRole } from '@/types/permissions';
   import PageLayout from 'src/components/PageLayout.vue';
   import PageTitle from 'src/components/PageTitle.vue';
   import DynamicWidget from 'src/components/dashboard/DynamicWidget.vue';
@@ -184,6 +221,7 @@
 
   const { t } = useI18n();
   const $q = useQuasar();
+  const router = useRouter();
   const authStore = useAuthStore();
 
   // State
@@ -193,34 +231,36 @@
 
   // Computed properties
   const userProfile = computed(() => authStore.userProfile);
-  const userRole = computed(() => userProfile.value?.role || 'assistant');
+  const userRole = computed(
+    () => (userProfile.value?.role || 'assistant') as UserRole
+  );
   const selectedDemoRole = ref(userRole.value);
-  
-  const dashboardConfig = computed(() => 
+
+  const dashboardConfig = computed(() =>
     practiceDashboardService.getRoleConfig(selectedDemoRole.value)
   );
 
   const widgets = computed(() => dashboardData.value?.widgets || []);
   const quickActions = computed(() => dashboardData.value?.quickActions || []);
   const alerts = computed(() => dashboardData.value?.alerts || []);
-  
-  const demoRoleOptions = computed(() => [
-    { 
-      label: t('dashboard.roles.assistant'), 
-      value: 'assistant',
-      icon: 'medical_services'
-    },
-    { 
-      label: t('dashboard.roles.manager'), 
-      value: 'manager',
-      icon: 'analytics'
-    },
-    { 
-      label: t('dashboard.roles.owner'), 
-      value: 'owner',
-      icon: 'admin_panel_settings'
-    }
-  ]);
+
+  const demoRoleOptions = computed(() =>
+    roleDashboardConfig.getDemoRoleOptions()
+  );
+
+  const selectedRoleIcon = computed(() => {
+    const option = demoRoleOptions.value.find(
+      opt => opt.value === selectedDemoRole.value
+    );
+    return option?.icon || 'person';
+  });
+
+  const selectedRoleLabel = computed(() => {
+    const option = demoRoleOptions.value.find(
+      opt => opt.value === selectedDemoRole.value
+    );
+    return option?.label || selectedDemoRole.value;
+  });
 
   // Methods
   function getWidgetGridClass(widget: DashboardWidgetType): string {
@@ -231,11 +271,16 @@
 
   function getAlertIcon(type: string): string {
     switch (type) {
-      case 'warning': return 'warning';
-      case 'error': return 'error';
-      case 'info': return 'info';
-      case 'success': return 'check_circle';
-      default: return 'info';
+      case 'warning':
+        return 'warning';
+      case 'error':
+        return 'error';
+      case 'info':
+        return 'info';
+      case 'success':
+        return 'check_circle';
+      default:
+        return 'info';
     }
   }
 
@@ -244,19 +289,22 @@
       loading.value = true;
       const role = selectedDemoRole.value || userRole.value || 'assistant';
       const practiceId = authStore.clinicId || authStore.selectedPractice?.id;
-      
+
       if (!practiceId) {
         throw new Error(t('dashboard.errors.practiceIdMissing'));
       }
-      
-      dashboardData.value = await practiceDashboardService.getDashboardData(role as PracticeRole, practiceId);
+
+      dashboardData.value = await practiceDashboardService.getDashboardData(
+        role as UserRole,
+        practiceId
+      );
       // Dashboard loaded successfully
     } catch (error) {
       console.error('Failed to load dashboard:', error);
       $q.notify({
         type: 'negative',
         message: t('dashboard.errors.loadFailed'),
-        caption: t('dashboard.errors.tryRefresh')
+        caption: t('dashboard.errors.tryRefresh'),
       });
     } finally {
       loading.value = false;
@@ -268,7 +316,7 @@
     $q.notify({
       type: 'positive',
       message: t('dashboard.actions.refreshed'),
-      timeout: 1000
+      timeout: 1000,
     });
   }
 
@@ -278,46 +326,54 @@
     $q.notify({
       type: 'positive',
       message: t('dashboard.widgetRefreshed', { widget: widgetId }),
-      timeout: 1000
+      timeout: 1000,
     });
   }
 
   async function switchDemoRole(newRole: string | any) {
     // Extract string value if object is passed
     const roleValue = typeof newRole === 'object' ? newRole.value : newRole;
-    
+
     // Switching demo role
-    
-    if (roleValue === selectedDemoRole.value) { return; }
-    
+
+    if (roleValue === selectedDemoRole.value) {
+      return;
+    }
+
     selectedDemoRole.value = roleValue;
-    
+
     // Reload dashboard with new role
     try {
       loading.value = true;
-      
+
       // Clear current data first for visual effect
       dashboardData.value = null;
-      
+
       // Small delay for better UX
       await new Promise(resolve => setTimeout(resolve, 300));
-      
+
       // Load new dashboard data
-      dashboardData.value = await dashboardService.getDashboardData(roleValue);
-      
+      const practiceId = authStore.clinicId || authStore.selectedPractice?.id;
+      if (practiceId) {
+        dashboardData.value = await practiceDashboardService.getDashboardData(
+          roleValue as UserRole,
+          practiceId
+        );
+      }
+
       $q.notify({
         type: 'positive',
         message: t('dashboard.roleSwitch.success'),
         caption: t('dashboard.roleSwitch.caption'),
         timeout: 2500,
-        icon: 'swap_horiz'
+        icon: 'swap_horiz',
       });
     } catch (error) {
       console.error('Failed to switch demo role:', error);
       $q.notify({
         type: 'negative',
         message: t('dashboard.errors.switchFailed'),
-        caption: t('dashboard.errors.tryAgain')
+        caption: t('dashboard.errors.tryAgain'),
       });
     } finally {
       loading.value = false;
@@ -326,32 +382,40 @@
 
   function getDemoRoleLabel(role: string): string {
     switch (role) {
-      case 'assistant': return t('dashboard.titles.assistant');
-      case 'manager': return t('dashboard.titles.manager');
-      case 'owner': return t('dashboard.titles.owner');
-      default: return t('dashboard.titles.default');
+      case 'assistant':
+        return t('dashboard.titles.assistant');
+      case 'manager':
+        return t('dashboard.titles.manager');
+      case 'owner':
+        return t('dashboard.titles.owner');
+      default:
+        return t('dashboard.titles.default');
     }
   }
 
   // Watchers
-  watch(userRole, (newRole) => {
-    // Only update if we haven't manually selected a different role
-    if (selectedDemoRole.value === userRole.value) {
-      selectedDemoRole.value = newRole;
-    }
-  }, { immediate: true });
+  watch(
+    userRole,
+    newRole => {
+      // Only update if we haven't manually selected a different role
+      if (selectedDemoRole.value === userRole.value) {
+        selectedDemoRole.value = newRole;
+      }
+    },
+    { immediate: true }
+  );
 
   // Lifecycle
   // Get button class based on action type
   const getActionButtonClass = (type: string) => {
     const classMap: Record<string, string> = {
-      'create': 'app-btn-success',
-      'view': 'app-btn-primary',
-      'manage': 'app-btn-secondary',
-      'analyze': 'app-btn-info',
-      'export': 'app-btn-secondary',
-      'settings': 'app-btn-secondary',
-      'default': 'app-btn-secondary'
+      create: 'app-btn-success',
+      view: 'app-btn-primary',
+      manage: 'app-btn-secondary',
+      analyze: 'app-btn-info',
+      export: 'app-btn-secondary',
+      settings: 'app-btn-secondary',
+      default: 'app-btn-secondary',
     };
     return classMap[type] || classMap.default;
   };
@@ -362,266 +426,295 @@
 </script>
 
 <style lang="scss" scoped>
-.dashboard-container {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-6);
-}
-
-// Quick Actions Section
-.quick-actions-section {
-  .quick-actions-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: var(--space-4);
-    
-    .quick-action-btn {
-      min-height: 60px;
-      font-weight: var(--font-weight-medium);
-      transition: all 0.2s ease;
-      
-      &:hover {
-        transform: translateY(-2px);
-        box-shadow: var(--shadow-md);
-      }
-    }
-  }
-}
-
-// Alerts Section
-.alerts-section {
-  .alert-banner {
-    margin-bottom: var(--space-3);
-    
-    &:last-child {
-      margin-bottom: 0;
-    }
-    
-    &.banner-warning {
-      background: var(--warning-50);
-      border-color: var(--warning-200);
-    }
-    
-    &.banner-error {
-      background: var(--negative-50);
-      border-color: var(--negative-200);
-    }
-    
-    &.banner-info {
-      background: var(--info-50);
-      border-color: var(--info-200);
-    }
-  }
-}
-
-// Widgets Grid
-.widgets-grid {
-  display: grid;
-  grid-template-columns: repeat(12, 1fr);
-  gap: var(--space-6);
-  auto-rows: min-content;
-  
-  .widget-grid-item {
-    &.widget-small {
-      grid-column: span 6;
-      
-      @media (max-width: 1024px) {
-        grid-column: span 12;
-      }
-    }
-    
-    &.widget-medium {
-      grid-column: span 6;
-      
-      @media (max-width: 768px) {
-        grid-column: span 12;
-      }
-    }
-    
-    &.widget-large {
-      grid-column: span 12;
-    }
-  }
-}
-
-// Empty State
-.empty-dashboard {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
-  padding: var(--space-8);
-  margin: var(--space-8) 0;
-  
-  h5 {
-    margin: var(--space-4) 0 var(--space-2) 0;
-    color: var(--text-primary);
-    font-weight: var(--font-weight-semibold);
-  }
-  
-  p {
-    margin: 0 0 var(--space-6) 0;
-    color: var(--text-muted);
-    max-width: 400px;
-  }
-}
-
-// Dark mode
-body.body--dark {
-  .alerts-section .alert-banner {
-    &.banner-warning {
-      background: var(--warning-900);
-      border-color: var(--warning-700);
-    }
-    
-    &.banner-error {
-      background: var(--negative-900);
-      border-color: var(--negative-700);
-    }
-    
-    &.banner-info {
-      background: var(--info-900);
-      border-color: var(--info-700);
-    }
-  }
-  
-  .empty-dashboard h5 {
-    color: var(--text-primary-dark);
-  }
-}
-
-// Mobile optimizations
-@media (max-width: 768px) {
   .dashboard-container {
-    gap: var(--space-4);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-6);
   }
-  
-  .quick-actions-section .quick-actions-grid {
-    grid-template-columns: 1fr;
-    gap: var(--space-3);
-    
-    .quick-action-btn {
-      min-height: 50px;
-      font-size: var(--text-sm);
-    }
-  }
-  
-  .widgets-grid {
-    gap: var(--space-4);
-    
-    .widget-grid-item {
-      grid-column: span 12;
-    }
-  }
-  
-  .empty-dashboard {
-    padding: var(--space-6);
-    margin: var(--space-6) 0;
-  }
-}
 
-// Enhanced responsive grid
-@media (min-width: 1400px) {
+  // Quick Actions Section
+  .quick-actions-section {
+    .quick-actions-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: var(--space-4);
+
+      .quick-action-btn {
+        min-height: 60px;
+        font-weight: var(--font-weight-medium);
+        transition: all 0.2s ease;
+
+        &:hover {
+          transform: translateY(-2px);
+          box-shadow: var(--shadow-md);
+        }
+      }
+    }
+  }
+
+  // Alerts Section
+  .alerts-section {
+    .alert-banner {
+      margin-bottom: var(--space-3);
+
+      &:last-child {
+        margin-bottom: 0;
+      }
+
+      &.banner-warning {
+        background: var(--warning-50);
+        border-color: var(--warning-200);
+      }
+
+      &.banner-error {
+        background: var(--negative-50);
+        border-color: var(--negative-200);
+      }
+
+      &.banner-info {
+        background: var(--info-50);
+        border-color: var(--info-200);
+      }
+    }
+  }
+
+  // Widgets Grid - Verbeterde layout voor consistente uitlijning
   .widgets-grid {
-    grid-template-columns: repeat(16, 1fr);
-    
+    display: grid;
+    grid-template-columns: repeat(12, 1fr);
+    gap: var(--space-4);
+    auto-rows: minmax(200px, auto); // Minimale hoogte voor consistentie
+
     .widget-grid-item {
+      display: flex;
+      flex-direction: column;
+
+      // Small widgets: 4 kolommen op desktop, 6 op tablet, 12 op mobile
       &.widget-small {
         grid-column: span 4;
+
+        @media (max-width: 1200px) {
+          grid-column: span 6;
+        }
+
+        @media (max-width: 768px) {
+          grid-column: span 12;
+        }
       }
-      
+
+      // Medium widgets: 6 kolommen op desktop, 12 op tablet/mobile
       &.widget-medium {
-        grid-column: span 8;
+        grid-column: span 6;
+
+        @media (max-width: 1024px) {
+          grid-column: span 12;
+        }
       }
-      
+
+      // Large widgets: altijd volledige breedte
       &.widget-large {
-        grid-column: span 16;
+        grid-column: span 12;
+      }
+
+      // Zorg dat alle widgets in een rij dezelfde hoogte hebben
+      > * {
+        flex: 1;
+        min-height: 100%;
+      }
+    }
+
+    // Automatische row heights voor betere uitlijning
+    &::after {
+      content: '';
+      grid-column: 1 / -1;
+      height: 0;
+    }
+  }
+
+  // Empty State
+  .empty-dashboard {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: var(--space-8);
+    margin: var(--space-8) 0;
+
+    h5 {
+      margin: var(--space-4) 0 var(--space-2) 0;
+      color: var(--text-primary);
+      font-weight: var(--font-weight-semibold);
+    }
+
+    p {
+      margin: 0 0 var(--space-6) 0;
+      color: var(--text-muted);
+      max-width: 400px;
+    }
+  }
+
+  // Dark mode
+  body.body--dark {
+    .alerts-section .alert-banner {
+      &.banner-warning {
+        background: var(--warning-900);
+        border-color: var(--warning-700);
+      }
+
+      &.banner-error {
+        background: var(--negative-900);
+        border-color: var(--negative-700);
+      }
+
+      &.banner-info {
+        background: var(--info-900);
+        border-color: var(--info-700);
+      }
+    }
+
+    .empty-dashboard h5 {
+      color: var(--text-primary-dark);
+    }
+  }
+
+  // Mobile optimizations
+  @media (max-width: 768px) {
+    .dashboard-container {
+      gap: var(--space-4);
+    }
+
+    .quick-actions-section .quick-actions-grid {
+      grid-template-columns: 1fr;
+      gap: var(--space-3);
+
+      .quick-action-btn {
+        min-height: 50px;
+        font-size: var(--text-sm);
+      }
+    }
+
+    .widgets-grid {
+      gap: var(--space-4);
+
+      .widget-grid-item {
+        grid-column: span 12;
+      }
+    }
+
+    .empty-dashboard {
+      padding: var(--space-6);
+      margin: var(--space-6) 0;
+    }
+  }
+
+  // Enhanced responsive grid
+  @media (min-width: 1400px) {
+    .widgets-grid {
+      grid-template-columns: repeat(16, 1fr);
+
+      .widget-grid-item {
+        &.widget-small {
+          grid-column: span 4;
+        }
+
+        &.widget-medium {
+          grid-column: span 8;
+        }
+
+        &.widget-large {
+          grid-column: span 16;
+        }
       }
     }
   }
-}
 
-// Animation for widget loading
-.widget-grid-item {
-  transition: all 0.3s ease;
-  
-  &:hover {
-    transform: translateY(-2px);
-  }
-}
-
-// Loading states
-.q-loading-bar {
-  background: var(--primary);
-}
-
-// Demo Role Switcher Styling
-.demo-role-switcher {
-  .q-field {
-    background: rgba(255, 255, 255, 0.1);
-    border-radius: var(--radius-md);
+  // Animation for widget loading
+  .widget-grid-item {
     transition: all 0.3s ease;
-    
+
     &:hover {
-      background: rgba(255, 255, 255, 0.15);
-    }
-    
-    .q-field__control {
-      border-color: var(--primary-300);
-    }
-    
-    .q-field__label {
-      color: var(--primary-600);
-      font-weight: var(--font-weight-medium);
+      transform: translateY(-2px);
     }
   }
-}
 
-// Role option styling
-.role-option-item {
-  transition: all 0.2s ease;
-  
-  &:hover {
-    background: var(--primary-50);
+  // Loading states
+  .q-loading-bar {
+    background: var(--primary);
   }
-  
-  .q-item__section--avatar {
-    color: var(--primary);
+
+  // Enforce consistent width for demo switcher in both light and dark
+  .demo-role-switcher {
+    width: 360px;
+    max-width: 360px;
+    flex: 0 0 360px;
+
+    // Ensure text truncates identically
+    :deep(.q-field__native),
+    :deep(.q-field__selected) {
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
   }
-}
 
-// Dashboard transition animations
-.dashboard-transition-enter-active,
-.dashboard-transition-leave-active {
-  transition: all 0.4s ease;
-}
+  body.body--dark .demo-role-switcher {
+    width: 360px;
+    max-width: 360px;
+    flex: 0 0 360px;
+  }
 
-.dashboard-transition-enter-from {
-  opacity: 0;
-  transform: translateY(20px) scale(0.95);
-}
+  // Role option styling
+  .role-option-item {
+    transition: all 0.2s ease;
 
-.dashboard-transition-leave-to {
-  opacity: 0;
-  transform: translateY(-20px) scale(1.05);
-}
+    &:hover {
+      background: var(--neutral-100);
+    }
 
-.dashboard-transition-enter-to,
-.dashboard-transition-leave-from {
-  opacity: 1;
-  transform: translateY(0) scale(1);
-}
+    .q-item__section--avatar {
+      color: var(--primary);
+    }
+  }
 
-// Title transition (for future use)
-.title-transition-enter-active,
-.title-transition-leave-active {
-  transition: all 0.3s ease;
-}
+  // Dark mode role option hover
+  body.body--dark {
+    .role-option-item:hover {
+      background: var(--bg-tertiary);
+    }
+  }
 
-.title-transition-enter-from,
-.title-transition-leave-to {
-  opacity: 0;
-  transform: translateX(10px);
-}
+  // Dashboard transition animations
+  .dashboard-transition-enter-active,
+  .dashboard-transition-leave-active {
+    transition: all 0.4s ease;
+  }
+
+  .dashboard-transition-enter-from {
+    opacity: 0;
+    transform: translateY(20px) scale(0.95);
+  }
+
+  .dashboard-transition-leave-to {
+    opacity: 0;
+    transform: translateY(-20px) scale(1.05);
+  }
+
+  .dashboard-transition-enter-to,
+  .dashboard-transition-leave-from {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+
+  // Title transition (for future use)
+  .title-transition-enter-active,
+  .title-transition-leave-active {
+    transition: all 0.3s ease;
+  }
+
+  .title-transition-enter-from,
+  .title-transition-leave-to {
+    opacity: 0;
+    transform: translateX(10px);
+  }
 </style>

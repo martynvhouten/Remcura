@@ -641,7 +641,7 @@ export interface Product {
   currency?: string;
   active: boolean;
   requires_batch_tracking: boolean;
-  
+
   // GS1 Fields
   gtin?: string;
   gpc_brick_code?: string;
@@ -657,7 +657,7 @@ export interface Product {
   effective_from_date?: string;
   effective_to_date?: string;
   product_lifecycle_status?: string;
-  
+
   supplier_products?: SupplierProduct[];
   stock_levels?: StockLevel[];
   created_at: string;
@@ -703,7 +703,7 @@ export interface ProductFilter {
   stock_status?: string;
   sort_by?: 'name' | 'price' | 'stock' | 'category';
   sort_order?: 'asc' | 'desc';
-  
+
   // GS1 Filters
   gtin?: string;
   country_of_origin?: string;

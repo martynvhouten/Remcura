@@ -69,7 +69,8 @@
 
 ✅ **Core Components:**
 
-- `MobileCountingInterface.vue` - Touch-optimized counting interface with integrated camera and method selection
+- `MobileCountingInterface.vue` - Touch-optimized counting interface with integrated camera and
+  method selection
 - Large touch targets for mobile devices
 - Barcode scanner integration ready
 - Variance detection with visual feedback

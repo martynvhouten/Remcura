@@ -4,7 +4,7 @@
       <PageTitle
         :title="$t('inventory.stockMovements')"
         :subtitle="$t('inventory.movementHistory')"
-          icon="timeline"
+        icon="timeline"
       >
         <template #actions>
           <q-btn
@@ -55,18 +55,18 @@
 
       <!-- Movements Table -->
       <div v-else class="medical-table">
-          <q-table
-            :rows="filteredMovements"
-            :columns="columns"
-            row-key="id"
-            :pagination="pagination"
-            :loading="inventoryStore.loading"
-            :no-data-label="$t('inventory.noMovementsFound')"
-            class="movements-table"
-            flat
-            bordered
-            separator="cell"
-          >
+        <q-table
+          :rows="filteredMovements"
+          :columns="columns"
+          row-key="id"
+          :pagination="pagination"
+          :loading="inventoryStore.loading"
+          :no-data-label="$t('inventory.noMovementsFound')"
+          class="movements-table"
+          flat
+          bordered
+          separator="cell"
+        >
           <!-- Movement Type Column -->
           <template v-slot:body-cell-movement_type="props">
             <q-td :props="props">
@@ -143,7 +143,7 @@
               <q-btn
                 flat
                 round
-          icon="visibility"
+                icon="visibility"
                 size="sm"
                 @click="viewMovementDetails(props.row)"
                 :title="$t('common.view')"
@@ -163,80 +163,76 @@
       @close="showMovementDetails = false"
     >
       <div v-if="selectedMovement" class="movement-details">
-          <div class="detail-row">
-            <span class="label">{{ $t('inventory.movementType') }}:</span>
-            <q-chip
-              :icon="movementIcon(selectedMovement.movement_type)"
-              :color="movementColor(selectedMovement.movement_type)"
-              text-color="white"
-              :label="formatMovementType(selectedMovement.movement_type)"
-              size="sm"
-            />
-          </div>
+        <div class="detail-row">
+          <span class="label">{{ $t('inventory.movementType') }}:</span>
+          <q-chip
+            :icon="movementIcon(selectedMovement.movement_type)"
+            :color="movementColor(selectedMovement.movement_type)"
+            text-color="white"
+            :label="formatMovementType(selectedMovement.movement_type)"
+            size="sm"
+          />
+        </div>
 
-          <div class="detail-row">
-            <span class="label">{{ $t('inventory.product') }}:</span>
-            <span class="value">
-              {{
-                selectedMovement.product?.name || $t('common.unknownProduct')
-              }}
-              <span class="sku"
-                >({{
-                  selectedMovement.product?.sku || $t('common.noSku')
-                }})</span
-              >
-            </span>
-          </div>
-
-          <div class="detail-row">
-            <span class="label">{{ $t('inventory.location') }}:</span>
-            <span class="value">{{
-              selectedMovement.location?.name || $t('common.unknownLocation')
-            }}</span>
-          </div>
-
-          <div class="detail-row">
-            <span class="label">{{ $t('inventory.quantityChange') }}:</span>
-            <span
-              :class="{
-                'quantity-positive': selectedMovement.quantity_change > 0,
-                'quantity-negative': selectedMovement.quantity_change < 0,
-              }"
-              class="quantity-change value"
+        <div class="detail-row">
+          <span class="label">{{ $t('inventory.product') }}:</span>
+          <span class="value">
+            {{ selectedMovement.product?.name || $t('common.unknownProduct') }}
+            <span class="sku"
+              >({{ selectedMovement.product?.sku || $t('common.noSku') }})</span
             >
-              {{ selectedMovement.quantity_change > 0 ? '+' : ''
-              }}{{ selectedMovement.quantity_change }}
-            </span>
-          </div>
+          </span>
+        </div>
 
-          <div class="detail-row">
-            <span class="label">{{ $t('inventory.quantityBefore') }}:</span>
-            <span class="value">{{ selectedMovement.quantity_before }}</span>
-          </div>
+        <div class="detail-row">
+          <span class="label">{{ $t('inventory.location') }}:</span>
+          <span class="value">{{
+            selectedMovement.location?.name || $t('common.unknownLocation')
+          }}</span>
+        </div>
 
-          <div class="detail-row">
-            <span class="label">{{ $t('inventory.quantityAfter') }}:</span>
-            <span class="value">{{ selectedMovement.quantity_after }}</span>
-          </div>
+        <div class="detail-row">
+          <span class="label">{{ $t('inventory.quantityChange') }}:</span>
+          <span
+            :class="{
+              'quantity-positive': selectedMovement.quantity_change > 0,
+              'quantity-negative': selectedMovement.quantity_change < 0,
+            }"
+            class="quantity-change value"
+          >
+            {{ selectedMovement.quantity_change > 0 ? '+' : ''
+            }}{{ selectedMovement.quantity_change }}
+          </span>
+        </div>
 
-          <div v-if="selectedMovement.reason_code" class="detail-row">
-            <span class="label">{{ $t('inventory.reasonCode') }}:</span>
-            <span class="value">{{
-              formatReasonCode(selectedMovement.reason_code)
-            }}</span>
-          </div>
+        <div class="detail-row">
+          <span class="label">{{ $t('inventory.quantityBefore') }}:</span>
+          <span class="value">{{ selectedMovement.quantity_before }}</span>
+        </div>
 
-          <div v-if="selectedMovement.notes" class="detail-row">
-            <span class="label">{{ $t('common.notes') }}:</span>
-            <span class="value">{{ selectedMovement.notes }}</span>
-          </div>
+        <div class="detail-row">
+          <span class="label">{{ $t('inventory.quantityAfter') }}:</span>
+          <span class="value">{{ selectedMovement.quantity_after }}</span>
+        </div>
 
-          <div class="detail-row">
-            <span class="label">{{ $t('common.date') }}:</span>
-            <span class="value">{{
-              formatDateTime(selectedMovement.created_at)
-            }}</span>
-          </div>
+        <div v-if="selectedMovement.reason_code" class="detail-row">
+          <span class="label">{{ $t('inventory.reasonCode') }}:</span>
+          <span class="value">{{
+            formatReasonCode(selectedMovement.reason_code)
+          }}</span>
+        </div>
+
+        <div v-if="selectedMovement.notes" class="detail-row">
+          <span class="label">{{ $t('common.notes') }}:</span>
+          <span class="value">{{ selectedMovement.notes }}</span>
+        </div>
+
+        <div class="detail-row">
+          <span class="label">{{ $t('common.date') }}:</span>
+          <span class="value">{{
+            formatDateTime(selectedMovement.created_at)
+          }}</span>
+        </div>
       </div>
 
       <template #actions>
@@ -263,7 +259,11 @@
     MovementType,
     ReasonCode,
   } from 'src/types/inventory';
-  import type { FilterValues, FilterChangeEvent, FilterResetEvent } from 'src/types/filters';
+  import type {
+    FilterValues,
+    FilterChangeEvent,
+    FilterResetEvent,
+  } from 'src/types/filters';
   import PageLayout from 'src/components/PageLayout.vue';
   import PageTitle from 'src/components/PageTitle.vue';
   import { BaseCard, InteractiveCard, AlertCard } from 'src/components/cards';
@@ -315,8 +315,14 @@
     }
 
     // Filter by date range
-    if (filterValues.value.date_range && typeof filterValues.value.date_range === 'object') {
-      const dateRange = filterValues.value.date_range as { start?: string; end?: string };
+    if (
+      filterValues.value.date_range &&
+      typeof filterValues.value.date_range === 'object'
+    ) {
+      const dateRange = filterValues.value.date_range as {
+        start?: string;
+        end?: string;
+      };
       if (dateRange.start && dateRange.end) {
         movements = movements.filter(m => {
           const movementDate = new Date(m.created_at);
@@ -330,10 +336,13 @@
 
     // Filter by product search
     if (filterValues.value.product_search) {
-      const searchTerm = String(filterValues.value.product_search).toLowerCase();
-      movements = movements.filter(m => 
-        m.product?.name?.toLowerCase().includes(searchTerm) ||
-        m.product?.sku?.toLowerCase().includes(searchTerm)
+      const searchTerm = String(
+        filterValues.value.product_search
+      ).toLowerCase();
+      movements = movements.filter(
+        m =>
+          m.product?.name?.toLowerCase().includes(searchTerm) ||
+          m.product?.sku?.toLowerCase().includes(searchTerm)
       );
     }
 

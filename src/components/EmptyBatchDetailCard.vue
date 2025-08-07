@@ -5,11 +5,11 @@
 </template>
 
 <script setup lang="ts">
-// Empty component to replace deleted BatchDetailCard
+  // Empty component to replace deleted BatchDetailCard
 </script>
 
 <style scoped>
-.empty-batch-detail {
-  display: none;
-}
+  .empty-batch-detail {
+    display: none;
+  }
 </style>

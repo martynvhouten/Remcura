@@ -1,8 +1,8 @@
-import type { FilterPreset } from '@/types/filters'
+import type { FilterPreset } from '@/types/filters';
 
 /**
  * SuppliersPage Filter Preset
- * 
+ *
  * All fields validated against Supabase `suppliers` table schema:
  * ✅ name, contact_email, contact_phone, is_active exist
  * ✅ country, city, integration_type exist
@@ -11,7 +11,7 @@ export const suppliersFilterPreset: FilterPreset = {
   id: 'suppliers',
   name: 'filters.suppliers.title',
   description: 'filters.suppliers.description',
-  
+
   fields: [
     // === Primary Search ===
     {
@@ -20,10 +20,15 @@ export const suppliersFilterPreset: FilterPreset = {
       label: 'filters.suppliers.fields.search.label',
       placeholder: 'filters.suppliers.fields.search.placeholder',
       icon: 'search',
-      searchFields: ['name', 'contact_email', 'contact_phone', 'contact_person'],
+      searchFields: [
+        'name',
+        'contact_email',
+        'contact_phone',
+        'contact_person',
+      ],
       clearable: true,
       debounce: 300,
-      priority: 1
+      priority: 1,
     },
 
     // === Status Filter ===
@@ -36,12 +41,22 @@ export const suppliersFilterPreset: FilterPreset = {
       dataSource: {
         type: 'static',
         options: [
-          { value: true, label: 'filters.suppliers.fields.status.options.active', color: 'positive', icon: 'check_circle' },
-          { value: false, label: 'filters.suppliers.fields.status.options.inactive', color: 'negative', icon: 'cancel' }
-        ]
+          {
+            value: true,
+            label: 'filters.suppliers.fields.status.options.active',
+            color: 'positive',
+            icon: 'check_circle',
+          },
+          {
+            value: false,
+            label: 'filters.suppliers.fields.status.options.inactive',
+            color: 'negative',
+            icon: 'cancel',
+          },
+        ],
       },
       clearable: true,
-      priority: 2
+      priority: 2,
     },
 
     // === Integration Type ===
@@ -54,13 +69,28 @@ export const suppliersFilterPreset: FilterPreset = {
       dataSource: {
         type: 'static',
         options: [
-          { value: 'manual', label: 'filters.suppliers.fields.integrationType.options.manual', icon: 'person', color: 'grey' },
-          { value: 'magento', label: 'filters.suppliers.fields.integrationType.options.magento', icon: 'shopping_cart', color: 'orange' },
-          { value: 'api', label: 'filters.suppliers.fields.integrationType.options.api', icon: 'api', color: 'blue' }
-        ]
+          {
+            value: 'manual',
+            label: 'filters.suppliers.fields.integrationType.options.manual',
+            icon: 'person',
+            color: 'grey',
+          },
+          {
+            value: 'magento',
+            label: 'filters.suppliers.fields.integrationType.options.magento',
+            icon: 'shopping_cart',
+            color: 'orange',
+          },
+          {
+            value: 'api',
+            label: 'filters.suppliers.fields.integrationType.options.api',
+            icon: 'api',
+            color: 'blue',
+          },
+        ],
       },
       clearable: true,
-      priority: 3
+      priority: 3,
     },
 
     // === Location Filters ===
@@ -77,11 +107,11 @@ export const suppliersFilterPreset: FilterPreset = {
         labelField: 'country',
         distinct: true,
         filters: [{ field: 'country', operator: 'is not', value: null }],
-        orderBy: [{ field: 'country', direction: 'asc' }]
+        orderBy: [{ field: 'country', direction: 'asc' }],
       },
       flagIcons: true,
       clearable: true,
-      priority: 4
+      priority: 4,
     },
 
     {
@@ -97,34 +127,34 @@ export const suppliersFilterPreset: FilterPreset = {
         labelField: 'city',
         distinct: true,
         filters: [{ field: 'city', operator: 'is not', value: null }],
-        orderBy: [{ field: 'city', direction: 'asc' }]
+        orderBy: [{ field: 'city', direction: 'asc' }],
       },
       clearable: true,
-      priority: 5
-    }
+      priority: 5,
+    },
   ],
 
   // === Layout Configuration ===
   layout: {
-    columns: { 
-      desktop: 3, 
-      tablet: 2, 
-      mobile: 1 
+    columns: {
+      desktop: 3,
+      tablet: 2,
+      mobile: 1,
     },
     showMoreThreshold: 4,
     resetButton: true,
     clearAllButton: true,
-    compactMode: false
+    compactMode: false,
   },
 
   // === Default State ===
   defaultFilters: {
-    status: null // No default - let users choose
+    status: null, // No default - let users choose
   },
 
   // === Validation ===
   validation: {
     required: [],
-    dependencies: []
-  }
-} 
+    dependencies: [],
+  },
+};

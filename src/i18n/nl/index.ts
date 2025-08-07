@@ -89,7 +89,7 @@ export default {
     submit: 'Verzenden',
     fromDate: 'Vanaf datum',
     toDate: 'Tot datum',
-    
+
     // Accessibility labels
     accessibility: {
       mainNavigation: 'Hoofdnavigatie',
@@ -104,7 +104,7 @@ export default {
       searchButton: 'Zoeken',
       notificationPanel: 'Meldingen paneel',
     },
-    
+
     // Start/Stop actions
     start: 'Start',
     stop: 'Stop',
@@ -115,44 +115,44 @@ export default {
     examples: {
       userProfile: {
         title: 'Gebruikersprofiel',
-        subtitle: 'Bekijk gebruikersinformatie en instellingen'
+        subtitle: 'Bekijk gebruikersinformatie en instellingen',
       },
       systemStatus: {
         title: 'Systeemstatus',
-        subtitle: 'Huidige systeemgezondheid en statistieken'
+        subtitle: 'Huidige systeemgezondheid en statistieken',
       },
       inventoryManagement: {
         title: 'Voorraadbeheer',
-        subtitle: 'Beheer producten, voorraadniveaus en bestellingen'
+        subtitle: 'Beheer producten, voorraadniveaus en bestellingen',
       },
       quickScan: {
         title: 'Snel scannen',
-        subtitle: 'Scan productbarcodes direct'
+        subtitle: 'Scan productbarcodes direct',
       },
       premiumFeature: {
         title: 'Premium functie',
-        subtitle: 'Beschikbaar in premium abonnement'
+        subtitle: 'Beschikbaar in premium abonnement',
       },
       newFeatureAvailable: {
         title: 'Nieuwe functie beschikbaar',
-        subtitle: 'Bekijk onze nieuwste voorraadtracking functies'
+        subtitle: 'Bekijk onze nieuwste voorraadtracking functies',
       },
       dataSyncComplete: {
         title: 'Data synchronisatie voltooid',
-        subtitle: 'Alle voorraadgegevens zijn gesynchroniseerd'
+        subtitle: 'Alle voorraadgegevens zijn gesynchroniseerd',
       },
       lowStockWarning: {
-        title: 'Lage voorraad waarschuwing'
+        title: 'Lage voorraad waarschuwing',
       },
       syncFailed: {
         title: 'Synchronisatie mislukt',
-        subtitle: 'Kan geen verbinding maken met voorraaddatabase'
-      }
+        subtitle: 'Kan geen verbinding maken met voorraaddatabase',
+      },
     },
     inputs: {
       standardInput: 'Standaard invoer',
-      placeholder: 'Voer hier tekst in'
-    }
+      placeholder: 'Voer hier tekst in',
+    },
   },
 
   // Services
@@ -165,8 +165,8 @@ export default {
       oauth2TokenRequestFailed: 'OAuth2 token aanvraag mislukt: {status}',
       oauth2AuthenticationFailed: 'OAuth2 authenticatie mislukt: {error}',
       unsupportedApiFormat: 'Niet ondersteund API formaat: {format}',
-      apiResponseError: 'API gaf terug {status}: {response}'
-    }
+      apiResponseError: 'API gaf terug {status}: {response}',
+    },
   },
 
   // Navigation
@@ -204,13 +204,16 @@ export default {
     shoppingCart: 'Winkelwagen',
     styleGuide: 'Stijlgids',
     designSystem: 'Ontwerp systeem referentie',
-    
+
     // Platform navigation
     platformDashboard: 'Platform Dashboard',
     practiceManagement: 'Praktijk Beheer',
     systemMonitoring: 'Systeem Monitoring',
     databaseAdmin: 'Database Beheer',
-    
+    systemLogs: 'Systeem Logs',
+    apiDocumentation: 'API Documentatie',
+    backupRestore: 'Backup & Restore',
+
     sections: {
       main: 'Overzicht',
       inventory: 'Voorraadbeheer',
@@ -219,7 +222,7 @@ export default {
       administration: 'Beheer',
       platform: 'Platform',
     },
-    
+
     inventoryLevels: 'Voorraadniveaus',
     currentStock: 'Huidige voorraad overzicht',
     locations: 'Locaties',
@@ -246,8 +249,22 @@ export default {
     logoutSuccess: 'Succesvol uitgelogd',
     pleaseLogin: 'Log in om verder te gaan',
     demoAccount: 'Demo account',
+    manualLogin: 'Handmatig inloggen',
+    demoLoginSuccess: 'Demo account succesvol ingelogd',
+    ownerLoginSuccess: 'Platform eigenaar succesvol ingelogd',
+    demoLogin: 'Demo inloggen',
+    ownerLogin: 'Eigenaar inloggen',
     or: 'of',
     secureConnection: 'Beveiligde verbinding',
+
+    quickLogin: {
+      title: 'Kies je login type',
+      subtitle: 'Selecteer de juiste optie voor je rol',
+      demo: 'Login als demo',
+      owner: 'Login als eigenaar',
+      demoTooltip: 'Toegang tot practice dashboards en demo functies',
+      ownerTooltip: 'Volledige toegang tot platform en systeembeheer',
+    },
     fullName: 'Volledige naam',
     role: 'Rol',
     privacyPolicy: 'Privacybeleid',
@@ -255,16 +272,20 @@ export default {
     support: 'Ondersteuning',
     allRightsReserved: 'Alle rechten voorbehouden',
     professionalInventory: 'Professioneel medisch voorraadbeheer',
-    platformDescription: 'Stroomlijn je medische voorraadbeheer met ons enterprise-grade platform. Volg voorraad, beheer bestellingen, en zorg voor compliance met gemak.',
+    platformDescription:
+      'Stroomlijn je medische voorraadbeheer met ons enterprise-grade platform. Volg voorraad, beheer bestellingen, en zorg voor compliance met gemak.',
     realtimeTracking: 'Realtime voorraad tracking',
     automatedAlerts: 'Geautomatiseerde herbestel waarschuwingen',
     complianceReporting: 'Compliance rapportage',
     multilocationSupport: 'Multi-locatie ondersteuning',
-    demoCredentialsFilled: 'Demo credentials ingevuld. Klik op Inloggen om door te gaan.',
-    passwordResetComingSoon: 'Wachtwoord reset functionaliteit komt binnenkort.',
+    demoCredentialsFilled:
+      'Demo credentials ingevuld. Klik op Inloggen om door te gaan.',
+    passwordResetComingSoon:
+      'Wachtwoord reset functionaliteit komt binnenkort.',
     copyright: '© {year} {company}. Alle rechten voorbehouden.',
     passwordHelp: 'Voer je wachtwoord in om veilig in te loggen',
-    demoHelp: 'Gebruik demo{at}remcura.com met wachtwoord demo123 voor demonstratie',
+    demoHelp:
+      'Gebruik demo{at}remcura.com met wachtwoord demo123 voor demonstratie',
     signingIn: 'Inloggen...',
   },
 
@@ -277,16 +298,19 @@ export default {
     resetDataSuccess: 'Demo data succesvol gereset',
     resetDataError: 'Fout bij het resetten van demo data',
     limitations: 'Demo beperkingen',
-    limitationsText: 'Dit is een demo account. Alle wijzigingen zijn zichtbaar maar kunnen worden gereset.',
+    limitationsText:
+      'Dit is een demo account. Alle wijzigingen zijn zichtbaar maar kunnen worden gereset.',
     practice: 'Remka demo kliniek',
-    practiceDescription: 'Volledig functionele demo omgeving met realistische data',
+    practiceDescription:
+      'Volledig functionele demo omgeving met realistische data',
     resetInfo: 'Dit zal alle demo data verwijderen en vers opnieuw aanmaken',
     onlyDemoUserCanReset: 'Alleen demo gebruiker kan demo data resetten',
-    changesCanBeReset: 'Alle wijzigingen worden opgeslagen maar kunnen worden gereset via de Admin pagina.',
+    changesCanBeReset:
+      'Alle wijzigingen worden opgeslagen maar kunnen worden gereset via de Admin pagina.',
     resetInProgress: 'Demo data wordt gereset...',
     reloadingAfterReset: 'Pagina wordt herladen met nieuwe data...',
     // MISSING KEY:
-    resetFailed: 'Reset mislukt'
+    resetFailed: 'Reset mislukt',
   },
 
   // Dashboard
@@ -318,15 +342,13 @@ export default {
     currentMin: 'Huidig / min',
     latestUpdates: 'Laatste updates',
     viewAnalytics: 'Analyses bekijken',
-    
+
     // === NEW DASHBOARD KEYS ===
     actions: {
       refresh: 'Dashboard vernieuwen',
       customize: 'Dashboard aanpassen',
       refreshed: 'Dashboard vernieuwd',
     },
-
-
 
     // Empty state
     empty: {
@@ -344,21 +366,32 @@ export default {
     // Role titles
     titles: {
       assistant: 'Assistent dashboard',
-      manager: 'Manager dashboard', 
+      manager: 'Manager dashboard',
       owner: 'Eigenaar dashboard',
       default: 'Dashboard',
     },
-    
+
     demoRoleSwitch: {
       label: 'Switch demo rol',
     },
-    
+
     roles: {
       assistant: '🩺 Assistent - Voorraad & bestellingen',
       manager: '📊 Manager - Analytics & overzichten',
       owner: '👑 Eigenaar - Volledige controle',
+      logistics: '🚚 Logistiek - Transport & bewegingen',
+      member: '👤 Medewerker - Basis toegang',
+      guest: '👁️ Gast - Alleen bekijken',
+      platformOwner: '⚙️ Platform eigenaar - Systeem beheer',
+      assistantDescription: 'Focus op dagelijkse voorraadtaken en bestellingen',
+      managerDescription: 'Overzicht van prestaties en analytics',
+      ownerDescription: 'Volledige controle en financiële overzichten',
+      logisticsDescription: 'Transport, leveringen en voorraad bewegingen',
+      memberDescription: 'Basis toegang tot voorraad informatie',
+      guestDescription: 'Alleen bekijken van publieke informatie',
+      platformOwnerDescription: 'Volledig platform beheer en configuratie',
     },
-    
+
     quickActionLabels: {
       scan: 'Snel scannen',
       order: 'Nieuwe bestelling',
@@ -366,12 +399,58 @@ export default {
       export: 'Export data',
       default: 'Actie',
     },
-    
+
     alerts: {
       noWarnings: 'Geen waarschuwingen',
       allStockLevelsOk: 'Alle voorraadniveaus zijn op orde',
+      lowStockMessage: 'Er zijn artikelen met lage voorraad',
+      viewStock: 'Bekijk voorraad',
+      failedOrdersMessage: 'Er zijn mislukte bestellingen',
+      viewOrders: 'Bekijk bestellingen',
+      expiredBatchesMessage: 'Er zijn verlopen batches',
+      viewBatches: 'Bekijk batches',
     },
-    
+
+    widgets: {
+      // Bestaande widgets
+      lowStockAlerts: 'Lage voorraad waarschuwingen',
+      expiringProducts: 'Verlopende producten',
+      orderSuggestions: 'Bestel suggesties',
+      activeOrderLists: 'Actieve bestellijsten',
+      pendingDeliveries: 'Lopende leveringen',
+      stockTrends: 'Voorraad trends',
+      supplierPerformance: 'Leverancier prestaties',
+      costAnalysis: 'Kosten analyse',
+      errorAlerts: 'Fout waarschuwingen',
+      pendingOrders: 'Lopende bestellingen',
+      inventoryValue: 'Voorraad waarde',
+      batchCompliance: 'Batch compliance',
+      supplierContracts: 'Leverancier contracten',
+      stockRotation: 'Voorraad rotatie',
+      auditNotifications: 'Audit meldingen',
+
+      // Nieuwe widgets voor logistics rol
+      stockMovements: 'Voorraad bewegingen',
+      locationOverview: 'Locatie overzicht',
+      transportStatus: 'Transport status',
+
+      // Nieuwe widgets voor member rol
+      stockOverview: 'Voorraad overzicht',
+      myTasks: 'Mijn taken',
+
+      // Nieuwe widgets voor guest rol
+      publicInfo: 'Publieke informatie',
+
+      // Nieuwe widgets voor platform owner rol
+      systemOverview: 'Systeem overzicht',
+      userAnalytics: 'Gebruiker analytics',
+      platformHealth: 'Platform gezondheid',
+      subscriptionStatus: 'Abonnement status',
+
+      // Error fallback
+      error: 'Widget fout',
+    },
+
     // Role switching
     roleSwitch: {
       success: 'Rol succesvol gewijzigd',
@@ -384,8 +463,17 @@ export default {
       tryRefresh: 'Probeer de pagina te vernieuwen',
       switchFailed: 'Wisselen van rol mislukt',
       tryAgain: 'Probeer het opnieuw',
+      practiceIdMissing: 'Praktijk ID ontbreekt',
     },
-    
+
+    // Platform Owner messages
+    platformOwner: {
+      title: 'Platform eigenaar dashboard',
+      description:
+        'Als platform eigenaar heb je toegang tot het speciale platform dashboard met systeembeheer functies.',
+      goToPlatform: 'Ga naar platform dashboard',
+    },
+
     widgetTypeNotSupported: 'Widget type niet ondersteund',
 
     // Service layer translations
@@ -400,7 +488,8 @@ export default {
         orderSuggestions: 'Bestel suggesties',
         recentOrders: 'Recente bestellingen',
         quickScan: 'Snel scannen',
-        quickScanDescription: 'Scan een product barcode voor snelle voorraad updates',
+        quickScanDescription:
+          'Scan een product barcode voor snelle voorraad updates',
         analyticsOverview: 'Analytics overzicht',
         businessOverview: 'Business overzicht',
         financialSummary: 'Financieel overzicht',
@@ -439,7 +528,8 @@ export default {
     },
     welcomeTitle: 'Welkom bij Remcura',
     welcomeSubtitle: 'Je professionele medische voorraadbeheersysteem',
-    welcomeDescription: 'Beheer je voorraad efficiënt met onze geavanceerde tools en realtime tracking.',
+    welcomeDescription:
+      'Beheer je voorraad efficiënt met onze geavanceerde tools en realtime tracking.',
     systemStatus: 'Systeemstatus',
     systemStatusSubtitle: 'Huidige status van je systeem',
     systemOnline: 'Systeem online',
@@ -455,14 +545,12 @@ export default {
     failedToLoadData: 'Fout bij laden dashboard data',
     dataRefreshedSuccessfully: 'Gegevens succesvol vernieuwd',
     failedToRefreshData: 'Fout bij vernieuwen gegevens',
-    
+
     // Role-based dashboards
     assistantDashboard: 'Assistent dashboard',
-    managerDashboard: 'Manager dashboard', 
+    managerDashboard: 'Manager dashboard',
     ownerDashboard: 'Eigenaar dashboard',
-    
 
-    
     // Widget titles
     stockAlerts: 'Voorraad waarschuwingen',
     orderSuggestions: 'Bestel suggesties',
@@ -476,7 +564,7 @@ export default {
     financialSummary: 'Financieel overzicht',
     userManagement: 'Gebruikersbeheer',
     systemHealth: 'Systeem gezondheid',
-    
+
     // Quick actions
     scanProduct: 'Scan product',
     createOrder: 'Nieuwe bestelling',
@@ -489,7 +577,7 @@ export default {
     systemSettings: 'Systeem instellingen',
     financialReports: 'Financiële Rapporten',
     backupData: 'Data backup',
-    
+
     // Alerts and messages
     noAlerts: 'Geen waarschuwingen',
     allStockLevelsOk: 'Alle voorraadniveaus OK',
@@ -497,12 +585,12 @@ export default {
     viewAllAlerts: 'Bekijk alle waarschuwingen',
     noOrderSuggestions: 'Geen bestel suggesties',
     noRecentOrders: 'Geen recente bestellingen',
-    
+
     // Loading and error states
     loadingWidgets: 'Widgets laden...',
     errorLoadingWidget: 'Fout bij laden widget',
     tryAgain: 'Probeer opnieuw',
-    
+
     // Metrics and analytics
     totalProducts: 'Totaal producten',
     lowStockCount: 'Lage voorraad',
@@ -531,10 +619,12 @@ export default {
   // Error pages
   error: {
     pageNotFound: 'Pagina niet gevonden',
-    pageNotFoundDescription: 'Sorry, de pagina die je zoekt kan niet worden gevonden. Deze is mogelijk verplaatst, verwijderd, of je hebt een verkeerde URL ingevoerd.',
+    pageNotFoundDescription:
+      'Sorry, de pagina die je zoekt kan niet worden gevonden. Deze is mogelijk verplaatst, verwijderd, of je hebt een verkeerde URL ingevoerd.',
     goHome: 'Naar home',
     goBack: 'Terug',
-    tryThesePages: "Probeer in plaats daarvan een van deze populaire pagina's te bezoeken:",
+    tryThesePages:
+      "Probeer in plaats daarvan een van deze populaire pagina's te bezoeken:",
   },
 
   // Validation
@@ -633,13 +723,13 @@ export default {
     searchProduct: 'Product zoeken',
     noProductsFound: 'Geen producten gevonden',
     tryDifferentSearchTerm: 'Probeer een andere zoekterm',
-    
+
     // Real-time functionality
     realTimeConnected: 'Live updates',
     realTimeDisconnected: 'Offline modus',
     stockUpdated: 'Voorraad bijgewerkt',
     stockUpdatedMessage: '{product}: nieuwe voorraad {quantity}',
-    
+
     // Enhanced UX functionality
     adjustStockLevels: 'Voorraden aanpassen en bijwerken',
     quickAmounts: 'Snelle hoeveelheden',
@@ -661,7 +751,7 @@ export default {
     lowStock: 'Lage voorraad',
     outOfStock: 'Niet op voorraad',
     overStock: 'Overvoorraad',
-    
+
     // Table column headers
     product: 'Product',
     location: 'Locatie',
@@ -750,9 +840,10 @@ export default {
     viewHistory: 'Geschiedenis bekijken',
     overStockItems: 'Artikelen met overvoorraad',
     batchTrackingWarning: 'Dit product vereist batch tracking',
-    cannotAdjustBatchTrackedProduct: 'Kan geen handmatige aanpassing doen voor batch-tracked product',
+    cannotAdjustBatchTrackedProduct:
+      'Kan geen handmatige aanpassing doen voor batch-tracked product',
     redirectingToBatchManagement: 'Doorverwijzen naar batch beheer',
-    
+
     // Quick Adjustment Dialog
     adjustmentType: 'Aanpassingstype',
     increase: 'Verhogen',
@@ -767,10 +858,14 @@ export default {
     notes: 'Notities',
     notesPlaceholder: 'Optionele notities voor deze aanpassing...',
     errorUpdatingStock: 'Fout bij bijwerken voorraad',
-    errorProductNotFound: 'Product, locatie of praktijk niet gevonden. Ververs de pagina en probeer opnieuw.',
-    errorUpdateInProgress: 'Een andere update is bezig. Wacht even en probeer opnieuw.',
-    errorInvalidData: 'Ongeldige gegevens. Controleer de invoer en probeer opnieuw.',
-    errorNegativeStock: 'Negatieve voorraad is niet toegestaan voor dit product.',
+    errorProductNotFound:
+      'Product, locatie of praktijk niet gevonden. Ververs de pagina en probeer opnieuw.',
+    errorUpdateInProgress:
+      'Een andere update is bezig. Wacht even en probeer opnieuw.',
+    errorInvalidData:
+      'Ongeldige gegevens. Controleer de invoer en probeer opnieuw.',
+    errorNegativeStock:
+      'Negatieve voorraad is niet toegestaan voor dit product.',
     dataRefreshed: 'Gegevens ververst',
     stockUpdatedRealtime: 'Voorraad live bijgewerkt voor {product}',
     productInfoCard: 'Product informatie',
@@ -824,14 +919,13 @@ export default {
     expiresThisMonth: 'Vervalt deze maand',
     fresh: 'Vers',
     maxAvailable: 'Maximaal beschikbaar',
-    
+
     // Transfer reasons
     locationRebalance: 'Locatie herbalancering',
     stockReplenishment: 'Voorraad aanvulling',
     emergencyTransfer: 'Spoed transfer',
     expiryManagement: 'Vervaldatum management',
     maintenanceRelocation: 'Onderhoud verplaatsing',
-
   },
 
   // Counting System
@@ -857,14 +951,15 @@ export default {
     countedProducts: 'Getelde producten',
     loadingSession: 'Tellingsessie laden...',
     sessionNotFound: 'Sessie niet gevonden',
-    sessionNotFoundDescription: 'De tellingsessie die je zoekt kon niet worden gevonden',
+    sessionNotFoundDescription:
+      'De tellingsessie die je zoekt kon niet worden gevonden',
     countingResults: 'Tellingsresultaten',
     viewResults: 'Bekijk tellingsresultaten en discrepanties',
     noResultsFound: 'Geen tellingsresultaten gevonden',
     product: 'Product',
     variance: 'Variantie',
     approveSession: 'Sessie goedkeuren',
-    
+
     // Method Selection
     method: {
       title: 'Kies je telmethode',
@@ -875,7 +970,7 @@ export default {
       manualDescription: 'Tel producten handmatig in',
       continue: 'Verder gaan',
     },
-    
+
     // Product Flow
     productFlow: {
       progressOf: '{current} van {total}',
@@ -887,19 +982,19 @@ export default {
       next: 'Volgende',
       previous: 'Vorige',
       complete: 'Voltooien',
-      
+
       // Status messages
       counting: 'Aan het tellen...',
       saved: 'Opgeslagen!',
       error: 'Fout bij opslaan',
       allComplete: 'Alle producten geteld!',
-      
+
       // Validation
       invalidAmount: 'Voer een geldig aantal in',
       amountRequired: 'Aantal is verplicht',
       mustBePositive: 'Aantal moet positief zijn',
     },
-    
+
     // Scanner specific
     scanner: {
       scanning: 'Aan het scannen...',
@@ -981,7 +1076,8 @@ export default {
     fifoSuggestionGenerated: 'FIFO suggestie succesvol gegenereerd',
     applyFifoSuggestion: 'FIFO suggestie toepassen',
     confirmFifoApplication: 'FIFO toepassing bevestigen',
-    confirmFifoMessage: 'Weet je zeker dat je deze FIFO suggestie wilt toepassen?',
+    confirmFifoMessage:
+      'Weet je zeker dat je deze FIFO suggestie wilt toepassen?',
     fifoAppliedSuccessfully: 'FIFO suggestie succesvol toegepast',
     useQuantity: 'Gebruik hoeveelheid',
     selectReport: 'Selecteer rapport',
@@ -1096,9 +1192,10 @@ export default {
     editProduct: 'Product bewerken',
     deleteProduct: 'Product verwijderen',
     deleteConfirm: 'Product verwijderen',
-    deleteMessage: 'Weet je zeker dat je "{name}" wilt verwijderen? Deze actie kan niet ongedaan worden gemaakt.',
+    deleteMessage:
+      'Weet je zeker dat je "{name}" wilt verwijderen? Deze actie kan niet ongedaan worden gemaakt.',
     created: 'Product succesvol aangemaakt',
-    updated: 'Product succesvol bijgewerkt', 
+    updated: 'Product succesvol bijgewerkt',
     deleted: 'Product "{name}" succesvol verwijderd',
     createError: 'Fout bij aanmaken van product',
     updateError: 'Fout bij bijwerken van product',
@@ -1111,20 +1208,21 @@ export default {
       tube: 'Tube',
       liter: 'Liter',
       kg: 'Kilogram',
-      gram: 'Gram'
+      gram: 'Gram',
     },
     lifecycle: {
       active: 'Actief',
       discontinued: 'Uitgefaseerd',
       new: 'Nieuw',
-      phaseOut: 'Wordt uitgefaseerd'
-    }
+      phaseOut: 'Wordt uitgefaseerd',
+    },
   },
 
   // Products Page
   productsPage: {
     title: 'Producten',
-    subtitle: 'Overzicht van alle beschikbare producten van Remka en externe leveranciers',
+    subtitle:
+      'Overzicht van alle beschikbare producten van Remka en externe leveranciers',
 
     table: {
       name: 'Naam',
@@ -1149,7 +1247,7 @@ export default {
     filterByStockStatus: 'Filter op voorraad status',
     sortBy: 'Sorteer op',
     clearFilters: 'Filters wissen',
-    
+
     // GTIN Search
     gtinDetected: 'GTIN gedetecteerd',
     gtinSearchTooltip: 'Zoekt op GTIN barcode',
@@ -1270,7 +1368,7 @@ export default {
       totalOrdered: 'Totaal Besteld',
       image: 'Product afbeelding',
       noImage: 'Geen afbeelding beschikbaar',
-      
+
       // GS1 Fields
       gs1Info: 'GS1 informatie',
       gtin: 'GTIN',
@@ -1307,7 +1405,7 @@ export default {
     submitToMagento: 'Verzenden naar Magento',
     duplicate: 'Dupliceren',
     cancel: 'Bestelling annuleren',
-    
+
     // Table column headers
     orderNumber: 'Bestelnummer',
     orderDate: 'Besteldatum',
@@ -1381,7 +1479,8 @@ export default {
       cancelFailed: 'Annuleren bestelling mislukt',
       exportFailed: 'Exporteren bestellingen mislukt',
       noOrdersToExport: 'Geen bestellingen om te exporteren',
-      noPracticeSelected: 'Selecteer eerst een praktijk om bestellingen te bekijken',
+      noPracticeSelected:
+        'Selecteer eerst een praktijk om bestellingen te bekijken',
     },
 
     exportFilteredNote: 'Exporteer {count} gefilterde bestellingen',
@@ -1395,7 +1494,8 @@ export default {
     title: 'Orderlijsten',
     subtitle: 'Beheer uw inkooplijsten',
     advancedTitle: 'Geavanceerde Orderlijsten',
-    advancedSubtitle: 'Min/max gestuurd leverancier-onafhankelijk bestelsysteem',
+    advancedSubtitle:
+      'Min/max gestuurd leverancier-onafhankelijk bestelsysteem',
     create: 'Nieuwe orderlijst',
     edit: 'Bewerken',
     delete: 'Verwijderen',
@@ -1406,12 +1506,15 @@ export default {
     sendToSupplier: 'Naar leverancier versturen',
     submitConfirm: 'Orderlijst versturen',
     sendToSupplierConfirm: 'Naar leverancier versturen',
-    submitMessage: 'Weet je zeker dat je "{name}" wilt versturen naar {supplier}?\n\nItems: {items}\nTotaalbedrag: {amount}',
-    sendToSupplierMessage: 'Weet je zeker dat je "{name}" wilt versturen naar {supplier}?\n\nVerzendmethode: {method}',
+    submitMessage:
+      'Weet je zeker dat je "{name}" wilt versturen naar {supplier}?\n\nItems: {items}\nTotaalbedrag: {amount}',
+    sendToSupplierMessage:
+      'Weet je zeker dat je "{name}" wilt versturen naar {supplier}?\n\nVerzendmethode: {method}',
     confirmSubmit: 'Ja, versturen',
     confirmSend: 'Versturen',
     submitted: 'Orderlijst "{name}" succesvol verstuurd',
-    sentToSupplier: 'Orderlijst "{name}" succesvol verzonden naar leverancier via {method}',
+    sentToSupplier:
+      'Orderlijst "{name}" succesvol verzonden naar leverancier via {method}',
     submitError: 'Fout bij versturen van orderlijst',
     sendError: 'Fout bij verzenden naar leverancier: {error}',
     viewSubmitted: 'Bekijk verstuurd',
@@ -1448,7 +1551,8 @@ export default {
     processingError: 'Fout bij verwerken urgente items',
     editComing: 'Bewerken functie komt binnenkort',
     loadDataError: 'Fout bij laden data',
-    sendConfirm: 'Wil je de {count} bestellingen nu naar de leveranciers sturen?',
+    sendConfirm:
+      'Wil je de {count} bestellingen nu naar de leveranciers sturen?',
     // Dialog specific
     createDialog: 'Nieuwe orderlijst aanmaken',
     editDialog: 'Orderlijst bewerken',
@@ -1462,7 +1566,7 @@ export default {
     orderListName: 'Orderlijst naam',
     orderListNotes: 'Orderlijst notities',
     addToList: 'Toevoegen aan lijst',
-    removeFromList: 'Verwijderen uit lijst'
+    removeFromList: 'Verwijderen uit lijst',
   },
 
   // Locations
@@ -1497,7 +1601,8 @@ export default {
     mainLocations: 'Hoofdlocaties',
     allLocations: 'Alle locaties',
     search: 'Locaties zoeken...',
-    comingSoonDescription: 'Locatiebeheer functies komen binnenkort beschikbaar. Je zult verschillende opslaggebieden voor je voorraad kunnen aanmaken en beheren.',
+    comingSoonDescription:
+      'Locatiebeheer functies komen binnenkort beschikbaar. Je zult verschillende opslaggebieden voor je voorraad kunnen aanmaken en beheren.',
     capacityItems: '{count} artikelen',
     samples: {
       emergencyStock: 'Spoedkast',
@@ -1535,7 +1640,8 @@ export default {
     title: 'Analyses',
     subtitle: 'Uitgebreide rapporten en inzichten voor je voorraad',
     comingSoon: 'Binnenkort beschikbaar',
-    comingSoonDescription: 'Geavanceerde analyses en rapportage functies worden binnenkort toegevoegd.',
+    comingSoonDescription:
+      'Geavanceerde analyses en rapportage functies worden binnenkort toegevoegd.',
     overview: 'Overzicht',
     trends: 'Trends',
     reports: 'Rapporten',
@@ -1549,11 +1655,11 @@ export default {
     orderFrequency: 'Bestelfrequentie',
     supplierPerformance: 'Leverancier prestaties',
     costAnalysis: 'Kostenanalyse',
-    
+
     dashboard: 'Dashboard analyses',
     usage: 'Gebruik statistieken',
     patterns: 'Gebruikspatronen',
-    
+
     events: {
       login: 'Inloggen',
       logout: 'Uitloggen',
@@ -1572,7 +1678,7 @@ export default {
   // Offline Services
   offline: {
     title: 'Offline modus',
-    
+
     data: {
       download: 'Offline data downloaden',
       downloadDescription: 'Download laatste data voor offline gebruik',
@@ -1603,8 +1709,9 @@ export default {
       downloadFailed: 'Download offline data mislukt',
       networkUnavailable: 'Netwerk niet beschikbaar',
     },
-    
-    newVersionAvailable: 'Een nieuwe versie van de app is beschikbaar. Wilt u nu herladen?',
+
+    newVersionAvailable:
+      'Een nieuwe versie van de app is beschikbaar. Wilt u nu herladen?',
   },
 
   // Exports
@@ -1615,7 +1722,7 @@ export default {
     selectData: 'Data selecteren',
     generateExport: 'Export genereren',
     downloadExport: 'Export downloaden',
-    
+
     formats: {
       csv: 'CSV bestand',
       pdf: 'PDF document',
@@ -1653,10 +1760,10 @@ export default {
     mostUpdatedProducts: 'Meest geüpdatet producten',
     userActivity: 'Gebruiker activiteit',
     export: 'Exporteren',
-    
+
     periods: {
       '7d': 'Laatste 7 dagen',
-      '30d': 'Laatste 30 dagen', 
+      '30d': 'Laatste 30 dagen',
       '90d': 'Laatste 90 dagen',
       '1y': 'Laatste jaar',
     },
@@ -1703,19 +1810,23 @@ export default {
     reset: 'Herstellen',
     resetToDefaults: 'Herstellen naar standaardwaarden',
     confirmReset: 'Weet je zeker dat je wilt herstellen naar standaardwaarden?',
-    
-    manageSettingsSubtitle: 'Beheer je systeeminstellingen en voorkeuren voor een optimale ervaring',
+
+    manageSettingsSubtitle:
+      'Beheer je systeeminstellingen en voorkeuren voor een optimale ervaring',
     profile: 'Profiel',
     profileSubtitle: 'Jouw persoonlijke gebruikersinformatie',
     appearanceTitle: 'Weergave',
     appearanceSubtitle: 'Personaliseer het uiterlijk van de applicatie',
-    darkModeDescription: 'Schakel tussen lichte en donkere modus voor betere zichtbaarheid',
+    darkModeDescription:
+      'Schakel tussen lichte en donkere modus voor betere zichtbaarheid',
     selectLanguage: 'Kies je voorkeurstaal voor de interface',
     colorSchemeTitle: 'Kleurenschema',
-    colorSchemeDescription: 'Selecteer het kleurenschema dat bij je voorkeur past',
+    colorSchemeDescription:
+      'Selecteer het kleurenschema dat bij je voorkeur past',
     clinic: 'Kliniek',
     clinicInfoSubtitle: 'Contactgegevens en bedrijfsinformatie',
-    contactSettingsNotice: 'Contactgegevens kunnen alleen worden aangepast door een beheerder',
+    contactSettingsNotice:
+      'Contactgegevens kunnen alleen worden aangepast door een beheerder',
     notificationSettingsSubtitle: 'Beheer je meldingen en alerts',
     stockAlertsLabel: 'Voorraad waarschuwingen',
     stockAlertsDescription: 'Ontvang meldingen wanneer voorraad laag is',
@@ -1742,10 +1853,11 @@ export default {
     saveSettings: 'Instellingen opslaan',
 
     styleGuideTitle: 'Remcura stijlgids',
-    styleGuideSubtitle: 'Complete ontwerpsysteem referentie en component showcase',
+    styleGuideSubtitle:
+      'Complete ontwerpsysteem referentie en component showcase',
     colorsSection: 'Kleuren',
     primaryColors: 'Primaire kleuren',
-    neutralColors: 'Neutrale kleuren', 
+    neutralColors: 'Neutrale kleuren',
     typographySection: 'Typografie',
     buttonsSection: 'Knoppen',
     solidButtons: 'Solide knoppen',
@@ -1770,37 +1882,43 @@ export default {
       defaultCard: {
         title: 'Standaard kaart',
         subtitle: 'Standaard kaart voor algemene inhoud',
-        description: 'Dit is de standaard kaart variant met standaard styling. Het gebruikt neutrale achtergronden die goed aanpassen aan lichte en donkere modi.',
+        description:
+          'Dit is de standaard kaart variant met standaard styling. Het gebruikt neutrale achtergronden die goed aanpassen aan lichte en donkere modi.',
         action: 'Actie',
       },
       modernCard: {
         title: 'Moderne kaart',
         subtitle: 'Verbeterde moderne styling met randen',
-        description: 'Moderne kaart variant met verbeterde styling en subtiele randen voor een hedendaagse uitstraling.',
+        description:
+          'Moderne kaart variant met verbeterde styling en subtiele randen voor een hedendaagse uitstraling.',
         action: 'Primaire actie',
       },
       elevatedCard: {
         title: 'Verhoogde kaart',
         subtitle: 'Kaart met verbeterde schaduw voor nadruk',
-        description: 'Deze kaart heeft verhoogde styling met verbeterde schaduwen om diepte en hiërarchie te creëren.',
+        description:
+          'Deze kaart heeft verhoogde styling met verbeterde schaduwen om diepte en hiërarchie te creëren.',
         action: 'Verhoogde actie',
       },
       glassCard: {
         title: 'Glas kaart',
         subtitle: 'Glas morfisme effect met transparantie',
-        description: 'Glas morfisme kaart met achtergrond blur en transparantie effecten voor een moderne, verfijnde uitstraling.',
+        description:
+          'Glas morfisme kaart met achtergrond blur en transparantie effecten voor een moderne, verfijnde uitstraling.',
         action: 'Glas actie',
       },
       outlinedCard: {
         title: 'Omlijnd kaart',
         subtitle: 'Kaart met rand nadruk',
-        description: 'Deze kaart gebruikt randen in plaats van schaduwen voor definitie, perfect voor minimale ontwerpen.',
+        description:
+          'Deze kaart gebruikt randen in plaats van schaduwen voor definitie, perfect voor minimale ontwerpen.',
         action: 'Omlijnd actie',
       },
       warningCard: {
         title: 'Waarschuwing kaart',
         subtitle: 'Kaart met waarschuwing kleur thema',
-        description: 'Voorbeeld van het gebruik van header kleuren om thematische kaarten te maken voor verschillende soorten content.',
+        description:
+          'Voorbeeld van het gebruik van header kleuren om thematische kaarten te maken voor verschillende soorten content.',
         action: 'Waarschuwing actie',
       },
     },
@@ -1870,7 +1988,7 @@ export default {
     permissions: 'Rechten',
     analytics: 'Analyses',
     quickActions: 'Snelle acties',
-    
+
     stats: {
       totalUsers: 'Totaal gebruikers',
       activeUsers: 'Actieve gebruikers',
@@ -1894,7 +2012,8 @@ export default {
       deactivate: 'Deactiveren',
       editingUser: 'Gebruiker bewerken: {userId}',
       managingPermissions: 'Rechten beheren voor: {userId}',
-      resetPasswordConfirm: 'Weet je zeker dat je het wachtwoord wilt resetten voor {userId}?',
+      resetPasswordConfirm:
+        'Weet je zeker dat je het wachtwoord wilt resetten voor {userId}?',
       actionConfirm: 'Weet je zeker dat je {userId} wilt {action}?',
     },
 
@@ -1911,7 +2030,7 @@ export default {
       loadUsersFailed: 'Fout bij laden gebruikers',
       loadLocationsFailed: 'Fout bij laden locaties',
       loadPermissionsFailed: 'Fout bij laden rechten',
-      
+
       // Common admin errors
       noPracticeSelected: 'Geen praktijk geselecteerd',
       practiceOrUserNotFound: 'Praktijk of gebruiker niet gevonden',
@@ -1919,17 +2038,19 @@ export default {
       userEmailNotFound: 'Gebruiker e-mail niet gevonden',
       cannotDeactivatePracticeOwner: 'Kan praktijk eigenaar niet deactiveren',
       cannotDeleteMainLocation: 'Kan hoofdlocatie niet verwijderen',
-      
+
       // Permission errors
       insufficientPermissionsToCreate: 'Onvoldoende rechten om te maken',
       insufficientPermissionsToUpdate: 'Onvoldoende rechten om bij te werken',
       insufficientPermissionsToDelete: 'Onvoldoende rechten om te verwijderen',
       insufficientPermissionsToView: 'Onvoldoende rechten om te bekijken',
-      insufficientPermissionsToGrant: 'Onvoldoende rechten om rechten toe te kennen',
-      insufficientPermissionsToRevoke: 'Onvoldoende rechten om rechten in te trekken',
+      insufficientPermissionsToGrant:
+        'Onvoldoende rechten om rechten toe te kennen',
+      insufficientPermissionsToRevoke:
+        'Onvoldoende rechten om rechten in te trekken',
       insufficientPermissionsToReset: 'Onvoldoende rechten om te resetten',
       insufficientPermissionsToToggle: 'Onvoldoende rechten om te wijzigen',
-      
+
       // Operation errors
       failedToCreate: 'Aanmaken mislukt',
       failedToUpdate: 'Bijwerken mislukt',
@@ -1940,7 +2061,7 @@ export default {
       failedToSend: 'Verzenden mislukt',
       failedToSet: 'Instellen mislukt',
     },
-    
+
     // Team Management
     teamOverview: 'Team overzicht',
     teamOverviewSubtitle: 'Beheer teamleden en hun toegangsmethoden',
@@ -1962,7 +2083,8 @@ export default {
     sendMessage: 'Bericht sturen',
     viewSessions: 'Sessies bekijken',
     personalMagicCode: 'Persoonlijke Magic Code',
-    magicCodeExplanation: 'Deze code kan gebruikt worden om direct in te loggen zonder wachtwoord',
+    magicCodeExplanation:
+      'Deze code kan gebruikt worden om direct in te loggen zonder wachtwoord',
     loadTeamError: 'Fout bij laden team',
     never: 'Nooit',
     minutesAgo: '{count} minuten geleden',
@@ -1989,7 +2111,7 @@ export default {
     permissionType: 'Rechten type',
     resourceType: 'Resource type',
     expiresAt: 'Verloopt op',
-    
+
     templates: {
       title: 'Rechten sjablonen',
       assistant: 'Assistent',
@@ -2022,7 +2144,7 @@ export default {
     isMain: 'Hoofdlocatie',
     setAsMain: 'Instellen als hoofdlocatie',
     manageAccess: 'Toegang beheren',
-    
+
     notifications: {
       mainLocationSet: 'Hoofdlocatie ingesteld',
       accessUpdated: 'Toegang bijgewerkt',
@@ -2038,24 +2160,24 @@ export default {
   platform: {
     title: 'Platform Dashboard',
     subtitle: 'Systeembeheer en monitoring',
-    
+
     systemHealth: {
       healthy: 'Gezond',
       warning: 'Waarschuwing',
       critical: 'Kritiek',
     },
-    
+
     version: 'Versie',
     environment: 'Omgeving',
-    
+
     metrics: {
       totalPractices: 'Totaal Praktijken',
-      totalUsers: 'Totaal Gebruikers', 
+      totalUsers: 'Totaal Gebruikers',
       activeToday: 'Actief Vandaag',
       totalEvents: 'Totaal Events',
       systemHealth: 'Systeem Status',
     },
-    
+
     notifications: {
       dataRefreshed: 'Platform data ververst',
       refreshFailed: 'Fout bij verversen platform data',
@@ -2101,9 +2223,11 @@ export default {
     save: 'Opslaan',
     nameRequired: 'Naam is verplicht',
     linkToMagento: 'Koppelen aan Magento',
-    linkToMagentoPrompt: 'Voer het Magento vendor ID in om deze leverancier te koppelen:',
+    linkToMagentoPrompt:
+      'Voer het Magento vendor ID in om deze leverancier te koppelen:',
     confirmDelete: 'Verwijderen bevestigen',
-    confirmDeleteMessage: 'Weet je zeker dat je "{name}" wilt verwijderen? Deze actie kan niet ongedaan worden gemaakt.',
+    confirmDeleteMessage:
+      'Weet je zeker dat je "{name}" wilt verwijderen? Deze actie kan niet ongedaan worden gemaakt.',
     supplierCreated: 'Leverancier succesvol aangemaakt',
     supplierUpdated: 'Leverancier succesvol bijgewerkt',
     supplierDeleted: 'Leverancier succesvol verwijderd',
@@ -2113,7 +2237,7 @@ export default {
     deleteError: 'Fout bij verwijderen leverancier',
     linkMagentoError: 'Fout bij koppelen leverancier aan Magento',
     importFeatureComingSoon: 'Import functie komt binnenkort!',
-    
+
     // Nieuwe integratie velden
     integrationSettings: 'Integratie instellingen',
     integrationType: 'Integratie type',
@@ -2131,7 +2255,8 @@ export default {
     syncNow: 'Nu synchroniseren',
     editSettings: 'Instellingen bewerken',
     testConnection: 'Verbinding testen',
-    manualIntegrationInfo: 'Handmatige integratie vereist geen configuratie. Bestellingen worden handmatig verwerkt.',
+    manualIntegrationInfo:
+      'Handmatige integratie vereist geen configuratie. Bestellingen worden handmatig verwerkt.',
     orderEmail: 'Bestel e-mailadres',
     apiEndpoint: 'API endpoint',
     apiKey: 'API sleutel',
@@ -2140,24 +2265,26 @@ export default {
     testingConnection: 'Verbinding testen...',
     connectionSuccessful: 'Verbinding succesvol getest',
     connectionFailed: 'Verbinding testen mislukt: {error}',
-    syncDisabledWarning: 'Synchronisatie is uitgeschakeld voor deze leverancier',
-    syncSuccess: 'Producten succesvol gesynchroniseerd voor {name} ({count} producten)',
+    syncDisabledWarning:
+      'Synchronisatie is uitgeschakeld voor deze leverancier',
+    syncSuccess:
+      'Producten succesvol gesynchroniseerd voor {name} ({count} producten)',
     syncFailed: 'Synchronisatie mislukt voor {name}: {error}',
-    
+
     integrationTypes: {
       manual: 'Handmatig',
       email: 'E-mail',
       api: 'API',
       edi: 'EDI',
-      magento: 'Magento'
+      magento: 'Magento',
     },
-    
+
     orderMethods: {
       manual: 'Handmatig',
       email: 'E-mail',
       api: 'API',
-      pdf: 'PDF'
-    }
+      pdf: 'PDF',
+    },
   },
 
   // Notifications Page
@@ -2183,13 +2310,15 @@ export default {
     markAsReadTooltip: 'Markeren als gelezen',
     deleteTooltip: 'Verwijderen',
     clearAllConfirm: 'Alle meldingen wissen',
-    clearAllConfirmMessage: 'Weet je zeker dat je alle meldingen wilt verwijderen? Deze actie kan niet ongedaan worden gemaakt.',
+    clearAllConfirmMessage:
+      'Weet je zeker dat je alle meldingen wilt verwijderen? Deze actie kan niet ongedaan worden gemaakt.',
     allMarkedAsRead: 'Alle meldingen gemarkeerd als gelezen',
     notificationDeleted: 'Melding verwijderd',
     allNotificationsCleared: 'Alle meldingen gewist',
     testStockAlertCreated: 'Test voorraad waarschuwing aangemaakt',
     testOrderUpdateCreated: 'Test bestel update aangemaakt',
-    settingsFeatureComingSoon: 'Meldingen instellingen functie komt binnenkort!',
+    settingsFeatureComingSoon:
+      'Meldingen instellingen functie komt binnenkort!',
     loadNotificationsError: 'Fout bij laden meldingen',
 
     categories: {
@@ -2221,70 +2350,77 @@ export default {
   // Messages for user feedback
   messages: {
     addToCartComingSoon: 'Functie toevoegen aan winkelwagen komt binnenkort',
-    addAllSuggestionsComingSoon: 'Functie alle suggesties toevoegen komt binnenkort',
+    addAllSuggestionsComingSoon:
+      'Functie alle suggesties toevoegen komt binnenkort',
     cartCleared: 'Winkelwagen geleegd',
     cartSaved: 'Winkelwagen opgeslagen',
   },
 
-  // Confirm dialog translations  
+  // Confirm dialog translations
   dialogs: {
     typeToConfirm: 'Typ {text} om te bevestigen',
-    confirmClose: 'Ben je zeker dat je wilt sluiten? Niet-opgeslagen wijzigingen gaan verloren.',
+    confirmClose:
+      'Ben je zeker dat je wilt sluiten? Niet-opgeslagen wijzigingen gaan verloren.',
   },
 
   // Magic Invite System - Revolutionary user management! 🚀
   magicInvite: {
     revolutionaryUserSystem: 'Revolutionair Gebruikerssysteem',
     simpleTitle: 'Mensen uitnodigen',
-    simpleDescription: 'Geef collega\'s instant toegang met een simpele code - geen wachtwoorden nodig!',
+    simpleDescription:
+      "Geef collega's instant toegang met een simpele code - geen wachtwoorden nodig!",
     howItWorks: 'Hoe werkt het?',
     stepCreate: 'Maak uitnodiging',
-    stepCreateDetail: 'Klik hieronder om een unieke code te maken voor je collega',
+    stepCreateDetail:
+      'Klik hieronder om een unieke code te maken voor je collega',
     stepShare: 'Deel de code',
     stepShareDetail: 'Stuur de code via WhatsApp, e-mail, of gewoon mondeling',
     stepJoin: 'Direct toegang',
     stepJoinDetail: 'Je collega gaat naar remcura.com/join en voert de code in',
-    
+
     createInvite: 'Nieuwe uitnodiging maken',
     whoAreYouInviting: 'Wie nodig je uit?',
     department: 'Afdeling (optioneel)',
     departmentPlaceholder: 'Bijv. Apotheek, Receptie, Behandeling',
     generateInviteCode: 'Maak uitnodigingscode',
-    
+
     inviteReady: '✅ Uitnodiging klaar!',
     shareThisCode: 'Deel deze code:',
     tellThem: 'Vertel ze:',
     shareMessage: 'Ga naar remcura.com/join en voer deze code in: {code}',
-    
+
     shareWhatsApp: 'WhatsApp',
     showQR: 'QR Code',
     shareEmail: 'E-mail',
     qrCode: 'QR Code',
     qrInstructions: 'Laat ze deze QR code scannen met hun telefoon',
-    
+
     activeInvites: 'Actieve uitnodigingen',
     created: 'aangemaakt',
-    
+
     doctorNurse: 'Dokter/Verpleegkundige',
     assistant: 'Assistent',
     admin: 'Beheerder',
     temporary: 'Tijdelijke toegang',
-    
+
     inviteCreated: 'Uitnodiging gemaakt!',
     createError: 'Fout bij maken uitnodiging',
     codeCopied: 'Code gekopieerd naar klembord',
     deleteInvite: 'Uitnodiging verwijderen',
     deleteConfirm: 'Weet je zeker dat je code {code} wilt verwijderen?',
     inviteDeleted: 'Uitnodiging verwijderd',
-    
-    whatsappMessage: 'Hoi! Je bent uitgenodigd voor Remcura.\n\nGa naar: {url}\nVoer deze code in: {code}\n\nDan heb je direct toegang! 👍',
+
+    whatsappMessage:
+      'Hoi! Je bent uitgenodigd voor Remcura.\n\nGa naar: {url}\nVoer deze code in: {code}\n\nDan heb je direct toegang! 👍',
     emailSubject: 'Uitnodiging Remcura',
-    emailMessage: 'Hoi!\n\nJe bent uitgenodigd om Remcura te gebruiken.\n\nStap 1: Ga naar {url}\nStap 2: Voer deze code in: {code}\n\nDan heb je meteen toegang tot het systeem!\n\nGroet',
+    emailMessage:
+      'Hoi!\n\nJe bent uitgenodigd om Remcura te gebruiken.\n\nStap 1: Ga naar {url}\nStap 2: Voer deze code in: {code}\n\nDan heb je meteen toegang tot het systeem!\n\nGroet',
   },
 
   magicJoin: {
     enterCode: 'Voer je magische code in',
-    codeExplanation: 'Voer de code in die je hebt ontvangen om toegang te krijgen',
+    codeExplanation:
+      'Voer de code in die je hebt ontvangen om toegang te krijgen',
     placeholder: '🏥JOUWCODE2024',
     joinNow: 'Nu deelnemen',
     scanQR: 'QR-code scannen',
@@ -2311,25 +2447,27 @@ export default {
     personalCodeError: 'Ongeldige persoonlijke code',
     permanentInviteDetected: 'Permanente uitnodiging gedetecteerd',
     guestAccessGranted: 'Gasttoegang verleend',
-    demoAccess: 'Demo toegang'
+    demoAccess: 'Demo toegang',
   },
 
   // Auto-Upgrade System - Permanent Team Members
   upgrade: {
     welcomeToTeam: 'Welkom bij het team!',
-    subtitle: 'Je bent uitgenodigd als {role} voor {practice}. Kies hoe je voortaan wilt inloggen:',
+    subtitle:
+      'Je bent uitgenodigd als {role} voor {practice}. Kies hoe je voortaan wilt inloggen:',
     benefit1: 'Permanente toegang tot het systeem',
     benefit2: 'Volledige functionaliteit beschikbaar',
     benefit3: 'Deel van het team voor dagelijks gebruik',
-    
+
     // Magic Code Option
     magicCodeTitle: '⚡ Persoonlijke Code',
-    magicCodeDescription: 'Krijg je eigen unieke code die je altijd kunt gebruiken',
+    magicCodeDescription:
+      'Krijg je eigen unieke code die je altijd kunt gebruiken',
     yourPersonalCode: 'Jouw persoonlijke code wordt:',
     magicBenefit1: 'Super snel inloggen',
     magicBenefit2: 'Makkelijk te onthouden',
     magicBenefit3: 'Werkt op elk apparaat',
-    
+
     // Email + Password Option
     emailTitle: '🔐 Email + Wachtwoord',
     emailDescription: 'Traditioneel inloggen zoals je gewend bent',
@@ -2338,14 +2476,14 @@ export default {
     emailBenefit1: 'Extra beveiligd',
     emailBenefit2: 'Bekend systeem',
     emailBenefit3: 'Wachtwoord herstel',
-    
+
     // Device Remember Option
     deviceTitle: '📱 Onthoud Apparaat',
     deviceDescription: 'Blijf automatisch ingelogd op dit apparaat',
     deviceBenefit1: 'Automatisch inloggen',
     deviceBenefit2: 'Veilig per apparaat',
     deviceBenefit3: '90 dagen geldig',
-    
+
     // Form & Actions
     yourFullName: 'Je volledige naam',
     nameRequired: 'Naam is verplicht',
@@ -2378,27 +2516,25 @@ export default {
   'inventory.reason.transfer_out': 'Overdracht uit',
   'common.retry': 'Opnieuw proberen',
 
-
-
   // === CRITICAL MISSING TRANSLATIONS ===
-  'retry': 'Opnieuw proberen',
-      'assistantDashboard': 'Assistent dashboard',
-    'managerDashboard': 'Manager dashboard',
-    'ownerDashboard': 'Eigenaar dashboard',
-    'orderSuggestions': 'Bestelling suggesties',
-    'recentOrders': 'Recente bestellingen',
-    'quickScan': 'Snelle scan',
-    'analyticsOverview': 'Analyse overzicht',
-    'businessOverview': 'Bedrijfs overzicht',
-    'teamActivity': 'Team activiteit',
-    'financialSummary': 'Financieel overzicht',
-    'userManagement': 'Gebruikers beheer',
-    'systemHealth': 'Systeem gezondheid',
-    'scanProduct': 'Product scannen',
-    'costAnalysis': 'Kosten analyse',
-    'supplierPerformance': 'Leverancier prestaties',
-    'createOrder': 'Bestelling maken',
-  'noAlerts': 'Geen waarschuwingen',
+  retry: 'Opnieuw proberen',
+  assistantDashboard: 'Assistent dashboard',
+  managerDashboard: 'Manager dashboard',
+  ownerDashboard: 'Eigenaar dashboard',
+  orderSuggestions: 'Bestelling suggesties',
+  recentOrders: 'Recente bestellingen',
+  quickScan: 'Snelle scan',
+  analyticsOverview: 'Analyse overzicht',
+  businessOverview: 'Bedrijfs overzicht',
+  teamActivity: 'Team activiteit',
+  financialSummary: 'Financieel overzicht',
+  userManagement: 'Gebruikers beheer',
+  systemHealth: 'Systeem gezondheid',
+  scanProduct: 'Product scannen',
+  costAnalysis: 'Kosten analyse',
+  supplierPerformance: 'Leverancier prestaties',
+  createOrder: 'Bestelling maken',
+  noAlerts: 'Geen waarschuwingen',
 
   // Critical dashboard keys that were previously missing
 
@@ -2406,7 +2542,8 @@ export default {
     title: 'Barcode scanner',
     subtitle: 'Scan product barcodes of GTINs',
     cameraPermission: 'Camera toegang vereist',
-    permissionDescription: 'Geef toegang tot de camera om barcodes en GTINs te scannen',
+    permissionDescription:
+      'Geef toegang tot de camera om barcodes en GTINs te scannen',
     enableCamera: 'Camera inschakelen',
     error: 'Scanner fout',
     scanning: 'Scannen...',
@@ -2419,8 +2556,10 @@ export default {
     flashOff: 'Flits uit',
     validGtin: 'Geldige GTIN gescand: {gtin}',
     invalidFormat: 'Ongeldig barcode formaat: {code}',
-    permissionDenied: 'Camera toegang geweigerd. Schakel camera toegang in via je browser instellingen.',
-    noCameraFound: 'Geen camera gevonden. Zorg ervoor dat een camera is verbonden.',
+    permissionDenied:
+      'Camera toegang geweigerd. Schakel camera toegang in via je browser instellingen.',
+    noCameraFound:
+      'Geen camera gevonden. Zorg ervoor dat een camera is verbonden.',
     cameraError: 'Camera fout opgetreden. Probeer opnieuw.',
   },
 
@@ -2437,12 +2576,12 @@ export default {
     notes: 'Opmerkingen',
     confirm: 'Bevestigen',
     success: 'Voorraad succesvol aangepast',
-    error: 'Fout bij aanpassen voorraad'
+    error: 'Fout bij aanpassen voorraad',
   },
 
   // Time periods (DASHBOARD FILTERS - MEDIUM PRIORITEIT)
   '7d': 'Laatste 7 dagen',
-  '30d': 'Laatste 30 dagen', 
+  '30d': 'Laatste 30 dagen',
   '90d': 'Laatste 90 dagen',
   '1y': 'Laatste jaar',
 
@@ -2450,2745 +2589,2746 @@ export default {
 
   // Brand/Basic missing keys (TOP LEVEL)
   name: 'Naam',
-  edition: 'Professionele editie',  
+  edition: 'Professionele editie',
   tagline: 'Professioneel medisch voorraadbeheer',
   defaultName: 'Standaard kliniek',
   professionalPlan: 'Professioneel plan',
-  
+
   // Information key (clinic namespace extension)
   information: 'Informatie',
 
-    'common.live': 'Live',
+  'common.live': 'Live',
 
-    'app.name': 'Remcura',
+  'app.name': 'Remcura',
 
-    'barcodeScanner.scanLabel': 'Scan product',
+  'barcodeScanner.scanLabel': 'Scan product',
 
-    'nav.dashboard': 'Dashboard',
+  'nav.dashboard': 'Dashboard',
 
-    'nav.products': 'Producten',
+  'nav.products': 'Producten',
 
-    'nav.orders': 'Bestellingen',
+  'nav.orders': 'Bestellingen',
 
-    'barcodeScanner.enterBarcode': 'Voer barcode in',
+  'barcodeScanner.enterBarcode': 'Voer barcode in',
 
-    'exports.formats.excel': 'Excel (.xlsx)',
+  'exports.formats.excel': 'Excel (.xlsx)',
 
-    'exports.formats.csv': 'CSV (.csv)',
+  'exports.formats.csv': 'CSV (.csv)',
 
-    'exports.formats.pdf': 'PDF (.pdf)',
+  'exports.formats.pdf': 'PDF (.pdf)',
 
-    'settings.languages.dutch': 'Nederlands',
+  'settings.languages.dutch': 'Nederlands',
 
-    'settings.languages.english': 'Engels',
+  'settings.languages.english': 'Engels',
 
-    'settings.languages.spanish': 'Spaans',
+  'settings.languages.spanish': 'Spaans',
 
-    'dashboard.widgets.teamMembers': 'Team leden',
+  'dashboard.widgets.teamMembers': 'Team leden',
 
-    'dashboard.widgets.systemStatus': 'Systeem status',
+  'dashboard.widgets.systemStatus': 'Systeem status',
 
-      'currencies.eur': 'EUR (€)',
+  'currencies.eur': 'EUR (€)',
   'currencies.usd': 'USD ($)',
   'currencies.gbp': 'GBP (£)',
 
-    'productsPage.title': 'Producten',
+  'productsPage.title': 'Producten',
 
-    'productsPage.subtitle': 'Beheer je productcatalogus en voorraad',
+  'productsPage.subtitle': 'Beheer je productcatalogus en voorraad',
 
-    'common.refresh': 'Verversen',
+  'common.refresh': 'Verversen',
 
-    'products.createProduct': 'Product toevoegen',
+  'products.createProduct': 'Product toevoegen',
 
-    'productsPage.viewCart': 'Winkelwagen bekijken',
+  'productsPage.viewCart': 'Winkelwagen bekijken',
 
-    'productsPage.noGs1Data': 'Geen GS1 data beschikbaar',
+  'productsPage.noGs1Data': 'Geen GS1 data beschikbaar',
 
-    'productsPage.viewDetails': 'Details bekijken',
+  'productsPage.viewDetails': 'Details bekijken',
 
-    'products.editProduct': 'Product bewerken',
+  'products.editProduct': 'Product bewerken',
 
-    'products.deleteProduct': 'Product verwijderen',
+  'products.deleteProduct': 'Product verwijderen',
 
-    'productsPage.addToCart': 'Toevoegen aan winkelwagen',
+  'productsPage.addToCart': 'Toevoegen aan winkelwagen',
 
-    'productsPage.addToOrderList': 'Toevoegen aan bestellijst',
+  'productsPage.addToOrderList': 'Toevoegen aan bestellijst',
 
-    'productsPage.productDetails': 'Product details',
+  'productsPage.productDetails': 'Product details',
 
-    'productsPage.description': 'Beschrijving',
+  'productsPage.description': 'Beschrijving',
 
-    'productsPage.unit': 'Eenheid',
+  'productsPage.unit': 'Eenheid',
 
-    'productsPage.category': 'Categorie',
+  'productsPage.category': 'Categorie',
 
-    'productsPage.gs1Information': 'GS1 informatie',
+  'productsPage.gs1Information': 'GS1 informatie',
 
-    'productsPage.lifecycle': 'Levenscyclus',
+  'productsPage.lifecycle': 'Levenscyclus',
 
-    'productsPage.suppliers': 'Leveranciers',
+  'productsPage.suppliers': 'Leveranciers',
 
-    'productsPage.stockLevels': 'Voorraadniveaus',
+  'productsPage.stockLevels': 'Voorraadniveaus',
 
-    'products.deleteConfirm': 'Product verwijderen',
+  'products.deleteConfirm': 'Product verwijderen',
 
-    'common.cancel': 'Annuleren',
+  'common.cancel': 'Annuleren',
 
-    'common.delete': 'Verwijderen',
+  'common.delete': 'Verwijderen',
 
-    'orders.title': 'Title',
+  'orders.title': 'Title',
 
-    'orders.bulkExport': 'BulkExport',
+  'orders.bulkExport': 'BulkExport',
 
-    'orders.bulkEmail': 'BulkEmail',
+  'orders.bulkEmail': 'BulkEmail',
 
-    'orders.viewOrder': 'ViewOrder',
+  'orders.viewOrder': 'ViewOrder',
 
-    'orders.editOrder': 'EditOrder',
+  'orders.editOrder': 'EditOrder',
 
-    'orders.downloadOrder': 'DownloadOrder',
+  'orders.downloadOrder': 'DownloadOrder',
 
-    'orders.export.title': 'Title',
+  'orders.export.title': 'Title',
 
-    'orders.export.format': 'Format',
+  'orders.export.format': 'Format',
 
-    'orders.export.dateFrom': 'DateFrom',
+  'orders.export.dateFrom': 'DateFrom',
 
-    'orders.export.dateTo': 'DateTo',
+  'orders.export.dateTo': 'DateTo',
 
-    'orders.export.export': 'Export',
+  'orders.export.export': 'Export',
 
-    
+  'common.close': 'Close',
 
-    'common.close': 'Close',
+  'orderLists.title': 'Bestellijsten',
 
-    'orderLists.title': 'Bestellijsten',
+  'orderLists.subtitle': 'Beheer je bestellijsten en verzend naar leveranciers',
 
-    'orderLists.subtitle': 'Beheer je bestellijsten en verzend naar leveranciers',
+  'orderLists.create': 'Nieuwe bestellijst',
 
-    'orderLists.create': 'Nieuwe bestellijst',
+  'orderLists.supplier': 'Leverancier',
 
-    'orderLists.supplier': 'Leverancier',
+  'orderLists.totalItems': 'Totaal items',
 
-    'orderLists.totalItems': 'Totaal items',
+  'orderLists.totalAmount': 'Totaalbedrag',
 
-    'orderLists.totalAmount': 'Totaalbedrag',
+  'orderLists.updatedAt': 'Bijgewerkt op',
 
-    'orderLists.updatedAt': 'Bijgewerkt op',
+  'orderLists.edit': 'Bewerken',
 
-    'orderLists.edit': 'Bewerken',
+  'orderLists.submit': 'Verzenden',
 
-    'orderLists.submit': 'Verzenden',
+  'orderLists.sendToSupplier': 'Naar leverancier sturen',
 
-    'orderLists.sendToSupplier': 'Naar leverancier sturen',
+  'orderLists.addToCart': 'Toevoegen aan winkelwagen',
 
-    'orderLists.addToCart': 'Toevoegen aan winkelwagen',
+  'orderLists.duplicate': 'Dupliceren',
 
-    'orderLists.duplicate': 'Dupliceren',
+  'orderLists.autoFill': 'Automatisch vullen',
 
-    'orderLists.autoFill': 'Automatisch vullen',
+  'orderLists.delete': 'Verwijderen',
 
-    'orderLists.delete': 'Verwijderen',
+  'orderLists.noLists': 'Geen bestellijsten gevonden',
 
-    'orderLists.noLists': 'Geen bestellijsten gevonden',
+  'orderLists.createNew': 'Maak je eerste bestellijst aan',
 
-    'orderLists.createNew': 'Maak je eerste bestellijst aan',
+  'orderLists.deleteDialog': 'Bestellijst verwijderen',
 
-    'orderLists.deleteDialog': 'Bestellijst verwijderen',
+  'orderLists.deleteConfirm':
+    'Weet je zeker dat je deze bestellijst wilt verwijderen?',
 
-    'orderLists.deleteConfirm': 'Weet je zeker dat je deze bestellijst wilt verwijderen?',
+  'inventory.stockLevels': 'Voorraadniveaus',
 
-    'inventory.stockLevels': 'Voorraadniveaus',
+  'inventory.overview': 'Overzicht',
 
-    'inventory.overview': 'Overzicht',
+  'inventory.totalProducts': 'Totaal producten',
 
-    'inventory.totalProducts': 'Totaal producten',
+  'inventory.products': 'Producten',
 
-    'inventory.products': 'Producten',
+  'inventory.stockLocations': 'Voorraadlocaties',
 
-    'inventory.stockLocations': 'Voorraadlocaties',
+  'inventory.activeLocations': 'Actieve locaties',
 
-    'inventory.activeLocations': 'Actieve locaties',
+  'inventory.locations': 'Locaties',
 
-    'inventory.locations': 'Locaties',
+  'inventory.dataLoaded': 'Data geladen',
 
-    'inventory.dataLoaded': 'Data geladen',
+  'inventory.upToDate': 'Up-to-date',
 
-    'inventory.upToDate': 'Up-to-date',
+  'inventory.realTimeConnected': 'Real-time verbonden',
 
-    'inventory.realTimeConnected': 'Real-time verbonden',
+  'inventory.status': 'Status',
 
-    'inventory.status': 'Status',
+  'inventory.lastUpdated': 'Laatst bijgewerkt',
 
-    'inventory.lastUpdated': 'Laatst bijgewerkt',
+  'inventory.refreshData': 'Data verversen',
 
-    'inventory.refreshData': 'Data verversen',
+  'inventory.lastSync': 'Laatste sync',
 
-    'inventory.lastSync': 'Laatste sync',
+  'inventory.noStockLevels': 'Geen voorraadniveaus gevonden',
 
-    'inventory.noStockLevels': 'Geen voorraadniveaus gevonden',
+  'inventory.adjustStock': 'Voorraad aanpassen',
 
-    'inventory.adjustStock': 'Voorraad aanpassen',
+  'inventory.viewHistory': 'Geschiedenis bekijken',
 
-    'inventory.viewHistory': 'Geschiedenis bekijken',
+  'inventory.countStock': 'Voorraad tellen',
 
-    'inventory.countStock': 'Voorraad tellen',
+  'inventory.currentStock': 'Huidige voorraad',
 
-    'inventory.currentStock': 'Huidige voorraad',
+  'inventory.adjustmentType': 'Aanpassingstype',
 
-    'inventory.adjustmentType': 'Aanpassingstype',
+  'inventory.quantity': 'Hoeveelheid',
 
-    'inventory.quantity': 'Hoeveelheid',
+  'validation.required': 'Dit veld is verplicht',
 
-    'validation.required': 'Dit veld is verplicht',
+  'inventory.reason': 'Reden',
 
-    'inventory.reason': 'Reden',
+  'inventory.adjust': 'Aanpassen',
 
-    'inventory.adjust': 'Aanpassen',
+  'counting.title': 'Voorraadtelling',
 
-    'counting.title': 'Voorraadtelling',
+  'counting.overview': 'Overzicht van tellingsessies',
 
-    'counting.overview': 'Overzicht van tellingsessies',
+  'counting.sessionStatus': 'Sessie status',
 
-    'counting.sessionStatus': 'Sessie status',
+  'counting.startSession': 'Nieuwe sessie starten',
 
-    'counting.startSession': 'Nieuwe sessie starten',
+  'counting.activeSession': 'Actieve sessie',
 
-    'counting.activeSession': 'Actieve sessie',
+  'counting.progress': 'Voortgang',
 
-    'counting.progress': 'Voortgang',
+  'counting.sessionType': 'Sessie type',
 
-    'counting.sessionType': 'Sessie type',
+  'common.startedAt': 'Gestart op',
 
-    'common.startedAt': 'Gestart op',
+  'counting.discrepancies': 'Afwijkingen',
 
-    'counting.discrepancies': 'Afwijkingen',
+  'counting.continueSession': 'Sessie voortzetten',
 
-    'counting.continueSession': 'Sessie voortzetten',
+  'counting.completeSession': 'Sessie voltooien',
 
-    'counting.completeSession': 'Sessie voltooien',
+  'counting.sessionsOverview': 'Sessies overzicht',
 
-    'counting.sessionsOverview': 'Sessies overzicht',
+  'counting.loadingSessions': 'Sessies laden...',
 
-    'counting.loadingSessions': 'Sessies laden...',
+  'counting.noSessionsFound': 'Geen sessies gevonden',
 
-    'counting.noSessionsFound': 'Geen sessies gevonden',
+  'common.view': 'Bekijken',
 
-    'common.view': 'Bekijken',
+  'counting.approveSession': 'Sessie goedkeuren',
 
-    'counting.approveSession': 'Sessie goedkeuren',
+  'counting.loadingSession': 'Sessie laden...',
 
-    'counting.loadingSession': 'Sessie laden...',
+  'counting.sessionNotFound': 'Sessie niet gevonden',
 
-    'counting.sessionNotFound': 'Sessie niet gevonden',
+  'counting.sessionNotFoundDescription':
+    'De gevraagde sessie bestaat niet of is verwijderd',
 
-    'counting.sessionNotFoundDescription': 'De gevraagde sessie bestaat niet of is verwijderd',
+  'common.goBack': 'Terug',
 
-    'common.goBack': 'Terug',
+  'counting.sessionSummary': 'Sessie samenvatting',
 
-    'counting.sessionSummary': 'Sessie samenvatting',
+  'counting.totalProducts': 'Totaal producten',
 
-    'counting.totalProducts': 'Totaal producten',
+  'counting.countedProducts': 'Getelde producten',
 
-    'counting.countedProducts': 'Getelde producten',
+  'common.completedAt': 'Voltooid op',
 
-    'common.completedAt': 'Voltooid op',
+  'counting.countingResults': 'Telresultaten',
 
-    'counting.countingResults': 'Telresultaten',
+  'counting.viewResults': 'Bekijk de resultaten van deze telling',
 
-    'counting.viewResults': 'Bekijk de resultaten van deze telling',
+  'counting.noResultsFound': 'Geen resultaten gevonden',
 
-    'counting.noResultsFound': 'Geen resultaten gevonden',
+  'locations.title': 'Locaties',
 
-    'locations.title': 'Locaties',
+  'locations.manage': 'Beheer locaties',
 
-    'locations.manage': 'Beheer locaties',
+  'locations.allLocations': 'Alle locaties',
 
-    'locations.allLocations': 'Alle locaties',
+  'locations.mainLocations': 'Hoofdlocaties',
 
-    'locations.mainLocations': 'Hoofdlocaties',
+  'locations.comingSoonDescription':
+    'Locatiebeheer komt binnenkort beschikbaar',
 
-    'locations.comingSoonDescription': 'Locatiebeheer komt binnenkort beschikbaar',
+  'locations.add': 'Locatie toevoegen',
 
-    'locations.add': 'Locatie toevoegen',
+  'locations.noLocations': 'Geen locaties gevonden',
 
-    'locations.noLocations': 'Geen locaties gevonden',
+  'inventory.stockMovements': 'Voorraadmutaties',
 
-    'inventory.stockMovements': 'Voorraadmutaties',
+  'inventory.movementHistory': 'Mutatiegeschiedenis',
 
-    'inventory.movementHistory': 'Mutatiegeschiedenis',
+  'common.export': 'Exporteren',
 
-    'common.export': 'Exporteren',
+  'inventory.loadingMovements': 'Mutaties laden...',
 
-    'inventory.loadingMovements': 'Mutaties laden...',
+  'inventory.noMovementsFound': 'Geen mutaties gevonden',
 
-    'inventory.noMovementsFound': 'Geen mutaties gevonden',
+  'common.unknownProduct': 'Onbekend product',
 
-    'common.unknownProduct': 'Onbekend product',
+  'common.unknownLocation': 'Onbekende locatie',
 
-    'common.unknownLocation': 'Onbekende locatie',
+  'inventory.movementDetails': 'Mutatiedetails',
 
-    'inventory.movementDetails': 'Mutatiedetails',
+  'inventory.movementType': 'Mutatietype',
 
-    'inventory.movementType': 'Mutatietype',
+  'inventory.product': 'Product',
 
-    'inventory.product': 'Product',
+  'common.noSku': 'Geen SKU',
 
-    'common.noSku': 'Geen SKU',
+  'inventory.location': 'Locatie',
 
-    'inventory.location': 'Locatie',
+  'inventory.quantityChange': 'Hoeveelheidswijziging',
 
-    'inventory.quantityChange': 'Hoeveelheidswijziging',
+  'inventory.quantityBefore': 'Hoeveelheid voor',
 
-    'inventory.quantityBefore': 'Hoeveelheid voor',
+  'inventory.quantityAfter': 'Hoeveelheid na',
 
-    'inventory.quantityAfter': 'Hoeveelheid na',
+  'inventory.reasonCode': 'Redencode',
 
-    'inventory.reasonCode': 'Redencode',
+  'common.notes': 'Opmerkingen',
 
-    'common.notes': 'Opmerkingen',
+  'common.date': 'Datum',
 
-    'common.date': 'Datum',
+  'inventory.minimumStock': 'Minimum voorraad',
 
-    'inventory.minimumStock': 'Minimum voorraad',
+  'orderLists.searchPlaceholder': 'Zoek bestellijsten...',
 
-    'orderLists.searchPlaceholder': 'Zoek bestellijsten...',
+  'orderLists.dateRange': 'Datumbereik',
 
-    'orderLists.dateRange': 'Datumbereik',
+  'orderLists.amountRange': 'Bedragbereik',
 
-    'orderLists.amountRange': 'Bedragbereik',
+  'orderLists.onlyWithItems': 'Alleen met items',
 
-    'orderLists.onlyWithItems': 'Alleen met items',
+  'filters.search.placeholder': 'Zoeken...',
 
-    'filters.search.placeholder': 'Zoeken...',
+  'filters.location.label': 'Locatie',
 
-    'filters.location.label': 'Locatie',
+  'filters.category.label': 'Categorie',
 
-    'filters.category.label': 'Categorie',
+  'filters.status.label': 'Status',
 
-    'filters.status.label': 'Status',
+  'demo.resetData': 'ResetData',
 
-    'demo.resetData': 'ResetData',
+  'demo.limitations': 'Limitations',
 
-    'demo.limitations': 'Limitations',
+  'demo.practice': 'Practice',
 
-    'demo.practice': 'Practice',
+  'demo.practiceDescription': 'PracticeDescription',
 
-    'demo.practiceDescription': 'PracticeDescription',
+  'demo.limitationsText': 'LimitationsText',
 
-    'demo.limitationsText': 'LimitationsText',
+  'demo.resetInfo': 'ResetInfo',
 
-    'demo.resetInfo': 'ResetInfo',
+  'demoresetc.resetfailed': 'Resetfailed',
 
-    'demoresetc.resetfailed': 'Resetfailed',
+  'demo.onlyDemoUserCanReset': 'OnlyDemoUserCanReset',
 
-    'demo.onlyDemoUserCanReset': 'OnlyDemoUserCanReset',
+  'demo.resetDataConfirm': 'ResetDataConfirm',
 
-    'demo.resetDataConfirm': 'ResetDataConfirm',
+  'demo.resetDataSuccess': 'ResetDataSuccess',
 
-    'demo.resetDataSuccess': 'ResetDataSuccess',
+  'demo.resetDataError': 'ResetDataError',
 
-    'demo.resetDataError': 'ResetDataError',
+  'magicInvite.simpleTitle': 'SimpleTitle',
 
-    'magicInvite.simpleTitle': 'SimpleTitle',
+  'magicInvite.simpleDescription': 'SimpleDescription',
 
-    'magicInvite.simpleDescription': 'SimpleDescription',
+  'magicInvite.howItWorks': 'HowItWorks',
 
-    'magicInvite.howItWorks': 'HowItWorks',
+  'magicInvite.stepCreate': 'StepCreate',
 
-    'magicInvite.stepCreate': 'StepCreate',
+  'magicInvite.stepCreateDetail': 'StepCreateDetail',
 
-    'magicInvite.stepCreateDetail': 'StepCreateDetail',
+  'magicInvite.stepShare': 'StepShare',
 
-    'magicInvite.stepShare': 'StepShare',
+  'magicInvite.stepShareDetail': 'StepShareDetail',
 
-    'magicInvite.stepShareDetail': 'StepShareDetail',
+  'magicInvite.stepJoin': 'StepJoin',
 
-    'magicInvite.stepJoin': 'StepJoin',
+  'magicInvite.stepJoinDetail': 'StepJoinDetail',
 
-    'magicInvite.stepJoinDetail': 'StepJoinDetail',
+  'magicInvite.createInvite': 'CreateInvite',
 
-    'magicInvite.createInvite': 'CreateInvite',
+  'magicInvite.whoAreYouInviting': 'WhoAreYouInviting',
 
-    'magicInvite.whoAreYouInviting': 'WhoAreYouInviting',
+  'magicInvite.department': 'Department',
 
-    'magicInvite.department': 'Department',
+  'magicInvite.departmentPlaceholder': 'DepartmentPlaceholder',
 
-    'magicInvite.departmentPlaceholder': 'DepartmentPlaceholder',
+  'magicInvite.generateInviteCode': 'GenerateInviteCode',
 
-    'magicInvite.generateInviteCode': 'GenerateInviteCode',
+  'magicInvite.inviteReady': 'InviteReady',
 
-    'magicInvite.inviteReady': 'InviteReady',
+  'magicInvite.shareThisCode': 'ShareThisCode',
 
-    'magicInvite.shareThisCode': 'ShareThisCode',
+  'common.copy': 'Kopiëren',
 
-    'common.copy': 'Kopiëren',
+  'magicInvite.tellThem': 'TellThem',
 
-    'magicInvite.tellThem': 'TellThem',
+  'magicInvite.shareWhatsApp': 'ShareWhatsApp',
 
-    'magicInvite.shareWhatsApp': 'ShareWhatsApp',
+  'magicInvite.showQR': 'ShowQR',
 
-    'magicInvite.showQR': 'ShowQR',
+  'magicInvite.shareEmail': 'ShareEmail',
 
-    'magicInvite.shareEmail': 'ShareEmail',
+  'magicInvite.activeInvites': 'ActiveInvites',
 
-    'magicInvite.activeInvites': 'ActiveInvites',
+  'magicInvite.created': 'Created',
 
-    'magicInvite.created': 'Created',
+  'common.share': 'Delen',
 
-    'common.share': 'Delen',
+  'magicInvite.qrCode': 'QrCode',
 
-    'magicInvite.qrCode': 'QrCode',
+  'magicInvite.qrInstructions': 'QrInstructions',
 
-    'magicInvite.qrInstructions': 'QrInstructions',
+  'magicInvite.doctorNurse': 'DoctorNurse',
 
-    'magicInvite.doctorNurse': 'DoctorNurse',
+  'magicInvite.assistant': 'Assistant',
 
-    'magicInvite.assistant': 'Assistant',
+  'magicInvite.admin': 'Admin',
 
-    'magicInvite.admin': 'Admin',
+  'magicInvite.temporary': 'Temporary',
 
-    'magicInvite.temporary': 'Temporary',
+  'magicInvite.inviteCreated': 'InviteCreated',
 
-    'magicInvite.inviteCreated': 'InviteCreated',
+  'magicInvite.createError': 'CreateError',
 
-    'magicInvite.createError': 'CreateError',
+  'magicInvite.codeCopied': 'CodeCopied',
 
-    'magicInvite.codeCopied': 'CodeCopied',
+  'magicInvite.emailSubject': 'EmailSubject',
 
-    'magicInvite.emailSubject': 'EmailSubject',
+  'magicInvite.deleteInvite': 'DeleteInvite',
 
-    'magicInvite.deleteInvite': 'DeleteInvite',
+  'magicInvite.inviteDeleted': 'InviteDeleted',
 
-    'magicInvite.inviteDeleted': 'InviteDeleted',
+  'magicInvite.shareMessage': 'ShareMessage',
 
-    'magicInvite.shareMessage': 'ShareMessage',
+  'admin.teamOverview': 'TeamOverview',
 
-    'admin.teamOverview': 'TeamOverview',
+  'admin.teamOverviewSubtitle': 'Titel',
 
-    'admin.teamOverviewSubtitle': 'Titel',
+  'admin.totalMembers': 'TotalMembers',
 
-    'admin.totalMembers': 'TotalMembers',
+  'admin.onlineNow': 'OnlineNow',
 
-    'admin.onlineNow': 'OnlineNow',
+  'admin.loadingTeam': 'Laden...',
 
-    'admin.loadingTeam': 'Laden...',
+  'admin.noTeamMembers': 'NoTeamMembers',
 
-    'admin.noTeamMembers': 'NoTeamMembers',
+  'admin.noTeamMembersDescription': 'NoTeamMembersDescription',
 
-    'admin.noTeamMembersDescription': 'NoTeamMembersDescription',
+  'admin.viewProfile': 'ViewProfile',
 
-    'admin.viewProfile': 'ViewProfile',
+  'admin.editMember': 'EditMember',
 
-    'admin.editMember': 'EditMember',
+  'admin.deactivate': 'Deactivate',
 
-    'admin.deactivate': 'Deactivate',
+  'admin.activate': 'Activate',
 
-    'admin.activate': 'Activate',
+  'admin.loginMethods': 'LoginMethods',
 
-    'admin.loginMethods': 'LoginMethods',
+  'admin.magicCode': 'MagicCode',
 
-    'admin.magicCode': 'MagicCode',
+  'admin.emailPassword': 'EmailPassword',
 
-    'admin.emailPassword': 'EmailPassword',
+  'admin.deviceRemember': 'DeviceRemember',
 
-    'admin.deviceRemember': 'DeviceRemember',
+  'admin.lastLogin': 'LastLogin',
 
-    'admin.lastLogin': 'LastLogin',
+  'admin.loginCount': 'LoginCount',
 
-    'admin.loginCount': 'LoginCount',
+  'admin.preferredMethod': 'PreferredMethod',
 
-    'admin.preferredMethod': 'PreferredMethod',
+  'admin.sendMessage': 'SendMessage',
 
-    'admin.sendMessage': 'SendMessage',
+  'admin.viewSessions': 'ViewSessions',
 
-    'admin.viewSessions': 'ViewSessions',
+  'admin.personalMagicCode': 'PersonalMagicCode',
 
-    'admin.personalMagicCode': 'PersonalMagicCode',
+  'admin.magicCodeExplanation': 'MagicCodeExplanation',
 
-    'admin.magicCodeExplanation': 'MagicCodeExplanation',
+  'admin.loadTeamError': 'LoadTeamError',
 
-    'admin.loadTeamError': 'LoadTeamError',
+  'admin.never': 'Never',
 
-    'admin.never': 'Never',
+  'admin.statusChangeError': 'StatusChangeError',
 
-    'admin.statusChangeError': 'StatusChangeError',
+  'admin.codeCopied': 'CodeCopied',
 
-    'admin.codeCopied': 'CodeCopied',
+  'admin.copyError': 'CopyError',
 
-    'admin.copyError': 'CopyError',
+  'admin.trustedDevices': 'TrustedDevices',
 
-    'admin.trustedDevices': 'TrustedDevices',
+  'upgrade.welcomeToTeam': 'WelcomeToTeam',
 
-    'upgrade.welcomeToTeam': 'WelcomeToTeam',
+  'upgrade.benefit1': 'Benefit1',
 
-    'upgrade.benefit1': 'Benefit1',
+  'upgrade.benefit2': 'Benefit2',
 
-    'upgrade.benefit2': 'Benefit2',
+  'upgrade.benefit3': 'Benefit3',
 
-    'upgrade.benefit3': 'Benefit3',
+  'upgrade.magicCodeTitle': 'MagicCodeTitle',
 
-    'upgrade.magicCodeTitle': 'MagicCodeTitle',
+  'upgrade.magicCodeDescription': 'MagicCodeDescription',
 
-    'upgrade.magicCodeDescription': 'MagicCodeDescription',
+  'upgrade.yourPersonalCode': 'YourPersonalCode',
 
-    'upgrade.yourPersonalCode': 'YourPersonalCode',
+  'upgrade.magicBenefit1': 'MagicBenefit1',
 
-    'upgrade.magicBenefit1': 'MagicBenefit1',
+  'upgrade.magicBenefit2': 'MagicBenefit2',
 
-    'upgrade.magicBenefit2': 'MagicBenefit2',
+  'upgrade.magicBenefit3': 'MagicBenefit3',
 
-    'upgrade.magicBenefit3': 'MagicBenefit3',
+  'upgrade.chooseThis': 'ChooseThis',
 
-    'upgrade.chooseThis': 'ChooseThis',
+  'upgrade.emailTitle': 'EmailTitle',
 
-    'upgrade.emailTitle': 'EmailTitle',
+  'upgrade.emailDescription': 'EmailDescription',
 
-    'upgrade.emailDescription': 'EmailDescription',
+  'upgrade.yourEmail': 'YourEmail',
 
-    'upgrade.yourEmail': 'YourEmail',
+  'upgrade.choosePassword': 'ChoosePassword',
 
-    'upgrade.choosePassword': 'ChoosePassword',
+  'upgrade.emailBenefit1': 'EmailBenefit1',
 
-    'upgrade.emailBenefit1': 'EmailBenefit1',
+  'upgrade.emailBenefit2': 'EmailBenefit2',
 
-    'upgrade.emailBenefit2': 'EmailBenefit2',
+  'upgrade.emailBenefit3': 'EmailBenefit3',
 
-    'upgrade.emailBenefit3': 'EmailBenefit3',
+  'upgrade.deviceTitle': 'DeviceTitle',
 
-    'upgrade.deviceTitle': 'DeviceTitle',
+  'upgrade.deviceDescription': 'DeviceDescription',
 
-    'upgrade.deviceDescription': 'DeviceDescription',
+  'upgrade.deviceBenefit1': 'DeviceBenefit1',
 
-    'upgrade.deviceBenefit1': 'DeviceBenefit1',
+  'upgrade.deviceBenefit2': 'DeviceBenefit2',
 
-    'upgrade.deviceBenefit2': 'DeviceBenefit2',
+  'upgrade.deviceBenefit3': 'DeviceBenefit3',
 
-    'upgrade.deviceBenefit3': 'DeviceBenefit3',
+  'upgrade.yourFullName': 'YourFullName',
 
-    'upgrade.yourFullName': 'YourFullName',
+  'upgrade.nameRequired': 'NameRequired',
 
-    'upgrade.nameRequired': 'NameRequired',
+  'upgrade.createAccount': 'CreateAccount',
 
-    'upgrade.createAccount': 'CreateAccount',
+  'upgrade.stayGuest': 'StayGuest',
 
-    'upgrade.stayGuest': 'StayGuest',
+  'upgrade.accountCreated': 'AccountCreated',
 
-    'upgrade.accountCreated': 'AccountCreated',
+  'upgrade.createError': 'CreateError',
 
-    'upgrade.createError': 'CreateError',
+  'upgrade.subtitle': 'Ondertitel',
 
-    'upgrade.subtitle': 'Ondertitel',
+  'barcodeScanner.title': 'Titel',
 
-    'barcodeScanner.title': 'Titel',
+  'barcodeScanner.subtitle': 'Ondertitel',
 
-    'barcodeScanner.subtitle': 'Ondertitel',
+  'barcodeScanner.cameraPermission': 'CameraPermission',
 
-    'barcodeScanner.cameraPermission': 'CameraPermission',
+  'barcodeScanner.permissionDescription': 'PermissionDescription',
 
-    'barcodeScanner.permissionDescription': 'PermissionDescription',
+  'barcodeScanner.error': 'Fout',
 
-    'barcodeScanner.error': 'Fout',
+  'barcodeScanner.scanning': 'Scanning',
 
-    'barcodeScanner.scanning': 'Scanning',
+  'barcodeScanner.instructions': 'Instructions',
 
-    'barcodeScanner.instructions': 'Instructions',
+  'barcodeScanner.manualInputHelp': 'ManualInputHelp',
 
-    'barcodeScanner.manualInputHelp': 'ManualInputHelp',
+  'barcodeScanner.permissionDenied': 'PermissionDenied',
 
-    'barcodeScanner.permissionDenied': 'PermissionDenied',
+  'barcodeScanner.noCameraFound': 'NoCameraFound',
 
-    'barcodeScanner.noCameraFound': 'NoCameraFound',
+  'barcodeScanner.cameraError': 'CameraError',
 
-    'barcodeScanner.cameraError': 'CameraError',
+  'common.closeDialog': 'Dialoog',
 
-    'common.closeDialog': 'Dialoog',
+  'common.confirm': 'Bevestigen',
 
-    'common.confirm': 'Bevestigen',
+  'validation.formErrors': 'Dit veld is verplicht',
 
-    'validation.formErrors': 'Dit veld is verplicht',
+  'common.reset': 'Resetten',
 
-    'common.reset': 'Resetten',
+  'common.save': 'Opslaan',
 
-    'common.save': 'Opslaan',
+  'common.confirmClose': 'ConfirmClose',
 
-    'common.confirmClose': 'ConfirmClose',
+  'batch.batchDetails': 'BatchDetails',
 
-    'batch.batchDetails': 'BatchDetails',
+  'batch.batchInformation': 'BatchInformation',
 
-    'batch.batchInformation': 'BatchInformation',
+  'batch.quantityStatus': 'QuantityStatus',
 
-    'batch.quantityStatus': 'QuantityStatus',
+  'batch.initialQuantity': 'InitialQuantity',
 
-    'batch.initialQuantity': 'InitialQuantity',
+  'batch.currentQuantity': 'CurrentQuantity',
 
-    'batch.currentQuantity': 'CurrentQuantity',
+  'batch.availableQuantity': 'AvailableQuantity',
 
-    'batch.availableQuantity': 'AvailableQuantity',
+  'batch.reservedQuantity': 'ReservedQuantity',
 
-    'batch.reservedQuantity': 'ReservedQuantity',
+  'batch.expiryInformation': 'ExpiryInformation',
 
-    'batch.expiryInformation': 'ExpiryInformation',
+  'batch.receivedDate': 'ReceivedDate',
 
-    'batch.receivedDate': 'ReceivedDate',
+  'batch.statusInformation': 'StatusInformation',
 
-    'batch.statusInformation': 'StatusInformation',
+  'batch.qualityApproved': 'QualityApproved',
 
-    'batch.qualityApproved': 'QualityApproved',
+  'batch.quarantineUntil': 'QuarantineUntil',
 
-    'batch.quarantineUntil': 'QuarantineUntil',
+  'batch.costInformation': 'CostInformation',
 
-    'batch.costInformation': 'CostInformation',
+  'batch.unitCost': 'UnitCost',
 
-    'batch.unitCost': 'UnitCost',
+  'batch.totalCost': 'TotalCost',
 
-    'batch.totalCost': 'TotalCost',
+  'batch.currentValue': 'CurrentValue',
 
-    'batch.currentValue': 'CurrentValue',
+  'batch.purchaseInformation': 'PurchaseInformation',
 
-    'batch.purchaseInformation': 'PurchaseInformation',
+  'batch.purchaseOrderNumber': 'PurchaseOrderNumber',
 
-    'batch.purchaseOrderNumber': 'PurchaseOrderNumber',
+  'batch.invoiceNumber': 'InvoiceNumber',
 
-    'batch.invoiceNumber': 'InvoiceNumber',
+  'batch.qualityNotes': 'QualityNotes',
 
-    'batch.qualityNotes': 'QualityNotes',
+  'batch.useBatch': 'UseBatch',
 
-    'batch.useBatch': 'UseBatch',
+  'batch.quarantine': 'Quarantine',
 
-    'batch.quarantine': 'Quarantine',
+  'common.edit': 'Bewerken',
 
-    'common.edit': 'Bewerken',
+  'batch.expiresToday': 'ExpiresToday',
 
-    'batch.expiresToday': 'ExpiresToday',
+  'batch.expiresTomorrow': 'ExpiresTomorrow',
 
-    'batch.expiresTomorrow': 'ExpiresTomorrow',
+  'batch.quarantineSuccess': 'QuarantineSuccess',
 
-    'batch.quarantineSuccess': 'QuarantineSuccess',
+  'errors.failed': 'Failed',
 
-    'errors.failed': 'Failed',
+  'batch.batchOverview': 'BatchOverview',
 
-    'batch.batchOverview': 'BatchOverview',
+  'location.location': 'Locatie',
 
-    'location.location': 'Locatie',
+  'batch.urgencyLevel': 'UrgencyLevel',
 
-    'batch.urgencyLevel': 'UrgencyLevel',
+  'batch.addBatch': 'AddBatch',
 
-    'batch.addBatch': 'AddBatch',
+  'batch.expiryAlert': 'ExpiryAlert',
 
-    'batch.expiryAlert': 'ExpiryAlert',
+  'batch.viewExpiring': 'ViewExpiring',
 
-    'batch.viewExpiring': 'ViewExpiring',
+  'batch.noBatchesFound': 'NoBatchesFound',
 
-    'batch.noBatchesFound': 'NoBatchesFound',
+  'batch.supplierBatch': 'SupplierBatch',
 
-    'batch.supplierBatch': 'SupplierBatch',
+  'batch.available': 'Available',
 
-    'batch.available': 'Available',
+  'common.moreActions': 'MoreActions',
 
-    'common.moreActions': 'MoreActions',
+  'batchoverv.noclinicidavailable': 'Noclinicidavailable',
 
-    'batchoverv.noclinicidavailable': 'Noclinicidavailable',
+  'product.product': 'Product',
 
-    'product.product': 'Product',
+  'batch.batchNumber': 'BatchNumber',
 
-    'batch.batchNumber': 'BatchNumber',
+  'batch.expiryDate': 'ExpiryDate',
 
-    'batch.expiryDate': 'ExpiryDate',
+  'common.status': 'Status',
 
-    'common.status': 'Status',
+  'common.actions': 'Actions',
 
-    'common.actions': 'Actions',
+  'common.all': 'All',
 
-    'common.all': 'All',
+  'batch.urgency.expired': 'Expired',
 
-    'batch.urgency.expired': 'Expired',
+  'batch.urgency.critical': 'Critical',
 
-    'batch.urgency.critical': 'Critical',
+  'batch.urgency.warning': 'Waarschuwing',
 
-    'batch.urgency.warning': 'Waarschuwing',
+  'batch.urgency.normal': 'Normal',
 
-    'batch.urgency.normal': 'Normal',
+  'errors.failedToLoadData': 'FailedToLoadData',
 
-    'errors.failedToLoadData': 'FailedToLoadData',
+  'batch.batchesExpiringSoon': 'BatchesExpiringSoon',
 
-    'batch.batchesExpiringSoon': 'BatchesExpiringSoon',
+  'batch.registerNewBatch': 'RegisterNewBatch',
 
-    'batch.registerNewBatch': 'RegisterNewBatch',
+  'batch.supplierBatchNumber': 'SupplierBatchNumber',
 
-    'batch.supplierBatchNumber': 'SupplierBatchNumber',
+  'batch.currency': 'Currency',
 
-    'batch.currency': 'Currency',
+  'batch.registerBatch': 'RegisterBatch',
 
-    'batch.registerBatch': 'RegisterBatch',
+  'location.sampleData.mainWarehouse.name': 'Naam',
 
-    'location.sampleData.mainWarehouse.name': 'Naam',
+  'location.samples.emergencyStock': 'EmergencyStock',
 
-    'location.samples.emergencyStock': 'EmergencyStock',
+  'location.sampleData.treatmentRoom.name': 'Naam',
 
-    'location.sampleData.treatmentRoom.name': 'Naam',
+  'batch.validation.expiryDateInPast': 'Dit veld is verplicht',
 
-    'batch.validation.expiryDateInPast': 'Dit veld is verplicht',
+  'batch.batchRegisteredSuccessfully': 'BatchRegisteredSuccessfully',
 
-    'batch.batchRegisteredSuccessfully': 'BatchRegisteredSuccessfully',
+  'errors.failedToRegisterBatch': 'FailedToRegisterBatch',
 
-    'errors.failedToRegisterBatch': 'FailedToRegisterBatch',
+  'validation.minLength': 'Dit veld is verplicht',
 
-    'validation.minLength': 'Dit veld is verplicht',
+  'batch.selectReport': 'SelectReport',
 
-    'batch.selectReport': 'SelectReport',
+  'common.fromDate': 'FromDate',
 
-    'common.fromDate': 'FromDate',
+  'common.toDate': 'ToDate',
 
-    'common.toDate': 'ToDate',
+  'batch.generateReport': 'GenerateReport',
 
-    'batch.generateReport': 'GenerateReport',
+  'batch.exportReport': 'ExportReport',
 
-    'batch.exportReport': 'ExportReport',
+  'batch.reportResults': 'ReportResults',
 
-    'batch.reportResults': 'ReportResults',
+  'batch.totalBatches': 'TotalBatches',
 
-    'batch.totalBatches': 'TotalBatches',
+  'batch.expiredBatches': 'ExpiredBatches',
 
-    'batch.expiredBatches': 'ExpiredBatches',
+  'batch.expiringSoon': 'ExpiringSoon',
 
-    'batch.expiringSoon': 'ExpiringSoon',
+  'batch.totalValue': 'TotalValue',
 
-    'batch.totalValue': 'TotalValue',
+  'batch.expiryAnalysis': 'ExpiryAnalysis',
 
-    'batch.expiryAnalysis': 'ExpiryAnalysis',
+  'batch.expiryAnalysisDesc': 'ExpiryAnalysisDesc',
 
-    'batch.expiryAnalysisDesc': 'ExpiryAnalysisDesc',
+  'batch.batchUsage': 'BatchUsage',
 
-    'batch.batchUsage': 'BatchUsage',
+  'batch.batchUsageDesc': 'BatchUsageDesc',
 
-    'batch.batchUsageDesc': 'BatchUsageDesc',
+  'batch.fifoCompliance': 'FifoCompliance',
 
-    'batch.fifoCompliance': 'FifoCompliance',
+  'batch.fifoComplianceDesc': 'FifoComplianceDesc',
 
-    'batch.fifoComplianceDesc': 'FifoComplianceDesc',
+  'batch.batchCosts': 'BatchCosts',
 
-    'batch.batchCosts': 'BatchCosts',
+  'batch.batchCostsDesc': 'BatchCostsDesc',
 
-    'batch.batchCostsDesc': 'BatchCostsDesc',
+  'common.allLocations': 'AllLocations',
 
-    'common.allLocations': 'AllLocations',
+  'common.allStatuses': 'AllStatuses',
 
-    'common.allStatuses': 'AllStatuses',
+  'batch.status.active': 'Actief',
 
-    'batch.status.active': 'Actief',
+  'batch.status.expired': 'Expired',
 
-    'batch.status.expired': 'Expired',
+  'batch.status.depleted': 'Depleted',
 
-    'batch.status.depleted': 'Depleted',
+  'batch.daysUntilExpiry': 'DaysUntilExpiry',
 
-    'batch.daysUntilExpiry': 'DaysUntilExpiry',
+  'batch.reportConfiguration': 'ReportConfiguration',
 
-    'batch.reportConfiguration': 'ReportConfiguration',
+  'batch.reportGenerated': 'ReportGenerated',
 
-    'batch.reportGenerated': 'ReportGenerated',
+  'errors.failedToGenerateReport': 'FailedToGenerateReport',
 
-    'errors.failedToGenerateReport': 'FailedToGenerateReport',
+  'batch.reportExported': 'ReportExported',
 
-    'batch.reportExported': 'ReportExported',
+  'dashboard.alerts.noWarnings': 'NoWarnings',
 
-    'dashboard.alerts.noWarnings': 'NoWarnings',
+  'dashboard.alerts.allStockLevelsOk': 'AllStockLevelsOk',
 
-    'dashboard.alerts.allStockLevelsOk': 'AllStockLevelsOk',
+  'dashboard.quickActionLabels.scan': 'Scan',
 
-    'dashboard.quickActionLabels.scan': 'Scan',
+  'dashboard.quickActionLabels.order': 'Bestelling',
 
-    'dashboard.quickActionLabels.order': 'Bestelling',
+  'dashboard.quickActionLabels.update': 'Bijwerken',
 
-    'dashboard.quickActionLabels.update': 'Bijwerken',
+  'dashboard.quickActionLabels.export': 'Exporteren',
 
-    'dashboard.quickActionLabels.export': 'Exporteren',
+  'dashboard.quickActionLabels.default': 'Default',
 
-    'dashboard.quickActionLabels.default': 'Default',
+  'quickactio.warning': 'Waarschuwing',
 
-    'quickactio.warning': 'Waarschuwing',
+  'batch.noExpiringBatches': 'NoExpiringBatches',
 
-    'batch.noExpiringBatches': 'NoExpiringBatches',
+  'batch.fifoSuggestion': 'FifoSuggestion',
 
-    'batch.fifoSuggestion': 'FifoSuggestion',
+  'batch.requestedQuantity': 'RequestedQuantity',
 
-    'batch.requestedQuantity': 'RequestedQuantity',
+  'validation.mustBePositive': 'Dit veld is verplicht',
 
-    'validation.mustBePositive': 'Dit veld is verplicht',
+  'batch.generateFifoSuggestion': 'GenerateFifoSuggestion',
 
-    'batch.generateFifoSuggestion': 'GenerateFifoSuggestion',
+  'batch.fifoResults': 'FifoResults',
 
-    'batch.fifoResults': 'FifoResults',
+  'batch.noFifoResults': 'NoFifoResults',
 
-    'batch.noFifoResults': 'NoFifoResults',
+  'batch.useQuantity': 'UseQuantity',
 
-    'batch.useQuantity': 'UseQuantity',
+  'batch.applyFifoSuggestion': 'ApplyFifoSuggestion',
 
-    'batch.applyFifoSuggestion': 'ApplyFifoSuggestion',
+  'product.samples.syringeBD': 'SyringeBD',
 
-    'product.samples.syringeBD': 'SyringeBD',
+  'product.samples.needleBD': 'NeedleBD',
 
-    'product.samples.needleBD': 'NeedleBD',
+  'batch.fifoSuggestionGenerated': 'FifoSuggestionGenerated',
 
-    'batch.fifoSuggestionGenerated': 'FifoSuggestionGenerated',
+  'errors.failedToGenerateSuggestion': 'FailedToGenerateSuggestion',
 
-    'errors.failedToGenerateSuggestion': 'FailedToGenerateSuggestion',
+  'batch.confirmFifoApplication': 'ConfirmFifoApplication',
 
-    'batch.confirmFifoApplication': 'ConfirmFifoApplication',
+  'batch.confirmFifoMessage': 'ConfirmFifoMessage',
 
-    'batch.confirmFifoMessage': 'ConfirmFifoMessage',
+  'batch.fifoAppliedSuccessfully': 'FifoAppliedSuccessfully',
 
-    'batch.fifoAppliedSuccessfully': 'FifoAppliedSuccessfully',
+  'filters.filterPanel.filtersButton': 'Knop',
 
-    'filters.filterPanel.filtersButton': 'Knop',
+  'filters.filterPanel.clearAllFilters': 'ClearAllFilters',
 
-    'filters.filterPanel.clearAllFilters': 'ClearAllFilters',
+  'inventory.startCountingSession': 'StartCountingSession',
 
-    'inventory.startCountingSession': 'StartCountingSession',
+  'inventory.sessionName': 'SessionName',
 
-    'inventory.sessionName': 'SessionName',
+  'inventory.sessionNamePlaceholder': 'SessionNamePlaceholder',
 
-    'inventory.sessionNamePlaceholder': 'SessionNamePlaceholder',
+  'inventory.sessionType': 'SessionType',
 
-    'inventory.sessionType': 'SessionType',
+  'inventory.selectLocations': 'SelectLocations',
 
-    'inventory.selectLocations': 'SelectLocations',
+  'inventory.allowNegativeCounts': 'AllowNegativeCounts',
 
-    'inventory.allowNegativeCounts': 'AllowNegativeCounts',
+  'inventory.requireApproval': 'RequireApproval',
 
-    'inventory.requireApproval': 'RequireApproval',
+  'inventory.autoAdjustStock': 'AutoAdjustStock',
 
-    'inventory.autoAdjustStock': 'AutoAdjustStock',
+  'inventory.sessionNotesPlaceholder': 'SessionNotesPlaceholder',
 
-    'inventory.sessionNotesPlaceholder': 'SessionNotesPlaceholder',
+  'inventory.startCounting': 'StartCounting',
 
-    'inventory.startCounting': 'StartCounting',
+  'inventory.partialCount': 'PartialCount',
 
-    'inventory.partialCount': 'PartialCount',
+  'inventory.partialCountDescription': 'PartialCountDescription',
 
-    'inventory.partialCountDescription': 'PartialCountDescription',
+  'inventory.fullCount': 'FullCount',
 
-    'inventory.fullCount': 'FullCount',
+  'inventory.fullCountDescription': 'FullCountDescription',
 
-    'inventory.fullCountDescription': 'FullCountDescription',
+  'inventory.spotCheck': 'SpotCheck',
 
-    'inventory.spotCheck': 'SpotCheck',
+  'inventory.spotCheckDescription': 'SpotCheckDescription',
 
-    'inventory.spotCheckDescription': 'SpotCheckDescription',
+  'inventory.cycleCount': 'CycleCount',
 
-    'inventory.cycleCount': 'CycleCount',
+  'inventory.cycleCountDescription': 'CycleCountDescription',
 
-    'inventory.cycleCountDescription': 'CycleCountDescription',
+  'inventory.sessionCreated': 'SessionCreated',
 
-    'inventory.sessionCreated': 'SessionCreated',
+  'inventory.sessionCreationFailed': 'SessionCreationFailed',
 
-    'inventory.sessionCreationFailed': 'SessionCreationFailed',
+  'counting.productsCompleted': 'ProductsCompleted',
 
-    'counting.productsCompleted': 'ProductsCompleted',
+  'products.sku': 'SKU',
 
-    'products.sku': 'SKU',
+  'counting.systemQuantity': 'SystemQuantity',
 
-    'counting.systemQuantity': 'SystemQuantity',
+  'counting.countedQuantity': 'CountedQuantity',
 
-    'counting.countedQuantity': 'CountedQuantity',
+  'counting.additionalOptions': 'AdditionalOptions',
 
-    'counting.additionalOptions': 'AdditionalOptions',
+  'counting.batchNumber': 'BatchNumber',
 
-    'counting.batchNumber': 'BatchNumber',
+  'counting.expiryDate': 'ExpiryDate',
 
-    'counting.expiryDate': 'ExpiryDate',
+  'counting.confidenceLevel': 'ConfidenceLevel',
 
-    'counting.confidenceLevel': 'ConfidenceLevel',
+  'counting.skipProduct': 'SkipProduct',
 
-    'counting.skipProduct': 'SkipProduct',
+  'counting.confirmCount': 'ConfirmCount',
 
-    'counting.confirmCount': 'ConfirmCount',
+  'counting.allProductsCounted': 'AllProductsCounted',
 
-    'counting.allProductsCounted': 'AllProductsCounted',
+  'counting.readyToComplete': 'ReadyToComplete',
 
-    'counting.readyToComplete': 'ReadyToComplete',
+  'common.loading': 'Laden...',
 
-    'common.loading': 'Laden...',
+  'counting.varianceMatch': 'VarianceMatch',
 
-    'counting.varianceMatch': 'VarianceMatch',
+  'counting.confidence.high': 'High',
 
-    'counting.confidence.high': 'High',
+  'counting.confidence.medium': 'Medium',
 
-    'counting.confidence.medium': 'Medium',
+  'counting.confidence.low': 'Low',
 
-    'counting.confidence.low': 'Low',
+  'inventory.quickAdjustment': 'QuickAdjustment',
 
-    'inventory.quickAdjustment': 'QuickAdjustment',
+  'inventory.adjustStockLevels': 'AdjustStockLevels',
 
-    'inventory.adjustStockLevels': 'AdjustStockLevels',
+  'inventory.selectProduct': 'SelectProduct',
 
-    'inventory.selectProduct': 'SelectProduct',
+  'inventory.searchProduct': 'SearchProduct',
 
-    'inventory.searchProduct': 'SearchProduct',
+  'inventory.noProductsFound': 'NoProductsFound',
 
-    'inventory.noProductsFound': 'NoProductsFound',
+  'inventory.tryDifferentSearchTerm': 'TryDifferentSearchTerm',
 
-    'inventory.tryDifferentSearchTerm': 'TryDifferentSearchTerm',
+  'inventory.scanBarcode': 'ScanBarcode',
 
-    'inventory.scanBarcode': 'ScanBarcode',
+  'quickAdjustment.noProduct': 'NoProduct',
 
-    'quickAdjustment.noProduct': 'NoProduct',
+  'inventory.noLocationSelected': 'NoLocationSelected',
 
-    'inventory.noLocationSelected': 'NoLocationSelected',
+  'inventory.changeProduct': 'ChangeProduct',
 
-    'inventory.changeProduct': 'ChangeProduct',
+  'inventory.selectLocation': 'SelectLocation',
 
-    'inventory.selectLocation': 'SelectLocation',
+  'common.required': 'Dit veld is verplicht',
 
-    'common.required': 'Dit veld is verplicht',
+  'inventory.quickAmounts': 'QuickAmounts',
 
-    'inventory.quickAmounts': 'QuickAmounts',
+  'inventory.selectReason': 'SelectReason',
 
-    'inventory.selectReason': 'SelectReason',
+  'inventory.notes': 'Notities',
 
-    'inventory.notes': 'Notities',
+  'common.optional': 'Optional',
 
-    'common.optional': 'Optional',
+  'inventory.notesPlaceholder': 'NotesPlaceholder',
 
-    'inventory.notesPlaceholder': 'NotesPlaceholder',
+  'inventory.preview': 'Preview',
 
-    'inventory.preview': 'Preview',
+  'inventory.current': 'Current',
 
-    'inventory.current': 'Current',
+  'inventory.newQuantity': 'NewQuantity',
 
-    'inventory.newQuantity': 'NewQuantity',
+  'inventory.adjusting': 'Adjusting',
 
-    'inventory.adjusting': 'Adjusting',
+  'inventory.completeRequiredFields': 'CompleteRequiredFields',
 
-    'inventory.completeRequiredFields': 'CompleteRequiredFields',
+  'inventory.selectProductFirst': 'SelectProductFirst',
 
-    'inventory.selectProductFirst': 'SelectProductFirst',
+  'inventory.selectLocationFirst': 'SelectLocationFirst',
 
-    'inventory.selectLocationFirst': 'SelectLocationFirst',
+  'quickadjus.noreasonselected': 'Noreasonselected',
 
-    'quickadjus.noreasonselected': 'Noreasonselected',
+  'quickadjus.usernotauthenticatedor': 'Usernotauthenticatedor',
 
-    'quickadjus.usernotauthenticatedor': 'Usernotauthenticatedor',
+  'quickadjus.nolocationselected': 'Nolocationselected',
 
-    'quickadjus.nolocationselected': 'Nolocationselected',
+  'quickadjus.noproductselected': 'Noproductselected',
 
-    'quickadjus.noproductselected': 'Noproductselected',
+  'inventory.increase': 'Increase',
 
-    'inventory.increase': 'Increase',
+  'inventory.decrease': 'Decrease',
 
-    'inventory.decrease': 'Decrease',
+  'inventory.setTo': 'SetTo',
 
-    'inventory.setTo': 'SetTo',
+  'inventory.reasons.adjustment': 'Adjustment',
 
-    'inventory.reasons.adjustment': 'Adjustment',
+  'inventory.reasons.damage': 'Damage',
 
-    'inventory.reasons.damage': 'Damage',
+  'inventory.reasons.expired': 'Expired',
 
-    'inventory.reasons.expired': 'Expired',
+  'inventory.reasons.lost': 'Lost',
 
-    'inventory.reasons.lost': 'Lost',
+  'inventory.reasons.found': 'Found',
 
-    'inventory.reasons.found': 'Found',
+  'inventory.reasons.recount': 'Recount',
 
-    'inventory.reasons.recount': 'Recount',
+  'inventory.reasons.correction': 'Correction',
 
-    'inventory.reasons.correction': 'Correction',
+  'inventory.reasons.other': 'Other',
 
-    'inventory.reasons.other': 'Other',
+  'inventory.quantityMustBePositive': 'QuantityMustBePositive',
 
-    'inventory.quantityMustBePositive': 'QuantityMustBePositive',
+  'inventory.reasonRequired': 'ReasonRequired',
 
-    'inventory.reasonRequired': 'ReasonRequired',
+  'inventory.quantityToAdd': 'QuantityToAdd',
 
-    'inventory.quantityToAdd': 'QuantityToAdd',
+  'inventory.quantityToRemove': 'QuantityToRemove',
 
-    'inventory.quantityToRemove': 'QuantityToRemove',
+  'errors.processingError': 'ProcessingError',
 
-    'errors.processingError': 'ProcessingError',
+  'inventory.savingChanges': 'SavingChanges',
 
-    'inventory.savingChanges': 'SavingChanges',
+  'inventory.stockUpdated': 'StockUpdated',
 
-    'inventory.stockUpdated': 'StockUpdated',
+  'inventory.errorUpdatingStock': 'ErrorUpdatingStock',
 
-    'inventory.errorUpdatingStock': 'ErrorUpdatingStock',
+  'inventory.errorProductNotFound': 'ErrorProductNotFound',
 
-    'inventory.errorProductNotFound': 'ErrorProductNotFound',
+  'inventory.errorUpdateInProgress': 'ErrorUpdateInProgress',
 
-    'inventory.errorUpdateInProgress': 'ErrorUpdateInProgress',
+  'inventory.errorInvalidData': 'ErrorInvalidData',
 
-    'inventory.errorInvalidData': 'ErrorInvalidData',
+  'inventory.errorNegativeStock': 'ErrorNegativeStock',
 
-    'inventory.errorNegativeStock': 'ErrorNegativeStock',
+  'inventory.realTimeDisconnected': 'RealTimeDisconnected',
 
-    'inventory.realTimeDisconnected': 'RealTimeDisconnected',
+  'inventory.stockTransfer': 'StockTransfer',
 
-    'inventory.stockTransfer': 'StockTransfer',
+  'inventory.fromLocation': 'FromLocation',
 
-    'inventory.fromLocation': 'FromLocation',
+  'inventory.availableStock': 'AvailableStock',
 
-    'inventory.availableStock': 'AvailableStock',
+  'inventory.toLocation': 'ToLocation',
 
-    'inventory.toLocation': 'ToLocation',
+  'inventory.selectBatch': 'SelectBatch',
 
-    'inventory.selectBatch': 'SelectBatch',
+  'inventory.expiryDate': 'ExpiryDate',
 
-    'inventory.expiryDate': 'ExpiryDate',
+  'inventory.available': 'Available',
 
-    'inventory.available': 'Available',
+  'inventory.quantityToTransfer': 'QuantityToTransfer',
 
-    'inventory.quantityToTransfer': 'QuantityToTransfer',
+  'inventory.maxAvailable': 'MaxAvailable',
 
-    'inventory.maxAvailable': 'MaxAvailable',
+  'inventory.transferReason': 'TransferReason',
 
-    'inventory.transferReason': 'TransferReason',
+  'inventory.transferNotesPlaceholder': 'TransferNotesPlaceholder',
 
-    'inventory.transferNotesPlaceholder': 'TransferNotesPlaceholder',
+  'inventory.transferPreview': 'TransferPreview',
 
-    'inventory.transferPreview': 'TransferPreview',
+  'inventory.remaining': 'Remaining',
 
-    'inventory.remaining': 'Remaining',
+  'inventory.newTotal': 'NewTotal',
 
-    'inventory.newTotal': 'NewTotal',
+  'inventory.executeTransfer': 'ExecuteTransfer',
 
-    'inventory.executeTransfer': 'ExecuteTransfer',
+  'inventory.locationRebalance': 'LocationRebalance',
 
-    'inventory.locationRebalance': 'LocationRebalance',
+  'inventory.stockReplenishment': 'StockReplenishment',
 
-    'inventory.stockReplenishment': 'StockReplenishment',
+  'inventory.emergencyTransfer': 'EmergencyTransfer',
 
-    'inventory.emergencyTransfer': 'EmergencyTransfer',
+  'inventory.expiryManagement': 'ExpiryManagement',
 
-    'inventory.expiryManagement': 'ExpiryManagement',
+  'inventory.maintenanceRelocation': 'MaintenanceRelocation',
 
-    'inventory.maintenanceRelocation': 'MaintenanceRelocation',
+  'inventory.expired': 'Expired',
 
-    'inventory.expired': 'Expired',
+  'inventory.expiresSoon': 'ExpiresSoon',
 
-    'inventory.expiresSoon': 'ExpiresSoon',
+  'inventory.expiresThisMonth': 'ExpiresThisMonth',
 
-    'inventory.expiresThisMonth': 'ExpiresThisMonth',
+  'inventory.fresh': 'Fresh',
 
-    'inventory.fresh': 'Fresh',
+  'inventory.transferCompleted': 'TransferCompleted',
 
-    'inventory.transferCompleted': 'TransferCompleted',
+  'inventory.transferFailed': 'TransferFailed',
 
-    'inventory.transferFailed': 'TransferFailed',
+  'inventory.transferFailedDetails': 'TransferFailedDetails',
 
-    'inventory.transferFailedDetails': 'TransferFailedDetails',
+  'demo.title': 'Titel',
 
-    'demo.title': 'Titel',
+  'demo.subtitle': 'Ondertitel',
 
-    'demo.subtitle': 'Ondertitel',
+  'demo.changesCanBeReset': 'ChangesCanBeReset',
 
-    'demo.changesCanBeReset': 'ChangesCanBeReset',
+  'common.accessibility.pageMetadata': 'PageMetadata',
 
-    'common.accessibility.pageMetadata': 'PageMetadata',
+  'common.accessibility.pageActions': 'PageActions',
 
-    'common.accessibility.pageActions': 'PageActions',
+  'productsPage.advancedSearch.title': 'Titel',
 
-    'productsPage.advancedSearch.title': 'Titel',
+  'productsPage.advancedSearch.basicSearch': 'BasicSearch',
 
-    'productsPage.advancedSearch.basicSearch': 'BasicSearch',
+  'productsPage.advancedSearch.searchPlaceholder': 'Zoeken...',
 
-    'productsPage.advancedSearch.searchPlaceholder': 'Zoeken...',
+  'productsPage.advancedSearch.gs1Search': 'Gs1Search',
 
-    'productsPage.advancedSearch.gs1Search': 'Gs1Search',
+  'productsPage.filters.gtinPlaceholder': 'GtinPlaceholder',
 
-    'productsPage.filters.gtinPlaceholder': 'GtinPlaceholder',
+  'productsPage.filters.selectCountry': 'SelectCountry',
 
-    'productsPage.filters.selectCountry': 'SelectCountry',
+  'productsPage.filters.selectGpc': 'SelectGpc',
 
-    'productsPage.filters.selectGpc': 'SelectGpc',
+  'productsPage.filters.selectLifecycle': 'SelectLifecycle',
 
-    'productsPage.filters.selectLifecycle': 'SelectLifecycle',
+  'productsPage.advancedSearch.categorySupplier': 'CategorySupplier',
 
-    'productsPage.advancedSearch.categorySupplier': 'CategorySupplier',
+  'productsPage.filters.selectCategory': 'SelectCategory',
 
-    'productsPage.filters.selectCategory': 'SelectCategory',
+  'productsPage.filters.selectSupplier': 'SelectSupplier',
 
-    'productsPage.filters.selectSupplier': 'SelectSupplier',
+  'productsPage.filters.selectStockStatus': 'SelectStockStatus',
 
-    'productsPage.filters.selectStockStatus': 'SelectStockStatus',
+  'productsPage.advancedSearch.priceRange': 'PriceRange',
 
-    'productsPage.advancedSearch.priceRange': 'PriceRange',
+  'productsPage.filters.minPrice': 'MinPrice',
 
-    'productsPage.filters.minPrice': 'MinPrice',
+  'productsPage.filters.maxPrice': 'MaxPrice',
 
-    'productsPage.filters.maxPrice': 'MaxPrice',
+  'productsPage.advancedSearch.specialOptions': 'SpecialOptions',
 
-    'productsPage.advancedSearch.specialOptions': 'SpecialOptions',
+  'productsPage.filters.orderableOnly': 'OrderableOnly',
 
-    'productsPage.filters.orderableOnly': 'OrderableOnly',
+  'productsPage.advancedSearch.hasGtin': 'HasGtin',
 
-    'productsPage.advancedSearch.hasGtin': 'HasGtin',
+  'productsPage.advancedSearch.batchTracked': 'BatchTracked',
 
-    'productsPage.advancedSearch.batchTracked': 'BatchTracked',
+  'productsPage.advancedSearch.inStockOnly': 'InStockOnly',
 
-    'productsPage.advancedSearch.inStockOnly': 'InStockOnly',
+  'productsPage.advancedSearch.sorting': 'Sorting',
 
-    'productsPage.advancedSearch.sorting': 'Sorting',
+  'productsPage.advancedSearch.sortBy': 'SortBy',
 
-    'productsPage.advancedSearch.sortBy': 'SortBy',
+  'productsPage.advancedSearch.livePreview': 'LivePreview',
 
-    'productsPage.advancedSearch.livePreview': 'LivePreview',
+  'productsPage.advancedSearch.avgPrice': 'AvgPrice',
 
-    'productsPage.advancedSearch.avgPrice': 'AvgPrice',
+  'productsPage.advancedSearch.inStock': 'InStock',
 
-    'productsPage.advancedSearch.inStock': 'InStock',
+  'productsPage.advancedSearch.withGtin': 'WithGtin',
 
-    'productsPage.advancedSearch.withGtin': 'WithGtin',
+  'productsPage.advancedSearch.sampleResults': 'SampleResults',
 
-    'productsPage.advancedSearch.sampleResults': 'SampleResults',
+  'productsPage.advancedSearch.reset': 'Resetten',
 
-    'productsPage.advancedSearch.reset': 'Resetten',
+  'productsPage.advancedSearch.search': 'Zoeken',
 
-    'productsPage.advancedSearch.search': 'Zoeken',
+  'productsPage.advancedSearch.previewTable': 'PreviewTable',
 
-    'productsPage.advancedSearch.previewTable': 'PreviewTable',
+  'productsPage.sortBy.name': 'Naam',
 
-    'productsPage.sortBy.name': 'Naam',
+  'productsPage.sortBy.price': 'Prijs',
 
-    'productsPage.sortBy.price': 'Prijs',
+  'productsPage.sortBy.stock': 'Voorraad',
 
-    'productsPage.sortBy.stock': 'Voorraad',
+  'productsPage.sortBy.category': 'Categorie',
 
-    'productsPage.sortBy.category': 'Categorie',
+  'productsPage.sortOrder.asc': 'Asc',
 
-    'productsPage.sortOrder.asc': 'Asc',
+  'productsPage.sortOrder.desc': 'Desc',
 
-    'productsPage.sortOrder.desc': 'Desc',
+  'productsPage.advancedSearch.resultsFound': 'ResultsFound',
 
-    'productsPage.advancedSearch.resultsFound': 'ResultsFound',
+  'orderLists.editDialog': 'Dialoog',
 
-    'orderLists.editDialog': 'Dialoog',
+  'orderLists.createDialog': 'Dialoog',
 
-    'orderLists.createDialog': 'Dialoog',
+  'orderLists.details': 'Details',
 
-    'orderLists.details': 'Details',
+  'orderLists.name': 'Naam',
 
-    'orderLists.name': 'Naam',
+  'orderLists.nameRequired': 'NameRequired',
 
-    'orderLists.nameRequired': 'NameRequired',
+  'orderLists.nameMinLength': 'NameMinLength',
 
-    'orderLists.nameMinLength': 'NameMinLength',
+  'orderLists.description': 'Beschrijving',
 
-    'orderLists.description': 'Beschrijving',
+  'orderLists.supplierRequired': 'SupplierRequired',
 
-    'orderLists.supplierRequired': 'SupplierRequired',
+  'orderLists.notes': 'Notities',
 
-    'orderLists.notes': 'Notities',
+  'orderLists.urgent': 'Urgent',
 
-    'orderLists.urgent': 'Urgent',
+  'orderLists.summary': 'Summary',
 
-    'orderLists.summary': 'Summary',
+  'orderLists.products': 'Products',
 
-    'orderLists.products': 'Products',
+  'orderLists.addProduct': 'AddProduct',
 
-    'orderLists.addProduct': 'AddProduct',
+  'orderLists.quantity': 'Hoeveelheid',
 
-    'orderLists.quantity': 'Hoeveelheid',
+  'orderLists.unitPrice': 'UnitPrice',
 
-    'orderLists.unitPrice': 'UnitPrice',
+  'orderLists.totalPrice': 'TotalPrice',
 
-    'orderLists.totalPrice': 'TotalPrice',
+  'orderLists.noProducts': 'NoProducts',
 
-    'orderLists.noProducts': 'NoProducts',
+  'orderLists.selectProduct': 'SelectProduct',
 
-    'orderLists.selectProduct': 'SelectProduct',
+  'common.add': 'Add',
 
-    'common.add': 'Add',
+  'orderlistd.nopracticeselected': 'Nopracticeselected',
 
-    'orderlistd.nopracticeselected': 'Nopracticeselected',
+  'orderLists.updated': 'Updated',
 
-    'orderLists.updated': 'Updated',
+  'orderLists.created': 'Created',
 
-    'orderLists.created': 'Created',
+  'orderLists.saveError': 'SaveError',
 
-    'orderLists.saveError': 'SaveError',
+  'productsPage.details.title': 'Titel',
 
-    'productsPage.details.title': 'Titel',
+  'productsPage.details.noImage': 'NoImage',
 
-    'productsPage.details.noImage': 'NoImage',
+  'productsPage.details.basicInfo': 'BasicInfo',
 
-    'productsPage.details.basicInfo': 'BasicInfo',
+  'productsPage.details.name': 'Naam',
 
-    'productsPage.details.name': 'Naam',
+  'productsPage.details.sku': 'SKU',
 
-    'productsPage.details.sku': 'SKU',
+  'productsPage.details.category': 'Categorie',
 
-    'productsPage.details.category': 'Categorie',
+  'productsPage.details.brand': 'Merk',
 
-    'productsPage.details.brand': 'Merk',
+  'productsPage.details.unit': 'Eenheid',
 
-    'productsPage.details.unit': 'Eenheid',
+  'productsPage.details.price': 'Prijs',
 
-    'productsPage.details.price': 'Prijs',
+  'productsPage.details.priceNotAvailable': 'PriceNotAvailable',
 
-    'productsPage.details.priceNotAvailable': 'PriceNotAvailable',
+  'productsPage.details.description': 'Beschrijving',
 
-    'productsPage.details.description': 'Beschrijving',
+  'productsPage.details.noDescription': 'NoDescription',
 
-    'productsPage.details.noDescription': 'NoDescription',
+  'productsPage.details.gs1Info': 'Gs1Info',
 
-    'productsPage.details.gs1Info': 'Gs1Info',
+  'productsPage.details.gtin': 'Gtin',
 
-    'productsPage.details.gtin': 'Gtin',
+  'productsPage.details.gpcBrickCode': 'GpcBrickCode',
 
-    'productsPage.details.gpcBrickCode': 'GpcBrickCode',
+  'productsPage.details.countryOfOrigin': 'CountryOfOrigin',
 
-    'productsPage.details.countryOfOrigin': 'CountryOfOrigin',
+  'productsPage.details.lifecycleStatus': 'LifecycleStatus',
 
-    'productsPage.details.lifecycleStatus': 'LifecycleStatus',
+  'productsPage.details.netContent': 'NetContent',
 
-    'productsPage.details.netContent': 'NetContent',
+  'productsPage.details.weight': 'Gewicht',
 
-    'productsPage.details.weight': 'Gewicht',
+  'productsPage.details.netWeight': 'NetWeight',
 
-    'productsPage.details.netWeight': 'NetWeight',
+  'productsPage.details.grossWeight': 'GrossWeight',
 
-    'productsPage.details.grossWeight': 'GrossWeight',
+  'productsPage.details.validityPeriod': 'ValidityPeriod',
 
-    'productsPage.details.validityPeriod': 'ValidityPeriod',
+  'productsPage.details.from': 'From',
 
-    'productsPage.details.from': 'From',
+  'productsPage.details.to': 'To',
 
-    'productsPage.details.to': 'To',
+  'productsPage.details.unitIndicators': 'UnitIndicators',
 
-    'productsPage.details.unitIndicators': 'UnitIndicators',
+  'productsPage.details.baseUnit': 'BaseUnit',
 
-    'productsPage.details.baseUnit': 'BaseUnit',
+  'productsPage.details.orderable': 'Orderable',
 
-    'productsPage.details.orderable': 'Orderable',
+  'productsPage.details.despatchable': 'Despatchable',
 
-    'productsPage.details.despatchable': 'Despatchable',
+  'productsPage.details.stockInfo': 'StockInfo',
 
-    'productsPage.details.stockInfo': 'StockInfo',
+  'productsPage.details.currentStock': 'CurrentStock',
 
-    'productsPage.details.currentStock': 'CurrentStock',
+  'products.name': 'Naam',
 
-    'products.name': 'Naam',
+  'products.skuHint': 'SkuHint',
 
-    'products.skuHint': 'SkuHint',
+  'products.description': 'Beschrijving',
 
-    'products.description': 'Beschrijving',
+  'products.category': 'Categorie',
 
-    'products.category': 'Categorie',
+  'products.brand': 'Merk',
 
-    'products.brand': 'Merk',
+  'products.unit': 'Eenheid',
 
-    'products.unit': 'Eenheid',
+  'products.price': 'Prijs',
 
-    'products.price': 'Prijs',
+  'products.barcode': 'Barcode',
 
-    'products.barcode': 'Barcode',
+  'products.barcodeHint': 'BarcodeHint',
 
-    'products.barcodeHint': 'BarcodeHint',
+  'products.scanBarcode': 'ScanBarcode',
 
-    'products.scanBarcode': 'ScanBarcode',
+  'products.requiresBatchTracking': 'RequiresBatchTracking',
 
-    'products.requiresBatchTracking': 'RequiresBatchTracking',
+  'products.active': 'Actief',
 
-    'products.active': 'Actief',
+  'products.gs1Information': 'Gs1Information',
 
-    'products.gs1Information': 'Gs1Information',
+  'products.gtinHint': 'GtinHint',
 
-    'products.gtinHint': 'GtinHint',
+  'products.gpcHint': 'GpcHint',
 
-    'products.gpcHint': 'GpcHint',
+  'products.countryOfOrigin': 'CountryOfOrigin',
 
-    'products.countryOfOrigin': 'CountryOfOrigin',
+  'products.lifecycleStatus': 'LifecycleStatus',
 
-    'products.lifecycleStatus': 'LifecycleStatus',
+  'common.update': 'Bijwerken',
 
-    'common.update': 'Bijwerken',
+  'common.create': 'Maken',
 
-    'common.create': 'Maken',
+  'products.units.piece': 'Piece',
 
-    'products.units.piece': 'Piece',
+  'products.units.pack': 'Pack',
 
-    'products.units.pack': 'Pack',
+  'products.units.box': 'Box',
 
-    'products.units.box': 'Box',
+  'products.units.bottle': 'Bottle',
 
-    'products.units.bottle': 'Bottle',
+  'products.units.tube': 'Tube',
 
-    'products.units.tube': 'Tube',
+  'products.units.liter': 'Liter',
 
-    'products.units.liter': 'Liter',
+  'products.units.kg': 'Kg',
 
-    'products.units.kg': 'Kg',
+  'products.units.gram': 'Gram',
 
-    'products.units.gram': 'Gram',
+  'products.lifecycle.active': 'Actief',
 
-    'products.lifecycle.active': 'Actief',
+  'products.lifecycle.discontinued': 'Discontinued',
 
-    'products.lifecycle.discontinued': 'Discontinued',
+  'products.lifecycle.new': 'New',
 
-    'products.lifecycle.new': 'New',
+  'products.lifecycle.phaseOut': 'PhaseOut',
 
-    'products.lifecycle.phaseOut': 'PhaseOut',
+  'errors.noPracticeSelected': 'NoPracticeSelected',
 
-    'errors.noPracticeSelected': 'NoPracticeSelected',
+  'products.updated': 'Updated',
 
-    'products.updated': 'Updated',
+  'products.created': 'Created',
 
-    'products.created': 'Created',
+  'products.updateError': 'UpdateError',
 
-    'products.updateError': 'UpdateError',
+  'products.createError': 'CreateError',
 
-    'products.createError': 'CreateError',
+  'productsPage.cart.title': 'Titel',
 
-    'productsPage.cart.title': 'Titel',
+  'productsPage.cart.empty': 'Geen resultaten gevonden',
 
-    'productsPage.cart.empty': 'Geen resultaten gevonden',
+  'productsPage.cart.totalItems': 'TotalItems',
 
-    'productsPage.cart.totalItems': 'TotalItems',
+  'productsPage.cart.clear': 'Wissen',
 
-    'productsPage.cart.clear': 'Wissen',
+  'productsPage.details.supplier': 'Leverancier',
 
-    'productsPage.details.supplier': 'Leverancier',
+  'productsPage.cart.unitPrice': 'UnitPrice',
 
-    'productsPage.cart.unitPrice': 'UnitPrice',
+  'productsPage.cart.checkout': 'Checkout',
 
-    'productsPage.cart.checkout': 'Checkout',
+  'productsPage.cart.remove': 'Remove',
 
-    'productsPage.cart.remove': 'Remove',
+  'batch.quantityToUse': 'QuantityToUse',
 
-    'batch.quantityToUse': 'QuantityToUse',
+  'batch.validation.exceededAvailable': 'Dit veld is verplicht',
 
-    'batch.validation.exceededAvailable': 'Dit veld is verplicht',
+  'batch.useAll': 'UseAll',
 
-    'batch.useAll': 'UseAll',
+  'batch.usageReason': 'UsageReason',
 
-    'batch.usageReason': 'UsageReason',
+  'batch.usageNotes': 'UsageNotes',
 
-    'batch.usageNotes': 'UsageNotes',
+  'batch.usageNotesHint': 'UsageNotesHint',
 
-    'batch.usageNotesHint': 'UsageNotesHint',
+  'batch.usageSummary': 'UsageSummary',
 
-    'batch.usageSummary': 'UsageSummary',
+  'batch.quantityUsed': 'QuantityUsed',
 
-    'batch.quantityUsed': 'QuantityUsed',
+  'batch.remainingQuantity': 'RemainingQuantity',
 
-    'batch.remainingQuantity': 'RemainingQuantity',
+  'batch.costImpact': 'CostImpact',
 
-    'batch.costImpact': 'CostImpact',
+  'batch.newStatus': 'NewStatus',
 
-    'batch.newStatus': 'NewStatus',
+  'batch.confirmUsage': 'ConfirmUsage',
 
-    'batch.confirmUsage': 'ConfirmUsage',
+  'batch.usage.consumption': 'Consumption',
 
-    'batch.usage.consumption': 'Consumption',
+  'batch.usage.expired': 'Expired',
 
-    'batch.usage.expired': 'Expired',
+  'batch.usage.damaged': 'Damaged',
 
-    'batch.usage.damaged': 'Damaged',
+  'batch.usage.transfer': 'Transfer',
 
-    'batch.usage.transfer': 'Transfer',
+  'batch.usage.adjustment': 'Adjustment',
 
-    'batch.usage.adjustment': 'Adjustment',
+  'batch.usage.other': 'Other',
 
-    'batch.usage.other': 'Other',
+  'batch.batchUsedSuccessfully': 'BatchUsedSuccessfully',
 
-    'batch.batchUsedSuccessfully': 'BatchUsedSuccessfully',
+  'common.dismiss': 'Dismiss',
 
-    'common.dismiss': 'Dismiss',
+  'errors.failedToUseBatch': 'FailedToUseBatch',
 
-    'errors.failedToUseBatch': 'FailedToUseBatch',
+  'validation.email': 'E-mail',
 
-    'validation.email': 'E-mail',
+  'validation.numeric': 'Dit veld is verplicht',
 
-    'validation.numeric': 'Dit veld is verplicht',
+  'validation.positiveNumber': 'Dit veld is verplicht',
 
-    'validation.positiveNumber': 'Dit veld is verplicht',
+  'validation.nonNegative': 'Dit veld is verplicht',
 
-    'validation.nonNegative': 'Dit veld is verplicht',
+  'validation.integer': 'Dit veld is verplicht',
 
-    'validation.integer': 'Dit veld is verplicht',
+  'validation.futureDate': 'Dit veld is verplicht',
 
-    'validation.futureDate': 'Dit veld is verplicht',
+  'validation.pastDate': 'Dit veld is verplicht',
 
-    'validation.pastDate': 'Dit veld is verplicht',
+  'validation.validSku': 'Dit veld is verplicht',
 
-    'validation.validSku': 'Dit veld is verplicht',
+  'validation.phone': 'Telefoon',
 
-    'validation.phone': 'Telefoon',
+  'validation.url': 'URL',
 
-    'validation.url': 'URL',
+  'brand.name': 'Naam',
 
-    'brand.name': 'Naam',
+  'brand.edition': 'Edition',
 
-    'brand.edition': 'Edition',
+  'brand.tagline': 'Tagline',
 
-    'brand.tagline': 'Tagline',
+  'clinic.defaultName': 'DefaultName',
 
-    'clinic.defaultName': 'DefaultName',
+  'clinic.professionalPlan': 'ProfessionalPlan',
 
-    'clinic.professionalPlan': 'ProfessionalPlan',
+  'clinic.settings': 'Settings',
 
-    'clinic.settings': 'Settings',
+  'clinic.information': 'Information',
 
-    'clinic.information': 'Information',
+  'common.ok': 'Ok',
 
-    'common.ok': 'Ok',
+  'common.remove': 'Remove',
 
-    'common.remove': 'Remove',
+  'common.search': 'Zoeken',
 
-    'common.search': 'Zoeken',
+  'common.filter': 'Filteren',
 
-    'common.filter': 'Filteren',
+  'common.clear': 'Wissen',
 
-    'common.clear': 'Wissen',
+  'common.noData': 'NoData',
 
-    'common.noData': 'NoData',
+  'common.error': 'Fout',
 
-    'common.error': 'Fout',
+  'common.success': 'Succes',
 
-    'common.success': 'Succes',
+  'common.warning': 'Waarschuwing',
 
-    'common.warning': 'Waarschuwing',
+  'common.info': 'Info',
 
-    'common.info': 'Info',
+  'common.yes': 'Yes',
 
-    'common.yes': 'Yes',
+  'common.no': 'No',
 
-    'common.no': 'No',
+  'common.back': 'Back',
 
-    'common.back': 'Back',
+  'common.next': 'Next',
 
-    'common.next': 'Next',
+  'common.previous': 'Previous',
 
-    'common.previous': 'Previous',
+  'common.none': 'None',
 
-    'common.none': 'None',
+  'common.select': 'Selecteren',
 
-    'common.select': 'Selecteren',
+  'common.open': 'Open',
 
-    'common.open': 'Open',
+  'common.unknownSupplier': 'UnknownSupplier',
 
-    'common.unknownSupplier': 'UnknownSupplier',
+  'common.uncategorized': 'Uncategorized',
 
-    'common.uncategorized': 'Uncategorized',
+  'common.defaultUnit': 'DefaultUnit',
 
-    'common.defaultUnit': 'DefaultUnit',
+  'common.import': 'Importeren',
 
-    'common.import': 'Importeren',
+  'common.download': 'Downloaden',
 
-    'common.download': 'Downloaden',
+  'common.upload': 'Uploaden',
 
-    'common.upload': 'Uploaden',
+  'common.print': 'Print',
 
-    'common.print': 'Print',
+  'common.active': 'Actief',
 
-    'common.active': 'Actief',
+  'common.inactive': 'Inactief',
 
-    'common.inactive': 'Inactief',
+  'common.enabled': 'Enabled',
 
-    'common.enabled': 'Enabled',
+  'common.disabled': 'Disabled',
 
-    'common.disabled': 'Disabled',
+  'common.name': 'Naam',
 
-    'common.name': 'Naam',
+  'common.description': 'Beschrijving',
 
-    'common.description': 'Beschrijving',
+  'common.time': 'Tijd',
 
-    'common.time': 'Tijd',
+  'common.today': 'Vandaag',
 
-    'common.today': 'Vandaag',
+  'common.yesterday': 'Gisteren',
 
-    'common.yesterday': 'Gisteren',
+  'common.comingSoon': 'Binnenkort beschikbaar',
 
-    'common.comingSoon': 'Binnenkort beschikbaar',
+  'common.dataRefreshed': 'DataRefreshed',
 
-    'common.dataRefreshed': 'DataRefreshed',
+  'common.clearFilters': 'ClearFilters',
 
-    'common.clearFilters': 'ClearFilters',
+  'common.submit': 'Verzenden',
 
-    'common.submit': 'Verzenden',
+  'common.accessibility.mainNavigation': 'MainNavigation',
 
-    'common.accessibility.mainNavigation': 'MainNavigation',
+  'common.accessibility.navigationActions': 'NavigationActions',
 
-    'common.accessibility.navigationActions': 'NavigationActions',
+  'common.accessibility.quickNavigation': 'QuickNavigation',
 
-    'common.accessibility.quickNavigation': 'QuickNavigation',
+  'common.accessibility.userMenu': 'UserMenu',
 
-    'common.accessibility.userMenu': 'UserMenu',
+  'common.accessibility.openMenu': 'OpenMenu',
 
-    'common.accessibility.openMenu': 'OpenMenu',
+  'common.accessibility.closeMenu': 'CloseMenu',
 
-    'common.accessibility.closeMenu': 'CloseMenu',
+  'common.accessibility.toggleTheme': 'ToggleTheme',
 
-    'common.accessibility.toggleTheme': 'ToggleTheme',
+  'common.accessibility.searchButton': 'Knop',
 
-    'common.accessibility.searchButton': 'Knop',
+  'common.accessibility.notificationPanel': 'NotificationPanel',
 
-    'common.accessibility.notificationPanel': 'NotificationPanel',
+  'nav.invoices': 'Invoices',
 
-    'nav.invoices': 'Invoices',
+  'nav.settings': 'Settings',
 
-    'nav.settings': 'Settings',
+  'nav.logout': 'Logout',
 
-    'nav.logout': 'Logout',
+  'nav.profile': 'Profile',
 
-    'nav.profile': 'Profile',
+  'nav.helpSupport': 'HelpSupport',
 
-    'nav.helpSupport': 'HelpSupport',
+  'nav.navigation': 'Navigatie',
 
-    'nav.navigation': 'Navigatie',
+  'nav.quickStats': 'QuickStats',
 
-    'nav.quickStats': 'QuickStats',
+  'nav.upgradePlan': 'UpgradePlan',
 
-    'nav.upgradePlan': 'UpgradePlan',
+  'nav.getAdvancedFeatures': 'GetAdvancedFeatures',
 
-    'nav.getAdvancedFeatures': 'GetAdvancedFeatures',
+  'nav.inventory': 'Voorraad',
 
-    'nav.inventory': 'Voorraad',
+  'nav.analytics': 'Analytics',
 
-    'nav.analytics': 'Analytics',
+  'nav.suppliers': 'Suppliers',
 
-    'nav.suppliers': 'Suppliers',
+  'nav.admin': 'Admin',
 
-    'nav.admin': 'Admin',
+  'nav.overviewAnalytics': 'OverviewAnalytics',
 
-    'nav.overviewAnalytics': 'OverviewAnalytics',
+  'nav.stockManagement': 'StockManagement',
 
-    'nav.stockManagement': 'StockManagement',
+  'nav.inventoryManagement': 'InventoryManagement',
 
-    'nav.inventoryManagement': 'InventoryManagement',
+  'nav.productManagement': 'ProductManagement',
 
-    'nav.productManagement': 'ProductManagement',
+  'nav.purchaseOrders': 'PurchaseOrders',
 
-    'nav.purchaseOrders': 'PurchaseOrders',
+  'nav.reportsInsights': 'ReportsInsights',
 
-    'nav.reportsInsights': 'ReportsInsights',
+  'nav.vendorManagement': 'VendorManagement',
 
-    'nav.vendorManagement': 'VendorManagement',
+  'nav.systemAdmin': 'SystemAdmin',
 
-    'nav.systemAdmin': 'SystemAdmin',
+  'nav.openNavigation': 'OpenNavigation',
 
-    'nav.openNavigation': 'OpenNavigation',
+  'nav.notifications': 'Notifications',
 
-    'nav.notifications': 'Notifications',
+  'nav.alertsNotifications': 'AlertsNotifications',
 
-    'nav.alertsNotifications': 'AlertsNotifications',
+  'nav.darkMode': 'DarkMode',
 
-    'nav.darkMode': 'DarkMode',
+  'nav.lightMode': 'LightMode',
 
-    'nav.lightMode': 'LightMode',
+  'nav.userMenu': 'UserMenu',
 
-    'nav.userMenu': 'UserMenu',
+  'nav.shoppingCart': 'ShoppingCart',
 
-    'nav.shoppingCart': 'ShoppingCart',
+  'nav.styleGuide': 'StyleGuide',
 
-    'nav.styleGuide': 'StyleGuide',
+  'nav.designSystem': 'DesignSystem',
 
-    'nav.designSystem': 'DesignSystem',
+  'nav.sections.main': 'Main',
 
-    'nav.sections.main': 'Main',
+  'nav.sections.inventory': 'Voorraad',
 
-    'nav.sections.inventory': 'Voorraad',
+  'nav.sections.supplyChain': 'SupplyChain',
 
-    'nav.sections.supplyChain': 'SupplyChain',
+  'nav.sections.analytics': 'Analytics',
 
-    'nav.sections.analytics': 'Analytics',
+  'nav.sections.administration': 'Administration',
 
-    'nav.sections.administration': 'Administration',
+  'nav.inventoryLevels': 'InventoryLevels',
 
-    'nav.inventoryLevels': 'InventoryLevels',
+  'nav.currentStock': 'CurrentStock',
 
-    'nav.currentStock': 'CurrentStock',
+  'nav.locations': 'Locations',
 
-    'nav.locations': 'Locations',
+  'nav.warehouseManagement': 'WarehouseManagement',
 
-    'nav.warehouseManagement': 'WarehouseManagement',
+  'nav.stockCounting': 'StockCounting',
 
-    'nav.stockCounting': 'StockCounting',
+  'nav.physicalCounts': 'PhysicalCounts',
 
-    'nav.physicalCounts': 'PhysicalCounts',
+  'nav.movements': 'Movements',
 
-    'nav.movements': 'Movements',
+  'nav.stockMovements': 'StockMovements',
 
-    'nav.stockMovements': 'StockMovements',
+  'auth.login': 'Login',
 
-    'auth.login': 'Login',
+  'auth.logout': 'Logout',
 
-    'auth.logout': 'Logout',
+  'auth.email': 'E-mail',
 
-    'auth.email': 'E-mail',
+  'auth.password': 'Wachtwoord',
 
-    'auth.password': 'Wachtwoord',
+  'auth.forgotPassword': 'ForgotPassword',
 
-    'auth.forgotPassword': 'ForgotPassword',
+  'auth.resetPassword': 'ResetPassword',
 
-    'auth.resetPassword': 'ResetPassword',
+  'auth.hidePassword': 'HidePassword',
 
-    'auth.hidePassword': 'HidePassword',
+  'auth.showPassword': 'ShowPassword',
 
-    'auth.showPassword': 'ShowPassword',
+  'auth.loginError': 'LoginError',
 
-    'auth.loginError': 'LoginError',
+  'auth.sessionExpired': 'SessionExpired',
 
-    'auth.sessionExpired': 'SessionExpired',
+  'auth.loginSuccess': 'LoginSuccess',
 
-    'auth.loginSuccess': 'LoginSuccess',
+  'auth.logoutSuccess': 'LogoutSuccess',
 
-    'auth.logoutSuccess': 'LogoutSuccess',
+  'auth.pleaseLogin': 'PleaseLogin',
 
-    'auth.pleaseLogin': 'PleaseLogin',
+  'auth.demoAccount': 'DemoAccount',
 
-    'auth.demoAccount': 'DemoAccount',
+  'auth.or': 'Or',
 
-    'auth.or': 'Or',
+  'auth.secureConnection': 'SecureConnection',
 
-    'auth.secureConnection': 'SecureConnection',
+  'auth.privacyPolicy': 'PrivacyPolicy',
 
-    'auth.privacyPolicy': 'PrivacyPolicy',
+  'auth.termsOfService': 'TermsOfService',
 
-    'auth.termsOfService': 'TermsOfService',
+  'auth.support': 'Support',
 
-    'auth.support': 'Support',
+  'auth.allRightsReserved': 'AllRightsReserved',
 
-    'auth.allRightsReserved': 'AllRightsReserved',
+  'auth.professionalInventory': 'ProfessionalInventory',
 
-    'auth.professionalInventory': 'ProfessionalInventory',
+  'auth.platformDescription': 'PlatformDescription',
 
-    'auth.platformDescription': 'PlatformDescription',
+  'auth.realtimeTracking': 'RealtimeTracking',
 
-    'auth.realtimeTracking': 'RealtimeTracking',
+  'auth.automatedAlerts': 'AutomatedAlerts',
 
-    'auth.automatedAlerts': 'AutomatedAlerts',
+  'auth.complianceReporting': 'ComplianceReporting',
 
-    'auth.complianceReporting': 'ComplianceReporting',
+  'auth.multilocationSupport': 'MultilocationSupport',
 
-    'auth.multilocationSupport': 'MultilocationSupport',
+  'auth.demoCredentialsFilled': 'DemoCredentialsFilled',
 
-    'auth.demoCredentialsFilled': 'DemoCredentialsFilled',
+  'auth.passwordResetComingSoon': 'PasswordResetComingSoon',
 
-    'auth.passwordResetComingSoon': 'PasswordResetComingSoon',
+  'auth.copyright': 'Copyright',
 
-    'auth.copyright': 'Copyright',
+  'auth.passwordHelp': 'PasswordHelp',
 
-    'auth.passwordHelp': 'PasswordHelp',
+  'auth.demoHelp': 'DemoHelp',
 
-    'auth.demoHelp': 'DemoHelp',
+  'auth.signingIn': 'SigningIn',
 
-    'auth.signingIn': 'SigningIn',
+  'auth.fullName': 'FullName',
 
-    'auth.fullName': 'FullName',
+  'demo.resetInProgress': 'ResetInProgress',
 
-    'demo.resetInProgress': 'ResetInProgress',
+  'demo.reloadingAfterReset': 'Laden...',
 
-    'demo.reloadingAfterReset': 'Laden...',
+  'dashboard.title': 'Titel',
 
-    'dashboard.title': 'Titel',
+  'dashboard.welcome': 'Welcome',
 
-    'dashboard.welcome': 'Welcome',
+  'dashboard.user': 'User',
 
-    'dashboard.user': 'User',
+  'dashboard.clinicInfo': 'ClinicInfo',
 
-    'dashboard.clinicInfo': 'ClinicInfo',
+  'dashboard.stockSummary': 'StockSummary',
 
-    'dashboard.stockSummary': 'StockSummary',
+  'dashboard.lowStockItems': 'LowStockItems',
 
-    'dashboard.lowStockItems': 'LowStockItems',
+  'dashboard.outOfStockItems': 'OutOfStockItems',
 
-    'dashboard.outOfStockItems': 'OutOfStockItems',
+  'dashboard.reorderSuggestions': 'ReorderSuggestions',
 
-    'dashboard.reorderSuggestions': 'ReorderSuggestions',
+  'dashboard.outOfStock': 'OutOfStock',
 
-    'dashboard.outOfStock': 'OutOfStock',
+  'dashboard.lowStock': 'LowStock',
 
-    'dashboard.lowStock': 'LowStock',
+  'dashboard.inStock': 'InStock',
 
-    'dashboard.inStock': 'InStock',
+  'dashboard.noLowStock': 'NoLowStock',
 
-    'dashboard.noLowStock': 'NoLowStock',
+  'dashboard.viewMore': 'ViewMore',
 
-    'dashboard.viewMore': 'ViewMore',
+  'dashboard.quickActions': 'QuickActions',
 
-    'dashboard.quickActions': 'QuickActions',
+  'dashboard.manageStock': 'ManageStock',
 
-    'dashboard.manageStock': 'ManageStock',
+  'dashboard.updateStockLevels': 'UpdateStockLevels',
 
-    'dashboard.updateStockLevels': 'UpdateStockLevels',
+  'dashboard.viewOrders': 'ViewOrders',
 
-    'dashboard.viewOrders': 'ViewOrders',
+  'dashboard.manageOrders': 'ManageOrders',
 
-    'dashboard.manageOrders': 'ManageOrders',
+  'dashboard.configureSystem': 'ConfigureSystem',
 
-    'dashboard.configureSystem': 'ConfigureSystem',
+  'dashboard.dataRefreshed': 'DataRefreshed',
 
-    'dashboard.dataRefreshed': 'DataRefreshed',
+  'dashboard.recentActivity': 'RecentActivity',
 
-    'dashboard.recentActivity': 'RecentActivity',
+  'dashboard.itemsRequiringAttention': 'ItemsRequiringAttention',
 
-    'dashboard.itemsRequiringAttention': 'ItemsRequiringAttention',
+  'dashboard.commonTasks': 'CommonTasks',
 
-    'dashboard.commonTasks': 'CommonTasks',
+  'dashboard.exportToCsv': 'ExportToCsv',
 
-    'dashboard.exportToCsv': 'ExportToCsv',
+  'dashboard.currentMin': 'CurrentMin',
 
-    'dashboard.currentMin': 'CurrentMin',
+  'dashboard.latestUpdates': 'LatestUpdates',
 
-    'dashboard.latestUpdates': 'LatestUpdates',
+  'dashboard.viewAnalytics': 'ViewAnalytics',
 
-    'dashboard.viewAnalytics': 'ViewAnalytics',
+  'dashboard.welcomeTitle': 'WelcomeTitle',
 
-    'dashboard.welcomeTitle': 'WelcomeTitle',
+  'dashboard.welcomeSubtitle': 'Titel',
 
-    'dashboard.welcomeSubtitle': 'Titel',
+  'dashboard.welcomeDescription': 'WelcomeDescription',
 
-    'dashboard.welcomeDescription': 'WelcomeDescription',
+  'dashboard.systemStatus': 'SystemStatus',
 
-    'dashboard.systemStatus': 'SystemStatus',
+  'dashboard.systemStatusSubtitle': 'Titel',
 
-    'dashboard.systemStatusSubtitle': 'Titel',
+  'dashboard.systemOnline': 'SystemOnline',
 
-    'dashboard.systemOnline': 'SystemOnline',
+  'dashboard.dataSynced': 'DataSynced',
 
-    'dashboard.dataSynced': 'DataSynced',
+  'dashboard.secureConnection': 'SecureConnection',
 
-    'dashboard.secureConnection': 'SecureConnection',
+  'dashboard.vsLastMonth': 'VsLastMonth',
 
-    'dashboard.vsLastMonth': 'VsLastMonth',
+  'dashboard.summaryOverview': 'SummaryOverview',
 
-    'dashboard.summaryOverview': 'SummaryOverview',
+  'dashboard.moreOptions': 'MoreOptions',
 
-    'dashboard.moreOptions': 'MoreOptions',
+  'dashboard.quickActionsList': 'QuickActionsList',
 
-    'dashboard.quickActionsList': 'QuickActionsList',
+  'dashboard.optionsMenu': 'OptionsMenu',
 
-    'dashboard.optionsMenu': 'OptionsMenu',
+  'dashboard.lowStockItemsList': 'LowStockItemsList',
 
-    'dashboard.lowStockItemsList': 'LowStockItemsList',
+  'dashboard.dashboardSummary': 'DashboardSummary',
 
-    'dashboard.dashboardSummary': 'DashboardSummary',
+  'dashboard.failedToLoadData': 'FailedToLoadData',
 
-    'dashboard.failedToLoadData': 'FailedToLoadData',
+  'dashboard.dataRefreshedSuccessfully': 'DataRefreshedSuccessfully',
 
-    'dashboard.dataRefreshedSuccessfully': 'DataRefreshedSuccessfully',
+  'dashboard.failedToRefreshData': 'FailedToRefreshData',
 
-    'dashboard.failedToRefreshData': 'FailedToRefreshData',
+  'dashboard.assistantDashboard': 'AssistantDashboard',
 
-    'dashboard.assistantDashboard': 'AssistantDashboard',
+  'dashboard.managerDashboard': 'ManagerDashboard',
 
-    'dashboard.managerDashboard': 'ManagerDashboard',
+  'dashboard.ownerDashboard': 'OwnerDashboard',
 
-    'dashboard.ownerDashboard': 'OwnerDashboard',
+  'dashboard.stockAlerts': 'StockAlerts',
 
-    'dashboard.stockAlerts': 'StockAlerts',
+  'dashboard.orderSuggestions': 'OrderSuggestions',
 
-    'dashboard.orderSuggestions': 'OrderSuggestions',
+  'dashboard.recentOrders': 'RecentOrders',
 
-    'dashboard.recentOrders': 'RecentOrders',
+  'dashboard.quickScan': 'QuickScan',
 
-    'dashboard.quickScan': 'QuickScan',
+  'dashboard.analyticsOverview': 'AnalyticsOverview',
 
-    'dashboard.analyticsOverview': 'AnalyticsOverview',
+  'dashboard.businessOverview': 'BusinessOverview',
 
-    'dashboard.businessOverview': 'BusinessOverview',
+  'dashboard.costAnalysis': 'CostAnalysis',
 
-    'dashboard.costAnalysis': 'CostAnalysis',
+  'dashboard.supplierPerformance': 'SupplierPerformance',
 
-    'dashboard.supplierPerformance': 'SupplierPerformance',
+  'dashboard.teamActivity': 'TeamActivity',
 
-    'dashboard.teamActivity': 'TeamActivity',
+  'dashboard.financialSummary': 'FinancialSummary',
 
-    'dashboard.financialSummary': 'FinancialSummary',
+  'dashboard.userManagement': 'UserManagement',
 
-    'dashboard.userManagement': 'UserManagement',
+  'dashboard.systemHealth': 'SystemHealth',
 
-    'dashboard.systemHealth': 'SystemHealth',
+  'dashboard.scanProduct': 'ScanProduct',
 
-    'dashboard.scanProduct': 'ScanProduct',
+  'dashboard.createOrder': 'CreateOrder',
 
-    'dashboard.createOrder': 'CreateOrder',
+  'dashboard.updateStock': 'UpdateStock',
 
-    'dashboard.updateStock': 'UpdateStock',
+  'dashboard.viewLowStock': 'ViewLowStock',
 
-    'dashboard.viewLowStock': 'ViewLowStock',
+  'dashboard.manageSuppliers': 'ManageSuppliers',
 
-    'dashboard.manageSuppliers': 'ManageSuppliers',
+  'dashboard.approveOrders': 'ApproveOrders',
 
-    'dashboard.approveOrders': 'ApproveOrders',
+  'dashboard.exportReports': 'ExportReports',
 
-    'dashboard.exportReports': 'ExportReports',
+  'dashboard.manageUsers': 'ManageUsers',
 
-    'dashboard.manageUsers': 'ManageUsers',
+  'dashboard.systemSettings': 'SystemSettings',
 
-    'dashboard.systemSettings': 'SystemSettings',
+  'dashboard.financialReports': 'FinancialReports',
 
-    'dashboard.financialReports': 'FinancialReports',
+  'dashboard.backupData': 'BackupData',
 
-    'dashboard.backupData': 'BackupData',
+  'dashboard.noAlerts': 'NoAlerts',
 
-    'dashboard.noAlerts': 'NoAlerts',
+  'dashboard.allStockLevelsOk': 'AllStockLevelsOk',
 
-    'dashboard.allStockLevelsOk': 'AllStockLevelsOk',
+  'dashboard.lowStockAlert': 'LowStockAlert',
 
-    'dashboard.lowStockAlert': 'LowStockAlert',
+  'dashboard.viewAllAlerts': 'ViewAllAlerts',
 
-    'dashboard.viewAllAlerts': 'ViewAllAlerts',
+  'dashboard.noOrderSuggestions': 'NoOrderSuggestions',
 
-    'dashboard.noOrderSuggestions': 'NoOrderSuggestions',
+  'dashboard.noRecentOrders': 'NoRecentOrders',
 
-    'dashboard.noRecentOrders': 'NoRecentOrders',
+  'dashboard.loading': 'Bezig met laden…',
 
-    'dashboard.loading': 'Bezig met laden…',
+  'dashboard.loadingWidgets': 'Laden...',
 
-    'dashboard.loadingWidgets': 'Laden...',
+  'dashboard.errorLoadingWidget': 'ErrorLoadingWidget',
 
-    'dashboard.errorLoadingWidget': 'ErrorLoadingWidget',
+  'dashboard.tryAgain': 'TryAgain',
 
-    'dashboard.tryAgain': 'TryAgain',
+  'dashboard.totalProducts': 'TotalProducts',
 
-    'dashboard.totalProducts': 'TotalProducts',
+  'dashboard.lowStockCount': 'LowStockCount',
 
-    'dashboard.lowStockCount': 'LowStockCount',
+  'dashboard.pendingOrders': 'PendingOrders',
 
-    'dashboard.pendingOrders': 'PendingOrders',
+  'dashboard.totalValue': 'TotalValue',
 
-    'dashboard.totalValue': 'TotalValue',
+  'dashboard.teamSize': 'TeamSize',
 
-    'dashboard.teamSize': 'TeamSize',
+  'dashboard.practiceHealth': 'PracticeHealth',
 
-    'dashboard.practiceHealth': 'PracticeHealth',
+  'errors.generic': 'Generic',
 
-    'errors.generic': 'Generic',
+  'errors.network': 'Network',
 
-    'errors.network': 'Network',
+  'errors.unauthorized': 'Unauthorized',
 
-    'errors.unauthorized': 'Unauthorized',
+  'errors.notFound': 'Geen resultaten gevonden',
 
-    'errors.notFound': 'Geen resultaten gevonden',
+  'errors.validation': 'Dit veld is verplicht',
 
-    'errors.validation': 'Dit veld is verplicht',
+  'errors.serverError': 'ServerError',
 
-    'errors.serverError': 'ServerError',
+  'errors.failedToRefreshData': 'FailedToRefreshData',
 
-    'errors.failedToRefreshData': 'FailedToRefreshData',
+  'error.pageNotFound': 'PageNotFound',
 
-    'error.pageNotFound': 'PageNotFound',
+  'error.pageNotFoundDescription': 'PageNotFoundDescription',
 
-    'error.pageNotFoundDescription': 'PageNotFoundDescription',
+  'error.goHome': 'GoHome',
 
-    'error.goHome': 'GoHome',
+  'error.goBack': 'GoBack',
 
-    'error.goBack': 'GoBack',
+  'error.tryThesePages': 'TryThesePages',
 
-    'error.tryThesePages': 'TryThesePages',
+  'validation.maxLength': 'Dit veld is verplicht',
 
-    'validation.maxLength': 'Dit veld is verplicht',
+  'validation.positive': 'Dit veld is verplicht',
 
-    'validation.positive': 'Dit veld is verplicht',
+  'validation.textMustMatch': 'Dit veld is verplicht',
 
-    'validation.textMustMatch': 'Dit veld is verplicht',
+  'product.selectProduct': 'SelectProduct',
 
-    'product.selectProduct': 'SelectProduct',
+  'location.selectLocation': 'SelectLocation',
 
-    'location.selectLocation': 'SelectLocation',
+  'location.sampleData.mainWarehouse.type': 'Type',
 
-    'location.sampleData.mainWarehouse.type': 'Type',
+  'location.sampleData.mainWarehouse.description': 'Beschrijving',
 
-    'location.sampleData.mainWarehouse.description': 'Beschrijving',
+  'location.sampleData.pharmacy.name': 'Naam',
 
-    'location.sampleData.pharmacy.name': 'Naam',
+  'location.sampleData.pharmacy.type': 'Type',
 
-    'location.sampleData.pharmacy.type': 'Type',
+  'location.sampleData.pharmacy.description': 'Beschrijving',
 
-    'location.sampleData.pharmacy.description': 'Beschrijving',
+  'location.sampleData.treatmentRoom.type': 'Type',
 
-    'location.sampleData.treatmentRoom.type': 'Type',
+  'location.sampleData.treatmentRoom.description': 'Beschrijving',
 
-    'location.sampleData.treatmentRoom.description': 'Beschrijving',
+  'inventory.title': 'Titel',
 
-    'inventory.title': 'Titel',
+  'inventory.suppliers': 'Suppliers',
 
-    'inventory.suppliers': 'Suppliers',
+  'inventory.orders': 'Orders',
 
-    'inventory.orders': 'Orders',
+  'inventory.stockCounting': 'StockCounting',
 
-    'inventory.stockCounting': 'StockCounting',
+  'inventory.time': 'Tijd',
 
-    'inventory.time': 'Tijd',
+  'inventory.searchProducts': 'SearchProducts',
 
-    'inventory.searchProducts': 'SearchProducts',
+  'inventory.stockStatus': 'StockStatus',
 
-    'inventory.stockStatus': 'StockStatus',
+  'inventory.category': 'Categorie',
 
-    'inventory.category': 'Categorie',
+  'inventory.items': 'Items',
 
-    'inventory.items': 'Items',
+  'inventory.totalValue': 'TotalValue',
 
-    'inventory.totalValue': 'TotalValue',
+  'inventory.lowStockItems': 'LowStockItems',
 
-    'inventory.lowStockItems': 'LowStockItems',
+  'inventory.outOfStockItems': 'OutOfStockItems',
 
-    'inventory.outOfStockItems': 'OutOfStockItems',
+  'inventory.stockAccuracy': 'StockAccuracy',
 
-    'inventory.stockAccuracy': 'StockAccuracy',
+  'inventory.lastFullCount': 'LastFullCount',
 
-    'inventory.lastFullCount': 'LastFullCount',
+  'inventory.allLocations': 'AllLocations',
 
-    'inventory.allLocations': 'AllLocations',
+  'inventory.currentLocation': 'CurrentLocation',
 
-    'inventory.currentLocation': 'CurrentLocation',
+  'inventory.switchLocation': 'SwitchLocation',
 
-    'inventory.switchLocation': 'SwitchLocation',
+  'inventory.transferStock': 'TransferStock',
 
-    'inventory.transferStock': 'TransferStock',
+  'inventory.viewMovements': 'ViewMovements',
 
-    'inventory.viewMovements': 'ViewMovements',
+  'inventory.exportData': 'ExportData',
 
-    'inventory.exportData': 'ExportData',
+  'demo.resetFailed': 'ResetFailed',
 
-    'demo.resetFailed': 'ResetFailed',
+  'batch.batchManagement': 'BatchManagement',
 
-    'batch.batchManagement': 'BatchManagement',
+  'dashboard.actions.refresh': 'Verversen',
 
-    'dashboard.actions.refresh': 'Verversen',
+  'dashboard.actions.refreshed': 'Dashboard ververst',
 
-    'dashboard.actions.refreshed': 'Dashboard ververst',
+  'dashboard.widgetRefreshed': 'Widget {widget} ververst',
 
-    'dashboard.widgetRefreshed': 'Widget {widget} ververst',
+  'dashboard.actions.customize': 'Customize',
 
-    'dashboard.actions.customize': 'Customize',
+  'dashboard.demoRoleSwitch.label': 'Label',
 
-    'dashboard.demoRoleSwitch.label': 'Label',
+  'dashboard.roles.assistant': 'Assistant',
 
-    'dashboard.roles.assistant': 'Assistant',
+  'dashboard.roles.manager': 'Manager',
 
-    'dashboard.roles.manager': 'Manager',
+  'dashboard.roles.owner': 'Owner',
 
-    'dashboard.roles.owner': 'Owner',
+  'dashboard.notifications.roleSwitch': 'RoleSwitch',
 
-    'dashboard.notifications.roleSwitch': 'RoleSwitch',
+  'inventory.stockUpdatedMessage': 'StockUpdatedMessage',
 
-    'inventory.stockUpdatedMessage': 'StockUpdatedMessage',
+  'magicJoin.subtitle': 'Ondertitel',
 
-    'magicJoin.subtitle': 'Ondertitel',
+  'admin.title': 'Titel',
 
-    'admin.title': 'Titel',
+  'admin.settings': 'Settings',
 
-    'admin.settings': 'Settings',
+  'admin.audit': 'Audit',
 
-    'admin.audit': 'Audit',
+  'admin.stats.totalUsers': 'TotalUsers',
 
-    'admin.stats.totalUsers': 'TotalUsers',
+  'admin.stats.activeToday': 'ActiveToday',
 
-    'admin.stats.activeToday': 'ActiveToday',
+  'admin.stats.totalLocations': 'TotalLocations',
 
-    'admin.stats.totalLocations': 'TotalLocations',
+  'admin.stats.active': 'Actief',
 
-    'admin.stats.active': 'Actief',
+  'admin.stats.pendingSync': 'PendingSync',
 
-    'admin.stats.pendingSync': 'PendingSync',
+  'admin.stats.lastSync': 'LastSync',
 
-    'admin.stats.lastSync': 'LastSync',
+  'admin.stats.todayEvents': 'TodayEvents',
 
-    'admin.stats.todayEvents': 'TodayEvents',
+  'admin.stats.fromYesterday': 'FromYesterday',
 
-    'admin.stats.fromYesterday': 'FromYesterday',
+  'admin.quickActions': 'QuickActions',
 
-    'admin.quickActions': 'QuickActions',
+  'admin.userManagement.invite': 'Invite',
 
-    'admin.userManagement.invite': 'Invite',
+  'offline.data.download': 'Downloaden',
 
-    'offline.data.download': 'Downloaden',
+  'offline.sync.forceSync': 'ForceSync',
 
-    'offline.sync.forceSync': 'ForceSync',
+  'exports.title': 'Titel',
 
-    'exports.title': 'Titel',
+  'magicInvite.revolutionaryUserSystem': 'RevolutionaryUserSystem',
 
-    'magicInvite.revolutionaryUserSystem': 'RevolutionaryUserSystem',
+  'admin.users': 'Users',
 
-    'admin.users': 'Users',
+  'admin.locations': 'Locations',
 
-    'admin.locations': 'Locations',
+  'admin.permissions': 'Permissions',
 
-    'admin.permissions': 'Permissions',
+  'admin.analytics': 'Analytics',
 
-    'admin.analytics': 'Analytics',
+  'admin.userManagement.title': 'Titel',
 
-    'admin.userManagement.title': 'Titel',
+  'locations.isMain': 'IsMain',
 
-    'locations.isMain': 'IsMain',
+  'permissions.title': 'Titel',
 
-    'permissions.title': 'Titel',
+  'permissions.templates.title': 'Titel',
 
-    'permissions.templates.title': 'Titel',
+  'analytics.dashboard': 'Dashboard',
 
-    'analytics.dashboard': 'Dashboard',
+  'analytics.usage': 'Usage',
 
-    'analytics.usage': 'Usage',
+  'analytics.patterns': 'Patterns',
 
-    'analytics.patterns': 'Patterns',
+  'analytics.metrics.averageSession': 'AverageSession',
 
-    'analytics.metrics.averageSession': 'AverageSession',
+  'analytics.metrics.peakHours': 'PeakHours',
 
-    'analytics.metrics.peakHours': 'PeakHours',
+  'admin.userManagement.email': 'E-mail',
 
-    'admin.userManagement.email': 'E-mail',
+  'admin.userManagement.roles': 'Roles',
 
-    'admin.userManagement.roles': 'Roles',
+  'admin.userManagement.lastActive': 'LastActive',
 
-    'admin.userManagement.lastActive': 'LastActive',
+  'locations.name': 'Naam',
 
-    'locations.name': 'Naam',
+  'locations.city': 'Stad',
 
-    'locations.city': 'Stad',
+  'permissions.user': 'User',
 
-    'permissions.user': 'User',
+  'permissions.permissionType': 'PermissionType',
 
-    'permissions.permissionType': 'PermissionType',
+  'permissions.resourceType': 'ResourceType',
 
-    'permissions.resourceType': 'ResourceType',
+  'permissions.expiresAt': 'ExpiresAt',
 
-    'permissions.expiresAt': 'ExpiresAt',
+  'admin.errors.loadUsersFailed': 'LoadUsersFailed',
 
-    'admin.errors.loadUsersFailed': 'LoadUsersFailed',
+  'admin.errors.loadLocationsFailed': 'LoadLocationsFailed',
 
-    'admin.errors.loadLocationsFailed': 'LoadLocationsFailed',
+  'offline.messages.syncCompleted': 'SyncCompleted',
 
-    'offline.messages.syncCompleted': 'SyncCompleted',
+  'offline.errors.downloadFailed': 'DownloadFailed',
 
-    'offline.errors.downloadFailed': 'DownloadFailed',
+  'offline.messages.syncFailed': 'SyncFailed',
 
-    'offline.messages.syncFailed': 'SyncFailed',
+  'admin.userManagement.resetPassword': 'ResetPassword',
 
-    'admin.userManagement.resetPassword': 'ResetPassword',
+  'admin.errors.failedToSet': 'FailedToSet',
 
-    'admin.errors.failedToSet': 'FailedToSet',
+  'admin.errors.failedToUpdate': 'FailedToUpdate',
 
-    'admin.errors.failedToUpdate': 'FailedToUpdate',
+  'locations.notifications.mainLocationSet': 'MainLocationSet',
 
-    'locations.notifications.mainLocationSet': 'MainLocationSet',
+  'locations.errors.setMainFailed': 'SetMainFailed',
 
-    'locations.errors.setMainFailed': 'SetMainFailed',
+  'permissions.notifications.revoked': 'Revoked',
 
-    'permissions.notifications.revoked': 'Revoked',
+  'permissions.errors.revokeFailed': 'RevokeFailed',
 
-    'permissions.errors.revokeFailed': 'RevokeFailed',
+  'analyticsPage.title': 'Titel',
 
-    'analyticsPage.title': 'Titel',
+  'analyticsPage.subtitle': 'Ondertitel',
 
-    'analyticsPage.subtitle': 'Ondertitel',
+  'analyticsPage.period': 'Period',
 
-    'analyticsPage.period': 'Period',
+  'analyticsPage.totalEvents': 'TotalEvents',
 
-    'analyticsPage.totalEvents': 'TotalEvents',
+  'analyticsPage.activeUsers': 'ActiveUsers',
 
-    'analyticsPage.activeUsers': 'ActiveUsers',
+  'analyticsPage.totalOrders': 'TotalOrders',
 
-    'analyticsPage.totalOrders': 'TotalOrders',
+  'analyticsPage.productUpdates': 'ProductUpdates',
 
-    'analyticsPage.productUpdates': 'ProductUpdates',
+  'analyticsPage.dailyActivity': 'DailyActivity',
 
-    'analyticsPage.dailyActivity': 'DailyActivity',
+  'analyticsPage.topEvents': 'TopEvents',
 
-    'analyticsPage.topEvents': 'TopEvents',
+  'analyticsPage.frequentlyOrderedItems': 'FrequentlyOrderedItems',
 
-    'analyticsPage.frequentlyOrderedItems': 'FrequentlyOrderedItems',
+  'analyticsPage.mostUpdatedProducts': 'MostUpdatedProducts',
 
-    'analyticsPage.mostUpdatedProducts': 'MostUpdatedProducts',
+  'analyticsPage.userActivity': 'UserActivity',
 
-    'analyticsPage.userActivity': 'UserActivity',
+  'analyticsPage.export': 'Exporteren',
 
-    'analyticsPage.export': 'Exporteren',
+  'analyticsPage.periods.7d': 'Laatste 7 dagen',
 
-    'analyticsPage.periods.7d': 'Laatste 7 dagen',
+  'analyticsPage.periods.30d': 'Laatste 30 dagen',
 
-    'analyticsPage.periods.30d': 'Laatste 30 dagen',
+  'analyticsPage.periods.90d': 'Laatste 90 dagen',
 
-    'analyticsPage.periods.90d': 'Laatste 90 dagen',
+  'analyticsPage.periods.1y': 'Laatste jaar',
 
-    'analyticsPage.periods.1y': 'Laatste jaar',
+  'analyticsPage.user': 'User',
 
-    'analyticsPage.user': 'User',
+  'analyticsPage.activityCount': 'ActivityCount',
 
-    'analyticsPage.activityCount': 'ActivityCount',
+  'analyticsPage.lastActivity': 'LastActivity',
 
-    'analyticsPage.lastActivity': 'LastActivity',
+  'analyticsPage.product': 'Product',
 
-    'analyticsPage.product': 'Product',
+  'analyticsPage.totalQuantity': 'TotalQuantity',
 
-    'analyticsPage.totalQuantity': 'TotalQuantity',
+  'analyticsPage.orderCount': 'OrderCount',
 
-    'analyticsPage.orderCount': 'OrderCount',
+  'analyticsPage.updates': 'Updates',
 
-    'analyticsPage.updates': 'Updates',
+  'analyticsPage.loadError': 'LoadError',
 
-    'analyticsPage.loadError': 'LoadError',
+  'analyticsPage.exportSuccess': 'ExportSuccess',
 
-    'analyticsPage.exportSuccess': 'ExportSuccess',
+  'analyticsPage.exportError': 'ExportError',
 
-    'analyticsPage.exportError': 'ExportError',
+  'magicJoin.enterCode': 'EnterCode',
 
-    'magicJoin.enterCode': 'EnterCode',
+  'magicJoin.codeExplanation': 'CodeExplanation',
 
-    'magicJoin.codeExplanation': 'CodeExplanation',
+  'magicJoin.placeholder': 'Placeholder',
 
-    'magicJoin.placeholder': 'Placeholder',
+  'magicJoin.joinNow': 'JoinNow',
 
-    'magicJoin.joinNow': 'JoinNow',
+  'common.or': 'Or',
 
-    'common.or': 'Or',
+  'magicJoin.scanQR': 'ScanQR',
 
-    'magicJoin.scanQR': 'ScanQR',
+  'magicJoin.tryDemo': 'TryDemo',
 
-    'magicJoin.tryDemo': 'TryDemo',
+  'magicJoin.howItWorks': 'HowItWorks',
 
-    'magicJoin.howItWorks': 'HowItWorks',
+  'magicJoin.step1': 'Step1',
 
-    'magicJoin.step1': 'Step1',
+  'magicJoin.step1Detail': 'Step1Detail',
 
-    'magicJoin.step1Detail': 'Step1Detail',
+  'magicJoin.step2': 'Step2',
 
-    'magicJoin.step2': 'Step2',
+  'magicJoin.step2Detail': 'Step2Detail',
 
-    'magicJoin.step2Detail': 'Step2Detail',
+  'magicJoin.step3': 'Step3',
 
-    'magicJoin.step3': 'Step3',
+  'magicJoin.step3Detail': 'Step3Detail',
 
-    'magicJoin.step3Detail': 'Step3Detail',
+  'magicJoin.scanTitle': 'ScanTitle',
 
-    'magicJoin.scanTitle': 'ScanTitle',
+  'magicJoin.scanInstructions': 'ScanInstructions',
 
-    'magicJoin.scanInstructions': 'ScanInstructions',
+  'magicJoin.welcomeTitle': 'WelcomeTitle',
 
-    'magicJoin.welcomeTitle': 'WelcomeTitle',
+  'magicJoin.getStarted': 'GetStarted',
 
-    'magicJoin.getStarted': 'GetStarted',
+  'magicJoin.demoAccess': 'DemoAccess',
 
-    'magicJoin.demoAccess': 'DemoAccess',
+  'magicJoin.memberAccess': 'MemberAccess',
 
-    'magicJoin.memberAccess': 'MemberAccess',
+  'magicJoin.invalidCode': 'InvalidCode',
 
-    'magicJoin.invalidCode': 'InvalidCode',
+  'magicJoin.joinError': 'JoinError',
 
-    'magicJoin.joinError': 'JoinError',
+  'magicJoin.personalCodeSuccess': 'PersonalCodeSuccess',
 
-    'magicJoin.personalCodeSuccess': 'PersonalCodeSuccess',
+  'magicJoin.personalCodeError': 'PersonalCodeError',
 
-    'magicJoin.personalCodeError': 'PersonalCodeError',
+  'magicJoin.expiredCode': 'ExpiredCode',
 
-    'magicJoin.expiredCode': 'ExpiredCode',
+  'magicJoin.maxUsesReached': 'MaxUsesReached',
 
-    'magicJoin.maxUsesReached': 'MaxUsesReached',
+  'magicJoin.permanentInviteDetected': 'PermanentInviteDetected',
 
-    'magicJoin.permanentInviteDetected': 'PermanentInviteDetected',
+  'magicJoin.guestAccessGranted': 'GuestAccessGranted',
 
-    'magicJoin.guestAccessGranted': 'GuestAccessGranted',
+  'magicJoin.validationError': 'Dit veld is verplicht',
 
-    'magicJoin.validationError': 'Dit veld is verplicht',
+  'upgrade.creatingAccount': 'CreatingAccount',
 
-    'upgrade.creatingAccount': 'CreatingAccount',
+  'upgrade.yourCodeIs': 'YourCodeIs',
 
-    'upgrade.yourCodeIs': 'YourCodeIs',
+  'batch.manageBatchesSubtitle': 'Titel',
 
-    'batch.manageBatchesSubtitle': 'Titel',
+  'batch.activeBatches': 'ActiveBatches',
 
-    'batch.activeBatches': 'ActiveBatches',
+  'batch.quickActions': 'QuickActions',
 
-    'batch.quickActions': 'QuickActions',
+  'batch.criticalAlert': 'CriticalAlert',
 
-    'batch.criticalAlert': 'CriticalAlert',
+  'batch.viewCritical': 'ViewCritical',
 
-    'batch.viewCritical': 'ViewCritical',
+  'batch.overview': 'Overview',
 
-    'batch.overview': 'Overview',
+  'batch.expiring': 'Expiring',
 
-    'batch.expiring': 'Expiring',
+  'batch.fifoManagement': 'FifoManagement',
 
-    'batch.fifoManagement': 'FifoManagement',
+  'batch.reports': 'Reports',
 
-    'batch.reports': 'Reports',
+  'batch.expiringBatches': 'ExpiringBatches',
 
-    'batch.expiringBatches': 'ExpiringBatches',
+  'batch.batchReports': 'BatchReports',
 
-    'batch.batchReports': 'BatchReports',
+  'batch.exportSuccess': 'ExportSuccess',
 
-    'batch.exportSuccess': 'ExportSuccess',
+  'batch.criticalBatchesFound': 'CriticalBatchesFound',
 
-    'batch.criticalBatchesFound': 'CriticalBatchesFound',
+  'dashboardp.negative': 'Negative',
 
-    'dashboardp.negative': 'Negative',
+  'dashboardp.positive': 'Positive',
 
-    'dashboardp.positive': 'Positive',
+  'counting.status.active': 'Actief',
 
-    'counting.status.active': 'Actief',
+  'counting.status.completed': 'Voltooid',
 
-    'counting.status.completed': 'Voltooid',
+  'counting.status.cancelled': 'Geannuleerd',
 
-    'counting.status.cancelled': 'Geannuleerd',
+  'counting.status.approved': 'Goedgekeurd',
 
-    'counting.status.approved': 'Goedgekeurd',
+  'counting.sessionName': 'SessionName',
 
-    'counting.sessionName': 'SessionName',
+  'counting.status': 'Status',
 
-    'counting.status': 'Status',
+  'common.refreshFailed': 'RefreshFailed',
 
-    'common.refreshFailed': 'RefreshFailed',
+  'counting.confirmComplete': 'ConfirmComplete',
 
-    'counting.confirmComplete': 'ConfirmComplete',
+  'counting.sessionCompleted': 'SessionCompleted',
 
-    'counting.sessionCompleted': 'SessionCompleted',
+  'counting.completeFailed': 'CompleteFailed',
 
-    'counting.completeFailed': 'CompleteFailed',
+  'counting.unknownSession': 'UnknownSession',
 
-    'counting.unknownSession': 'UnknownSession',
+  'counting.product': 'Product',
 
-    'counting.product': 'Product',
+  'counting.variance': 'Variance',
 
-    'counting.variance': 'Variance',
+  'counting.sessionLoadFailed': 'SessionLoadFailed',
 
-    'counting.sessionLoadFailed': 'SessionLoadFailed',
+  'counting.confirmApprove': 'ConfirmApprove',
 
-    'counting.confirmApprove': 'ConfirmApprove',
+  'counting.sessionApproved': 'SessionApproved',
 
-    'counting.sessionApproved': 'SessionApproved',
+  'counting.approveFailed': 'ApproveFailed',
 
-    'counting.approveFailed': 'ApproveFailed',
+  'inventory.unknownLocation': 'UnknownLocation',
 
-    'inventory.unknownLocation': 'UnknownLocation',
+  'inventory.lastCounted': 'LastCounted',
 
-    'inventory.lastCounted': 'LastCounted',
+  'inventory.actions': 'Actions',
 
-    'inventory.actions': 'Actions',
+  'inventory.addStock': 'AddStock',
 
-    'inventory.addStock': 'AddStock',
+  'inventory.removeStock': 'RemoveStock',
 
-    'inventory.removeStock': 'RemoveStock',
+  'inventory.setStock': 'SetStock',
 
-    'inventory.setStock': 'SetStock',
+  'inventory.loadError': 'LoadError',
 
-    'inventory.loadError': 'LoadError',
+  'inventory.dataRefreshed': 'DataRefreshed',
 
-    'inventory.dataRefreshed': 'DataRefreshed',
+  'inventory.historyNotImplemented': 'HistoryNotImplemented',
 
-    'inventory.historyNotImplemented': 'HistoryNotImplemented',
+  'inventory.countingNotImplemented': 'CountingNotImplemented',
 
-    'inventory.countingNotImplemented': 'CountingNotImplemented',
+  'inventory.stockAdjusted': 'StockAdjusted',
 
-    'inventory.stockAdjusted': 'StockAdjusted',
+  'inventory.adjustError': 'AdjustError',
 
-    'inventory.adjustError': 'AdjustError',
+  'locations.sampleData.mainWarehouse.name': 'Naam',
 
-    'locations.sampleData.mainWarehouse.name': 'Naam',
+  'locations.sampleData.mainWarehouse.type': 'Type',
 
-    'locations.sampleData.mainWarehouse.type': 'Type',
+  'locations.sampleData.mainWarehouse.description': 'Beschrijving',
 
-    'locations.sampleData.mainWarehouse.description': 'Beschrijving',
+  'locations.sampleData.pharmacy.name': 'Naam',
 
-    'locations.sampleData.pharmacy.name': 'Naam',
+  'locations.sampleData.pharmacy.type': 'Type',
 
-    'locations.sampleData.pharmacy.type': 'Type',
+  'locations.sampleData.pharmacy.description': 'Beschrijving',
 
-    'locations.sampleData.pharmacy.description': 'Beschrijving',
+  'locations.sampleData.treatmentRoom.name': 'Naam',
 
-    'locations.sampleData.treatmentRoom.name': 'Naam',
+  'locations.sampleData.treatmentRoom.type': 'Type',
 
-    'locations.sampleData.treatmentRoom.type': 'Type',
+  'locations.sampleData.treatmentRoom.description': 'Beschrijving',
 
-    'locations.sampleData.treatmentRoom.description': 'Beschrijving',
+  'locations.type': 'Type',
 
-    'locations.type': 'Type',
+  'locations.description': 'Beschrijving',
 
-    'locations.description': 'Beschrijving',
+  'locations.capacity': 'Capacity',
 
-    'locations.capacity': 'Capacity',
+  'notificationsPage.title': 'Titel',
 
-    'notificationsPage.title': 'Titel',
+  'notificationsPage.subtitle': 'Ondertitel',
 
-    'notificationsPage.subtitle': 'Ondertitel',
+  'notificationsPage.notificationStatistics': 'NotificationStatistics',
 
-    'notificationsPage.notificationStatistics': 'NotificationStatistics',
+  'notificationsPage.all': 'All',
 
-    'notificationsPage.all': 'All',
+  'notificationsPage.unreadCount': 'UnreadCount',
 
-    'notificationsPage.unreadCount': 'UnreadCount',
+  'notificationsPage.total': 'Totaal',
 
-    'notificationsPage.total': 'Totaal',
+  'notificationsPage.quickActions': 'QuickActions',
 
-    'notificationsPage.quickActions': 'QuickActions',
+  'notificationsPage.unread': 'Unread',
 
-    'notificationsPage.unread': 'Unread',
+  'notificationsPage.filterByCategory': 'FilterByCategory',
 
-    'notificationsPage.filterByCategory': 'FilterByCategory',
+  'notificationsPage.noNotifications': 'NoNotifications',
 
-    'notificationsPage.noNotifications': 'NoNotifications',
+  'notificationsPage.allCaughtUp': 'AllCaughtUp',
 
-    'notificationsPage.allCaughtUp': 'AllCaughtUp',
+  'notificationsPage.markAsReadTooltip': 'MarkAsReadTooltip',
 
-    'notificationsPage.markAsReadTooltip': 'MarkAsReadTooltip',
+  'notificationsPage.deleteTooltip': 'DeleteTooltip',
 
-    'notificationsPage.deleteTooltip': 'DeleteTooltip',
+  'notificationsPage.markAllRead': 'MarkAllRead',
 
-    'notificationsPage.markAllRead': 'MarkAllRead',
+  'notificationsPage.testStockAlert': 'TestStockAlert',
 
-    'notificationsPage.testStockAlert': 'TestStockAlert',
+  'notificationsPage.testOrderUpdate': 'TestOrderUpdate',
 
-    'notificationsPage.testOrderUpdate': 'TestOrderUpdate',
+  'notificationsPage.clearAllNotifications': 'ClearAllNotifications',
 
-    'notificationsPage.clearAllNotifications': 'ClearAllNotifications',
+  'sampleNotifications.lowStockWarning': 'LowStockWarning',
 
-    'sampleNotifications.lowStockWarning': 'LowStockWarning',
+  'sampleNotifications.orderConfirmed': 'OrderConfirmed',
 
-    'sampleNotifications.orderConfirmed': 'OrderConfirmed',
+  'sampleNotifications.stockUpdated': 'StockUpdated',
 
-    'sampleNotifications.stockUpdated': 'StockUpdated',
+  'sampleNotifications.systemMaintenance': 'SystemMaintenance',
 
-    'sampleNotifications.systemMaintenance': 'SystemMaintenance',
+  'notificationsPage.categories.stockAlert': 'StockAlert',
 
-    'notificationsPage.categories.stockAlert': 'StockAlert',
+  'notificationsPage.categories.orderUpdate': 'OrderUpdate',
 
-    'notificationsPage.categories.orderUpdate': 'OrderUpdate',
+  'notificationsPage.categories.systemNotification': 'SystemNotification',
 
-    'notificationsPage.categories.systemNotification': 'SystemNotification',
+  'notificationsPage.categories.reminder': 'Reminder',
 
-    'notificationsPage.categories.reminder': 'Reminder',
+  'notificationsPage.loadNotificationsError': 'LoadNotificationsError',
 
-    'notificationsPage.loadNotificationsError': 'LoadNotificationsError',
+  'notificationsPage.allMarkedAsRead': 'AllMarkedAsRead',
 
-    'notificationsPage.allMarkedAsRead': 'AllMarkedAsRead',
+  'notificationsPage.notificationDeleted': 'NotificationDeleted',
 
-    'notificationsPage.notificationDeleted': 'NotificationDeleted',
+  'notificationsPage.clearAllConfirm': 'ClearAllConfirm',
 
-    'notificationsPage.clearAllConfirm': 'ClearAllConfirm',
+  'notificationsPage.clearAllConfirmMessage': 'ClearAllConfirmMessage',
 
-    'notificationsPage.clearAllConfirmMessage': 'ClearAllConfirmMessage',
+  'notificationsPage.allNotificationsCleared': 'AllNotificationsCleared',
 
-    'notificationsPage.allNotificationsCleared': 'AllNotificationsCleared',
+  'notificationsPage.testMessages.stockAlert.title': 'Titel',
 
-    'notificationsPage.testMessages.stockAlert.title': 'Titel',
+  'notificationsPage.testMessages.stockAlert.message': 'Bericht',
 
-    'notificationsPage.testMessages.stockAlert.message': 'Bericht',
+  'notificationsPage.testMessages.orderUpdate.title': 'Titel',
 
-    'notificationsPage.testMessages.orderUpdate.title': 'Titel',
+  'notificationsPage.testMessages.orderUpdate.message': 'Bericht',
 
-    'notificationsPage.testMessages.orderUpdate.message': 'Bericht',
+  'notificationsPage.testStockAlertCreated': 'TestStockAlertCreated',
 
-    'notificationsPage.testStockAlertCreated': 'TestStockAlertCreated',
+  'notificationsPage.testOrderUpdateCreated': 'TestOrderUpdateCreated',
 
-    'notificationsPage.testOrderUpdateCreated': 'TestOrderUpdateCreated',
+  'orderLists.duplicated': 'Duplicated',
 
-    'orderLists.duplicated': 'Duplicated',
+  'orderLists.deleted': 'Deleted',
 
-    'orderLists.deleted': 'Deleted',
+  'orderLists.deleteError': 'DeleteError',
 
-    'orderLists.deleteError': 'DeleteError',
+  'orderLists.addedToCart': 'AddedToCart',
 
-    'orderLists.addedToCart': 'AddedToCart',
+  'orderLists.cartError': 'CartError',
 
-    'orderLists.cartError': 'CartError',
+  'orderLists.autoFilled': 'AutoFilled',
 
-    'orderLists.autoFilled': 'AutoFilled',
+  'orderLists.autoFillError': 'AutoFillError',
 
-    'orderLists.autoFillError': 'AutoFillError',
+  'orderLists.submitConfirm': 'SubmitConfirm',
 
-    'orderLists.submitConfirm': 'SubmitConfirm',
+  'orderLists.confirmSubmit': 'ConfirmSubmit',
 
-    'orderLists.confirmSubmit': 'ConfirmSubmit',
+  'orderLists.viewSubmitted': 'ViewSubmitted',
 
-    'orderLists.viewSubmitted': 'ViewSubmitted',
+  'orderLists.submitError': 'SubmitError',
 
-    'orderLists.submitError': 'SubmitError',
+  'orderLists.sendToSupplierConfirm': 'SendToSupplierConfirm',
 
-    'orderLists.sendToSupplierConfirm': 'SendToSupplierConfirm',
+  'orderLists.confirmSend': 'ConfirmSend',
 
-    'orderLists.confirmSend': 'ConfirmSend',
+  'orderLists.loadError': 'LoadError',
 
-    'orderLists.loadError': 'LoadError',
+  'orders.export.button': 'Knop',
 
-    'orders.export.button': 'Knop',
+  'orders.analytics.button': 'Knop',
 
-    'orders.analytics.button': 'Knop',
+  'orders.createOrder': 'CreateOrder',
 
-    'orders.createOrder': 'CreateOrder',
+  'orders.orderNumber': 'OrderNumber',
 
-    'orders.orderNumber': 'OrderNumber',
+  'orders.supplier': 'Leverancier',
 
-    'orders.supplier': 'Leverancier',
+  'orders.orderDate': 'OrderDate',
 
-    'orders.orderDate': 'OrderDate',
+  'orders.status': 'Status',
 
-    'orders.status': 'Status',
+  'orders.totalAmount': 'TotalAmount',
 
-    'orders.totalAmount': 'TotalAmount',
+  'orders.expectedDelivery': 'ExpectedDelivery',
 
-    'orders.expectedDelivery': 'ExpectedDelivery',
+  'orders.actions': 'Actions',
 
-    'orders.actions': 'Actions',
+  'orders.loadError': 'LoadError',
 
-    'orders.loadError': 'LoadError',
+  'orders.viewOrderNotImplemented': 'ViewOrderNotImplemented',
 
-    'orders.viewOrderNotImplemented': 'ViewOrderNotImplemented',
+  'orders.editOrderNotImplemented': 'EditOrderNotImplemented',
 
-    'orders.editOrderNotImplemented': 'EditOrderNotImplemented',
+  'orders.downloadOrderNotImplemented': 'DownloadOrderNotImplemented',
 
-    'orders.downloadOrderNotImplemented': 'DownloadOrderNotImplemented',
+  'orders.bulkExportNotImplemented': 'BulkExportNotImplemented',
 
-    'orders.bulkExportNotImplemented': 'BulkExportNotImplemented',
+  'orders.bulkEmailNotImplemented': 'BulkEmailNotImplemented',
 
-    'orders.bulkEmailNotImplemented': 'BulkEmailNotImplemented',
+  'orders.export.exportSuccess': 'ExportSuccess',
 
-    'orders.export.exportSuccess': 'ExportSuccess',
+  'orders.export.exportError': 'ExportError',
 
-    'orders.export.exportError': 'ExportError',
+  'productsPage.stockStatus.in_stock': 'In_stock',
 
-    'productsPage.stockStatus.in_stock': 'In_stock',
+  'productsPage.stockStatus.low_stock': 'Low_stock',
 
-    'productsPage.stockStatus.low_stock': 'Low_stock',
+  'productsPage.stockStatus.out_of_stock': 'Out_of_stock',
 
-    'productsPage.stockStatus.out_of_stock': 'Out_of_stock',
+  'productsPage.lifecycleStatus.active': 'Actief',
 
-    'productsPage.lifecycleStatus.active': 'Actief',
+  'productsPage.lifecycleStatus.discontinued': 'Discontinued',
 
-    'productsPage.lifecycleStatus.discontinued': 'Discontinued',
+  'productsPage.lifecycleStatus.new': 'New',
 
-    'productsPage.lifecycleStatus.new': 'New',
+  'productsPage.lifecycleStatus.phase_out': 'Phase_out',
 
-    'productsPage.lifecycleStatus.phase_out': 'Phase_out',
+  'productsPage.viewProduct': 'ViewProduct',
 
-    'productsPage.viewProduct': 'ViewProduct',
+  'productsPage.cartAddError': 'CartAddError',
 
-    'productsPage.cartAddError': 'CartAddError',
+  'productsPage.dataRefreshed': 'DataRefreshed',
 
-    'productsPage.dataRefreshed': 'DataRefreshed',
+  'productsPage.productLoadError': 'ProductLoadError',
 
-    'productsPage.productLoadError': 'ProductLoadError',
+  'products.deleteError': 'DeleteError',
 
-    'products.deleteError': 'DeleteError',
+  'products.deleteMessage': 'DeleteMessage',
 
-    'products.deleteMessage': 'DeleteMessage',
+  'settings.title': 'Titel',
 
-    'settings.title': 'Titel',
+  'settings.manageSettingsSubtitle': 'Titel',
 
-    'settings.manageSettingsSubtitle': 'Titel',
+  'settings.saveSettings': 'SaveSettings',
 
-    'settings.saveSettings': 'SaveSettings',
+  'settings.profile': 'Profile',
 
-    'settings.profile': 'Profile',
+  'settings.profileSubtitle': 'Titel',
 
-    'settings.profileSubtitle': 'Titel',
+  'settings.role': 'Role',
 
-    'settings.role': 'Role',
+  'settings.appearanceTitle': 'AppearanceTitle',
 
-    'settings.appearanceTitle': 'AppearanceTitle',
+  'settings.appearanceSubtitle': 'Titel',
 
-    'settings.appearanceSubtitle': 'Titel',
+  'settings.darkMode': 'DarkMode',
 
-    'settings.darkMode': 'DarkMode',
+  'settings.darkModeDescription': 'DarkModeDescription',
 
-    'settings.darkModeDescription': 'DarkModeDescription',
+  'settings.darkModeEnabled': 'DarkModeEnabled',
 
-    'settings.darkModeEnabled': 'DarkModeEnabled',
+  'settings.lightModeEnabled': 'LightModeEnabled',
 
-    'settings.lightModeEnabled': 'LightModeEnabled',
+  'settings.language': 'Language',
 
-    'settings.language': 'Language',
+  'settings.selectLanguage': 'SelectLanguage',
 
-    'settings.selectLanguage': 'SelectLanguage',
+  'settings.colorSchemeTitle': 'ColorSchemeTitle',
 
-    'settings.colorSchemeTitle': 'ColorSchemeTitle',
+  'settings.colorSchemeDescription': 'ColorSchemeDescription',
 
-    'settings.colorSchemeDescription': 'ColorSchemeDescription',
+  'settings.clinic': 'Clinic',
 
-    'settings.clinic': 'Clinic',
+  'settings.clinicInfoSubtitle': 'Titel',
 
-    'settings.clinicInfoSubtitle': 'Titel',
+  'settings.clinicName': 'ClinicName',
 
-    'settings.clinicName': 'ClinicName',
+  'settings.contactEmail': 'ContactEmail',
 
-    'settings.contactEmail': 'ContactEmail',
+  'settings.phoneNumber': 'PhoneNumber',
 
-    'settings.phoneNumber': 'PhoneNumber',
+  'settings.address': 'Adres',
 
-    'settings.address': 'Adres',
+  'settings.contactSettingsNotice': 'ContactSettingsNotice',
 
-    'settings.contactSettingsNotice': 'ContactSettingsNotice',
+  'settings.notifications': 'Notifications',
 
-    'settings.notifications': 'Notifications',
+  'settings.notificationSettingsSubtitle': 'Titel',
 
-    'settings.notificationSettingsSubtitle': 'Titel',
+  'settings.stockAlertsLabel': 'StockAlertsLabel',
 
-    'settings.stockAlertsLabel': 'StockAlertsLabel',
+  'settings.stockAlertsDescription': 'StockAlertsDescription',
 
-    'settings.stockAlertsDescription': 'StockAlertsDescription',
+  'settings.emailNotificationsLabel': 'EmailNotificationsLabel',
 
-    'settings.emailNotificationsLabel': 'EmailNotificationsLabel',
+  'settings.emailNotificationsDescription': 'EmailNotificationsDescription',
 
-    'settings.emailNotificationsDescription': 'EmailNotificationsDescription',
+  'settings.browserNotificationsLabel': 'BrowserNotificationsLabel',
 
-    'settings.browserNotificationsLabel': 'BrowserNotificationsLabel',
+  'settings.browserNotificationsDescription': 'BrowserNotificationsDescription',
 
-    'settings.browserNotificationsDescription': 'BrowserNotificationsDescription',
+  'settings.systemInfoTitle': 'SystemInfoTitle',
 
-    'settings.systemInfoTitle': 'SystemInfoTitle',
+  'settings.systemInfoSubtitle': 'Titel',
 
-    'settings.systemInfoSubtitle': 'Titel',
+  'settings.versionLabel': 'VersionLabel',
 
-    'settings.versionLabel': 'VersionLabel',
+  'settings.lastUpdateLabel': 'LastUpdateLabel',
 
-    'settings.lastUpdateLabel': 'LastUpdateLabel',
+  'settings.supportLabel': 'SupportLabel',
 
-    'settings.supportLabel': 'SupportLabel',
+  'settingspa.positive': 'Positive',
 
-    'settingspa.positive': 'Positive',
+  'settings.settingsSaved': 'SettingsSaved',
 
-    'settings.settingsSaved': 'SettingsSaved',
+  'settings.settingsSaveError': 'SettingsSaveError',
 
-    'settings.settingsSaveError': 'SettingsSaveError',
+  'settings.styleGuideTitle': 'StyleGuideTitle',
 
-    'settings.styleGuideTitle': 'StyleGuideTitle',
+  'settings.styleGuideSubtitle': 'Titel',
 
-    'settings.styleGuideSubtitle': 'Titel',
+  'settings.colorsSection': 'ColorsSection',
 
-    'settings.colorsSection': 'ColorsSection',
+  'settings.primaryColors': 'PrimaryColors',
 
-    'settings.primaryColors': 'PrimaryColors',
+  'settings.neutralColors': 'NeutralColors',
 
-    'settings.neutralColors': 'NeutralColors',
+  'settings.typographySection': 'TypographySection',
 
-    'settings.typographySection': 'TypographySection',
+  'settings.buttonsSection': 'Knop',
 
-    'settings.buttonsSection': 'Knop',
+  'settings.solidButtons': 'Knop',
 
-    'settings.solidButtons': 'Knop',
+  'settings.primaryButton': 'Knop',
 
-    'settings.primaryButton': 'Knop',
+  'settings.secondaryButton': 'Knop',
 
-    'settings.secondaryButton': 'Knop',
+  'settings.successButton': 'Knop',
 
-    'settings.successButton': 'Knop',
+  'settings.warningButton': 'Knop',
 
-    'settings.warningButton': 'Knop',
+  'settings.dangerButton': 'Knop',
 
-    'settings.dangerButton': 'Knop',
+  'settings.infoButton': 'Knop',
 
-    'settings.infoButton': 'Knop',
+  'settings.outlinedButtons': 'Knop',
 
-    'settings.outlinedButtons': 'Knop',
+  'settings.flatButtons': 'Knop',
 
-    'settings.flatButtons': 'Knop',
+  'settings.iconButtons': 'Knop',
 
-    'settings.iconButtons': 'Knop',
+  'settings.addProductButton': 'Knop',
 
-    'settings.addProductButton': 'Knop',
+  'settings.editButton': 'Knop',
 
-    'settings.editButton': 'Knop',
+  'settings.deleteButton': 'Knop',
 
-    'settings.deleteButton': 'Knop',
+  'settings.saveButton': 'Knop',
 
-    'settings.saveButton': 'Knop',
+  'settings.downloadButton': 'Knop',
 
-    'settings.downloadButton': 'Knop',
+  'settings.cardsSection': 'CardsSection',
 
-    'settings.cardsSection': 'CardsSection',
+  'settings.cards.defaultCard.title': 'Titel',
 
-    'settings.cards.defaultCard.title': 'Titel',
+  'settings.cards.defaultCard.subtitle': 'Ondertitel',
 
-    'settings.cards.defaultCard.subtitle': 'Ondertitel',
+  'settings.cards.defaultCard.description': 'Beschrijving',
 
-    'settings.cards.defaultCard.description': 'Beschrijving',
+  'settings.cards.defaultCard.action': 'Action',
 
-    'settings.cards.defaultCard.action': 'Action',
+  'settings.cards.modernCard.title': 'Titel',
 
-    'settings.cards.modernCard.title': 'Titel',
+  'settings.cards.modernCard.subtitle': 'Ondertitel',
 
-    'settings.cards.modernCard.subtitle': 'Ondertitel',
+  'settings.cards.modernCard.description': 'Beschrijving',
 
-    'settings.cards.modernCard.description': 'Beschrijving',
+  'settings.cards.modernCard.action': 'Action',
 
-    'settings.cards.modernCard.action': 'Action',
+  'settings.cards.elevatedCard.title': 'Titel',
 
-    'settings.cards.elevatedCard.title': 'Titel',
+  'settings.cards.elevatedCard.subtitle': 'Ondertitel',
 
-    'settings.cards.elevatedCard.subtitle': 'Ondertitel',
+  'settings.cards.elevatedCard.description': 'Beschrijving',
 
-    'settings.cards.elevatedCard.description': 'Beschrijving',
+  'settings.cards.elevatedCard.action': 'Action',
 
-    'settings.cards.elevatedCard.action': 'Action',
+  'settings.cards.glassCard.title': 'Titel',
 
-    'settings.cards.glassCard.title': 'Titel',
+  'settings.cards.glassCard.subtitle': 'Ondertitel',
 
-    'settings.cards.glassCard.subtitle': 'Ondertitel',
+  'settings.cards.glassCard.description': 'Beschrijving',
 
-    'settings.cards.glassCard.description': 'Beschrijving',
+  'settings.cards.glassCard.action': 'Action',
 
-    'settings.cards.glassCard.action': 'Action',
+  'settings.cards.outlinedCard.title': 'Titel',
 
-    'settings.cards.outlinedCard.title': 'Titel',
+  'settings.cards.outlinedCard.subtitle': 'Ondertitel',
 
-    'settings.cards.outlinedCard.subtitle': 'Ondertitel',
+  'settings.cards.outlinedCard.description': 'Beschrijving',
 
-    'settings.cards.outlinedCard.description': 'Beschrijving',
+  'settings.cards.outlinedCard.action': 'Action',
 
-    'settings.cards.outlinedCard.action': 'Action',
+  'settings.cards.warningCard.title': 'Titel',
 
-    'settings.cards.warningCard.title': 'Titel',
+  'settings.cards.warningCard.subtitle': 'Ondertitel',
 
-    'settings.cards.warningCard.subtitle': 'Ondertitel',
+  'settings.cards.warningCard.description': 'Beschrijving',
 
-    'settings.cards.warningCard.description': 'Beschrijving',
+  'settings.cards.warningCard.action': 'Action',
 
-    'settings.cards.warningCard.action': 'Action',
+  'settings.shadowsSection': 'ShadowsSection',
 
-    'settings.shadowsSection': 'ShadowsSection',
+  'settings.iconsSection': 'IconsSection',
 
-    'settings.iconsSection': 'IconsSection',
+  'suppliersPage.title': 'Titel',
 
-    'suppliersPage.title': 'Titel',
+  'suppliersPage.subtitle': 'Ondertitel',
 
-    'suppliersPage.subtitle': 'Ondertitel',
+  'suppliersPage.importSuppliers': 'ImportSuppliers',
 
-    'suppliersPage.importSuppliers': 'ImportSuppliers',
+  'suppliersPage.addSupplier': 'AddSupplier',
 
-    'suppliersPage.addSupplier': 'AddSupplier',
+  'suppliersPage.active': 'Actief',
 
-    'suppliersPage.active': 'Actief',
+  'suppliersPage.inactive': 'Inactief',
 
-    'suppliersPage.inactive': 'Inactief',
+  'suppliersPage.notLinked': 'NotLinked',
 
-    'suppliersPage.notLinked': 'NotLinked',
+  'suppliersPage.autoSyncOn': 'AutoSyncOn',
 
-    'suppliersPage.autoSyncOn': 'AutoSyncOn',
+  'suppliersPage.autoSyncOff': 'AutoSyncOff',
 
-    'suppliersPage.autoSyncOff': 'AutoSyncOff',
+  'suppliersPage.neverSynced': 'NeverSynced',
 
-    'suppliersPage.neverSynced': 'NeverSynced',
+  'suppliersPage.configureIntegration': 'ConfigureIntegration',
 
-    'suppliersPage.configureIntegration': 'ConfigureIntegration',
+  'suppliersPage.syncProducts': 'SyncProducts',
 
-    'suppliersPage.syncProducts': 'SyncProducts',
+  'suppliersPage.editSupplier': 'EditSupplier',
 
-    'suppliersPage.editSupplier': 'EditSupplier',
+  'suppliersPage.deleteSupplier': 'DeleteSupplier',
 
-    'suppliersPage.deleteSupplier': 'DeleteSupplier',
+  'suppliersPage.supplierName': 'SupplierName',
 
-    'suppliersPage.supplierName': 'SupplierName',
+  'suppliersPage.contactEmail': 'ContactEmail',
 
-    'suppliersPage.contactEmail': 'ContactEmail',
+  'suppliersPage.contactPhone': 'ContactPhone',
 
-    'suppliersPage.contactPhone': 'ContactPhone',
+  'suppliersPage.website': 'Website',
 
-    'suppliersPage.website': 'Website',
+  'suppliersPage.address': 'Adres',
 
-    'suppliersPage.address': 'Adres',
+  'suppliersPage.city': 'Stad',
 
-    'suppliersPage.city': 'Stad',
+  'suppliersPage.postalCode': 'PostalCode',
 
-    'suppliersPage.postalCode': 'PostalCode',
+  'suppliersPage.country': 'Land',
 
-    'suppliersPage.country': 'Land',
+  'suppliersPage.magentoVendorId': 'MagentoVendorId',
 
-    'suppliersPage.magentoVendorId': 'MagentoVendorId',
+  'suppliersPage.notes': 'Notities',
 
-    'suppliersPage.notes': 'Notities',
+  'suppliersPage.integrationSettings': 'IntegrationSettings',
 
-    'suppliersPage.integrationSettings': 'IntegrationSettings',
+  'suppliersPage.integrationType': 'IntegrationType',
 
-    'suppliersPage.integrationType': 'IntegrationType',
+  'suppliersPage.orderMethod': 'OrderMethod',
 
-    'suppliersPage.orderMethod': 'OrderMethod',
+  'suppliersPage.autoSyncEnabled': 'AutoSyncEnabled',
 
-    'suppliersPage.autoSyncEnabled': 'AutoSyncEnabled',
+  'suppliersPage.orderEmail': 'OrderEmail',
 
-    'suppliersPage.orderEmail': 'OrderEmail',
+  'suppliersPage.apiEndpoint': 'ApiEndpoint',
 
-    'suppliersPage.apiEndpoint': 'ApiEndpoint',
+  'suppliersPage.apiKey': 'ApiKey',
 
-    'suppliersPage.apiKey': 'ApiKey',
+  'suppliersPage.ediEndpoint': 'EdiEndpoint',
 
-    'suppliersPage.ediEndpoint': 'EdiEndpoint',
+  'suppliersPage.ediPartnerId': 'EdiPartnerId',
 
-    'suppliersPage.ediPartnerId': 'EdiPartnerId',
+  'suppliersPage.activeSupplier': 'ActiveSupplier',
 
-    'suppliersPage.activeSupplier': 'ActiveSupplier',
+  'suppliersPage.manualIntegrationInfo': 'ManualIntegrationInfo',
 
-    'suppliersPage.manualIntegrationInfo': 'ManualIntegrationInfo',
+  'actionqueu.actionfailedafterthismaxretri': 'Actionfailedafterthismaxretri',
 
-    'actionqueu.actionfailedafterthismaxretri': 'Actionfailedafterthismaxretri',
+  'actionqueu.noexecutorregisteredfor': 'Noexecutorregisteredfor',
 
-    'actionqueu.noexecutorregisteredfor': 'Noexecutorregisteredfor',
+  'admin.insufficientpermissionstobulk': 'Insufficientpermissionstobulk',
 
-    'admin.insufficientpermissionstobulk': 'Insufficientpermissionstobulk',
+  'admin.insufficientpermissionstoview': 'Insufficientpermissionstoview',
 
-    'admin.insufficientpermissionstoview': 'Insufficientpermissionstoview',
+  'admin.nopracticeselected': 'Nopracticeselected',
 
-    'admin.nopracticeselected': 'Nopracticeselected',
+  'analytics.clinicidisrequired': 'Clinicidisrequired',
 
-    'analytics.clinicidisrequired': 'Clinicidisrequired',
+  'analytics.nopracticeidavailable': 'Nopracticeidavailable',
 
-    'analytics.nopracticeidavailable': 'Nopracticeidavailable',
+  'camerascan.cameradevicenotfound': 'Cameradevicenotfound',
 
-    'camerascan.cameradevicenotfound': 'Cameradevicenotfound',
+  'camerascan.cameranotstarted': 'Cameranotstarted',
 
-    'camerascan.cameranotstarted': 'Cameranotstarted',
+  'camerascan.torchnotsupportedon': 'Torchnotsupportedon',
 
-    'camerascan.torchnotsupportedon': 'Torchnotsupportedon',
+  'camerascan.unabletoaccesscamera': 'Unabletoaccesscamera',
 
-    'camerascan.unabletoaccesscamera': 'Unabletoaccesscamera',
+  'camerascan.unabletostartcamera': 'Unabletostartcamera',
 
-    'camerascan.unabletostartcamera': 'Unabletostartcamera',
+  'counting.noactivecountingsession': 'Noactivecountingsession',
 
-    'counting.noactivecountingsession': 'Noactivecountingsession',
+  'counting.sessionnotfound': 'Sessionnotfound',
 
-    'counting.sessionnotfound': 'Sessionnotfound',
+  'dashboard.widgetcreationreturnednull': 'Widgetcreationreturnednull',
 
-    'dashboard.widgetcreationreturnednull': 'Widgetcreationreturnednull',
+  'datasync.syncalreadyinprogress': 'Syncalreadyinprogress',
 
-    'datasync.syncalreadyinprogress': 'Syncalreadyinprogress',
+  'index.cannotaddofflineaction': 'Cannotaddofflineaction',
 
-    'index.cannotaddofflineaction': 'Cannotaddofflineaction',
+  'index.cannotdownloaddatadevice': 'Cannotdownloaddatadevice',
 
-    'index.cannotdownloaddatadevice': 'Cannotdownloaddatadevice',
+  'index.cannotsyncdeviceis': 'Cannotsyncdeviceis',
 
-    'index.cannotsyncdeviceis': 'Cannotsyncdeviceis',
+  'index.httpresponsestatusresponsestatuste':
+    'Httpresponsestatusresponsestatuste',
 
-    'index.httpresponsestatusresponsestatuste': 'Httpresponsestatusresponsestatuste',
+  'index.magentoapiconfigurationis': 'Magentoapiconfigurationis',
 
-    'index.magentoapiconfigurationis': 'Magentoapiconfigurationis',
+  'index.nopracticeidavailable': 'Nopracticeidavailable',
 
-    'index.nopracticeidavailable': 'Nopracticeidavailable',
+  'index.nopracticeselectedfor': 'Nopracticeselectedfor',
 
-    'index.nopracticeselectedfor': 'Nopracticeselectedfor',
+  'index.requesttimeout': 'Requesttimeout',
 
-    'index.requesttimeout': 'Requesttimeout',
+  'orders.status.draft': 'Concept',
 
-    'orders.status.draft': 'Concept',
+  'orders.status.pending': 'In behandeling',
 
-    'orders.status.pending': 'In behandeling',
+  'orders.status.confirmed': 'Bevestigd',
 
-    'orders.status.confirmed': 'Bevestigd',
+  'orders.status.shipped': 'Verzonden',
 
-    'orders.status.shipped': 'Verzonden',
+  'orders.status.delivered': 'Geleverd',
 
-    'orders.status.delivered': 'Geleverd',
+  'orders.status.cancelled': 'Geannuleerd',
 
-    'orders.status.cancelled': 'Geannuleerd',
+  'orders.status.returned': 'Geretourneerd',
 
-    'orders.status.returned': 'Geretourneerd',
+  'orders.table.orderNumber': 'Bestelnummer',
 
-    'orders.table.orderNumber': 'Bestelnummer',
+  'orders.table.supplier': 'Leverancier',
 
-    'orders.table.supplier': 'Leverancier',
+  'orders.table.orderDate': 'Besteldatum',
 
-    'orders.table.orderDate': 'Besteldatum',
+  'orders.table.status': 'Status',
 
-    'orders.table.status': 'Status',
+  'orders.table.totalAmount': 'Totaalbedrag',
 
-    'orders.table.totalAmount': 'Totaalbedrag',
+  'orders.table.expectedDelivery': 'Verwachte levering',
 
-    'orders.table.expectedDelivery': 'Verwachte levering',
-
-    'orders.table.actions': 'Acties',
+  'orders.table.actions': 'Acties',
 
   // Mobile counting interface
   mobileCountInterface: {
     cameraAccessFailed: 'Camera toegang mislukt',
     checkCameraPermissions: 'Controleer camera permissies',
-    productNotFound: 'Product niet gevonden'
-  }
-
+    productNotFound: 'Product niet gevonden',
+  },
 };

@@ -19,16 +19,22 @@ const ADMIN_ERRORS = {
   PRACTICE_OR_USER_NOT_FOUND: 'admin.errors.practiceOrUserNotFound',
   USER_NOT_FOUND_IN_PRACTICE: 'admin.errors.userNotFoundInPractice',
   USER_EMAIL_NOT_FOUND: 'admin.errors.userEmailNotFound',
-  CANNOT_DEACTIVATE_PRACTICE_OWNER: 'admin.errors.cannotDeactivatePracticeOwner',
+  CANNOT_DEACTIVATE_PRACTICE_OWNER:
+    'admin.errors.cannotDeactivatePracticeOwner',
   CANNOT_DELETE_MAIN_LOCATION: 'admin.errors.cannotDeleteMainLocation',
-  INSUFFICIENT_PERMISSIONS_CREATE: 'admin.errors.insufficientPermissionsToCreate',
-  INSUFFICIENT_PERMISSIONS_UPDATE: 'admin.errors.insufficientPermissionsToUpdate',
-  INSUFFICIENT_PERMISSIONS_DELETE: 'admin.errors.insufficientPermissionsToDelete',
+  INSUFFICIENT_PERMISSIONS_CREATE:
+    'admin.errors.insufficientPermissionsToCreate',
+  INSUFFICIENT_PERMISSIONS_UPDATE:
+    'admin.errors.insufficientPermissionsToUpdate',
+  INSUFFICIENT_PERMISSIONS_DELETE:
+    'admin.errors.insufficientPermissionsToDelete',
   INSUFFICIENT_PERMISSIONS_VIEW: 'admin.errors.insufficientPermissionsToView',
   INSUFFICIENT_PERMISSIONS_GRANT: 'admin.errors.insufficientPermissionsToGrant',
-  INSUFFICIENT_PERMISSIONS_REVOKE: 'admin.errors.insufficientPermissionsToRevoke',
+  INSUFFICIENT_PERMISSIONS_REVOKE:
+    'admin.errors.insufficientPermissionsToRevoke',
   INSUFFICIENT_PERMISSIONS_RESET: 'admin.errors.insufficientPermissionsToReset',
-  INSUFFICIENT_PERMISSIONS_TOGGLE: 'admin.errors.insufficientPermissionsToToggle',
+  INSUFFICIENT_PERMISSIONS_TOGGLE:
+    'admin.errors.insufficientPermissionsToToggle',
   FAILED_TO_CREATE: 'admin.errors.failedToCreate',
   FAILED_TO_UPDATE: 'admin.errors.failedToUpdate',
   FAILED_TO_DELETE: 'admin.errors.failedToDelete',
@@ -418,11 +424,11 @@ export class AdminService {
       const result: PermissionCheck = {
         hasPermission: true,
       };
-      
+
       if (validPermission.expires_at) {
         result.expires_at = new Date(validPermission.expires_at);
       }
-      
+
       return result;
     }
 
@@ -508,7 +514,9 @@ export class AdminService {
     const practiceId = authStore.selectedPractice?.id;
     const userId = authStore.user?.id;
 
-    if (!practiceId) { return; }
+    if (!practiceId) {
+      return;
+    }
 
     try {
       await analyticsService.trackEvent('admin_activity', {
@@ -714,16 +722,20 @@ export class AdminService {
     }
 
     // Get user email from auth.users
-    const { data: userData, error: userError } = await supabase.auth.admin.getUserById(userId);
+    const { data: userData, error: userError } =
+      await supabase.auth.admin.getUserById(userId);
 
     if (userError || !userData?.user?.email) {
       throw new Error(ADMIN_ERRORS.USER_EMAIL_NOT_FOUND);
     }
 
     // Use Supabase Auth API to reset password
-    const { error } = await supabase.auth.resetPasswordForEmail(userData.user.email, {
-      redirectTo: `${window.location.origin}/auth/reset-password`,
-    });
+    const { error } = await supabase.auth.resetPasswordForEmail(
+      userData.user.email,
+      {
+        redirectTo: `${window.location.origin}/auth/reset-password`,
+      }
+    );
 
     if (error) {
       throw new Error(ADMIN_ERRORS.FAILED_TO_SEND);
@@ -819,9 +831,7 @@ export class AdminService {
   ): Promise<void> {
     // Check admin permissions
     if (!(await this.hasPermission('admin', 'practice'))) {
-      throw new Error(
-        $t('admin.insufficientpermissionstobulk')
-      );
+      throw new Error($t('admin.insufficientpermissionstobulk'));
     }
 
     for (const update of userUpdates) {

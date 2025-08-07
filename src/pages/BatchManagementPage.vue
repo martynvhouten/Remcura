@@ -17,7 +17,7 @@
             size="sm"
             class="view-mode-toggle"
           />
-          
+
           <q-btn
             flat
             round
@@ -92,7 +92,9 @@
             icon-color="primary"
           >
             <div class="stat-display">
-              <div class="stat-value">{{ formatCurrency(totalValue, 'EUR') }}</div>
+              <div class="stat-value">
+                {{ formatCurrency(totalValue, 'EUR') }}
+              </div>
             </div>
           </BaseCard>
         </div>
@@ -133,7 +135,7 @@
           <q-icon name="flash_on" class="q-mr-sm" />
           {{ $t('batch.quickActions') }}
         </div>
-        
+
         <div class="row q-gutter-md">
           <!-- Scan Batch Action -->
           <div class="col-12 col-sm-6 col-md-3">
@@ -143,7 +145,6 @@
               icon="qr_code_scanner"
               icon-color="primary"
               @click="openBarcodeScanner"
-
             />
           </div>
 
@@ -151,7 +152,9 @@
           <div class="col-12 col-sm-6 col-md-3">
             <InteractiveCard
               :title="$t('batch.viewExpiring')"
-              :subtitle="`${expiringBatches} ${$t('batch.viewExpiringSubtitle')}`"
+              :subtitle="`${expiringBatches} ${$t(
+                'batch.viewExpiringSubtitle'
+              )}`"
               icon="warning"
               icon-color="warning"
               @click="filterExpiring"
@@ -167,11 +170,8 @@
               icon="download"
               icon-color="positive"
               @click="exportBatches"
-
             />
           </div>
-
-
         </div>
       </div>
 
@@ -318,7 +318,9 @@
 
           <!-- Expiring Tab - Lite -->
           <q-tab-panel name="expiring" class="q-pa-md">
-            <div class="text-subtitle1 q-mb-md">{{ $t('batch.expiringBatches') }}</div>
+            <div class="text-subtitle1 q-mb-md">
+              {{ $t('batch.expiringBatches') }}
+            </div>
             <ExpiringBatchesList
               :batches="batchStore.expiringBatches"
               :view-mode="viewMode"
@@ -357,7 +359,7 @@
         </div>
         <div class="detail-row">
           <span class="label">{{ $t('batch.status') }}:</span>
-          <q-chip 
+          <q-chip
             :color="getStatusColor(selectedBatch.status)"
             text-color="white"
             size="sm"
@@ -366,13 +368,13 @@
           </q-chip>
         </div>
       </div>
-      
+
       <template #actions>
-        <q-btn 
-          flat 
-          :label="$t('common.close')" 
+        <q-btn
+          flat
+          :label="$t('common.close')"
           color="primary"
-          @click="showBatchDetailDialog = false" 
+          @click="showBatchDetailDialog = false"
         />
       </template>
     </BaseDialog>
@@ -385,7 +387,14 @@
 </template>
 
 <script setup lang="ts">
-  import { ref, computed, onMounted, getCurrentInstance, defineAsyncComponent, watch } from 'vue';
+  import {
+    ref,
+    computed,
+    onMounted,
+    getCurrentInstance,
+    defineAsyncComponent,
+    watch,
+  } from 'vue';
   import { useI18n } from 'vue-i18n';
   import { useQuasar } from 'quasar';
   import { useBatchStore } from 'src/stores/batch';
@@ -397,13 +406,23 @@
   import { BaseCard, InteractiveCard } from 'src/components/cards';
   import BaseDialog from 'src/components/base/BaseDialog.vue';
   // ✅ PERFORMANCE OPTIMIZATION: Dynamic imports for heavy components
-  
+
   import BatchOverview from 'src/components/BatchOverview.vue';
-  const BatchRegistrationForm = defineAsyncComponent(() => import('src/components/BatchRegistrationForm.vue'));
-  const BarcodeScanner = defineAsyncComponent(() => import('src/components/BarcodeScanner.vue'));
-  const ExpiringBatchesList = defineAsyncComponent(() => import('src/components/ExpiringBatchesList.vue'));
-  const FifoBatchManager = defineAsyncComponent(() => import('src/components/FifoBatchManager.vue'));
-  const BatchReports = defineAsyncComponent(() => import('src/components/BatchReports.vue'));
+  const BatchRegistrationForm = defineAsyncComponent(
+    () => import('src/components/BatchRegistrationForm.vue')
+  );
+  const BarcodeScanner = defineAsyncComponent(
+    () => import('src/components/BarcodeScanner.vue')
+  );
+  const ExpiringBatchesList = defineAsyncComponent(
+    () => import('src/components/ExpiringBatchesList.vue')
+  );
+  const FifoBatchManager = defineAsyncComponent(
+    () => import('src/components/FifoBatchManager.vue')
+  );
+  const BatchReports = defineAsyncComponent(
+    () => import('src/components/BatchReports.vue')
+  );
   import type { ProductBatchWithDetails } from 'src/types/inventory';
   import { useFormatting } from 'src/composables/useFormatting';
 
@@ -436,12 +455,12 @@
   const selectedBatch = ref<ProductBatchWithDetails | null>(null);
   const refreshing = ref(false);
   const batchOverviewRef = ref();
-  
+
   // View mode state
   const viewMode = ref<'lite' | 'full'>('full');
   const viewModeOptions = computed(() => [
     { label: t('batch.viewMode.lite'), value: 'lite', icon: 'view_compact' },
-    { label: t('batch.viewMode.full'), value: 'full', icon: 'view_module' }
+    { label: t('batch.viewMode.full'), value: 'full', icon: 'view_module' },
   ]);
 
   // Computed
@@ -494,7 +513,7 @@
     // Default based on user role or practice settings
     // For now, default to 'full' - can be enhanced with role-based logic
     viewMode.value = 'full';
-    
+
     // Save the initial preference
     localStorage.setItem('remcura_batch_view_mode', viewMode.value);
   };
@@ -502,9 +521,12 @@
   const onViewModeChange = () => {
     // Save preference when changed
     localStorage.setItem('remcura_batch_view_mode', viewMode.value);
-    
+
     // Reset active tab for lite view if on advanced tabs
-    if (viewMode.value === 'lite' && ['fifo', 'reports'].includes(activeTab.value)) {
+    if (
+      viewMode.value === 'lite' &&
+      ['fifo', 'reports'].includes(activeTab.value)
+    ) {
       activeTab.value = 'overview';
     }
   };
@@ -513,7 +535,9 @@
     try {
       refreshing.value = true;
       const practiceId = authStore.clinicId;
-      if (!practiceId) { return; }
+      if (!practiceId) {
+        return;
+      }
 
       await Promise.all([
         batchStore.fetchBatches(practiceId),
@@ -571,7 +595,9 @@
   };
 
   const convertToCSV = (data: any[]) => {
-    if (!data.length) { return ''; }
+    if (!data.length) {
+      return '';
+    }
 
     const headers = Object.keys(data[0]);
     const csvHeaders = headers.join(',');
@@ -675,8 +701,6 @@
     height: 100%;
   }
 
-
-
   @media (max-width: 768px) {
     .batch-management-page {
       padding: 8px;
@@ -714,7 +738,7 @@
   .lite-actions {
     .lite-action-btn {
       min-width: 140px;
-      
+
       @media (max-width: 640px) {
         min-width: 120px;
         font-size: 0.875rem;
@@ -732,7 +756,7 @@
 
   .view-mode-toggle {
     margin-right: 8px;
-    
+
     @media (max-width: 768px) {
       margin-right: 0;
       margin-bottom: 8px;
@@ -745,45 +769,45 @@
     background: linear-gradient(135deg, #fff3e0 0%, #ffebcc 100%);
 
     .body--dark & {
-          background: linear-gradient(135deg, #2d1b0e 0%, #3d2914 100%);
-    border-color: #ff9800;
+      background: linear-gradient(135deg, #2d1b0e 0%, #3d2914 100%);
+      border-color: #ff9800;
     }
   }
 
   /* New stat display styles for replaced stats cards */
   .stat-display {
-  text-align: center;
-  padding: var(--space-4);
-  
-  .stat-value {
-    font-size: 28px;
-    font-weight: 700;
-    color: var(--text-primary);
-    line-height: 1.2;
-    margin-bottom: 4px;
-  }
-}
+    text-align: center;
+    padding: var(--space-4);
 
-.batch-details {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-
-  .detail-row {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 8px 0;
-    border-bottom: 1px solid var(--card-border, rgba(0, 0, 0, 0.08));
-
-    &:last-child {
-      border-bottom: none;
-    }
-
-    .label {
-      font-weight: 600;
+    .stat-value {
+      font-size: 28px;
+      font-weight: 700;
       color: var(--text-primary);
+      line-height: 1.2;
+      margin-bottom: 4px;
     }
   }
-}
+
+  .batch-details {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+
+    .detail-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 8px 0;
+      border-bottom: 1px solid var(--card-border, rgba(0, 0, 0, 0.08));
+
+      &:last-child {
+        border-bottom: none;
+      }
+
+      .label {
+        font-weight: 600;
+        color: var(--text-primary);
+      }
+    }
+  }
 </style>

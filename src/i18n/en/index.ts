@@ -87,7 +87,7 @@ export default {
     submit: 'Submit',
     fromDate: 'From date',
     toDate: 'To date',
-    
+
     // Accessibility labels
     accessibility: {
       mainNavigation: 'Main navigation',
@@ -139,13 +139,16 @@ export default {
     shoppingCart: 'Shopping cart',
     styleGuide: 'Style guide',
     designSystem: 'Design system reference',
-    
+
     // Platform navigation
     platformDashboard: 'Platform Dashboard',
     practiceManagement: 'Practice Management',
     systemMonitoring: 'System Monitoring',
     databaseAdmin: 'Database Admin',
-    
+    systemLogs: 'System Logs',
+    apiDocumentation: 'API Documentation',
+    backupRestore: 'Backup & Restore',
+
     sections: {
       main: 'Overview',
       inventory: 'Inventory Management',
@@ -154,7 +157,7 @@ export default {
       administration: 'Administration',
       platform: 'Platform',
     },
-    
+
     inventoryLevels: 'Inventory levels',
     currentStock: 'Current stock overview',
     locations: 'Locations',
@@ -181,7 +184,21 @@ export default {
     logoutSuccess: 'Logout successful',
     pleaseLogin: 'Please log in to continue',
     demoAccount: 'Demo account',
+    manualLogin: 'Manual login',
+    demoLoginSuccess: 'Demo account successfully logged in',
+    ownerLoginSuccess: 'Platform owner successfully logged in',
+    demoLogin: 'Demo login',
+    ownerLogin: 'Owner login',
     or: 'or',
+
+    quickLogin: {
+      title: 'Choose your login type',
+      subtitle: 'Select the right option for your role',
+      demo: 'Login as demo',
+      owner: 'Login as owner',
+      demoTooltip: 'Access to practice dashboards and demo features',
+      ownerTooltip: 'Full access to platform and system management',
+    },
     secureConnection: 'Secure connection',
     fullName: 'Full Name',
     role: 'Role',
@@ -190,7 +207,8 @@ export default {
     support: 'Support',
     allRightsReserved: 'All rights reserved',
     professionalInventory: 'Professional medical inventory management',
-    platformDescription: 'Streamline your medical inventory management with our enterprise-grade platform. Track stock, manage orders, and ensure compliance with ease.',
+    platformDescription:
+      'Streamline your medical inventory management with our enterprise-grade platform. Track stock, manage orders, and ensure compliance with ease.',
     realtimeTracking: 'Real-time inventory tracking',
     automatedAlerts: 'Automated reorder alerts',
     complianceReporting: 'Compliance reporting',
@@ -212,12 +230,15 @@ export default {
     resetDataSuccess: 'Demo data reset successfully',
     resetDataError: 'Error resetting demo data',
     limitations: 'Demo limitations',
-    limitationsText: 'This is a demo account. All changes are visible but can be reset.',
+    limitationsText:
+      'This is a demo account. All changes are visible but can be reset.',
     practice: 'Remka demo clinic',
-    practiceDescription: 'Fully functional demo environment with realistic data',
+    practiceDescription:
+      'Fully functional demo environment with realistic data',
     resetInfo: 'This will delete all demo data and create fresh data',
     onlyDemoUserCanReset: 'Only demo user can reset demo data',
-    changesCanBeReset: 'All changes are saved but can be reset via the Admin page.',
+    changesCanBeReset:
+      'All changes are saved but can be reset via the Admin page.',
     resetInProgress: 'Resetting demo data...',
     reloadingAfterReset: 'Reloading page with fresh data...',
   },
@@ -253,7 +274,8 @@ export default {
     viewAnalytics: 'View analytics',
     welcomeTitle: 'Welcome to Remcura',
     welcomeSubtitle: 'Your professional medical inventory management system',
-    welcomeDescription: 'Manage your inventory efficiently with our advanced tools and real-time tracking.',
+    welcomeDescription:
+      'Manage your inventory efficiently with our advanced tools and real-time tracking.',
     systemStatus: 'System status',
     systemStatusSubtitle: 'Current status of your system',
     systemOnline: 'System online',
@@ -287,7 +309,7 @@ export default {
     // Role titles
     titles: {
       assistant: 'Assistant dashboard',
-      manager: 'Manager dashboard', 
+      manager: 'Manager dashboard',
       owner: 'Owner dashboard',
       default: 'Dashboard',
     },
@@ -311,6 +333,15 @@ export default {
       tryRefresh: 'Try refreshing the page',
       switchFailed: 'Failed to switch role',
       tryAgain: 'Please try again',
+      practiceIdMissing: 'Practice ID missing',
+    },
+
+    // Platform Owner messages
+    platformOwner: {
+      title: 'Platform owner dashboard',
+      description:
+        'As a platform owner, you have access to the special platform dashboard with system management functions.',
+      goToPlatform: 'Go to platform dashboard',
     },
 
     // Roles
@@ -318,6 +349,69 @@ export default {
       assistant: '🩺 Assistant - Inventory & orders',
       manager: '📊 Manager - Analytics & overviews',
       owner: '👑 Owner - Full control',
+      logistics: '🚚 Logistics - Transport & movements',
+      member: '👤 Member - Basic access',
+      guest: '👁️ Guest - View only',
+      platformOwner: '⚙️ Platform owner - System management',
+      assistantDescription: 'Focus on daily inventory tasks and orders',
+      managerDescription: 'Overview of performance and analytics',
+      ownerDescription: 'Full control and financial overviews',
+      logisticsDescription: 'Transport, deliveries and stock movements',
+      memberDescription: 'Basic access to inventory information',
+      guestDescription: 'View only access to public information',
+      platformOwnerDescription:
+        'Complete platform management and configuration',
+    },
+
+    widgets: {
+      // Existing widgets
+      lowStockAlerts: 'Low stock alerts',
+      expiringProducts: 'Expiring products',
+      orderSuggestions: 'Order suggestions',
+      activeOrderLists: 'Active order lists',
+      pendingDeliveries: 'Pending deliveries',
+      stockTrends: 'Stock trends',
+      supplierPerformance: 'Supplier performance',
+      costAnalysis: 'Cost analysis',
+      errorAlerts: 'Error alerts',
+      pendingOrders: 'Pending orders',
+      inventoryValue: 'Inventory value',
+      batchCompliance: 'Batch compliance',
+      supplierContracts: 'Supplier contracts',
+      stockRotation: 'Stock rotation',
+      auditNotifications: 'Audit notifications',
+
+      // New widgets for logistics role
+      stockMovements: 'Stock movements',
+      locationOverview: 'Location overview',
+      transportStatus: 'Transport status',
+
+      // New widgets for member role
+      stockOverview: 'Stock overview',
+      myTasks: 'My tasks',
+
+      // New widgets for guest role
+      publicInfo: 'Public information',
+
+      // New widgets for platform owner role
+      systemOverview: 'System overview',
+      userAnalytics: 'User analytics',
+      platformHealth: 'Platform health',
+      subscriptionStatus: 'Subscription status',
+
+      // Error fallback
+      error: 'Widget error',
+    },
+
+    alerts: {
+      noWarnings: 'No warnings',
+      allStockLevelsOk: 'All stock levels are good',
+      lowStockMessage: 'There are items with low stock',
+      viewStock: 'View stock',
+      failedOrdersMessage: 'There are failed orders',
+      viewOrders: 'View orders',
+      expiredBatchesMessage: 'There are expired batches',
+      viewBatches: 'View batches',
     },
 
     // Service layer translations
@@ -332,7 +426,8 @@ export default {
         orderSuggestions: 'Order suggestions',
         recentOrders: 'Recent orders',
         quickScan: 'Quick scan',
-        quickScanDescription: 'Scan a product barcode for quick inventory updates',
+        quickScanDescription:
+          'Scan a product barcode for quick inventory updates',
         analyticsOverview: 'Analytics overview',
         businessOverview: 'Business overview',
         financialSummary: 'Financial overview',
@@ -390,7 +485,8 @@ export default {
   // Error pages
   error: {
     pageNotFound: 'Page not found',
-    pageNotFoundDescription: "Sorry, the page you're looking for can't be found. It may have been moved, deleted, or you entered a wrong URL.",
+    pageNotFoundDescription:
+      "Sorry, the page you're looking for can't be found. It may have been moved, deleted, or you entered a wrong URL.",
     goHome: 'Go home',
     goBack: 'Go back',
     tryThesePages: 'Try visiting one of these popular pages instead:',
@@ -580,9 +676,10 @@ export default {
     viewHistory: 'View history',
     overStockItems: 'Overstocked items',
     batchTrackingWarning: 'This product requires batch tracking',
-    cannotAdjustBatchTrackedProduct: 'Cannot manually adjust batch-tracked product',
+    cannotAdjustBatchTrackedProduct:
+      'Cannot manually adjust batch-tracked product',
     redirectingToBatchManagement: 'Redirecting to batch management',
-    
+
     // Quick Adjustment Dialog
     adjustmentType: 'Adjustment type',
     increase: 'Increase',
@@ -636,20 +733,20 @@ export default {
     expiresThisMonth: 'Expires this month',
     fresh: 'Fresh',
     maxAvailable: 'Max available',
-    
+
     // Transfer reasons
     locationRebalance: 'Location rebalancing',
     stockReplenishment: 'Stock replenishment',
     emergencyTransfer: 'Emergency transfer',
     expiryManagement: 'Expiry management',
     maintenanceRelocation: 'Maintenance relocation',
-
   },
 
   // Counting System
   counting: {
     title: 'Stock counting',
-    overview: 'Manage your inventory counting sessions and track stock accuracy',
+    overview:
+      'Manage your inventory counting sessions and track stock accuracy',
     sessionStatus: 'Session status',
     startSession: 'Start counting session',
     activeSession: 'Active counting session',
@@ -668,7 +765,8 @@ export default {
     countedProducts: 'Counted products',
     loadingSession: 'Loading counting session...',
     sessionNotFound: 'Session not found',
-    sessionNotFoundDescription: 'The counting session you are looking for could not be found',
+    sessionNotFoundDescription:
+      'The counting session you are looking for could not be found',
     countingResults: 'Counting results',
     viewResults: 'View counting results and discrepancies',
     noResultsFound: 'No counting results found',
@@ -680,7 +778,8 @@ export default {
   // Batch Management
   batch: {
     batchManagement: 'Batch management',
-    manageBatchesSubtitle: 'Manage your product batches and expiry dates effectively',
+    manageBatchesSubtitle:
+      'Manage your product batches and expiry dates effectively',
     title: 'Batch management',
     batchNumber: 'Batch number',
     lotNumber: 'Lot number',
@@ -857,7 +956,8 @@ export default {
   // Products Page
   productsPage: {
     title: 'Products',
-    subtitle: 'Overview of all available products from Remka and external suppliers',
+    subtitle:
+      'Overview of all available products from Remka and external suppliers',
 
     table: {
       name: 'Name',
@@ -881,7 +981,7 @@ export default {
     filterByStockStatus: 'Filter by stock status',
     sortBy: 'Sort by',
     clearFilters: 'Clear filters',
-    
+
     // GTIN Search
     gtinDetected: 'GTIN detected',
     gtinSearchTooltip: 'Searching by GTIN barcode',
@@ -1000,7 +1100,7 @@ export default {
       noImage: 'No image available',
       noDescription: 'No description available',
       priceNotAvailable: 'Price not available',
-      
+
       // GS1 Fields
       gs1Info: 'GS1 Information',
       gtin: 'GTIN',
@@ -1224,7 +1324,8 @@ export default {
     mainLocations: 'Main locations',
     allLocations: 'All locations',
     search: 'Search locations...',
-    comingSoonDescription: 'Location management features coming soon. You will be able to create and manage different storage areas for your inventory.',
+    comingSoonDescription:
+      'Location management features coming soon. You will be able to create and manage different storage areas for your inventory.',
     capacityItems: '{count} items',
     samples: {
       emergencyStock: 'Emergency Cabinet',
@@ -1262,7 +1363,8 @@ export default {
     title: 'Analytics',
     subtitle: 'Comprehensive reports and insights for your inventory',
     comingSoon: 'Coming soon',
-    comingSoonDescription: 'Advanced analytics and reporting features will be added soon.',
+    comingSoonDescription:
+      'Advanced analytics and reporting features will be added soon.',
     overview: 'Overview',
     trends: 'Trends',
     reports: 'Reports',
@@ -1276,11 +1378,11 @@ export default {
     orderFrequency: 'Order frequency',
     supplierPerformance: 'Supplier performance',
     costAnalysis: 'Cost analysis',
-    
+
     dashboard: 'Dashboard analytics',
     usage: 'Usage statistics',
     patterns: 'Usage patterns',
-    
+
     events: {
       login: 'Login',
       logout: 'Logout',
@@ -1299,7 +1401,7 @@ export default {
   // Offline Services
   offline: {
     title: 'Offline mode',
-    
+
     data: {
       download: 'Download offline data',
       downloadDescription: 'Download latest data for offline use',
@@ -1330,8 +1432,9 @@ export default {
       downloadFailed: 'Failed to download offline data',
       networkUnavailable: 'Network unavailable',
     },
-    
-    newVersionAvailable: 'A new version of the app is available. Would you like to reload now?',
+
+    newVersionAvailable:
+      'A new version of the app is available. Would you like to reload now?',
   },
 
   // Exports
@@ -1342,7 +1445,7 @@ export default {
     selectData: 'Select data',
     generateExport: 'Generate export',
     downloadExport: 'Download export',
-    
+
     formats: {
       csv: 'CSV file',
       pdf: 'PDF document',
@@ -1380,7 +1483,7 @@ export default {
     mostUpdatedProducts: 'Most updated products',
     userActivity: 'User activity',
     export: 'Export',
-    
+
     periods: {
       '7d': 'Last 7 days',
       '30d': 'Last 30 days',
@@ -1430,19 +1533,23 @@ export default {
     reset: 'Reset',
     resetToDefaults: 'Reset to defaults',
     confirmReset: 'Are you sure you want to reset to defaults?',
-    
-    manageSettingsSubtitle: 'Manage your system settings and preferences for optimal experience',
+
+    manageSettingsSubtitle:
+      'Manage your system settings and preferences for optimal experience',
     profile: 'Profile',
     profileSubtitle: 'Your personal user information',
     appearanceTitle: 'Appearance',
     appearanceSubtitle: 'Customize the look and feel of the application',
-    darkModeDescription: 'Switch between light and dark mode for better visibility',
+    darkModeDescription:
+      'Switch between light and dark mode for better visibility',
     selectLanguage: 'Choose your preferred language for the interface',
     colorSchemeTitle: 'Color scheme',
-    colorSchemeDescription: 'Select the color scheme that suits your preference',
+    colorSchemeDescription:
+      'Select the color scheme that suits your preference',
     clinic: 'Clinic',
     clinicInfoSubtitle: 'Contact details and business information',
-    contactSettingsNotice: 'Contact details can only be modified by an administrator',
+    contactSettingsNotice:
+      'Contact details can only be modified by an administrator',
     notificationSettingsSubtitle: 'Manage your alerts and notifications',
     stockAlertsLabel: 'Stock alerts',
     stockAlertsDescription: 'Receive notifications when stock is low',
@@ -1468,7 +1575,8 @@ export default {
     saveSettings: 'Save settings',
 
     styleGuideTitle: 'Remcura Style Guide',
-    styleGuideSubtitle: 'Complete design system reference and component showcase',
+    styleGuideSubtitle:
+      'Complete design system reference and component showcase',
     colorsSection: 'Colors',
     primaryColors: 'Primary colors',
     neutralColors: 'Neutral colors',
@@ -1496,37 +1604,43 @@ export default {
       defaultCard: {
         title: 'Default card',
         subtitle: 'Standard card for general content',
-        description: 'This is the default card variant with standard styling. It uses neutral backgrounds that adapt well to light and dark modes.',
+        description:
+          'This is the default card variant with standard styling. It uses neutral backgrounds that adapt well to light and dark modes.',
         action: 'Action',
       },
       modernCard: {
         title: 'Modern card',
         subtitle: 'Enhanced modern styling with borders',
-        description: 'Modern card variant with enhanced styling and subtle borders for a contemporary look.',
+        description:
+          'Modern card variant with enhanced styling and subtle borders for a contemporary look.',
         action: 'Primary action',
       },
       elevatedCard: {
         title: 'Elevated card',
         subtitle: 'Card with enhanced shadow for emphasis',
-        description: 'This card has elevated styling with enhanced shadows to create depth and hierarchy.',
+        description:
+          'This card has elevated styling with enhanced shadows to create depth and hierarchy.',
         action: 'Elevated action',
       },
       glassCard: {
         title: 'Glass card',
         subtitle: 'Glassmorphism effect with transparency',
-        description: 'Glassmorphism card with backdrop blur and transparency effects for a modern, sleek appearance.',
+        description:
+          'Glassmorphism card with backdrop blur and transparency effects for a modern, sleek appearance.',
         action: 'Glass action',
       },
       outlinedCard: {
         title: 'Outlined card',
         subtitle: 'Card with border emphasis',
-        description: 'This card uses borders instead of shadows for definition, perfect for minimal designs.',
+        description:
+          'This card uses borders instead of shadows for definition, perfect for minimal designs.',
         action: 'Outlined action',
       },
       warningCard: {
         title: 'Warning card',
         subtitle: 'Card with warning color theme',
-        description: 'Example of using header colors to create thematic cards for different types of content.',
+        description:
+          'Example of using header colors to create thematic cards for different types of content.',
         action: 'Warning action',
       },
     },
@@ -1595,7 +1709,7 @@ export default {
     permissions: 'Permissions',
     analytics: 'Analytics',
     quickActions: 'Quick actions',
-    
+
     stats: {
       totalUsers: 'Total users',
       activeUsers: 'Active users',
@@ -1623,7 +1737,7 @@ export default {
       loadUsersFailed: 'Error loading users',
       loadLocationsFailed: 'Error loading locations',
       loadPermissionsFailed: 'Error loading permissions',
-      
+
       // Common admin errors
       noPracticeSelected: 'No practice selected',
       practiceOrUserNotFound: 'Practice or user not found',
@@ -1631,17 +1745,19 @@ export default {
       userEmailNotFound: 'User email not found',
       cannotDeactivatePracticeOwner: 'Cannot deactivate practice owner',
       cannotDeleteMainLocation: 'Cannot delete the main location',
-      
+
       // Permission errors
       insufficientPermissionsToCreate: 'Insufficient permissions to create',
       insufficientPermissionsToUpdate: 'Insufficient permissions to update',
       insufficientPermissionsToDelete: 'Insufficient permissions to delete',
       insufficientPermissionsToView: 'Insufficient permissions to view',
-      insufficientPermissionsToGrant: 'Insufficient permissions to grant permissions',
-      insufficientPermissionsToRevoke: 'Insufficient permissions to revoke permissions',
+      insufficientPermissionsToGrant:
+        'Insufficient permissions to grant permissions',
+      insufficientPermissionsToRevoke:
+        'Insufficient permissions to revoke permissions',
       insufficientPermissionsToReset: 'Insufficient permissions to reset',
       insufficientPermissionsToToggle: 'Insufficient permissions to toggle',
-      
+
       // Operation errors
       failedToCreate: 'Failed to create',
       failedToUpdate: 'Failed to update',
@@ -1652,7 +1768,7 @@ export default {
       failedToSend: 'Failed to send',
       failedToSet: 'Failed to set',
     },
-    
+
     // Team Management
     teamOverview: 'Team Overview',
     teamOverviewSubtitle: 'Manage team members and their access methods',
@@ -1674,7 +1790,8 @@ export default {
     sendMessage: 'Send message',
     viewSessions: 'View sessions',
     personalMagicCode: 'Personal Magic Code',
-    magicCodeExplanation: 'This code can be used to login directly without a password',
+    magicCodeExplanation:
+      'This code can be used to login directly without a password',
     loadTeamError: 'Error loading team',
     never: 'Never',
     minutesAgo: '{count} minutes ago',
@@ -1701,7 +1818,7 @@ export default {
     permissionType: 'Permission type',
     resourceType: 'Resource type',
     expiresAt: 'Expires at',
-    
+
     templates: {
       title: 'Permission templates',
       assistant: 'Assistant',
@@ -1734,7 +1851,7 @@ export default {
     isMain: 'Main location',
     setAsMain: 'Set as main location',
     manageAccess: 'Manage access',
-    
+
     notifications: {
       mainLocationSet: 'Main location set',
       accessUpdated: 'Access updated',
@@ -1750,24 +1867,24 @@ export default {
   platform: {
     title: 'Platform Dashboard',
     subtitle: 'System administration and monitoring',
-    
+
     systemHealth: {
       healthy: 'Healthy',
       warning: 'Warning',
       critical: 'Critical',
     },
-    
+
     version: 'Version',
     environment: 'Environment',
-    
+
     metrics: {
       totalPractices: 'Total Practices',
-      totalUsers: 'Total Users', 
+      totalUsers: 'Total Users',
       activeToday: 'Active Today',
       totalEvents: 'Total Events',
       systemHealth: 'System Health',
     },
-    
+
     notifications: {
       dataRefreshed: 'Platform data refreshed',
       refreshFailed: 'Failed to refresh platform data',
@@ -1812,7 +1929,8 @@ export default {
     linkToMagento: 'Link to Magento',
     linkToMagentoPrompt: 'Enter the Magento vendor ID to link this supplier:',
     confirmDelete: 'Confirm delete',
-    confirmDeleteMessage: 'Are you sure you want to delete "{name}"? This action cannot be undone.',
+    confirmDeleteMessage:
+      'Are you sure you want to delete "{name}"? This action cannot be undone.',
     supplierCreated: 'Supplier created successfully',
     supplierUpdated: 'Supplier updated successfully',
     supplierDeleted: 'Supplier deleted successfully',
@@ -1847,7 +1965,8 @@ export default {
     markAsReadTooltip: 'Mark as read',
     deleteTooltip: 'Delete',
     clearAllConfirm: 'Clear all notifications',
-    clearAllConfirmMessage: 'Are you sure you want to delete all notifications? This action cannot be undone.',
+    clearAllConfirmMessage:
+      'Are you sure you want to delete all notifications? This action cannot be undone.',
     allMarkedAsRead: 'All notifications marked as read',
     notificationDeleted: 'Notification deleted',
     allNotificationsCleared: 'All notifications cleared',
@@ -1890,59 +2009,64 @@ export default {
     cartSaved: 'Cart saved',
   },
 
-  // Confirm dialog translations  
+  // Confirm dialog translations
   dialogs: {
     typeToConfirm: 'Type {text} to confirm',
-    confirmClose: 'Are you sure you want to close? Unsaved changes will be lost.',
+    confirmClose:
+      'Are you sure you want to close? Unsaved changes will be lost.',
   },
 
   // Magic Invite System - Revolutionary user management! 🚀
   magicInvite: {
     simpleTitle: 'Invite People',
-    simpleDescription: 'Give colleagues instant access with a simple code - no passwords needed!',
+    simpleDescription:
+      'Give colleagues instant access with a simple code - no passwords needed!',
     howItWorks: 'How does it work?',
     stepCreate: 'Create invitation',
     stepCreateDetail: 'Click below to make a unique code for your colleague',
     stepShare: 'Share the code',
     stepShareDetail: 'Send the code via WhatsApp, email, or just tell them',
     stepJoin: 'Instant access',
-    stepJoinDetail: 'Your colleague goes to remcura.com/join and enters the code',
-    
+    stepJoinDetail:
+      'Your colleague goes to remcura.com/join and enters the code',
+
     createInvite: 'Create new invitation',
     whoAreYouInviting: 'Who are you inviting?',
     department: 'Department (optional)',
     departmentPlaceholder: 'E.g. Pharmacy, Reception, Treatment',
     generateInviteCode: 'Generate invitation code',
-    
+
     inviteReady: '✅ Invitation ready!',
     shareThisCode: 'Share this code:',
     tellThem: 'Tell them:',
     shareMessage: 'Go to remcura.com/join and enter this code: {code}',
-    
+
     shareWhatsApp: 'WhatsApp',
     showQR: 'QR Code',
     shareEmail: 'Email',
     qrCode: 'QR Code',
     qrInstructions: 'Let them scan this QR code with their phone',
-    
+
     activeInvites: 'Active invitations',
     created: 'created',
-    
+
     doctorNurse: 'Doctor/Nurse',
     assistant: 'Assistant',
     admin: 'Administrator',
     temporary: 'Temporary access',
-    
+
     inviteCreated: 'Invitation created!',
     createError: 'Error creating invitation',
     codeCopied: 'Code copied to clipboard',
     deleteInvite: 'Delete invitation',
     deleteConfirm: 'Are you sure you want to delete code {code}?',
     inviteDeleted: 'Invitation deleted',
-    
-    whatsappMessage: 'Hi! You\'re invited to Remcura.\n\nGo to: {url}\nEnter this code: {code}\n\nYou\'ll have instant access! 👍',
+
+    whatsappMessage:
+      "Hi! You're invited to Remcura.\n\nGo to: {url}\nEnter this code: {code}\n\nYou'll have instant access! 👍",
     emailSubject: 'Remcura Invitation',
-    emailMessage: 'Hi!\n\nYou\'ve been invited to use Remcura.\n\nStep 1: Go to {url}\nStep 2: Enter this code: {code}\n\nYou\'ll have immediate access to the system!\n\nBest regards',
+    emailMessage:
+      "Hi!\n\nYou've been invited to use Remcura.\n\nStep 1: Go to {url}\nStep 2: Enter this code: {code}\n\nYou'll have immediate access to the system!\n\nBest regards",
   },
 
   magicJoin: {
@@ -1955,11 +2079,12 @@ export default {
     tryDemo: 'Try demo',
     howItWorks: 'How does it work?',
     step1: 'Receive invitation',
-    step1Detail: 'You get a simple code from your clinic, like: 🏥AMSTERDAM✨2024',
+    step1Detail:
+      'You get a simple code from your clinic, like: 🏥AMSTERDAM✨2024',
     step2: 'Enter code',
     step2Detail: 'Type the code above - no password or account needed!',
     step3: 'Instant access',
-    step3Detail: 'You\'re immediately logged in and can start working.',
+    step3Detail: "You're immediately logged in and can start working.",
     scanTitle: 'Scan QR code',
     scanInstructions: 'Point your camera at the QR code you received',
     demoAccess: 'Demo access - explore all features',
@@ -1969,23 +2094,24 @@ export default {
     welcomeTitle: 'Welcome!',
     welcomeMessage: 'You now have access to {practice}',
     getStarted: 'Get started!',
-    
+
     // Smart Login Detection Messages
     welcomeBack: 'Welcome back, {name}!',
     personalCodeSuccess: 'Successfully logged in with personal code',
     personalCodeError: 'Invalid personal code',
-    permanentInviteDetected: 'You\'ve been invited as a permanent team member!',
+    permanentInviteDetected: "You've been invited as a permanent team member!",
     guestAccessGranted: 'Guest access granted',
   },
 
   // Auto-Upgrade System - Permanent Team Members
   upgrade: {
     welcomeToTeam: 'Welcome to the team!',
-    subtitle: 'You\'ve been invited as {role} for {practice}. Choose how you want to login from now on:',
+    subtitle:
+      "You've been invited as {role} for {practice}. Choose how you want to login from now on:",
     benefit1: 'Permanent access to the system',
     benefit2: 'Full functionality available',
     benefit3: 'Part of the team for daily use',
-    
+
     // Magic Code Option
     magicCodeTitle: '⚡ Personal Code',
     magicCodeDescription: 'Get your own unique code that you can always use',
@@ -1993,23 +2119,23 @@ export default {
     magicBenefit1: 'Super fast login',
     magicBenefit2: 'Easy to remember',
     magicBenefit3: 'Works on any device',
-    
+
     // Email + Password Option
     emailTitle: '🔐 Email + Password',
-    emailDescription: 'Traditional login like you\'re used to',
+    emailDescription: "Traditional login like you're used to",
     yourEmail: 'Your email address',
     choosePassword: 'Choose a password',
     emailBenefit1: 'Extra secure',
     emailBenefit2: 'Familiar system',
     emailBenefit3: 'Password recovery',
-    
+
     // Device Remember Option
     deviceTitle: '📱 Remember Device',
     deviceDescription: 'Stay automatically logged in on this device',
     deviceBenefit1: 'Automatic login',
     deviceBenefit2: 'Secure per device',
     deviceBenefit3: '90 days valid',
-    
+
     // Form & Actions
     yourFullName: 'Your full name',
     nameRequired: 'Name is required',
@@ -2075,9 +2201,12 @@ export default {
   adjust: 'Aanpassen',
   savingChanges: 'Wijzigingen inslaan...',
   current: 'Huidig',
-  errorProductNotFound: 'Product, locatie of praktijk niet gevonden. ververs de pagina en probeer opnieuw.',
-  errorUpdateInProgress: 'Een andere update is bezig. wacht even en probeer innieuw.',
-  errorInvalidData: 'Ongeldige gegevens. controleer de invoer en probeer innieuw.',
+  errorProductNotFound:
+    'Product, locatie of praktijk niet gevonden. ververs de pagina en probeer opnieuw.',
+  errorUpdateInProgress:
+    'Een andere update is bezig. wacht even en probeer innieuw.',
+  errorInvalidData:
+    'Ongeldige gegevens. controleer de invoer en probeer innieuw.',
   errorNegativeStock: 'Negatieve stock is niet toegestaan voor dit product.',
   stockUpdatedRealtime: 'Stock live bijgewerkt voor {product}',
   productInfoCard: 'Product informatie',
@@ -2166,36 +2295,65 @@ export default {
   'inventory.barcodeFound.barcodeNotFound.adjust': 'inventory',
   'inventory.barcodeFound.barcodeNotFound.savingChanges': 'inventory',
   'inventory.barcodeFound.barcodeNotFound.current': 'inventory',
-  'inventory.barcodeFound.barcodeNotFound.barcodeScanned.errorProductNotFound': 'inventory',
-  'inventory.barcodeFound.barcodeNotFound.barcodeScanned.errorUpdateInProgress': 'inventory',
-  'inventory.barcodeFound.barcodeNotFound.barcodeScanned.errorInvalidData': 'inventory',
-  'inventory.barcodeFound.barcodeNotFound.barcodeScanned.errorNegativeStock': 'inventory',
-  'inventory.barcodeFound.barcodeNotFound.barcodeScanned.stockUpdatedRealtime': 'inventory',
-  'inventory.barcodeFound.barcodeNotFound.barcodeScanned.productInfoCard': 'inventory',
-  'inventory.barcodeFound.barcodeNotFound.barcodeScanned.productImageAlt': 'inventory',
-  'inventory.barcodeFound.barcodeNotFound.barcodeScanned.productPrice': 'inventory',
+  'inventory.barcodeFound.barcodeNotFound.barcodeScanned.errorProductNotFound':
+    'inventory',
+  'inventory.barcodeFound.barcodeNotFound.barcodeScanned.errorUpdateInProgress':
+    'inventory',
+  'inventory.barcodeFound.barcodeNotFound.barcodeScanned.errorInvalidData':
+    'inventory',
+  'inventory.barcodeFound.barcodeNotFound.barcodeScanned.errorNegativeStock':
+    'inventory',
+  'inventory.barcodeFound.barcodeNotFound.barcodeScanned.stockUpdatedRealtime':
+    'inventory',
+  'inventory.barcodeFound.barcodeNotFound.barcodeScanned.productInfoCard':
+    'inventory',
+  'inventory.barcodeFound.barcodeNotFound.barcodeScanned.productImageAlt':
+    'inventory',
+  'inventory.barcodeFound.barcodeNotFound.barcodeScanned.productPrice':
+    'inventory',
   'inventory.barcodeFound.barcodeNotFound.barcodeScanned.euro': 'inventory',
-  'inventory.barcodeFound.barcodeNotFound.barcodeScanned.selectProductTitle': 'inventory',
-  'inventory.barcodeFound.barcodeNotFound.barcodeScanned.scanBarcodeTitle': 'inventory',
-  'inventory.barcodeFound.barcodeNotFound.barcodeScanned.adjustmentPreviewTitle': 'inventory',
-  'inventory.barcodeFound.barcodeNotFound.barcodeScanned.currentStockLevel': 'inventory',
-  'inventory.barcodeFound.barcodeNotFound.barcodeScanned.newStockLevel': 'inventory',
-  'inventory.barcodeFound.barcodeNotFound.barcodeScanned.stockDifference': 'inventory',
-  'inventory.barcodeFound.barcodeNotFound.barcodeScanned.reasons.damage': 'inventory',
-  'inventory.barcodeFound.barcodeNotFound.barcodeScanned.reasons.recount': 'inventory',
-  'inventory.barcodeFound.barcodeNotFound.barcodeScanned.reasons.correction': 'inventory',
-  'inventory.barcodeFound.barcodeNotFound.barcodeScanned.reasons.other': 'inventory',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.magicInvite.shareMessage.whatsappMessage.productsPage.noProductsFound': 'inventory',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.magicInvite.shareMessage.whatsappMessage.inventory.finalQuantity': 'inventory',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.magicInvite.shareMessage.whatsappMessage.inventory.refreshFailed': 'inventory',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.magicInvite.shareMessage.whatsappMessage.inventory.reason.normal_usage': 'inventory',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.magicInvite.shareMessage.whatsappMessage.inventory.reason.expired': 'inventory',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.magicInvite.shareMessage.whatsappMessage.inventory.reason.damaged': 'inventory',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.magicInvite.shareMessage.whatsappMessage.inventory.reason.lost': 'inventory',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.magicInvite.shareMessage.whatsappMessage.inventory.reason.found': 'inventory',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.magicInvite.shareMessage.whatsappMessage.inventory.reason.transfer_in': 'inventory',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.magicInvite.shareMessage.whatsappMessage.inventory.reason.transfer_out': 'inventory',
-  'inventory.barcodeFound.barcodeNotFound.orders.notifications.magicInvite.shareMessage.whatsappMessage.common.retry': 'inventory',
+  'inventory.barcodeFound.barcodeNotFound.barcodeScanned.selectProductTitle':
+    'inventory',
+  'inventory.barcodeFound.barcodeNotFound.barcodeScanned.scanBarcodeTitle':
+    'inventory',
+  'inventory.barcodeFound.barcodeNotFound.barcodeScanned.adjustmentPreviewTitle':
+    'inventory',
+  'inventory.barcodeFound.barcodeNotFound.barcodeScanned.currentStockLevel':
+    'inventory',
+  'inventory.barcodeFound.barcodeNotFound.barcodeScanned.newStockLevel':
+    'inventory',
+  'inventory.barcodeFound.barcodeNotFound.barcodeScanned.stockDifference':
+    'inventory',
+  'inventory.barcodeFound.barcodeNotFound.barcodeScanned.reasons.damage':
+    'inventory',
+  'inventory.barcodeFound.barcodeNotFound.barcodeScanned.reasons.recount':
+    'inventory',
+  'inventory.barcodeFound.barcodeNotFound.barcodeScanned.reasons.correction':
+    'inventory',
+  'inventory.barcodeFound.barcodeNotFound.barcodeScanned.reasons.other':
+    'inventory',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.magicInvite.shareMessage.whatsappMessage.productsPage.noProductsFound':
+    'inventory',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.magicInvite.shareMessage.whatsappMessage.inventory.finalQuantity':
+    'inventory',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.magicInvite.shareMessage.whatsappMessage.inventory.refreshFailed':
+    'inventory',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.magicInvite.shareMessage.whatsappMessage.inventory.reason.normal_usage':
+    'inventory',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.magicInvite.shareMessage.whatsappMessage.inventory.reason.expired':
+    'inventory',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.magicInvite.shareMessage.whatsappMessage.inventory.reason.damaged':
+    'inventory',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.magicInvite.shareMessage.whatsappMessage.inventory.reason.lost':
+    'inventory',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.magicInvite.shareMessage.whatsappMessage.inventory.reason.found':
+    'inventory',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.magicInvite.shareMessage.whatsappMessage.inventory.reason.transfer_in':
+    'inventory',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.magicInvite.shareMessage.whatsappMessage.inventory.reason.transfer_out':
+    'inventory',
+  'inventory.barcodeFound.barcodeNotFound.orders.notifications.magicInvite.shareMessage.whatsappMessage.common.retry':
+    'inventory',
 
   barcodeScanner: {
     title: 'Barcode Scanner',
@@ -2214,391 +2372,392 @@ export default {
     flashOff: 'Flash Off',
     validGtin: 'Valid GTIN scanned: {gtin}',
     invalidFormat: 'Invalid barcode format: {code}',
-    permissionDenied: 'Camera permission denied. Please enable camera access in your browser settings.',
+    permissionDenied:
+      'Camera permission denied. Please enable camera access in your browser settings.',
     noCameraFound: 'No camera found. Please ensure a camera is connected.',
     cameraError: 'Camera error occurred. Please try again.',
   },
 
-    'batch.batchManagement': 'Batch management',
+  'batch.batchManagement': 'Batch management',
 
-    'orderLists.title': 'Order lists',
+  'orderLists.title': 'Order lists',
 
-    'dashboard.actions.refresh': 'Refresh dashboard',
+  'dashboard.actions.refresh': 'Refresh dashboard',
 
-    'dashboard.actions.customize': 'Customize dashboard',
+  'dashboard.actions.customize': 'Customize dashboard',
 
-    'dashboard.demoRoleSwitch.label': 'Switch demo role',
+  'dashboard.demoRoleSwitch.label': 'Switch demo role',
 
-    'dashboard.roles.assistant': '🩺 Assistant - inventory & orders',
+  'dashboard.roles.assistant': '🩺 Assistant - inventory & orders',
 
-    'dashboard.roles.manager': '📊 Manager - analytics & reports',
+  'dashboard.roles.manager': '📊 Manager - analytics & reports',
 
-    'dashboard.roles.owner': '👑 Owner - full control',
+  'dashboard.roles.owner': '👑 Owner - full control',
 
-    'dashboard.quickActionLabels.scan': 'Quick scan',
+  'dashboard.quickActionLabels.scan': 'Quick scan',
 
-    'dashboard.quickActionLabels.order': 'New order',
+  'dashboard.quickActionLabels.order': 'New order',
 
-    'dashboard.quickActionLabels.update': 'Update inventory',
+  'dashboard.quickActionLabels.update': 'Update inventory',
 
-    'dashboard.quickActionLabels.export': 'Export data',
+  'dashboard.quickActionLabels.export': 'Export data',
 
-    'dashboard.quickActionLabels.default': 'Action',
+  'dashboard.quickActionLabels.default': 'Action',
 
-    'dashboard.alerts.noWarnings': 'No warnings',
+  'dashboard.alerts.noWarnings': 'No warnings',
 
-    'dashboard.alerts.allStockLevelsOk': 'All stock levels are ok',
+  'dashboard.alerts.allStockLevelsOk': 'All stock levels are ok',
 
-    'dashboard.notifications.roleSwitch': 'Dashboard has been adapted to your new role',
+  'dashboard.notifications.roleSwitch':
+    'Dashboard has been adapted to your new role',
   'quickAdjustment.noProduct': 'No product',
 
-    'common.live': 'Live',
+  'common.live': 'Live',
 
-    'app.name': 'Remcura',
+  'app.name': 'Remcura',
 
-    'barcodeScanner.scanLabel': 'Scan product',
+  'barcodeScanner.scanLabel': 'Scan product',
 
-    'nav.dashboard': 'Dashboard',
+  'nav.dashboard': 'Dashboard',
 
-    'nav.products': 'Products',
+  'nav.products': 'Products',
 
-    'nav.orders': 'Orders',
+  'nav.orders': 'Orders',
 
-    'barcodeScanner.enterBarcode': 'Enter barcode',
+  'barcodeScanner.enterBarcode': 'Enter barcode',
 
-    'exports.formats.excel': 'Excel (.xlsx)',
+  'exports.formats.excel': 'Excel (.xlsx)',
 
-    'exports.formats.csv': 'CSV (.csv)',
+  'exports.formats.csv': 'CSV (.csv)',
 
-    'exports.formats.pdf': 'PDF (.pdf)',
+  'exports.formats.pdf': 'PDF (.pdf)',
 
-    'settings.languages.dutch': 'Dutch',
+  'settings.languages.dutch': 'Dutch',
 
-    'settings.languages.english': 'English',
+  'settings.languages.english': 'English',
 
-    'settings.languages.spanish': 'Spanish',
+  'settings.languages.spanish': 'Spanish',
 
-    'dashboard.widgets.teamMembers': 'Team members',
+  'dashboard.widgets.teamMembers': 'Team members',
 
-    'dashboard.widgets.systemStatus': 'System status',
+  'dashboard.widgets.systemStatus': 'System status',
 
-      'currencies.eur': 'EUR (€)',
+  'currencies.eur': 'EUR (€)',
   'currencies.usd': 'USD ($)',
   'currencies.gbp': 'GBP (£)',
 
-    'productsPage.title': 'Products',
+  'productsPage.title': 'Products',
 
-    'productsPage.subtitle': 'Manage your product catalog and inventory',
+  'productsPage.subtitle': 'Manage your product catalog and inventory',
 
-    'common.refresh': 'Refresh',
+  'common.refresh': 'Refresh',
 
-    'products.createProduct': 'Create product',
+  'products.createProduct': 'Create product',
 
-    'productsPage.viewCart': 'View cart',
+  'productsPage.viewCart': 'View cart',
 
-    'productsPage.noGs1Data': 'No GS1 data available',
+  'productsPage.noGs1Data': 'No GS1 data available',
 
-    'productsPage.viewDetails': 'View details',
+  'productsPage.viewDetails': 'View details',
 
-    'products.editProduct': 'Edit product',
+  'products.editProduct': 'Edit product',
 
-    'products.deleteProduct': 'Delete product',
+  'products.deleteProduct': 'Delete product',
 
-    'productsPage.addToCart': 'Add to cart',
+  'productsPage.addToCart': 'Add to cart',
 
-    'productsPage.addToOrderList': 'Add to order list',
+  'productsPage.addToOrderList': 'Add to order list',
 
-    'productsPage.productDetails': 'Product details',
+  'productsPage.productDetails': 'Product details',
 
-    'productsPage.description': 'Description',
+  'productsPage.description': 'Description',
 
-    'productsPage.unit': 'Unit',
+  'productsPage.unit': 'Unit',
 
-    'productsPage.category': 'Category',
+  'productsPage.category': 'Category',
 
-    'productsPage.gs1Information': 'GS1 information',
+  'productsPage.gs1Information': 'GS1 information',
 
-    'productsPage.lifecycle': 'Lifecycle',
+  'productsPage.lifecycle': 'Lifecycle',
 
-    'productsPage.suppliers': 'Suppliers',
+  'productsPage.suppliers': 'Suppliers',
 
-    'productsPage.stockLevels': 'Stock levels',
+  'productsPage.stockLevels': 'Stock levels',
 
-    'products.deleteConfirm': 'Delete product',
+  'products.deleteConfirm': 'Delete product',
 
-    'common.cancel': 'Cancel',
+  'common.cancel': 'Cancel',
 
-    'common.delete': 'Delete',
+  'common.delete': 'Delete',
 
-    'orders.title': 'Title',
+  'orders.title': 'Title',
 
-    'orders.bulkExport': 'BulkExport',
+  'orders.bulkExport': 'BulkExport',
 
-    'orders.bulkEmail': 'BulkEmail',
+  'orders.bulkEmail': 'BulkEmail',
 
-    'orders.viewOrder': 'ViewOrder',
+  'orders.viewOrder': 'ViewOrder',
 
-    'orders.editOrder': 'EditOrder',
+  'orders.editOrder': 'EditOrder',
 
-    'orders.downloadOrder': 'DownloadOrder',
+  'orders.downloadOrder': 'DownloadOrder',
 
-    'orders.export.title': 'Title',
+  'orders.export.title': 'Title',
 
-    'orders.export.format': 'Format',
+  'orders.export.format': 'Format',
 
-    'orders.export.dateFrom': 'DateFrom',
+  'orders.export.dateFrom': 'DateFrom',
 
-    'orders.export.dateTo': 'DateTo',
+  'orders.export.dateTo': 'DateTo',
 
-    'orders.export.export': 'Export',
+  'orders.export.export': 'Export',
 
-    'orders.analytics.title': 'Title',
+  'orders.analytics.title': 'Title',
 
-    'orders.analytics.comingSoon': 'ComingSoon',
+  'orders.analytics.comingSoon': 'ComingSoon',
 
-    'common.close': 'Close',
+  'common.close': 'Close',
 
-    'orderLists.subtitle': 'Manage your order lists and send to suppliers',
+  'orderLists.subtitle': 'Manage your order lists and send to suppliers',
 
-    'orderLists.create': 'Create order list',
+  'orderLists.create': 'Create order list',
 
-    'orderLists.supplier': 'Supplier',
+  'orderLists.supplier': 'Supplier',
 
-    'orderLists.totalItems': 'Total items',
+  'orderLists.totalItems': 'Total items',
 
-    'orderLists.totalAmount': 'Total amount',
+  'orderLists.totalAmount': 'Total amount',
 
-    'orderLists.updatedAt': 'Updated at',
+  'orderLists.updatedAt': 'Updated at',
 
-    'orderLists.edit': 'Edit',
+  'orderLists.edit': 'Edit',
 
-    'orderLists.submit': 'Submit',
+  'orderLists.submit': 'Submit',
 
-    'orderLists.sendToSupplier': 'Send to supplier',
+  'orderLists.sendToSupplier': 'Send to supplier',
 
-    'orderLists.addToCart': 'Add to cart',
+  'orderLists.addToCart': 'Add to cart',
 
-    'orderLists.duplicate': 'Duplicate',
+  'orderLists.duplicate': 'Duplicate',
 
-    'orderLists.autoFill': 'Auto fill',
+  'orderLists.autoFill': 'Auto fill',
 
-    'orderLists.delete': 'Delete',
+  'orderLists.delete': 'Delete',
 
-    'orderLists.noLists': 'No order lists found',
+  'orderLists.noLists': 'No order lists found',
 
-    'orderLists.createNew': 'Create your first order list',
+  'orderLists.createNew': 'Create your first order list',
 
-    'orderLists.deleteDialog': 'Delete order list',
+  'orderLists.deleteDialog': 'Delete order list',
 
-    'orderLists.deleteConfirm': 'Are you sure you want to delete this order list?',
+  'orderLists.deleteConfirm':
+    'Are you sure you want to delete this order list?',
 
-    'inventory.stockLevels': 'Stock levels',
+  'inventory.stockLevels': 'Stock levels',
 
-    'inventory.overview': 'Overview',
+  'inventory.overview': 'Overview',
 
-    'inventory.totalProducts': 'Total products',
+  'inventory.totalProducts': 'Total products',
 
-    'inventory.products': 'Products',
+  'inventory.products': 'Products',
 
-    'inventory.stockLocations': 'Stock locations',
+  'inventory.stockLocations': 'Stock locations',
 
-    'inventory.activeLocations': 'Active locations',
+  'inventory.activeLocations': 'Active locations',
 
-    'inventory.locations': 'Locations',
+  'inventory.locations': 'Locations',
 
-    'inventory.dataLoaded': 'Data loaded',
+  'inventory.dataLoaded': 'Data loaded',
 
-    'inventory.upToDate': 'Up to date',
+  'inventory.upToDate': 'Up to date',
 
-    'inventory.realTimeConnected': 'Real-time connected',
+  'inventory.realTimeConnected': 'Real-time connected',
 
-    'inventory.status': 'Status',
+  'inventory.status': 'Status',
 
-    'inventory.lastUpdated': 'Last updated',
+  'inventory.lastUpdated': 'Last updated',
 
-    'inventory.refreshData': 'Refresh data',
+  'inventory.refreshData': 'Refresh data',
 
-    'inventory.lastSync': 'Last sync',
+  'inventory.lastSync': 'Last sync',
 
-    'inventory.noStockLevels': 'No stock levels found',
+  'inventory.noStockLevels': 'No stock levels found',
 
-    'inventory.adjustStock': 'Adjust stock',
+  'inventory.adjustStock': 'Adjust stock',
 
-    'inventory.viewHistory': 'View history',
+  'inventory.viewHistory': 'View history',
 
-    'inventory.countStock': 'Count stock',
+  'inventory.countStock': 'Count stock',
 
-    'inventory.currentStock': 'Current stock',
+  'inventory.currentStock': 'Current stock',
 
-    'inventory.adjustmentType': 'Adjustment type',
+  'inventory.adjustmentType': 'Adjustment type',
 
-    'inventory.quantity': 'Quantity',
+  'inventory.quantity': 'Quantity',
 
-    'validation.required': 'This field is required',
+  'validation.required': 'This field is required',
 
-    'inventory.reason': 'Reason',
+  'inventory.reason': 'Reason',
 
-    'inventory.adjust': 'Adjust',
+  'inventory.adjust': 'Adjust',
 
-    'counting.title': 'Stock counting',
+  'counting.title': 'Stock counting',
 
-    'counting.overview': 'Counting sessions overview',
+  'counting.overview': 'Counting sessions overview',
 
-    'counting.sessionStatus': 'Session status',
+  'counting.sessionStatus': 'Session status',
 
-    'counting.startSession': 'Start new session',
+  'counting.startSession': 'Start new session',
 
-    'counting.activeSession': 'Active session',
+  'counting.activeSession': 'Active session',
 
-    'counting.progress': 'Progress',
+  'counting.progress': 'Progress',
 
-    'counting.sessionType': 'Session type',
+  'counting.sessionType': 'Session type',
 
-    'common.startedAt': 'Started at',
+  'common.startedAt': 'Started at',
 
-    'counting.discrepancies': 'Discrepancies',
+  'counting.discrepancies': 'Discrepancies',
 
-    'counting.continueSession': 'Continue session',
+  'counting.continueSession': 'Continue session',
 
-    'counting.completeSession': 'Complete session',
+  'counting.completeSession': 'Complete session',
 
-    'counting.sessionsOverview': 'Sessions overview',
+  'counting.sessionsOverview': 'Sessions overview',
 
-    'counting.loadingSessions': 'Loading sessions...',
+  'counting.loadingSessions': 'Loading sessions...',
 
-    'counting.noSessionsFound': 'No sessions found',
+  'counting.noSessionsFound': 'No sessions found',
 
-    'common.view': 'View',
+  'common.view': 'View',
 
-    'counting.approveSession': 'Approve session',
+  'counting.approveSession': 'Approve session',
 
-    'counting.loadingSession': 'Loading session...',
+  'counting.loadingSession': 'Loading session...',
 
-    'counting.sessionNotFound': 'Session not found',
+  'counting.sessionNotFound': 'Session not found',
 
-    'counting.sessionNotFoundDescription': 'The requested session does not exist or has been deleted',
+  'counting.sessionNotFoundDescription':
+    'The requested session does not exist or has been deleted',
 
-    'common.goBack': 'Go back',
+  'common.goBack': 'Go back',
 
-    'counting.sessionSummary': 'Session summary',
+  'counting.sessionSummary': 'Session summary',
 
-    'counting.totalProducts': 'Total products',
+  'counting.totalProducts': 'Total products',
 
-    'counting.countedProducts': 'Counted products',
+  'counting.countedProducts': 'Counted products',
 
-    'common.completedAt': 'Completed at',
+  'common.completedAt': 'Completed at',
 
-    'counting.countingResults': 'Counting results',
+  'counting.countingResults': 'Counting results',
 
-    'counting.viewResults': 'View the results of this count',
+  'counting.viewResults': 'View the results of this count',
 
-    'counting.noResultsFound': 'No results found',
+  'counting.noResultsFound': 'No results found',
 
-    'locations.title': 'Locations',
+  'locations.title': 'Locations',
 
-    'locations.manage': 'Manage locations',
+  'locations.manage': 'Manage locations',
 
-    'locations.allLocations': 'All locations',
+  'locations.allLocations': 'All locations',
 
-    'locations.mainLocations': 'Main locations',
+  'locations.mainLocations': 'Main locations',
 
-    'locations.comingSoonDescription': 'Location management coming soon',
+  'locations.comingSoonDescription': 'Location management coming soon',
 
-    'locations.add': 'Add location',
+  'locations.add': 'Add location',
 
-    'locations.noLocations': 'No locations found',
+  'locations.noLocations': 'No locations found',
 
-    'inventory.stockMovements': 'Stock movements',
+  'inventory.stockMovements': 'Stock movements',
 
-    'inventory.movementHistory': 'Movement history',
+  'inventory.movementHistory': 'Movement history',
 
-    'common.export': 'Export',
+  'common.export': 'Export',
 
-    'inventory.loadingMovements': 'Loading movements...',
+  'inventory.loadingMovements': 'Loading movements...',
 
-    'inventory.noMovementsFound': 'No movements found',
+  'inventory.noMovementsFound': 'No movements found',
 
-    'common.unknownProduct': 'Unknown product',
+  'common.unknownProduct': 'Unknown product',
 
-    'common.unknownLocation': 'Unknown location',
+  'common.unknownLocation': 'Unknown location',
 
-    'inventory.movementDetails': 'Movement details',
+  'inventory.movementDetails': 'Movement details',
 
-    'inventory.movementType': 'Movement type',
+  'inventory.movementType': 'Movement type',
 
-    'inventory.product': 'Product',
+  'inventory.product': 'Product',
 
-    'common.noSku': 'No SKU',
+  'common.noSku': 'No SKU',
 
-    'inventory.location': 'Location',
+  'inventory.location': 'Location',
 
-    'inventory.quantityChange': 'Quantity change',
+  'inventory.quantityChange': 'Quantity change',
 
-    'inventory.quantityBefore': 'Quantity before',
+  'inventory.quantityBefore': 'Quantity before',
 
-    'inventory.quantityAfter': 'Quantity after',
+  'inventory.quantityAfter': 'Quantity after',
 
-    'inventory.reasonCode': 'Reason code',
+  'inventory.reasonCode': 'Reason code',
 
-    'common.notes': 'Notes',
+  'common.notes': 'Notes',
 
-    'common.date': 'Date',
+  'common.date': 'Date',
 
-    'inventory.minimumStock': 'Minimum stock',
+  'inventory.minimumStock': 'Minimum stock',
 
-    'productsPage.table.stockType': 'Stock type',
+  'productsPage.table.stockType': 'Stock type',
 
-    'orderLists.searchPlaceholder': 'Search order lists...',
+  'orderLists.searchPlaceholder': 'Search order lists...',
 
-    'orderLists.dateRange': 'Date range',
+  'orderLists.dateRange': 'Date range',
 
-    'orderLists.amountRange': 'Amount range',
+  'orderLists.amountRange': 'Amount range',
 
-    'orderLists.onlyWithItems': 'Only with items',
+  'orderLists.onlyWithItems': 'Only with items',
 
-    'filters.search.placeholder': 'Search...',
+  'filters.search.placeholder': 'Search...',
 
-    'filters.location.label': 'Location',
+  'filters.location.label': 'Location',
 
-    'filters.category.label': 'Category',
+  'filters.category.label': 'Category',
 
-    'filters.status.label': 'Status',
+  'filters.status.label': 'Status',
 
-    'orders.status.draft': 'Draft',
+  'orders.status.draft': 'Draft',
 
-    'orders.status.pending': 'Pending',
+  'orders.status.pending': 'Pending',
 
-    'orders.status.confirmed': 'Confirmed',
+  'orders.status.confirmed': 'Confirmed',
 
-    'orders.status.shipped': 'Shipped',
+  'orders.status.shipped': 'Shipped',
 
-    'orders.status.delivered': 'Delivered',
+  'orders.status.delivered': 'Delivered',
 
-    'orders.status.cancelled': 'Cancelled',
+  'orders.status.cancelled': 'Cancelled',
 
-    'orders.status.returned': 'Returned',
+  'orders.status.returned': 'Returned',
 
-    'orders.table.orderNumber': 'Order number',
+  'orders.table.orderNumber': 'Order number',
 
-    'orders.table.supplier': 'Supplier',
+  'orders.table.supplier': 'Supplier',
 
-    'orders.table.orderDate': 'Order date',
+  'orders.table.orderDate': 'Order date',
 
-    'orders.table.status': 'Status',
+  'orders.table.status': 'Status',
 
-    'orders.table.totalAmount': 'Total amount',
+  'orders.table.totalAmount': 'Total amount',
 
-    'orders.table.expectedDelivery': 'Expected delivery',
+  'orders.table.expectedDelivery': 'Expected delivery',
 
-    'orders.table.actions': 'Actions',
-
-
+  'orders.table.actions': 'Actions',
 
   // Quick adjustment keys
   quickAdjustment: {
     noProduct: 'No product selected',
     selectProduct: 'Select Product',
-    adjustmentComplete: 'Stock adjustment completed'
-  }
-
+    adjustmentComplete: 'Stock adjustment completed',
+  },
 };

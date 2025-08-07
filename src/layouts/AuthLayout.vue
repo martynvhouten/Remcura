@@ -119,30 +119,30 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, computed } from 'vue';
-import { useRoute } from 'vue-router';
-import { useI18n } from 'vue-i18n';
+  import { defineComponent, computed } from 'vue';
+  import { useRoute } from 'vue-router';
+  import { useI18n } from 'vue-i18n';
 
-export default defineComponent({
-  name: 'AuthLayout',
-  setup() {
-    const route = useRoute();
-    const { t } = useI18n();
+  export default defineComponent({
+    name: 'AuthLayout',
+    setup() {
+      const route = useRoute();
+      const { t } = useI18n();
 
-    // Dynamic subtitle based on current route
-    const subtitleText = computed(() => {
-      if (route.path.startsWith('/join')) {
-        return t('magicJoin.subtitle');
-      }
-      return t('auth.pleaseLogin');
-    });
+      // Dynamic subtitle based on current route
+      const subtitleText = computed(() => {
+        if (route.path.startsWith('/join')) {
+          return t('magicJoin.subtitle');
+        }
+        return t('auth.pleaseLogin');
+      });
 
-    return {
-      t,
-      subtitleText
-    };
-  }
-});
+      return {
+        t,
+        subtitleText,
+      };
+    },
+  });
 </script>
 
 <style lang="scss" scoped>
@@ -285,9 +285,7 @@ export default defineComponent({
   body.body--dark .auth-card {
     background: rgba(41, 37, 36, 0.95);
     border: 1px solid rgba(255, 255, 255, 0.15);
-    box-shadow: 
-      0 20px 60px rgba(0, 0, 0, 0.4),
-      0 8px 24px rgba(0, 0, 0, 0.2),
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4), 0 8px 24px rgba(0, 0, 0, 0.2),
       inset 0 1px 0 rgba(255, 255, 255, 0.1);
   }
 
@@ -459,9 +457,7 @@ export default defineComponent({
   body.body--dark .info-panel {
     background: rgba(41, 37, 36, 0.3);
     border: 1px solid rgba(255, 255, 255, 0.2);
-    box-shadow: 
-      0 20px 60px rgba(0, 0, 0, 0.4),
-      0 8px 24px rgba(0, 0, 0, 0.2),
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4), 0 8px 24px rgba(0, 0, 0, 0.2),
       inset 0 1px 0 rgba(255, 255, 255, 0.1);
   }
 

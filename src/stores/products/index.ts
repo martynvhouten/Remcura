@@ -102,7 +102,7 @@ export const useProductsStore = defineStore('products', () => {
 });
 
 // Re-export types and interfaces for backward compatibility
-export type { 
+export type {
   ProductWithStock,
   ProductCategory,
   ProductFilter,

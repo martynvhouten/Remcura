@@ -51,25 +51,25 @@ class PlatformDashboardService {
       'api-integration-status',
       'performance-metrics',
       'database-status',
-      'error-monitoring'
+      'error-monitoring',
     ];
   }
 
   async getDashboardData(): Promise<PlatformDashboardData> {
     try {
       dashboardLogger.info('🌐 Loading platform dashboard');
-      
+
       const widgetIds = this.getWidgetConfig();
-      
+
       // Load system info
       const systemInfo = await this.loadSystemInfo();
-      
+
       // Load platform metrics
       const platformMetrics = await this.loadPlatformMetrics();
-      
+
       // Load platform widgets
       const widgets = await this.loadWidgets(widgetIds);
-      
+
       // Load quick actions
       const quickActions = this.getQuickActions();
 
@@ -77,7 +77,7 @@ class PlatformDashboardService {
         widgets,
         systemInfo,
         platformMetrics,
-        quickActions
+        quickActions,
       };
     } catch (error) {
       dashboardLogger.error('Error loading platform dashboard:', error);
@@ -88,13 +88,14 @@ class PlatformDashboardService {
   private async loadSystemInfo() {
     // This would typically come from environment variables or system APIs
     const packageInfo = await import('../../../package.json');
-    
+
     return {
       version: packageInfo.version || '2.1.0',
       buildNumber: process.env.VITE_BUILD_NUMBER || '1234',
-      lastDeployment: process.env.VITE_DEPLOYMENT_TIME || new Date().toISOString(),
+      lastDeployment:
+        process.env.VITE_DEPLOYMENT_TIME || new Date().toISOString(),
       uptime: this.getSystemUptime(),
-      environment: process.env.NODE_ENV || 'development'
+      environment: process.env.NODE_ENV || 'development',
     };
   }
 
@@ -102,7 +103,9 @@ class PlatformDashboardService {
     // In a real application, this would be calculated from deployment time
     const uptimeMs = Date.now() - new Date('2024-01-01').getTime();
     const days = Math.floor(uptimeMs / (1000 * 60 * 60 * 24));
-    const hours = Math.floor((uptimeMs % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+    const hours = Math.floor(
+      (uptimeMs % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)
+    );
     return `${days}d ${hours}h`;
   }
 
@@ -143,7 +146,7 @@ class PlatformDashboardService {
         totalUsers: totalUsers || 0,
         activeToday: activeToday || 0,
         totalEvents: totalEvents || 0,
-        systemHealth
+        systemHealth,
       };
     } catch (error) {
       dashboardLogger.error('Error loading platform metrics:', error);
@@ -152,7 +155,7 @@ class PlatformDashboardService {
         totalUsers: 0,
         activeToday: 0,
         totalEvents: 0,
-        systemHealth: 'critical' as const
+        systemHealth: 'critical' as const,
       };
     }
   }
@@ -168,12 +171,16 @@ class PlatformDashboardService {
           widgets.push(widget);
         }
       } catch (error) {
-        ServiceErrorHandler.handle(error, {
-          service: 'PlatformDashboardService',
-          operation: 'loadWidget',
-          metadata: { widgetId, position: i }
-        }, { rethrow: false, logLevel: 'error' });
-        
+        ServiceErrorHandler.handle(
+          error,
+          {
+            service: 'PlatformDashboardService',
+            operation: 'loadWidget',
+            metadata: { widgetId, position: i },
+          },
+          { rethrow: false, logLevel: 'error' }
+        );
+
         // Add error widget
         widgets.push({
           id: widgetId,
@@ -183,7 +190,7 @@ class PlatformDashboardService {
           size: 'medium',
           position: i,
           visible: true,
-          error: error instanceof Error ? error.message : 'Unknown error'
+          error: error instanceof Error ? error.message : 'Unknown error',
         });
       }
     }
@@ -191,13 +198,16 @@ class PlatformDashboardService {
     return widgets;
   }
 
-  private async loadWidget(widgetId: string, position: number): Promise<PlatformWidget | null> {
+  private async loadWidget(
+    widgetId: string,
+    position: number
+  ): Promise<PlatformWidget | null> {
     const baseWidget = {
       id: widgetId,
       title: this.getWidgetTitle(widgetId),
       position,
       visible: true,
-      loading: false
+      loading: false,
     };
 
     switch (widgetId) {
@@ -206,7 +216,7 @@ class PlatformDashboardService {
           ...baseWidget,
           type: 'metric' as const,
           size: 'large' as const,
-          data: await this.loadSystemHealth()
+          data: await this.loadSystemHealth(),
         };
 
       case 'version-info':
@@ -214,7 +224,7 @@ class PlatformDashboardService {
           ...baseWidget,
           type: 'system' as const,
           size: 'medium' as const,
-          data: await this.loadVersionInfo()
+          data: await this.loadVersionInfo(),
         };
 
       case 'platform-audit-logs':
@@ -222,7 +232,7 @@ class PlatformDashboardService {
           ...baseWidget,
           type: 'list' as const,
           size: 'large' as const,
-          data: await this.loadPlatformAuditLogs()
+          data: await this.loadPlatformAuditLogs(),
         };
 
       case 'customer-management':
@@ -230,7 +240,7 @@ class PlatformDashboardService {
           ...baseWidget,
           type: 'table' as const,
           size: 'large' as const,
-          data: await this.loadCustomerManagement()
+          data: await this.loadCustomerManagement(),
         };
 
       case 'api-integration-status':
@@ -238,7 +248,7 @@ class PlatformDashboardService {
           ...baseWidget,
           type: 'table' as const,
           size: 'medium' as const,
-          data: await this.loadApiIntegrationStatus()
+          data: await this.loadApiIntegrationStatus(),
         };
 
       case 'performance-metrics':
@@ -246,7 +256,7 @@ class PlatformDashboardService {
           ...baseWidget,
           type: 'chart' as const,
           size: 'medium' as const,
-          data: await this.loadPerformanceMetrics()
+          data: await this.loadPerformanceMetrics(),
         };
 
       case 'database-status':
@@ -254,7 +264,7 @@ class PlatformDashboardService {
           ...baseWidget,
           type: 'metric' as const,
           size: 'small' as const,
-          data: await this.loadDatabaseStatus()
+          data: await this.loadDatabaseStatus(),
         };
 
       case 'error-monitoring':
@@ -262,7 +272,7 @@ class PlatformDashboardService {
           ...baseWidget,
           type: 'list' as const,
           size: 'medium' as const,
-          data: await this.loadErrorMonitoring()
+          data: await this.loadErrorMonitoring(),
         };
 
       default:
@@ -276,7 +286,10 @@ class PlatformDashboardService {
       .from('activity_log')
       .select('activity_type, created_at')
       .ilike('activity_type', '%error%')
-      .gte('created_at', new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString())
+      .gte(
+        'created_at',
+        new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString()
+      )
       .order('created_at', { ascending: false });
 
     const { data: practicesActive } = await supabase
@@ -284,7 +297,8 @@ class PlatformDashboardService {
       .select('practice_id')
       .gte('created_at', new Date(Date.now() - 60 * 60 * 1000).toISOString());
 
-    const activePractices = new Set(practicesActive?.map(p => p.practice_id)).size;
+    const activePractices = new Set(practicesActive?.map(p => p.practice_id))
+      .size;
 
     // Check database connection health
     const { data: dbHealth } = await supabase
@@ -296,88 +310,123 @@ class PlatformDashboardService {
       error_count_24h: recentErrors?.length || 0,
       active_practices_1h: activePractices,
       database_status: dbHealth ? 'connected' : 'disconnected',
-      overall_status: recentErrors && recentErrors.length > 20 ? 'warning' : 'healthy',
-      last_check: new Date().toISOString()
+      overall_status:
+        recentErrors && recentErrors.length > 20 ? 'warning' : 'healthy',
+      last_check: new Date().toISOString(),
     };
   }
 
   private async loadVersionInfo() {
     const packageInfo = await import('../../../package.json');
-    
+
     return {
       app_version: packageInfo.version || '2.1.0',
       build_number: process.env.VITE_BUILD_NUMBER || '1234',
-      last_deployment: process.env.VITE_DEPLOYMENT_TIME || new Date().toISOString(),
+      last_deployment:
+        process.env.VITE_DEPLOYMENT_TIME || new Date().toISOString(),
       database_version: '15.4', // This would typically come from a query
       environment: process.env.NODE_ENV || 'development',
       dependencies: {
         vue: packageInfo.dependencies?.vue || '3.4.0',
         quasar: packageInfo.dependencies?.quasar || '2.14.0',
-        supabase: packageInfo.dependencies?.['@supabase/supabase-js'] || '2.38.0'
-      }
+        supabase:
+          packageInfo.dependencies?.['@supabase/supabase-js'] || '2.38.0',
+      },
     };
   }
 
   private async loadPlatformAuditLogs() {
     const { data } = await supabase
       .from('activity_log')
-      .select(`
+      .select(
+        `
         activity_type,
         description,
         created_at,
         practices!inner(name),
         user_id
-      `)
-      .in('activity_type', ['user_created', 'practice_created', 'system_error', 'login_failed'])
-      .gte('created_at', new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString())
+      `
+      )
+      .in('activity_type', [
+        'user_created',
+        'practice_created',
+        'system_error',
+        'login_failed',
+      ])
+      .gte(
+        'created_at',
+        new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString()
+      )
       .order('created_at', { ascending: false })
       .limit(50);
 
     return {
-      items: data?.map(log => ({
-        type: log.activity_type,
-        description: log.description,
-        practice_name: (log.practices as any)?.name || 'System',
-        user_id: log.user_id,
-        timestamp: log.created_at,
-        severity: log.activity_type.includes('error') ? 'error' : 
-                 log.activity_type.includes('failed') ? 'warning' : 'info'
-      })) || []
+      items:
+        data?.map(log => ({
+          type: log.activity_type,
+          description: log.description,
+          practice_name: (log.practices as any)?.name || 'System',
+          user_id: log.user_id,
+          timestamp: log.created_at,
+          severity: log.activity_type.includes('error')
+            ? 'error'
+            : log.activity_type.includes('failed')
+            ? 'warning'
+            : 'info',
+        })) || [],
     };
   }
 
   private async loadCustomerManagement() {
     const { data } = await supabase
       .from('practices')
-      .select(`
+      .select(
+        `
         name,
         email,
         created_at,
         practice_members(user_id),
         practice_locations(id),
         usage_analytics(created_at)
-      `)
+      `
+      )
       .order('created_at', { ascending: false })
       .limit(20);
 
     return {
-      headers: ['Practice', 'Email', 'Users', 'Locations', 'Last Activity', 'Created'],
-      rows: data?.map(practice => {
-        const userCount = (practice.practice_members as any[])?.length || 0;
-        const locationCount = (practice.practice_locations as any[])?.length || 0;
-        const lastActivity = (practice.usage_analytics as any[])?.length > 0 ? 
-          new Date(Math.max(...(practice.usage_analytics as any[]).map((a: any) => new Date(a.created_at).getTime()))).toLocaleDateString() :
-          'Never';
+      headers: [
+        'Practice',
+        'Email',
+        'Users',
+        'Locations',
+        'Last Activity',
+        'Created',
+      ],
+      rows:
+        data?.map(practice => {
+          const userCount = (practice.practice_members as any[])?.length || 0;
+          const locationCount =
+            (practice.practice_locations as any[])?.length || 0;
+          const lastActivity =
+            (practice.usage_analytics as any[])?.length > 0
+              ? new Date(
+                  Math.max(
+                    ...(practice.usage_analytics as any[]).map((a: any) =>
+                      new Date(a.created_at).getTime()
+                    )
+                  )
+                ).toLocaleDateString()
+              : 'Never';
 
-        return [
-          practice.name,
-          practice.email || 'N/A',
-          userCount,
-          locationCount,
-          lastActivity,
-          new Date(practice.created_at).toLocaleDateString()
-        ];
-      }) || []
+          return [
+            practice.name,
+            practice.email || 'N/A',
+            userCount,
+            locationCount,
+            lastActivity,
+            new Date(practice.created_at).toLocaleDateString(),
+          ];
+        }) || [],
     };
   }
 
@@ -388,22 +437,28 @@ class PlatformDashboardService {
       .neq('integration_type', 'manual');
 
     // Group by integration type and method
-    const integrationStats: Record<string, {
-      total: number;
-      active: number;
-      recent_syncs: number;
-    }> = {};
+    const integrationStats: Record<
+      string,
+      {
+        total: number;
+        active: number;
+        recent_syncs: number;
+      }
+    > = {};
 
     data?.forEach(supplier => {
       const key = `${supplier.integration_type}-${supplier.order_method}`;
       if (!integrationStats[key]) {
         integrationStats[key] = { total: 0, active: 0, recent_syncs: 0 };
       }
-      
+
       integrationStats[key].total++;
       if (supplier.sync_enabled) integrationStats[key].active++;
-      if (supplier.last_sync_at && 
-          new Date(supplier.last_sync_at) > new Date(Date.now() - 24 * 60 * 60 * 1000)) {
+      if (
+        supplier.last_sync_at &&
+        new Date(supplier.last_sync_at) >
+          new Date(Date.now() - 24 * 60 * 60 * 1000)
+      ) {
         integrationStats[key].recent_syncs++;
       }
     });
@@ -411,18 +466,21 @@ class PlatformDashboardService {
     return {
       headers: ['Integration', 'Total', 'Active', 'Recent Syncs', 'Health'],
       rows: Object.entries(integrationStats).map(([key, stats]) => {
-        const health = stats.active > 0 ? 
-          (stats.recent_syncs / stats.active > 0.8 ? 'Good' : 'Warning') : 
-          'Inactive';
-        
+        const health =
+          stats.active > 0
+            ? stats.recent_syncs / stats.active > 0.8
+              ? 'Good'
+              : 'Warning'
+            : 'Inactive';
+
         return [
           key.replace('-', ' + '),
           stats.total,
           stats.active,
           stats.recent_syncs,
-          health
+          health,
         ];
-      })
+      }),
     };
   }
 
@@ -431,15 +489,20 @@ class PlatformDashboardService {
     const { data } = await supabase
       .from('usage_analytics')
       .select('created_at, event_type')
-      .gte('created_at', new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString())
+      .gte(
+        'created_at',
+        new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString()
+      )
       .order('created_at', { ascending: true });
 
     // Group by day
     const dailyMetrics: Record<string, number> = {};
     const last7Days = [];
-    
+
     for (let i = 6; i >= 0; i--) {
-      const date = new Date(Date.now() - i * 24 * 60 * 60 * 1000).toISOString().split('T')[0];
+      const date = new Date(Date.now() - i * 24 * 60 * 60 * 1000)
+        .toISOString()
+        .split('T')[0];
       last7Days.push(date);
       dailyMetrics[date] = 0;
     }
@@ -458,10 +521,13 @@ class PlatformDashboardService {
         {
           label: 'Daily Events',
           data: last7Days.map(date => dailyMetrics[date]),
-          color: '#2196F3'
-        }
+          color: '#2196F3',
+        },
       ],
-      total_events: Object.values(dailyMetrics).reduce((sum, val) => sum + val, 0)
+      total_events: Object.values(dailyMetrics).reduce(
+        (sum, val) => sum + val,
+        0
+      ),
     };
   }
 
@@ -469,10 +535,7 @@ class PlatformDashboardService {
     try {
       // Simple connectivity test
       const start = Date.now();
-      const { data } = await supabase
-        .from('practices')
-        .select('id')
-        .limit(1);
+      const { data } = await supabase.from('practices').select('id').limit(1);
       const responseTime = Date.now() - start;
 
       // Get table sizes (this would require a custom RPC function in production)
@@ -483,7 +546,7 @@ class PlatformDashboardService {
         response_time_ms: responseTime,
         total_tables: tableStats?.length || 0,
         largest_table: tableStats?.[0]?.table_name || 'unknown',
-        last_check: new Date().toISOString()
+        last_check: new Date().toISOString(),
       };
     } catch (error) {
       return {
@@ -492,7 +555,7 @@ class PlatformDashboardService {
         total_tables: 0,
         largest_table: 'unknown',
         last_check: new Date().toISOString(),
-        error: error instanceof Error ? error.message : 'Unknown error'
+        error: error instanceof Error ? error.message : 'Unknown error',
       };
     }
   }
@@ -500,42 +563,59 @@ class PlatformDashboardService {
   private async loadErrorMonitoring() {
     const { data } = await supabase
       .from('activity_log')
-      .select(`
+      .select(
+        `
         activity_type,
         description,
         created_at,
         practices!inner(name)
-      `)
+      `
+      )
       .ilike('activity_type', '%error%')
-      .gte('created_at', new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString())
+      .gte(
+        'created_at',
+        new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString()
+      )
       .order('created_at', { ascending: false })
       .limit(20);
 
     // Group errors by type
-    const errorGroups: Record<string, { count: number; last_seen: string; practices: Set<string> }> = {};
-    
+    const errorGroups: Record<
+      string,
+      { count: number; last_seen: string; practices: Set<string> }
+    > = {};
+
     data?.forEach(error => {
       const type = error.activity_type;
       if (!errorGroups[type]) {
-        errorGroups[type] = { count: 0, last_seen: error.created_at, practices: new Set() };
+        errorGroups[type] = {
+          count: 0,
+          last_seen: error.created_at,
+          practices: new Set(),
+        };
       }
-      
+
       errorGroups[type].count++;
-      errorGroups[type].practices.add((error.practices as any)?.name || 'Unknown');
-      
+      errorGroups[type].practices.add(
+        (error.practices as any)?.name || 'Unknown'
+      );
+
       if (new Date(error.created_at) > new Date(errorGroups[type].last_seen)) {
         errorGroups[type].last_seen = error.created_at;
       }
     });
 
     return {
-      items: Object.entries(errorGroups).map(([type, info]) => ({
-        error_type: type,
-        count: info.count,
-        affected_practices: info.practices.size,
-        last_seen: info.last_seen,
-        severity: info.count > 10 ? 'high' : info.count > 5 ? 'medium' : 'low'
-      })).sort((a, b) => b.count - a.count)
+      items: Object.entries(errorGroups)
+        .map(([type, info]) => ({
+          error_type: type,
+          count: info.count,
+          affected_practices: info.practices.size,
+          last_seen: info.last_seen,
+          severity:
+            info.count > 10 ? 'high' : info.count > 5 ? 'medium' : 'low',
+        }))
+        .sort((a, b) => b.count - a.count),
     };
   }
 
@@ -548,7 +628,7 @@ class PlatformDashboardService {
       'api-integration-status': t('platform.widgets.apiIntegrationStatus'),
       'performance-metrics': t('platform.widgets.performanceMetrics'),
       'database-status': t('platform.widgets.databaseStatus'),
-      'error-monitoring': t('platform.widgets.errorMonitoring')
+      'error-monitoring': t('platform.widgets.errorMonitoring'),
     };
 
     return titles[widgetId] || widgetId;
@@ -561,43 +641,43 @@ class PlatformDashboardService {
         label: t('platform.quickActions.createPractice'),
         icon: 'add_business',
         route: '/platform/practices/create',
-        color: 'primary'
+        color: 'primary',
       },
       {
         id: 'system-logs',
         label: t('platform.quickActions.systemLogs'),
         icon: 'description',
         route: '/platform/logs',
-        color: 'info'
+        color: 'info',
       },
       {
         id: 'database-admin',
         label: t('platform.quickActions.databaseAdmin'),
         icon: 'storage',
         route: '/platform/database',
-        color: 'warning'
+        color: 'warning',
       },
       {
         id: 'api-documentation',
         label: t('platform.quickActions.apiDocumentation'),
         icon: 'api',
         route: '/platform/api-docs',
-        color: 'indigo'
+        color: 'indigo',
       },
       {
         id: 'monitoring',
         label: t('platform.quickActions.monitoring'),
         icon: 'monitoring',
         route: '/platform/monitoring',
-        color: 'red'
+        color: 'red',
       },
       {
         id: 'backup-restore',
         label: t('platform.quickActions.backupRestore'),
         icon: 'backup',
         route: '/platform/backup',
-        color: 'green'
-      }
+        color: 'green',
+      },
     ];
   }
 }

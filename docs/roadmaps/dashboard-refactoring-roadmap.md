@@ -1,17 +1,19 @@
-# 🎯 DASHBOARD SYSTEEM REFACTORING PLAN
+# 🎯 Dashboard Systeem Refactoring Roadmap
 
 ## **📋 OVERZICHT HUIDIGE SITUATIE**
 
 ### **Huidige Dashboard Structuur**
+
 - **DashboardPage.vue**: Algemene praktijk dashboard
 - **AdminDashboard.vue**: Admin functies (onduidelijke rol)
 - **dashboard.ts**: Service met rol-based widget configuratie
 
 ### **Huidige Rollen & Widgets**
+
 ```typescript
-assistant: ['stock-alerts', 'order-suggestions', 'recent-orders', 'quick-scan']
-manager: ['analytics-overview', 'cost-analysis', 'supplier-performance', 'team-activity']
-owner: ['business-overview', 'financial-summary', 'user-management', 'system-health']
+assistant: ['stock-alerts', 'order-suggestions', 'recent-orders', 'quick-scan'];
+manager: ['analytics-overview', 'cost-analysis', 'supplier-performance', 'team-activity'];
+owner: ['business-overview', 'financial-summary', 'user-management', 'system-health'];
 ```
 
 ---
@@ -21,15 +23,17 @@ owner: ['business-overview', 'financial-summary', 'user-management', 'system-hea
 ### **1. PRAKTIJK DASHBOARDS** (Gefilterd op practice_id)
 
 #### **🔧 ASSISTENT DASHBOARD**
+
 **Focus**: Operationele taken en voorraadprocessen
 
 **Widgets:**
+
 ```typescript
 // VOORRAAD OPERATIES
 'low-stock-alerts': {
   query: `SELECT p.name, sl.current_quantity, sl.minimum_quantity, pl.name as location
-          FROM stock_levels sl 
-          JOIN products p ON sl.product_id = p.id 
+          FROM stock_levels sl
+          JOIN products p ON sl.product_id = p.id
           JOIN practice_locations pl ON sl.location_id = pl.id
           WHERE sl.practice_id = $1 AND sl.current_quantity <= sl.minimum_quantity
           ORDER BY (sl.current_quantity / sl.minimum_quantity) ASC`,
@@ -38,8 +42,8 @@ owner: ['business-overview', 'financial-summary', 'user-management', 'system-hea
 
 'expiring-products': {
   query: `SELECT p.name, pb.batch_number, pb.expiry_date, pb.current_quantity, pl.name as location
-          FROM product_batches pb 
-          JOIN products p ON pb.product_id = p.id 
+          FROM product_batches pb
+          JOIN products p ON pb.product_id = p.id
           JOIN practice_locations pl ON pb.location_id = pl.id
           WHERE pb.practice_id = $1 AND pb.expiry_date <= CURRENT_DATE + INTERVAL '30 days'
           ORDER BY pb.expiry_date ASC`,
@@ -47,8 +51,8 @@ owner: ['business-overview', 'financial-summary', 'user-management', 'system-hea
 }
 
 'order-suggestions': {
-  query: `SELECT os.*, p.name, p.category 
-          FROM order_suggestions os 
+  query: `SELECT os.*, p.name, p.category
+          FROM order_suggestions os
           JOIN products p ON os.product_id = p.id
           WHERE os.practice_id = $1 AND os.expires_at > NOW()
           ORDER BY os.urgency_level DESC, os.created_at ASC`,
@@ -57,7 +61,7 @@ owner: ['business-overview', 'financial-summary', 'user-management', 'system-hea
 
 'active-order-lists': {
   query: `SELECT ol.name, ol.status, ol.total_items, ol.total_value, s.name as supplier_name
-          FROM order_lists ol 
+          FROM order_lists ol
           LEFT JOIN suppliers s ON ol.supplier_id = s.id
           WHERE ol.practice_id = $1 AND ol.status IN ('draft', 'active')
           ORDER BY ol.updated_at DESC`,
@@ -66,7 +70,7 @@ owner: ['business-overview', 'financial-summary', 'user-management', 'system-hea
 
 'pending-deliveries': {
   query: `SELECT so.*, s.name as supplier_name, ol.name as order_list_name
-          FROM supplier_orders so 
+          FROM supplier_orders so
           JOIN suppliers s ON so.supplier_id = s.id
           JOIN order_lists ol ON so.order_list_id = ol.id
           WHERE ol.practice_id = $1 AND so.status IN ('sent', 'confirmed')
@@ -76,16 +80,18 @@ owner: ['business-overview', 'financial-summary', 'user-management', 'system-hea
 ```
 
 #### **📊 MANAGER DASHBOARD**
+
 **Focus**: Analyse, trends en leveranciersprestaties
 
 **Widgets:**
+
 ```typescript
 // VOORRAAD TRENDS
 'stock-trends': {
   query: `SELECT DATE_TRUNC('week', sm.created_at) as week,
                  sm.movement_type,
                  SUM(sm.quantity_change) as total_change
-          FROM stock_movements sm 
+          FROM stock_movements sm
           JOIN practice_locations pl ON sm.location_id = pl.id
           WHERE sm.practice_id = $1 AND sm.created_at >= NOW() - INTERVAL '3 months'
           GROUP BY week, sm.movement_type
@@ -98,7 +104,7 @@ owner: ['business-overview', 'financial-summary', 'user-management', 'system-hea
                  COUNT(so.id) as total_orders,
                  AVG(EXTRACT(days FROM (so.delivery_confirmed_at - so.sent_at))) as avg_delivery_days,
                  COUNT(CASE WHEN so.status = 'failed' THEN 1 END) as failed_orders
-          FROM suppliers s 
+          FROM suppliers s
           LEFT JOIN supplier_orders so ON s.id = so.supplier_id
           LEFT JOIN order_lists ol ON so.order_list_id = ol.id
           WHERE ol.practice_id = $1 AND so.created_at >= NOW() - INTERVAL '6 months'
@@ -112,7 +118,7 @@ owner: ['business-overview', 'financial-summary', 'user-management', 'system-hea
                  SUM(pb.total_cost) as total_spent,
                  COUNT(DISTINCT pb.supplier_id) as supplier_count,
                  AVG(pb.unit_cost) as avg_unit_cost
-          FROM product_batches pb 
+          FROM product_batches pb
           JOIN products p ON pb.product_id = p.id
           WHERE pb.practice_id = $1 AND pb.created_at >= NOW() - INTERVAL '3 months'
           GROUP BY p.category
@@ -123,7 +129,7 @@ owner: ['business-overview', 'financial-summary', 'user-management', 'system-hea
 'error-alerts': {
   query: `SELECT al.activity_type, al.description, al.created_at, COUNT(*) as count
           FROM activity_log al
-          WHERE al.practice_id = $1 AND al.activity_type LIKE '%error%' 
+          WHERE al.practice_id = $1 AND al.activity_type LIKE '%error%'
                 AND al.created_at >= NOW() - INTERVAL '7 days'
           GROUP BY al.activity_type, al.description, al.created_at
           ORDER BY al.created_at DESC`,
@@ -132,30 +138,32 @@ owner: ['business-overview', 'financial-summary', 'user-management', 'system-hea
 
 'pending-orders': {
   query: `SELECT COUNT(*) as count, SUM(total_value) as total_value
-          FROM order_lists 
+          FROM order_lists
           WHERE practice_id = $1 AND status IN ('draft', 'active')`,
   data: { practice_id }
 }
 ```
 
 #### **🏢 PRACTICE OWNER DASHBOARD**
+
 **Focus**: Financiën, compliance, strategische overview
 
 **Widgets:**
+
 ```typescript
 // FINANCIËLE OVERVIEW
 'inventory-value': {
   query: `SELECT SUM(sl.current_quantity * COALESCE(p.price, 0)) as total_value,
                  COUNT(DISTINCT p.id) as total_products,
                  COUNT(DISTINCT sl.location_id) as locations_count
-          FROM stock_levels sl 
+          FROM stock_levels sl
           JOIN products p ON sl.product_id = p.id
           WHERE sl.practice_id = $1`,
   data: { practice_id }
 }
 
 'batch-compliance': {
-  query: `SELECT 
+  query: `SELECT
                  COUNT(*) as total_batches,
                  COUNT(CASE WHEN pb.expiry_date <= CURRENT_DATE + INTERVAL '30 days' THEN 1 END) as expiring_soon,
                  COUNT(CASE WHEN pb.expiry_date <= CURRENT_DATE THEN 1 END) as expired,
@@ -169,7 +177,7 @@ owner: ['business-overview', 'financial-summary', 'user-management', 'system-hea
   query: `SELECT s.name, s.integration_type, s.order_method, s.last_sync_at,
                  COUNT(sp.id) as products_count,
                  s.minimum_order_amount, s.payment_terms
-          FROM suppliers s 
+          FROM suppliers s
           LEFT JOIN supplier_products sp ON s.id = sp.supplier_id
           WHERE s.is_active = true
           GROUP BY s.id, s.name, s.integration_type, s.order_method, s.last_sync_at,
@@ -179,10 +187,10 @@ owner: ['business-overview', 'financial-summary', 'user-management', 'system-hea
 }
 
 'stock-rotation': {
-  query: `SELECT p.category, 
+  query: `SELECT p.category,
                  AVG(EXTRACT(days FROM (pb.created_at - pb.received_date))) as avg_shelf_life,
                  COUNT(pb.id) as batches_processed
-          FROM product_batches pb 
+          FROM product_batches pb
           JOIN products p ON pb.product_id = p.id
           WHERE pb.practice_id = $1 AND pb.status = 'depleted'
                 AND pb.created_at >= NOW() - INTERVAL '6 months'
@@ -194,7 +202,7 @@ owner: ['business-overview', 'financial-summary', 'user-management', 'system-hea
 'audit-notifications': {
   query: `SELECT cs.name, cs.status, cs.total_products_counted, cs.products_with_variance,
                  cs.total_variance_value, cs.completed_at, pl.name as location_name
-          FROM counting_sessions cs 
+          FROM counting_sessions cs
           JOIN practice_locations pl ON cs.location_id = pl.id
           WHERE cs.practice_id = $1 AND cs.status = 'completed'
                 AND cs.completed_at >= NOW() - INTERVAL '1 month'
@@ -210,19 +218,20 @@ owner: ['business-overview', 'financial-summary', 'user-management', 'system-hea
 **Route**: `/platform` (alleen toegankelijk voor platform_owner rol)
 
 #### **🔧 SYSTEEM WIDGETS**
+
 ```typescript
 // PLATFORM BEHEER
 'system-health': {
-  query: `SELECT 
+  query: `SELECT
             COUNT(DISTINCT p.id) as total_practices,
             COUNT(DISTINCT pm.user_id) as total_users,
             SUM(ua.event_count) as total_events_today
-          FROM practices p 
+          FROM practices p
           LEFT JOIN practice_members pm ON p.id = pm.practice_id
           LEFT JOIN (
-            SELECT practice_id, COUNT(*) as event_count 
-            FROM usage_analytics 
-            WHERE created_at >= CURRENT_DATE 
+            SELECT practice_id, COUNT(*) as event_count
+            FROM usage_analytics
+            WHERE created_at >= CURRENT_DATE
             GROUP BY practice_id
           ) ua ON p.id = ua.practice_id`,
   data: {}
@@ -244,7 +253,7 @@ owner: ['business-overview', 'financial-summary', 'user-management', 'system-hea
 }
 
 'platform-audit-logs': {
-  query: `SELECT al.activity_type, al.description, al.created_at, 
+  query: `SELECT al.activity_type, al.description, al.created_at,
                  p.name as practice_name, al.user_id
           FROM activity_log al
           JOIN practices p ON al.practice_id = p.id
@@ -260,7 +269,7 @@ owner: ['business-overview', 'financial-summary', 'user-management', 'system-hea
                  COUNT(DISTINCT pm.user_id) as user_count,
                  COUNT(DISTINCT pl.id) as location_count,
                  MAX(ua.created_at) as last_activity
-          FROM practices p 
+          FROM practices p
           LEFT JOIN practice_members pm ON p.id = pm.practice_id
           LEFT JOIN practice_locations pl ON p.id = pl.practice_id
           LEFT JOIN usage_analytics ua ON p.id = ua.practice_id
@@ -286,6 +295,7 @@ owner: ['business-overview', 'financial-summary', 'user-management', 'system-hea
 ## **🔄 IMPLEMENTATIE STAPPEN**
 
 ### **Stap 1: Dashboard Service Refactoring**
+
 ```typescript
 // src/services/dashboard/practice-dashboard.ts
 export class PracticeDashboardService {
@@ -294,7 +304,7 @@ export class PracticeDashboardService {
   }
 }
 
-// src/services/dashboard/platform-dashboard.ts  
+// src/services/dashboard/platform-dashboard.ts
 export class PlatformDashboardService {
   async getDashboardData() {
     // Implementeer platform-wide widgets
@@ -303,6 +313,7 @@ export class PlatformDashboardService {
 ```
 
 ### **Stap 2: Route & Component Structuur**
+
 ```
 src/pages/
 ├── DashboardPage.vue           # Praktijk dashboard (herbruik bestaande)
@@ -317,16 +328,17 @@ src/pages/
 ```
 
 ### **Stap 3: RLS & Autorisatie**
+
 ```sql
 -- Voeg platform_owner rol toe aan practice_members
 ALTER TYPE user_role ADD VALUE 'platform_owner';
 
 -- RLS policies voor platform toegang
-CREATE POLICY platform_access ON practices 
+CREATE POLICY platform_access ON practices
 FOR SELECT USING (
   EXISTS (
-    SELECT 1 FROM practice_members pm 
-    WHERE pm.user_id = auth.uid() 
+    SELECT 1 FROM practice_members pm
+    WHERE pm.user_id = auth.uid()
     AND pm.role = 'platform_owner'
   )
 );
@@ -337,8 +349,9 @@ FOR SELECT USING (
 ## **📊 ONTBREKENDE DATA IDENTIFICATIE**
 
 ### **Huidige Tabellen Status: ✅ COMPLEET**
+
 - ✅ `practices` - Practice basis info
-- ✅ `practice_members` - Gebruikers en rollen  
+- ✅ `practice_members` - Gebruikers en rollen
 - ✅ `products` & `stock_levels` - Voorraad data
 - ✅ `product_batches` - Batch tracking & expiratie
 - ✅ `suppliers` & `supplier_orders` - Leverancier integraties
@@ -350,6 +363,7 @@ FOR SELECT USING (
 ### **Benodigde Toevoegingen: 🔧 MINOR**
 
 #### **1. Dashboard Configuratie Tabel**
+
 ```sql
 CREATE TABLE dashboard_configurations (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
@@ -364,14 +378,15 @@ CREATE TABLE dashboard_configurations (
 ```
 
 #### **2. Platform Metrics Materialized View**
+
 ```sql
 CREATE MATERIALIZED VIEW platform_metrics AS
-SELECT 
+SELECT
   DATE_TRUNC('day', created_at) as date,
   COUNT(DISTINCT practice_id) as active_practices,
   COUNT(*) as total_events,
   event_type
-FROM usage_analytics 
+FROM usage_analytics
 WHERE created_at >= NOW() - INTERVAL '30 days'
 GROUP BY date, event_type;
 
@@ -384,24 +399,28 @@ CREATE INDEX ON platform_metrics (date, event_type);
 ## **🚀 PRIORITEITEN & TIJDLIJN**
 
 ### **Week 1: Foundation**
-1. ✅ Analyseer huidige dashboard.ts 
+
+1. ✅ Analyseer huidige dashboard.ts
 2. 🔧 Refactor naar practice-dashboard.ts & platform-dashboard.ts
 3. 🔧 Implementeer rol-specifieke widget queries
 4. 🔧 Test met bestaande Supabase data
 
 ### **Week 2: Platform Portal**
+
 1. 🔧 Maak PlatformDashboard.vue component
 2. 🔧 Implementeer /platform route met auth guards
 3. 🔧 Voeg platform_owner rol toe aan RLS
 4. 🔧 Test platform-wide queries
 
 ### **Week 3: Widgets & UI**
+
 1. 🔧 Implementeer alle assistant widgets
-2. 🔧 Implementeer alle manager widgets  
+2. 🔧 Implementeer alle manager widgets
 3. 🔧 Implementeer alle owner widgets
 4. 🔧 Test realtime data updates
 
 ### **Week 4: Polish & Deploy**
+
 1. 🔧 Add dashboard customization
 2. 🔧 Performance optimization
 3. 🔧 Testing & bug fixes
@@ -412,21 +431,25 @@ CREATE INDEX ON platform_metrics (date, event_type);
 ## **✅ SUCCESS CRITERIA**
 
 ### **Praktijk Dashboards**
+
 - [x] Elke rol heeft specifieke, relevante widgets
 - [x] Alle data is gefilterd op practice_id
 - [x] Realtime updates werken correct
 - [x] Performance < 2sec laadtijd
 
 ### **Platform Portal**
+
 - [x] Volledig gescheiden van praktijk data
 - [x] Platform-wide metrics en beheer
 - [x] Alleen toegankelijk voor platform_owners
 - [x] Klantbeheer en systeem monitoring
 
 ### **Data Integriteit**
+
 - [x] Alle queries gebruiken bestaande tabellen
 - [x] RLS policies zijn correct geconfigureerd
 - [x] Geen N+1 query problemen
 - [x] Proper error handling
 
-Dit plan maakt optimaal gebruik van de bestaande database structuur en biedt een duidelijke scheiding tussen praktijk-specifieke en platform-wide functionaliteit.
+Dit plan maakt optimaal gebruik van de bestaande database structuur en biedt een duidelijke
+scheiding tussen praktijk-specifieke en platform-wide functionaliteit.

@@ -2,20 +2,24 @@
 
 ## Overview
 
-Remcura implements a comprehensive role-based permission system that provides fine-grained access control across all application features. The system is built on top of Supabase with Row Level Security (RLS) and consists of multiple layers of protection.
+Remcura implements a comprehensive role-based permission system that provides fine-grained access
+control across all application features. The system is built on top of Supabase with Row Level
+Security (RLS) and consists of multiple layers of protection.
 
 ## System Architecture
 
 ### 1. Database Layer (Supabase)
+
 ```sql
 -- Core Tables
 practices                 -- Practice/clinic organizations
-practice_members         -- User-practice relationships with roles  
+practice_members         -- User-practice relationships with roles
 user_permissions        -- Granular permission assignments
 practice_locations      -- Physical locations within practices
 ```
 
 ### 2. Application Layer (Frontend)
+
 ```typescript
 // Core Services
 src/services/permissions.ts    -- Permission checking logic
@@ -27,16 +31,18 @@ src/stores/auth.ts           -- Authentication state
 ## Role Hierarchy
 
 ### Platform Level
+
 ```
 platform_owner (Super Admin)
 ├── Full platform access
-├── All practice functionalities  
+├── All practice functionalities
 ├── System monitoring
 ├── Database administration
 └── Multi-practice management
 ```
 
-### Practice Level  
+### Practice Level
+
 ```
 owner (Practice Owner)
 ├── All practice functions
@@ -45,7 +51,7 @@ owner (Practice Owner)
 ├── Financial reports
 └── Complete data access
 
-manager (Practice Manager)  
+manager (Practice Manager)
 ├── Operations management
 ├── Product & inventory control
 ├── Order management
@@ -79,24 +85,25 @@ guest (External Access)
 
 ### Complete Role Matrix
 
-| Feature | platform_owner | owner | manager | assistant | logistics | member | guest |
-|---------|---------------|-------|---------|-----------|-----------|--------|-------|
-| **Dashboard Access** | ✅ All | ✅ Practice | ✅ Practice | ✅ Practice | ✅ Basic | ✅ Basic | ❌ |
-| **Product Management** | ✅ Full | ✅ Full | ✅ Full | ✅ Full | 👁️ View | 👁️ View | 👁️ Limited |
-| **Inventory Management** | ✅ Full | ✅ Full | ✅ Full | ✅ Full | ✅ Count/Adjust | 👁️ View | ❌ |
-| **Order Management** | ✅ Full | ✅ Full | ✅ Full | ✅ Full | ❌ | ✅ Create | ❌ |
-| **Location Management** | ✅ Full | ✅ Full | ✅ Full | ❌ | ❌ | ❌ | ❌ |
-| **User Management** | ✅ Full | ✅ Full | ✅ Basic | ❌ | ❌ | ❌ | ❌ |
-| **Analytics & Reports** | ✅ Full | ✅ Full | ✅ Full | ✅ Basic | ❌ | ❌ | ❌ |
-| **Supplier Management** | ✅ Full | ✅ Full | ✅ Full | ✅ Full | ❌ | ❌ | ❌ |
-| **Settings Management** | ✅ Full | ✅ Full | ✅ Basic | ❌ | ❌ | ❌ | ❌ |
-| **Platform Functions** | ✅ Only | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ |
+| Feature                  | platform_owner | owner       | manager     | assistant   | logistics       | member    | guest      |
+| ------------------------ | -------------- | ----------- | ----------- | ----------- | --------------- | --------- | ---------- |
+| **Dashboard Access**     | ✅ All         | ✅ Practice | ✅ Practice | ✅ Practice | ✅ Basic        | ✅ Basic  | ❌         |
+| **Product Management**   | ✅ Full        | ✅ Full     | ✅ Full     | ✅ Full     | 👁️ View         | 👁️ View   | 👁️ Limited |
+| **Inventory Management** | ✅ Full        | ✅ Full     | ✅ Full     | ✅ Full     | ✅ Count/Adjust | 👁️ View   | ❌         |
+| **Order Management**     | ✅ Full        | ✅ Full     | ✅ Full     | ✅ Full     | ❌              | ✅ Create | ❌         |
+| **Location Management**  | ✅ Full        | ✅ Full     | ✅ Full     | ❌          | ❌              | ❌        | ❌         |
+| **User Management**      | ✅ Full        | ✅ Full     | ✅ Basic    | ❌          | ❌              | ❌        | ❌         |
+| **Analytics & Reports**  | ✅ Full        | ✅ Full     | ✅ Full     | ✅ Basic    | ❌              | ❌        | ❌         |
+| **Supplier Management**  | ✅ Full        | ✅ Full     | ✅ Full     | ✅ Full     | ❌              | ❌        | ❌         |
+| **Settings Management**  | ✅ Full        | ✅ Full     | ✅ Basic    | ❌          | ❌              | ❌        | ❌         |
+| **Platform Functions**   | ✅ Only        | ❌          | ❌          | ❌          | ❌              | ❌        | ❌         |
 
 ## Implementation Details
 
 ### 1. Role Assignment
 
 **Database Storage:**
+
 ```sql
 -- practice_members table
 CREATE TABLE practice_members (
@@ -110,20 +117,22 @@ CREATE TABLE practice_members (
 ```
 
 **TypeScript Definition:**
+
 ```typescript
-export type UserRole = 
-  | 'owner' 
-  | 'manager' 
-  | 'assistant' 
-  | 'logistics' 
-  | 'member' 
-  | 'guest' 
+export type UserRole =
+  | 'owner'
+  | 'manager'
+  | 'assistant'
+  | 'logistics'
+  | 'member'
+  | 'guest'
   | 'platform_owner';
 ```
 
 ### 2. Permission Checking
 
 **Basic Role Check:**
+
 ```typescript
 // Check user's role in current practice
 const userRole = await PermissionService.getUserRole();
@@ -131,16 +140,18 @@ const canEdit = PermissionService.canEditProducts(userRole);
 ```
 
 **Granular Permission Check:**
+
 ```typescript
 // Check specific permission
 const hasPermission = await PermissionService.hasPermission(
-  'write',        // permission type
-  'products',     // resource type  
-  'product-123'   // specific resource (optional)
+  'write', // permission type
+  'products', // resource type
+  'product-123' // specific resource (optional)
 );
 ```
 
 **Route Protection:**
+
 ```typescript
 // In route definition
 {
@@ -155,13 +166,10 @@ const hasPermission = await PermissionService.hasPermission(
 ### 3. Component-Level Access Control
 
 **Conditional Rendering:**
+
 ```vue
 <template>
-  <q-btn 
-    v-if="canDeleteProducts" 
-    @click="deleteProduct"
-    label="Delete"
-  />
+  <q-btn v-if="canDeleteProducts" @click="deleteProduct" label="Delete" />
 </template>
 
 <script setup lang="ts">
@@ -173,6 +181,7 @@ const canDeleteProducts = PermissionService.canDeleteProducts(userRole);
 ```
 
 **Navigation Guard Example:**
+
 ```typescript
 // MainLayout.vue
 const isAdmin = computed(() => {
@@ -246,7 +255,7 @@ ALTER TABLE practice_locations ENABLE ROW LEVEL SECURITY;
 CREATE POLICY "Users can view own practice data" ON practices
   FOR SELECT USING (
     id IN (
-      SELECT practice_id FROM practice_members 
+      SELECT practice_id FROM practice_members
       WHERE user_id = auth.uid()
     )
   );
@@ -255,7 +264,7 @@ CREATE POLICY "Users can view own practice data" ON practices
 CREATE POLICY "Only owners can update practices" ON practices
   FOR UPDATE USING (
     id IN (
-      SELECT practice_id FROM practice_members 
+      SELECT practice_id FROM practice_members
       WHERE user_id = auth.uid() AND role = 'owner'
     )
   );
@@ -264,18 +273,21 @@ CREATE POLICY "Only owners can update practices" ON practices
 ## Security Features
 
 ### 1. Multi-Layer Protection
+
 - **Database Level**: RLS policies on all sensitive tables
 - **API Level**: Permission checks in Supabase functions
 - **Application Level**: Role-based route guards
 - **Component Level**: Conditional rendering and access
 
 ### 2. Principle of Least Privilege
+
 - Users receive minimum permissions necessary
 - Role escalation requires explicit approval
 - Time-limited permissions supported
 - Location-based restrictions available
 
 ### 3. Audit Trail
+
 ```sql
 -- Activity logging for permission changes
 CREATE TABLE activity_log (
@@ -295,35 +307,31 @@ CREATE TABLE activity_log (
 ### 1. Initial Platform Setup
 
 **Create Platform Owner:**
+
 ```typescript
 // During platform initialization
 const platformOwner = {
   email: 'admin@remcura.com',
   role: 'platform_owner',
-  practice_id: null // Platform level access
+  practice_id: null, // Platform level access
 };
 ```
 
 ### 2. Practice Setup
 
 **Create New Practice:**
+
 ```typescript
 async function createPractice(practiceData: PracticeInsert, ownerId: string) {
   // 1. Create practice
-  const practice = await supabase
-    .from('practices')
-    .insert(practiceData)
-    .select()
-    .single();
+  const practice = await supabase.from('practices').insert(practiceData).select().single();
 
   // 2. Assign owner role
-  await supabase
-    .from('practice_members')
-    .insert({
-      practice_id: practice.id,
-      user_id: ownerId,
-      role: 'owner'
-    });
+  await supabase.from('practice_members').insert({
+    practice_id: practice.id,
+    user_id: ownerId,
+    role: 'owner',
+  });
 
   return practice;
 }
@@ -332,27 +340,21 @@ async function createPractice(practiceData: PracticeInsert, ownerId: string) {
 ### 3. User Invitation Flow
 
 **Invite New User:**
+
 ```typescript
-async function inviteUser(
-  email: string, 
-  role: UserRole, 
-  practiceId: string,
-  invitedBy: string
-) {
+async function inviteUser(email: string, role: UserRole, practiceId: string, invitedBy: string) {
   // 1. Create user invitation
-  const invitation = await supabase
-    .from('invitations')
-    .insert({
-      email,
-      role,
-      practice_id: practiceId,
-      invited_by: invitedBy,
-      expires_at: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000) // 7 days
-    });
+  const invitation = await supabase.from('invitations').insert({
+    email,
+    role,
+    practice_id: practiceId,
+    invited_by: invitedBy,
+    expires_at: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000), // 7 days
+  });
 
   // 2. Send invitation email
   await sendInvitationEmail(email, invitation.token);
-  
+
   return invitation;
 }
 ```
@@ -376,7 +378,7 @@ const navigationItems = computed(() => {
     items.push({ name: 'orders', icon: 'shopping_cart' });
   }
 
-  // Owner+ level features  
+  // Owner+ level features
   if (['owner', 'platform_owner'].includes(role)) {
     items.push({ name: 'users', icon: 'people' });
     items.push({ name: 'settings', icon: 'settings' });
@@ -432,9 +434,9 @@ try {
     $q.notify({
       type: 'negative',
       message: 'You do not have permission to perform this action',
-      caption: 'Contact your administrator if you believe this is an error'
+      caption: 'Contact your administrator if you believe this is an error',
     });
-    
+
     // Optionally redirect to appropriate page
     router.push('/dashboard');
   }
@@ -478,7 +480,7 @@ describe('Route Protection', () => {
 
   test('platform_owner can access all routes', async () => {
     await loginAs('platform_owner');
-    
+
     const routes = ['/products', '/orders', '/users', '/platform'];
     for (const route of routes) {
       const response = await router.push(route);
@@ -491,6 +493,7 @@ describe('Route Protection', () => {
 ## Best Practices
 
 ### 1. Security
+
 - ✅ Always check permissions on both frontend and backend
 - ✅ Use RLS policies as the primary security layer
 - ✅ Implement proper session management
@@ -498,12 +501,14 @@ describe('Route Protection', () => {
 - ✅ Regular permission audits
 
 ### 2. User Experience
+
 - ✅ Hide unavailable features instead of showing errors
 - ✅ Provide clear feedback when permissions are denied
 - ✅ Progressive disclosure based on role capabilities
 - ✅ Contextual help for permission requirements
 
 ### 3. Maintenance
+
 - ✅ Document all permission changes
 - ✅ Use consistent naming conventions
 - ✅ Regular cleanup of expired permissions
@@ -515,9 +520,10 @@ describe('Route Protection', () => {
 ### Common Issues
 
 **1. "Access Denied" Errors**
+
 ```bash
 # Check user role assignment
-SELECT pm.role, p.name as practice_name 
+SELECT pm.role, p.name as practice_name
 FROM practice_members pm
 JOIN practices p ON pm.practice_id = p.id
 WHERE pm.user_id = 'USER_ID';
@@ -527,22 +533,25 @@ WHERE pm.user_id = 'USER_ID';
 ```
 
 **2. Platform Owner Not Working**
+
 ```typescript
 // Ensure platform_owner is included in all permission checks
 const hasAccess = ['owner', 'manager', 'platform_owner'].includes(userRole);
 ```
 
 **3. Database Permission Errors**
+
 ```sql
 -- Check RLS policies
-SELECT schemaname, tablename, policyname, permissive, roles, cmd, qual 
-FROM pg_policies 
+SELECT schemaname, tablename, policyname, permissive, roles, cmd, qual
+FROM pg_policies
 WHERE schemaname = 'public';
 ```
 
 ## Migration Guide
 
 ### Adding New Roles
+
 1. Update `UserRole` type in `permissions.ts`
 2. Add role definition to `ROLE_DEFINITIONS`
 3. Update all permission functions
@@ -551,6 +560,7 @@ WHERE schemaname = 'public';
 6. Add database migrations if needed
 
 ### Modifying Permissions
+
 1. Update permission functions in `PermissionService`
 2. Modify route guards as needed
 3. Update component access controls
@@ -569,4 +579,5 @@ The Remcura permission system provides enterprise-grade access control with:
 - **Flexible architecture** supporting future extensions
 - **Complete audit trail** for compliance requirements
 
-The system is **production-ready** and handles all access control requirements for medical inventory management across multiple practices and user types.
+The system is **production-ready** and handles all access control requirements for medical inventory
+management across multiple practices and user types.

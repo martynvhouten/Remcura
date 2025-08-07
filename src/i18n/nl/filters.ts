@@ -18,7 +18,8 @@ export default {
   // Product filters
   products: {
     title: 'Productfilters',
-    description: 'Filter producten op categorieën, leveranciers, GS1 gegevens en voorraadstatus',
+    description:
+      'Filter producten op categorieën, leveranciers, GS1 gegevens en voorraadstatus',
     groups: {
       search: {
         label: 'Zoeken',
@@ -99,7 +100,8 @@ export default {
   // Supplier filters
   suppliers: {
     title: 'Leverancierfilters',
-    description: 'Filter leveranciers op naam, contactgegevens, locatie en status',
+    description:
+      'Filter leveranciers op naam, contactgegevens, locatie en status',
     fields: {
       search: {
         label: 'Zoek leveranciers',
@@ -136,7 +138,8 @@ export default {
   // Order filters
   orders: {
     title: 'Bestellingfilters',
-    description: 'Filter bestellingen op status, leverancier, datumbereik en bedrag',
+    description:
+      'Filter bestellingen op status, leverancier, datumbereik en bedrag',
     fields: {
       status: {
         label: 'Bestelling status',
@@ -181,7 +184,8 @@ export default {
   // Inventory filters
   inventory: {
     title: 'Voorraadfilters',
-    description: 'Filter voorraad op locatie, product, categorie en voorraadstatus',
+    description:
+      'Filter voorraad op locatie, product, categorie en voorraadstatus',
     fields: {
       search: {
         label: 'Zoek Producten',
@@ -309,4 +313,4 @@ export default {
     fromDate: 'Van datum',
     toDate: 'Tot datum',
   },
-}; 
+};

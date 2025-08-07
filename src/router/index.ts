@@ -22,7 +22,9 @@ import { PermissionService } from '@/services/permissions';
 export default route(function (/* { store, ssrContext } */) {
   const createHistory = process.env.SERVER
     ? createMemoryHistory
-    : (process.env.VUE_ROUTER_MODE === 'history' ? createWebHistory : createWebHashHistory);
+    : process.env.VUE_ROUTER_MODE === 'history'
+    ? createWebHistory
+    : createWebHashHistory;
 
   const Router = createRouter({
     scrollBehavior: () => ({ left: 0, top: 0 }),
@@ -53,16 +55,20 @@ export default route(function (/* { store, ssrContext } */) {
     if (to.meta.requiresRole && authStore.isAuthenticated) {
       try {
         const userRole = await PermissionService.getUserRole();
-        const requiredRoles = Array.isArray(to.meta.requiresRole) 
-          ? to.meta.requiresRole 
+        const requiredRoles = Array.isArray(to.meta.requiresRole)
+          ? to.meta.requiresRole
           : [to.meta.requiresRole];
 
         // If no role found but user is authenticated, default to 'guest' for demo purposes
         const effectiveRole = userRole || 'guest';
-        
+
         if (!requiredRoles.includes(effectiveRole)) {
-          console.warn(`Access denied. User role: ${effectiveRole}, Required: ${requiredRoles.join(', ')}`);
-          
+          console.warn(
+            `Access denied. User role: ${effectiveRole}, Required: ${requiredRoles.join(
+              ', '
+            )}`
+          );
+
           // Only redirect if not dashboard - avoid infinite loops
           if (to.name !== 'dashboard') {
             next({ name: 'dashboard' });
@@ -72,7 +78,9 @@ export default route(function (/* { store, ssrContext } */) {
       } catch (error) {
         console.error('Error checking user role:', error);
         // On error, allow access but log the issue for debugging
-        console.warn('Allowing access due to role check error - this should be fixed in production');
+        console.warn(
+          'Allowing access due to role check error - this should be fixed in production'
+        );
       }
     }
 
@@ -80,11 +88,17 @@ export default route(function (/* { store, ssrContext } */) {
     if (to.meta.requiresPermission && authStore.isAuthenticated) {
       try {
         const { permission, resource, resourceId } = to.meta.requiresPermission;
-        const hasPermission = await PermissionService.hasPermission(permission, resource, resourceId);
-        
+        const hasPermission = await PermissionService.hasPermission(
+          permission,
+          resource,
+          resourceId
+        );
+
         if (!hasPermission) {
-          console.warn(`Access denied. Missing permission: ${permission} on ${resource}`);
-          
+          console.warn(
+            `Access denied. Missing permission: ${permission} on ${resource}`
+          );
+
           // Only redirect if not dashboard - avoid infinite loops
           if (to.name !== 'dashboard') {
             next({ name: 'dashboard' });
@@ -94,7 +108,9 @@ export default route(function (/* { store, ssrContext } */) {
       } catch (error) {
         console.error('Error checking permission:', error);
         // On error, allow access but log the issue for debugging
-        console.warn('Allowing access due to permission check error - this should be fixed in production');
+        console.warn(
+          'Allowing access due to permission check error - this should be fixed in production'
+        );
       }
     }
 
@@ -115,7 +131,6 @@ export default route(function (/* { store, ssrContext } */) {
     //   routeName: (to.name as string) || 'unknown',
     //   fromRoute: from.path,
     // });
-
     // Add breadcrumb for debugging
     // monitoringService.addBreadcrumb(
     //   `Navigated to ${to.path}`,

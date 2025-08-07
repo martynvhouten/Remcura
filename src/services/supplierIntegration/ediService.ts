@@ -1,6 +1,9 @@
 import { supabase } from '@/boot/supabase';
 import { orderLogger } from '@/utils/logger';
-import type { SupplierOrder, OrderSendingResult } from '@/stores/orderLists/orderLists-supplier-splitting';
+import type {
+  SupplierOrder,
+  OrderSendingResult,
+} from '@/stores/orderLists/orderLists-supplier-splitting';
 
 export interface EDIConfig {
   edi_endpoint: string;
@@ -48,9 +51,14 @@ export class EDIService {
   /**
    * Send order via EDI/XML
    */
-  async sendOrderViaEDI(order: SupplierOrder, orderReference: string): Promise<OrderSendingResult> {
+  async sendOrderViaEDI(
+    order: SupplierOrder,
+    orderReference: string
+  ): Promise<OrderSendingResult> {
     try {
-      orderLogger.info(`Sending order ${orderReference} via EDI to supplier ${order.supplier_name}`);
+      orderLogger.info(
+        `Sending order ${orderReference} via EDI to supplier ${order.supplier_name}`
+      );
 
       // Get supplier EDI configuration
       const { data: supplier, error: supplierError } = await supabase
@@ -124,7 +132,11 @@ export class EDIService {
       }
 
       // Send to EDI endpoint
-      const response = await this.sendToEDIEndpoint(ediConfig, xmlContent, orderReference);
+      const response = await this.sendToEDIEndpoint(
+        ediConfig,
+        xmlContent,
+        orderReference
+      );
 
       // Record the order in supplier_orders table
       await this.recordSupplierOrder(order, orderReference, 'edi', response);
@@ -139,10 +151,12 @@ export class EDIService {
         error_message: response.success ? undefined : response.error,
         delivery_expected: order.estimated_delivery_date,
       };
-
     } catch (error: any) {
-      orderLogger.error(`EDI order sending failed for ${orderReference}:`, error);
-      
+      orderLogger.error(
+        `EDI order sending failed for ${orderReference}:`,
+        error
+      );
+
       return {
         supplier_id: order.supplier_id,
         supplier_name: order.supplier_name,
@@ -159,8 +173,11 @@ export class EDIService {
    * Generate EDIFACT ORDERS D.96A XML
    */
   private generateEDIFACTXML(order: EDIOrder): string {
-    const timestamp = new Date().toISOString().replace(/[-:]/g, '').replace(/\.\d{3}Z/, '');
-    
+    const timestamp = new Date()
+      .toISOString()
+      .replace(/[-:]/g, '')
+      .replace(/\.\d{3}Z/, '');
+
     return `<?xml version="1.0" encoding="UTF-8"?>
 <EDIFACT_ORDERS>
   <UNH>
@@ -189,7 +206,9 @@ export class EDIService {
     <NameAndAddress>
       <NameAndAddressLine>${order.buyer_party.name}</NameAndAddressLine>
       <NameAndAddressLine>${order.buyer_party.address}</NameAndAddressLine>
-      <NameAndAddressLine>${order.buyer_party.postal_code} ${order.buyer_party.city}</NameAndAddressLine>
+      <NameAndAddressLine>${order.buyer_party.postal_code} ${
+      order.buyer_party.city
+    }</NameAndAddressLine>
       <CountryCode>${order.buyer_party.country}</CountryCode>
     </NameAndAddress>
   </NAD_BY>
@@ -199,7 +218,9 @@ export class EDIService {
       <PartyIdIdentification>${order.supplier_party.gln}</PartyIdIdentification>
     </PartyIdentificationDetails>
   </NAD_SU>
-  ${order.items.map(item => `
+  ${order.items
+    .map(
+      item => `
   <LIN>
     <LineItemNumber>${item.line_number}</LineItemNumber>
     <ItemNumberIdentification>
@@ -220,7 +241,9 @@ export class EDIService {
       <Price>${item.unit_price}</Price>
       <PriceType>TU</PriceType>
     </PriceInformation>
-  </PRI>`).join('')}
+  </PRI>`
+    )
+    .join('')}
   <UNT>
     <NumberOfSegments>${2 + order.items.length * 3}</NumberOfSegments>
     <MessageReferenceNumber>${order.order_number}</MessageReferenceNumber>
@@ -236,7 +259,9 @@ export class EDIService {
 <X12_850>
   <ST>
     <TransactionSetIdentifierCode>850</TransactionSetIdentifierCode>
-    <TransactionSetControlNumber>${order.order_number}</TransactionSetControlNumber>
+    <TransactionSetControlNumber>${
+      order.order_number
+    }</TransactionSetControlNumber>
   </ST>
   <BEG>
     <TransactionSetPurposeCode>00</TransactionSetPurposeCode>
@@ -265,7 +290,9 @@ export class EDIService {
     <IdentificationCodeQualifier>91</IdentificationCodeQualifier>
     <IdentificationCode>${order.supplier_party.gln}</IdentificationCode>
   </N1_ST>
-  ${order.items.map(item => `
+  ${order.items
+    .map(
+      item => `
   <PO1>
     <AssignedIdentification>${item.line_number}</AssignedIdentification>
     <QuantityOrdered>${item.quantity}</QuantityOrdered>
@@ -274,13 +301,19 @@ export class EDIService {
     <BasisOfUnitPriceCode>PE</BasisOfUnitPriceCode>
     <ProductServiceIdQualifier>SK</ProductServiceIdQualifier>
     <ProductServiceId>${item.sku}</ProductServiceId>
-  </PO1>`).join('')}
+  </PO1>`
+    )
+    .join('')}
   <CTT>
     <NumberOfLineItems>${order.items.length}</NumberOfLineItems>
   </CTT>
   <SE>
-    <NumberOfIncludedSegments>${4 + order.items.length}</NumberOfIncludedSegments>
-    <TransactionSetControlNumber>${order.order_number}</TransactionSetControlNumber>
+    <NumberOfIncludedSegments>${
+      4 + order.items.length
+    }</NumberOfIncludedSegments>
+    <TransactionSetControlNumber>${
+      order.order_number
+    }</TransactionSetControlNumber>
   </SE>
 </X12_850>`;
   }
@@ -296,7 +329,11 @@ export class EDIService {
     <OrderDate>${order.order_date}</OrderDate>
     <Currency>${order.currency}</Currency>
     <TotalAmount>${order.total_amount}</TotalAmount>
-    ${order.delivery_date ? `<RequestedDeliveryDate>${order.delivery_date}</RequestedDeliveryDate>` : ''}
+    ${
+      order.delivery_date
+        ? `<RequestedDeliveryDate>${order.delivery_date}</RequestedDeliveryDate>`
+        : ''
+    }
   </Header>
   <BuyerParty>
     <Name>${order.buyer_party.name}</Name>
@@ -313,7 +350,9 @@ export class EDIService {
     <PartnerID>${order.supplier_party.edi_partner_id}</PartnerID>
   </SupplierParty>
   <OrderLines>
-    ${order.items.map(item => `
+    ${order.items
+      .map(
+        item => `
     <OrderLine>
       <LineNumber>${item.line_number}</LineNumber>
       <SKU>${item.sku}</SKU>
@@ -322,7 +361,9 @@ export class EDIService {
       <UnitOfMeasure>${item.uom}</UnitOfMeasure>
       <UnitPrice>${item.unit_price}</UnitPrice>
       <LineTotal>${(item.quantity * item.unit_price).toFixed(2)}</LineTotal>
-    </OrderLine>`).join('')}
+    </OrderLine>`
+      )
+      .join('')}
   </OrderLines>
   ${order.notes ? `<Notes><![CDATA[${order.notes}]]></Notes>` : ''}
 </Order>`;
@@ -331,7 +372,11 @@ export class EDIService {
   /**
    * Send XML to EDI endpoint
    */
-  private async sendToEDIEndpoint(config: EDIConfig, xmlContent: string, orderReference: string): Promise<{ success: boolean; error?: string; response?: any }> {
+  private async sendToEDIEndpoint(
+    config: EDIConfig,
+    xmlContent: string,
+    orderReference: string
+  ): Promise<{ success: boolean; error?: string; response?: any }> {
     try {
       const headers: Record<string, string> = {
         'Content-Type': 'application/xml',
@@ -353,11 +398,13 @@ export class EDIService {
       const responseText = await response.text();
 
       if (!response.ok) {
-        throw new Error(`EDI endpoint returned ${response.status}: ${responseText}`);
+        throw new Error(
+          `EDI endpoint returned ${response.status}: ${responseText}`
+        );
       }
 
       orderLogger.info(`EDI order ${orderReference} sent successfully`);
-      
+
       return {
         success: true,
         response: {
@@ -366,7 +413,6 @@ export class EDIService {
           body: responseText,
         },
       };
-
     } catch (error: any) {
       orderLogger.error(`EDI sending failed: ${error.message}`);
       return {
@@ -379,22 +425,25 @@ export class EDIService {
   /**
    * Record order in supplier_orders table
    */
-  private async recordSupplierOrder(order: SupplierOrder, orderReference: string, method: string, response: any): Promise<void> {
-    const { error } = await supabase
-      .from('supplier_orders')
-      .insert({
-        supplier_id: order.supplier_id,
-        order_list_id: null, // Would be set if from specific order list
-        practice_id: order.practice_id,
-        status: response.success ? 'sent' : 'failed',
-        method_used: method,
-        sent_at: new Date().toISOString(),
-        delivery_expected: order.estimated_delivery_date,
-        total_items: order.total_items,
-        total_value: order.total_value,
-        response_data: response,
-        order_reference: orderReference,
-      });
+  private async recordSupplierOrder(
+    order: SupplierOrder,
+    orderReference: string,
+    method: string,
+    response: any
+  ): Promise<void> {
+    const { error } = await supabase.from('supplier_orders').insert({
+      supplier_id: order.supplier_id,
+      order_list_id: null, // Would be set if from specific order list
+      practice_id: order.practice_id,
+      status: response.success ? 'sent' : 'failed',
+      method_used: method,
+      sent_at: new Date().toISOString(),
+      delivery_expected: order.estimated_delivery_date,
+      total_items: order.total_items,
+      total_value: order.total_value,
+      response_data: response,
+      order_reference: orderReference,
+    });
 
     if (error) {
       orderLogger.error('Failed to record supplier order:', error);

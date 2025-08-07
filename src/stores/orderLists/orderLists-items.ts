@@ -20,7 +20,8 @@ export function useOrderListsItems(orderLists: Ref<OrderListWithItems[]>) {
       const supplierProduct = product.supplier_products?.find(
         sp => sp.id === request.supplier_product_id
       );
-      if (!supplierProduct) throw new Error($t('orderlists.supplierproductnotfound'));
+      if (!supplierProduct)
+        throw new Error($t('orderlists.supplierproductnotfound'));
 
       const itemData = {
         order_list_id: request.order_list_id,
@@ -29,17 +30,19 @@ export function useOrderListsItems(orderLists: Ref<OrderListWithItems[]>) {
         suggested_quantity: request.requested_quantity,
         ordered_quantity: request.requested_quantity,
         unit_price: supplierProduct.unit_price,
-        notes: request.notes
+        notes: request.notes,
       };
 
       const { data, error } = await supabase
         .from('order_list_items')
         .insert(itemData)
-        .select(`
+        .select(
+          `
           *,
           product:products(*),
           supplier_product:supplier_products(*)
-        `)
+        `
+        )
         .single();
 
       if (error) throw error;
@@ -55,7 +58,7 @@ export function useOrderListsItems(orderLists: Ref<OrderListWithItems[]>) {
     } catch (err) {
       const handledError = ServiceErrorHandler.handle(err, {
         service: 'OrderListsStore',
-        operation: 'addOrderListItem'
+        operation: 'addOrderListItem',
       });
       orderLogger.error('Error adding order list item:', handledError);
       throw handledError;
@@ -73,7 +76,9 @@ export function useOrderListsItems(orderLists: Ref<OrderListWithItems[]>) {
 
       // Update local state
       for (const orderList of orderLists.value) {
-        const itemIndex = orderList.items.findIndex((item: OrderListItem) => item.id === itemId);
+        const itemIndex = orderList.items.findIndex(
+          (item: OrderListItem) => item.id === itemId
+        );
         if (itemIndex !== -1) {
           orderList.items.splice(itemIndex, 1);
           updateOrderListTotals(orderList.id);
@@ -83,7 +88,7 @@ export function useOrderListsItems(orderLists: Ref<OrderListWithItems[]>) {
     } catch (err) {
       const handledError = ServiceErrorHandler.handle(err, {
         service: 'OrderListsStore',
-        operation: 'removeOrderListItem'
+        operation: 'removeOrderListItem',
       });
       orderLogger.error('Error removing order list item:', handledError);
       throw handledError;
@@ -112,7 +117,9 @@ export function useOrderListsItems(orderLists: Ref<OrderListWithItems[]>) {
 
       // Update local state
       for (const orderList of orderLists.value) {
-        const item = orderList.items.find((item: OrderListItem) => item.id === itemId);
+        const item = orderList.items.find(
+          (item: OrderListItem) => item.id === itemId
+        );
         if (item) {
           if (updates.requested_quantity !== undefined) {
             item.requested_quantity = updates.requested_quantity;
@@ -126,7 +133,7 @@ export function useOrderListsItems(orderLists: Ref<OrderListWithItems[]>) {
     } catch (err) {
       const handledError = ServiceErrorHandler.handle(err, {
         service: 'OrderListsStore',
-        operation: 'updateOrderListItem'
+        operation: 'updateOrderListItem',
       });
       orderLogger.error('Error updating order list item:', handledError);
       throw handledError;
@@ -134,8 +141,12 @@ export function useOrderListsItems(orderLists: Ref<OrderListWithItems[]>) {
   };
 
   const updateOrderListTotals = async (orderListId: string): Promise<void> => {
-    const orderList = orderLists.value.find((list: OrderListWithItems) => list.id === orderListId);
-    if (!orderList) { return; }
+    const orderList = orderLists.value.find(
+      (list: OrderListWithItems) => list.id === orderListId
+    );
+    if (!orderList) {
+      return;
+    }
 
     const totalItems = orderList.items.reduce(
       (sum: number, item: OrderListItem) => sum + item.requested_quantity,
@@ -152,7 +163,7 @@ export function useOrderListsItems(orderLists: Ref<OrderListWithItems[]>) {
         .update({
           total_items: totalItems,
           total_value: totalValue,
-          updated_at: new Date().toISOString()
+          updated_at: new Date().toISOString(),
         })
         .eq('id', orderListId);
 

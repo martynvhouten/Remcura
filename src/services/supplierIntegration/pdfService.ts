@@ -1,6 +1,9 @@
 import { supabase } from '@/boot/supabase';
 import { orderLogger } from '@/utils/logger';
-import type { SupplierOrder, OrderSendingResult } from '@/stores/orderLists/orderLists-supplier-splitting';
+import type {
+  SupplierOrder,
+  OrderSendingResult,
+} from '@/stores/orderLists/orderLists-supplier-splitting';
 
 export interface PDFConfig {
   email_template?: 'standard' | 'custom';
@@ -25,9 +28,14 @@ export class PDFService {
   /**
    * Send order via PDF (email with PDF attachment)
    */
-  async sendOrderViaPDF(order: SupplierOrder, orderReference: string): Promise<OrderSendingResult> {
+  async sendOrderViaPDF(
+    order: SupplierOrder,
+    orderReference: string
+  ): Promise<OrderSendingResult> {
     try {
-      orderLogger.info(`Generating PDF order ${orderReference} for supplier ${order.supplier_name}`);
+      orderLogger.info(
+        `Generating PDF order ${orderReference} for supplier ${order.supplier_name}`
+      );
 
       // Get supplier and practice details
       const [supplierResult, practiceResult] = await Promise.all([
@@ -38,9 +46,11 @@ export class PDFService {
           .single(),
         supabase
           .from('practices')
-          .select('name, address, city, postal_code, country, contact_email, contact_phone, logo_url')
+          .select(
+            'name, address, city, postal_code, country, contact_email, contact_phone, logo_url'
+          )
           .eq('id', order.practice_id)
-          .single()
+          .single(),
       ]);
 
       if (supplierResult.error || !supplierResult.data) {
@@ -60,19 +70,39 @@ export class PDFService {
       }
 
       // Generate PDF content
-      const pdfHTML = this.generatePDFHTML(order, orderReference, practice, supplier, pdfConfig);
-      
+      const pdfHTML = this.generatePDFHTML(
+        order,
+        orderReference,
+        practice,
+        supplier,
+        pdfConfig
+      );
+
       // Generate PDF using browser's print functionality (would need actual PDF generation in production)
       const pdfBlob = await this.generatePDFBlob(pdfHTML);
 
       // Prepare email
-      const emailTemplate = this.generateEmailTemplate(order, orderReference, practice, supplier, pdfConfig);
+      const emailTemplate = this.generateEmailTemplate(
+        order,
+        orderReference,
+        practice,
+        supplier,
+        pdfConfig
+      );
 
       // Send email with PDF attachment
-      await this.sendEmail(supplier.contact_email, emailTemplate, pdfBlob, orderReference, pdfConfig);
+      await this.sendEmail(
+        supplier.contact_email,
+        emailTemplate,
+        pdfBlob,
+        orderReference,
+        pdfConfig
+      );
 
       // Record the order
-      await this.recordSupplierOrder(order, orderReference, 'pdf', { success: true });
+      await this.recordSupplierOrder(order, orderReference, 'pdf', {
+        success: true,
+      });
 
       return {
         supplier_id: order.supplier_id,
@@ -83,10 +113,12 @@ export class PDFService {
         sent_at: new Date().toISOString(),
         delivery_expected: order.estimated_delivery_date,
       };
-
     } catch (error: any) {
-      orderLogger.error(`PDF order sending failed for ${orderReference}:`, error);
-      
+      orderLogger.error(
+        `PDF order sending failed for ${orderReference}:`,
+        error
+      );
+
       return {
         supplier_id: order.supplier_id,
         supplier_name: order.supplier_name,
@@ -102,11 +134,17 @@ export class PDFService {
   /**
    * Generate PDF HTML content
    */
-  private generatePDFHTML(order: SupplierOrder, orderReference: string, practice: any, supplier: any, config: PDFConfig): string {
+  private generatePDFHTML(
+    order: SupplierOrder,
+    orderReference: string,
+    practice: any,
+    supplier: any,
+    config: PDFConfig
+  ): string {
     const currentDate = new Date().toLocaleDateString('nl-NL', {
       year: 'numeric',
       month: 'long',
-      day: 'numeric'
+      day: 'numeric',
     });
 
     return `
@@ -125,7 +163,11 @@ export class PDFService {
     <!-- Header -->
     <header class="order-header">
       <div class="header-left">
-        ${config.include_logos && practice.logo_url ? `<img src="${practice.logo_url}" alt="${practice.name}" class="logo">` : ''}
+        ${
+          config.include_logos && practice.logo_url
+            ? `<img src="${practice.logo_url}" alt="${practice.name}" class="logo">`
+            : ''
+        }
         <div class="practice-info">
           <h1>${practice.name}</h1>
           <div class="address">
@@ -133,8 +175,16 @@ export class PDFService {
             ${practice.postal_code} ${practice.city}<br>
             ${practice.country}
           </div>
-          ${practice.contact_email ? `<div class="contact">Email: ${practice.contact_email}</div>` : ''}
-          ${practice.contact_phone ? `<div class="contact">Tel: ${practice.contact_phone}</div>` : ''}
+          ${
+            practice.contact_email
+              ? `<div class="contact">Email: ${practice.contact_email}</div>`
+              : ''
+          }
+          ${
+            practice.contact_phone
+              ? `<div class="contact">Tel: ${practice.contact_phone}</div>`
+              : ''
+          }
         </div>
       </div>
       <div class="header-right">
@@ -142,7 +192,13 @@ export class PDFService {
         <div class="order-info">
           <div><strong>Bestelnummer:</strong> ${orderReference}</div>
           <div><strong>Datum:</strong> ${currentDate}</div>
-          ${order.estimated_delivery_date ? `<div><strong>Gewenste leverdatum:</strong> ${new Date(order.estimated_delivery_date).toLocaleDateString('nl-NL')}</div>` : ''}
+          ${
+            order.estimated_delivery_date
+              ? `<div><strong>Gewenste leverdatum:</strong> ${new Date(
+                  order.estimated_delivery_date
+                ).toLocaleDateString('nl-NL')}</div>`
+              : ''
+          }
         </div>
       </div>
     </header>
@@ -152,7 +208,9 @@ export class PDFService {
       <h3>Leverancier</h3>
       <div class="supplier-info">
         <strong>${supplier.name}</strong>
-        ${supplier.contact_person ? `<br>T.a.v. ${supplier.contact_person}` : ''}
+        ${
+          supplier.contact_person ? `<br>T.a.v. ${supplier.contact_person}` : ''
+        }
       </div>
     </section>
 
@@ -170,7 +228,9 @@ export class PDFService {
           </tr>
         </thead>
         <tbody>
-          ${order.items.map(item => `
+          ${order.items
+            .map(
+              item => `
           <tr>
             <td>${item.name}</td>
             <td>${item.supplier_sku || item.sku}</td>
@@ -178,7 +238,9 @@ export class PDFService {
             <td>€${item.unit_price.toFixed(2)}</td>
             <td>€${(item.quantity * item.unit_price).toFixed(2)}</td>
           </tr>
-          `).join('')}
+          `
+            )
+            .join('')}
         </tbody>
         <tfoot>
           <tr class="total-row">
@@ -186,16 +248,22 @@ export class PDFService {
             <td><strong>${order.total_items}</strong></td>
             <td><strong>€${order.total_value.toFixed(2)}</strong></td>
           </tr>
-          ${order.shipping_cost ? `
+          ${
+            order.shipping_cost
+              ? `
           <tr>
             <td colspan="4">Verzendkosten</td>
             <td>€${order.shipping_cost.toFixed(2)}</td>
           </tr>
           <tr class="grand-total">
             <td colspan="4"><strong>Totaal inclusief verzending</strong></td>
-            <td><strong>€${(order.total_value + order.shipping_cost).toFixed(2)}</strong></td>
+            <td><strong>€${(order.total_value + order.shipping_cost).toFixed(
+              2
+            )}</strong></td>
           </tr>
-          ` : ''}
+          `
+              : ''
+          }
         </tfoot>
       </table>
     </section>
@@ -203,20 +271,31 @@ export class PDFService {
     <!-- Additional notes -->
     <section class="notes-section">
       <h3>Opmerkingen</h3>
-      <p>Deze bestelling is automatisch gegenereerd door Remcura voor ${practice.name}.</p>
+      <p>Deze bestelling is automatisch gegenereerd door Remcura voor ${
+        practice.name
+      }.</p>
       <p>Gelieve deze bestelling te bevestigen en een verwachte leverdatum door te geven.</p>
     </section>
 
-    ${config.include_terms ? `
+    ${
+      config.include_terms
+        ? `
     <section class="terms-section">
       <h3>Algemene voorwaarden</h3>
       <p>Deze bestelling is onderworpen aan de algemene voorwaarden van ${practice.name} en de leverancier.</p>
     </section>
-    ` : ''}
+    `
+        : ''
+    }
 
     <!-- Footer -->
     <footer class="order-footer">
-      ${config.footer_text || `<p>Gegenereerd op ${new Date().toLocaleString('nl-NL')} door Remcura</p>`}
+      ${
+        config.footer_text ||
+        `<p>Gegenereerd op ${new Date().toLocaleString(
+          'nl-NL'
+        )} door Remcura</p>`
+      }
     </footer>
   </div>
 </body>
@@ -370,7 +449,7 @@ export class PDFService {
     // - Puppeteer for server-side PDF generation
     // - jsPDF for client-side PDF generation
     // - Or a PDF generation service
-    
+
     // For now, we'll return the HTML as a blob that can be printed to PDF
     return new Blob([htmlContent], { type: 'text/html' });
   }
@@ -378,8 +457,14 @@ export class PDFService {
   /**
    * Generate email template
    */
-  private generateEmailTemplate(order: SupplierOrder, orderReference: string, practice: any, supplier: any, config: PDFConfig): EmailTemplate {
-    const defaultSubject = config.email_subject_template 
+  private generateEmailTemplate(
+    order: SupplierOrder,
+    orderReference: string,
+    practice: any,
+    supplier: any,
+    config: PDFConfig
+  ): EmailTemplate {
+    const defaultSubject = config.email_subject_template
       ? config.email_subject_template
           .replace('{order_reference}', orderReference)
           .replace('{practice_name}', practice.name)
@@ -393,15 +478,27 @@ export class PDFService {
           
           <p>Beste ${supplier.contact_person || supplier.name},</p>
           
-          <p>Hierbij ontvangt u een nieuwe bestelling van <strong>${practice.name}</strong>.</p>
+          <p>Hierbij ontvangt u een nieuwe bestelling van <strong>${
+            practice.name
+          }</strong>.</p>
           
           <h3>Bestelling details:</h3>
           <ul>
             <li><strong>Bestelnummer:</strong> ${orderReference}</li>
-            <li><strong>Datum:</strong> ${new Date().toLocaleDateString('nl-NL')}</li>
+            <li><strong>Datum:</strong> ${new Date().toLocaleDateString(
+              'nl-NL'
+            )}</li>
             <li><strong>Aantal artikelen:</strong> ${order.total_items}</li>
-            <li><strong>Totaalwaarde:</strong> €${order.total_value.toFixed(2)}</li>
-            ${order.estimated_delivery_date ? `<li><strong>Gewenste leverdatum:</strong> ${new Date(order.estimated_delivery_date).toLocaleDateString('nl-NL')}</li>` : ''}
+            <li><strong>Totaalwaarde:</strong> €${order.total_value.toFixed(
+              2
+            )}</li>
+            ${
+              order.estimated_delivery_date
+                ? `<li><strong>Gewenste leverdatum:</strong> ${new Date(
+                    order.estimated_delivery_date
+                  ).toLocaleDateString('nl-NL')}</li>`
+                : ''
+            }
           </ul>
           
           <p>Zie de bijgevoegde PDF voor alle details van de bestelling.</p>
@@ -432,7 +529,13 @@ Bestelling details:
 - Datum: ${new Date().toLocaleDateString('nl-NL')}
 - Aantal artikelen: ${order.total_items}
 - Totaalwaarde: €${order.total_value.toFixed(2)}
-${order.estimated_delivery_date ? `- Gewenste leverdatum: ${new Date(order.estimated_delivery_date).toLocaleDateString('nl-NL')}` : ''}
+${
+  order.estimated_delivery_date
+    ? `- Gewenste leverdatum: ${new Date(
+        order.estimated_delivery_date
+      ).toLocaleDateString('nl-NL')}`
+    : ''
+}
 
 Zie de bijgevoegde PDF voor alle details van de bestelling.
 
@@ -456,7 +559,13 @@ Deze email is automatisch gegenereerd door Remcura.
   /**
    * Send email with PDF attachment
    */
-  private async sendEmail(recipientEmail: string, template: EmailTemplate, pdfBlob: Blob, orderReference: string, config: PDFConfig): Promise<void> {
+  private async sendEmail(
+    recipientEmail: string,
+    template: EmailTemplate,
+    pdfBlob: Blob,
+    orderReference: string,
+    config: PDFConfig
+  ): Promise<void> {
     try {
       // In a production environment, you would integrate with an email service like:
       // - SendGrid
@@ -465,7 +574,9 @@ Deze email is automatisch gegenereerd door Remcura.
       // - Or use Supabase Edge Functions for email sending
 
       // For now, we'll simulate the email sending
-      orderLogger.info(`Email sent to ${recipientEmail} with PDF attachment for order ${orderReference}`);
+      orderLogger.info(
+        `Email sent to ${recipientEmail} with PDF attachment for order ${orderReference}`
+      );
 
       // Create a download link for the PDF (for testing purposes)
       const pdfUrl = URL.createObjectURL(pdfBlob);
@@ -479,7 +590,6 @@ Deze email is automatisch gegenereerd door Remcura.
         subject: template.subject,
         attachment: `order_${orderReference}.pdf`,
       });
-
     } catch (error: any) {
       orderLogger.error('Email sending failed:', error);
       throw new Error(`Failed to send email: ${error.message}`);
@@ -489,22 +599,25 @@ Deze email is automatisch gegenereerd door Remcura.
   /**
    * Record order in supplier_orders table
    */
-  private async recordSupplierOrder(order: SupplierOrder, orderReference: string, method: string, response: any): Promise<void> {
-    const { error } = await supabase
-      .from('supplier_orders')
-      .insert({
-        supplier_id: order.supplier_id,
-        order_list_id: null,
-        practice_id: order.practice_id,
-        status: response.success ? 'sent' : 'failed',
-        method_used: method,
-        sent_at: new Date().toISOString(),
-        delivery_expected: order.estimated_delivery_date,
-        total_items: order.total_items,
-        total_value: order.total_value,
-        response_data: response,
-        order_reference: orderReference,
-      });
+  private async recordSupplierOrder(
+    order: SupplierOrder,
+    orderReference: string,
+    method: string,
+    response: any
+  ): Promise<void> {
+    const { error } = await supabase.from('supplier_orders').insert({
+      supplier_id: order.supplier_id,
+      order_list_id: null,
+      practice_id: order.practice_id,
+      status: response.success ? 'sent' : 'failed',
+      method_used: method,
+      sent_at: new Date().toISOString(),
+      delivery_expected: order.estimated_delivery_date,
+      total_items: order.total_items,
+      total_value: order.total_value,
+      response_data: response,
+      order_reference: orderReference,
+    });
 
     if (error) {
       orderLogger.error('Failed to record supplier order:', error);
@@ -515,19 +628,24 @@ Deze email is automatisch gegenereerd door Remcura.
   /**
    * Generate PDF for download (without sending email)
    */
-  async generatePDFForDownload(order: SupplierOrder, orderReference: string): Promise<Blob> {
+  async generatePDFForDownload(
+    order: SupplierOrder,
+    orderReference: string
+  ): Promise<Blob> {
     // Get practice and supplier details
     const [practiceResult, supplierResult] = await Promise.all([
       supabase
         .from('practices')
-        .select('name, address, city, postal_code, country, contact_email, contact_phone, logo_url')
+        .select(
+          'name, address, city, postal_code, country, contact_email, contact_phone, logo_url'
+        )
         .eq('id', order.practice_id)
         .single(),
       supabase
         .from('suppliers')
         .select('name, contact_person, integration_config')
         .eq('id', order.supplier_id)
-        .single()
+        .single(),
     ]);
 
     if (practiceResult.error || supplierResult.error) {
@@ -538,7 +656,13 @@ Deze email is automatisch gegenereerd door Remcura.
     const supplier = supplierResult.data;
     const config = (supplier.integration_config as PDFConfig) || {};
 
-    const htmlContent = this.generatePDFHTML(order, orderReference, practice, supplier, config);
+    const htmlContent = this.generatePDFHTML(
+      order,
+      orderReference,
+      practice,
+      supplier,
+      config
+    );
     return this.generatePDFBlob(htmlContent);
   }
 }

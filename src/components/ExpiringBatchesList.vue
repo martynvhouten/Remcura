@@ -10,32 +10,32 @@
         bordered
         separator="cell"
       >
-      <template v-slot:body-cell-urgency="props">
-        <q-td :props="props">
-          <q-chip
-            :color="getUrgencyColor(props.row.urgencyLevel)"
-            text-color="white"
-            size="sm"
-          >
-            {{ $t(`batch.urgency.${props.row.urgencyLevel}`) }}
-          </q-chip>
-        </q-td>
-      </template>
+        <template v-slot:body-cell-urgency="props">
+          <q-td :props="props">
+            <q-chip
+              :color="getUrgencyColor(props.row.urgencyLevel)"
+              text-color="white"
+              size="sm"
+            >
+              {{ $t(`batch.urgency.${props.row.urgencyLevel}`) }}
+            </q-chip>
+          </q-td>
+        </template>
 
-      <template v-slot:body-cell-actions="props">
-        <q-td :props="props">
-          <q-btn
-            icon="visibility"
-            size="sm"
-            flat
-            round
-            color="primary"
-            @click="$emit('batch-selected', props.row)"
-          >
-            <q-tooltip>{{ $t('common.view') }}</q-tooltip>
-          </q-btn>
-        </q-td>
-      </template>
+        <template v-slot:body-cell-actions="props">
+          <q-td :props="props">
+            <q-btn
+              icon="visibility"
+              size="sm"
+              flat
+              round
+              color="primary"
+              @click="$emit('batch-selected', props.row)"
+            >
+              <q-tooltip>{{ $t('common.view') }}</q-tooltip>
+            </q-btn>
+          </q-td>
+        </template>
       </q-table>
     </div>
   </div>

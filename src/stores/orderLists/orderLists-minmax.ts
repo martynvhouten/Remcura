@@ -35,7 +35,12 @@ export interface ReorderSuggestion {
   reorder_point: number;
   suggested_quantity: number;
   urgency_level: string;
-  stock_status: 'out_of_stock' | 'below_minimum' | 'reorder_needed' | 'overstocked' | 'in_range';
+  stock_status:
+    | 'out_of_stock'
+    | 'below_minimum'
+    | 'reorder_needed'
+    | 'overstocked'
+    | 'in_range';
   calculated_order_quantity: number;
   product_name: string;
   product_sku: string;
@@ -64,7 +69,7 @@ export interface OrderAdvice {
 export function useOrderListsMinMax() {
   // Event emitter for store communication
   const eventEmitter = createEventEmitter('order-lists-minmax');
-  
+
   // Current practice ID (from auth events)
   const currentPracticeId = ref<string | null>(null);
 
@@ -74,15 +79,21 @@ export function useOrderListsMinMax() {
   const lastCalculationAt = ref<Date | null>(null);
 
   // Set up event listeners for auth changes
-  const unsubscribeAuth = eventEmitter.on(StoreEvents.USER_LOGGED_IN, async (data: { clinicId: string }) => {
-    currentPracticeId.value = data.clinicId;
-    orderLogger.info('Auth changed, auto-loading reorder suggestions for practice:', data.clinicId);
-    
-    // Auto-load suggestions when user logs in
-    if (data.clinicId) {
-      await refreshReorderSuggestions(data.clinicId);
+  const unsubscribeAuth = eventEmitter.on(
+    StoreEvents.USER_LOGGED_IN,
+    async (data: { clinicId: string }) => {
+      currentPracticeId.value = data.clinicId;
+      orderLogger.info(
+        'Auth changed, auto-loading reorder suggestions for practice:',
+        data.clinicId
+      );
+
+      // Auto-load suggestions when user logs in
+      if (data.clinicId) {
+        await refreshReorderSuggestions(data.clinicId);
+      }
     }
-  });
+  );
 
   const unsubscribeLogout = eventEmitter.on(StoreEvents.USER_LOGGED_OUT, () => {
     currentPracticeId.value = null;
@@ -99,10 +110,11 @@ export function useOrderListsMinMax() {
 
   // Computed properties for order advice
   const orderAdvice = computed((): OrderAdvice => {
-    const itemsToOrder = reorderSuggestions.value.filter(item => 
-      item.calculated_order_quantity > 0 && 
-      item.stock_status !== 'in_range' && 
-      item.stock_status !== 'overstocked'
+    const itemsToOrder = reorderSuggestions.value.filter(
+      item =>
+        item.calculated_order_quantity > 0 &&
+        item.stock_status !== 'in_range' &&
+        item.stock_status !== 'overstocked'
     );
 
     const itemsByUrgency = {
@@ -112,24 +124,30 @@ export function useOrderListsMinMax() {
       low: itemsToOrder.filter(item => item.urgency_level === 'low'),
     };
 
-    const suppliersInvolved = [...new Set(
-      itemsToOrder
-        .map(item => item.preferred_supplier_name)
-        .filter(Boolean)
-    )];
+    const suppliersInvolved = [
+      ...new Set(
+        itemsToOrder.map(item => item.preferred_supplier_name).filter(Boolean)
+      ),
+    ];
 
-    const totalEstimatedCost = itemsToOrder.reduce((sum, item) => 
-      sum + (item.calculated_order_quantity * (item.preferred_unit_price || 0)), 0
+    const totalEstimatedCost = itemsToOrder.reduce(
+      (sum, item) =>
+        sum + item.calculated_order_quantity * (item.preferred_unit_price || 0),
+      0
     );
 
     // Estimate delivery dates based on lead times (simplified)
     const estimatedDeliveryDates: Record<string, string> = {};
     suppliersInvolved.forEach(supplier => {
-      const supplierItems = itemsToOrder.filter(item => item.preferred_supplier_name === supplier);
+      const supplierItems = itemsToOrder.filter(
+        item => item.preferred_supplier_name === supplier
+      );
       const maxLeadTime = Math.max(...supplierItems.map(item => 7)); // Default 7 days
       const deliveryDate = new Date();
       deliveryDate.setDate(deliveryDate.getDate() + maxLeadTime);
-      estimatedDeliveryDates[supplier] = deliveryDate.toISOString().split('T')[0];
+      estimatedDeliveryDates[supplier] = deliveryDate
+        .toISOString()
+        .split('T')[0];
     });
 
     return {
@@ -141,23 +159,32 @@ export function useOrderListsMinMax() {
     };
   });
 
-  const criticalItemsCount = computed(() => 
-    reorderSuggestions.value.filter(item => 
-      item.urgency_level === 'critical' && item.calculated_order_quantity > 0
-    ).length
+  const criticalItemsCount = computed(
+    () =>
+      reorderSuggestions.value.filter(
+        item =>
+          item.urgency_level === 'critical' &&
+          item.calculated_order_quantity > 0
+      ).length
   );
 
-  const itemsBelowMinimum = computed(() => 
-    reorderSuggestions.value.filter(item => 
-      item.stock_status === 'below_minimum' || item.stock_status === 'out_of_stock'
-    ).length
+  const itemsBelowMinimum = computed(
+    () =>
+      reorderSuggestions.value.filter(
+        item =>
+          item.stock_status === 'below_minimum' ||
+          item.stock_status === 'out_of_stock'
+      ).length
   );
 
   // Actions
   const refreshReorderSuggestions = async (practiceId: string) => {
     loading.value = true;
     try {
-      orderLogger.info('Fetching reorder suggestions for practice:', practiceId);
+      orderLogger.info(
+        'Fetching reorder suggestions for practice:',
+        practiceId
+      );
 
       const { data, error } = await supabase
         .from('reorder_suggestions')
@@ -171,7 +198,9 @@ export function useOrderListsMinMax() {
       reorderSuggestions.value = data || [];
       lastCalculationAt.value = new Date();
 
-      orderLogger.info(`✅ Loaded ${reorderSuggestions.value.length} reorder suggestions`);
+      orderLogger.info(
+        `✅ Loaded ${reorderSuggestions.value.length} reorder suggestions`
+      );
 
       // Emit event that suggestions have been loaded
       await eventEmitter.emit(StoreEvents.ORDER_SUGGESTIONS_UPDATED, {
@@ -180,7 +209,6 @@ export function useOrderListsMinMax() {
         criticalCount: criticalItemsCount.value,
         timestamp: new Date().toISOString(),
       });
-
     } catch (error) {
       orderLogger.error('Error fetching reorder suggestions:', error);
       throw error;
@@ -189,16 +217,22 @@ export function useOrderListsMinMax() {
     }
   };
 
-  const updateStockLevel = async (itemId: string, newStockLevel: number, reason?: string) => {
+  const updateStockLevel = async (
+    itemId: string,
+    newStockLevel: number,
+    reason?: string
+  ) => {
     try {
-      orderLogger.info(`Updating stock level for item ${itemId} to ${newStockLevel}`);
+      orderLogger.info(
+        `Updating stock level for item ${itemId} to ${newStockLevel}`
+      );
 
       // Update the item's current stock
       const { error } = await supabase
         .from('order_list_items')
-        .update({ 
+        .update({
           current_stock: newStockLevel,
-          updated_at: new Date().toISOString()
+          updated_at: new Date().toISOString(),
         })
         .eq('id', itemId);
 
@@ -208,7 +242,7 @@ export function useOrderListsMinMax() {
       const item = reorderSuggestions.value.find(s => s.id === itemId);
       if (item) {
         item.current_stock = newStockLevel;
-        
+
         // Recalculate stock status and order quantity
         if (newStockLevel <= 0) {
           item.stock_status = 'out_of_stock';
@@ -216,10 +250,12 @@ export function useOrderListsMinMax() {
         } else if (newStockLevel <= item.minimum_stock) {
           item.stock_status = 'below_minimum';
           item.calculated_order_quantity = item.maximum_stock - newStockLevel;
-        } else if (newStockLevel <= (item.reorder_point || item.minimum_stock * 1.2)) {
+        } else if (
+          newStockLevel <= (item.reorder_point || item.minimum_stock * 1.2)
+        ) {
           item.stock_status = 'reorder_needed';
           item.calculated_order_quantity = Math.max(
-            item.maximum_stock - newStockLevel, 
+            item.maximum_stock - newStockLevel,
             item.minimum_stock
           );
         } else if (newStockLevel >= item.maximum_stock) {
@@ -240,7 +276,6 @@ export function useOrderListsMinMax() {
         reason,
         timestamp: new Date().toISOString(),
       });
-
     } catch (error) {
       orderLogger.error('Error updating stock level:', error);
       throw error;
@@ -249,9 +284,13 @@ export function useOrderListsMinMax() {
 
   const createOrdersFromAdvice = async (selectedItems?: string[]) => {
     try {
-      const itemsToOrder = selectedItems 
-        ? reorderSuggestions.value.filter(item => selectedItems.includes(item.id))
-        : reorderSuggestions.value.filter(item => item.calculated_order_quantity > 0);
+      const itemsToOrder = selectedItems
+        ? reorderSuggestions.value.filter(item =>
+            selectedItems.includes(item.id)
+          )
+        : reorderSuggestions.value.filter(
+            item => item.calculated_order_quantity > 0
+          );
 
       if (itemsToOrder.length === 0) {
         throw new Error('No items selected for ordering');
@@ -259,7 +298,7 @@ export function useOrderListsMinMax() {
 
       // Group items by supplier
       const ordersBySupplier = new Map<string, ReorderSuggestion[]>();
-      
+
       itemsToOrder.forEach(item => {
         const supplierId = item.preferred_supplier_name || 'unassigned';
         if (!ordersBySupplier.has(supplierId)) {
@@ -282,8 +321,11 @@ export function useOrderListsMinMax() {
           auto_reorder_enabled: true,
           supplier_id: null, // Will be set based on preferred supplier
           total_items: items.length,
-          total_value: items.reduce((sum, item) => 
-            sum + (item.calculated_order_quantity * (item.preferred_unit_price || 0)), 0
+          total_value: items.reduce(
+            (sum, item) =>
+              sum +
+              item.calculated_order_quantity * (item.preferred_unit_price || 0),
+            0
           ),
         };
 
@@ -302,7 +344,8 @@ export function useOrderListsMinMax() {
           suggested_quantity: item.calculated_order_quantity,
           ordered_quantity: item.calculated_order_quantity,
           unit_price: item.preferred_unit_price || 0,
-          total_price: item.calculated_order_quantity * (item.preferred_unit_price || 0),
+          total_price:
+            item.calculated_order_quantity * (item.preferred_unit_price || 0),
           status: 'pending',
           notes: `Auto-suggested: ${item.stock_status}`,
         }));
@@ -319,7 +362,9 @@ export function useOrderListsMinMax() {
           supplier: supplierName,
         });
 
-        orderLogger.info(`✅ Created order for ${supplierName} with ${items.length} items`);
+        orderLogger.info(
+          `✅ Created order for ${supplierName} with ${items.length} items`
+        );
       }
 
       // Emit event for order creation
@@ -331,7 +376,6 @@ export function useOrderListsMinMax() {
       });
 
       return createdOrders;
-
     } catch (error) {
       orderLogger.error('Error creating orders from advice:', error);
       throw error;
@@ -339,9 +383,9 @@ export function useOrderListsMinMax() {
   };
 
   const updateMinMaxLevels = async (
-    itemId: string, 
-    minStock: number, 
-    maxStock: number, 
+    itemId: string,
+    minStock: number,
+    maxStock: number,
     reorderPoint?: number
   ) => {
     try {
@@ -368,7 +412,6 @@ export function useOrderListsMinMax() {
       }
 
       orderLogger.info(`✅ Updated min/max levels for item ${itemId}`);
-
     } catch (error) {
       orderLogger.error('Error updating min/max levels:', error);
       throw error;

@@ -75,172 +75,177 @@
         bordered
         separator="cell"
       >
-      <!-- Product column with grouping -->
-      <template v-slot:body-cell-product="props">
-        <q-td :props="props">
-          <div class="row items-center">
-            <q-avatar size="32px" class="q-mr-sm">
-              <q-icon name="medical_services" color="primary" />
-            </q-avatar>
-            <div>
-              <div class="text-weight-medium">{{ props.row.productName }}</div>
-              <div class="text-caption text-grey">
-                {{ props.row.productSku }}
+        <!-- Product column with grouping -->
+        <template v-slot:body-cell-product="props">
+          <q-td :props="props">
+            <div class="row items-center">
+              <q-avatar size="32px" class="q-mr-sm">
+                <q-icon name="medical_services" color="primary" />
+              </q-avatar>
+              <div>
+                <div class="text-weight-medium">
+                  {{ props.row.productName }}
+                </div>
+                <div class="text-caption text-grey">
+                  {{ props.row.productSku }}
+                </div>
               </div>
             </div>
-          </div>
-        </q-td>
-      </template>
+          </q-td>
+        </template>
 
-      <!-- Batch number column with scanner icon -->
-      <template v-slot:body-cell-batchNumber="props">
-        <q-td :props="props">
-          <div class="row items-center">
-            <q-icon name="qr_code" class="q-mr-xs text-grey" size="16px" />
-            <span class="text-weight-medium">{{ props.row.batchNumber }}</span>
-          </div>
-          <div
-            v-if="props.row.supplierBatchNumber"
-            class="text-caption text-grey"
-          >
-            {{ $t('batch.supplierBatch') }}: {{ props.row.supplierBatchNumber }}
-          </div>
-        </q-td>
-      </template>
-
-      <!-- Location column -->
-      <template v-slot:body-cell-location="props">
-        <q-td :props="props">
-          <q-chip
-            :color="getLocationColor(props.row.locationType)"
-            text-color="white"
-            size="sm"
-          >
-            {{ props.row.locationName }}
-          </q-chip>
-        </q-td>
-      </template>
-
-      <!-- Quantity column with progress bar -->
-      <template v-slot:body-cell-quantity="props">
-        <q-td :props="props">
-          <div class="text-weight-medium">
-            {{ formatQuantity(props.row.currentQuantity) }}
-            <span class="text-grey"
-              >/ {{ formatQuantity(props.row.initialQuantity) }}</span
+        <!-- Batch number column with scanner icon -->
+        <template v-slot:body-cell-batchNumber="props">
+          <q-td :props="props">
+            <div class="row items-center">
+              <q-icon name="qr_code" class="q-mr-xs text-grey" size="16px" />
+              <span class="text-weight-medium">{{
+                props.row.batchNumber
+              }}</span>
+            </div>
+            <div
+              v-if="props.row.supplierBatchNumber"
+              class="text-caption text-grey"
             >
-          </div>
-          <q-linear-progress
-            :value="props.row.currentQuantity / props.row.initialQuantity"
-            size="4px"
-            :color="
-              getQuantityColor(
-                props.row.currentQuantity / props.row.initialQuantity
-              )
-            "
-            class="q-mt-xs"
-          />
-          <div class="text-caption text-grey">
-            {{ $t('batch.available') }}:
-            {{ formatQuantity(props.row.availableQuantity) }}
-          </div>
-        </q-td>
-      </template>
+              {{ $t('batch.supplierBatch') }}:
+              {{ props.row.supplierBatchNumber }}
+            </div>
+          </q-td>
+        </template>
 
-      <!-- Expiry date column with urgency indicators -->
-      <template v-slot:body-cell-expiry="props">
-        <q-td :props="props">
-          <div class="row items-center">
-            <q-icon
-              :name="getExpiryIcon(props.row.urgencyLevel)"
-              :color="getExpiryColor(props.row.urgencyLevel)"
-              size="16px"
-              class="q-mr-xs"
-            />
-            <div>
-              <div class="text-weight-medium">
-                {{ formatDate(props.row.expiryDate) }}
-              </div>
-              <div
-                class="text-caption"
-                :class="getExpiryTextClass(props.row.urgencyLevel)"
+        <!-- Location column -->
+        <template v-slot:body-cell-location="props">
+          <q-td :props="props">
+            <q-chip
+              :color="getLocationColor(props.row.locationType)"
+              text-color="white"
+              size="sm"
+            >
+              {{ props.row.locationName }}
+            </q-chip>
+          </q-td>
+        </template>
+
+        <!-- Quantity column with progress bar -->
+        <template v-slot:body-cell-quantity="props">
+          <q-td :props="props">
+            <div class="text-weight-medium">
+              {{ formatQuantity(props.row.currentQuantity) }}
+              <span class="text-grey"
+                >/ {{ formatQuantity(props.row.initialQuantity) }}</span
               >
-                {{
-                  getExpiryText(
-                    props.row.daysUntilExpiry,
-                    props.row.urgencyLevel
-                  )
-                }}
+            </div>
+            <q-linear-progress
+              :value="props.row.currentQuantity / props.row.initialQuantity"
+              size="4px"
+              :color="
+                getQuantityColor(
+                  props.row.currentQuantity / props.row.initialQuantity
+                )
+              "
+              class="q-mt-xs"
+            />
+            <div class="text-caption text-grey">
+              {{ $t('batch.available') }}:
+              {{ formatQuantity(props.row.availableQuantity) }}
+            </div>
+          </q-td>
+        </template>
+
+        <!-- Expiry date column with urgency indicators -->
+        <template v-slot:body-cell-expiry="props">
+          <q-td :props="props">
+            <div class="row items-center">
+              <q-icon
+                :name="getExpiryIcon(props.row.urgencyLevel)"
+                :color="getExpiryColor(props.row.urgencyLevel)"
+                size="16px"
+                class="q-mr-xs"
+              />
+              <div>
+                <div class="text-weight-medium">
+                  {{ formatDate(props.row.expiryDate) }}
+                </div>
+                <div
+                  class="text-caption"
+                  :class="getExpiryTextClass(props.row.urgencyLevel)"
+                >
+                  {{
+                    getExpiryText(
+                      props.row.daysUntilExpiry,
+                      props.row.urgencyLevel
+                    )
+                  }}
+                </div>
               </div>
             </div>
-          </div>
-        </q-td>
-      </template>
+          </q-td>
+        </template>
 
-      <!-- Status column -->
-      <template v-slot:body-cell-status="props">
-        <q-td :props="props">
-          <q-chip
-            :color="getStatusColor(props.row.status)"
-            text-color="white"
-            size="sm"
-          >
-            {{ $t(`batch.status.${props.row.status}`) }}
-          </q-chip>
-        </q-td>
-      </template>
-
-      <!-- Actions column -->
-      <template v-slot:body-cell-actions="props">
-        <q-td :props="props">
-          <div class="row q-gutter-xs">
-            <q-btn
-              icon="edit"
+        <!-- Status column -->
+        <template v-slot:body-cell-status="props">
+          <q-td :props="props">
+            <q-chip
+              :color="getStatusColor(props.row.status)"
+              text-color="white"
               size="sm"
-              flat
-              round
-              color="primary"
-              @click="editBatch(props.row)"
             >
-              <q-tooltip>{{ $t('common.edit') }}</q-tooltip>
-            </q-btn>
+              {{ $t(`batch.status.${props.row.status}`) }}
+            </q-chip>
+          </q-td>
+        </template>
 
-            <q-btn
-              icon="move_down"
-              size="sm"
-              flat
-              round
-              color="green"
-              @click="useBatch(props.row)"
-              :disable="props.row.availableQuantity <= 0"
-            >
-              <q-tooltip>{{ $t('batch.useBatch') }}</q-tooltip>
-            </q-btn>
+        <!-- Actions column -->
+        <template v-slot:body-cell-actions="props">
+          <q-td :props="props">
+            <div class="row q-gutter-xs">
+              <q-btn
+                icon="edit"
+                size="sm"
+                flat
+                round
+                color="primary"
+                @click="editBatch(props.row)"
+              >
+                <q-tooltip>{{ $t('common.edit') }}</q-tooltip>
+              </q-btn>
 
-            <q-btn
-              v-if="props.row.status === 'active'"
-              icon="block"
-              size="sm"
-              flat
-              round
-              color="orange"
-              @click="quarantineBatch(props.row)"
-            >
-              <q-tooltip>{{ $t('batch.quarantine') }}</q-tooltip>
-            </q-btn>
+              <q-btn
+                icon="move_down"
+                size="sm"
+                flat
+                round
+                color="green"
+                @click="useBatch(props.row)"
+                :disable="props.row.availableQuantity <= 0"
+              >
+                <q-tooltip>{{ $t('batch.useBatch') }}</q-tooltip>
+              </q-btn>
 
-            <q-btn
-              icon="more_vert"
-              size="sm"
-              flat
-              round
-              @click="showBatchDetails(props.row)"
-            >
-              <q-tooltip>{{ $t('common.moreActions') }}</q-tooltip>
-            </q-btn>
-          </div>
-        </q-td>
-      </template>
+              <q-btn
+                v-if="props.row.status === 'active'"
+                icon="block"
+                size="sm"
+                flat
+                round
+                color="orange"
+                @click="quarantineBatch(props.row)"
+              >
+                <q-tooltip>{{ $t('batch.quarantine') }}</q-tooltip>
+              </q-btn>
+
+              <q-btn
+                icon="more_vert"
+                size="sm"
+                flat
+                round
+                @click="showBatchDetails(props.row)"
+              >
+                <q-tooltip>{{ $t('common.moreActions') }}</q-tooltip>
+              </q-btn>
+            </div>
+          </q-td>
+        </template>
       </q-table>
     </div>
 
@@ -266,13 +271,17 @@
           <div class="col">
             <div class="detail-item">
               <div class="detail-label">{{ $t('batch.quantity') }}</div>
-              <div class="detail-value">{{ selectedBatch.currentQuantity }}</div>
+              <div class="detail-value">
+                {{ selectedBatch.currentQuantity }}
+              </div>
             </div>
           </div>
           <div class="col">
             <div class="detail-item">
               <div class="detail-label">{{ $t('batch.expiryDate') }}</div>
-              <div class="detail-value">{{ formatDate(selectedBatch.expiryDate) }}</div>
+              <div class="detail-value">
+                {{ formatDate(selectedBatch.expiryDate) }}
+              </div>
             </div>
           </div>
         </div>
@@ -470,8 +479,12 @@
   };
 
   const getQuantityColor = (ratio: number) => {
-    if (ratio > 0.5) { return 'green'; }
-    if (ratio > 0.2) { return 'orange'; }
+    if (ratio > 0.5) {
+      return 'green';
+    }
+    if (ratio > 0.2) {
+      return 'orange';
+    }
     return 'red';
   };
 

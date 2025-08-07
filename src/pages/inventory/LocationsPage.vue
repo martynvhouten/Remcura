@@ -99,20 +99,20 @@
         :no-data-label="$t('locations.noLocations')"
         @request="onTableRequest"
       >
-      <template v-slot:body-cell-actions="props">
-        <q-td :props="props">
-          <q-btn icon="edit" size="sm" flat dense @click="showComingSoon" />
-          <q-btn
-            icon="delete"
-            size="sm"
-            flat
-            dense
-            color="negative"
-            @click="showComingSoon"
-          />
-        </q-td>
-      </template>
-    </q-table>
+        <template v-slot:body-cell-actions="props">
+          <q-td :props="props">
+            <q-btn icon="edit" size="sm" flat dense @click="showComingSoon" />
+            <q-btn
+              icon="delete"
+              size="sm"
+              flat
+              dense
+              color="negative"
+              @click="showComingSoon"
+            />
+          </q-td>
+        </template>
+      </q-table>
     </div>
   </PageLayout>
 </template>
@@ -127,14 +127,18 @@
   import { useAuthStore } from 'src/stores/auth';
   import { useTableSorting } from 'src/composables/useTableSorting';
   import { locationsFilterPreset } from 'src/presets/filters/locations';
-  import type { FilterValues, FilterChangeEvent, FilterResetEvent } from 'src/types/filters';
+  import type {
+    FilterValues,
+    FilterChangeEvent,
+    FilterResetEvent,
+  } from 'src/types/filters';
 
   const { t } = useI18n();
   const $q = useQuasar();
 
   // Table sorting
   const { pagination, onTableRequest, sortData } = useTableSorting({
-    rowsPerPage: 25
+    rowsPerPage: 25,
   });
 
   // State
@@ -182,17 +186,20 @@
     // Apply search filter
     if (filterValues.value.search) {
       const searchTerm = String(filterValues.value.search).toLowerCase();
-      filtered = filtered.filter(location =>
-        location.name.toLowerCase().includes(searchTerm) ||
-        location.type.toLowerCase().includes(searchTerm) ||
-        location.description.toLowerCase().includes(searchTerm)
+      filtered = filtered.filter(
+        location =>
+          location.name.toLowerCase().includes(searchTerm) ||
+          location.type.toLowerCase().includes(searchTerm) ||
+          location.description.toLowerCase().includes(searchTerm)
       );
     }
 
     // Apply type filter
     if (filterValues.value.type) {
-      filtered = filtered.filter(location => 
-        location.type.toLowerCase() === String(filterValues.value.type).toLowerCase()
+      filtered = filtered.filter(
+        location =>
+          location.type.toLowerCase() ===
+          String(filterValues.value.type).toLowerCase()
       );
     }
 
@@ -206,7 +213,11 @@
 
   // Apply sorting to filtered locations
   const sortedLocations = computed(() => {
-    return sortData(filteredLocations.value, pagination.value.sortBy, pagination.value.descending);
+    return sortData(
+      filteredLocations.value,
+      pagination.value.sortBy,
+      pagination.value.descending
+    );
   });
 
   const mainLocationsCount = computed(() => {

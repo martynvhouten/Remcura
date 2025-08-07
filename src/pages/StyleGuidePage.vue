@@ -12,7 +12,7 @@
       <!-- Colors Section -->
       <div class="style-section">
         <h2 class="section-title">🎨 {{ $t('settings.colorsSection') }}</h2>
-        
+
         <div class="color-showcase">
           <!-- Primary Colors -->
           <div class="color-group">
@@ -61,50 +61,52 @@
       <!-- Typography Section -->
       <div class="style-section">
         <h2 class="section-title">📝 {{ $t('settings.typographySection') }}</h2>
-        
+
         <div class="typography-showcase">
           <div class="text-example">
             <h1 class="text-h1">Heading 1 - Display Large</h1>
             <div class="text-meta">36px, Bold, Line Height 1.2</div>
           </div>
-          
+
           <div class="text-example">
             <h2 class="text-h2">Heading 2 - Display Medium</h2>
             <div class="text-meta">28px, Semibold, Line Height 1.25</div>
           </div>
-          
+
           <div class="text-example">
             <h3 class="text-h3">Heading 3 - Display Small</h3>
             <div class="text-meta">24px, Semibold, Line Height 1.3</div>
           </div>
-          
+
           <div class="text-example">
             <h4 class="text-h4">Heading 4 - Title Large</h4>
             <div class="text-meta">20px, Semibold, Line Height 1.4</div>
           </div>
-          
+
           <div class="text-example">
             <h5 class="text-h5">Heading 5 - Title Medium</h5>
             <div class="text-meta">18px, Medium, Line Height 1.4</div>
           </div>
-          
+
           <div class="text-example">
             <h6 class="text-h6">Heading 6 - Title Small</h6>
             <div class="text-meta">16px, Medium, Line Height 1.5</div>
           </div>
-          
+
           <div class="text-example">
             <p class="text-body1">Body 1 - Primary text for most content</p>
             <div class="text-meta">16px, Regular, Line Height 1.6</div>
           </div>
-          
+
           <div class="text-example">
             <p class="text-body2">Body 2 - Secondary text for descriptions</p>
             <div class="text-meta">14px, Regular, Line Height 1.5</div>
           </div>
-          
+
           <div class="text-example">
-            <p class="text-caption">Caption - Small text for labels and metadata</p>
+            <p class="text-caption">
+              Caption - Small text for labels and metadata
+            </p>
             <div class="text-meta">12px, Regular, Line Height 1.4</div>
           </div>
         </div>
@@ -113,7 +115,7 @@
       <!-- Button System -->
       <div class="style-section">
         <h2 class="section-title">🔘 {{ $t('settings.buttonsSection') }}</h2>
-        
+
         <div class="button-showcase">
           <div class="button-group">
             <h4>Primary Buttons</h4>
@@ -130,7 +132,12 @@
             <div class="button-row">
               <q-btn outline color="primary" label="Outline" />
               <q-btn flat color="primary" label="Flat" />
-              <q-btn unelevated color="grey-3" text-color="grey-8" label="Neutral" />
+              <q-btn
+                unelevated
+                color="grey-3"
+                text-color="grey-8"
+                label="Neutral"
+              />
             </div>
           </div>
 
@@ -164,22 +171,46 @@
         <h2 class="section-title">🌟 {{ $t('settings.shadowsSection') }}</h2>
 
         <div class="shadow-showcase">
-          <div class="shadow-card" style="box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08), 0 1px 2px rgba(0, 0, 0, 0.06)">
+          <div
+            class="shadow-card"
+            style="
+              box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08),
+                0 1px 2px rgba(0, 0, 0, 0.06);
+            "
+          >
             <div class="shadow-label">Base Shadow</div>
             <div class="shadow-value">New card system default</div>
           </div>
 
-          <div class="shadow-card" style="box-shadow: 0 8px 25px rgba(0, 0, 0, 0.12), 0 4px 10px rgba(0, 0, 0, 0.08)">
+          <div
+            class="shadow-card"
+            style="
+              box-shadow: 0 8px 25px rgba(0, 0, 0, 0.12),
+                0 4px 10px rgba(0, 0, 0, 0.08);
+            "
+          >
             <div class="shadow-label">Hover Shadow</div>
             <div class="shadow-value">Interactive card hover</div>
           </div>
 
-          <div class="shadow-card" style="box-shadow: 0 2px 4px rgba(0, 0, 0, 0.06), 0 1px 2px rgba(0, 0, 0, 0.04)">
+          <div
+            class="shadow-card"
+            style="
+              box-shadow: 0 2px 4px rgba(0, 0, 0, 0.06),
+                0 1px 2px rgba(0, 0, 0, 0.04);
+            "
+          >
             <div class="shadow-label">Interactive Shadow</div>
             <div class="shadow-value">Interactive card default</div>
           </div>
 
-          <div class="shadow-card" style="box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.08)">
+          <div
+            class="shadow-card"
+            style="
+              box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1),
+                0 1px 3px rgba(0, 0, 0, 0.08);
+            "
+          >
             <div class="shadow-label">Medium Shadow</div>
             <div class="shadow-value">Elevated elements</div>
           </div>
@@ -344,289 +375,289 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue';
-import PageLayout from 'src/components/PageLayout.vue';
-import PageTitle from 'src/components/PageTitle.vue';
-import CardStyleGuide from 'src/components/cards/CardStyleGuide.vue';
+  import { ref } from 'vue';
+  import PageLayout from 'src/components/PageLayout.vue';
+  import PageTitle from 'src/components/PageTitle.vue';
+  import CardStyleGuide from 'src/components/cards/CardStyleGuide.vue';
 </script>
 
 <style scoped lang="scss">
-.style-guide {
-  display: flex;
-  flex-direction: column;
-  gap: 48px;
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 0 20px;
-}
-
-.style-section {
-  .section-title {
-    font-size: 32px;
-    font-weight: 600;
-    margin: 0 0 24px 0;
-    color: var(--text-primary);
-  }
-
-  .section-description {
-    font-size: 18px;
-    color: var(--text-secondary);
-    margin-bottom: 32px;
-    line-height: 1.6;
-  }
-}
-
-// Color showcase
-.color-showcase {
-  display: flex;
-  flex-direction: column;
-  gap: 32px;
-
-  .color-group {
-    h4 {
-      font-size: 18px;
-      font-weight: 600;
-      margin: 0 0 16px 0;
-      color: var(--text-primary);
-    }
-
-    .color-row {
-      display: flex;
-      gap: 16px;
-      flex-wrap: wrap;
-    }
-  }
-
-  .color-card {
-    width: 120px;
-    height: 80px;
-    border-radius: 12px;
-    padding: 12px;
-    color: white;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-
-    .color-value {
-      font-weight: 600;
-      font-size: 14px;
-    }
-
-    .color-hex {
-      font-size: 11px;
-      opacity: 0.9;
-      font-family: monospace;
-    }
-  }
-}
-
-// Typography showcase
-.typography-showcase {
-  display: flex;
-  flex-direction: column;
-  gap: 24px;
-
-  .text-example {
-    padding: 16px 0;
-    border-bottom: 1px solid var(--border-color);
-
-    &:last-child {
-      border-bottom: none;
-    }
-
-    .text-meta {
-      font-size: 12px;
-      color: var(--text-secondary);
-      margin-top: 8px;
-      font-family: monospace;
-    }
-  }
-}
-
-// Button showcase
-.button-showcase {
-  display: flex;
-  flex-direction: column;
-  gap: 32px;
-
-  .button-group {
-    h4 {
-      font-size: 18px;
-      font-weight: 600;
-      margin: 0 0 16px 0;
-      color: var(--text-primary);
-    }
-
-    .button-row {
-      display: flex;
-      gap: 12px;
-      flex-wrap: wrap;
-      align-items: center;
-    }
-  }
-}
-
-// Shadow showcase
-.shadow-showcase {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 24px;
-
-  .shadow-card {
-    background: var(--card-background, #ffffff);
-    border-radius: 12px;
-    padding: 24px;
-    text-align: center;
-
-    .shadow-label {
-      font-weight: 600;
-      margin-bottom: 8px;
-      color: var(--text-primary);
-    }
-
-    .shadow-value {
-      font-size: 14px;
-      color: var(--text-secondary);
-    }
-
-    .body--dark & {
-      background: #1e1e1e;
-    }
-  }
-}
-
-// Icon showcase
-.icon-showcase {
-  display: flex;
-  flex-direction: column;
-  gap: 32px;
-
-  .icon-group {
-    h4 {
-      font-size: 18px;
-      font-weight: 600;
-      margin: 0 0 16px 0;
-      color: var(--text-primary);
-    }
-
-    .icon-row {
-      display: flex;
-      gap: 24px;
-      flex-wrap: wrap;
-    }
-  }
-
-  .icon-item {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 8px;
-    text-align: center;
-
-    .icon-label {
-      font-size: 14px;
-      color: var(--text-secondary);
-    }
-  }
-}
-
-// Radius showcase
-.radius-showcase {
-  display: flex;
-  gap: 24px;
-  flex-wrap: wrap;
-  align-items: end;
-
-  .radius-item {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 12px;
-
-    .radius-demo {
-      width: 60px;
-      height: 60px;
-      background: var(--q-primary);
-    }
-
-    .radius-label {
-      font-weight: 600;
-      color: var(--text-primary);
-    }
-
-    .radius-value {
-      font-size: 12px;
-      color: var(--text-secondary);
-      font-family: monospace;
-    }
-  }
-}
-
-// Spacing showcase
-.spacing-showcase {
-  display: flex;
-  gap: 24px;
-  flex-wrap: wrap;
-  align-items: end;
-
-  .spacing-item {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 12px;
-
-    .spacing-demo {
-      height: 40px;
-      background: var(--q-primary);
-      border-radius: 4px;
-    }
-
-    .spacing-label {
-      font-weight: 600;
-      color: var(--text-primary);
-    }
-
-    .spacing-value {
-      font-size: 12px;
-      color: var(--text-secondary);
-      font-family: monospace;
-    }
-  }
-}
-
-// Responsive adjustments
-@media (max-width: 768px) {
   .style-guide {
-    gap: 32px;
-    padding: 0 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 48px;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
   }
 
   .style-section {
     .section-title {
-      font-size: 24px;
+      font-size: 32px;
+      font-weight: 600;
+      margin: 0 0 24px 0;
+      color: var(--text-primary);
     }
 
     .section-description {
-      font-size: 16px;
+      font-size: 18px;
+      color: var(--text-secondary);
+      margin-bottom: 32px;
+      line-height: 1.6;
     }
   }
 
-  .color-row {
-    justify-content: center;
+  // Color showcase
+  .color-showcase {
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
+
+    .color-group {
+      h4 {
+        font-size: 18px;
+        font-weight: 600;
+        margin: 0 0 16px 0;
+        color: var(--text-primary);
+      }
+
+      .color-row {
+        display: flex;
+        gap: 16px;
+        flex-wrap: wrap;
+      }
+    }
+
+    .color-card {
+      width: 120px;
+      height: 80px;
+      border-radius: 12px;
+      padding: 12px;
+      color: white;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+
+      .color-value {
+        font-weight: 600;
+        font-size: 14px;
+      }
+
+      .color-hex {
+        font-size: 11px;
+        opacity: 0.9;
+        font-family: monospace;
+      }
+    }
   }
 
-  .button-row {
-    justify-content: center;
+  // Typography showcase
+  .typography-showcase {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+
+    .text-example {
+      padding: 16px 0;
+      border-bottom: 1px solid var(--border-color);
+
+      &:last-child {
+        border-bottom: none;
+      }
+
+      .text-meta {
+        font-size: 12px;
+        color: var(--text-secondary);
+        margin-top: 8px;
+        font-family: monospace;
+      }
+    }
   }
 
-  .icon-row {
-    justify-content: center;
+  // Button showcase
+  .button-showcase {
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
+
+    .button-group {
+      h4 {
+        font-size: 18px;
+        font-weight: 600;
+        margin: 0 0 16px 0;
+        color: var(--text-primary);
+      }
+
+      .button-row {
+        display: flex;
+        gap: 12px;
+        flex-wrap: wrap;
+        align-items: center;
+      }
+    }
   }
 
-  .radius-showcase,
+  // Shadow showcase
+  .shadow-showcase {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 24px;
+
+    .shadow-card {
+      background: var(--card-background, #ffffff);
+      border-radius: 12px;
+      padding: 24px;
+      text-align: center;
+
+      .shadow-label {
+        font-weight: 600;
+        margin-bottom: 8px;
+        color: var(--text-primary);
+      }
+
+      .shadow-value {
+        font-size: 14px;
+        color: var(--text-secondary);
+      }
+
+      .body--dark & {
+        background: #1e1e1e;
+      }
+    }
+  }
+
+  // Icon showcase
+  .icon-showcase {
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
+
+    .icon-group {
+      h4 {
+        font-size: 18px;
+        font-weight: 600;
+        margin: 0 0 16px 0;
+        color: var(--text-primary);
+      }
+
+      .icon-row {
+        display: flex;
+        gap: 24px;
+        flex-wrap: wrap;
+      }
+    }
+
+    .icon-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      text-align: center;
+
+      .icon-label {
+        font-size: 14px;
+        color: var(--text-secondary);
+      }
+    }
+  }
+
+  // Radius showcase
+  .radius-showcase {
+    display: flex;
+    gap: 24px;
+    flex-wrap: wrap;
+    align-items: end;
+
+    .radius-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
+
+      .radius-demo {
+        width: 60px;
+        height: 60px;
+        background: var(--q-primary);
+      }
+
+      .radius-label {
+        font-weight: 600;
+        color: var(--text-primary);
+      }
+
+      .radius-value {
+        font-size: 12px;
+        color: var(--text-secondary);
+        font-family: monospace;
+      }
+    }
+  }
+
+  // Spacing showcase
   .spacing-showcase {
-    justify-content: center;
+    display: flex;
+    gap: 24px;
+    flex-wrap: wrap;
+    align-items: end;
+
+    .spacing-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
+
+      .spacing-demo {
+        height: 40px;
+        background: var(--q-primary);
+        border-radius: 4px;
+      }
+
+      .spacing-label {
+        font-weight: 600;
+        color: var(--text-primary);
+      }
+
+      .spacing-value {
+        font-size: 12px;
+        color: var(--text-secondary);
+        font-family: monospace;
+      }
+    }
   }
-}
+
+  // Responsive adjustments
+  @media (max-width: 768px) {
+    .style-guide {
+      gap: 32px;
+      padding: 0 16px;
+    }
+
+    .style-section {
+      .section-title {
+        font-size: 24px;
+      }
+
+      .section-description {
+        font-size: 16px;
+      }
+    }
+
+    .color-row {
+      justify-content: center;
+    }
+
+    .button-row {
+      justify-content: center;
+    }
+
+    .icon-row {
+      justify-content: center;
+    }
+
+    .radius-showcase,
+    .spacing-showcase {
+      justify-content: center;
+    }
+  }
 </style>

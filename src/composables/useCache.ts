@@ -1,16 +1,16 @@
-import { ref, Ref } from 'vue'
+import { ref, Ref } from 'vue';
 
 interface CacheItem<T> {
-  data: T
-  timestamp: number
-  expiresAt: number
+  data: T;
+  timestamp: number;
+  expiresAt: number;
 }
 
 interface CacheOptions {
-  ttl?: number // Time to live in milliseconds
-  maxSize?: number // Maximum number of items
-  storage?: 'memory' | 'localStorage' | 'sessionStorage'
-  serialize?: boolean
+  ttl?: number; // Time to live in milliseconds
+  maxSize?: number; // Maximum number of items
+  storage?: 'memory' | 'localStorage' | 'sessionStorage';
+  serialize?: boolean;
 }
 
 /**
@@ -25,23 +25,23 @@ export function useCache<T = any>(
     ttl = 5 * 60 * 1000, // 5 minutes default
     maxSize = 100,
     storage = 'memory',
-    serialize = true
-  } = options
+    serialize = true,
+  } = options;
 
   // Memory cache
-  const memoryCache = new Map<string, CacheItem<T>>()
+  const memoryCache = new Map<string, CacheItem<T>>();
   const cacheStats = ref({
     hits: 0,
     misses: 0,
-    size: 0
-  })
+    size: 0,
+  });
 
   /**
    * Generate cache key with prefix
    */
   const getCacheKey = (key: string): string => {
-    return `${prefix}:${key}`
-  }
+    return `${prefix}:${key}`;
+  };
 
   /**
    * Get item from appropriate storage
@@ -50,24 +50,24 @@ export function useCache<T = any>(
     try {
       switch (storage) {
         case 'localStorage': {
-          const localItem = localStorage.getItem(getCacheKey(key))
-          return localItem ? JSON.parse(localItem) : null
+          const localItem = localStorage.getItem(getCacheKey(key));
+          return localItem ? JSON.parse(localItem) : null;
         }
 
         case 'sessionStorage': {
-          const sessionItem = sessionStorage.getItem(getCacheKey(key))
-          return sessionItem ? JSON.parse(sessionItem) : null
+          const sessionItem = sessionStorage.getItem(getCacheKey(key));
+          return sessionItem ? JSON.parse(sessionItem) : null;
         }
 
         case 'memory':
         default:
-          return memoryCache.get(key) || null
+          return memoryCache.get(key) || null;
       }
     } catch (error) {
-      console.warn('Cache get error:', error)
-      return null
+      console.warn('Cache get error:', error);
+      return null;
     }
-  }
+  };
 
   /**
    * Set item in appropriate storage
@@ -76,26 +76,26 @@ export function useCache<T = any>(
     try {
       switch (storage) {
         case 'localStorage': {
-          localStorage.setItem(getCacheKey(key), JSON.stringify(item))
-          break
+          localStorage.setItem(getCacheKey(key), JSON.stringify(item));
+          break;
         }
 
         case 'sessionStorage': {
-          sessionStorage.setItem(getCacheKey(key), JSON.stringify(item))
-          break
+          sessionStorage.setItem(getCacheKey(key), JSON.stringify(item));
+          break;
         }
 
         case 'memory':
         default:
-          memoryCache.set(key, item)
-          enforceMaxSize()
-          break
+          memoryCache.set(key, item);
+          enforceMaxSize();
+          break;
       }
-      cacheStats.value.size = memoryCache.size
+      cacheStats.value.size = memoryCache.size;
     } catch (error) {
-      console.warn('Cache set error:', error)
+      console.warn('Cache set error:', error);
     }
-  }
+  };
 
   /**
    * Remove item from storage
@@ -103,83 +103,83 @@ export function useCache<T = any>(
   const removeFromStorage = (key: string): void => {
     switch (storage) {
       case 'localStorage': {
-        localStorage.removeItem(getCacheKey(key))
-        break
+        localStorage.removeItem(getCacheKey(key));
+        break;
       }
 
       case 'sessionStorage': {
-        sessionStorage.removeItem(getCacheKey(key))
-        break
+        sessionStorage.removeItem(getCacheKey(key));
+        break;
       }
 
       case 'memory':
       default:
-        memoryCache.delete(key)
-        break
+        memoryCache.delete(key);
+        break;
     }
-    cacheStats.value.size = memoryCache.size
-  }
+    cacheStats.value.size = memoryCache.size;
+  };
 
   /**
    * Enforce maximum cache size (LRU eviction)
    */
   const enforceMaxSize = (): void => {
     if (storage === 'memory' && memoryCache.size > maxSize) {
-      const oldestKey = memoryCache.keys().next().value
+      const oldestKey = memoryCache.keys().next().value;
       if (oldestKey) {
-        memoryCache.delete(oldestKey)
+        memoryCache.delete(oldestKey);
       }
     }
-  }
+  };
 
   /**
    * Check if cache item is expired
    */
   const isExpired = (item: CacheItem<T>): boolean => {
-    return Date.now() > item.expiresAt
-  }
+    return Date.now() > item.expiresAt;
+  };
 
   /**
    * Get cached data
    */
   const get = (key: string): T | null => {
-    const item = getFromStorage(key)
+    const item = getFromStorage(key);
 
     if (!item) {
-      cacheStats.value.misses++
-      return null
+      cacheStats.value.misses++;
+      return null;
     }
 
     if (isExpired(item)) {
-      removeFromStorage(key)
-      cacheStats.value.misses++
-      return null
+      removeFromStorage(key);
+      cacheStats.value.misses++;
+      return null;
     }
 
-    cacheStats.value.hits++
-    return item.data
-  }
+    cacheStats.value.hits++;
+    return item.data;
+  };
 
   /**
    * Set cached data
    */
   const set = (key: string, data: T, customTtl?: number): void => {
-    const expirationTime = customTtl || ttl
+    const expirationTime = customTtl || ttl;
     const item: CacheItem<T> = {
       data: serialize ? JSON.parse(JSON.stringify(data)) : data,
       timestamp: Date.now(),
-      expiresAt: Date.now() + expirationTime
-    }
+      expiresAt: Date.now() + expirationTime,
+    };
 
-    setInStorage(key, item)
-  }
+    setInStorage(key, item);
+  };
 
   /**
    * Remove cached data
    */
   const remove = (key: string): void => {
-    removeFromStorage(key)
-  }
+    removeFromStorage(key);
+  };
 
   /**
    * Clear all cache
@@ -189,34 +189,36 @@ export function useCache<T = any>(
       case 'localStorage':
         Object.keys(localStorage).forEach(key => {
           if (key.startsWith(`${prefix}:`)) {
-            localStorage.removeItem(key)
+            localStorage.removeItem(key);
           }
-        })
-        break
+        });
+        break;
 
       case 'sessionStorage':
         Object.keys(sessionStorage).forEach(key => {
           if (key.startsWith(`${prefix}:`)) {
-            sessionStorage.removeItem(key)
+            sessionStorage.removeItem(key);
           }
-        })
-        break
+        });
+        break;
 
       case 'memory':
       default:
-        memoryCache.clear()
-        break
+        memoryCache.clear();
+        break;
     }
-    cacheStats.value.size = 0
-  }
+    cacheStats.value.size = 0;
+  };
 
   /**
    * Get cache statistics
    */
   const getStats = () => ({
     ...cacheStats.value,
-    hitRate: cacheStats.value.hits / (cacheStats.value.hits + cacheStats.value.misses) || 0
-  })
+    hitRate:
+      cacheStats.value.hits /
+        (cacheStats.value.hits + cacheStats.value.misses) || 0,
+  });
 
   /**
    * Get or set with async function
@@ -226,41 +228,43 @@ export function useCache<T = any>(
     fetchFn: () => Promise<TResult>,
     customTtl?: number
   ): Promise<TResult> => {
-    const cached = get(key) as TResult | null
+    const cached = get(key) as TResult | null;
 
     if (cached !== null) {
-      return cached
+      return cached;
     }
 
-    const result = await fetchFn()
-    set(key, result as any, customTtl)
-    return result
-  }
+    const result = await fetchFn();
+    set(key, result as any, customTtl);
+    return result;
+  };
 
   /**
    * Batch operations
    */
   const batchGet = (keys: string[]): Array<T | null> => {
-    return keys.map(key => get(key))
-  }
+    return keys.map(key => get(key));
+  };
 
-  const batchSet = (entries: Array<{ key: string; data: T; ttl?: number }>): void => {
+  const batchSet = (
+    entries: Array<{ key: string; data: T; ttl?: number }>
+  ): void => {
     entries.forEach(({ key, data, ttl: customTtl }) => {
-      set(key, data, customTtl)
-    })
-  }
+      set(key, data, customTtl);
+    });
+  };
 
   /**
    * Clean expired items
    */
   const cleanExpired = (): number => {
-    let cleaned = 0
+    let cleaned = 0;
 
     if (storage === 'memory') {
       for (const [key, item] of memoryCache.entries()) {
         if (isExpired(item)) {
-          memoryCache.delete(key)
-          cleaned++
+          memoryCache.delete(key);
+          cleaned++;
         }
       }
     } else {
@@ -268,17 +272,17 @@ export function useCache<T = any>(
       // This is more expensive, so we'll do it on-demand
     }
 
-    cacheStats.value.size = memoryCache.size
-    return cleaned
-  }
+    cacheStats.value.size = memoryCache.size;
+    return cleaned;
+  };
 
   /**
    * Check if key exists and is valid
    */
   const has = (key: string): boolean => {
-    const item = getFromStorage(key)
-    return item !== null && !isExpired(item)
-  }
+    const item = getFromStorage(key);
+    return item !== null && !isExpired(item);
+  };
 
   return {
     get,
@@ -291,8 +295,8 @@ export function useCache<T = any>(
     batchSet,
     cleanExpired,
     getStats,
-    stats: cacheStats
-  }
+    stats: cacheStats,
+  };
 }
 
 /**
@@ -302,8 +306,8 @@ export function useApiCache() {
   return useCache('api', {
     ttl: 5 * 60 * 1000, // 5 minutes
     maxSize: 50,
-    storage: 'memory'
-  })
+    storage: 'memory',
+  });
 }
 
 /**
@@ -313,8 +317,8 @@ export function usePreferencesCache() {
   return useCache('prefs', {
     ttl: 24 * 60 * 60 * 1000, // 24 hours
     maxSize: 20,
-    storage: 'localStorage'
-  })
+    storage: 'localStorage',
+  });
 }
 
 /**
@@ -324,8 +328,8 @@ export function useSessionCache() {
   return useCache('session', {
     ttl: 30 * 60 * 1000, // 30 minutes
     maxSize: 30,
-    storage: 'sessionStorage'
-  })
+    storage: 'sessionStorage',
+  });
 }
 
 /**
@@ -335,18 +339,18 @@ export function useSmartCache<T = any>(
   prefix: string,
   options: CacheOptions & { cleanupInterval?: number } = {}
 ) {
-  const { cleanupInterval = 10 * 60 * 1000, ...cacheOptions } = options
-  const cache = useCache<T>(prefix, cacheOptions)
+  const { cleanupInterval = 10 * 60 * 1000, ...cacheOptions } = options;
+  const cache = useCache<T>(prefix, cacheOptions);
 
   // Auto cleanup expired items
   if (typeof window !== 'undefined') {
     setInterval(() => {
-      const cleaned = cache.cleanExpired()
+      const cleaned = cache.cleanExpired();
       if (cleaned > 0) {
-        console.debug(`Cache cleanup: removed ${cleaned} expired items`)
+        console.debug(`Cache cleanup: removed ${cleaned} expired items`);
       }
-    }, cleanupInterval)
+    }, cleanupInterval);
   }
 
-  return cache
+  return cache;
 }

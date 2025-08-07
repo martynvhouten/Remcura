@@ -1,9 +1,6 @@
 import { computed, type Ref } from 'vue';
 import { productLogger } from '@/utils/logger';
-import type {
-  ProductWithStock,
-  ProductFilter,
-} from '@/types/inventory';
+import type { ProductWithStock, ProductFilter } from '@/types/inventory';
 
 export function useProductsFilters(
   products: Ref<ProductWithStock[]>,
@@ -33,20 +30,32 @@ export function useProductsFilters(
 
     // Apply category filter
     if (filters.value.category && filters.value.category !== 'all') {
-      result = result.filter(product => product.category === filters.value.category);
+      result = result.filter(
+        product => product.category === filters.value.category
+      );
     }
 
     // Apply supplier filter
     if (filters.value.supplier && filters.value.supplier !== 'all') {
-      result = result.filter(product => product.supplier_id === filters.value.supplier);
+      result = result.filter(
+        product => product.supplier_id === filters.value.supplier
+      );
     }
 
     // Apply stock status filter
     if (filters.value.stock_status && filters.value.stock_status !== 'all') {
       result = result.filter(product => {
-        const totalStock = product.stock_levels?.reduce((sum, level) => sum + level.current_quantity, 0) || 0;
-        const stockStatus = totalStock <= 0 ? 'out_of_stock' : 
-                          totalStock <= product.minimum_stock ? 'low_stock' : 'in_stock';
+        const totalStock =
+          product.stock_levels?.reduce(
+            (sum, level) => sum + level.current_quantity,
+            0
+          ) || 0;
+        const stockStatus =
+          totalStock <= 0
+            ? 'out_of_stock'
+            : totalStock <= product.minimum_stock
+            ? 'low_stock'
+            : 'in_stock';
         return stockStatus === filters.value.stock_status;
       });
     }
@@ -54,7 +63,8 @@ export function useProductsFilters(
     // Apply sorting
     if (filters.value.sort_by) {
       result.sort((a, b) => {
-        let aValue: string | number | boolean, bValue: string | number | boolean;
+        let aValue: string | number | boolean,
+          bValue: string | number | boolean;
 
         switch (filters.value.sort_by) {
           case 'name':
@@ -74,8 +84,16 @@ export function useProductsFilters(
             bValue = b.unit_price || 0;
             break;
           case 'stock':
-            aValue = a.stock_levels?.reduce((sum, level) => sum + level.current_quantity, 0) || 0;
-            bValue = b.stock_levels?.reduce((sum, level) => sum + level.current_quantity, 0) || 0;
+            aValue =
+              a.stock_levels?.reduce(
+                (sum, level) => sum + level.current_quantity,
+                0
+              ) || 0;
+            bValue =
+              b.stock_levels?.reduce(
+                (sum, level) => sum + level.current_quantity,
+                0
+              ) || 0;
             break;
           case 'last_updated':
             aValue = new Date(a.updated_at || a.created_at || 0);
@@ -109,7 +127,7 @@ export function useProductsFilters(
   // Supplier-related computed properties
   const availableSuppliers = computed(() => {
     const supplierMap = new Map();
-    
+
     products.value.forEach(product => {
       if (product.supplier_id && product.supplier_name) {
         supplierMap.set(product.supplier_id, {
@@ -118,8 +136,10 @@ export function useProductsFilters(
         });
       }
     });
-    
-    return Array.from(supplierMap.values()).sort((a, b) => a.name.localeCompare(b.name));
+
+    return Array.from(supplierMap.values()).sort((a, b) =>
+      a.name.localeCompare(b.name)
+    );
   });
 
   // Filter management actions
@@ -197,33 +217,45 @@ export function useProductsFilters(
   // Quick filter helpers
   const getProductsInStock = computed(() => {
     return products.value.filter(product => {
-      const totalStock = product.stock_levels?.reduce((sum, level) => sum + level.current_quantity, 0) || 0;
+      const totalStock =
+        product.stock_levels?.reduce(
+          (sum, level) => sum + level.current_quantity,
+          0
+        ) || 0;
       return totalStock > product.minimum_stock;
     });
   });
 
   const getProductsLowStock = computed(() => {
     return products.value.filter(product => {
-      const totalStock = product.stock_levels?.reduce((sum, level) => sum + level.current_quantity, 0) || 0;
+      const totalStock =
+        product.stock_levels?.reduce(
+          (sum, level) => sum + level.current_quantity,
+          0
+        ) || 0;
       return totalStock > 0 && totalStock <= product.minimum_stock;
     });
   });
 
   const getProductsOutOfStock = computed(() => {
     return products.value.filter(product => {
-      const totalStock = product.stock_levels?.reduce((sum, level) => sum + level.current_quantity, 0) || 0;
+      const totalStock =
+        product.stock_levels?.reduce(
+          (sum, level) => sum + level.current_quantity,
+          0
+        ) || 0;
       return totalStock <= 0;
     });
   });
 
   const getProductsByCategory = (category: string) => {
-    return computed(() => 
+    return computed(() =>
       products.value.filter(product => product.category === category)
     );
   };
 
   const getProductsBySupplier = (supplierId: string) => {
-    return computed(() => 
+    return computed(() =>
       products.value.filter(product => product.supplier_id === supplierId)
     );
   };

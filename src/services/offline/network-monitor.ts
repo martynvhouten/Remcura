@@ -33,7 +33,7 @@ export class NetworkMonitor {
    */
   addListener(listener: NetworkEventListener): () => void {
     this.listeners.add(listener);
-    
+
     // Return unsubscribe function
     return () => {
       this.listeners.delete(listener);
@@ -117,4 +117,4 @@ export class NetworkMonitor {
 }
 
 // Export singleton instance
-export const networkMonitor = new NetworkMonitor(); 
+export const networkMonitor = new NetworkMonitor();

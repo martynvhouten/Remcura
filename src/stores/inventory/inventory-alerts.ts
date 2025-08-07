@@ -10,10 +10,13 @@ export function useInventoryAlerts(stockLevels: Ref<StockLevel[]>) {
   // Computed properties
   const criticalAlerts = computed<StockAlert[]>(() => {
     const alerts: StockAlert[] = [];
-    
+
     stockLevels.value.forEach((stockLevel: StockLevel) => {
       // Low stock alerts - using minimum_stock instead of minimum_quantity
-      const minimumStock = (stockLevel as any).minimum_stock || (stockLevel as any).minimum_quantity || 10;
+      const minimumStock =
+        (stockLevel as any).minimum_stock ||
+        (stockLevel as any).minimum_quantity ||
+        10;
       if (stockLevel.current_quantity <= minimumStock) {
         alerts.push({
           product_id: stockLevel.product_id,
@@ -21,9 +24,10 @@ export function useInventoryAlerts(stockLevels: Ref<StockLevel[]>) {
           type: 'low_stock',
           current_quantity: stockLevel.current_quantity,
           threshold_quantity: minimumStock,
-          title: stockLevel.current_quantity === 0 ? 'Out of Stock' : 'Low Stock',
+          title:
+            stockLevel.current_quantity === 0 ? 'Out of Stock' : 'Low Stock',
           message: `Current stock: ${stockLevel.current_quantity}, Minimum: ${minimumStock}`,
-          created_at: new Date().toISOString()
+          created_at: new Date().toISOString(),
         });
       }
 
@@ -37,15 +41,19 @@ export function useInventoryAlerts(stockLevels: Ref<StockLevel[]>) {
           threshold_quantity: 0,
           title: 'Negative Stock',
           message: `Stock level is below zero: ${stockLevel.current_quantity}`,
-          created_at: new Date().toISOString()
+          created_at: new Date().toISOString(),
         });
       }
     });
 
     return alerts.sort((a, b) => {
       // Sort by severity: out_of_stock first, then low_stock
-          if (a.type === 'out_of_stock' && b.type !== 'out_of_stock') { return -1; }
-    if (b.type === 'out_of_stock' && a.type !== 'out_of_stock') { return 1; }
+      if (a.type === 'out_of_stock' && b.type !== 'out_of_stock') {
+        return -1;
+      }
+      if (b.type === 'out_of_stock' && a.type !== 'out_of_stock') {
+        return 1;
+      }
       return 0;
     });
   });
@@ -79,9 +87,13 @@ export function useInventoryAlerts(stockLevels: Ref<StockLevel[]>) {
     }
   };
 
-  const getProductStockAtLocation = (productId: string, locationId: string): number => {
-    const stockLevel = stockLevels.value.find((sl: StockLevel) => 
-      sl.product_id === productId && sl.location_id === locationId
+  const getProductStockAtLocation = (
+    productId: string,
+    locationId: string
+  ): number => {
+    const stockLevel = stockLevels.value.find(
+      (sl: StockLevel) =>
+        sl.product_id === productId && sl.location_id === locationId
     );
     return stockLevel?.current_quantity || 0;
   };

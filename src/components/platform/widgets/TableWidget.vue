@@ -20,54 +20,54 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref } from 'vue';
-import { useI18n } from 'vue-i18n';
-import { BaseDashboardWidget } from '@/components/cards';
+  import { computed, ref } from 'vue';
+  import { useI18n } from 'vue-i18n';
+  import { BaseDashboardWidget } from '@/components/cards';
 
-const { t } = useI18n();
+  const { t } = useI18n();
 
-// Props
-interface Props {
-  data: {
-    headers?: string[];
-    rows?: any[][];
-    columns?: any[];
-  };
-}
-
-const props = defineProps<Props>();
-
-// Reactive state
-const loading = ref(false);
-
-// Computed
-const columns = computed(() => {
-  if (props.data.columns) {
-    return props.data.columns;
+  // Props
+  interface Props {
+    data: {
+      headers?: string[];
+      rows?: any[][];
+      columns?: any[];
+    };
   }
-  
-  if (props.data.headers) {
-    return props.data.headers.map((header, index) => ({
-      name: `col_${index}`,
-      label: header,
-      field: (row: any[]) => row[index],
-      align: 'left' as const,
-      sortable: true
-    }));
-  }
-  
-  return [];
-});
 
-const pagination = ref({
-  rowsPerPage: 10
-});
+  const props = defineProps<Props>();
+
+  // Reactive state
+  const loading = ref(false);
+
+  // Computed
+  const columns = computed(() => {
+    if (props.data.columns) {
+      return props.data.columns;
+    }
+
+    if (props.data.headers) {
+      return props.data.headers.map((header, index) => ({
+        name: `col_${index}`,
+        label: header,
+        field: (row: any[]) => row[index],
+        align: 'left' as const,
+        sortable: true,
+      }));
+    }
+
+    return [];
+  });
+
+  const pagination = ref({
+    rowsPerPage: 10,
+  });
 </script>
 
 <style lang="scss" scoped>
-// Platform table widget content styling (wrapper now handled by BaseDashboardWidget)
+  // Platform table widget content styling (wrapper now handled by BaseDashboardWidget)
 
-.platform-table {
-  /* Table styling now handled by global medical-table class */
-}
+  .platform-table {
+    /* Table styling now handled by global medical-table class */
+  }
 </style>

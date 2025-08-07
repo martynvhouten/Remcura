@@ -3,12 +3,13 @@ import { useQuasar } from 'quasar';
 
 export function useOffline() {
   const $q = useQuasar();
-  
+
   // Use hardcoded fallbacks to avoid i18n dependency issues during boot
   const translations = {
     onlineMode: 'Je bent weer online',
     offlineMode: 'Je werkt nu offline. Sommige functies zijn mogelijk beperkt.',
-    newVersionAvailable: 'Er is een nieuwe versie van de app beschikbaar. Wilt u nu opnieuw laden?',
+    newVersionAvailable:
+      'Er is een nieuwe versie van de app beschikbaar. Wilt u nu opnieuw laden?',
   };
 
   const isOnline = ref(navigator.onLine);
@@ -34,7 +35,7 @@ export function useOffline() {
     hasBeenOffline.value = true;
 
     $q.notify({
-      type: 'warning',  
+      type: 'warning',
       message: translations.offlineMode,
       icon: 'wifi_off',
       position: 'top',
@@ -85,11 +86,7 @@ export function registerServiceWorker() {
                 navigator.serviceWorker.controller
               ) {
                 // New content is available
-                if (
-                  confirm(
-                    translations.newVersionAvailable
-                  )
-                ) {
+                if (confirm(translations.newVersionAvailable)) {
                   window.location.reload();
                 }
               }

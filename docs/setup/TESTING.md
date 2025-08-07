@@ -2,8 +2,8 @@
 
 ## **🎯 Overview**
 
-Remcura features a **comprehensive, enterprise-level testing suite** built with modern tools
-and best practices. Our testing infrastructure provides:
+Remcura features a **comprehensive, enterprise-level testing suite** built with modern tools and
+best practices. Our testing infrastructure provides:
 
 - **Component Testing** with Vue Test Utils
 - **Unit Testing** for business logic

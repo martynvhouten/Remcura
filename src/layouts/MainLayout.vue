@@ -10,9 +10,10 @@
       <q-toolbar class="toolbar-modern">
         <q-btn
           flat
-          dense
           round
-          icon="menu"
+          size="lg"
+          icon="view_sidebar"
+          class="menu-toggle-btn"
           :aria-label="t('nav.openNavigation') || 'Open navigation menu'"
           @click="toggleLeftDrawer"
         />
@@ -24,7 +25,7 @@
             text-color="primary"
             class="brand-avatar"
           >
-            <q-icon name="local_hospital" size="18px" />
+            <q-icon name="local_hospital" class="icon-size-sm" />
           </q-avatar>
           <div class="brand-text">
             <div class="brand-title">{{ t('brand.name') }}</div>
@@ -43,9 +44,9 @@
             @click="goToNotifications"
             :aria-label="t('nav.notifications')"
           >
-            <q-badge 
+            <q-badge
               v-if="notificationStore.hasUnreadNotifications"
-              color="red" 
+              color="red"
               floating
             >
               {{ notificationStore.unreadCount }}
@@ -77,7 +78,7 @@
               floating
               class="demo-badge"
             >
-              <q-icon name="science" size="10px" />
+              <q-icon name="science" class="icon-size-xs" />
             </q-badge>
             <q-menu>
               <q-list>
@@ -150,16 +151,19 @@
       v-model="leftDrawerOpen"
       show-if-above
       bordered
+      dark
       class="navigation-drawer"
       :width="280"
+      :mini="isMiniDrawer"
+      :mini-width="72"
       role="navigation"
-              :aria-label="t('common.accessibility.mainNavigation')"
+      :aria-label="t('common.accessibility.mainNavigation')"
     >
       <!-- Clinic Info Section -->
       <div class="clinic-info-section" role="banner">
         <div class="clinic-avatar">
           <q-avatar size="48px" color="primary" text-color="white">
-            <q-icon name="domain" size="24px" />
+            <q-icon name="apartment" class="icon-size-lg" />
           </q-avatar>
         </div>
         <div class="clinic-details">
@@ -185,7 +189,6 @@
             <q-item
               :to="item.submenu ? undefined : item.to"
               clickable
-              v-ripple
               :active="$route.name === item.routeName || isParentActive(item)"
               active-class="nav-item-active"
               class="nav-item"
@@ -193,37 +196,43 @@
               :aria-label="
                 item.title + (item.badge ? ' (' + item.badge + ' items)' : '')
               "
-              :aria-expanded="item.submenu ? isSubmenuExpanded(item.routeName) : undefined"
+              :aria-expanded="
+                item.submenu ? isSubmenuExpanded(item.routeName) : undefined
+              "
               @click="handleItemClick(item)"
             >
               <q-item-section avatar>
-                <q-icon :name="item.icon" size="20px" />
+                <q-icon :name="item.icon" class="icon-size-base" />
               </q-item-section>
 
-              <q-item-section>
-                <q-item-label class="nav-item-label">{{
+              <q-item-section class="hide-when-mini">
+                <q-item-label class="nav-item-label" :title="item.title">{{
                   item.title
                 }}</q-item-label>
               </q-item-section>
 
-              <q-item-section side v-if="item.badge">
+              <q-item-section side v-if="item.badge" class="hide-when-mini">
                 <q-badge
                   :color="item.badgeColor || 'primary'"
                   :label="item.badge"
                   :aria-label="`${item.badge} items requiring attention`"
+                  class="nav-badge"
                 />
               </q-item-section>
 
               <!-- Expand/Collapse for submenu -->
-              <q-item-section side v-if="item.submenu" class="submenu-chevron">
+              <q-item-section
+                side
+                v-if="item.submenu"
+                class="submenu-chevron hide-when-mini"
+              >
                 <q-icon
-                  :name="
-                    isSubmenuExpanded(item.routeName)
-                      ? 'expand_less'
-                      : 'expand_more'
-                  "
+                  name="expand_more"
                   size="20px"
-                  class="chevron-icon"
+                  :class="[
+                    'chevron-icon',
+                    { expanded: isSubmenuExpanded(item.routeName) },
+                  ]"
                 />
               </q-item-section>
             </q-item>
@@ -236,20 +245,21 @@
                   :key="subItem.title"
                   :to="subItem.to"
                   clickable
-                  v-ripple
                   :active="$route.name === subItem.routeName"
                   active-class="nav-item-active"
                   class="nav-item nav-sub-item"
                   :aria-label="subItem.title"
                 >
                   <q-item-section avatar class="sub-item-avatar">
-                    <q-icon :name="subItem.icon" size="18px" />
+                    <q-icon :name="subItem.icon" class="icon-size-sm" />
                   </q-item-section>
 
-                  <q-item-section>
-                    <q-item-label class="nav-item-label">{{
-                      subItem.title
-                    }}</q-item-label>
+                  <q-item-section class="hide-when-mini">
+                    <q-item-label
+                      class="nav-item-label"
+                      :title="subItem.title"
+                      >{{ subItem.title }}</q-item-label
+                    >
                   </q-item-section>
                 </q-item>
               </div>
@@ -276,7 +286,7 @@
           clickable
           tabindex="0"
           role="button"
-                      :aria-label="t('nav.upgradePlan')"
+          :aria-label="t('nav.upgradePlan')"
         >
           <q-item-section avatar>
             <q-icon name="upgrade" color="accent" />
@@ -340,6 +350,7 @@
   const leftDrawerOpen = ref(false);
   const isScrolled = ref(false);
   const expandedSubmenus = ref<string[]>([]);
+  const isMiniDrawer = ref(false);
 
   // Computed properties
   const userProfile = computed(() => authStore.userProfile);
@@ -347,9 +358,7 @@
   const clinicName = computed(
     () => clinicStore.clinic?.name || t('clinic.defaultName')
   );
-  const isDemoUser = computed(
-    () => authStore.userEmail === 'demo@remcura.com'
-  );
+  const isDemoUser = computed(() => authStore.userEmail === 'demo@remcura.com');
 
   // Check if user has admin permissions
   const isAdmin = computed(() => {
@@ -440,7 +449,7 @@
             routeName: 'products',
           },
           {
-            title: 'Bestellijsten',
+            title: t('orderLists.title'),
             icon: 'list_alt',
             to: '/order-lists',
             routeName: 'order-lists',
@@ -527,6 +536,24 @@
             to: '/platform/database',
             routeName: 'platform-database',
           },
+          {
+            title: t('nav.systemLogs'),
+            icon: 'description',
+            to: '/platform/logs',
+            routeName: 'platform-logs',
+          },
+          {
+            title: t('nav.apiDocumentation'),
+            icon: 'api',
+            to: '/platform/api-docs',
+            routeName: 'platform-api-docs',
+          },
+          {
+            title: t('nav.backupRestore'),
+            icon: 'backup',
+            to: '/platform/backup',
+            routeName: 'platform-backup',
+          },
         ],
       });
     }
@@ -536,7 +563,12 @@
 
   // Methods
   const toggleLeftDrawer = () => {
-    leftDrawerOpen.value = !leftDrawerOpen.value;
+    // Toggle only the mini state for smooth inline collapse/expand
+    isMiniDrawer.value = !isMiniDrawer.value;
+    // Ensure drawer remains open while toggling mini
+    if (!leftDrawerOpen.value) {
+      leftDrawerOpen.value = true;
+    }
   };
 
   const toggleDarkMode = () => {
@@ -608,7 +640,9 @@
 
   // Check if parent item should be highlighted (when child is active)
   const isParentActive = (item: NavigationItem) => {
-    if (!item.submenu) { return false; }
+    if (!item.submenu) {
+      return false;
+    }
     const currentRoute = router.currentRoute.value.name as string;
     return item.submenu.some(
       (subItem: NavigationItem) => subItem.routeName === currentRoute
@@ -643,7 +677,7 @@
   onMounted(() => {
     window.addEventListener('scroll', handleScroll);
     checkAndExpandCurrentSubmenu();
-    
+
     // Load notifications for badge count
     notificationStore.loadNotifications();
   });
@@ -696,13 +730,21 @@
       max-width: 100%;
 
       .menu-toggle-btn {
-        color: var(--neutral-700);
-        border-radius: var(--radius-lg);
-        transition: all var(--transition-base);
+        color: var(--neutral-800);
+        border-radius: var(--radius-full);
+        transition: transform 180ms ease, background-color 180ms ease,
+          color 180ms ease;
+        width: 56px;
+        height: 56px;
+
+        .q-icon {
+          font-size: 30px;
+        }
 
         &:hover {
-          background-color: rgba(var(--q-primary-rgb), 0.1);
+          background-color: rgba(var(--q-primary-rgb), 0.12);
           color: var(--brand-primary);
+          transform: translateY(-1px);
         }
       }
 
@@ -810,28 +852,35 @@
 
   // Enhanced navigation drawer
   .navigation-drawer {
-    background: var(--neutral-50);
-    border-right: 1px solid var(--neutral-200);
+    // Softer dark background and subtle border using design tokens
+    background: var(--sidebar-bg);
+    border-right: 1px solid var(--sidebar-border);
+    transition: width 220ms ease, transform 220ms ease;
+
+    :deep(.q-drawer__content) {
+      background: var(--sidebar-bg);
+      transition: width 220ms ease, transform 220ms ease;
+    }
 
     .clinic-info-section {
       padding: var(--space-6);
-      border-bottom: 1px solid var(--neutral-200);
+      border-bottom: 1px solid var(--sidebar-border);
       display: flex;
       align-items: center;
       gap: var(--space-4);
 
       .clinic-details {
         .clinic-name {
-          font-weight: var(--font-weight-semibold);
-          font-size: 1rem;
-          color: var(--neutral-900);
-          margin-bottom: var(--space-1);
+          font-weight: var(--font-weight-medium);
+          font-size: var(--text-sm);
+          color: rgba(255, 255, 255, 0.8);
+          margin: 0;
         }
 
         .clinic-plan {
           font-size: 0.875rem;
-          color: var(--neutral-500);
-          background: var(--neutral-100);
+          color: rgba(255, 255, 255, 0.7);
+          background: rgba(255, 255, 255, 0.1);
           padding: var(--space-1) var(--space-2);
           border-radius: var(--radius-full);
           display: inline-block;
@@ -841,10 +890,11 @@
 
     .navigation-list {
       padding: var(--space-4);
+      transition: padding 220ms ease;
 
       .navigation-header {
         font-weight: var(--font-weight-semibold);
-        color: var(--neutral-600);
+        color: rgba(255, 255, 255, 0.6);
         font-size: 0.75rem;
         text-transform: uppercase;
         letter-spacing: 0.05em;
@@ -852,39 +902,64 @@
       }
 
       .nav-item {
-        border-radius: var(--radius-lg);
+        border-radius: var(--radius-md);
         margin-bottom: var(--space-1);
         transition: all var(--transition-base);
+        padding-right: var(--space-2);
+        position: relative;
+        border: 1px solid transparent; // prevent layout shift when active adds border
 
         &:hover {
-          background-color: var(--neutral-100);
-          transform: translateX(4px);
+          background-color: var(--nav-hover-bg);
         }
 
         &:focus {
-          outline: 2px solid var(--brand-primary);
+          outline: none;
+        }
+
+        &:focus-visible {
+          outline: 2px solid rgba(var(--brand-primary-rgb), 0.5);
           outline-offset: 2px;
-          background-color: var(--neutral-100);
+          box-shadow: 0 0 0 2px rgba(var(--brand-primary-rgb), 0.15);
+          background-color: var(--nav-hover-bg);
         }
 
         &.nav-item-active {
-          background: linear-gradient(
-            135deg,
-            var(--brand-primary),
-            var(--brand-primary-light)
-          );
-          color: white;
-          transform: translateX(6px);
-          box-shadow: var(--shadow-sm);
+          background: var(--nav-active-bg);
+          color: rgba(255, 255, 255, 0.95);
+          transform: none;
+          box-shadow: none;
+          border: 1px solid var(--sidebar-border);
+          border-radius: var(--radius-lg);
+
+          // Left accent bar for active state
+          &::before {
+            content: '';
+            position: absolute;
+            left: -1px;
+            top: 4px;
+            bottom: 4px;
+            width: 3px;
+            background: var(--brand-primary);
+            border-radius: var(--radius-full);
+          }
 
           .q-icon {
-            color: white;
+            color: rgba(255, 255, 255, 0.95);
+          }
+
+          .nav-item-label {
+            font-weight: var(--font-weight-bold);
           }
         }
 
         .nav-item-label {
           font-weight: var(--font-weight-medium);
           font-size: 0.925rem;
+          color: rgba(255, 255, 255, 0.92);
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
         }
 
         // Submenu chevron styling
@@ -892,17 +967,22 @@
           min-width: 24px;
 
           .chevron-icon {
-            color: var(--neutral-500);
+            color: rgba(255, 255, 255, 0.5);
             transition: all var(--transition-base);
+            transform-origin: center;
           }
         }
 
         &.has-submenu:hover .chevron-icon {
-          color: var(--brand-primary);
+          color: var(--brand-primary-light);
         }
 
         &.nav-item-active .chevron-icon {
-          color: white;
+          color: rgba(255, 255, 255, 0.95);
+        }
+
+        .chevron-icon.expanded {
+          transform: rotate(180deg);
         }
       }
 
@@ -910,7 +990,7 @@
       .navigation-section-header {
         font-size: 0.8rem;
         font-weight: var(--font-weight-bold);
-        color: var(--neutral-600);
+        color: rgba(255, 255, 255, 0.6);
         text-transform: uppercase;
         letter-spacing: 0.05em;
         margin-top: var(--space-4);
@@ -921,52 +1001,51 @@
           margin-top: var(--space-2);
         }
 
-        // All sections use primary blue color
+        // All sections use primary blue color (but lighter for dark background)
         &.section-main,
         &.section-inventory,
         &.section-supply,
         &.section-analytics,
         &.section-admin {
-          color: var(--brand-primary);
+          color: var(--brand-primary-light);
         }
       }
 
       // Section separators
       .navigation-separator {
         margin: var(--space-4) var(--space-3);
-        background: var(--neutral-200);
+        background: var(--sidebar-border);
       }
 
       // Submenu items
       .nav-sub-item {
         margin-left: var(--space-6);
-        border-left: 2px solid var(--neutral-200);
+        border-left: 2px solid var(--sidebar-border);
         border-radius: 0 var(--radius-md) var(--radius-md) 0;
         transition: all var(--transition-base);
+        position: relative;
 
         &:hover {
           border-left-color: var(--brand-primary);
-          background: var(--neutral-50);
+          background: var(--nav-hover-bg);
         }
 
         &.nav-item-active {
           border-left-color: var(--brand-primary);
-          background: linear-gradient(
-            90deg,
-            rgba(var(--q-primary-rgb), 0.1),
-            transparent
-          );
+          background: var(--nav-active-bg);
           transform: none;
           margin-left: calc(var(--space-6) + 2px);
-
-          // Override text colors for submenu items to keep them readable
-          .nav-item-label {
-            color: var(--brand-primary);
-            font-weight: var(--font-weight-bold);
-          }
-
-          .q-icon {
-            color: var(--brand-primary);
+          border-radius: 0 var(--radius-lg) var(--radius-lg) 0;
+          // Inherit active colors from parent active style for consistency
+          &::before {
+            content: '';
+            position: absolute;
+            left: -2px;
+            top: 2px;
+            bottom: 2px;
+            width: 3px;
+            background: var(--brand-primary);
+            border-radius: var(--radius-full);
           }
         }
 
@@ -975,13 +1054,20 @@
 
           .q-icon {
             font-size: 16px;
-            opacity: 0.8;
+            opacity: 0.85;
           }
         }
 
         .nav-item-label {
           font-size: 0.875rem;
         }
+      }
+
+      // Badge tweaks for better contrast
+      .nav-badge :deep(.q-badge__content) {
+        font-weight: 600;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+        border: 1px solid rgba(255, 255, 255, 0.4);
       }
     }
 
@@ -1031,122 +1117,102 @@
 
     .drawer-footer {
       padding: var(--space-4);
-      border-top: 1px solid var(--neutral-200);
+      border-top: 1px solid var(--sidebar-border);
 
       .upgrade-item {
         border-radius: var(--radius-lg);
         cursor: pointer;
         transition: all var(--transition-base);
-        box-shadow: var(--shadow-base);
+        box-shadow: none;
 
         &:hover {
-          transform: translateY(-2px);
-          box-shadow: var(--shadow-lg);
+          transform: translateY(-1px);
+          box-shadow: var(--shadow-sm);
         }
 
         &:focus {
           outline: 2px solid var(--brand-primary);
           outline-offset: 2px;
-          box-shadow: var(--shadow-lg);
+          box-shadow: var(--shadow-sm);
         }
       }
-    }
-  }
 
-  // Dark mode drawer
-  body.body--dark .navigation-drawer {
-    background: var(--neutral-100);
-    border-right-color: var(--neutral-300);
-
-    .clinic-info-section {
-      border-bottom-color: var(--neutral-300);
-
-      .clinic-details .clinic-name {
-        color: var(--neutral-900);
-      }
-
-      .clinic-details .clinic-plan {
-        background: var(--neutral-200);
-      }
+      // removed old drawer-controls
     }
 
-    .navigation-list {
-      .nav-item:hover {
-        background-color: var(--neutral-200);
-
-        .chevron-icon {
-          color: var(--brand-primary-light);
-        }
+    // Mini drawer visual adjustments
+    &.q-drawer--mini {
+      .navigation-list {
+        padding-left: var(--space-2);
+        padding-right: var(--space-2);
       }
 
-      .nav-item.nav-item-active .chevron-icon {
-        color: white;
+      .hide-when-mini {
+        display: none !important;
       }
 
-      // Dark mode section headers
-      .navigation-section-header {
-        color: var(--neutral-500);
-
-        &.section-main,
-        &.section-inventory,
-        &.section-supply,
-        &.section-analytics,
-        &.section-admin {
-          color: var(--brand-primary-light);
-        }
-      }
-
-      // Dark mode separators
-      .navigation-separator {
-        background: var(--neutral-300);
-      }
-
-      // Dark mode submenu items
+      .nav-item,
       .nav-sub-item {
-        border-left-color: var(--neutral-300);
+        padding-right: 0;
+      }
 
-        &:hover {
-          border-left-color: var(--brand-primary-light);
-          background: var(--neutral-200);
+      // Compact clinic header and prevent logo clipping
+      .clinic-info-section {
+        padding: var(--space-3);
+        justify-content: center;
+        .clinic-details {
+          display: none;
         }
-
-        &.nav-item-active {
-          border-left-color: var(--brand-primary-light);
-          background: linear-gradient(
-            90deg,
-            rgba(var(--q-primary-rgb), 0.15),
-            transparent
-          );
-
-          // Dark mode readable colors for submenu active items
-          .nav-item-label {
-            color: var(--brand-primary-light);
-            font-weight: var(--font-weight-bold);
-          }
-
-          .q-icon {
-            color: var(--brand-primary-light);
-          }
+        .clinic-avatar :deep(.q-avatar) {
+          width: 40px;
+          height: 40px;
         }
       }
-    }
 
-    .quick-stats-section {
-      border-top-color: var(--neutral-300);
-
-      .stat-item {
-        background: var(--neutral-200);
-
-        .stat-number {
-          color: var(--neutral-900);
-        }
+      // Icon-only styling for hover/active
+      .nav-item,
+      .nav-sub-item {
+        border: none;
+        border-radius: var(--radius-lg);
       }
-    }
-
-    .drawer-footer {
-      border-top-color: var(--neutral-300);
+      .nav-item:hover,
+      .nav-sub-item:hover {
+        background: var(--nav-hover-bg);
+      }
+      .nav-item.nav-item-active,
+      .nav-sub-item.nav-item-active {
+        background: transparent;
+      }
+      .nav-item.nav-item-active::before,
+      .nav-sub-item.nav-item-active::before {
+        display: none;
+      }
+      .nav-item .q-item__section--avatar,
+      .nav-sub-item .q-item__section--avatar {
+        border-radius: var(--radius-full);
+        transition: background-color 160ms ease, transform 160ms ease;
+      }
+      .nav-item:hover .q-item__section--avatar,
+      .nav-sub-item:hover .q-item__section--avatar {
+        background: var(--nav-hover-bg);
+      }
+      .nav-item.nav-item-active .q-item__section--avatar,
+      .nav-sub-item.nav-item-active .q-item__section--avatar {
+        background: rgba(var(--brand-primary-rgb), 0.15);
+      }
+      .nav-item.nav-item-active .q-item__section--avatar .q-icon,
+      .nav-sub-item.nav-item-active .q-item__section--avatar .q-icon {
+        color: var(--brand-primary);
+      }
+      .nav-sub-item {
+        margin-left: 0;
+        border-left: 0;
+      }
     }
   }
+
+  // Dark mode styling is now handled by Quasar's native dark prop
+  // No custom dark mode CSS needed for navigation drawer
 
   // Header Actions
   .header-actions {

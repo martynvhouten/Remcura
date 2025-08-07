@@ -99,7 +99,9 @@ class MonitoringService {
    * Track custom events/metrics
    */
   trackEvent(eventName: string, properties?: Record<string, any>): void {
-    if (!this.isInitialized || !this.config) { return; }
+    if (!this.isInitialized || !this.config) {
+      return;
+    }
 
     // TODO: Send to analytics service
     // Example:
@@ -110,7 +112,9 @@ class MonitoringService {
    * Set user context for error tracking
    */
   setUserContext(user: { id: string; email?: string; role?: string }): void {
-    if (!this.isInitialized) { return; }
+    if (!this.isInitialized) {
+      return;
+    }
 
     // Update Sentry user context in production
     if (this.config?.environment === 'production') {
@@ -150,7 +154,9 @@ class MonitoringService {
     category?: string,
     level?: 'info' | 'warning' | 'error'
   ): void {
-    if (!this.isInitialized) { return; }
+    if (!this.isInitialized) {
+      return;
+    }
 
     if (this.config?.environment === 'production') {
       this.addSentryBreadcrumb(message, category, level);
@@ -181,7 +187,9 @@ class MonitoringService {
    * Track performance metrics
    */
   trackPerformance(metric: string, value: number, unit?: string): void {
-    if (!this.isInitialized) { return; }
+    if (!this.isInitialized) {
+      return;
+    }
 
     // TODO: Send performance data
     // Example:

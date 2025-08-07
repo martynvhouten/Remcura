@@ -1,14 +1,15 @@
 <template>
   <BaseDialog
     v-model="dialogVisible"
-    :title="isEditing ? $t('orderLists.editDialog') : $t('orderLists.createDialog')"
+    :title="
+      isEditing ? $t('orderLists.editDialog') : $t('orderLists.createDialog')
+    "
     icon="list_alt"
     size="xl"
     variant="elegant"
     header-variant="solid"
     @hide="onDialogHide"
   >
-
     <div class="orderlist-dialog-content">
       <div class="orderlist-layout">
         <!-- Left Panel - Order List Details -->
@@ -70,11 +71,15 @@
               <h4 class="summary-title">{{ $t('orderLists.summary') }}</h4>
               <div class="summary-stats">
                 <div class="stat-item">
-                  <span class="stat-label">{{ $t('orderLists.totalItems') }}</span>
+                  <span class="stat-label">{{
+                    $t('orderLists.totalItems')
+                  }}</span>
                   <span class="stat-value">{{ totalItems }}</span>
                 </div>
                 <div class="stat-item">
-                  <span class="stat-label">{{ $t('orderLists.totalAmount') }}</span>
+                  <span class="stat-label">{{
+                    $t('orderLists.totalAmount')
+                  }}</span>
                   <span class="stat-value">€{{ totalAmount.toFixed(2) }}</span>
                 </div>
               </div>
@@ -99,92 +104,89 @@
 
           <!-- Products List -->
           <div v-if="orderListItems.length > 0" class="products-list">
-              <q-card
-                v-for="(item, index) in orderListItems"
-                :key="item.id || index"
-                class="q-pa-md"
-                bordered
-              >
-                <div class="row items-center q-gutter-md">
-                  <div class="col">
-                    <div class="text-subtitle1 text-weight-bold">
-                      {{ getProductName(item.product_id) }}
-                    </div>
-                    <div class="text-body2 text-grey-6">
-                      SKU: {{ getProductSku(item.product_id) }}
-                    </div>
-                    <div
-                      v-if="item.notes"
-                      class="text-body2 text-grey-6 q-mt-xs"
-                    >
-                      {{ item.notes }}
-                    </div>
+            <q-card
+              v-for="(item, index) in orderListItems"
+              :key="item.id || index"
+              class="q-pa-md"
+              bordered
+            >
+              <div class="row items-center q-gutter-md">
+                <div class="col">
+                  <div class="text-subtitle1 text-weight-bold">
+                    {{ getProductName(item.product_id) }}
                   </div>
-
-                  <div class="col-auto">
-                    <q-input
-                      v-model.number="item.requested_quantity"
-                      type="number"
-                      min="1"
-                      :label="$t('orderLists.quantity')"
-                      outlined
-                      dense
-                      style="width: 100px"
-                      @update:model-value="updateItemTotal(item)"
-                    />
+                  <div class="text-body2 text-grey-6">
+                    SKU: {{ getProductSku(item.product_id) }}
                   </div>
-
-                  <div class="col-auto text-right">
-                    <div class="text-body2 text-grey-6">
-                      {{ $t('orderLists.unitPrice') }}
-                    </div>
-                    <div class="text-subtitle2">
-                      €{{ item.unit_price.toFixed(2) }}
-                    </div>
-                  </div>
-
-                  <div class="col-auto text-right">
-                    <div class="text-body2 text-grey-6">
-                      {{ $t('orderLists.totalPrice') }}
-                    </div>
-                    <div class="text-subtitle1 text-weight-bold">
-                      €{{ item.total_price.toFixed(2) }}
-                    </div>
-                  </div>
-
-                  <div class="col-auto">
-                    <q-btn
-                      flat
-                      round
-                      color="negative"
-                      icon="delete"
-                      @click="removeItem(index)"
-                      size="sm"
-                    />
+                  <div v-if="item.notes" class="text-body2 text-grey-6 q-mt-xs">
+                    {{ item.notes }}
                   </div>
                 </div>
-              </q-card>
+
+                <div class="col-auto">
+                  <q-input
+                    v-model.number="item.requested_quantity"
+                    type="number"
+                    min="1"
+                    :label="$t('orderLists.quantity')"
+                    outlined
+                    dense
+                    style="width: 100px"
+                    @update:model-value="updateItemTotal(item)"
+                  />
+                </div>
+
+                <div class="col-auto text-right">
+                  <div class="text-body2 text-grey-6">
+                    {{ $t('orderLists.unitPrice') }}
+                  </div>
+                  <div class="text-subtitle2">
+                    €{{ item.unit_price.toFixed(2) }}
+                  </div>
+                </div>
+
+                <div class="col-auto text-right">
+                  <div class="text-body2 text-grey-6">
+                    {{ $t('orderLists.totalPrice') }}
+                  </div>
+                  <div class="text-subtitle1 text-weight-bold">
+                    €{{ item.total_price.toFixed(2) }}
+                  </div>
+                </div>
+
+                <div class="col-auto">
+                  <q-btn
+                    flat
+                    round
+                    color="negative"
+                    icon="delete"
+                    @click="removeItem(index)"
+                    size="sm"
+                  />
+                </div>
+              </div>
+            </q-card>
           </div>
 
           <!-- Empty State -->
           <BaseCard v-else class="text-center q-pa-xl">
-              <q-icon
-                name="shopping_cart"
-                size="3rem"
-                color="grey-4"
-                class="q-mb-md"
-              />
-              <div class="text-body1 text-grey-6">
-                {{ $t('orderLists.noProducts') }}
-              </div>
-              <q-btn
-                v-if="form.supplier_id"
-                :label="$t('orderLists.addProduct')"
-                color="primary"
-                class="q-mt-md"
-                @click="showAddProductDialog = true"
-              />
-            </BaseCard>
+            <q-icon
+              name="shopping_cart"
+              size="3rem"
+              color="grey-4"
+              class="q-mb-md"
+            />
+            <div class="text-body1 text-grey-6">
+              {{ $t('orderLists.noProducts') }}
+            </div>
+            <q-btn
+              v-if="form.supplier_id"
+              :label="$t('orderLists.addProduct')"
+              color="primary"
+              class="q-mt-md"
+              @click="showAddProductDialog = true"
+            />
+          </BaseCard>
         </div>
       </div>
     </div>
@@ -202,82 +204,82 @@
     </template>
   </BaseDialog>
 
-    <!-- Add Product Dialog -->
-    <q-dialog v-model="showAddProductDialog" persistent>
-      <q-card style="min-width: 500px">
-        <q-card-section>
-          <div class="text-h6">{{ $t('orderLists.addProduct') }}</div>
-        </q-card-section>
+  <!-- Add Product Dialog -->
+  <q-dialog v-model="showAddProductDialog" persistent>
+    <q-card style="min-width: 500px">
+      <q-card-section>
+        <div class="text-h6">{{ $t('orderLists.addProduct') }}</div>
+      </q-card-section>
 
-        <q-card-section class="q-pt-none">
-          <q-select
-            v-model="selectedProduct"
-            :options="availableProducts"
-            :label="$t('orderLists.selectProduct')"
-            outlined
-            option-label="name"
-            option-value="id"
-            emit-value
-            map-options
-            use-input
-            hide-selected
-            fill-input
-            input-debounce="300"
-            @filter="filterProducts"
-          >
-            <template v-slot:option="scope">
-              <q-item v-bind="scope.itemProps">
-                <q-item-section>
-                  <q-item-label>{{ scope.opt.name }}</q-item-label>
-                  <q-item-label caption>{{ scope.opt.sku }}</q-item-label>
-                </q-item-section>
-                <q-item-section side>
-                  <q-item-label caption
-                    >€{{ scope.opt.price?.toFixed(2) || '0.00' }}</q-item-label
-                  >
-                </q-item-section>
-              </q-item>
-            </template>
-          </q-select>
+      <q-card-section class="q-pt-none">
+        <q-select
+          v-model="selectedProduct"
+          :options="availableProducts"
+          :label="$t('orderLists.selectProduct')"
+          outlined
+          option-label="name"
+          option-value="id"
+          emit-value
+          map-options
+          use-input
+          hide-selected
+          fill-input
+          input-debounce="300"
+          @filter="filterProducts"
+        >
+          <template v-slot:option="scope">
+            <q-item v-bind="scope.itemProps">
+              <q-item-section>
+                <q-item-label>{{ scope.opt.name }}</q-item-label>
+                <q-item-label caption>{{ scope.opt.sku }}</q-item-label>
+              </q-item-section>
+              <q-item-section side>
+                <q-item-label caption
+                  >€{{ scope.opt.price?.toFixed(2) || '0.00' }}</q-item-label
+                >
+              </q-item-section>
+            </q-item>
+          </template>
+        </q-select>
 
-          <q-input
-            v-model.number="newItemQuantity"
-            :label="$t('orderLists.quantity')"
-            type="number"
-            min="1"
-            outlined
-            class="q-mt-md"
-          />
+        <q-input
+          v-model.number="newItemQuantity"
+          :label="$t('orderLists.quantity')"
+          type="number"
+          min="1"
+          outlined
+          class="q-mt-md"
+        />
 
-          <q-input
-            v-model="newItemNotes"
-            :label="$t('orderLists.notes')"
-            type="textarea"
-            rows="2"
-            outlined
-            class="q-mt-md"
-          />
-        </q-card-section>
+        <q-input
+          v-model="newItemNotes"
+          :label="$t('orderLists.notes')"
+          type="textarea"
+          rows="2"
+          outlined
+          class="q-mt-md"
+        />
+      </q-card-section>
 
-        <q-card-actions align="right">
-          <q-btn :label="$t('common.cancel')" flat @click="cancelAddProduct" />
-          <q-btn
-            :label="$t('common.add')"
-            color="primary"
-            @click="addProduct"
-            :disable="!selectedProduct || !newItemQuantity"
-          />
-        </q-card-actions>
-      </q-card>
-    </q-dialog>
+      <q-card-actions align="right">
+        <q-btn :label="$t('common.cancel')" flat @click="cancelAddProduct" />
+        <q-btn
+          :label="$t('common.add')"
+          color="primary"
+          @click="addProduct"
+          :disable="!selectedProduct || !newItemQuantity"
+        />
+      </q-card-actions>
+    </q-card>
+  </q-dialog>
 </template>
 
 <script setup lang="ts">
   import { ref, computed, watch, nextTick, onMounted } from 'vue';
   import { useQuasar } from 'quasar';
   import { useI18n } from 'vue-i18n';
-  import { 
-    useOrderListsStore, 
+  import {
+    useOrderListsStore,
     type OrderListWithItems,
     type CreateOrderListRequest,
     type UpdateOrderListRequest,
@@ -342,7 +344,7 @@
   // Computed
   const dialogVisible = computed({
     get: () => props.modelValue,
-    set: (value) => emit('update:modelValue', value),
+    set: value => emit('update:modelValue', value),
   });
 
   const isEditing = computed(() => !!props.orderList);
@@ -609,128 +611,128 @@
 </script>
 
 <style lang="scss" scoped>
-// ===================================================================
-// MODERN ORDERLIST DIALOG STYLING
-// ===================================================================
+  // ===================================================================
+  // MODERN ORDERLIST DIALOG STYLING
+  // ===================================================================
 
-.orderlist-dialog-content {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-6);
-  min-height: 600px;
-}
-
-.orderlist-layout {
-  display: grid;
-  grid-template-columns: 1fr 2fr;
-  gap: var(--space-6);
-  height: 100%;
-  
-  @media (max-width: 768px) {
-    grid-template-columns: 1fr;
-    gap: var(--space-4);
+  .orderlist-dialog-content {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-6);
+    min-height: 600px;
   }
-}
 
-// Left Panel - Details
-.orderlist-details-panel {
-  background: var(--neutral-50);
-  border-radius: var(--radius-lg);
-  padding: var(--space-6);
-  border: 1px solid var(--border-primary);
-}
+  .orderlist-layout {
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    gap: var(--space-6);
+    height: 100%;
 
-// Right Panel - Products
-.orderlist-products-panel {
-  background: var(--bg-primary);
-  border-radius: var(--radius-lg);
-  padding: var(--space-6);
-  border: 1px solid var(--border-primary);
-}
+    @media (max-width: 768px) {
+      grid-template-columns: 1fr;
+      gap: var(--space-4);
+    }
+  }
 
-.panel-title {
-  font-size: var(--text-xl);
-  font-weight: var(--font-weight-semibold);
-  color: var(--text-primary);
-  margin: 0 0 var(--space-4) 0;
-}
-
-.panel-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: var(--space-4);
-}
-
-// Form Styling
-.orderlist-form {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-4);
-}
-
-.checkbox-group {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-3);
-  margin-top: var(--space-2);
-}
-
-// Summary Section
-.orderlist-summary {
-  margin-top: var(--space-6);
-  padding: var(--space-4);
-  background: white;
-  border-radius: var(--radius-md);
-  border: 1px solid var(--border-primary);
-}
-
-.summary-title {
-  font-size: var(--text-lg);
-  font-weight: var(--font-weight-semibold);
-  color: var(--text-primary);
-  margin: 0 0 var(--space-3) 0;
-}
-
-.summary-stats {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: var(--space-4);
-}
-
-.stat-item {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-1);
-}
-
-.stat-label {
-  font-size: var(--text-sm);
-  color: var(--text-secondary);
-  font-weight: var(--font-weight-medium);
-}
-
-.stat-value {
-  font-size: var(--text-lg);
-  font-weight: var(--font-weight-bold);
-  color: var(--text-primary);
-}
-
-// Dark Mode
-body.body--dark {
+  // Left Panel - Details
   .orderlist-details-panel {
-    background: var(--neutral-800);
-    border-color: var(--border-primary);
+    background: var(--neutral-50);
+    border-radius: var(--radius-lg);
+    padding: var(--space-6);
+    border: 1px solid var(--border-primary);
   }
-  
+
+  // Right Panel - Products
   .orderlist-products-panel {
     background: var(--bg-primary);
-    border-color: var(--border-primary);
+    border-radius: var(--radius-lg);
+    padding: var(--space-6);
+    border: 1px solid var(--border-primary);
   }
-  
+
+  .panel-title {
+    font-size: var(--text-xl);
+    font-weight: var(--font-weight-semibold);
+    color: var(--text-primary);
+    margin: 0 0 var(--space-4) 0;
+  }
+
+  .panel-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: var(--space-4);
+  }
+
+  // Form Styling
+  .orderlist-form {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-4);
+  }
+
+  .checkbox-group {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+    margin-top: var(--space-2);
+  }
+
+  // Summary Section
   .orderlist-summary {
-    background: var(--neutral-900);
-    border-color: var(--border-primary);
+    margin-top: var(--space-6);
+    padding: var(--space-4);
+    background: white;
+    border-radius: var(--radius-md);
+    border: 1px solid var(--border-primary);
   }
-}
+
+  .summary-title {
+    font-size: var(--text-lg);
+    font-weight: var(--font-weight-semibold);
+    color: var(--text-primary);
+    margin: 0 0 var(--space-3) 0;
+  }
+
+  .summary-stats {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-4);
+  }
+
+  .stat-item {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-1);
+  }
+
+  .stat-label {
+    font-size: var(--text-sm);
+    color: var(--text-secondary);
+    font-weight: var(--font-weight-medium);
+  }
+
+  .stat-value {
+    font-size: var(--text-lg);
+    font-weight: var(--font-weight-bold);
+    color: var(--text-primary);
+  }
+
+  // Dark Mode
+  body.body--dark {
+    .orderlist-details-panel {
+      background: var(--neutral-800);
+      border-color: var(--border-primary);
+    }
+
+    .orderlist-products-panel {
+      background: var(--bg-primary);
+      border-color: var(--border-primary);
+    }
+
+    .orderlist-summary {
+      background: var(--neutral-900);
+      border-color: var(--border-primary);
+    }
+  }
 </style>
