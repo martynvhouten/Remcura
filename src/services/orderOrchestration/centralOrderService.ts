@@ -1,11 +1,7 @@
 import { supabase } from '@/boot/supabase';
 import { orderLogger } from '@/utils/logger';
-import { useOrderListsSupplierSplitting } from '@/stores/orderLists/orderLists-supplier-splitting';
+import { useOrderListsSupplierSplitting, type SupplierOrder, type OrderSendingResult } from '@/stores/orderLists/orderLists-supplier-splitting';
 import { useInventoryMovements } from '@/stores/inventory/inventory-movements';
-import type { 
-  SupplierOrder, 
-  OrderSendingResult 
-} from '@/stores/orderLists/orderLists-supplier-splitting';
 import type { ReorderSuggestion } from '@/stores/orderLists/orderLists-minmax';
 
 export interface OrderResult {

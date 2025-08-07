@@ -123,9 +123,10 @@
             :class="getWidgetGridClass(widget)"
             class="widget-grid-item"
           >
-            <DashboardWidget
+            <DynamicWidget
               :widget="widget"
               :loading="loading"
+              @refresh="refreshWidget"
             />
           </div>
         </div>
@@ -178,7 +179,7 @@
   import { practiceDashboardService, type PracticeDashboardData, type PracticeWidget as DashboardWidgetType, type PracticeRole } from '@/services/dashboard/practice-dashboard';
   import PageLayout from 'src/components/PageLayout.vue';
   import PageTitle from 'src/components/PageTitle.vue';
-  import DashboardWidget from 'src/components/dashboard/DashboardWidget.vue';
+  import DynamicWidget from 'src/components/dashboard/DynamicWidget.vue';
   import BaseDialog from 'src/components/base/BaseDialog.vue';
 
   const { t } = useI18n();
@@ -267,6 +268,16 @@
     $q.notify({
       type: 'positive',
       message: t('dashboard.actions.refreshed'),
+      timeout: 1000
+    });
+  }
+
+  async function refreshWidget(widgetId: string) {
+    // Refresh specific widget - for now just refresh all data
+    await loadDashboard();
+    $q.notify({
+      type: 'positive',
+      message: t('dashboard.widgetRefreshed', { widget: widgetId }),
       timeout: 1000
     });
   }

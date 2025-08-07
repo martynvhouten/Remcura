@@ -809,13 +809,13 @@
 
   // Action handlers (simplified for brevity)
   const editUser = (user: PracticeMember) => {
-    $q.notify({ type: 'info', message: `Editing user: ${user.user_id}` });
+    $q.notify({ type: 'info', message: $t('admin.userManagement.editingUser', { userId: user.user_id }) });
   };
 
   const manageUserPermissions = (user: PracticeMember) => {
     $q.notify({
       type: 'info',
-      message: `Managing permissions for: ${user.user_id}`,
+      message: $t('admin.userManagement.managingPermissions', { userId: user.user_id }),
     });
   };
 
@@ -824,7 +824,7 @@
     try {
       $q.dialog({
         title: 'Reset Password',
-        message: `Are you sure you want to reset the password for ${user.user_id}?`,
+        message: $t('admin.userManagement.resetPasswordConfirm', { userId: user.user_id }),
         cancel: true,
         persistent: true,
       }).onOk(async () => {
@@ -848,7 +848,7 @@
       const action = user.role === 'inactive' ? 'activate' : 'deactivate';
       $q.dialog({
         title: `${action.charAt(0).toUpperCase() + action.slice(1)} User`,
-        message: `Are you sure you want to ${action} ${user.user_id}?`,
+        message: $t('admin.userManagement.actionConfirm', { action, userId: user.user_id }),
         cancel: true,
         persistent: true,
       }).onOk(async () => {
@@ -874,7 +874,7 @@
   const manageLocationAccess = (location: Location) => {
     $q.notify({
       type: 'info',
-      message: `Managing access for location: ${location.name}`,
+      message: $t('admin.locationManagement.managingAccess', { locationName: location.name }),
     });
     // TODO: Implement location access management dialog
   };
@@ -886,13 +886,13 @@
   }) => {
     $q.notify({
       type: 'info',
-      message: `Showing template: ${template.key}`,
+      message: $t('admin.permissionTemplates.showing', { templateKey: template.key }),
     });
     // TODO: Implement permission template display dialog
   };
 
   const editLocation = (location: Location) => {
-    $q.notify({ type: 'info', message: `Editing location: ${location.name}` });
+    $q.notify({ type: 'info', message: $t('admin.locationManagement.editing', { locationName: location.name }) });
   };
 
   const setMainLocation = async (location: Location) => {

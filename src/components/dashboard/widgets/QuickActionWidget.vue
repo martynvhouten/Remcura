@@ -1,5 +1,5 @@
 <template>
-  <div class="quick-action-widget" @click="handleAction">
+  <BaseDashboardWidget :hide-header="true" @click="handleAction" class="cursor-pointer">
     <div class="action-content">
       <q-icon 
         :name="actionIcon"
@@ -24,13 +24,14 @@
     <div v-if="data.action === 'scan'" class="scan-animation">
       <div class="scan-line" :class="{ active: isScanning }"></div>
     </div>
-  </div>
+  </BaseDashboardWidget>
 </template>
 
 <script setup lang="ts">
 import { computed, ref } from 'vue';
 import { useRouter } from 'vue-router';
 import { useQuasar } from 'quasar';
+import { BaseDashboardWidget } from '@/components/cards';
 
 interface QuickActionData {
   action: string;
@@ -163,7 +164,8 @@ function handleExportAction() {
 </script>
 
 <style lang="scss" scoped>
-.quick-action-widget {
+// Quick action content styling (wrapper now handled by BaseDashboardWidget)
+.action-content {
   height: 100%;
   display: flex;
   flex-direction: column;
@@ -171,50 +173,32 @@ function handleExportAction() {
   align-items: center;
   text-align: center;
   padding: var(--space-6);
-  cursor: pointer;
   position: relative;
-  overflow: hidden;
-  
-  &:hover {
-    .action-icon {
-      transform: scale(1.1);
-    }
-    
-    .action-button {
-      transform: translateY(-2px);
-      box-shadow: var(--shadow-md);
-    }
-  }
-  
-  .action-content {
-    z-index: 2;
-    position: relative;
-  }
-  
-  .action-icon {
-    margin-bottom: var(--space-4);
-    transition: transform 0.2s ease;
-    opacity: 0.9;
-  }
-  
-  .action-title {
-    margin: 0 0 var(--space-3) 0;
-    font-size: var(--text-xl);
-    font-weight: var(--font-weight-semibold);
-    color: var(--text-primary);
-  }
-  
-  .action-description {
-    margin: 0 0 var(--space-6) 0;
-    color: var(--text-muted);
-    font-size: var(--text-sm);
-    line-height: 1.5;
-  }
-  
-  .action-button {
-    min-width: 120px;
-    transition: all 0.2s ease;
-  }
+}
+
+.action-icon {
+  margin-bottom: var(--space-4);
+  transition: transform 0.2s ease;
+  opacity: 0.9;
+}
+
+.action-title {
+  margin: 0 0 var(--space-3) 0;
+  font-size: var(--text-xl);
+  font-weight: var(--font-weight-semibold);
+  color: var(--text-primary);
+}
+
+.action-description {
+  margin: 0 0 var(--space-6) 0;
+  color: var(--text-muted);
+  font-size: var(--text-sm);
+  line-height: 1.5;
+}
+
+.action-button {
+  min-width: 120px;
+  transition: all 0.2s ease;
 }
 
 // Scan animation

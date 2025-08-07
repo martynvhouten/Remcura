@@ -1,753 +1,1337 @@
 <template>
-  <div class="mobile-counting-interface">
-    <!-- Counting Header with Progress -->
-    <div class="counting-header">
-      <div class="progress-section">
-        <q-linear-progress
-          :value="countingStats.progress_percentage / 100"
-          color="primary"
-          size="8px"
-          class="progress-bar"
+  <div class="mobile-counting" :class="{ 'fullscreen-mode': isFullscreen }">
+    <!-- Method Selection Screen -->
+    <Transition name="fade" mode="out-in">
+      <div v-if="currentStep === 'method-selection'" class="method-selection-screen">
+        <div class="method-header">
+          <div class="header-content">
+                    <q-btn 
+          @click="$emit('close')" 
+          round 
+          flat 
+          icon="close" 
+          color="white"
+          size="md"
         />
-        <div class="progress-text">
-          {{ countingStats.counted_products }} /
-          {{ countingStats.total_products }}
-          {{ $t('counting.productsCompleted') }}
+            <div class="session-info">
+              <h1 class="main-title">{{ $t('counting.title') }}</h1>
+              <p class="session-subtitle">{{ totalProducts }} {{ $t('counting.totalProducts').toLowerCase() }}</p>
+                        </div>
+            <q-btn 
+              @click="toggleFullscreen" 
+              round 
+              flat 
+              :icon="isFullscreen ? 'fullscreen_exit' : 'fullscreen'"
+              color="white"
+              size="md"
+            />
         </div>
       </div>
 
-      <div class="stats-row">
-        <div class="stat-item">
-          <q-icon name="checklist" color="positive" />
-          <span>{{ countingStats.counted_products }}</span>
+        <div class="method-content">
+          <div class="method-selection">
+            <div class="selection-header">
+              <h2>{{ $t('counting.method.title') }}</h2>
+              <p>{{ $t('counting.method.subtitle') }}</p>
         </div>
-        <div class="stat-item" v-if="countingStats.discrepancies > 0">
-          <q-icon name="warning" color="warning" />
-          <span>{{ countingStats.discrepancies }}</span>
+
+            <div class="method-options">
+                          <q-card 
+              @click="selectMethod('scan')"
+              class="method-option cursor-pointer"
+              :class="{ selected: selectedMethod === 'scan' }"
+            >
+                <div class="method-icon scan-icon">
+                  <q-icon name="qr_code_scanner" />
         </div>
-        <div class="stat-item">
-          <q-icon name="schedule" />
-          <span>{{ formatSessionTime }}</span>
+                <div class="method-info">
+                  <h3>{{ $t('counting.method.scan') }}</h3>
+                  <p>{{ $t('counting.method.scanDescription') }}</p>
         </div>
+                <div class="method-indicator">
+                                    <q-icon name="radio_button_unchecked" v-if="selectedMethod !== 'scan'" />
+                  <q-icon name="check_circle" v-else />
       </div>
-    </div>
+              </q-card>
 
-    <!-- Current Product Card -->
-    <div v-if="currentProduct" class="product-card">
-      <div class="product-header">
-        <div class="product-info">
-          <h3 class="product-name">{{ currentProduct.name }}</h3>
-          <p class="product-sku">
-            {{ $t('products.sku') }}: {{ currentProduct.sku }}
-          </p>
-          <p v-if="currentProduct.category" class="product-category">
-            {{ currentProduct.category }}
-          </p>
+              <q-card 
+                @click="selectMethod('manual')"
+                class="method-option cursor-pointer"
+                :class="{ selected: selectedMethod === 'manual' }"
+              >
+                <div class="method-icon manual-icon">
+                  <q-icon name="edit" />
         </div>
-
-        <div class="product-image">
-          <q-img
-            v-if="currentProduct.image_url"
-            :src="currentProduct.image_url"
-            :alt="currentProduct.name"
-            width="80px"
-            height="80px"
-            fit="cover"
-            class="rounded-lg"
-          />
-          <div v-else class="placeholder-image">
-            <q-icon name="inventory_2" size="40px" color="grey-5" />
+                <div class="method-info">
+                  <h3>{{ $t('counting.method.manual') }}</h3>
+                  <p>{{ $t('counting.method.manualDescription') }}</p>
           </div>
+                <div class="method-indicator">
+                                    <q-icon name="radio_button_unchecked" v-if="selectedMethod !== 'manual'" />
+                  <q-icon name="check_circle" v-else />
         </div>
+              </q-card>
       </div>
 
-      <div class="location-info">
-        <q-icon name="place" />
-        <span>{{ currentProduct.location_name }}</span>
-      </div>
-
-      <div class="system-quantity">
-        {{ $t('counting.systemQuantity') }}:
-        <strong
-          >{{ currentProduct.current_system_quantity }}
-          {{ currentProduct.unit || '' }}</strong
-        >
+                        <div class="method-actions">
+              <q-btn 
+                @click="startCounting"
+                :disable="!selectedMethod"
+                color="primary"
+                size="lg"
+                class="full-width"
+                no-caps
+              >
+                <q-icon name="arrow_forward" class="q-mr-sm" />
+                {{ $t('counting.method.continue') }}
+              </q-btn>
       </div>
     </div>
+        </div>
+      </div>
+    </Transition>
 
-    <!-- Counting Input Section -->
-    <div v-if="currentProduct" class="counting-input-section">
-      <div class="quantity-input-container">
-        <label class="input-label">{{ $t('counting.countedQuantity') }}</label>
-
-        <!-- Large touch-friendly number input -->
-        <div class="quantity-input-wrapper">
+    <!-- Product Counting Flow -->
+    <Transition name="slide-up" mode="out-in">
+      <div v-if="currentStep === 'counting'" class="counting-flow">
+        <!-- Progress Header -->
+        <div class="counting-header">
+          <div class="header-background"></div>
+          <div class="header-content">
           <q-btn
+              @click="goBack" 
             round
-            color="negative"
-            icon="remove"
-            size="lg"
-            @click="decrementQuantity"
-            :disable="countedQuantity <= 0"
-            class="quantity-btn"
-          />
-
-          <q-input
-            v-model.number="countedQuantity"
-            type="number"
-            min="0"
-            step="0.1"
-            filled
-            class="quantity-input"
-            :suffix="currentProduct.unit || ''"
-            input-class="text-center text-h5"
-            @focus="onQuantityFocus"
-          />
-
-          <q-btn
-            round
-            color="positive"
-            icon="add"
-            size="lg"
-            @click="incrementQuantity"
-            class="quantity-btn"
-          />
+              flat 
+              icon="arrow_back"
+              color="white"
+              size="md"
+            />
+            
+            <div class="progress-info">
+              <div class="progress-text">
+                {{ $t('counting.productFlow.progressOf', { 
+                  current: currentProductIndex + 1, 
+                  total: totalProducts 
+                }) }}
+              </div>
+              <div class="progress-bar">
+                <div 
+                  class="progress-fill" 
+                  :style="{ width: progressPercentage + '%' }"
+                ></div>
+              </div>
         </div>
 
-        <!-- Quick quantity buttons -->
-        <div class="quick-buttons">
-          <q-btn
-            v-for="qty in quickQuantities"
-            :key="qty"
-            :label="qty.toString()"
-            outline
-            color="primary"
-            size="md"
-            @click="setQuantity(qty)"
-            class="quick-btn"
-          />
-          <q-btn
-            :label="currentProduct.current_system_quantity.toString()"
-            color="primary"
-            size="md"
-            @click="setQuantity(currentProduct.current_system_quantity)"
-            class="quick-btn system-qty-btn"
-          />
+            <button @click="toggleFullscreen" class="fullscreen-btn">
+              <q-icon :name="isFullscreen ? 'fullscreen_exit' : 'fullscreen'" />
+            </button>
         </div>
       </div>
 
-      <!-- Variance Indicator -->
-      <div
-        v-if="showVariance"
-        class="variance-indicator"
-        :class="varianceClass"
-      >
-        <q-icon :name="varianceIcon" />
-        <span class="variance-text">
-          {{ varianceText }}
-        </span>
+        <!-- Scanner Mode -->
+        <div v-if="selectedMethod === 'scan'" class="scanner-mode">
+          <div v-if="!showProductInput" class="scanner-interface">
+            <div class="scanner-status">
+              <h3>{{ $t('counting.scanner.scanning') }}</h3>
+              <p>{{ $t('counting.scanner.placeBarcode') }}</p>
       </div>
 
-      <!-- Additional Options -->
-      <div class="additional-options">
-        <q-expansion-item
-          icon="more_horiz"
-          :label="$t('counting.additionalOptions')"
-          header-class="text-primary"
-        >
-          <div class="options-content">
-            <q-input
-              v-model="notes"
-              type="textarea"
-              :label="$t('common.notes')"
-              outlined
-              rows="2"
-              class="notes-input"
-            />
+            <div class="camera-container">
+              <video 
+                ref="videoElement" 
+                autoplay 
+                playsinline 
+                class="camera-video"
+                @loadedmetadata="onVideoLoaded"
+              ></video>
+              
+              <div class="scan-overlay">
+                <div class="scan-frame">
+                  <div class="frame-corners">
+                    <div class="corner corner-tl"></div>
+                    <div class="corner corner-tr"></div>
+                    <div class="corner corner-bl"></div>
+                    <div class="corner corner-br"></div>
+                  </div>
+                  <div class="scan-line"></div>
+        </div>
+      </div>
 
-            <q-input
-              v-model="batchNumber"
-              :label="$t('counting.batchNumber')"
-              outlined
-              class="batch-input"
-            />
+              <!-- Camera Controls -->
+              <div class="camera-controls">
+                <button 
+                  v-if="canSwitchCamera" 
+                  @click="switchCamera" 
+                  class="camera-control-btn"
+                >
+                  <q-icon name="flip_camera_android" />
+                </button>
+                <button 
+                  v-if="hasFlash" 
+                  @click="toggleFlash" 
+                  :class="['camera-control-btn', { active: flashEnabled }]"
+                >
+                  <q-icon :name="flashEnabled ? 'flash_off' : 'flash_on'" />
+                </button>
+              </div>
+      </div>
 
-            <q-input
-              v-model="expiryDate"
-              type="date"
-              :label="$t('counting.expiryDate')"
-              outlined
-              class="expiry-input"
-            />
-
-            <q-select
-              v-model="confidenceLevel"
-              :options="confidenceLevelOptions"
-              :label="$t('counting.confidenceLevel')"
-              outlined
-              map-options
-              emit-value
-            />
+            <div class="scanner-actions">
+              <button @click="switchToManual" class="switch-method-btn">
+                <q-icon name="edit" />
+                <span>{{ $t('counting.scanner.switchToManual') }}</span>
+              </button>
           </div>
-        </q-expansion-item>
       </div>
 
-      <!-- Action Buttons -->
-      <div class="action-buttons">
-        <q-btn
-          :label="$t('counting.skipProduct')"
-          outline
-          color="grey-7"
-          size="lg"
-          @click="skipProduct"
-          class="action-btn skip-btn"
-        />
-
-        <q-btn
-          :label="$t('counting.confirmCount')"
-          color="primary"
-          size="lg"
-          @click="confirmCount"
-          :loading="submitting"
-          :disable="!isValidCount"
-          class="action-btn confirm-btn"
+          <!-- Product Input (after scan) -->
+          <Transition name="slide-up">
+            <div v-if="showProductInput" class="product-input-container">
+              <ProductCountingCard
+                :product="currentProduct"
+                :method="selectedMethod"
+                :current-stock="currentStock"
+                :is-loading="submitting"
+                @confirm="confirmCount"
+                @skip="skipProduct"
+                @cancel="showProductInput = false"
         />
       </div>
+          </Transition>
     </div>
 
-    <!-- No More Products -->
-    <div v-else-if="!loading" class="no-products">
-      <q-icon name="check_circle" color="positive" size="80px" />
-      <h3>{{ $t('counting.allProductsCounted') }}</h3>
-      <p>{{ $t('counting.readyToComplete') }}</p>
-
-      <q-btn
-        :label="$t('counting.completeSession')"
-        color="positive"
-        size="lg"
-        @click="completeSession"
-        class="complete-btn"
+        <!-- Manual Mode -->
+        <div v-if="selectedMethod === 'manual'" class="manual-mode">
+          <ProductCountingCard
+            :product="currentProduct"
+            :method="selectedMethod"
+            :current-stock="currentStock"
+            :is-loading="submitting"
+            @confirm="confirmCount"
+            @skip="skipProduct"
       />
     </div>
+      </div>
+    </Transition>
 
-    <!-- Loading State -->
-    <div v-if="loading" class="loading-state">
-      <q-spinner size="40px" color="primary" />
-      <p>{{ $t('common.loading') }}</p>
+    <!-- Completion Screen -->
+    <Transition name="fade" mode="out-in">
+      <div v-if="currentStep === 'complete'" class="completion-screen">
+        <div class="completion-content">
+          <div class="completion-icon">
+            <q-icon name="check_circle" />
+          </div>
+          <h2>{{ $t('counting.productFlow.allComplete') }}</h2>
+          <div class="completion-stats">
+            <div class="stat-item">
+              <span class="stat-value">{{ countedProducts }}</span>
+              <span class="stat-label">{{ $t('counting.countedProducts') }}</span>
+            </div>
+            <div class="stat-item">
+              <span class="stat-value">{{ discrepancies }}</span>
+              <span class="stat-label">{{ $t('counting.discrepancies') }}</span>
+            </div>
     </div>
 
-    <!-- Floating Action Buttons -->
-    <div class="floating-actions">
-      <q-btn
-        fab
-        color="accent"
-        icon="qr_code_scanner"
-        @click="openBarcodeScanner"
-        class="fab-btn scanner-btn"
-      />
+          <div class="completion-actions">
+            <button @click="$emit('session-complete')" class="complete-btn">
+              <q-icon name="check" />
+              <span>{{ $t('counting.completeSession') }}</span>
+            </button>
+            <button @click="restartCounting" class="restart-btn">
+              <q-icon name="refresh" />
+              <span>{{ $t('common.restart') }}</span>
+            </button>
     </div>
+        </div>
+      </div>
+    </Transition>
   </div>
 </template>
 
 <script setup lang="ts">
-  import { ref, computed, onMounted, watch } from 'vue';
+import { ref, computed, onMounted, onUnmounted, watch, nextTick } from 'vue';
+import { useQuasar } from 'quasar';
   import { useI18n } from 'vue-i18n';
-  import { useCountingStore } from 'src/stores/counting';
-  import type { CountingProduct } from 'src/types/inventory';
+import { useInventoryStore } from '@/stores/inventory';
+import ProductCountingCard from './ProductCountingCard.vue';
 
-  // Props
-  interface Props {
-    productId?: string;
-  }
+// Types
+interface Product {
+  id: string;
+  name: string;
+  sku: string;
+  current_stock?: number;
+  minimum_stock?: number;
+  maximum_stock?: number;
+  barcode?: string;
+  gtin?: string;
+  image_url?: string;
+}
 
-  const props = withDefaults(defineProps<Props>(), {
-    productId: undefined,
-  });
+interface CountEntry {
+  id: string;
+  productName: string;
+  oldStock: number;
+  newStock: number;
+  variance: number;
+  timestamp: Date;
+}
+
+type CountingMethod = 'scan' | 'manual';
+type CountingStep = 'method-selection' | 'counting' | 'complete';
+
+// Props
+const props = defineProps<{
+  locationId?: string;
+  practiceId?: string;
+  session?: any;
+  products?: any[];
+}>();
+
+// Emits
+const emit = defineEmits<{
+  close: [];
+  'product-counted': [];
+  'session-complete': [];
+}>();
 
   // Composables
+const $q = useQuasar();
   const { t } = useI18n();
-  const countingStore = useCountingStore();
+const inventoryStore = useInventoryStore();
 
   // State
-  const countedQuantity = ref(0);
-  const notes = ref('');
-  const batchNumber = ref('');
-  const expiryDate = ref('');
-  const confidenceLevel = ref<'high' | 'medium' | 'low'>('high');
+const currentStep = ref<CountingStep>('method-selection');
+const selectedMethod = ref<CountingMethod | null>(null);
+const isFullscreen = ref(false);
+const currentProductIndex = ref(0);
+const showProductInput = ref(false);
   const submitting = ref(false);
-  const sessionStartTime = ref<Date>(new Date());
 
-  // Computed
-  const currentProduct = computed((): CountingProduct | null => {
-    if (props.productId) {
-      return (
-        countingStore.availableProducts.find(p => p.id === props.productId) ||
-        null
-      );
-    }
-    return countingStore.nextProductToCount;
-  });
+// Camera state
+const videoElement = ref<HTMLVideoElement | null>(null);
+const currentStream = ref<MediaStream | null>(null);
+const canSwitchCamera = ref(false);
+const hasFlash = ref(false);
+const flashEnabled = ref(false);
+const currentFacingMode = ref<'user' | 'environment'>('environment');
+const scanInterval = ref<number | null>(null);
 
-  const countingStats = computed(() => countingStore.countingStats);
-  const loading = computed(() => countingStore.loading);
+// Data
+const products = ref<Product[]>([]);
+const recentCounts = ref<CountEntry[]>([]);
 
-  const quickQuantities = computed(() => {
-    const systemQty = currentProduct.value?.current_system_quantity || 0;
-    const baseQuantities = [0, 1, 5, 10, 25, 50];
+// Barcode Detection
+let barcodeDetector: any = null;
 
-    // Add system quantity if it's not already in the list
-    if (systemQty > 0 && !baseQuantities.includes(systemQty)) {
-      baseQuantities.push(systemQty);
-    }
+// Computed
+const totalProducts = computed(() => products.value.length);
+const countedProducts = computed(() => recentCounts.value.length);
+const discrepancies = computed(() => 
+  recentCounts.value.filter(c => c.variance !== 0).length
+);
 
-    return baseQuantities.sort((a, b) => a - b).slice(0, 6);
-  });
+const progressPercentage = computed(() => {
+  if (totalProducts.value === 0) return 0;
+  return (currentProductIndex.value / totalProducts.value) * 100;
+});
 
-  const showVariance = computed(() => {
-    return (
-      currentProduct.value &&
-      countedQuantity.value !== currentProduct.value.current_system_quantity
-    );
-  });
+const currentProduct = computed(() => {
+  if (currentProductIndex.value >= products.value.length) return null;
+  return products.value[currentProductIndex.value];
+});
 
-  const variance = computed(() => {
+const currentStock = computed(() => {
     if (!currentProduct.value) return 0;
-    return countedQuantity.value - currentProduct.value.current_system_quantity;
-  });
+  return currentProduct.value.current_stock || 0;
+});
 
-  const varianceClass = computed(() => {
-    const v = variance.value;
-    if (v > 0) return 'variance-positive';
-    if (v < 0) return 'variance-negative';
-    return 'variance-neutral';
-  });
+// Methods
+const selectMethod = (method: CountingMethod) => {
+  selectedMethod.value = method;
+};
 
-  const varianceIcon = computed(() => {
-    const v = variance.value;
-    if (v > 0) return 'trending_up';
-    if (v < 0) return 'trending_down';
-    return 'check';
-  });
+const startCounting = async () => {
+  if (!selectedMethod.value) return;
+  
+  currentStep.value = 'counting';
+  
+  // Initialize camera for scan mode
+  if (selectedMethod.value === 'scan') {
+    await startCamera();
+  }
+};
 
-  const varianceText = computed(() => {
-    const v = variance.value;
-    const absV = Math.abs(v);
-    if (v > 0) {
-      return t('counting.variancePositive', { amount: absV });
-    } else if (v < 0) {
-      return t('counting.varianceNegative', { amount: absV });
+const goBack = () => {
+  if (currentStep.value === 'counting') {
+    stopCamera();
+    currentStep.value = 'method-selection';
+    currentProductIndex.value = 0;
+    showProductInput.value = false;
+  }
+};
+
+const switchToManual = () => {
+  selectedMethod.value = 'manual';
+  stopCamera();
+  showProductInput.value = false;
+};
+
+const toggleFullscreen = async () => {
+  try {
+    if (!isFullscreen.value) {
+      if (document.documentElement.requestFullscreen) {
+        await document.documentElement.requestFullscreen();
+      }
+    } else {
+      if (document.exitFullscreen) {
+        await document.exitFullscreen();
+      }
     }
-    return t('counting.varianceMatch');
-  });
+  } catch (error) {
+    console.warn('Fullscreen toggle failed:', error);
+  }
+};
 
-  const isValidCount = computed(() => {
-    return countedQuantity.value >= 0 && currentProduct.value;
-  });
-
-  const formatSessionTime = computed(() => {
-    const elapsed = Date.now() - sessionStartTime.value.getTime();
-    const minutes = Math.floor(elapsed / 60000);
-    const seconds = Math.floor((elapsed % 60000) / 1000);
-    return `${minutes}:${seconds.toString().padStart(2, '0')}`;
-  });
-
-  const confidenceLevelOptions = computed(() => [
-    { label: t('counting.confidence.high'), value: 'high' },
-    { label: t('counting.confidence.medium'), value: 'medium' },
-    { label: t('counting.confidence.low'), value: 'low' },
-  ]);
-
-  // Methods
-  const incrementQuantity = () => {
-    countedQuantity.value += 1;
-  };
-
-  const decrementQuantity = () => {
-    if (countedQuantity.value > 0) {
-      countedQuantity.value -= 1;
+// Camera Methods
+const startCamera = async () => {
+  try {
+    if (currentStream.value) {
+      await stopCamera();
     }
-  };
 
-  const setQuantity = (qty: number) => {
-    countedQuantity.value = qty;
-  };
+    const stream = await navigator.mediaDevices.getUserMedia({
+      video: {
+        facingMode: currentFacingMode.value,
+        width: { ideal: 1920 },
+        height: { ideal: 1080 }
+      }
+    });
 
-  const onQuantityFocus = (event: Event) => {
-    const input = event.target as HTMLInputElement;
-    input.select();
-  };
+    currentStream.value = stream;
+    if (videoElement.value) {
+      videoElement.value.srcObject = stream;
+    }
 
-  const confirmCount = async () => {
-    if (!currentProduct.value || !isValidCount.value) return;
+    // Initialize camera capabilities
+    canSwitchCamera.value = await checkMultipleCameras();
+    hasFlash.value = await checkFlashSupport();
 
+    // Initialize barcode detection
+    if ('BarcodeDetector' in window) {
+      barcodeDetector = new (window as any).BarcodeDetector();
+      startScanning();
+    }
+
+  } catch (error) {
+    console.error('Camera access failed:', error);
+    $q.notify({
+      type: 'negative',
+      message: t('common.error'),
+      caption: 'Camera toegang geweigerd'
+    });
+  }
+};
+
+const stopCamera = async () => {
+  if (scanInterval.value) {
+    clearInterval(scanInterval.value);
+    scanInterval.value = null;
+  }
+
+  if (currentStream.value) {
+    currentStream.value.getTracks().forEach(track => track.stop());
+    currentStream.value = null;
+  }
+
+  if (videoElement.value) {
+    videoElement.value.srcObject = null;
+  }
+};
+
+const switchCamera = async () => {
+  if (!canSwitchCamera.value) return;
+  
+  currentFacingMode.value = currentFacingMode.value === 'user' ? 'environment' : 'user';
+  await stopCamera();
+  await startCamera();
+};
+
+const toggleFlash = async () => {
+  if (!hasFlash.value || !currentStream.value) return;
+
+  try {
+    const videoTrack = currentStream.value.getVideoTracks()[0];
+    if (videoTrack) {
+      await videoTrack.applyConstraints({
+        advanced: [{ torch: !flashEnabled.value } as any]
+      });
+      flashEnabled.value = !flashEnabled.value;
+    }
+  } catch (err) {
+    console.warn('Flash toggle failed:', err);
+  }
+};
+
+const checkMultipleCameras = async (): Promise<boolean> => {
+  try {
+    const devices = await navigator.mediaDevices.enumerateDevices();
+    const videoDevices = devices.filter(device => device.kind === 'videoinput');
+    return videoDevices.length > 1;
+  } catch {
+    return false;
+  }
+};
+
+const checkFlashSupport = async (): Promise<boolean> => {
+  try {
+    const stream = currentStream.value;
+    if (!stream) return false;
+    
+    const videoTrack = stream.getVideoTracks()[0];
+    const capabilities = videoTrack.getCapabilities();
+    return 'torch' in capabilities;
+  } catch {
+    return false;
+  }
+};
+
+const startScanning = () => {
+  if (!barcodeDetector || scanInterval.value) return;
+  
+  scanInterval.value = window.setInterval(async () => {
+    if (!videoElement.value || currentStep.value !== 'counting') return;
+    
     try {
-      submitting.value = true;
-
-      await countingStore.countProduct(
-        currentProduct.value.id,
-        currentProduct.value.location_id,
-        countedQuantity.value,
-        {
-          countMethod: 'manual',
-          confidenceLevel: confidenceLevel.value,
-          batchNumber: batchNumber.value || undefined,
-          expiryDate: expiryDate.value || undefined,
-          notes: notes.value || undefined,
-        }
-      );
-
-      // Reset form for next product
-      resetForm();
+      const barcodes = await barcodeDetector.detect(videoElement.value);
+      if (barcodes.length > 0) {
+        const barcode = barcodes[0].rawValue;
+        await handleBarcodeScan(barcode);
+      }
     } catch (error) {
-      console.error('Error confirming count:', error);
-      // Handle error (show notification, etc.)
+      // Silently ignore scanning errors
+    }
+  }, 1000);
+};
+
+const handleBarcodeScan = async (barcode: string) => {
+  try {
+    // Find product by barcode
+    const foundProduct = products.value.find(p => 
+      p.barcode === barcode || 
+      p.gtin === barcode ||
+      p.sku === barcode
+    );
+
+    if (foundProduct) {
+      // Set current product index
+      const productIndex = products.value.findIndex(p => p.id === foundProduct.id);
+      if (productIndex !== -1) {
+        currentProductIndex.value = productIndex;
+        showProductInput.value = true;
+        
+        $q.notify({
+          type: 'positive',
+          message: t('counting.scanner.productFound'),
+          caption: foundProduct.name,
+          timeout: 2000
+        });
+      }
+    } else {
+      $q.notify({
+        type: 'warning',
+        message: t('counting.scanner.productNotFound'),
+        caption: `Barcode: ${barcode}`,
+        timeout: 3000
+      });
+    }
+    } catch (error) {
+    $q.notify({
+      type: 'negative',
+      message: t('counting.productFlow.error'),
+      caption: error instanceof Error ? error.message : 'Onbekende fout'
+    });
+  }
+};
+
+// Product Flow Methods
+const confirmCount = async (count: number) => {
+  if (!currentProduct.value) return;
+
+  try {
+    submitting.value = true;
+
+    const oldStock = currentStock.value;
+    const variance = count - oldStock;
+
+    // Add to recent counts
+    recentCounts.value.push({
+      id: currentProduct.value.id,
+      productName: currentProduct.value.name,
+      oldStock,
+      newStock: count,
+      variance,
+      timestamp: new Date(),
+    });
+
+    $q.notify({
+      type: 'positive',
+      message: t('counting.productFlow.saved'),
+      timeout: 1500
+    });
+
+    // Emit event
+    emit('product-counted');
+
+    // Move to next product
+    await nextProduct();
+
+  } catch (error) {
+    $q.notify({
+      type: 'negative',
+      message: t('counting.productFlow.error'),
+      caption: error instanceof Error ? error.message : 'Onbekende fout'
+    });
     } finally {
       submitting.value = false;
     }
   };
 
-  const skipProduct = () => {
-    resetForm();
-    // Could implement skip logic here
-  };
+const skipProduct = async () => {
+  await nextProduct();
+};
 
-  const resetForm = () => {
-    countedQuantity.value = 0;
-    notes.value = '';
-    batchNumber.value = '';
-    expiryDate.value = '';
-    confidenceLevel.value = 'high';
-  };
-
-  const completeSession = async () => {
-    try {
-      await countingStore.completeCountingSession();
-      // Navigate away or show completion message
-    } catch (error) {
-      console.error('Error completing session:', error);
+const nextProduct = async () => {
+  showProductInput.value = false;
+  
+  // Optimized transition - shorter wait time
+  await nextTick();
+  
+  if (currentProductIndex.value >= totalProducts.value - 1) {
+    // All products counted
+    currentStep.value = 'complete';
+    stopCamera();
+  } else {
+    // Move to next product with immediate update
+    currentProductIndex.value++;
+    
+    // Reset for scan mode without delay
+    if (selectedMethod.value === 'scan') {
+      showProductInput.value = false;
     }
-  };
+  }
+};
 
-  const openBarcodeScanner = () => {
-    // Implement barcode scanning functionality
-    // Opening barcode scanner
-  };
+const restartCounting = () => {
+  currentStep.value = 'method-selection';
+  currentProductIndex.value = 0;
+  selectedMethod.value = null;
+  showProductInput.value = false;
+  recentCounts.value = [];
+};
 
-  // Initialize
-  watch(
-    currentProduct,
-    newProduct => {
-      if (newProduct) {
-        // Set initial quantity to system quantity for easier counting
-        countedQuantity.value = newProduct.current_system_quantity;
-      }
-    },
-    { immediate: true }
-  );
+const onVideoLoaded = () => {
+  // Video loaded successfully
+};
 
-  onMounted(() => {
-    sessionStartTime.value = new Date();
+// Lifecycle
+onMounted(async () => {
+  // Load initial data
+  if (props.practiceId) {
+    await inventoryStore.refreshData(props.practiceId);
+  }
+
+  // Initialize products list
+  products.value = inventoryStore.stockLevels.map(s => ({
+    id: s.product_id,
+    name: (s as any).product?.name || 'Onbekend product',
+    sku: (s as any).product?.sku || '',
+    current_stock: s.current_quantity || 0,
+    minimum_stock: s.minimum_stock || 0,
+    maximum_stock: s.maximum_stock || 100,
+    barcode: (s as any).product?.barcode,
+    gtin: (s as any).product?.gtin,
+    image_url: (s as any).product?.image_url,
+  }));
+
+  // Listen for fullscreen changes
+  document.addEventListener('fullscreenchange', () => {
+    isFullscreen.value = !!document.fullscreenElement;
+  });
+});
+
+onUnmounted(() => {
+  stopCamera();
+  document.removeEventListener('fullscreenchange', () => {});
+});
+
+// Watch for method changes
+watch(selectedMethod, (newMethod) => {
+  if (newMethod === 'manual') {
+    stopCamera();
+  }
   });
 </script>
 
 <style lang="scss" scoped>
-  .mobile-counting-interface {
-    min-height: 100vh;
-    background: var(--q-color-grey-1);
-    padding: var(--space-4);
-    padding-bottom: 100px; // Space for floating actions
+.mobile-counting {
+  height: 100vh;
+  max-height: 100vh;
+  background: var(--bg-primary);
+  background-image: linear-gradient(135deg, var(--brand-primary), var(--brand-primary-light));
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  overflow: hidden;
+
+  &.fullscreen-mode {
+    height: 100vh;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 9999;
   }
+}
 
-  .counting-header {
-    background: white;
-    border-radius: var(--radius-lg);
-    padding: var(--space-4);
-    margin-bottom: var(--space-4);
-    box-shadow: var(--shadow-sm);
+// Method Selection Screen
+.method-selection-screen {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
 
-    .progress-bar {
-      margin-bottom: var(--space-2);
-    }
+.method-header {
+  padding: 1.5rem 1rem;
+  color: white;
 
-    .progress-text {
-      font-size: 0.9rem;
-      color: var(--text-muted);
+  .header-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    max-width: 1200px;
+    margin: 0 auto;
+
+      // Header buttons are now q-btn components
+
+    .session-info {
       text-align: center;
-      margin-bottom: var(--space-3);
+      flex: 1;
+
+      .main-title {
+        margin: 0;
+        font-size: 1.75rem;
+        font-weight: var(--font-weight-bold);
+        margin-bottom: 0.25rem;
+        color: white;
+        font-family: var(--font-family-heading);
+      }
+
+      .session-subtitle {
+        margin: 0;
+        font-size: 1rem;
+        opacity: 0.9;
+        font-weight: var(--font-weight-medium);
+        color: white;
+      }
     }
+  }
+}
 
-    .stats-row {
-      display: flex;
-      justify-content: space-around;
-      gap: var(--space-3);
-
-      .stat-item {
+.method-content {
+  flex: 1;
+  padding: 2rem 1rem;
         display: flex;
         align-items: center;
-        gap: var(--space-1);
-        font-size: 0.9rem;
-        font-weight: 500;
-      }
-    }
-  }
+  justify-content: center;
+}
 
-  .product-card {
-    background: white;
-    border-radius: var(--radius-lg);
-    padding: var(--space-4);
-    margin-bottom: var(--space-4);
-    box-shadow: var(--shadow-sm);
+.method-selection {
+  background: var(--bg-secondary);
+  border-radius: var(--radius-lg);
+  padding: 2rem;
+  max-width: 500px;
+  width: 100%;
+  box-shadow: var(--shadow-xl);
 
-    .product-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-start;
-      margin-bottom: var(--space-3);
+  .selection-header {
+      text-align: center;
+    margin-bottom: 2rem;
 
-      .product-info {
-        flex: 1;
-
-        .product-name {
-          font-size: 1.25rem;
-          font-weight: 600;
-          margin: 0 0 var(--space-1) 0;
-          color: var(--text-primary);
-        }
-
-        .product-sku {
-          font-size: 0.9rem;
-          color: var(--text-muted);
-          margin: 0 0 var(--space-1) 0;
-        }
-
-        .product-category {
-          font-size: 0.8rem;
-          color: var(--text-muted);
-          margin: 0;
-        }
-      }
-
-      .product-image {
-        width: 80px;
-        height: 80px;
-
-        .placeholder-image {
-          width: 100%;
-          height: 100%;
-          background: var(--q-color-grey-3);
-          border-radius: var(--radius-md);
-          display: flex;
-          align-items: center;
-          justify-content: center;
-        }
-      }
-    }
-
-    .location-info {
-      display: flex;
-      align-items: center;
-      gap: var(--space-2);
-      margin-bottom: var(--space-3);
-      font-size: 0.9rem;
-      color: var(--text-muted);
-    }
-
-    .system-quantity {
-      font-size: 1rem;
-      color: var(--text-secondary);
-    }
-  }
-
-  .counting-input-section {
-    background: white;
-    border-radius: var(--radius-lg);
-    padding: var(--space-4);
-    margin-bottom: var(--space-4);
-    box-shadow: var(--shadow-sm);
-
-    .input-label {
-      display: block;
-      font-weight: 600;
-      margin-bottom: var(--space-3);
+    h2 {
+      margin: 0 0 0.5rem 0;
+      font-size: 1.5rem;
+      font-weight: var(--font-weight-bold);
       color: var(--text-primary);
+      font-family: var(--font-family-heading);
     }
 
-    .quantity-input-wrapper {
-      display: flex;
-      align-items: center;
-      gap: var(--space-3);
-      margin-bottom: var(--space-4);
+    p {
+      margin: 0;
+      color: var(--text-secondary);
+      font-size: 1rem;
+    }
+  }
 
-      .quantity-btn {
+  .method-options {
+      display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    margin-bottom: 2rem;
+
+        .method-option {
+        display: flex;
+        align-items: center;
+      gap: 1rem;
+      padding: 1.5rem;
+      border: 2px solid var(--border-primary);
+      border-radius: var(--radius-base);
+      background: var(--bg-primary);
+      cursor: pointer;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+      text-align: left;
+      width: 100%;
+
+      &:hover {
+        transform: translateY(-2px);
+        box-shadow: var(--shadow-md);
+      }
+
+      &.selected {
+        border-color: var(--brand-primary);
+        background: var(--bg-primary);
+        box-shadow: var(--shadow-lg);
+
+        .method-icon {
+          background: var(--brand-primary);
+          color: white;
+        }
+
+        .method-indicator {
+          color: var(--brand-primary);
+        }
+      }
+
+            .method-icon {
+        width: 56px;
+        height: 56px;
+        border-radius: var(--radius-base);
+        background: var(--bg-tertiary);
+        color: var(--text-secondary);
+      display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 24px;
+        transition: background-color 0.2s ease, color 0.2s ease;
         flex-shrink: 0;
       }
 
-      .quantity-input {
+      .method-info {
         flex: 1;
 
-        :deep(.q-field__control) {
-          min-height: 60px;
+        h3 {
+          margin: 0 0 0.25rem 0;
+          font-size: 1.1rem;
+          font-weight: var(--font-weight-semibold);
+          color: var(--text-primary);
+        }
+
+        p {
+          margin: 0;
+          font-size: 0.9rem;
+          color: var(--text-secondary);
         }
       }
-    }
 
-    .quick-buttons {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: var(--space-2);
-      margin-bottom: var(--space-4);
-
-      .quick-btn {
-        min-height: 44px;
-
-        &.system-qty-btn {
-          grid-column: span 3;
-        }
+      .method-indicator {
+        font-size: 24px;
+        color: var(--text-tertiary);
+        transition: color 0.2s ease;
       }
     }
   }
 
-  .variance-indicator {
+    .method-actions {
     display: flex;
-    align-items: center;
-    gap: var(--space-2);
-    padding: var(--space-3);
-    border-radius: var(--radius-md);
-    margin-bottom: var(--space-4);
-    font-weight: 500;
-
-    &.variance-positive {
-      background: var(--q-color-positive-1);
-      color: var(--q-color-positive-8);
-    }
-
-    &.variance-negative {
-      background: var(--q-color-negative-1);
-      color: var(--q-color-negative-8);
-    }
-
-    &.variance-neutral {
-      background: var(--q-color-positive-1);
-      color: var(--q-color-positive-8);
-    }
+    justify-content: center;
   }
+}
 
-  .additional-options {
-    margin-bottom: var(--space-4);
-
-    .options-content {
-      padding: var(--space-3);
+// Counting Flow
+.counting-flow {
+  height: 100vh;
       display: flex;
-      flex-direction: column;
-      gap: var(--space-3);
-    }
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.counting-header {
+  position: relative;
+  padding: 1.5rem 1rem;
+  color: white;
+
+  .header-background {
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.2);
+    backdrop-filter: blur(20px);
   }
 
-  .action-buttons {
-    display: grid;
-    grid-template-columns: 1fr 2fr;
-    gap: var(--space-3);
+  .header-content {
+    position: relative;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    max-width: 1200px;
+    margin: 0 auto;
 
-    .action-btn {
-      min-height: 50px;
+    .back-btn,
+    .fullscreen-btn {
+      width: 44px;
+      height: 44px;
+      border: none;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.2);
+      color: white;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s ease;
+      backdrop-filter: blur(10px);
+
+      &:hover {
+        background: rgba(255, 255, 255, 0.3);
+        transform: scale(1.05);
+      }
+    }
+
+    .progress-info {
+      text-align: center;
+      flex: 1;
+
+      .progress-text {
+        font-size: 1rem;
       font-weight: 600;
+        margin-bottom: 0.5rem;
+      }
+
+      .progress-bar {
+        width: 200px;
+        height: 6px;
+        background: rgba(255, 255, 255, 0.3);
+        border-radius: 3px;
+        overflow: hidden;
+        margin: 0 auto;
+
+        .progress-fill {
+          height: 100%;
+          background: rgba(255, 255, 255, 0.9);
+          transition: width 0.3s ease;
+        }
+      }
     }
   }
+}
 
-  .no-products {
-    background: white;
-    border-radius: var(--radius-lg);
-    padding: var(--space-6);
+// Scanner Mode
+.scanner-mode {
+  flex: 1;
+      display: flex;
+  flex-direction: column;
+}
+
+.scanner-interface {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  padding: 1rem;
+
+  .scanner-status {
     text-align: center;
-    box-shadow: var(--shadow-sm);
+    color: white;
+    margin-bottom: 1rem;
 
     h3 {
-      margin: var(--space-4) 0 var(--space-2) 0;
-      color: var(--text-primary);
+      margin: 0 0 0.5rem 0;
+      font-size: 1.25rem;
+      font-weight: 600;
     }
 
     p {
-      color: var(--text-muted);
-      margin-bottom: var(--space-4);
+      margin: 0;
+      opacity: 0.8;
+      font-size: 1rem;
+    }
+  }
+
+  .camera-container {
+        flex: 1;
+    position: relative;
+    border-radius: 16px;
+    overflow: hidden;
+    background: #000;
+    margin-bottom: 1rem;
+    min-height: 400px;
+
+    .camera-video {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .scan-overlay {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .scan-frame {
+      position: relative;
+      width: 280px;
+      height: 280px;
+
+      .frame-corners {
+        position: absolute;
+        inset: 0;
+
+        .corner {
+          position: absolute;
+          width: 40px;
+          height: 40px;
+          border: 3px solid #00ff88;
+
+          &.corner-tl {
+            top: 0;
+            left: 0;
+            border-right: none;
+            border-bottom: none;
+            border-radius: 12px 0 0 0;
+          }
+
+          &.corner-tr {
+            top: 0;
+            right: 0;
+            border-left: none;
+            border-bottom: none;
+            border-radius: 0 12px 0 0;
+          }
+
+          &.corner-bl {
+            bottom: 0;
+            left: 0;
+            border-right: none;
+            border-top: none;
+            border-radius: 0 0 0 12px;
+          }
+
+          &.corner-br {
+            bottom: 0;
+            right: 0;
+            border-left: none;
+            border-top: none;
+            border-radius: 0 0 12px 0;
+          }
+        }
+      }
+
+      .scan-line {
+        position: absolute;
+        top: 50%;
+        left: 20px;
+        right: 20px;
+        height: 2px;
+        background: linear-gradient(90deg, transparent, #00ff88, transparent);
+        animation: scanning 2s ease-in-out infinite;
+      }
+    }
+
+    .camera-controls {
+      position: absolute;
+      bottom: 1rem;
+      right: 1rem;
+      display: flex;
+      gap: 0.75rem;
+
+      .camera-control-btn {
+        width: 48px;
+        height: 48px;
+        border-radius: 50%;
+        border: none;
+        background: rgba(0, 0, 0, 0.6);
+        color: white;
+        cursor: pointer;
+    display: flex;
+    align-items: center;
+        justify-content: center;
+        transition: all 0.2s ease;
+        backdrop-filter: blur(10px);
+
+        &:hover {
+          background: rgba(0, 0, 0, 0.8);
+          transform: scale(1.1);
+        }
+
+        &.active {
+          background: #00ff88;
+          color: #000;
+        }
+      }
+    }
+  }
+
+  .scanner-actions {
+    .switch-method-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.75rem;
+      width: 100%;
+      padding: 1rem;
+      border: 2px solid rgba(255, 255, 255, 0.3);
+      border-radius: 12px;
+      background: rgba(255, 255, 255, 0.1);
+      color: white;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      backdrop-filter: blur(10px);
+
+      &:hover {
+        background: rgba(255, 255, 255, 0.2);
+        border-color: rgba(255, 255, 255, 0.5);
+      }
+    }
+  }
+}
+
+.product-input-container {
+  padding: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: 1;
+}
+
+// Manual Mode
+.manual-mode {
+  flex: 1;
+  padding: 1rem;
+      display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow-y: auto;
+}
+
+// Completion Screen
+.completion-screen {
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+  overflow: hidden;
+}
+
+.completion-content {
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(20px);
+  border-radius: 24px;
+  padding: 3rem 2rem;
+  text-align: center;
+  max-width: 500px;
+  width: 100%;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+
+  .completion-icon {
+    font-size: 80px;
+    color: #10b981;
+    margin-bottom: 1.5rem;
+  }
+
+  h2 {
+    margin: 0 0 2rem 0;
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: #1a202c;
+  }
+
+  .completion-stats {
+    display: flex;
+    justify-content: center;
+    gap: 2rem;
+    margin-bottom: 2rem;
+
+    .stat-item {
+    text-align: center;
+
+      .stat-value {
+        display: block;
+        font-size: 2rem;
+        font-weight: 800;
+        color: #1a202c;
+        line-height: 1;
+      }
+
+      .stat-label {
+        display: block;
+        font-size: 0.9rem;
+        color: #64748b;
+        margin-top: 0.25rem;
+      }
+    }
+  }
+
+  .completion-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+
+    .complete-btn,
+    .restart-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.75rem;
+      padding: 1rem 1.5rem;
+      border: none;
+      border-radius: 12px;
+      font-size: 1.1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      min-height: 56px;
     }
 
     .complete-btn {
-      min-height: 50px;
-      min-width: 200px;
+      background: linear-gradient(135deg, #10b981, #059669);
+      color: white;
+
+      &:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 25px rgba(16, 185, 129, 0.4);
+      }
+    }
+
+    .restart-btn {
+      background: #f8fafc;
+      color: #64748b;
+      border: 2px solid #e2e8f0;
+
+      &:hover {
+        background: #f1f5f9;
+        border-color: #cbd5e0;
+      }
     }
   }
+}
 
-  .loading-state {
-    background: white;
-    border-radius: var(--radius-lg);
-    padding: var(--space-6);
-    text-align: center;
-    box-shadow: var(--shadow-sm);
-
-    p {
-      margin-top: var(--space-3);
-      color: var(--text-muted);
-    }
+// Animations - GPU optimized
+@keyframes scanning {
+  0%, 100% {
+    opacity: 0;
+    transform: translateY(-50%) scaleX(0) translateZ(0);
   }
-
-  .floating-actions {
-    position: fixed;
-    bottom: var(--space-4);
-    right: var(--space-4);
-    z-index: 1000;
-
-    .fab-btn {
-      box-shadow: var(--shadow-lg);
-    }
+  50% {
+    opacity: 1;
+    transform: translateY(-50%) scaleX(1) translateZ(0);
   }
+}
 
-  // Dark mode
-  body.body--dark {
-    .mobile-counting-interface {
-      background: var(--q-color-dark-page);
-    }
+// Transitions - Performance optimized
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.3s ease;
+  will-change: opacity;
+}
 
-    .counting-header,
-    .product-card,
-    .counting-input-section,
-    .no-products,
-    .loading-state {
-      background: var(--q-color-dark-card);
-    }
-  }
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
+}
 
-  // Mobile optimizations
+.slide-up-enter-active,
+.slide-up-leave-active {
+  transition: transform 0.3s ease, opacity 0.3s ease;
+  will-change: transform, opacity;
+}
+
+.slide-up-enter-from,
+.slide-up-leave-to {
+  opacity: 0;
+  transform: translateY(20px) translateZ(0);
+}
+
+// Responsive Design
   @media (max-width: 768px) {
-    .mobile-counting-interface {
-      padding: var(--space-3);
+  .method-selection {
+    padding: 1.5rem;
+    margin: 1rem;
+
+    .method-options .method-option {
+      padding: 1rem;
+
+      .method-icon {
+        width: 48px;
+        height: 48px;
+        font-size: 20px;
+      }
+
+      .method-info h3 {
+        font-size: 1rem;
+      }
+
+      .method-info p {
+        font-size: 0.85rem;
+      }
     }
+  }
 
-    .quantity-input-wrapper {
-      gap: var(--space-2);
+  .completion-content {
+    padding: 2rem 1.5rem;
 
-      .quantity-btn {
-        min-width: 50px;
-        min-height: 50px;
+    .completion-stats {
+      gap: 1.5rem;
+
+      .stat-item .stat-value {
+        font-size: 1.5rem;
       }
     }
 
-    .quick-buttons {
-      grid-template-columns: repeat(2, 1fr);
-
-      .system-qty-btn {
-        grid-column: span 2;
+    .completion-actions {
+      .complete-btn,
+      .restart-btn {
+        padding: 0.875rem 1.25rem;
       }
     }
+  }
 
-    .action-buttons {
-      grid-template-columns: 1fr;
+  .counting-header .header-content .progress-info .progress-bar {
+    width: 150px;
+  }
+}
 
-      .skip-btn {
-        order: 2;
+// Dark mode support
+@media (prefers-color-scheme: dark) {
+  .method-selection,
+  .completion-content {
+    background: rgba(45, 55, 72, 0.95);
+    
+    h2, h3 {
+      color: #f7fafc;
+    }
+    
+    .method-option {
+      background: rgba(45, 55, 72, 0.8);
+      border-color: rgba(255, 255, 255, 0.1);
+      
+      &.selected {
+        background: rgba(102, 126, 234, 0.2);
       }
-
-      .confirm-btn {
-        order: 1;
       }
     }
   }

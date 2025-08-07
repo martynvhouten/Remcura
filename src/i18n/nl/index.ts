@@ -1,4 +1,4 @@
-﻿import filters from './filters';
+﻿import filters from './filters.js';
 
 export default {
   // Filters
@@ -104,6 +104,69 @@ export default {
       searchButton: 'Zoeken',
       notificationPanel: 'Meldingen paneel',
     },
+    
+    // Start/Stop actions
+    start: 'Start',
+    stop: 'Stop',
+  },
+
+  // Cards
+  cards: {
+    examples: {
+      userProfile: {
+        title: 'Gebruikersprofiel',
+        subtitle: 'Bekijk gebruikersinformatie en instellingen'
+      },
+      systemStatus: {
+        title: 'Systeemstatus',
+        subtitle: 'Huidige systeemgezondheid en statistieken'
+      },
+      inventoryManagement: {
+        title: 'Voorraadbeheer',
+        subtitle: 'Beheer producten, voorraadniveaus en bestellingen'
+      },
+      quickScan: {
+        title: 'Snel scannen',
+        subtitle: 'Scan productbarcodes direct'
+      },
+      premiumFeature: {
+        title: 'Premium functie',
+        subtitle: 'Beschikbaar in premium abonnement'
+      },
+      newFeatureAvailable: {
+        title: 'Nieuwe functie beschikbaar',
+        subtitle: 'Bekijk onze nieuwste voorraadtracking functies'
+      },
+      dataSyncComplete: {
+        title: 'Data synchronisatie voltooid',
+        subtitle: 'Alle voorraadgegevens zijn gesynchroniseerd'
+      },
+      lowStockWarning: {
+        title: 'Lage voorraad waarschuwing'
+      },
+      syncFailed: {
+        title: 'Synchronisatie mislukt',
+        subtitle: 'Kan geen verbinding maken met voorraaddatabase'
+      }
+    },
+    inputs: {
+      standardInput: 'Standaard invoer',
+      placeholder: 'Voer hier tekst in'
+    }
+  },
+
+  // Services
+  services: {
+    supplierIntegration: {
+      supplierNotFound: 'Leverancier niet gevonden',
+      apiEndpointNotConfigured: 'API endpoint niet geconfigureerd',
+      practiceDetailsNotFound: 'Praktijk details niet gevonden',
+      oauth2ConfigurationIncomplete: 'OAuth2 configuratie onvolledig',
+      oauth2TokenRequestFailed: 'OAuth2 token aanvraag mislukt: {status}',
+      oauth2AuthenticationFailed: 'OAuth2 authenticatie mislukt: {error}',
+      unsupportedApiFormat: 'Niet ondersteund API formaat: {format}',
+      apiResponseError: 'API gaf terug {status}: {response}'
+    }
   },
 
   // Navigation
@@ -774,6 +837,7 @@ export default {
   // Counting System
   counting: {
     title: 'Voorraadtelling',
+    enterAmount: 'Aantal geteld',
     overview: 'Beheer je voorraadtellingsessies en volg voorraadnauwkeurigheid',
     sessionStatus: 'Sessie status',
     startSession: 'Tellingsessie starten',
@@ -800,6 +864,51 @@ export default {
     product: 'Product',
     variance: 'Variantie',
     approveSession: 'Sessie goedkeuren',
+    
+    // Method Selection
+    method: {
+      title: 'Kies je telmethode',
+      subtitle: 'Selecteer hoe je de voorraad wilt tellen',
+      scan: 'Barcode scannen',
+      scanDescription: 'Scan producten met je camera',
+      manual: 'Handmatige telling',
+      manualDescription: 'Tel producten handmatig in',
+      continue: 'Verder gaan',
+    },
+    
+    // Product Flow
+    productFlow: {
+      progressOf: '{current} van {total}',
+      currentStock: 'Huidige voorraad: {amount}',
+      enterCount: 'Voer geteld aantal in',
+      countPlaceholder: 'Aantal...',
+      confirm: 'Bevestigen',
+      skip: 'Overslaan',
+      next: 'Volgende',
+      previous: 'Vorige',
+      complete: 'Voltooien',
+      
+      // Status messages
+      counting: 'Aan het tellen...',
+      saved: 'Opgeslagen!',
+      error: 'Fout bij opslaan',
+      allComplete: 'Alle producten geteld!',
+      
+      // Validation
+      invalidAmount: 'Voer een geldig aantal in',
+      amountRequired: 'Aantal is verplicht',
+      mustBePositive: 'Aantal moet positief zijn',
+    },
+    
+    // Scanner specific
+    scanner: {
+      scanning: 'Aan het scannen...',
+      placeBarcode: 'Plaats barcode binnen het kader',
+      productFound: 'Product gevonden!',
+      productNotFound: 'Product niet gevonden',
+      tryAgain: 'Probeer opnieuw',
+      switchToManual: 'Schakel over naar handmatig',
+    },
   },
 
   // Batch Management
@@ -1333,6 +1442,13 @@ export default {
     deleteDialog: 'Orderlijst verwijderen',
     deleteConfirm: 'Weet je zeker dat je deze orderlijst wilt verwijderen?',
     duplicateName: 'Kopie van {name}',
+    // Messages
+    noUrgentItems: 'Geen urgente items om te bestellen',
+    ordersSent: '{successCount} bestellingen verzonden, {failedCount} gefaald',
+    processingError: 'Fout bij verwerken urgente items',
+    editComing: 'Bewerken functie komt binnenkort',
+    loadDataError: 'Fout bij laden data',
+    sendConfirm: 'Wil je de {count} bestellingen nu naar de leveranciers sturen?',
     // Dialog specific
     createDialog: 'Nieuwe orderlijst aanmaken',
     editDialog: 'Orderlijst bewerken',
@@ -1776,6 +1892,19 @@ export default {
       resetPassword: 'Wachtwoord resetten',
       activate: 'Activeren',
       deactivate: 'Deactiveren',
+      editingUser: 'Gebruiker bewerken: {userId}',
+      managingPermissions: 'Rechten beheren voor: {userId}',
+      resetPasswordConfirm: 'Weet je zeker dat je het wachtwoord wilt resetten voor {userId}?',
+      actionConfirm: 'Weet je zeker dat je {userId} wilt {action}?',
+    },
+
+    locationManagement: {
+      managingAccess: 'Toegang beheren voor locatie: {locationName}',
+      editing: 'Locatie bewerken: {locationName}',
+    },
+
+    permissionTemplates: {
+      showing: 'Template tonen: {templateKey}',
     },
 
     errors: {
@@ -4105,6 +4234,8 @@ export default {
 
     'dashboard.noRecentOrders': 'NoRecentOrders',
 
+    'dashboard.loading': 'Bezig met laden…',
+
     'dashboard.loadingWidgets': 'Laden...',
 
     'dashboard.errorLoadingWidget': 'ErrorLoadingWidget',
@@ -4216,6 +4347,10 @@ export default {
     'batch.batchManagement': 'BatchManagement',
 
     'dashboard.actions.refresh': 'Verversen',
+
+    'dashboard.actions.refreshed': 'Dashboard ververst',
+
+    'dashboard.widgetRefreshed': 'Widget {widget} ververst',
 
     'dashboard.actions.customize': 'Customize',
 
@@ -5049,6 +5184,11 @@ export default {
 
     'orders.table.actions': 'Acties',
 
-
+  // Mobile counting interface
+  mobileCountInterface: {
+    cameraAccessFailed: 'Camera toegang mislukt',
+    checkCameraPermissions: 'Controleer camera permissies',
+    productNotFound: 'Product niet gevonden'
+  }
 
 };

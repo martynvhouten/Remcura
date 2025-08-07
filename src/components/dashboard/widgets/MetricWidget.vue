@@ -1,5 +1,5 @@
 <template>
-  <div class="metric-widget">
+  <BaseDashboardWidget :hide-header="true">
     <!-- Single Metric Display -->
     <div v-if="isSingleMetric" class="single-metric">
       <q-icon 
@@ -59,13 +59,14 @@
         class="q-mt-sm"
       />
     </div>
-  </div>
+  </BaseDashboardWidget>
 </template>
 
 <script setup lang="ts">
 import { computed } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useFormatting } from '@/composables/useFormatting';
+import { BaseDashboardWidget } from '@/components/cards';
 
 interface MetricData {
   // Single metric mode
@@ -202,12 +203,7 @@ function formatValue(value: number | string | undefined): string {
 </script>
 
 <style lang="scss" scoped>
-.metric-widget {
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-}
+// Metric widget content styling (wrapper now handled by BaseDashboardWidget)
 
 .single-metric {
   text-align: center;

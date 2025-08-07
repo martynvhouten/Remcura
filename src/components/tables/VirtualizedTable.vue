@@ -1,5 +1,5 @@
 <template>
-  <div class="virtualized-table-container">
+  <div ref="tableContainer" class="virtualized-table-container" @wheel="handleWheelScroll">
     <!-- Table Header -->
     <div class="table-header">
       <div 
@@ -104,6 +104,7 @@ interface Emits {
 const emit = defineEmits<Emits>()
 
 // Refs
+const tableContainer = ref<HTMLElement>()
 const scrollContainer = ref<HTMLElement>()
 const scrollTop = ref(0)
 const sortColumn = ref<string>('')
@@ -172,6 +173,26 @@ const formatCellValue = (row: any, column: Column) => {
   return value ?? '-'
 }
 
+// Enable horizontal scroll with mouse wheel
+const handleWheelScroll = (event: WheelEvent) => {
+  if (!tableContainer.value) return;
+  
+  // Check if horizontal scroll is needed
+  const { scrollWidth, clientWidth, scrollLeft } = tableContainer.value;
+  const canScrollHorizontally = scrollWidth > clientWidth;
+  
+  // Only handle horizontal scroll when:
+  // 1. Shift key is held (explicit horizontal scroll intent)
+  // 2. Table needs horizontal scroll AND we're already scrolled horizontally
+  if (canScrollHorizontally && event.shiftKey && event.deltaY !== 0) {
+    event.preventDefault();
+    tableContainer.value.scrollLeft += event.deltaY;
+  }
+  
+  // For normal vertical scroll, let the browser handle it naturally
+  // This ensures smooth transitions between horizontal and vertical scrolling
+}
+
 // Performance optimization: Throttled scroll handling
 let scrollTimeout: NodeJS.Timeout | null = null
 const throttledHandleScroll = () => {
@@ -207,24 +228,26 @@ watch(() => props.rows.length, () => {
   position: relative;
   border: 1px solid #e0e0e0;
   border-radius: 8px;
-  overflow: hidden;
+  overflow-x: auto; // Enable horizontal scroll
+  overflow-y: hidden;
   background: white;
 }
 
 .table-header {
   display: flex;
-  background: #f5f5f5;
+  background: var(--brand-primary);
   border-bottom: 1px solid #e0e0e0;
   position: sticky;
   top: 0;
   z-index: 10;
+  min-width: max-content; // Ensure header matches body width
   
   .header-cell {
     padding: 12px 16px;
     font-weight: 600;
     font-size: 14px;
-    color: #424242;
-    border-right: 1px solid #e0e0e0;
+    color: white;
+    border-right: 1px solid rgba(255, 255, 255, 0.2);
     
     &:last-child {
       border-right: none;
@@ -243,12 +266,14 @@ watch(() => props.rows.length, () => {
 
 .table-body {
   overflow-y: auto;
+  overflow-x: hidden; // Body doesn't need horizontal scroll, parent handles it
   position: relative;
   
   .table-row {
     display: flex;
     border-bottom: 1px solid #f0f0f0;
     transition: background-color 0.2s ease;
+    min-width: max-content; // Ensure rows can grow with content
     
     &:hover {
       background-color: #fafafa;
@@ -296,12 +321,12 @@ body.body--dark .virtualized-table-container {
   border-color: #333;
   
   .table-header {
-    background: #2d2d2d;
+    background: var(--brand-primary);
     border-bottom-color: #333;
     
     .header-cell {
-      color: #e0e0e0;
-      border-right-color: #333;
+      color: white;
+      border-right-color: rgba(255, 255, 255, 0.2);
     }
   }
   

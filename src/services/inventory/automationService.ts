@@ -1,7 +1,6 @@
 import { supabase } from '@/boot/supabase';
 import { inventoryLogger } from '@/utils/logger';
-import { centralOrderService } from '@/services/orderOrchestration/centralOrderService';
-import type { AutoReorderConfig } from '@/services/orderOrchestration/centralOrderService';
+import { centralOrderService, type AutoReorderConfig } from '@/services/orderOrchestration/centralOrderService';
 
 export interface LowStockItem {
   id: string;

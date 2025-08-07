@@ -22,8 +22,8 @@
         <div class="example-group">
           <h4>Basic Example</h4>
           <BaseCard
-            title="User Profile"
-            subtitle="View user information and settings"
+            :title="$t('cards.examples.userProfile.title')"
+            :subtitle="$t('cards.examples.userProfile.subtitle')"
             icon="person"
             icon-color="primary"
           >
@@ -38,8 +38,8 @@
         <div class="example-group">
           <h4>With Actions</h4>
           <BaseCard
-            title="System Status"
-            subtitle="Current system health and metrics"
+            :title="$t('cards.examples.systemStatus.title')"
+            :subtitle="$t('cards.examples.systemStatus.subtitle')"
             icon="health_and_safety"
             icon-color="positive"
           >
@@ -92,8 +92,8 @@
         <div class="example-group">
           <h4>Navigation Card</h4>
           <InteractiveCard
-            title="Inventory Management"
-            subtitle="Manage products, stock levels, and orders"
+            :title="$t('cards.examples.inventoryManagement.title')"
+            :subtitle="$t('cards.examples.inventoryManagement.subtitle')"
             icon="inventory"
             icon-color="primary"
             show-click-indicator
@@ -108,8 +108,8 @@
         <div class="example-group">
           <h4>Action Card</h4>
           <InteractiveCard
-            title="Quick Scan"
-            subtitle="Scan product barcodes instantly"
+            :title="$t('cards.examples.quickScan.title')"
+            :subtitle="$t('cards.examples.quickScan.subtitle')"
             icon="qr_code_scanner"
             icon-color="positive"
             :loading="isScanning"
@@ -128,8 +128,8 @@
         <div class="example-group">
           <h4>Disabled State</h4>
           <InteractiveCard
-            title="Premium Feature"
-            subtitle="Available in premium plan"
+            :title="$t('cards.examples.premiumFeature.title')"
+            :subtitle="$t('cards.examples.premiumFeature.subtitle')"
             icon="star"
             icon-color="warning"
             disabled
@@ -171,8 +171,8 @@
           <h4>Info Alert</h4>
           <AlertCard
             severity="info"
-            title="New Feature Available"
-            subtitle="Check out our latest inventory tracking features"
+            :title="$t('cards.examples.newFeatureAvailable.title')"
+            :subtitle="$t('cards.examples.newFeatureAvailable.subtitle')"
           >
             <div class="example-content">
               <p>We've added advanced filtering and batch operations to help you manage inventory more efficiently.</p>
@@ -188,8 +188,8 @@
           <h4>Success Alert</h4>
           <AlertCard
             severity="success"
-            title="Data Sync Complete"
-            subtitle="All inventory data has been synchronized"
+            :title="$t('cards.examples.dataSyncComplete.title')"
+            :subtitle="$t('cards.examples.dataSyncComplete.subtitle')"
             dismissible
             @dismiss="handleDismiss('success')"
           >
@@ -203,7 +203,7 @@
           <h4>Warning Alert</h4>
           <AlertCard
             severity="warning"
-            title="Low Stock Warning"
+            :title="$t('cards.examples.lowStockWarning.title')"
             subtitle="12 products are below minimum levels"
           >
             <div class="example-content">
@@ -226,8 +226,8 @@
           <h4>Error Alert</h4>
           <AlertCard
             severity="error"
-            title="Sync Failed"
-            subtitle="Unable to connect to inventory database"
+            :title="$t('cards.examples.syncFailed.title')"
+            :subtitle="$t('cards.examples.syncFailed.subtitle')"
             dismissible
             @dismiss="handleDismiss('error')"
           >
@@ -270,9 +270,9 @@
           <div class="field-demo">
             <q-input
               v-model="demoText"
-              label="Standard Input"
+              :label="$t('cards.inputs.standardInput')"
               outlined
-              placeholder="Enter text here"
+              :placeholder="$t('cards.inputs.placeholder')"
               style="margin-bottom: 16px;"
             />
             <q-select

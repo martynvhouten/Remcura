@@ -109,7 +109,7 @@
           :key="widget.id"
           :class="getWidgetClass(widget.size)"
         >
-          <platform-widget
+          <DynamicPlatformWidget
             :widget="widget"
             @refresh="refreshWidget"
             @configure="configureWidget"
@@ -140,7 +140,7 @@ import { useI18n } from 'vue-i18n';
 import { useQuasar } from 'quasar';
 import { platformDashboardService, type PlatformDashboardData } from '@/services/dashboard/platform-dashboard';
 import { dashboardLogger } from '@/utils/logger';
-import PlatformWidget from '@/components/platform/PlatformWidget.vue';
+import DynamicPlatformWidget from '@/components/platform/DynamicPlatformWidget.vue';
 import PageLayout from '@/components/PageLayout.vue';
 import PageTitle from '@/components/PageTitle.vue';
 

@@ -11,6 +11,13 @@ import {
   type BatchMovement,
 } from '@/types/inventory';
 import { ServiceErrorHandler } from '@/utils/service-error-handler';
+import { 
+  calculateBatchUrgency, 
+  sortBatchesFIFO, 
+  filterBatchesByUrgency,
+  validateBatchData,
+  areBatchNumbersSimilar
+} from '@/utils/batch-helpers';
 
 export const useBatchStore = defineStore('batch', () => {
   // State
@@ -54,6 +61,44 @@ export const useBatchStore = defineStore('batch', () => {
       const unitCost = batch.unit_cost || 0;
       return total + (batch.current_quantity * unitCost);
     }, 0);
+  });
+
+  // Enhanced getters using batch helpers
+  const batchesSortedByFIFO = computed(() => {
+    return sortBatchesFIFO(batches.value);
+  });
+
+  const criticalBatches = computed(() => {
+    return filterBatchesByUrgency(batches.value, ['critical', 'expired']);
+  });
+
+  const warningBatches = computed(() => {
+    return filterBatchesByUrgency(batches.value, ['warning', 'high']);
+  });
+
+  const batchesWithUrgency = computed(() => {
+    return batches.value.map(batch => ({
+      ...batch,
+      urgencyInfo: calculateBatchUrgency(batch.expiry_date)
+    }));
+  });
+
+  const batchesByUrgencyLevel = computed(() => {
+    const grouped = {
+      expired: [] as ProductBatchWithDetails[],
+      critical: [] as ProductBatchWithDetails[],
+      high: [] as ProductBatchWithDetails[],
+      warning: [] as ProductBatchWithDetails[],
+      low: [] as ProductBatchWithDetails[],
+      normal: [] as ProductBatchWithDetails[]
+    };
+
+    batches.value.forEach(batch => {
+      const urgency = calculateBatchUrgency(batch.expiry_date);
+      grouped[urgency.level].push(batch);
+    });
+
+    return grouped;
   });
 
   // Actions
@@ -348,6 +393,139 @@ export const useBatchStore = defineStore('batch', () => {
     }
   };
 
+  // New enhanced actions
+  const searchBatches = async (searchTerm: string, practiceId: string) => {
+    try {
+      loading.value = true;
+      error.value = null;
+
+      let query = supabase
+        .from('product_batches')
+        .select(`
+          *,
+          product:products!inner(id, name, sku, category, brand, unit),
+          location:practice_locations!inner(id, name, code, location_type),
+          supplier:suppliers(id, name, code)
+        `)
+        .eq('practice_id', practiceId);
+
+      // Search in batch number, product name, or SKU
+      query = query.or(`batch_number.ilike.%${searchTerm}%,supplier_batch_number.ilike.%${searchTerm}%,product.name.ilike.%${searchTerm}%,product.sku.ilike.%${searchTerm}%`);
+
+      const { data, error: searchError } = await query
+        .eq('status', 'active')
+        .order('expiry_date', { ascending: true })
+        .limit(50);
+
+      if (searchError) throw searchError;
+
+      return data || [];
+    } catch (err) {
+      const handledError = ServiceErrorHandler.handle(err, {
+        service: 'BatchStore',
+        operation: 'searchBatches'
+      });
+      error.value = handledError.message;
+      throw handledError;
+    } finally {
+      loading.value = false;
+    }
+  };
+
+  const findSimilarBatches = (batchNumber: string, productId: string): ProductBatchWithDetails[] => {
+    return batches.value.filter(batch => 
+      batch.product_id === productId && 
+      areBatchNumbersSimilar(batch.batch_number, batchNumber)
+    );
+  };
+
+  const validateNewBatch = (batchData: CreateBatchRequest) => {
+    const validationResult = validateBatchData({
+      batchNumber: batchData.batch_number,
+      expiryDate: batchData.expiry_date,
+      quantity: batchData.initial_quantity
+    });
+
+    // Check for duplicate batch numbers
+    const existingBatch = batches.value.find(batch => 
+      batch.product_id === batchData.product_id &&
+      batch.batch_number.toLowerCase() === batchData.batch_number.toLowerCase()
+    );
+
+    if (existingBatch) {
+      validationResult.errors.push('Batchnummer bestaat al voor dit product');
+      validationResult.isValid = false;
+    }
+
+    // Check for similar batch numbers
+    const similarBatches = findSimilarBatches(batchData.batch_number, batchData.product_id);
+    if (similarBatches.length > 0) {
+      validationResult.warnings.push(`Vergelijkbare batchnummers gevonden: ${similarBatches.map(b => b.batch_number).join(', ')}`);
+    }
+
+    return validationResult;
+  };
+
+  const getFifoBatchSuggestion = (productId: string, locationId: string, quantityNeeded: number) => {
+    const productBatches = batches.value
+      .filter(batch => 
+        batch.product_id === productId && 
+        batch.location_id === locationId &&
+        batch.status === 'active' &&
+        batch.current_quantity > 0
+      );
+
+    const sortedBatches = sortBatchesFIFO(productBatches);
+    const suggestion = [];
+    let remainingQuantity = quantityNeeded;
+
+    for (const batch of sortedBatches) {
+      if (remainingQuantity <= 0) break;
+
+      const quantityFromBatch = Math.min(batch.current_quantity, remainingQuantity);
+      suggestion.push({
+        batch,
+        quantity: quantityFromBatch,
+        urgencyInfo: calculateBatchUrgency(batch.expiry_date)
+      });
+
+      remainingQuantity -= quantityFromBatch;
+    }
+
+    return {
+      suggestion,
+      canFulfill: remainingQuantity <= 0,
+      shortfall: Math.max(0, remainingQuantity)
+    };
+  };
+
+  const getBatchHistory = async (batchId: string) => {
+    try {
+      loading.value = true;
+      error.value = null;
+
+      // This would require a batch_movements or audit_log table
+      const { data, error: historyError } = await supabase
+        .from('batch_movements')
+        .select('*')
+        .eq('batch_id', batchId)
+        .order('created_at', { ascending: false });
+
+      if (historyError) throw historyError;
+
+      return data || [];
+    } catch (err) {
+      const handledError = ServiceErrorHandler.handle(err, {
+        service: 'BatchStore',
+        operation: 'getBatchHistory'
+      });
+      error.value = handledError.message;
+      throw handledError;
+    } finally {
+      loading.value = false;
+    }
+  };
+
   return {
     // State
     batches,
@@ -363,6 +541,11 @@ export const useBatchStore = defineStore('batch', () => {
     expiringBatchesCount,
     lowStockBatches,
     totalValue,
+    batchesSortedByFIFO,
+    criticalBatches,
+    warningBatches,
+    batchesWithUrgency,
+    batchesByUrgencyLevel,
 
     // Actions
     fetchBatches,
@@ -373,5 +556,10 @@ export const useBatchStore = defineStore('batch', () => {
     useBatch,
     deleteBatch,
     getBatch,
+    searchBatches,
+    findSimilarBatches,
+    validateNewBatch,
+    getFifoBatchSuggestion,
+    getBatchHistory,
   };
 });

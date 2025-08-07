@@ -1,5 +1,5 @@
 <template>
-  <div class="system-widget">
+  <BaseDashboardWidget :hide-header="true">
     <!-- Version Information -->
     <template v-if="isVersionInfo">
       <div class="version-section">
@@ -184,12 +184,13 @@
         </div>
       </div>
     </template>
-  </div>
+  </BaseDashboardWidget>
 </template>
 
 <script setup lang="ts">
 import { computed } from 'vue';
 import { useI18n } from 'vue-i18n';
+import { BaseDashboardWidget } from '@/components/cards';
 
 const { t } = useI18n();
 
@@ -298,9 +299,7 @@ function formatValue(value: any): string {
 </script>
 
 <style lang="scss" scoped>
-.system-widget {
-  height: 100%;
-}
+// Platform system widget content styling (wrapper now handled by BaseDashboardWidget)
 
 // Version Info Styles
 .version-section {

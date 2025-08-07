@@ -1,5 +1,5 @@
 <template>
-  <div class="unified-table-container medical-table">
+  <div ref="tableContainer" class="unified-table-container medical-table">
     <q-table
       v-bind="$attrs"
       :rows="rows"
@@ -36,7 +36,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref, watch } from 'vue';
+import { computed, ref, watch, onMounted, onUnmounted } from 'vue';
 import { useI18n } from 'vue-i18n';
 
 // Types
@@ -91,6 +91,9 @@ const emit = defineEmits<{
 
 const { t } = useI18n();
 
+// Template ref for the table container
+const tableContainer = ref<HTMLElement>();
+
 // Internal pagination state
 const internalPagination = ref<TablePagination>({ ...props.pagination });
 
@@ -127,19 +130,56 @@ const onTableRequest = (requestProps: any) => {
   internalPagination.value = { ...pagination };
   emit('request', requestProps);
 };
+
+// Enable horizontal scroll with mouse wheel
+const handleWheelScroll = (event: WheelEvent) => {
+  if (!tableContainer.value) return;
+  
+  // Check if horizontal scroll is needed
+  const { scrollWidth, clientWidth, scrollLeft } = tableContainer.value;
+  const canScrollHorizontally = scrollWidth > clientWidth;
+  
+  // Only handle horizontal scroll when:
+  // 1. Shift key is held (explicit horizontal scroll intent)
+  // 2. Table needs horizontal scroll AND we're already scrolled horizontally
+  if (canScrollHorizontally && event.shiftKey && event.deltaY !== 0) {
+    event.preventDefault();
+    tableContainer.value.scrollLeft += event.deltaY;
+  }
+  
+  // For normal vertical scroll, let the browser handle it naturally
+  // This ensures smooth transitions between horizontal and vertical scrolling
+};
+
+// Lifecycle hooks
+onMounted(() => {
+  if (tableContainer.value) {
+    // Use passive: true for better performance unless we need to preventDefault
+    tableContainer.value.addEventListener('wheel', handleWheelScroll, { passive: false });
+  }
+});
+
+onUnmounted(() => {
+  if (tableContainer.value) {
+    tableContainer.value.removeEventListener('wheel', handleWheelScroll);
+  }
+});
 </script>
 
 <style lang="scss" scoped>
 .unified-table-container {
+  overflow-x: auto; // Enable horizontal scroll
+  overflow-y: visible;
+  
   .unified-table {
     border-radius: var(--radius-lg);
-    overflow: hidden;
     box-shadow: var(--shadow-sm);
     border: 1px solid var(--border-primary);
+    min-width: 100%; // Ensure table can grow beyond container
 
     // Enhanced headers with consistent styling
     :deep(.unified-table-header) {
-      background: linear-gradient(135deg, #1e3a8a, #1e40af) !important; // Donkerdere header
+      background: var(--brand-primary) !important; // Consistent hoofdblauwe kleur
       color: white !important;
       font-family: var(--font-family-primary);
       font-weight: var(--font-weight-bold);
@@ -160,7 +200,7 @@ const onTableRequest = (requestProps: any) => {
         transition: background var(--transition-base);
         
         &:hover {
-          background: linear-gradient(135deg, #1e40af, #2563eb) !important;
+          background: var(--brand-primary-dark) !important;
         }
       }
     }
@@ -180,9 +220,8 @@ const onTableRequest = (requestProps: any) => {
       }
 
       &:hover {
-        background: rgba(30, 58, 138, 0.05) !important; // Subtle blue hover
-        transform: translateX(2px);
-        box-shadow: 4px 0 12px rgba(30, 58, 138, 0.1);
+        background: rgba(30, 58, 138, 0.05) !important; // Subtle blue hover using brand primary
+        box-shadow: 0 2px 8px rgba(30, 58, 138, 0.08);
       }
     }
 
@@ -242,11 +281,11 @@ body.body--dark .unified-table-container {
     border-color: var(--border-primary);
 
     :deep(.unified-table-header) {
-      background: linear-gradient(135deg, #1e3a8a, #1e40af) !important;
+      background: var(--brand-primary) !important;
       color: white !important;
       
       &.sortable:hover {
-        background: linear-gradient(135deg, #1e40af, #2563eb) !important;
+        background: var(--brand-primary-dark) !important;
       }
     }
 
@@ -263,6 +302,7 @@ body.body--dark .unified-table-container {
 
       &:hover {
         background: rgba(30, 58, 138, 0.08) !important;
+        box-shadow: 0 2px 8px rgba(30, 58, 138, 0.08);
       }
     }
 

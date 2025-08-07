@@ -1,5 +1,6 @@
 import { supabase } from '@/boot/supabase';
 import { orderLogger } from '@/utils/logger';
+import { t } from '@/utils/i18n-service';
 import type { SupplierOrder, OrderSendingResult } from '@/stores/orderLists/orderLists-supplier-splitting';
 
 export interface APIConfig {
@@ -76,12 +77,12 @@ export class APIService {
         .single();
 
       if (supplierError || !supplier) {
-        throw new Error('Supplier not found');
+        throw new Error(t('services.supplierIntegration.supplierNotFound'));
       }
 
       const apiConfig = supplier.integration_config as APIConfig;
       if (!apiConfig?.api_endpoint) {
-        throw new Error('API endpoint not configured');
+        throw new Error(t('services.supplierIntegration.apiEndpointNotConfigured'));
       }
 
       // Get practice details
@@ -92,7 +93,7 @@ export class APIService {
         .single();
 
       if (practiceError || !practice) {
-        throw new Error('Practice details not found');
+        throw new Error(t('services.supplierIntegration.practiceDetailsNotFound'));
       }
 
       // Build API payload
@@ -229,7 +230,7 @@ export class APIService {
    */
   private async getOAuth2Token(config: APIConfig): Promise<string> {
     if (!config.oauth2_config?.client_id || !config.oauth2_config?.client_secret) {
-      throw new Error('OAuth2 configuration incomplete');
+      throw new Error(t('services.supplierIntegration.oauth2ConfigurationIncomplete'));
     }
 
     const cacheKey = `${config.oauth2_config.client_id}_${config.oauth2_config.token_endpoint}`;
@@ -257,7 +258,7 @@ export class APIService {
       });
 
       if (!tokenResponse.ok) {
-        throw new Error(`OAuth2 token request failed: ${tokenResponse.status}`);
+        throw new Error(t('services.supplierIntegration.oauth2TokenRequestFailed', { status: tokenResponse.status }));
       }
 
       const tokenData = await tokenResponse.json();
@@ -273,7 +274,7 @@ export class APIService {
 
     } catch (error: any) {
       orderLogger.error('OAuth2 token acquisition failed:', error);
-      throw new Error(`OAuth2 authentication failed: ${error.message}`);
+      throw new Error(t('services.supplierIntegration.oauth2AuthenticationFailed', { error: error.message }));
     }
   }
 
@@ -308,7 +309,7 @@ export class APIService {
         }
 
         default:
-          throw new Error(`Unsupported API format: ${config.api_format}`);
+          throw new Error(t('services.supplierIntegration.unsupportedApiFormat', { format: config.api_format }));
       }
 
       const controller = new AbortController();
@@ -333,7 +334,7 @@ export class APIService {
       }
 
       if (!response.ok) {
-        throw new Error(`API returned ${response.status}: ${responseText}`);
+        throw new Error(t('services.supplierIntegration.apiResponseError', { status: response.status, response: responseText }));
       }
 
       orderLogger.info(`API order sent successfully, response: ${response.status}`);

@@ -347,7 +347,7 @@
       transition-show="slide-up"
       transition-hide="slide-down"
     >
-      <MobileStockCountingInterface
+      <MobileCountingInterface
         :practice-id="authStore.clinicId"
         @close="showMobileCountingDialog = false"
       />
@@ -378,7 +378,7 @@ import PageTitle from '@/components/PageTitle.vue';
 import { BaseCard } from '@/components/cards';
 import FilterPanel from '@/components/filters/FilterPanel.vue';
 import SimpleOrderListCard from '@/components/orderLists/SimpleOrderListCard.vue';
-import MobileStockCountingInterface from '@/components/inventory/MobileStockCountingInterface.vue';
+import MobileCountingInterface from '@/components/inventory/MobileCountingInterface.vue';
 import OrderListDialog from '@/components/products/OrderListDialog.vue';
 import type { OrderListWithItems } from '@/types/stores';
 import type { OrderAdvice } from '@/stores/orderLists/orderLists-minmax';
@@ -655,7 +655,7 @@ const orderAllUrgentItems = async () => {
     if (urgentItems.length === 0) {
       $q.notify({
         type: 'info',
-        message: 'Geen urgente items om te bestellen',
+        message: $t('orderLists.noUrgentItems'),
         timeout: 2000,
       });
       return;
@@ -666,7 +666,7 @@ const orderAllUrgentItems = async () => {
 
     $q.notify({
       type: 'positive',
-      message: `${splitResult.supplier_orders.length} bestellingen aangemaakt!`,
+      message: $t('orderlists.positive'),
       caption: `${urgentItems.length} urgente items verwerkt`,
       timeout: 3000,
     });
@@ -677,7 +677,7 @@ const orderAllUrgentItems = async () => {
     if (splitResult.supplier_orders.length > 0) {
       $q.dialog({
         title: 'Bestellingen verzenden?',
-        message: `Wil je de ${splitResult.supplier_orders.length} bestellingen nu naar de leveranciers sturen?`,
+        message: $t('orderLists.sendConfirm', { count: splitResult.supplier_orders.length }),
         ok: {
           label: 'Ja, verzenden',
           color: 'primary',
@@ -698,14 +698,14 @@ const orderAllUrgentItems = async () => {
 
       $q.notify({
             type: successCount > 0 ? 'positive' : 'negative',
-            message: `${successCount} bestellingen verzonden, ${failedCount} gefaald`,
+            message: $t('orderLists.ordersSent', { successCount, failedCount }),
             timeout: 3000,
       });
 
     } catch (error) {
       $q.notify({
         type: 'negative',
-            message: 'Fout bij verzenden bestellingen',
+            message: $t('orderLists.sendError'),
             caption: error instanceof Error ? error.message : 'Onbekende fout',
           });
         }
@@ -715,7 +715,7 @@ const orderAllUrgentItems = async () => {
   } catch (error) {
     $q.notify({
       type: 'negative',
-      message: 'Fout bij verwerken urgente items',
+      message: $t('orderLists.processingError'),
       caption: error instanceof Error ? error.message : 'Onbekende fout',
     });
   } finally {
@@ -731,7 +731,7 @@ const editOrderList = (orderList: OrderListWithItems) => {
   // Implementation for editing order list
   $q.notify({
     type: 'info',
-    message: 'Bewerken functie komt binnenkort',
+    message: $t('orderLists.editComing'),
     timeout: 2000,
   });
 };
@@ -742,7 +742,7 @@ const duplicateOrderList = async (orderList: OrderListWithItems) => {
     
       $q.notify({
         type: 'positive',
-      message: 'Lijst gedupliceerd!',
+      message: $t('orderLists.duplicated'),
       caption: `Nieuwe lijst: ${newList.name}`,
       timeout: 3000,
       });
@@ -750,7 +750,7 @@ const duplicateOrderList = async (orderList: OrderListWithItems) => {
     } catch (error) {
       $q.notify({
         type: 'negative',
-      message: 'Fout bij dupliceren lijst',
+      message: $t('orderLists.duplicateError'),
       caption: error instanceof Error ? error.message : 'Onbekende fout',
       });
     }
@@ -759,7 +759,7 @@ const duplicateOrderList = async (orderList: OrderListWithItems) => {
 const deleteOrderList = async (orderList: OrderListWithItems) => {
   $q.dialog({
     title: 'Lijst verwijderen',
-    message: `Weet je zeker dat je "${orderList.name}" wilt verwijderen?`,
+    message: $t('orderLists.deleteConfirmText', { name: orderList.name }),
     ok: {
       label: 'Verwijderen',
       color: 'negative',
@@ -775,14 +775,14 @@ const deleteOrderList = async (orderList: OrderListWithItems) => {
       
       $q.notify({
         type: 'positive',
-        message: 'Lijst verwijderd',
+        message: $t('orderLists.deleted'),
         timeout: 2000,
       });
 
     } catch (error) {
       $q.notify({
         type: 'negative',
-        message: 'Fout bij verwijderen lijst',
+        message: $t('orderLists.deleteError'),
         caption: error instanceof Error ? error.message : 'Onbekende fout',
       });
     }
@@ -792,7 +792,7 @@ const deleteOrderList = async (orderList: OrderListWithItems) => {
 const handleOrderCreated = (orderList: OrderListWithItems) => {
         $q.notify({
           type: 'positive',
-    message: 'Bestelling aangemaakt!',
+    message: $t('orderLists.orderCreated'),
     caption: `Vanuit lijst: ${orderList.name}`,
           timeout: 3000,
     });
@@ -801,7 +801,7 @@ const handleOrderCreated = (orderList: OrderListWithItems) => {
 const handleListUpdated = (orderList: OrderListWithItems) => {
           $q.notify({
             type: 'positive',
-    message: 'Lijst bijgewerkt!',
+    message: $t('orderLists.updated'),
     timeout: 2000,
     });
   };
@@ -815,7 +815,7 @@ const handleOrderListCreated = () => {
   
   $q.notify({
     type: 'positive',
-    message: 'Bestellijst aangemaakt!',
+    message: $t('orderLists.created'),
     timeout: 2000,
   });
   };
@@ -835,7 +835,7 @@ const handleOrderListCreated = () => {
     } catch (error) {
       $q.notify({
         type: 'negative',
-      message: 'Fout bij laden data',
+      message: $t('orderLists.loadDataError'),
       caption: error instanceof Error ? error.message : 'Onbekende fout',
       });
   } finally {
@@ -857,7 +857,7 @@ const handleOrderListCreated = () => {
         } catch (error) {
           $q.notify({
             type: 'negative',
-          message: 'Fout bij laden data',
+          message: $t('orderLists.loadDataError'),
           caption: error instanceof Error ? error.message : 'Onbekende fout',
           });
       } finally {

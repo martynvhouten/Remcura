@@ -1,5 +1,5 @@
 <template>
-  <div class="table-widget">
+  <BaseDashboardWidget :hide-header="true">
     <q-table
       :rows="data.rows || []"
       :columns="columns"
@@ -16,12 +16,13 @@
         </div>
       </template>
     </q-table>
-  </div>
+  </BaseDashboardWidget>
 </template>
 
 <script setup lang="ts">
 import { computed, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
+import { BaseDashboardWidget } from '@/components/cards';
 
 const { t } = useI18n();
 
@@ -64,11 +65,9 @@ const pagination = ref({
 </script>
 
 <style lang="scss" scoped>
-.table-widget {
-  height: 100%;
-  
-      .platform-table {
-      /* Table styling now handled by global medical-table class */
-    }
+// Platform table widget content styling (wrapper now handled by BaseDashboardWidget)
+
+.platform-table {
+  /* Table styling now handled by global medical-table class */
 }
 </style>

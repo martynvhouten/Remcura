@@ -7,17 +7,30 @@
         icon="qr_code_scanner"
       >
         <template #actions>
+          <!-- View Mode Toggle -->
+          <q-btn-toggle
+            v-model="viewMode"
+            :options="viewModeOptions"
+            outline
+            toggle-color="primary"
+            color="grey-6"
+            size="sm"
+            class="view-mode-toggle"
+          />
+          
           <q-btn
             flat
             round
             icon="refresh"
             size="md"
-            @click="loadBatches"
+            @click="refreshData"
+            :loading="refreshing"
             class="app-btn-refresh"
           >
             <q-tooltip>{{ $t('common.refresh') }}</q-tooltip>
           </q-btn>
           <q-btn
+            v-if="viewMode === 'full'"
             icon="add"
             :label="$t('batch.addBatch')"
             @click="showAddBatchDialog = true"
@@ -30,8 +43,8 @@
     </template>
 
     <div class="batch-management-page">
-      <!-- Dashboard Cards -->
-      <div class="row q-mb-lg stats-cards-container">
+      <!-- Dashboard Cards - Full View -->
+      <div v-if="viewMode === 'full'" class="row q-mb-lg stats-cards-container">
         <!-- Total Batches Card -->
         <div class="col-12 col-sm-6 col-md-3 stats-card-col">
           <BaseCard
@@ -85,8 +98,37 @@
         </div>
       </div>
 
+      <!-- Dashboard Cards - Lite View -->
+      <div v-else class="row q-mb-lg stats-cards-container-lite">
+        <!-- Essential Info Only -->
+        <div class="col-12 col-sm-6 stats-card-col">
+          <BaseCard
+            :title="$t('batch.totalBatches')"
+            icon="inventory"
+            icon-color="primary"
+          >
+            <div class="stat-display">
+              <div class="stat-value">{{ totalBatches }}</div>
+            </div>
+          </BaseCard>
+        </div>
+
+        <!-- Expiring Soon Card -->
+        <div class="col-12 col-sm-6 stats-card-col">
+          <BaseCard
+            :title="$t('batch.expiringSoon')"
+            icon="warning"
+            :icon-color="expiringBatches > 0 ? 'warning' : 'info'"
+          >
+            <div class="stat-display">
+              <div class="stat-value">{{ expiringBatches }}</div>
+            </div>
+          </BaseCard>
+        </div>
+      </div>
+
       <!-- Quick Actions -->
-      <div class="q-mb-lg">
+      <div v-if="viewMode === 'full'" class="q-mb-lg">
         <div class="text-h6 q-mb-md text-grey-8">
           <q-icon name="flash_on" class="q-mr-sm" />
           {{ $t('batch.quickActions') }}
@@ -133,6 +175,28 @@
         </div>
       </div>
 
+      <!-- Quick Actions - Lite View -->
+      <div v-else class="q-mb-lg lite-actions">
+        <div class="row q-gutter-sm">
+          <q-btn
+            icon="qr_code_scanner"
+            :label="$t('batch.scanBatch')"
+            @click="openBarcodeScanner"
+            unelevated
+            color="primary"
+            class="lite-action-btn"
+          />
+          <q-btn
+            icon="warning"
+            :label="$t('batch.viewExpiring')"
+            @click="filterExpiring"
+            unelevated
+            :color="showExpiringOnly ? 'warning' : 'grey-6'"
+            class="lite-action-btn"
+          />
+        </div>
+      </div>
+
       <!-- Expiry Alerts -->
       <div v-if="criticalBatches.length > 0" class="q-mb-lg">
         <q-banner class="bg-red text-white" rounded dense>
@@ -159,8 +223,8 @@
         </q-banner>
       </div>
 
-      <!-- Main Content Tabs -->
-      <BaseCard>
+      <!-- Main Content Tabs - Full View -->
+      <BaseCard v-if="viewMode === 'full'">
         <q-tabs
           v-model="activeTab"
           dense
@@ -191,6 +255,7 @@
           <q-tab-panel name="overview" class="q-pa-none">
             <BatchOverview
               ref="batchOverviewRef"
+              :view-mode="viewMode"
               @batch-selected="onBatchSelected"
               @batch-used="onBatchUsed"
             />
@@ -215,6 +280,50 @@
           <q-tab-panel name="reports" class="q-pa-md">
             <div class="text-h6 q-mb-md">{{ $t('batch.batchReports') }}</div>
             <BatchReports />
+          </q-tab-panel>
+        </q-tab-panels>
+      </BaseCard>
+
+      <!-- Simplified Content - Lite View -->
+      <BaseCard v-else class="lite-content">
+        <q-tabs
+          v-model="activeTab"
+          dense
+          class="text-grey"
+          active-color="primary"
+          indicator-color="primary"
+          align="left"
+          narrow-indicator
+        >
+          <q-tab name="overview" :label="$t('batch.overview')" icon="list" />
+          <q-tab
+            name="expiring"
+            :label="$t('batch.expiring')"
+            icon="schedule"
+          />
+        </q-tabs>
+
+        <q-separator />
+
+        <q-tab-panels v-model="activeTab" animated>
+          <!-- Overview Tab - Lite -->
+          <q-tab-panel name="overview" class="q-pa-none">
+            <BatchOverview
+              ref="batchOverviewRef"
+              :view-mode="viewMode"
+              @batch-selected="onBatchSelected"
+              @batch-used="onBatchUsed"
+            />
+          </q-tab-panel>
+
+          <!-- Expiring Tab - Lite -->
+          <q-tab-panel name="expiring" class="q-pa-md">
+            <div class="text-subtitle1 q-mb-md">{{ $t('batch.expiringBatches') }}</div>
+            <ExpiringBatchesList
+              :batches="batchStore.expiringBatches"
+              :view-mode="viewMode"
+              @batch-selected="onBatchSelected"
+            />
           </q-tab-panel>
         </q-tab-panels>
       </BaseCard>
@@ -276,12 +385,13 @@
 </template>
 
 <script setup lang="ts">
-  import { ref, computed, onMounted, getCurrentInstance, defineAsyncComponent } from 'vue';
+  import { ref, computed, onMounted, getCurrentInstance, defineAsyncComponent, watch } from 'vue';
   import { useI18n } from 'vue-i18n';
   import { useQuasar } from 'quasar';
   import { useBatchStore } from 'src/stores/batch';
   import { useInventoryStore } from 'src/stores/inventory';
   import { useAuthStore } from 'src/stores/auth';
+  import { useClinicStore } from 'src/stores/clinic';
   import PageLayout from 'src/components/PageLayout.vue';
   import PageTitle from 'src/components/PageTitle.vue';
   import { BaseCard, InteractiveCard } from 'src/components/cards';
@@ -303,6 +413,7 @@
   const batchStore = useBatchStore();
   const inventoryStore = useInventoryStore();
   const authStore = useAuthStore();
+  const clinicStore = useClinicStore();
   const { formatDate } = useFormatting();
 
   const getStatusColor = (status: string) => {
@@ -325,6 +436,13 @@
   const selectedBatch = ref<ProductBatchWithDetails | null>(null);
   const refreshing = ref(false);
   const batchOverviewRef = ref();
+  
+  // View mode state
+  const viewMode = ref<'lite' | 'full'>('full');
+  const viewModeOptions = computed(() => [
+    { label: t('batch.viewMode.lite'), value: 'lite', icon: 'view_compact' },
+    { label: t('batch.viewMode.full'), value: 'full', icon: 'view_module' }
+  ]);
 
   // Computed
   const totalBatches = computed(() => batchStore.batches.length);
@@ -363,6 +481,32 @@
       style: 'currency',
       currency: currency || 'EUR',
     }).format(amount);
+  };
+
+  const initializeViewMode = () => {
+    // Check for saved preference first
+    const savedViewMode = localStorage.getItem('remcura_batch_view_mode');
+    if (savedViewMode && ['lite', 'full'].includes(savedViewMode)) {
+      viewMode.value = savedViewMode as 'lite' | 'full';
+      return;
+    }
+
+    // Default based on user role or practice settings
+    // For now, default to 'full' - can be enhanced with role-based logic
+    viewMode.value = 'full';
+    
+    // Save the initial preference
+    localStorage.setItem('remcura_batch_view_mode', viewMode.value);
+  };
+
+  const onViewModeChange = () => {
+    // Save preference when changed
+    localStorage.setItem('remcura_batch_view_mode', viewMode.value);
+    
+    // Reset active tab for lite view if on advanced tabs
+    if (viewMode.value === 'lite' && ['fifo', 'reports'].includes(activeTab.value)) {
+      activeTab.value = 'overview';
+    }
   };
 
   const refreshData = async () => {
@@ -499,8 +643,12 @@
     // FIFO suggestion generated successfully
   };
 
+  // Watchers
+  watch(viewMode, onViewModeChange);
+
   // Lifecycle
   onMounted(() => {
+    initializeViewMode();
     const practiceId = authStore.clinicId;
     if (practiceId) {
       refreshData();
@@ -548,6 +696,46 @@
       @media (max-width: 640px) {
         padding: 6px;
       }
+    }
+  }
+
+  .stats-cards-container-lite {
+    gap: 0;
+
+    .stats-card-col {
+      padding: 8px;
+
+      @media (max-width: 640px) {
+        padding: 6px;
+      }
+    }
+  }
+
+  .lite-actions {
+    .lite-action-btn {
+      min-width: 140px;
+      
+      @media (max-width: 640px) {
+        min-width: 120px;
+        font-size: 0.875rem;
+      }
+    }
+  }
+
+  .lite-content {
+    .q-tab-panels {
+      .q-tab-panel {
+        padding: 12px;
+      }
+    }
+  }
+
+  .view-mode-toggle {
+    margin-right: 8px;
+    
+    @media (max-width: 768px) {
+      margin-right: 0;
+      margin-bottom: 8px;
     }
   }
 

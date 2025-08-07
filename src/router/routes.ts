@@ -94,6 +94,15 @@ const routes: RouteRecordRaw[] = [
             }
           },
           {
+            path: 'mobile-counting-test',
+            name: 'mobile-counting-test',
+            component: () => import('pages/inventory/MobileCountingTestPage.vue'),
+            meta: {
+              requiresRole: ['owner', 'manager', 'assistant', 'logistics', 'platform_owner'],
+              title: 'Mobile Counting Test'
+            }
+          },
+          {
             path: 'movements',
             name: 'inventory-movements',
             component: () => import('pages/inventory/MovementsPage.vue'),

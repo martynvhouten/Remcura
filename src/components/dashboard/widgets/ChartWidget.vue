@@ -1,5 +1,5 @@
 <template>
-  <div class="chart-widget">
+  <BaseDashboardWidget :hide-header="true">
     <!-- Simple Bar Chart -->
     <div v-if="chartType === 'bar'" class="bar-chart">
       <div v-if="!chartData.length" class="empty-chart">
@@ -100,11 +100,12 @@
         </div>
       </div>
     </div>
-  </div>
+  </BaseDashboardWidget>
 </template>
 
 <script setup lang="ts">
 import { computed } from 'vue';
+import { BaseDashboardWidget } from '@/components/cards';
 
 interface ChartData {
   analytics?: Array<{
@@ -265,11 +266,7 @@ function getEventLabel(eventType: string): string {
 </script>
 
 <style lang="scss" scoped>
-.chart-widget {
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-}
+// Chart widget content styling (wrapper now handled by BaseDashboardWidget)
 
 .empty-chart {
   flex: 1;

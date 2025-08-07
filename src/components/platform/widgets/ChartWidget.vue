@@ -1,5 +1,5 @@
 <template>
-  <div class="chart-widget">
+  <BaseDashboardWidget :hide-header="true">
     <!-- Chart.js will be rendered here -->
     <canvas ref="chartCanvas" class="chart-canvas"></canvas>
     
@@ -26,12 +26,13 @@
         </div>
       </div>
     </div>
-  </div>
+  </BaseDashboardWidget>
 </template>
 
 <script setup lang="ts">
 import { ref, computed, onMounted, onUnmounted, nextTick } from 'vue';
 import { useI18n } from 'vue-i18n';
+import { BaseDashboardWidget } from '@/components/cards';
 
 const { t } = useI18n();
 
@@ -171,9 +172,7 @@ onUnmounted(() => {
 </script>
 
 <style lang="scss" scoped>
-.chart-widget {
-  height: 100%;
-  position: relative;
+// Platform chart widget content styling (wrapper now handled by BaseDashboardWidget)
   
   .chart-canvas {
     width: 100%;
@@ -229,7 +228,6 @@ onUnmounted(() => {
       }
     }
   }
-}
 
 // Dark mode
 .body--dark {

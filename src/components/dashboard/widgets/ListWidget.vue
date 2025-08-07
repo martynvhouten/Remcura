@@ -1,5 +1,5 @@
 <template>
-  <div class="list-widget">
+  <BaseDashboardWidget :hide-header="true">
     <!-- Order Suggestions List -->
     <div v-if="widgetId === 'order-suggestions'" class="suggestions-list">
       <div v-if="!data.suggestions?.length" class="empty-state">
@@ -118,16 +118,17 @@
         </div>
       </div>
     </div>
-  </div>
+  </BaseDashboardWidget>
 </template>
 
 <script setup lang="ts">
 import { computed } from 'vue';
 import { useRouter } from 'vue-router';
 import { useI18n } from 'vue-i18n';
+import { useFormatting } from '@/composables/useFormatting';
+import { BaseDashboardWidget } from '@/components/cards';
 
 const { t } = useI18n();
-import { useFormatting } from '@/composables/useFormatting';
 
 interface ListData {
   suggestions?: Array<{
@@ -235,11 +236,7 @@ function viewOrder(order: any) {
 </script>
 
 <style lang="scss" scoped>
-.list-widget {
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-}
+// List widget content styling (wrapper now handled by BaseDashboardWidget)
 
 .empty-state {
   flex: 1;

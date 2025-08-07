@@ -1,4 +1,5 @@
 export { default as BaseCard } from './BaseCard.vue';
+export { default as BaseDashboardWidget } from './BaseDashboardWidget.vue';
 export { default as InteractiveCard } from './InteractiveCard.vue';
 export { default as AlertCard } from './AlertCard.vue';
 
@@ -27,6 +28,17 @@ export interface AlertCardProps extends CardProps {
   severity?: 'info' | 'success' | 'warning' | 'error';
   showStatusIcon?: boolean;
   dismissible?: boolean;
+}
+
+export interface BaseDashboardWidgetProps {
+  /** Optional widget title displayed in header */
+  title?: string;
+  /** Show loading overlay when true */
+  loading?: boolean;
+  /** Hide the header section completely */
+  hideHeader?: boolean;
+  /** Additional CSS classes for the card */
+  cardClass?: string;
 }
 
 // Card design guidelines

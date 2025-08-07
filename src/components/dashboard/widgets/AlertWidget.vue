@@ -1,5 +1,5 @@
 <template>
-  <div class="alert-widget">
+  <BaseDashboardWidget :hide-header="true">
     <!-- Empty State -->
     <div v-if="!items.length" class="empty-state">
       <q-icon name="check_circle" color="positive" size="3rem" />
@@ -78,13 +78,14 @@
         class="full-width"
       />
     </div>
-  </div>
+  </BaseDashboardWidget>
 </template>
 
 <script setup lang="ts">
 import { computed } from 'vue';
 import { useRouter } from 'vue-router';
 import { useFormatting } from '@/composables/useFormatting';
+import { BaseDashboardWidget } from '@/components/cards';
 
 interface AlertItem {
   id: string;
@@ -181,11 +182,7 @@ function viewAllAlerts() {
 </script>
 
 <style lang="scss" scoped>
-.alert-widget {
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-}
+// Alert widget content styling (wrapper now handled by BaseDashboardWidget)
 
 .empty-state {
   flex: 1;

@@ -1,5 +1,5 @@
 <template>
-  <div class="metric-widget">
+  <BaseDashboardWidget :hide-header="true">
     <!-- Single Value Metric -->
     <template v-if="isSingleValue">
       <div class="metric-primary">
@@ -54,12 +54,13 @@
         </div>
       </div>
     </template>
-  </div>
+  </BaseDashboardWidget>
 </template>
 
 <script setup lang="ts">
 import { computed } from 'vue';
 import { useI18n } from 'vue-i18n';
+import { BaseDashboardWidget } from '@/components/cards';
 
 const { t } = useI18n();
 
@@ -199,12 +200,7 @@ function formatLabel(key: string): string {
 </script>
 
 <style lang="scss" scoped>
-.metric-widget {
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-}
+// Platform metric widget content styling (wrapper now handled by BaseDashboardWidget)
 
 .metric-primary {
   text-align: center;

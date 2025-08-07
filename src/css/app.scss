@@ -1896,6 +1896,40 @@ h2,
 
   .q-table__container {
     overflow-x: auto; // Allow horizontal scroll on tables if needed
+    overflow-y: visible;
+  }
+}
+
+// Enhanced table scroll behavior for mouse wheel
+.medical-table,
+.unified-table-container,
+.products-table {
+  overflow-x: auto;
+  overflow-y: visible;
+  scroll-behavior: smooth; // Native smooth scrolling
+  
+  // Ensure smooth scrolling with mouse wheel
+  &::-webkit-scrollbar {
+    height: 8px;
+  }
+  
+  &::-webkit-scrollbar-track {
+    background: var(--neutral-100);
+    border-radius: 4px;
+  }
+  
+  &::-webkit-scrollbar-thumb {
+    background: var(--neutral-400);
+    border-radius: 4px;
+    
+    &:hover {
+      background: var(--neutral-500);
+    }
+  }
+  
+  // Improve scroll performance
+  * {
+    scroll-behavior: smooth;
   }
 }
 
@@ -2858,14 +2892,14 @@ html body .sr-only {
     thead tr th.q-th,
     .q-table__top,
     thead tr th[class*="q-th"] {
-      background: #1e3a8a;
+      background: var(--brand-primary);
       color: white;
       font-weight: bold;
     }
 
     // Enhanced header for medical data - DARKER BACKGROUND
     .medical-table .q-table .q-table__top {
-      background: linear-gradient(135deg, #1e3a8a, #1e40af);
+      background: var(--brand-primary);
       color: white;
       padding: var(--space-3) var(--space-4);
       
@@ -2911,8 +2945,7 @@ html body .sr-only {
 
                    &:hover {
                background: rgba(30, 58, 138, 0.05);
-               transform: translateX(2px);
-               box-shadow: 4px 0 12px rgba(30, 58, 138, 0.1);
+               box-shadow: 0 2px 8px rgba(30, 58, 138, 0.08);
              }
 
              // Critical row highlighting
@@ -2974,7 +3007,7 @@ html body .sr-only {
     // Enhanced headers with much darker background and better contrast
     // Use maximum CSS specificity to override Quasar defaults
     .medical-table .q-table thead tr th.q-th {
-      background: linear-gradient(135deg, #1e3a8a, #1e40af);
+      background: var(--brand-primary);
       color: white;
       font-family: var(--font-family-primary);
       font-weight: var(--font-weight-bold);
@@ -2995,7 +3028,7 @@ html body .sr-only {
         transition: background var(--transition-base);
         
         &:hover {
-          background: linear-gradient(135deg, #1e40af, #2563eb);
+          background: var(--brand-primary-dark);
         }
       }
     }
@@ -3004,7 +3037,7 @@ html body .sr-only {
     .medical-table .q-table thead th,
     .medical-table .q-table .q-th,
     .medical-table .q-table thead tr th {
-      background: linear-gradient(135deg, #1e3a8a, #1e40af);
+      background: var(--brand-primary);
       color: white;
     }
 
@@ -3025,7 +3058,7 @@ body.body--dark .medical-table {
     border-color: var(--border-primary);
 
     .q-table__top {
-      background: linear-gradient(135deg, #1e3a8a, #1e40af); // Same dark header in dark mode
+      background: var(--brand-primary); // Same primary header in dark mode
     }
 
     tbody tr {
@@ -3050,11 +3083,11 @@ body.body--dark .medical-table {
     }
 
     .q-th {
-      background: linear-gradient(135deg, #1e3a8a, #1e40af) !important;
+      background: var(--brand-primary) !important;
       color: white !important;
       
       &.sortable:hover {
-        background: linear-gradient(135deg, #1e40af, #2563eb) !important;
+        background: var(--brand-primary-dark) !important;
       }
     }
 
@@ -3088,6 +3121,21 @@ body.body--dark .medical-table {
         font-size: var(--text-sm);
       }
     }
+  }
+}
+
+// ===================================================================
+// GLOBAL TABLE HEADER CONSISTENCY - ENSURE ALL HEADERS USE BRAND PRIMARY
+// ===================================================================
+
+// Universal table header styling to ensure consistency across all tables
+.q-table thead th,
+.q-table .q-th,
+thead th,
+th {
+  &:not(.custom-header) {
+    background: var(--brand-primary) !important;
+    color: white !important;
   }
 }
 

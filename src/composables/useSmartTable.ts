@@ -96,8 +96,8 @@ export function useSmartTable(config: SmartTableConfig = {}) {
         const bVal = getNestedValue(b, sortBy);
         
         if (aVal === bVal) return 0;
-        if (aVal == null) return descending ? 1 : -1;
-        if (bVal == null) return descending ? -1 : 1;
+        if (aVal === null || aVal === undefined) return descending ? 1 : -1;
+        if (bVal === null || bVal === undefined) return descending ? -1 : 1;
         
         // Smart type detection
         if (typeof aVal === 'number' && typeof bVal === 'number') {

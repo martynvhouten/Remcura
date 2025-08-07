@@ -1,5 +1,5 @@
 <template>
-  <div class="list-widget">
+  <BaseDashboardWidget :hide-header="true">
     <q-list separator>
       <q-item 
         v-for="(item, index) in listItems" 
@@ -39,12 +39,13 @@
         </q-item-section>
       </q-item>
     </q-list>
-  </div>
+  </BaseDashboardWidget>
 </template>
 
 <script setup lang="ts">
 import { computed } from 'vue';
 import { useI18n } from 'vue-i18n';
+import { BaseDashboardWidget } from '@/components/cards';
 
 const { t } = useI18n();
 
@@ -104,17 +105,15 @@ function formatTimestamp(timestamp?: string): string {
 </script>
 
 <style lang="scss" scoped>
-.list-widget {
-  height: 100%;
+// Platform list widget content styling (wrapper now handled by BaseDashboardWidget)
   
-  .list-item {
-    border-radius: 8px;
-    margin-bottom: 4px;
-    transition: background-color 0.2s ease;
-    
-    &:hover {
-      background-color: rgba(var(--q-primary-rgb), 0.05);
-    }
+.list-item {
+  border-radius: 8px;
+  margin-bottom: 4px;
+  transition: background-color 0.2s ease;
+  
+  &:hover {
+    background-color: rgba(var(--q-primary-rgb), 0.05);
   }
 }
 </style>

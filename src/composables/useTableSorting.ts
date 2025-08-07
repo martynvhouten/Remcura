@@ -60,9 +60,9 @@ export function useTableSorting(
       let bVal = getFieldValue(b, sortBy);
 
       // Handle null/undefined values
-      if (aVal == null && bVal == null) return 0;
-      if (aVal == null) return descending ? 1 : -1;
-      if (bVal == null) return descending ? -1 : 1;
+      if ((aVal === null || aVal === undefined) && (bVal === null || bVal === undefined)) return 0;
+      if (aVal === null || aVal === undefined) return descending ? 1 : -1;
+      if (bVal === null || bVal === undefined) return descending ? -1 : 1;
 
       // Handle dates
       if (isDate(aVal) && isDate(bVal)) {
