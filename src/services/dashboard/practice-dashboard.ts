@@ -715,31 +715,68 @@ class PracticeDashboardService {
   }
 
   private async loadSupplierPerformance(practiceId: string) {
-    const { data } = await supabase.rpc('get_supplier_performance', {
-      practice_id_param: practiceId,
-    });
+    try {
+      const { data, error } = await supabase.rpc('get_supplier_performance', {
+        practice_id_param: practiceId,
+      });
 
-    return {
-      headers: [
-        'Supplier',
-        'Integration',
-        'Orders',
-        'Avg Delivery',
-        'Failed',
-        'Last Sync',
-      ],
-      rows:
-        data?.map((item: any) => [
-          item.supplier_name,
-          item.integration_type,
-          item.total_orders,
-          item.avg_delivery_days ? `${item.avg_delivery_days} days` : 'N/A',
-          item.failed_orders,
-          item.last_sync_at
-            ? new Date(item.last_sync_at).toLocaleDateString()
-            : 'Never',
-        ]) || [],
-    };
+      if (error) {
+        ServiceErrorHandler.handle(
+          error,
+          {
+            service: 'PracticeDashboardService',
+            operation: 'loadSupplierPerformance',
+            practiceId,
+          },
+          { rethrow: false, logLevel: 'warn' }
+        );
+      }
+
+      return {
+        headers: [
+          'Supplier',
+          'Integration',
+          'Orders',
+          'Avg Delivery',
+          'Failed',
+          'Last Sync',
+        ],
+        rows:
+          data?.map((item: any) => [
+            item.supplier_name,
+            item.integration_type,
+            item.total_orders,
+            item.avg_delivery_days ? `${item.avg_delivery_days} days` : 'N/A',
+            item.failed_orders,
+            item.last_sync_at
+              ? new Date(item.last_sync_at).toLocaleDateString()
+              : 'Never',
+          ]) || [],
+      };
+    } catch (error) {
+      ServiceErrorHandler.handle(
+        error,
+        {
+          service: 'PracticeDashboardService',
+          operation: 'loadSupplierPerformance',
+          practiceId,
+        },
+        { rethrow: false, logLevel: 'error' }
+      );
+
+      // Graceful empty state with headers
+      return {
+        headers: [
+          'Supplier',
+          'Integration',
+          'Orders',
+          'Avg Delivery',
+          'Failed',
+          'Last Sync',
+        ],
+        rows: [],
+      };
+    }
   }
 
   private async loadCostAnalysis(practiceId: string) {

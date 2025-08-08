@@ -23,6 +23,13 @@
 
     <!-- Widget Content -->
     <q-card-section class="widget-content p-0 flex-1 flex flex-col">
+      <!-- Error state (optional) -->
+      <slot name="error"></slot>
+
+      <!-- Empty state (optional) -->
+      <slot name="empty"></slot>
+
+      <!-- Default content -->
       <slot />
     </q-card-section>
 
@@ -84,6 +91,10 @@
     default(): any;
     /** Actions section in the header (buttons, menus, etc.) */
     actions(): any;
+    /** Optional error state content */
+    error(): any;
+    /** Optional empty state content */
+    empty(): any;
   }>();
 </script>
 

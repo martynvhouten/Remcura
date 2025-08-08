@@ -371,8 +371,8 @@ class PlatformDashboardService {
           severity: log.activity_type.includes('error')
             ? 'error'
             : log.activity_type.includes('failed')
-            ? 'warning'
-            : 'info',
+              ? 'warning'
+              : 'info',
         })) || [],
     };
   }
@@ -535,17 +535,35 @@ class PlatformDashboardService {
     try {
       // Simple connectivity test
       const start = Date.now();
-      const { data } = await supabase.from('practices').select('id').limit(1);
+      const { data: pingData, error: pingError } = await supabase
+        .from('practices')
+        .select('id')
+        .limit(1);
       const responseTime = Date.now() - start;
 
-      // Get table sizes (this would require a custom RPC function in production)
-      const { data: tableStats } = await supabase.rpc('get_table_stats');
+      // Optional RPC get_table_stats
+      let totalTables = 0;
+      let largestTable = 'unknown';
+      try {
+        const { data: tableStats } = await supabase.rpc('get_table_stats');
+        totalTables = tableStats?.length || 0;
+        largestTable = tableStats?.[0]?.table_name || 'unknown';
+      } catch (rpcError) {
+        ServiceErrorHandler.handle(
+          rpcError,
+          {
+            service: 'PlatformDashboardService',
+            operation: 'get_table_stats',
+          },
+          { rethrow: false, logLevel: 'warn' }
+        );
+      }
 
       return {
-        status: data ? 'connected' : 'disconnected',
+        status: pingError ? 'error' : pingData ? 'connected' : 'disconnected',
         response_time_ms: responseTime,
-        total_tables: tableStats?.length || 0,
-        largest_table: tableStats?.[0]?.table_name || 'unknown',
+        total_tables: totalTables,
+        largest_table: largestTable,
         last_check: new Date().toISOString(),
       };
     } catch (error) {
