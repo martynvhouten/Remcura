@@ -31,6 +31,7 @@
   import { ref, computed, onMounted, onUnmounted, nextTick } from 'vue';
   import { useI18n } from 'vue-i18n';
   import { BaseDashboardWidget } from '@/components/cards';
+  import ChartCanvas from '@/components/charts/ChartCanvas.vue';
 
   const { t } = useI18n();
 
@@ -53,9 +54,7 @@
   const props = defineProps<Props>();
 
   // Reactive state
-  const chartCanvas = ref<HTMLCanvasElement | null>(null);
-  const chartReady = ref(false);
-  const chartInstance = ref<any>(null);
+  const chartReady = ref(true);
 
   // Computed
   const maxValue = computed(() => {
@@ -66,26 +65,6 @@
   });
 
   // Methods
-  async function initChart() {
-    try {
-      // Dynamic import of Chart.js to avoid bundling if not needed
-      const { Chart, registerables } = await import('chart.js');
-      Chart.register(...registerables);
-
-      if (!chartCanvas.value) return;
-
-      const ctx = chartCanvas.value.getContext('2d');
-      if (!ctx) return;
-
-      const config = getChartConfig();
-      chartInstance.value = new Chart(ctx, config);
-      chartReady.value = true;
-    } catch (error) {
-      console.warn('Chart.js not available, using fallback display');
-      chartReady.value = false;
-    }
-  }
-
   function getChartConfig() {
     const {
       chart_type = 'bar',
@@ -158,90 +137,16 @@
     };
   }
 
-  function destroyChart() {
-    if (chartInstance.value) {
-      chartInstance.value.destroy();
-      chartInstance.value = null;
-    }
-  }
-
-  // Lifecycle
-  onMounted(async () => {
-    await nextTick();
-    initChart();
-  });
-
-  onUnmounted(() => {
-    destroyChart();
-  });
+  // Lifecycle (no-op, ChartCanvas handles rendering)
 </script>
 
 <style lang="scss" scoped>
   // Platform chart widget content styling (wrapper now handled by BaseDashboardWidget)
 
-  .chart-canvas {
-    width: 100%;
-    height: 100%;
-  }
-
-  .chart-fallback {
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-
-    .simple-chart {
-      width: 100%;
-      max-width: 300px;
-
-      .chart-bar {
-        margin-bottom: 1rem;
-
-        .bar-label {
-          font-size: 0.875rem;
-          color: var(--q-dark);
-          margin-bottom: 0.25rem;
-          text-align: left;
-        }
-
-        .bar-container {
-          position: relative;
-          background: rgba(0, 0, 0, 0.05);
-          border-radius: 4px;
-          height: 24px;
-          overflow: hidden;
-
-          .bar-fill {
-            height: 100%;
-            background: linear-gradient(
-              90deg,
-              var(--q-primary),
-              var(--q-secondary)
-            );
-            transition: width 0.5s ease;
-            border-radius: 4px;
-          }
-
-          .bar-value {
-            position: absolute;
-            right: 8px;
-            top: 50%;
-            transform: translateY(-50%);
-            font-size: 0.75rem;
-            font-weight: 500;
-            color: var(--q-dark);
-          }
-        }
-      }
-    }
-  }
+  /* ChartCanvas handles rendering and fallback */
 
   // Dark mode
   .body--dark {
-    .chart-fallback .simple-chart .chart-bar .bar-container {
-      background: rgba(255, 255, 255, 0.1);
-    }
+    /* no-op */
   }
 </style>
