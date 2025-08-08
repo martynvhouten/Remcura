@@ -223,7 +223,7 @@
 
 <style lang="scss" scoped>
   // ===================================================================
-  // MODERN FORM DIALOG STYLING
+  // Form dialog styles
   // ===================================================================
 
   .form-dialog-content {

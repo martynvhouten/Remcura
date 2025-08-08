@@ -1,8 +1,14 @@
 module.exports = {
-  // Minimal enforcement: block !important only
+  // Minimal enforcement: block !important only, but ignore built assets
   rules: {
-    'declaration-no-important': true,
+    'declaration-no-important': [
+      true,
+      {
+        ignore: ['inside-parentheses'],
+      },
+    ],
   },
+  ignoreFiles: ['dist/**', 'public/**'],
   overrides: [
     {
       files: ['**/*.vue'],

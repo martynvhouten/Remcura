@@ -435,8 +435,8 @@
                     adjustmentType === 'increase'
                       ? 'Verhogen'
                       : adjustmentType === 'decrease'
-                      ? 'Verlagen'
-                      : 'Instellen'
+                        ? 'Verlagen'
+                        : 'Instellen'
                   }}
                 </q-chip>
               </div>
@@ -1219,9 +1219,9 @@
         }
 
         @media (max-width: 600px) {
-          min-height: 40px;
-          font-size: 0.8rem;
-          padding: 8px 12px;
+          min-height: var(--control-height-sm);
+          font-size: var(--control-font-sm);
+          padding: var(--control-pad-y) var(--control-pad-x);
         }
       }
     }
@@ -1259,7 +1259,7 @@
     }
 
     .preview-content {
-      font-family: 'Roboto Mono', monospace;
+      font-family: var(--font-mono);
     }
 
     .modern-actions {

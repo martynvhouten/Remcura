@@ -23,7 +23,7 @@ async function main() {
     expandDirectories: true,
   });
 
-  let warnings = 0;
+  const findings = [];
   for (const file of files) {
     if (CONTROL_FILES_ALLOWLIST.some(allow => file.endsWith(allow))) continue;
     const text = await fs.readFile(file, 'utf8');
@@ -33,21 +33,32 @@ async function main() {
       let m;
       while ((m = re.exec(text)) !== null) {
         const idx = m.index;
+        // Heuristic: ensure the occurrence is within a form control selector context
+        const context = text.slice(
+          Math.max(0, idx - 200),
+          Math.min(text.length, idx + 100)
+        );
+        const selectorHint =
+          /(q-field|q-input|q-select|form-control|dropdown-control|\binput\b|\bselect\b|\btextarea\b)/i;
+        if (!selectorHint.test(context)) continue;
+
         const before = text.lastIndexOf('\n', idx) + 1;
         const after = text.indexOf('\n', re.lastIndex);
         const line = text.slice(before, after === -1 ? undefined : after);
         const lineNum = text.slice(0, before).split('\n').length;
-        console.warn(`[hardcoded-controls] ${file}:${lineNum}: ${line.trim()}`);
-        warnings++;
+        findings.push(
+          `[hardcoded-controls] ${file}:${lineNum}: ${line.trim()}`
+        );
       }
     });
   }
 
-  if (warnings === 0) {
+  if (findings.length === 0) {
     console.log('No hard-coded control sizes found.');
   } else {
+    findings.forEach(msg => console.log(msg));
     console.log(
-      `Found ${warnings} hard-coded control size occurrences (warn-only).`
+      `Found ${findings.length} hard-coded control size occurrences (warn-only).`
     );
   }
 }

@@ -885,7 +885,7 @@
   .medical-table {
     margin-top: 0;
   }
-  /* Modern Order List Detail Page Design */
+  /* Order list detail page styles */
   .order-detail-page {
     min-height: 100vh;
     background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
@@ -1064,7 +1064,9 @@
     padding: 20px;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
     border: 1px solid rgba(0, 0, 0, 0.06);
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    transition:
+      transform 0.2s ease,
+      box-shadow 0.2s ease;
     display: flex;
     align-items: center;
     gap: 16px;
@@ -1211,7 +1213,9 @@
     background: #f8fafc;
     border: 1px solid rgba(0, 0, 0, 0.06);
     border-radius: 12px;
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    transition:
+      transform 0.2s ease,
+      box-shadow 0.2s ease;
     overflow: hidden;
   }
 

@@ -591,7 +591,7 @@
 </script>
 
 <style lang="scss" scoped>
-  // Modern dialog styling handled by BaseDialog
+  // Dialog styling is handled by BaseDialog
 
   .advanced-search-content {
     display: flex;

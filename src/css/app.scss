@@ -1,6 +1,6 @@
 // ===================================================================
 // REMCURA - OPTIMIZED DESIGN SYSTEM 2024
-// Modern B2B SaaS Platform - Optimized for Performance
+// B2B SaaS platform styles
 // ===================================================================
 
 /* CSS Layers to control specificity and load order */
@@ -16,6 +16,14 @@
 
 /* Fonts are loaded once in index.html head to avoid duplicate @imports */
 
+/* Ensure global font wins over Quasar (non-layered for higher precedence) */
+html,
+body,
+body.body--dark,
+body.body--light {
+  font-family: var(--font-sans);
+}
+
 // ===================================================================
 // CSS CUSTOM PROPERTIES & DESIGN TOKENS
 // (Existing tokens kept for compatibility; prefer tokens in _tokens.scss)
@@ -23,7 +31,7 @@
 
 @layer base {
   :root {
-    // Enhanced Brand Colors - Modern Medical Blue Theme
+    // Brand colors – medical blue theme
     --brand-primary: #1e3a8a; // Deep Medical Blue - Professional & trustworthy
     --brand-primary-dark: #1e40af; // Rich Blue for contrast
     --brand-primary-light: #3b82f6; // Bright Blue for accents
@@ -41,13 +49,13 @@
     --brand-info-light: #3b82f6; // Lighter blue for UI
 
     // Extended Brand Palette for Rich Medical UI
-    --brand-navy: #1e3a8a; // Deep Navy - Premium medical feel
+    --brand-navy: #1e3a8a; // Deep navy tone
     --brand-navy-light: #1e40af; // Lighter navy
     --brand-emerald: #065f46; // Deep Emerald - Health & growth
     --brand-emerald-light: #059669; // Lighter emerald
     --brand-cyan: #0e7490; // Medical Cyan - Clean technology
     --brand-cyan-light: #0891b2; // Lighter cyan
-    --brand-slate: #334155; // Professional Slate - Elegant neutrals
+    --brand-slate: #334155; // Slate neutrals
     --brand-slate-light: #475569; // Lighter slate
 
     // Professional Neutral Palette - Warmer & More Sophisticated
@@ -128,7 +136,7 @@
     --icon-4xl: 96px;
     --icon-5xl: 120px;
 
-    // Border Radius - More modern and consistent
+    // Border radius scale
     --radius-sm: 0.25rem;
     --radius-base: 0.5rem;
     --radius-lg: 0.75rem;
@@ -307,7 +315,7 @@ body.body--dark {
 // ENHANCED TYPOGRAPHY FOR MEDICAL PROFESSIONALS
 // ===================================================================
 
-// Enhanced Medical-specific typography with Poppins improvements
+// Medical-specific typography presets
 .text-medical-heading {
   font-family: var(--font-family-display);
   font-size: var(--text-2xl);
@@ -353,10 +361,10 @@ body.body--dark {
 }
 
 // ===================================================================
-// NEW ENHANCED LABEL & UI TEXT CLASSES
+// Label & UI text classes
 // ===================================================================
 
-// Form labels - much bolder for better accessibility
+// Form label styles
 .label-form {
   font-family: var(--font-family-primary);
   font-size: var(--text-sm);
@@ -367,7 +375,7 @@ body.body--dark {
   margin-bottom: var(--space-1);
 }
 
-// Card titles - strong and prominent
+// Card title styles
 .title-card {
   font-family: var(--font-family-display);
   font-size: var(--text-lg);
@@ -377,7 +385,7 @@ body.body--dark {
   letter-spacing: -0.01em;
 }
 
-// Section headers - very prominent
+// Section header styles
 .title-section {
   font-family: var(--font-family-display);
   font-size: var(--text-xl);
@@ -388,7 +396,7 @@ body.body--dark {
   margin-bottom: var(--space-2);
 }
 
-// Page titles - maximum impact
+// Page title styles
 .title-page {
   font-family: var(--font-family-display);
   font-size: var(--text-3xl);
@@ -398,7 +406,7 @@ body.body--dark {
   letter-spacing: -0.02em;
 }
 
-// Table headers - professional and clear
+// Table header styles
 .label-table-header {
   font-family: var(--font-family-primary);
   font-size: var(--text-xs);
@@ -408,21 +416,21 @@ body.body--dark {
   letter-spacing: 0.05em;
 }
 
-// Button text - clear and prominent
+// Button text styles
 .text-button {
   font-family: var(--font-family-primary);
   font-weight: var(--font-weight-semibold); // 600 - Semibold for buttons
   letter-spacing: 0.025em;
 }
 
-// Important/highlighted text
+// Highlight text styles
 .text-highlight {
   font-family: var(--font-family-primary);
   font-weight: var(--font-weight-bold); // 700 - Bold for highlighted content
   color: var(--brand-primary);
 }
 
-// Status text - prominent and clear
+// Status text styles
 .text-status {
   font-family: var(--font-family-primary);
   font-size: var(--text-sm);
@@ -455,7 +463,7 @@ body .text-success-emphasis,
 
 // ===================================================================
 // ===================================================================
-// MODERN ICON SYSTEM - NO !IMPORTANT APPROACH
+// Icon system (no !important)
 // ===================================================================
 
 // Use high specificity selectors to override Quasar defaults cleanly
@@ -623,7 +631,7 @@ body.body--dark .card-content.q-card__section {
   color: var(--text-primary);
 }
 
-// Summary section styling for beautiful cards
+// Summary section styles for cards
 .summary-section {
   .summary-grid {
     display: grid;
@@ -638,7 +646,7 @@ body.body--dark .card-content.q-card__section {
 }
 
 // ===================================================================
-// MODERN BUTTON SYSTEM - PREMIUM DESIGN 2024
+// Button system
 // ===================================================================
 
 // Enhanced button variables for perfect design
@@ -664,7 +672,7 @@ body.body--dark .card-content.q-card__section {
   --btn-radius-lg: 16px;
   --btn-radius-xl: 20px;
 
-  // Modern gradients for premium look
+  // Gradient presets
   --btn-gradient-primary: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%);
   --btn-gradient-primary-hover: linear-gradient(
     135deg,
@@ -690,7 +698,7 @@ body.body--dark .card-content.q-card__section {
     #b91c1c 100%
   );
 
-  // Premium shadows
+  // Button shadows
   --btn-shadow-base: 0 2px 8px rgba(30, 58, 138, 0.12);
   --btn-shadow-hover: 0 8px 25px rgba(30, 58, 138, 0.25);
   --btn-shadow-active: 0 2px 4px rgba(30, 58, 138, 0.2);
@@ -706,7 +714,7 @@ body.body--dark {
 }
 
 // ===================================================================
-// MODERN BUTTON SYSTEM - NO !IMPORTANT APPROACH
+// Button system (no !important)
 // ===================================================================
 
 // Use high specificity selector to override Quasar defaults cleanly
@@ -1062,7 +1070,7 @@ body .q-btn {
 }
 
 // ===================================================================
-// MODERN BUTTON CLASS
+// Button helper class
 // ===================================================================
 
 // Enhanced modern button styling with high specificity
@@ -1070,7 +1078,7 @@ body .q-btn {
 .q-dialog .btn-modern.q-btn,
 .q-drawer .btn-modern.q-btn,
 body .btn-modern.q-btn {
-  // Enhanced modern styling
+  // Elevated button shadow
   box-shadow: 0 4px 14px rgba(30, 58, 138, 0.15);
 
   &:hover:not(.disabled):not(.q-btn--loading) {
@@ -1382,8 +1390,8 @@ body.body--dark {
   .q-item {
     border-radius: 0; // match light-mode flat list items edge-to-edge
     margin: 0;
-    padding: 8px 10px;
-    min-height: 36px; // consistent compact item height across modes
+    padding: var(--control-pad-y) var(--control-pad-x);
+    min-height: var(--control-height-sm); // token-based compact item height
     color: var(--text-primary);
 
     &:hover {
@@ -1407,7 +1415,7 @@ body.body--dark {
     }
 
     .q-item {
-      min-height: 36px; // mirror light mode
+      min-height: var(--control-height-sm); // mirror light mode via token
     }
   }
 }
@@ -1426,8 +1434,8 @@ body.body--dark {
   .q-item {
     border-radius: 0;
     margin: 0;
-    padding: 8px 10px;
-    min-height: 36px;
+    padding: var(--control-pad-y) var(--control-pad-x);
+    min-height: var(--control-height-sm);
     color: var(--text-primary);
 
     &:hover {
@@ -1452,7 +1460,7 @@ body.body--dark .q-dialog.q-select__dialog {
   }
 
   .q-item {
-    min-height: 36px;
+    min-height: var(--control-height-sm);
   }
 }
 
@@ -1658,9 +1666,9 @@ body.body--dark .neumorphism-light {
   }
 }
 
-// Enhanced Modern Components
+// Components
 
-// Beautiful Modern Button System
+// Button utility styles
 .btn-modern {
   border-radius: var(--radius-lg);
   font-weight: var(--font-weight-semibold);
@@ -1972,7 +1980,7 @@ h2,
   box-shadow: var(--shadow-sm);
 }
 
-// Modern card styles
+// Card styles
 .card-modern {
   border-radius: var(--radius-xl);
   border: 1px solid var(--neutral-200);
@@ -2034,10 +2042,10 @@ h2,
 }
 
 // ===================================================================
-// BEAUTIFUL BUTTON SYSTEM
+// Legacy button system (kept for compatibility)
 // ===================================================================
 
-/* Modern Button Design System */
+/* Button design system */
 .q-btn {
   position: relative;
   overflow: hidden;
@@ -2741,7 +2749,7 @@ html body.body--dark .q-select .q-field__selected {
   min-height: var(--control-height-md);
   display: flex;
   align-items: center;
-  padding: 8px 12px;
+  padding: var(--control-pad-y) var(--control-pad-x);
   box-sizing: border-box;
   font-size: var(--text-base);
   line-height: 1.4;
@@ -3683,7 +3691,7 @@ body.body--dark .medical-table {
 // CUSTOM SCROLLBAR STYLING
 // ===================================================================
 
-/* Subtle and modern scrollbar styling for navigation and content */
+/* Scrollbar styling for navigation and content */
 .navigation-drawer,
 .q-drawer__content {
   scrollbar-width: thin;

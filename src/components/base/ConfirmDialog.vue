@@ -236,7 +236,7 @@
 
 <style lang="scss" scoped>
   // ===================================================================
-  // MODERN CONFIRM DIALOG STYLING
+  // Confirm dialog styles
   // ===================================================================
 
   .confirm-dialog-content {

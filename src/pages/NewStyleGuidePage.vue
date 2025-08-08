@@ -59,7 +59,7 @@
         <div class="deprecated-cards-grid">
           <div class="deprecated-card">
             <BaseCard
-              title="Glass Modern (Deprecated)"
+              title="Glass (Deprecated)"
               subtitle="Too complex hover effects"
               icon="blur_on"
               icon-color="primary"
@@ -359,8 +359,9 @@
         }
 
         code {
-          font-family: 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono',
-            Consolas, 'Courier New', monospace;
+          font-family:
+            var(--font-mono), 'SF Mono', Monaco, 'Cascadia Code', Consolas,
+            'Courier New', monospace;
           color: inherit;
         }
       }

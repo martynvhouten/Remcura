@@ -669,7 +669,7 @@
 
 <style lang="scss" scoped>
   // ===================================================================
-  // INVENTORY LEVELS PAGE - CONSISTENT MODERN STYLING
+  // Inventory levels page styles
   // ===================================================================
 
   .stats-cards-container {
@@ -707,7 +707,7 @@
     margin-bottom: var(--space-6);
 
     .inventory-filter-panel {
-      // FilterPanel already has its own modern styling
+      // FilterPanel defines its own styling
       // No additional customization needed
     }
   }

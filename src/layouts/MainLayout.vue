@@ -1,6 +1,6 @@
 <template>
   <q-layout view="lHh Lpr lFf" class="layout-modern">
-    <!-- Modern Header with Glass Morphism Effect -->
+    <!-- Header with glass effect -->
     <q-header
       elevated
       class="header-modern glass"
@@ -703,7 +703,7 @@
       box-sizing: border-box;
     }
 
-    // Modern header styling with CSS custom properties approach
+    // Header styling with CSS custom properties
     .header-modern {
       --header-bg: rgba(255, 255, 255, 0.8);
       --header-bg-scrolled: rgba(255, 255, 255, 0.95);

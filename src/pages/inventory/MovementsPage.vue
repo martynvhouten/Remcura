@@ -31,7 +31,7 @@
       </PageTitle>
     </template>
 
-    <!-- Modern FilterPanel Component -->
+    <!-- FilterPanel component -->
     <div class="filters-section q-mb-lg">
       <FilterPanel
         :preset="movementsFilterPreset"
@@ -283,7 +283,7 @@
   const selectedMovement = ref<MovementWithRelations | null>(null);
   const isUnmounted = ref(false);
 
-  // Modern Filter System
+  // Filter system styles
   const filterValues = ref<FilterValues>({});
 
   // Pagination

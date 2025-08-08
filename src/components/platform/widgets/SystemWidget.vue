@@ -394,7 +394,7 @@
         }
 
         .version-value {
-          font-family: 'Roboto Mono', monospace;
+          font-family: var(--font-mono);
         }
       }
     }
@@ -420,7 +420,7 @@
           }
 
           .dependency-version {
-            font-family: 'Roboto Mono', monospace;
+            font-family: var(--font-mono);
             font-size: 0.875rem;
             color: var(--q-primary);
           }
@@ -527,7 +527,7 @@
         }
 
         .system-value {
-          font-family: 'Roboto Mono', monospace;
+          font-family: var(--font-mono);
           color: var(--q-primary);
         }
       }

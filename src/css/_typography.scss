@@ -8,7 +8,18 @@
   }
 
   html,
-  body {
+  body,
+  .q-app,
+  .q-layout,
+  .q-page,
+  .q-card,
+  .q-toolbar,
+  .q-item,
+  .q-table,
+  .q-field,
+  input,
+  select,
+  textarea {
     font-family: var(--font-sans);
   }
 }

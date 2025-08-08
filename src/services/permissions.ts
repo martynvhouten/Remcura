@@ -133,6 +133,24 @@ export class PermissionService {
       (authStore.user as any).app_metadata.role === 'platform_owner';
     if (isPlatformOwnerFallback) return true;
 
+    // Practice owner bypass (treat practice owners as having all permissions)
+    if (practiceId) {
+      try {
+        const { data: membership } = await supabase
+          .from('practice_members')
+          .select('role')
+          .eq('practice_id', practiceId)
+          .eq('user_id', userId)
+          .single();
+
+        if (membership?.role === 'owner') {
+          return true;
+        }
+      } catch {
+        // Ignore and continue to explicit permission check
+      }
+    }
+
     // If no practiceId (Magic Join users), grant basic read permissions
     if (!practiceId) {
       console.warn('No practice ID - applying magic join fallback permissions');

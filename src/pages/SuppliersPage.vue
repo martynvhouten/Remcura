@@ -38,7 +38,7 @@
       </PageTitle>
     </template>
 
-    <!-- Modern FilterPanel Component -->
+    <!-- FilterPanel component -->
     <div class="filters-section q-mb-lg">
       <FilterPanel
         :preset="suppliersFilterPreset"

@@ -906,7 +906,7 @@
 </script>
 
 <style scoped>
-  /* Modern Order List Card Design */
+  /* Order list card styles */
   .modern-order-card {
     background: white;
     border-radius: 16px;

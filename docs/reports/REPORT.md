@@ -87,6 +87,21 @@ Removed CSS
 
 - `src/components/filters/FilterField.vue`: replaced fixed `40px` and manual focus with token-based
   sizing and unified ring.
+- Replaced hard-coded menu item sizes with tokens in `src/css/app.scss` (`.q-menu .q-item` and
+  `.q-dialog.q-select__dialog .q-item` now use `var(--control-height-sm)` and token paddings).
+- Normalized Quasar selected/native paddings in `src/css/app.scss` to use `var(--control-pad-x/y)`.
+- Removed direct `'Roboto Mono'` font-family overrides in:
+  - `src/components/platform/widgets/SystemWidget.vue` (now `var(--font-mono)`).
+  - `src/components/inventory/QuickAdjustmentDialog.vue` (preview content uses `var(--font-mono)`).
+  - `src/pages/NewStyleGuidePage.vue` code blocks use `var(--font-mono)` stack.
+- Converted component-local fixed paddings/heights to tokens:
+  - `src/components/inventory/CountingEntryWithBatch.vue` (new batch input paddings).
+
+Comments normalization
+
+- Replaced subjective terms like “beautiful”, “premium”, “modern” in comments where encountered with
+  neutral, functional descriptions (e.g., “button styles”, “filter panel styles”). Further passes
+  can continue as we touch files.
 
 Safety and linting
 

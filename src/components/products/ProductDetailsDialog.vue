@@ -562,7 +562,7 @@
 
 <style lang="scss" scoped>
   // ===================================================================
-  // MODERN PRODUCT DETAILS DIALOG STYLING
+  // Product details dialog styles
   // ===================================================================
 
   .product-details-content {
