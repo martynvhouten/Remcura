@@ -31,6 +31,16 @@ const routes: RouteRecordRaw[] = [
         redirect: '/dashboard',
       },
       {
+        path: 'style-sandbox',
+        name: 'style-sandbox',
+        component: () => import('pages/StyleSandbox.vue'),
+        meta: {
+          requiresAuth: true,
+          requiresRole: ['owner', 'platform_owner'],
+          title: 'Style Sandbox',
+        },
+      },
+      {
         path: 'dashboard',
         name: 'dashboard',
         component: () => import('pages/DashboardPage.vue'),

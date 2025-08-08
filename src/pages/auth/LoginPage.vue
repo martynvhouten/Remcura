@@ -116,7 +116,7 @@
             unelevated
             no-caps
             :loading="demoLoading"
-            size="lg"
+            size="md"
           >
             <q-tooltip>{{ $t('auth.quickLogin.demoTooltip') }}</q-tooltip>
           </q-btn>
@@ -129,7 +129,7 @@
             unelevated
             no-caps
             :loading="ownerLoading"
-            size="lg"
+            size="md"
           >
             <q-tooltip>{{ $t('auth.quickLogin.ownerTooltip') }}</q-tooltip>
           </q-btn>
@@ -148,6 +148,7 @@
             "
             unelevated
             no-caps
+            padding="10px 16px"
           />
 
           <q-btn
@@ -334,6 +335,33 @@
 
     .form-field {
       position: relative;
+
+      /* Force Quasar outlined field to respect internal flow; prevent label/content overlap */
+      :deep(.q-field__control) {
+        display: grid;
+        grid-template-columns: auto 1fr auto;
+        align-items: center;
+      }
+
+      :deep(.q-field__prepend),
+      :deep(.q-field__append),
+      :deep(.q-field__marginal) {
+        align-self: center;
+      }
+
+      :deep(.q-field__native) {
+        min-width: 0;
+      }
+
+      :deep(.q-field__label) {
+        background: var(--bg-primary);
+        padding: 0 4px;
+      }
+
+      :deep(.q-field--outlined.q-field--focused .q-field__label),
+      :deep(.q-field--outlined.q-field--has-value .q-field__label) {
+        background: var(--bg-primary);
+      }
     }
 
     // Field styling is now fully handled by global field system
@@ -425,6 +453,12 @@
             .q-icon {
               font-size: 1.5rem;
             }
+
+            // Make the label text a bit smaller
+            .block {
+              font-size: var(--text-sm);
+              line-height: 1.2;
+            }
           }
 
           &:hover {
@@ -465,6 +499,8 @@
 
           :deep(.q-btn__content) {
             gap: var(--space-2);
+            align-items: center;
+            line-height: 1.2;
           }
         }
       }

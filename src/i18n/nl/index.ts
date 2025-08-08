@@ -343,6 +343,9 @@ export default {
     latestUpdates: 'Laatste updates',
     viewAnalytics: 'Analyses bekijken',
 
+    // Practice switcher label
+    selectPractice: 'Selecteer kliniek',
+
     // === NEW DASHBOARD KEYS ===
     actions: {
       refresh: 'Dashboard vernieuwen',

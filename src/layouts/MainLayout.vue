@@ -11,22 +11,15 @@
         <q-btn
           flat
           round
-          size="lg"
-          icon="view_sidebar"
-          class="menu-toggle-btn"
+          size="xl"
+          class="menu-toggle-btn header-btn"
           :aria-label="t('nav.openNavigation') || 'Open navigation menu'"
           @click="toggleLeftDrawer"
-        />
+        >
+          <q-icon name="view_sidebar" class="header-icon header-icon-lg" />
+        </q-btn>
 
         <div class="brand-section">
-          <q-avatar
-            size="32px"
-            color="white"
-            text-color="primary"
-            class="brand-avatar"
-          >
-            <q-icon name="local_hospital" class="icon-size-sm" />
-          </q-avatar>
           <div class="brand-text">
             <div class="brand-title">{{ t('brand.name') }}</div>
           </div>
@@ -40,10 +33,9 @@
           <q-btn
             flat
             round
-            icon="notifications"
             @click="goToNotifications"
             :aria-label="t('nav.notifications')"
-            class="action-btn"
+            class="header-btn"
           >
             <q-badge
               v-if="notificationStore.hasUnreadNotifications"
@@ -55,6 +47,7 @@
             >
               {{ notificationStore.unreadCount }}
             </q-badge>
+            <q-icon name="notifications" class="header-icon" />
             <q-tooltip>{{ t('nav.notifications') }}</q-tooltip>
           </q-btn>
 
@@ -62,35 +55,24 @@
           <q-btn
             flat
             round
-            :icon="$q.dark.isActive ? 'light_mode' : 'dark_mode'"
             @click="toggleDarkMode"
             :aria-label="
               $q.dark.isActive ? t('nav.lightMode') : t('nav.darkMode')
             "
-            class="action-btn"
+            class="header-btn"
           >
+            <q-icon
+              :name="$q.dark.isActive ? 'light_mode' : 'dark_mode'"
+              class="header-icon"
+            />
             <q-tooltip>{{
               $q.dark.isActive ? t('nav.lightMode') : t('nav.darkMode')
             }}</q-tooltip>
           </q-btn>
 
           <!-- User Menu -->
-          <q-btn
-            flat
-            round
-            icon="person"
-            :aria-label="t('nav.userMenu')"
-            class="user-menu-btn"
-          >
-            <!-- Demo indicator badge -->
-            <q-badge
-              v-if="isDemoUser"
-              color="amber"
-              floating
-              class="demo-badge"
-            >
-              <q-icon name="science" class="icon-size-xs" />
-            </q-badge>
+          <q-btn flat round :aria-label="t('nav.userMenu')" class="header-btn">
+            <q-icon name="person" class="header-icon" />
             <q-menu>
               <q-list>
                 <q-item class="user-info">
@@ -246,6 +228,8 @@
                   ]"
                 />
               </q-item-section>
+
+              <q-tooltip v-if="isMiniDrawer">{{ item.title }}</q-tooltip>
             </q-item>
 
             <!-- Submenu Items -->
@@ -272,6 +256,8 @@
                       >{{ subItem.title }}</q-item-label
                     >
                   </q-item-section>
+
+                  <q-tooltip v-if="isMiniDrawer">{{ subItem.title }}</q-tooltip>
                 </q-item>
               </div>
             </q-slide-transition>
@@ -740,25 +726,40 @@
       width: 100%;
       max-width: 100%;
 
-      .menu-toggle-btn {
+      .header-btn {
         color: var(--neutral-800);
-        border-radius: var(--radius-full);
+        border-radius: var(--radius-lg);
         transition:
-          transform 180ms ease,
-          background-color 180ms ease,
-          color 180ms ease;
-        width: 56px;
-        height: 56px;
-
-        .q-icon {
-          font-size: 30px;
-        }
+          transform 160ms ease,
+          background-color 160ms ease,
+          color 160ms ease,
+          box-shadow 160ms ease;
+        width: 50px;
+        height: 50px;
+        padding: 6px;
 
         &:hover {
           background-color: rgba(var(--q-primary-rgb), 0.12);
           color: var(--brand-primary);
           transform: translateY(-1px);
+          box-shadow: var(--shadow-sm);
         }
+
+        &:focus-visible {
+          outline: 2px solid rgba(var(--brand-primary-rgb), 0.5);
+          outline-offset: 2px;
+          box-shadow: 0 0 0 2px rgba(var(--brand-primary-rgb), 0.15);
+        }
+      }
+
+      .header-icon {
+        font-size: 24px;
+        line-height: 1;
+      }
+
+      .header-icon-lg {
+        font-size: 30px;
+        line-height: 1;
       }
 
       .brand-section {
@@ -767,9 +768,7 @@
         gap: var(--space-3);
         margin-left: var(--space-4);
 
-        .brand-avatar {
-          box-shadow: var(--shadow-sm);
-        }
+        // brand avatar removed
 
         .brand-text {
           .brand-title {
@@ -791,55 +790,6 @@
         display: flex;
         align-items: center;
         gap: var(--space-2);
-
-        .action-btn {
-          color: var(--neutral-700);
-          border-radius: var(--radius-lg);
-          transition:
-            transform 180ms ease,
-            background-color 180ms ease,
-            color 180ms ease;
-          width: 56px;
-          height: 56px;
-
-          .q-icon {
-            font-size: 28px;
-          }
-
-          &:hover {
-            background-color: rgba(var(--q-primary-rgb), 0.12);
-            color: var(--brand-primary);
-            transform: translateY(-1px);
-          }
-
-          &:focus-visible {
-            outline: 2px solid rgba(var(--brand-primary-rgb), 0.5);
-            outline-offset: 2px;
-            box-shadow: 0 0 0 2px rgba(var(--brand-primary-rgb), 0.15);
-          }
-        }
-
-        .user-menu-btn {
-          width: 56px;
-          height: 56px;
-          border-radius: var(--radius-full);
-          padding: var(--space-1);
-          transition:
-            transform 180ms ease,
-            background-color 180ms ease,
-            color 180ms ease;
-
-          .q-icon {
-            font-size: 30px;
-          }
-
-          &:hover {
-            transform: translateY(-1px);
-            box-shadow: var(--shadow-sm);
-            background-color: rgba(var(--q-primary-rgb), 0.12);
-            color: var(--brand-primary);
-          }
-        }
       }
     }
   }
@@ -877,7 +827,7 @@
       }
 
       .header-actions {
-        .action-btn {
+        .header-btn {
           color: var(--neutral-200);
 
           &:hover {
@@ -1190,6 +1140,9 @@
       .navigation-list {
         padding-left: var(--space-2);
         padding-right: var(--space-2);
+        display: flex;
+        flex-direction: column;
+        gap: var(--space-2);
       }
 
       .hide-when-mini {
@@ -1199,6 +1152,11 @@
       .nav-item,
       .nav-sub-item {
         padding-right: 0;
+        justify-content: center;
+        align-items: center;
+        min-height: 48px; // ensure room for 40px icon bubble
+        padding-top: 4px;
+        padding-bottom: 4px;
       }
 
       // Compact clinic header and prevent logo clipping
@@ -1220,10 +1178,10 @@
         border: none;
         border-radius: var(--radius-lg);
       }
+      // In mini mode, show a circular hover around the icon instead of full-row
       .nav-item:hover,
       .nav-sub-item:hover {
-        background: var(--nav-hover-bg);
-        border-radius: var(--radius-lg);
+        background: transparent;
       }
       .nav-item.nav-item-active,
       .nav-sub-item.nav-item-active {
@@ -1256,74 +1214,59 @@
         margin-left: 0;
         border-left: 0;
       }
+
+      // Center avatar icon sections and size consistently
+      .q-item__section--avatar {
+        width: 40px;
+        min-width: 40px;
+        height: 40px;
+        border-radius: var(--radius-full);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        transition:
+          background-color 160ms ease,
+          transform 160ms ease,
+          box-shadow 160ms ease;
+
+        .q-icon {
+          font-size: 22px;
+        }
+      }
+
+      // Hover/active/focus states applied to the circular icon bubble
+      .nav-item:hover .q-item__section--avatar,
+      .nav-sub-item:hover .q-item__section--avatar {
+        background: var(--nav-hover-bg);
+      }
+      .nav-item.nav-item-active .q-item__section--avatar,
+      .nav-sub-item.nav-item-active .q-item__section--avatar {
+        background: rgba(var(--brand-primary-rgb), 0.18);
+        box-shadow: inset 0 0 0 1px var(--sidebar-border);
+      }
+      .nav-item:focus-visible .q-item__section--avatar,
+      .nav-sub-item:focus-visible .q-item__section--avatar {
+        outline: 2px solid rgba(var(--brand-primary-rgb), 0.5);
+        outline-offset: 2px;
+      }
+
+      // Subtiele separator-lijn tussen secties
+      .navigation-separator {
+        margin: var(--space-2) auto;
+        width: 28px;
+        height: 1px;
+        opacity: 0.5;
+      }
     }
   }
 
   // Dark mode styling is now handled by Quasar's native dark prop
   // No custom dark mode CSS needed for navigation drawer
 
-  // Header Actions
-  .header-actions {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    margin: 8px 12px 0 0; // Extra ruimte rechts voor floating badges
-  }
-
-  .header-actions .q-btn {
-    border-radius: 12px;
-    color: var(--neutral-600);
-    background: rgba(255, 255, 255, 0.8);
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    backdrop-filter: blur(8px);
-    transition:
-      transform 180ms ease,
-      background-color 180ms ease,
-      color 180ms ease,
-      box-shadow 180ms ease,
-      border-color 180ms ease;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
-    padding: 6px; // Extra padding binnen de knop voor badges
-
-    &:hover {
-      color: var(--brand-primary);
-      background: rgba(255, 255, 255, 0.92);
-      border-color: rgba(var(--brand-primary-rgb), 0.25);
-      transform: translateY(-1px);
-      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
-    }
-
-    &:focus {
-      outline: none;
-    }
-
-    &:active {
-      transform: translateY(0);
-    }
-
-    &:focus-visible {
-      outline: 2px solid rgba(var(--brand-primary-rgb), 0.5);
-      outline-offset: 2px;
-      box-shadow: 0 0 0 2px rgba(var(--brand-primary-rgb), 0.15);
-      background: rgba(255, 255, 255, 0.95);
-      border-color: rgba(var(--brand-primary-rgb), 0.32);
-    }
-  }
-
-  // Baseline sizes only for buttons without custom sizing classes
-  .header-actions
-    .q-btn:not(.action-btn):not(.user-menu-btn):not(.menu-toggle-btn) {
-    width: 48px;
-    height: 48px;
-  }
-  .header-actions
-    .q-btn:not(.action-btn):not(.user-menu-btn):not(.menu-toggle-btn)
-    .q-icon {
-    font-size: 22px;
-  }
+  // Removed generic .header-actions button styling to avoid conflicts.
 
   // Notification badge styling - floating next to icon
-  .header-actions .q-btn .q-badge {
+  .layout-modern .toolbar-modern .header-actions .q-btn .q-badge {
     font-size: 11px;
     font-weight: 600;
     min-width: 18px;
@@ -1337,7 +1280,7 @@
   }
 
   // Demo badge styling (geel icoontje) - floating next to icon
-  .header-actions .q-btn .demo-badge {
+  .layout-modern .toolbar-modern .header-actions .q-btn .demo-badge {
     font-size: 10px;
     min-width: 16px;
     height: 16px;
@@ -1348,7 +1291,7 @@
   }
 
   // User menu
-  .header-actions .q-menu .q-list {
+  .layout-modern .toolbar-modern .header-actions .q-menu .q-list {
     min-width: 280px;
     border-radius: 12px;
     padding: 8px;
@@ -1383,7 +1326,7 @@
 
   // Dark mode
   body.body--dark {
-    .header-actions .q-btn {
+    .layout-modern .toolbar-modern .header-actions .q-btn {
       color: var(--neutral-300);
       background: rgba(0, 0, 0, 0.6);
       border-color: rgba(255, 255, 255, 0.1);
@@ -1395,7 +1338,7 @@
       }
     }
 
-    .header-actions .q-menu .q-list {
+    .layout-modern .toolbar-modern .header-actions .q-menu .q-list {
       background: rgba(30, 30, 30, 0.95);
       border-color: rgba(255, 255, 255, 0.15);
 

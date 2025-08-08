@@ -6,13 +6,11 @@
     <!-- Widget Header -->
     <q-card-section
       v-if="!hideHeader && (title || $slots.actions)"
-      class="widget-header flex items-center justify-between p-0 pb-4"
+      class="widget-header flex items-center justify-between"
     >
       <!-- Title Section -->
       <div v-if="title" class="widget-title">
-        <h4
-          class="text-sm font-medium text-gray-700 m-0 uppercase tracking-wide"
-        >
+        <h4 class="widget-title-text">
           {{ title }}
         </h4>
       </div>
@@ -108,10 +106,11 @@
     box-shadow: var(--widget-shadow);
     transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
 
-    // Interactive states
+    // Interactive states: keep card in place
     &:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1),
+      transform: none;
+      box-shadow:
+        0 10px 15px -3px rgba(0, 0, 0, 0.1),
         0 4px 6px -2px rgba(0, 0, 0, 0.05);
     }
 
@@ -121,20 +120,25 @@
       pointer-events: none;
     }
 
-    // Header styling
+    // Header styling (compact)
     .widget-header {
       border-bottom: 1px solid var(--widget-border);
+      padding: 0.5rem 1rem; // compact vertical padding, add horizontal space so title doesn't touch edges
 
-      .widget-title h3 {
+      .widget-title-text {
+        margin: 0;
         color: var(--widget-text-primary);
-        font-weight: 600;
-        line-height: 1.25;
+        font-weight: 700;
+        font-size: 1.1rem;
+        line-height: 1.2;
+        letter-spacing: 0.01em;
+        text-transform: none;
       }
 
       .widget-actions {
         display: flex;
         align-items: center;
-        gap: 0.5rem;
+        gap: 0.375rem;
       }
     }
 
@@ -152,7 +156,8 @@
       --widget-text-muted: var(--text-muted-dark, #d1d5db);
 
       &:hover {
-        box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3),
+        box-shadow:
+          0 10px 15px -3px rgba(0, 0, 0, 0.3),
           0 4px 6px -2px rgba(0, 0, 0, 0.2);
       }
     }

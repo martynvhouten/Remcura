@@ -294,10 +294,23 @@ export const useAuthStore = defineStore('auth', () => {
     try {
       authLogger.info('Starting platform owner login process');
 
-      // For development, use the demo account but override the role to platform_owner
+      // Use dedicated platform owner credentials from environment
+      const ownerEmail =
+        (import.meta as any).env.VITE_PLATFORM_OWNER_EMAIL ||
+        'owner@remcura.com';
+      const ownerPassword = (import.meta as any).env
+        .VITE_PLATFORM_OWNER_PASSWORD;
+
+      if (!ownerPassword) {
+        authLogger.warn(
+          'Missing VITE_PLATFORM_OWNER_PASSWORD; aborting owner login'
+        );
+        throw new Error('Platform owner wachtwoord ontbreekt');
+      }
+
       const { data, error } = await supabase.auth.signInWithPassword({
-        email: 'demo@remcura.com',
-        password: 'demo123',
+        email: ownerEmail,
+        password: ownerPassword,
       });
 
       if (error) {
@@ -316,26 +329,8 @@ export const useAuthStore = defineStore('auth', () => {
           userId: data.session.user.id,
         });
 
-        // Set auth data first
+        // Set auth data; role will be derived from JWT/app_metadata in fetchUserProfile
         await setAuthData(data.session);
-
-        // Override the user profile to be platform_owner
-        userProfile.value = {
-          id: data.session.user.id,
-          clinic_id: null, // Platform owners don't belong to a specific practice
-          email: data.session.user.email || 'demo@remcura.com',
-          full_name: 'Platform Owner',
-          role: 'platform_owner',
-          avatar_url: null,
-          created_at: new Date().toISOString(),
-          updated_at: new Date().toISOString(),
-        };
-
-        // Save the platform owner profile
-        localStorage.setItem(
-          'remcura_auth_profile',
-          JSON.stringify(userProfile.value)
-        );
 
         monitoringService.trackEvent('platform_owner_login_success', {
           method: 'supabase',
@@ -519,38 +514,32 @@ export const useAuthStore = defineStore('auth', () => {
 
   const fetchUserProfile = async (userId: string) => {
     try {
-      // For demo user, use practice-based profile
-      if (userId === '550e8400-e29b-41d4-a716-446655440001') {
-        userProfile.value = {
-          id: userId,
-          clinic_id: '550e8400-e29b-41d4-a716-446655440000',
-          email: 'demo@remcura.com',
-          full_name: 'Demo User',
-          role: 'owner', // Practice role, not platform
-          avatar_url: null,
-          created_at: new Date().toISOString(),
-          updated_at: new Date().toISOString(),
-        };
-        localStorage.setItem(
-          'remcura_auth_profile',
-          JSON.stringify(userProfile.value)
-        );
-        return;
+      const currentUser = user.value;
+
+      // Platform owner: derive from Supabase helper (preferred) or JWT/app_metadata (fallback)
+      let isPlatformOwner = false;
+      try {
+        const { data: isPo } = await supabase.rpc('is_platform_owner');
+        if (isPo === true) {
+          isPlatformOwner = true;
+        }
+      } catch (e) {
+        // ignore and fallback to app_metadata
+      }
+      if (!isPlatformOwner) {
+        isPlatformOwner =
+          !!(currentUser as any)?.app_metadata?.role &&
+          (currentUser as any).app_metadata.role === 'platform_owner';
       }
 
-      // Check if this is a platform owner (based on email or user metadata)
-      const currentUser = user.value;
-      if (
-        currentUser?.email === 'owner@remcura.com' ||
-        currentUser?.user_metadata?.role === 'platform_owner'
-      ) {
+      if (isPlatformOwner) {
         userProfile.value = {
           id: userId,
-          clinic_id: null, // Platform owners don't belong to a specific practice
-          email: currentUser.email || 'owner@remcura.com',
-          full_name: currentUser.user_metadata?.full_name || 'Platform Owner',
+          clinic_id: null,
+          email: currentUser?.email || '',
+          full_name: currentUser?.user_metadata?.full_name || 'Platform Owner',
           role: 'platform_owner',
-          avatar_url: currentUser.user_metadata?.avatar_url || null,
+          avatar_url: currentUser?.user_metadata?.avatar_url || null,
           created_at: new Date().toISOString(),
           updated_at: new Date().toISOString(),
         };
@@ -564,14 +553,11 @@ export const useAuthStore = defineStore('auth', () => {
       // For real users, get practice membership data
       const { data, error } = await supabase
         .from('practice_members')
-        .select(
-          `
-          *,
-          practices:practice_id (*)
-        `
-        )
+        .select('practice_id, role, created_at, updated_at, joined_at')
         .eq('user_id', userId)
-        .single();
+        .order('joined_at', { ascending: false })
+        .limit(1)
+        .maybeSingle();
 
       if (error) {
         authLogger.warn('No practice membership found for user', {
@@ -599,13 +585,13 @@ export const useAuthStore = defineStore('auth', () => {
       // Create user profile from practice membership
       userProfile.value = {
         id: userId,
-        clinic_id: data.practice_id,
+        clinic_id: data?.practice_id || null,
         email: user.value?.email || '',
         full_name: user.value?.user_metadata?.full_name || 'User',
-        role: data.role,
+        role: (data?.role as any) || 'member',
         avatar_url: user.value?.user_metadata?.avatar_url || null,
-        created_at: data.created_at || new Date().toISOString(),
-        updated_at: data.updated_at || new Date().toISOString(),
+        created_at: (data as any)?.created_at || new Date().toISOString(),
+        updated_at: (data as any)?.updated_at || new Date().toISOString(),
       };
 
       // Persist user profile to localStorage

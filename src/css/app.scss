@@ -3,182 +3,195 @@
 // Modern B2B SaaS Platform - Optimized for Performance
 // ===================================================================
 
+/* CSS Layers to control specificity and load order */
+@layer base, components, utilities;
+
+/* Split architecture imports */
+@import './_tokens.scss';
+@import './_reset.scss';
+@import './_primitives.forms.scss';
+@import './_components.scss';
+@import './_utilities.scss';
+
 // Import Poppins font from Google Fonts with all needed weights
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap');
 
 // ===================================================================
 // CSS CUSTOM PROPERTIES & DESIGN TOKENS
+// (Existing tokens kept for compatibility; prefer tokens in _tokens.scss)
 // ===================================================================
 
-:root {
-  // Enhanced Brand Colors - Modern Medical Blue Theme
-  --brand-primary: #1e3a8a; // Deep Medical Blue - Professional & trustworthy
-  --brand-primary-dark: #1e40af; // Rich Blue for contrast
-  --brand-primary-light: #3b82f6; // Bright Blue for accents
-  --brand-secondary: #0f766e; // Deep Teal - Clean & calming
-  --brand-accent: #0d9488; // Medical Teal - Attention & trust
+@layer base {
+  :root {
+    // Enhanced Brand Colors - Modern Medical Blue Theme
+    --brand-primary: #1e3a8a; // Deep Medical Blue - Professional & trustworthy
+    --brand-primary-dark: #1e40af; // Rich Blue for contrast
+    --brand-primary-light: #3b82f6; // Bright Blue for accents
+    --brand-secondary: #0f766e; // Deep Teal - Clean & calming
+    --brand-accent: #0d9488; // Medical Teal - Attention & trust
 
-  // Semantic Colors - Enhanced for Medical Context
-  --brand-success: #065f46; // Deep Emerald - Natural & healing
-  --brand-success-light: #059669; // Lighter emerald for UI elements
-  --brand-warning: #d97706; // Warm Orange - Professional warning
-  --brand-warning-light: #f59e0b; // Lighter orange for UI
-  --brand-danger: #b91c1c; // Deep Red - Clear alerts
-  --brand-danger-light: #dc2626; // Lighter red for UI
-  --brand-info: #1e40af; // Rich Blue - Informative & calm
-  --brand-info-light: #3b82f6; // Lighter blue for UI
+    // Semantic Colors - Enhanced for Medical Context
+    --brand-success: #065f46; // Deep Emerald - Natural & healing
+    --brand-success-light: #059669; // Lighter emerald for UI elements
+    --brand-warning: #d97706; // Warm Orange - Professional warning
+    --brand-warning-light: #f59e0b; // Lighter orange for UI
+    --brand-danger: #b91c1c; // Deep Red - Clear alerts
+    --brand-danger-light: #dc2626; // Lighter red for UI
+    --brand-info: #1e40af; // Rich Blue - Informative & calm
+    --brand-info-light: #3b82f6; // Lighter blue for UI
 
-  // Extended Brand Palette for Rich Medical UI
-  --brand-navy: #1e3a8a; // Deep Navy - Premium medical feel
-  --brand-navy-light: #1e40af; // Lighter navy
-  --brand-emerald: #065f46; // Deep Emerald - Health & growth
-  --brand-emerald-light: #059669; // Lighter emerald
-  --brand-cyan: #0e7490; // Medical Cyan - Clean technology
-  --brand-cyan-light: #0891b2; // Lighter cyan
-  --brand-slate: #334155; // Professional Slate - Elegant neutrals
-  --brand-slate-light: #475569; // Lighter slate
+    // Extended Brand Palette for Rich Medical UI
+    --brand-navy: #1e3a8a; // Deep Navy - Premium medical feel
+    --brand-navy-light: #1e40af; // Lighter navy
+    --brand-emerald: #065f46; // Deep Emerald - Health & growth
+    --brand-emerald-light: #059669; // Lighter emerald
+    --brand-cyan: #0e7490; // Medical Cyan - Clean technology
+    --brand-cyan-light: #0891b2; // Lighter cyan
+    --brand-slate: #334155; // Professional Slate - Elegant neutrals
+    --brand-slate-light: #475569; // Lighter slate
 
-  // Professional Neutral Palette - Warmer & More Sophisticated
-  --neutral-50: #fafaf9; // Warm white
-  --neutral-100: #f5f5f4; // Very light warm gray
-  --neutral-200: #e7e5e4; // Light warm gray
-  --neutral-300: #d6d3d1; // Medium light warm gray
-  --neutral-400: #a8a29e; // Medium warm gray
-  --neutral-500: #78716c; // Medium warm gray
-  --neutral-600: #57534e; // Dark warm gray
-  --neutral-700: #44403c; // Darker warm gray
-  --neutral-800: #292524; // Very dark warm gray
-  --neutral-900: #1c1917; // Almost black warm
+    // Professional Neutral Palette - Warmer & More Sophisticated
+    --neutral-50: #fafaf9; // Warm white
+    --neutral-100: #f5f5f4; // Very light warm gray
+    --neutral-200: #e7e5e4; // Light warm gray
+    --neutral-300: #d6d3d1; // Medium light warm gray
+    --neutral-400: #a8a29e; // Medium warm gray
+    --neutral-500: #78716c; // Medium warm gray
+    --neutral-600: #57534e; // Dark warm gray
+    --neutral-700: #44403c; // Darker warm gray
+    --neutral-800: #292524; // Very dark warm gray
+    --neutral-900: #1c1917; // Almost black warm
 
-  // Semantic UI Colors - Light Mode
-  --bg-primary: #fafaf9; // Primary background
-  --bg-secondary: #f5f5f4; // Secondary background (cards, panels)
-  --bg-tertiary: #e7e5e4; // Tertiary background (hover states)
-  --text-primary: #1c1917; // Primary text
-  --text-secondary: #57534e; // Secondary text
-  --text-tertiary: #78716c; // Tertiary text (muted)
-  --border-primary: #e7e5e4; // Primary borders
-  --border-secondary: #d6d3d1; // Secondary borders
+    // Semantic UI Colors - Light Mode
+    --bg-primary: #fafaf9; // Primary background
+    --bg-secondary: #f5f5f4; // Secondary background (cards, panels)
+    --bg-tertiary: #e7e5e4; // Tertiary background (hover states)
+    --text-primary: #1c1917; // Primary text
+    --text-secondary: #57534e; // Secondary text
+    --text-tertiary: #78716c; // Tertiary text (muted)
+    --border-primary: #e7e5e4; // Primary borders
+    --border-secondary: #d6d3d1; // Secondary borders
 
-  // Typography - Poppins Font Stack for Medical Platform (Better Font Weights)
-  --font-family-primary:
-    'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'San Francisco',
-    'Helvetica Neue', Arial, sans-serif;
-  --font-family-display:
-    'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'San Francisco',
-    'Helvetica Neue', Arial, sans-serif;
-  --font-family-mono:
-    'JetBrains Mono', 'SF Mono', 'Monaco', 'Cascadia Code', 'Roboto Mono',
-    'Courier New', monospace;
+    // Typography - Poppins Font Stack for Medical Platform (Better Font Weights)
+    --font-family-primary:
+      'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'San Francisco',
+      'Helvetica Neue', Arial, sans-serif;
+    --font-family-display:
+      'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'San Francisco',
+      'Helvetica Neue', Arial, sans-serif;
+    --font-family-mono:
+      'JetBrains Mono', 'SF Mono', 'Monaco', 'Cascadia Code', 'Roboto Mono',
+      'Courier New', monospace;
 
-  // Enhanced Poppins Font Weights - Much Better for Headers & Labels
-  --font-weight-light: 300;
-  --font-weight-normal: 400;
-  --font-weight-medium: 500;
-  --font-weight-semibold: 600;
-  --font-weight-bold: 700;
-  --font-weight-extrabold: 800;
-  --font-weight-black: 900;
+    // Enhanced Poppins Font Weights - Much Better for Headers & Labels
+    --font-weight-light: 300;
+    --font-weight-normal: 400;
+    --font-weight-medium: 500;
+    --font-weight-semibold: 600;
+    --font-weight-bold: 700;
+    --font-weight-extrabold: 800;
+    --font-weight-black: 900;
 
-  // Font sizes - proper scale
-  --text-xs: 0.75rem;
-  --text-sm: 0.875rem;
-  --text-base: 1rem;
-  --text-lg: 1.125rem;
-  --text-xl: 1.25rem;
-  --text-2xl: 1.5rem;
-  --text-3xl: 1.875rem;
-  --text-4xl: 2.25rem;
+    // Font sizes - proper scale
+    --text-xs: 0.75rem;
+    --text-sm: 0.875rem;
+    --text-base: 1rem;
+    --text-lg: 1.125rem;
+    --text-xl: 1.25rem;
+    --text-2xl: 1.5rem;
+    --text-3xl: 1.875rem;
+    --text-4xl: 2.25rem;
 
-  // Line heights
-  --leading-tight: 1.25;
-  --leading-normal: 1.5;
-  --leading-relaxed: 1.625;
+    // Line heights
+    --leading-tight: 1.25;
+    --leading-normal: 1.5;
+    --leading-relaxed: 1.625;
 
-  // Spacing (8pt grid)
-  --space-1: 0.25rem;
-  --space-2: 0.5rem;
-  --space-3: 0.75rem;
-  --space-4: 1rem;
-  --space-5: 1.25rem;
-  --space-6: 1.5rem;
-  --space-8: 2rem;
-  --space-12: 3rem;
+    // Spacing (8pt grid)
+    --space-1: 0.25rem;
+    --space-2: 0.5rem;
+    --space-3: 0.75rem;
+    --space-4: 1rem;
+    --space-5: 1.25rem;
+    --space-6: 1.5rem;
+    --space-8: 2rem;
+    --space-12: 3rem;
 
-  // Icon sizes - standardized
-  --icon-xs: 12px;
-  --icon-sm: 16px;
-  --icon-base: 20px;
-  --icon-lg: 24px;
-  --icon-xl: 32px;
-  --icon-2xl: 48px;
-  --icon-3xl: 64px;
-  --icon-4xl: 96px;
-  --icon-5xl: 120px;
+    // Icon sizes - standardized
+    --icon-xs: 12px;
+    --icon-sm: 16px;
+    --icon-base: 20px;
+    --icon-lg: 24px;
+    --icon-xl: 32px;
+    --icon-2xl: 48px;
+    --icon-3xl: 64px;
+    --icon-4xl: 96px;
+    --icon-5xl: 120px;
 
-  // Border Radius - More modern and consistent
-  --radius-sm: 0.25rem;
-  --radius-base: 0.5rem;
-  --radius-lg: 0.75rem;
-  --radius-xl: 1rem;
-  --radius-2xl: 1.5rem;
-  --radius-3xl: 2rem;
-  --radius-full: 9999px;
+    // Border Radius - More modern and consistent
+    --radius-sm: 0.25rem;
+    --radius-base: 0.5rem;
+    --radius-lg: 0.75rem;
+    --radius-xl: 1rem;
+    --radius-2xl: 1.5rem;
+    --radius-3xl: 2rem;
+    --radius-full: 9999px;
 
-  // Enhanced Shadows - More sophisticated depth
-  --shadow-xs: 0 1px 2px 0 rgba(0, 0, 0, 0.02);
-  --shadow-sm:
-    0 1px 3px 0 rgba(0, 0, 0, 0.06), 0 1px 2px -1px rgba(0, 0, 0, 0.04);
-  --shadow-base:
-    0 4px 6px -1px rgba(0, 0, 0, 0.08), 0 2px 4px -2px rgba(0, 0, 0, 0.05);
-  --shadow-md:
-    0 10px 15px -3px rgba(0, 0, 0, 0.08), 0 4px 6px -4px rgba(0, 0, 0, 0.05);
-  --shadow-lg:
-    0 20px 25px -5px rgba(0, 0, 0, 0.08), 0 8px 10px -6px rgba(0, 0, 0, 0.05);
-  --shadow-xl: 0 25px 50px -12px rgba(0, 0, 0, 0.12);
-  --shadow-2xl: 0 50px 100px -20px rgba(0, 0, 0, 0.15);
+    // Enhanced Shadows - More sophisticated depth
+    --shadow-xs: 0 1px 2px 0 rgba(0, 0, 0, 0.02);
+    --shadow-sm:
+      0 1px 3px 0 rgba(0, 0, 0, 0.06), 0 1px 2px -1px rgba(0, 0, 0, 0.04);
+    --shadow-base:
+      0 4px 6px -1px rgba(0, 0, 0, 0.08), 0 2px 4px -2px rgba(0, 0, 0, 0.05);
+    --shadow-md:
+      0 10px 15px -3px rgba(0, 0, 0, 0.08), 0 4px 6px -4px rgba(0, 0, 0, 0.05);
+    --shadow-lg:
+      0 20px 25px -5px rgba(0, 0, 0, 0.08), 0 8px 10px -6px rgba(0, 0, 0, 0.05);
+    --shadow-xl: 0 25px 50px -12px rgba(0, 0, 0, 0.12);
+    --shadow-2xl: 0 50px 100px -20px rgba(0, 0, 0, 0.15);
 
-  // Glass Morphism - Enhanced
-  --glass-bg: rgba(255, 255, 255, 0.08);
-  --glass-border: rgba(255, 255, 255, 0.12);
-  --glass-backdrop: blur(20px);
-  --glass-shadow: 0 8px 32px rgba(31, 38, 135, 0.12);
+    // Glass Morphism - Enhanced
+    --glass-bg: rgba(255, 255, 255, 0.08);
+    --glass-border: rgba(255, 255, 255, 0.12);
+    --glass-backdrop: blur(20px);
+    --glass-shadow: 0 8px 32px rgba(31, 38, 135, 0.12);
 
-  // Transitions - Smoother and more refined
-  --transition-fast: 150ms cubic-bezier(0.4, 0, 0.2, 1);
-  --transition-base: 250ms cubic-bezier(0.4, 0, 0.2, 1);
-  --transition-slow: 350ms cubic-bezier(0.4, 0, 0.2, 1);
-  --transition-bounce: 400ms cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    // Transitions - Smoother and more refined
+    --transition-fast: 150ms cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-base: 250ms cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-slow: 350ms cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-bounce: 400ms cubic-bezier(0.68, -0.55, 0.265, 1.55);
 
-  // Navigation & Sidebar theme tokens
-  --sidebar-bg: #111827; /* softer than pure black */
-  --sidebar-border: rgba(255, 255, 255, 0.08);
-  --nav-hover-bg: rgba(255, 255, 255, 0.06);
-  --nav-active-bg: rgba(255, 255, 255, 0.1);
+    // Navigation & Sidebar theme tokens
+    --sidebar-bg: #111827; /* softer than pure black */
+    --sidebar-border: rgba(255, 255, 255, 0.08);
+    --nav-hover-bg: rgba(255, 255, 255, 0.06);
+    --nav-active-bg: rgba(255, 255, 255, 0.1);
 
-  // Interactive States - Medical Blue Theme
-  --hover-bg: rgba(30, 58, 138, 0.08);
-  --hover-border: rgba(30, 58, 138, 0.2);
-  --focus-ring: 0 0 0 3px rgba(30, 58, 138, 0.12);
-  --focus-ring-offset: 2px;
+    // Interactive States - Medical Blue Theme
+    --hover-bg: rgba(30, 58, 138, 0.08);
+    --hover-border: rgba(30, 58, 138, 0.2);
+    --focus-ring: 0 0 0 3px rgba(30, 58, 138, 0.12);
+    --focus-ring-offset: 2px;
 
-  // Medical-specific color system
-  --medical-critical: #dc2626; // Emergency red
-  --medical-urgent: #ea580c; // Urgent orange
-  --medical-caution: #f59e0b; // Caution amber
-  --medical-stable: #059669; // Stable green
-  --medical-optimal: #0d9488; // Optimal teal
+    // Medical-specific color system
+    --medical-critical: #dc2626; // Emergency red
+    --medical-urgent: #ea580c; // Urgent orange
+    --medical-caution: #f59e0b; // Caution amber
+    --medical-stable: #059669; // Stable green
+    --medical-optimal: #0d9488; // Optimal teal
 
-  // Stock level indicators
-  --stock-critical: #dc2626; // Out of stock - red
-  --stock-low: #f59e0b; // Low stock - amber
-  --stock-adequate: #059669; // Adequate - green
-  --stock-overstocked: #0891b2; // Overstocked - blue
+    // Stock level indicators
+    --stock-critical: #dc2626; // Out of stock - red
+    --stock-low: #f59e0b; // Low stock - amber
+    --stock-adequate: #059669; // Adequate - green
+    --stock-overstocked: #0891b2; // Overstocked - blue
 
-  // Medical equipment colors
-  --equipment-inactive: #6b7280; // Gray for inactive
-  --equipment-maintenance: #f59e0b; // Amber for maintenance
-  --equipment-active: #059669; // Green for active
+    // Medical equipment colors
+    --equipment-inactive: #6b7280; // Gray for inactive
+    --equipment-maintenance: #f59e0b; // Amber for maintenance
+    --equipment-active: #059669; // Green for active
+  }
 }
 
 // Dark mode variables - Enhanced warm dark theme
@@ -229,16 +242,18 @@ body.body--dark {
   box-sizing: border-box;
 }
 
-body {
-  font-family: var(--font-family-primary);
-  font-weight: var(--font-weight-normal);
-  line-height: 1.5;
-  color: var(--text-primary);
-  background-color: var(--bg-primary);
-  transition:
-    color var(--transition-base),
-    background-color var(--transition-base);
-  overflow-x: hidden; // Prevent horizontal scrolling
+@layer base {
+  body {
+    font-family: var(--font-family-primary);
+    font-weight: var(--font-weight-normal);
+    line-height: 1.5;
+    color: var(--text-primary);
+    background-color: var(--bg-primary);
+    transition:
+      color var(--transition-base),
+      background-color var(--transition-base);
+    overflow-x: hidden; // Prevent horizontal scrolling
+  }
 }
 
 // ===================================================================
@@ -1190,176 +1205,13 @@ body.body--dark {
   }
 
   // ===================================================================
-  // MODERN FIELD STYLING - CLEAN AND CONSISTENT
-  // ===================================================================
+  // MODERN FIELD STYLING - moved to primitives in _primitives.forms.scss
 
-  .q-field {
-    // Ensure the field itself is also 40px to match control
-    min-height: 40px;
-    height: 40px;
+  // Dark mode specifics remain minimal; primitives handle sizes
 
-    .q-field__control {
-      border-radius: var(--radius-lg);
-      min-height: 40px;
-      height: 40px; // Force consistent height
-      border: 1px solid var(--border-primary);
-      background: var(--bg-primary);
-      transition: all var(--transition-base);
-      box-shadow: var(--shadow-xs);
+  // Verlaat sizing aan Quasar; geen mode-specifieke hoogtes
 
-      &:hover {
-        border-color: var(--border-secondary);
-        box-shadow: var(--shadow-sm);
-      }
-    }
-
-    // Focus state
-    &.q-field--focused .q-field__control {
-      border-color: var(--brand-primary);
-      box-shadow: 0 0 0 3px rgba(30, 58, 138, 0.1);
-    }
-
-    // Error state
-    &.q-field--error .q-field__control {
-      border-color: var(--brand-danger);
-      box-shadow: 0 0 0 3px rgba(185, 28, 28, 0.1);
-    }
-
-    // Input styling with improved alignment
-    .q-field__native {
-      padding: 8px 12px; // Reduced padding to fit 40px height
-      font-family: var(--font-family-primary);
-      font-size: var(--text-base);
-      color: var(--text-primary);
-      line-height: 1.4;
-      border: none;
-      outline: none;
-      box-shadow: none;
-      display: flex;
-      align-items: center;
-      height: 40px; // Force 40px height
-      min-height: 40px;
-    }
-
-    // Better text alignment for field elements
-    .q-field__selected {
-      display: flex;
-      align-items: center;
-      line-height: 1.4;
-    }
-
-    input {
-      line-height: 1.4;
-      vertical-align: middle;
-    }
-
-    // Label styling
-    .q-field__label {
-      font-family: var(--font-family-primary);
-      font-weight: var(--font-weight-medium);
-      color: var(--text-secondary);
-      transition: all var(--transition-base);
-    }
-
-    // Focused label
-    &.q-field--focused .q-field__label {
-      color: var(--brand-primary);
-    }
-
-    // Error label
-    &.q-field--error .q-field__label {
-      color: var(--brand-danger);
-    }
-
-    // Icons
-    .q-field__prepend,
-    .q-field__append {
-      .q-icon {
-        color: var(--text-secondary);
-        transition: color var(--transition-fast);
-      }
-    }
-
-    &.q-field--focused .q-field__prepend .q-icon,
-    &.q-field--focused .q-field__append .q-icon {
-      color: var(--brand-primary);
-    }
-
-    // Disabled state
-    &.q-field--disabled .q-field__control {
-      opacity: 0.6;
-      background: var(--bg-tertiary);
-    }
-  }
-
-  // Dark mode specific field fixes
-  body.body--dark {
-    .q-field {
-      .q-field__control {
-        background: var(--bg-secondary);
-        border-color: var(--border-primary);
-      }
-
-      .q-field__native {
-        color: var(--text-primary);
-        display: flex;
-        align-items: center;
-        height: 40px; // Force 40px height in dark mode too
-        min-height: 40px;
-        padding: 8px 12px; // Consistent padding
-      }
-
-      // Fix selected value alignment in dark mode
-      .q-field__selected {
-        color: var(--text-primary);
-        font-size: 14px;
-        line-height: 1.4;
-        height: 100%;
-        display: flex;
-        align-items: center;
-        min-height: 38px; // Match field control height minus border
-        padding: 0; // Remove any extra padding
-      }
-
-      // Fix label positioning and contrast in dark mode
-      .q-field__label {
-        color: var(--text-secondary);
-        font-weight: var(--font-weight-medium);
-      }
-
-      // Better contrast for focused labels in dark mode
-      &.q-field--focused .q-field__label {
-        color: var(--brand-primary-light);
-      }
-
-      // Fix prepend/append icon colors
-      .q-field__prepend .q-icon,
-      .q-field__append .q-icon {
-        color: var(--text-secondary);
-      }
-
-      &.q-field--focused .q-field__prepend .q-icon,
-      &.q-field--focused .q-field__append .q-icon {
-        color: var(--brand-primary-light);
-      }
-    }
-  }
-
-  // Normalize outlined input/select vertical sizing across modes
-  .q-field.q-field--outlined .q-field__control,
-  body.body--dark .q-field.q-field--outlined .q-field__control {
-    min-height: 40px;
-    height: 40px;
-  }
-
-  // Ensure QSelect selected area height matches exactly in both modes
-  .q-select .q-field__native,
-  .q-select .q-field__selected,
-  body.body--dark .q-select .q-field__native,
-  body.body--dark .q-select .q-field__selected {
-    height: 40px;
-    min-height: 40px;
-  }
+  // QSelect: alleen typografie en ellipsis worden component-specifiek gezet
 
   // Remove browser default focus rings on native elements
   input:focus,
@@ -2862,6 +2714,51 @@ html body .sr-only {
     transition-duration: 0.01ms;
     scroll-behavior: auto;
   }
+}
+
+/* =================================================================== */
+/* FINAL UNIFIER: IDENTICAL FIELD LAYOUT IN LIGHT & DARK MODE           */
+/* =================================================================== */
+html body .q-field,
+html body.body--dark .q-field {
+  min-height: var(--control-height-md);
+  height: var(--control-height-md);
+}
+
+html body .q-field .q-field__control,
+html body.body--dark .q-field .q-field__control {
+  min-height: var(--control-height-md);
+  height: var(--control-height-md);
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--border-primary);
+  background: transparent;
+  box-shadow: var(--shadow-xs);
+  display: flex;
+  align-items: center;
+}
+
+/* Selected text/native input must align identically in both modes */
+html body .q-select .q-field__native,
+html body .q-select .q-field__selected,
+html body.body--dark .q-select .q-field__native,
+html body.body--dark .q-select .q-field__selected {
+  height: var(--control-height-md);
+  min-height: var(--control-height-md);
+  display: flex;
+  align-items: center;
+  padding: 8px 12px;
+  box-sizing: border-box;
+  font-size: var(--text-base);
+  line-height: 1.4;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Keep label metrics identical; only color differs elsewhere */
+html body .q-field .q-field__label,
+html body.body--dark .q-field .q-field__label {
+  line-height: 1.2;
 }
 
 /* Ensure icons are properly hidden from screen readers */

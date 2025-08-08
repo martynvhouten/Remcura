@@ -122,10 +122,16 @@ export class PermissionService {
       return false;
     }
 
-    // For demo user, grant all permissions
-    if (userId === '550e8400-e29b-41d4-a716-446655440001') {
-      return true;
-    }
+    // Platform owner bypass
+    // Prefer backend check; fallback to app_metadata
+    try {
+      const { data: isPo } = await supabase.rpc('is_platform_owner');
+      if (isPo === true) return true;
+    } catch {}
+    const isPlatformOwnerFallback =
+      !!(authStore.user as any)?.app_metadata?.role &&
+      (authStore.user as any).app_metadata.role === 'platform_owner';
+    if (isPlatformOwnerFallback) return true;
 
     // If no practiceId (Magic Join users), grant basic read permissions
     if (!practiceId) {
@@ -141,7 +147,7 @@ export class PermissionService {
     }
 
     try {
-      const { data, error } = await supabase.rpc('check_user_permission', {
+      const { data, error } = await supabase.rpc('check_user_permission_v2', {
         p_user_id: userId,
         p_practice_id: practiceId,
         p_permission_type: permissionType,
@@ -213,10 +219,15 @@ export class PermissionService {
     const userId = authStore.user?.id;
     const practiceId = authStore.clinicId;
 
-    // For demo user, return platform_owner role
-    if (userId === '550e8400-e29b-41d4-a716-446655440001') {
-      return 'platform_owner';
-    }
+    // Platform owner from JWT/app_metadata
+    try {
+      const { data: isPo } = await supabase.rpc('is_platform_owner');
+      if (isPo === true) return 'platform_owner';
+    } catch {}
+    const isPlatformOwnerFallback =
+      !!(authStore.user as any)?.app_metadata?.role &&
+      (authStore.user as any).app_metadata.role === 'platform_owner';
+    if (isPlatformOwnerFallback) return 'platform_owner';
 
     // If no practiceId, this might be a Magic Join user - give them guest access for now
     if (!practiceId) {

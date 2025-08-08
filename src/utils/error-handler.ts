@@ -74,7 +74,8 @@ export class ErrorHandler {
 // Composable for use in components
 export function useErrorHandler() {
   return {
-    handleError: ErrorHandler.handle,
-    getErrorMessage: ErrorHandler.getErrorMessage,
+    handleError: (error: Error | AppError, context?: string) =>
+      ErrorHandler.handle(error, context),
+    getErrorMessage: (error: Error) => ErrorHandler.getErrorMessage(error),
   };
 }
