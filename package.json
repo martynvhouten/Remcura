@@ -14,6 +14,7 @@
     "quality:fix": "npm run format && npm run lint -- --fix && npm run stylelint:fix",
     "stylelint": "stylelint \"**/*.{css,scss,vue}\"",
     "stylelint:fix": "stylelint \"**/*.{css,scss,vue}\" --fix",
+    "guard:hardcoded-controls": "node scripts/find-hardcoded-controls.mjs",
     "ci": "npm run quality && npm run quality:i18n && npm run build",
     "serve": "quasar serve dist/spa --port 3000 --history",
     "performance": "npm run build && npm run serve",

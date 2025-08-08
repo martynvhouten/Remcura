@@ -26,13 +26,14 @@
       border-color 150ms ease;
   }
 
-  .form-control:focus,
-  input:focus,
-  select:focus,
-  textarea:focus,
-  .dropdown-control:focus {
-    border-color: var(--brand-primary, #1e3a8a);
-    box-shadow: var(--focus-ring);
+  /* Single focus style: ring + transparent border to avoid double edges */
+  .form-control:focus-visible,
+  input:focus-visible,
+  select:focus-visible,
+  textarea:focus-visible,
+  .dropdown-control:focus-visible {
+    border-color: transparent;
+    box-shadow: 0 0 0 3px var(--focus-ring-color, rgba(30, 58, 138, 0.3));
   }
 
   .form-control[disabled],
@@ -108,9 +109,10 @@
         border-color 150ms ease;
     }
 
+    /* Ensure focus style matches native: transparent border + ring */
     &.q-field--focused .q-field__control {
-      border-color: var(--brand-primary, #1e3a8a);
-      box-shadow: var(--focus-ring);
+      border-color: transparent;
+      box-shadow: 0 0 0 3px var(--focus-ring-color, rgba(30, 58, 138, 0.3));
     }
 
     .q-field__native,

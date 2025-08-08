@@ -68,4 +68,7 @@ EOF
   fi
 fi
 
+# Warn-only guard for hardcoded control sizes
+npm run -s guard:hardcoded-controls || true
+
 echo "✅ Pre-commit checks passed!"

@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!doctype html>
 <html>
   <head>
     <title><%= productName %></title>
@@ -17,7 +17,11 @@
       content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width<% if (ctx.mode.cordova || ctx.mode.capacitor) { %>, viewport-fit=cover<% } %>"
     />
 
-    <!-- Fonts are managed via SCSS tokens (Poppins). Removed Inter to avoid duplication. -->
+    <!-- Load Poppins globally (single source). Avoid duplicating in SCSS. -->
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap"
+      rel="stylesheet"
+    />
 
     <!-- SEO Meta Tags -->
     <meta

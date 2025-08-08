@@ -66,11 +66,33 @@ De-duplication
 - Moved field sizing/spacing into primitives; replaced hard-coded 40px in global blocks with tokens.
 - Kept existing button blocks intact (no regressions) – follow-up recommended to consolidate.
 
+Focus strategy
+
+- Single ring via tokens on :focus-visible for inputs/selects/textareas and Quasar fields;
+  border-color set to transparent to prevent double edges. Hover styles do not override focused
+  state.
+
+Typography normalization
+
+- Introduced `src/css/_typography.scss` with `--font-sans: "Poppins", system-ui, ...` and applied to
+  `html, body`. Loaded Google Font once in `index.html`. Removed duplicate SCSS @import.
+
+Token wiring and sizing
+
+- Replaced hard-coded heights/paddings in form contexts with tokens/utilities. Mapped
+  `.q-field/.q-input/.q-select` to tokens so visuals align 1:1 with native controls.
+  `--control-height-md` now drives sandbox and real pages.
+
+Removed CSS
+
+- `src/components/filters/FilterField.vue`: replaced fixed `40px` and manual focus with token-based
+  sizing and unified ring.
+
 Safety and linting
 
 - No !important in primitives.
 - Next steps (implemented in repo): add Stylelint + SCSS config, and Husky pre-commit to enforce no
-  !important.
+  !important. Added warn-only guard `scripts/find-hardcoded-controls.mjs` and wired to pre-commit.
 
 Verification
 

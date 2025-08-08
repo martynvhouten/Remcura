@@ -9,12 +9,12 @@
 /* Split architecture imports */
 @import './_tokens.scss';
 @import './_reset.scss';
+@import './_typography.scss';
 @import './_primitives.forms.scss';
 @import './_components.scss';
 @import './_utilities.scss';
 
-// Import Poppins font from Google Fonts with all needed weights
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap');
+/* Fonts are loaded once in index.html head to avoid duplicate @imports */
 
 // ===================================================================
 // CSS CUSTOM PROPERTIES & DESIGN TOKENS
@@ -2664,13 +2664,8 @@ html body .sr-only {
 }
 
 /* Ensure focus is visible when navigating with keyboard */
+/* Global focus policy: rely on :focus-visible rings in primitives and buttons */
 *:focus {
-  outline: 2px solid var(--brand-primary);
-  outline-offset: 2px;
-}
-
-/* Hide focus outline when using mouse */
-*:focus:not(:focus-visible) {
   outline: none;
 }
 
