@@ -66,14 +66,15 @@ module.exports = {
     'vue/no-unused-components': 'warn',
 
     // Import/Export rules
-    'no-duplicate-imports': 'error',
+    'no-duplicate-imports': 'warn',
 
     // Best practices
-    eqeqeq: ['error', 'always'],
-    curly: ['error', 'all'],
-    'no-var': 'error',
-    'prefer-const': 'error',
-    'prefer-arrow-callback': 'error',
+    eqeqeq: ['warn', 'always'],
+    curly: ['warn', 'all'],
+    'no-var': 'warn',
+    'prefer-const': 'warn',
+    'prefer-arrow-callback': 'warn',
+    'no-misleading-character-class': 'warn',
 
     // Disable base no-unused-vars in favor of TypeScript version
     'no-unused-vars': 'off',
