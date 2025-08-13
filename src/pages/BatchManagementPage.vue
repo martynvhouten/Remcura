@@ -407,21 +407,21 @@
   import BaseDialog from 'src/components/base/BaseDialog.vue';
   // ✅ PERFORMANCE OPTIMIZATION: Dynamic imports for heavy components
 
-  import BatchOverview from 'src/components/BatchOverview.vue';
+  import BatchOverview from 'src/components/batch/BatchOverview.vue';
   const BatchRegistrationForm = defineAsyncComponent(
-    () => import('src/components/BatchRegistrationForm.vue')
+    () => import('src/components/batch/BatchRegistrationForm.vue')
   );
   const BarcodeScanner = defineAsyncComponent(
     () => import('src/components/BarcodeScanner.vue')
   );
   const ExpiringBatchesList = defineAsyncComponent(
-    () => import('src/components/ExpiringBatchesList.vue')
+    () => import('src/components/batch/ExpiringBatchesList.vue')
   );
   const FifoBatchManager = defineAsyncComponent(
-    () => import('src/components/FifoBatchManager.vue')
+    () => import('src/components/batch/FifoBatchManager.vue')
   );
   const BatchReports = defineAsyncComponent(
-    () => import('src/components/BatchReports.vue')
+    () => import('src/components/batch/BatchReports.vue')
   );
   import type { ProductBatchWithDetails } from 'src/types/inventory';
   import { useFormatting } from 'src/composables/useFormatting';
