@@ -407,7 +407,7 @@
   import BaseDialog from 'src/components/base/BaseDialog.vue';
   // ✅ PERFORMANCE OPTIMIZATION: Dynamic imports for heavy components
 
-  import BatchOverview from 'src/components/batch/BatchOverview.vue';
+  import BatchOverview from 'src/components/BatchOverview.vue';
   const BatchRegistrationForm = defineAsyncComponent(
     () => import('src/components/batch/BatchRegistrationForm.vue')
   );

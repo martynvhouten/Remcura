@@ -47,9 +47,7 @@ export function useTableSorting(
     descending?: boolean,
     customSorter?: (a: T, b: T, sortBy: string, descending: boolean) => number
   ): T[] => {
-    if (!sortBy || !data.length) {
-      return data;
-    }
+    if (!sortBy || !data.length) return data;
 
     return [...data].sort((a: any, b: any) => {
       // Use custom sorter if provided
@@ -65,15 +63,10 @@ export function useTableSorting(
       if (
         (aVal === null || aVal === undefined) &&
         (bVal === null || bVal === undefined)
-      ) {
+      )
         return 0;
-      }
-      if (aVal === null || aVal === undefined) {
-        return descending ? 1 : -1;
-      }
-      if (bVal === null || bVal === undefined) {
-        return descending ? -1 : 1;
-      }
+      if (aVal === null || aVal === undefined) return descending ? 1 : -1;
+      if (bVal === null || bVal === undefined) return descending ? -1 : 1;
 
       // Handle dates
       if (isDate(aVal) && isDate(bVal)) {

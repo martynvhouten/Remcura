@@ -262,12 +262,16 @@
 
   // GTIN Validation
   const isValidGTIN = (code: string): boolean => {
-    if (!code) return false;
+    if (!code) {
+      return false;
+    }
     const cleanCode = code.trim().replace(/\D/g, '');
 
     // GTIN can be 8, 12, 13, or 14 digits
     const gtinRegex = /^(\d{8}|\d{12}|\d{13}|\d{14})$/;
-    if (!gtinRegex.test(cleanCode)) return false;
+    if (!gtinRegex.test(cleanCode)) {
+      return false;
+    }
 
     // Check digit validation for GTIN-13 and GTIN-14
     if (cleanCode.length === 13 || cleanCode.length === 14) {
@@ -350,8 +354,8 @@
         err.name === 'NotAllowedError'
           ? t('barcodeScanner.permissionDenied')
           : err.name === 'NotFoundError'
-          ? t('barcodeScanner.noCameraFound')
-          : t('barcodeScanner.cameraError');
+            ? t('barcodeScanner.noCameraFound')
+            : t('barcodeScanner.cameraError');
     } finally {
       initializing.value = false;
     }
@@ -370,12 +374,16 @@
   };
 
   const startScanning = () => {
-    if (!cameraActive.value || scanning.value) return;
+    if (!cameraActive.value || scanning.value) {
+      return;
+    }
 
     scanning.value = true;
 
     scanInterval.value = window.setInterval(async () => {
-      if (!videoElement.value || !cameraActive.value) return;
+      if (!videoElement.value || !cameraActive.value) {
+        return;
+      }
 
       try {
         await scanFrame();
@@ -390,14 +398,17 @@
       !videoElement.value ||
       !barcodeDetector ||
       !videoElement.value.videoWidth
-    )
+    ) {
       return;
+    }
 
     try {
       // Create canvas to capture frame
       const canvas = document.createElement('canvas');
       const ctx = canvas.getContext('2d');
-      if (!ctx) return;
+      if (!ctx) {
+        return;
+      }
 
       canvas.width = videoElement.value.videoWidth;
       canvas.height = videoElement.value.videoHeight;
@@ -460,7 +471,9 @@
   };
 
   const processManualInput = () => {
-    if (!manualInput.value.trim()) return;
+    if (!manualInput.value.trim()) {
+      return;
+    }
 
     const code = manualInput.value.trim();
     processScanResult(code);
@@ -468,7 +481,9 @@
   };
 
   const switchCamera = async () => {
-    if (!canSwitchCamera.value) return;
+    if (!canSwitchCamera.value) {
+      return;
+    }
 
     currentFacingMode.value =
       currentFacingMode.value === 'user' ? 'environment' : 'user';
@@ -478,7 +493,9 @@
   };
 
   const toggleFlash = async () => {
-    if (!hasFlash.value || !currentStream.value) return;
+    if (!hasFlash.value || !currentStream.value) {
+      return;
+    }
 
     try {
       const videoTrack = currentStream.value.getVideoTracks()[0];

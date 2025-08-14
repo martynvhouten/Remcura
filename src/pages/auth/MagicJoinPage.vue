@@ -231,7 +231,8 @@
     // Clean and format input
     magicCode.value = magicCode.value
       .toUpperCase()
-      .replace(/[^A-Z0-9🏥💊🦷🔬🩺💉⚕️✨🌟]/gu, '');
+      // Allow letters, numbers, and a curated set of emoji; avoid multi-codepoint classes
+      .replace(/(?![\p{L}\p{N}]|🏥|💊|🦷|🔬|🩺|💉|⚕️|✨|🌟)./gu, '');
   };
 
   const clearCode = () => {
@@ -456,9 +457,8 @@
           PermanentUserService.getDeviceFingerprint();
       }
 
-      const result = await PermanentUserService.createPermanentUser(
-        createRequest
-      );
+      const result =
+        await PermanentUserService.createPermanentUser(createRequest);
 
       if (result.success) {
         // Show success with personal code if applicable

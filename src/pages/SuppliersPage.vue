@@ -763,7 +763,9 @@
         .select('*')
         .order('name');
 
-      if (error) throw error;
+      if (error) {
+        throw error;
+      }
 
       suppliers.value = data || [];
     } catch (error: unknown) {
@@ -826,7 +828,9 @@
           .update(supplierData)
           .eq('id', editingSupplier.value.id);
 
-        if (error) throw error;
+        if (error) {
+          throw error;
+        }
 
         $q.notify({
           type: 'positive',
@@ -838,7 +842,9 @@
           .from('suppliers')
           .insert([supplierData]);
 
-        if (error) throw error;
+        if (error) {
+          throw error;
+        }
 
         $q.notify({
           type: 'positive',
@@ -883,7 +889,9 @@
         .delete()
         .eq('id', supplier.id);
 
-      if (error) throw error;
+      if (error) {
+        throw error;
+      }
 
       $q.notify({
         type: 'positive',
@@ -965,7 +973,9 @@
         supplier_uuid: supplier.id,
       });
 
-      if (error) throw error;
+      if (error) {
+        throw error;
+      }
 
       if (data?.success) {
         $q.notify({

@@ -9,6 +9,7 @@
     "build:analyze": "quasar build && npx vite-bundle-analyzer dist/spa",
     "build:stats": "quasar build && echo 'Bundle analysis complete - check dist/spa for generated files'",
     "lint": "eslint --ext .js,.ts,.vue ./",
+    "lint:errors": "eslint --ext .js,.ts,.vue ./ --quiet",
     "format": "prettier --write \"**/*.{js,ts,vue,scss,html,md,json}\" --ignore-path .gitignore",
     "quality": "npm run lint && npm run stylelint",
     "quality:fix": "npm run format && npm run lint -- --fix && npm run stylelint:fix",
@@ -32,6 +33,7 @@
     "i18n:sync": "node scripts/remcura-translation-manager.js --sync",
     "quality:i18n": "npm run translations:status && npm run i18n:find-hardcoded",
     "prepare": "husky install",
+    "guard:dialogs": "node scripts/guard-no-raw-qdialog.js",
     "gs1:import": "ts-node scripts/importGs1Excel.ts",
     "gs1:test": "ts-node scripts/testGs1Import.ts",
     "gs1:help": "ts-node scripts/importGs1Excel.ts --help"

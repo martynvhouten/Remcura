@@ -13,10 +13,14 @@
           round
           size="xl"
           class="menu-toggle-btn header-btn"
-          :aria-label="t('nav.openNavigation') || 'Open navigation menu'"
+          :aria-label="isMiniDrawer ? (t('nav.openNavigation') || 'Open navigation') : (t('nav.closeNavigation') || 'Collapse navigation')"
+          :aria-expanded="!isMiniDrawer"
           @click="toggleLeftDrawer"
         >
-          <q-icon name="view_sidebar" class="header-icon header-icon-lg" />
+          <q-icon :name="isMiniDrawer ? 'menu' : 'menu_open'" class="header-icon header-icon-lg" />
+          <q-tooltip>
+            {{ isMiniDrawer ? (t('nav.openNavigation') || 'Open navigation') : (t('nav.closeNavigation') || 'Collapse navigation') }}
+          </q-tooltip>
         </q-btn>
 
         <div class="brand-section">
@@ -152,20 +156,37 @@
       role="navigation"
       :aria-label="t('common.accessibility.mainNavigation')"
     >
-      <!-- Clinic Info Section -->
-      <div class="clinic-info-section" role="banner">
-        <div class="clinic-avatar">
-          <q-avatar size="48px" color="primary" text-color="white">
-            <q-icon name="apartment" class="icon-size-lg" />
-          </q-avatar>
+      <!--
+        Mini drawer rules:
+        - Top logo area is independent, fixed-height and perfectly centered in mini
+        - Tooltips appear on hover and focus only in mini
+        - Mini hover/active use subtle pill + focus ring; expanded drawer is unchanged
+      -->
+      <div class="flex flex-col h-full">
+        <!-- Top Logo Section (mini only) -->
+        <div
+          v-if="isMiniDrawer"
+          class="top-logo-section flex-none flex items-center justify-center"
+          role="img"
+          aria-label="Remcura"
+        >
+          <img src="/icons/icon-192x192.svg" alt="" class="h-10 w-10" />
         </div>
-        <div class="clinic-details">
-          <div class="clinic-name">{{ clinicName }}</div>
-        </div>
-      </div>
 
-      <!-- Main Navigation -->
-      <q-list class="navigation-list">
+        <!-- Clinic Info Section (expanded only to keep visuals unchanged) -->
+        <div v-else class="clinic-info-section" role="banner">
+          <div class="clinic-avatar">
+            <q-avatar size="48px" color="primary" text-color="white">
+              <q-icon name="apartment" class="icon-size-lg" />
+            </q-avatar>
+          </div>
+        <div class="clinic-details">
+          <div class="clinic-name" :title="clinicName">{{ clinicName }}</div>
+          </div>
+        </div>
+
+        <!-- Main Navigation -->
+        <q-list class="navigation-list flex-1" role="menu">
         <!-- Iterate through sections -->
         <template v-for="section in navigationLinks" :key="section.id">
           <!-- Section Header -->
@@ -179,86 +200,115 @@
 
           <!-- Section Items -->
           <template v-for="item in section.items" :key="item.title">
-            <q-item
-              :to="item.submenu ? undefined : item.to"
-              clickable
-              :active="$route.name === item.routeName || isParentActive(item)"
-              active-class="nav-item-active"
-              class="nav-item"
-              :class="{ 'has-submenu': item.submenu }"
-              :aria-label="
-                item.title + (item.badge ? ' (' + item.badge + ' items)' : '')
-              "
-              :aria-expanded="
-                item.submenu ? isSubmenuExpanded(item.routeName) : undefined
-              "
-              @click="handleItemClick(item)"
-            >
-              <q-item-section avatar>
-                <q-icon :name="item.icon" class="icon-size-base" />
-              </q-item-section>
+              <!-- Mini: icon-only item with tooltip -->
+              <NavIconItem
+                v-if="isMiniDrawer"
+                :icon="item.icon"
+                :label="String(item.title)"
+                :to="item.submenu ? null : item.to"
+                :active="$route.name === item.routeName || isParentActive(item)"
+                :mini="true"
+                :tooltip="String(item.title)"
+                :aria-label="String(item.title)"
+                @click="handleItemClick(item)"
+              />
 
-              <q-item-section class="hide-when-mini">
-                <q-item-label class="nav-item-label" :title="item.title">{{
-                  item.title
-                }}</q-item-label>
-              </q-item-section>
-
-              <q-item-section side v-if="item.badge" class="hide-when-mini">
-                <q-badge
-                  :color="item.badgeColor || 'primary'"
-                  :label="item.badge"
-                  :aria-label="`${item.badge} items requiring attention`"
-                  class="nav-badge"
-                />
-              </q-item-section>
-
-              <!-- Expand/Collapse for submenu -->
-              <q-item-section
-                side
-                v-if="item.submenu"
-                class="submenu-chevron hide-when-mini"
+              <!-- Expanded: original rich item -->
+              <q-item
+                v-else
+                :to="item.submenu ? undefined : item.to"
+                clickable
+                :active="$route.name === item.routeName || isParentActive(item)"
+                active-class="nav-item-active"
+                class="nav-item"
+                :class="{ 'has-submenu': item.submenu }"
+                role="menuitem"
+                :aria-current="($route.name === item.routeName || isParentActive(item)) ? 'page' : undefined"
+                :aria-label="
+                  item.title + (item.badge ? ' (' + item.badge + ' items)' : '')
+                "
+                :aria-expanded="
+                  item.submenu ? isSubmenuExpanded(item.routeName) : undefined
+                "
+                @click="handleItemClick(item)"
               >
-                <q-icon
-                  name="expand_more"
-                  size="20px"
-                  :class="[
-                    'chevron-icon',
-                    { expanded: isSubmenuExpanded(item.routeName) },
-                  ]"
-                />
-              </q-item-section>
+                <q-item-section avatar>
+                  <q-icon :name="item.icon" class="icon-size-base" />
+                </q-item-section>
 
-              <q-tooltip v-if="isMiniDrawer">{{ item.title }}</q-tooltip>
-            </q-item>
+                <q-item-section class="hide-when-mini">
+                  <q-item-label class="nav-item-label" :title="item.title">{{
+                    item.title
+                  }}</q-item-label>
+                </q-item-section>
+
+                <q-item-section side v-if="item.badge" class="hide-when-mini">
+                  <q-badge
+                    :color="item.badgeColor || 'primary'"
+                    :label="item.badge"
+                    :aria-label="`${item.badge} items requiring attention`"
+                    class="nav-badge"
+                  />
+                </q-item-section>
+
+                <!-- Expand/Collapse for submenu -->
+                <q-item-section
+                  side
+                  v-if="item.submenu"
+                  class="submenu-chevron hide-when-mini"
+                >
+                  <q-icon
+                    name="expand_more"
+                    size="20px"
+                    :class="[
+                      'chevron-icon',
+                      { expanded: isSubmenuExpanded(item.routeName) },
+                    ]"
+                  />
+                </q-item-section>
+              </q-item>
 
             <!-- Submenu Items -->
             <q-slide-transition v-if="item.submenu">
               <div v-show="isSubmenuExpanded(item.routeName)">
-                <q-item
-                  v-for="subItem in item.submenu"
-                  :key="subItem.title"
-                  :to="subItem.to"
-                  clickable
-                  :active="$route.name === subItem.routeName"
-                  active-class="nav-item-active"
-                  class="nav-item nav-sub-item"
-                  :aria-label="subItem.title"
-                >
-                  <q-item-section avatar class="sub-item-avatar">
-                    <q-icon :name="subItem.icon" class="icon-size-sm" />
-                  </q-item-section>
+                  <template v-for="subItem in item.submenu" :key="subItem.title">
+                    <!-- Mini: icon-only sub item -->
+                    <NavIconItem
+                      v-if="isMiniDrawer"
+                      :icon="subItem.icon"
+                      :label="String(subItem.title)"
+                      :to="subItem.to"
+                      :active="$route.name === subItem.routeName"
+                      :mini="true"
+                      :tooltip="String(subItem.title)"
+                      :aria-label="String(subItem.title)"
+                    />
 
-                  <q-item-section class="hide-when-mini">
-                    <q-item-label
-                      class="nav-item-label"
-                      :title="subItem.title"
-                      >{{ subItem.title }}</q-item-label
+                    <!-- Expanded: original rich sub item -->
+                    <q-item
+                      v-else
+                      :to="subItem.to"
+                      clickable
+                      :active="$route.name === subItem.routeName"
+                      active-class="nav-item-active"
+                      class="nav-item nav-sub-item"
+                      role="menuitem"
+                      :aria-current="($route.name === subItem.routeName) ? 'page' : undefined"
+                      :aria-label="subItem.title"
                     >
-                  </q-item-section>
+                      <q-item-section avatar class="sub-item-avatar">
+                        <q-icon :name="subItem.icon" class="icon-size-sm" />
+                      </q-item-section>
 
-                  <q-tooltip v-if="isMiniDrawer">{{ subItem.title }}</q-tooltip>
-                </q-item>
+                      <q-item-section class="hide-when-mini">
+                        <q-item-label
+                          class="nav-item-label"
+                          :title="subItem.title"
+                          >{{ subItem.title }}</q-item-label
+                        >
+                      </q-item-section>
+                    </q-item>
+                  </template>
               </div>
             </q-slide-transition>
           </template>
@@ -271,32 +321,33 @@
             class="navigation-separator"
           />
         </template>
-      </q-list>
+        </q-list>
 
-      <!-- Spacer -->
-      <q-space />
+        <!-- Spacer -->
+        <q-space />
 
-      <!-- Footer Section -->
-      <div class="drawer-footer">
-        <q-item
-          class="upgrade-item glass-card"
-          clickable
-          tabindex="0"
-          role="button"
-          :aria-label="t('nav.upgradePlan')"
-        >
-          <q-item-section avatar>
-            <q-icon name="upgrade" color="accent" />
-          </q-item-section>
-          <q-item-section>
-            <q-item-label class="text-weight-medium">{{
-              t('nav.upgradePlan')
-            }}</q-item-label>
-            <q-item-label caption>{{
-              t('nav.getAdvancedFeatures')
-            }}</q-item-label>
-          </q-item-section>
-        </q-item>
+        <!-- Footer Section -->
+        <div class="drawer-footer flex-none">
+          <q-item
+            class="upgrade-item glass-card"
+            clickable
+            tabindex="0"
+            role="button"
+            :aria-label="t('nav.upgradePlan')"
+          >
+            <q-item-section avatar>
+              <q-icon name="upgrade" color="accent" />
+            </q-item-section>
+            <q-item-section>
+              <q-item-label class="text-weight-medium">{{
+                t('nav.upgradePlan')
+              }}</q-item-label>
+              <q-item-label caption>{{
+                t('nav.getAdvancedFeatures')
+              }}</q-item-label>
+            </q-item-section>
+          </q-item>
+        </div>
       </div>
     </q-drawer>
 
@@ -318,6 +369,7 @@
   import { useAuthStore } from 'src/stores/auth';
   import { useClinicStore } from 'src/stores/clinic';
   import { useNotificationStore } from 'src/stores/notifications';
+  import NavIconItem from 'src/components/navigation/NavIconItem.vue';
 
   // Type definitions for navigation
   interface NavigationItem {
@@ -365,6 +417,12 @@
 
   // Enhanced navigation links with more details
   const navigationLinks = computed((): NavigationSection[] => {
+    // Re-enable all sections in navigation
+    const SHOW_ANALYTICS = true;
+    const SHOW_BATCH = true;
+    const SHOW_ADMIN = true;
+    const SHOW_PLATFORM = true;
+
     const sections = [
       // Main Section - Dashboard and notifications
       {
@@ -396,7 +454,7 @@
           {
             title: t('nav.inventory'),
             icon: 'inventory_2',
-            to: '/inventory/levels', // Redirect directly to levels instead of main inventory
+            to: '/inventory/levels',
             routeName: 'inventory-levels',
             submenu: [
               {
@@ -425,12 +483,17 @@
               },
             ],
           },
-          {
-            title: t('batch.batchManagement'),
-            icon: 'qr_code_scanner',
-            to: '/batch-management',
-            routeName: 'batch-management',
-          },
+          // Hide batch management in MVP drawer
+          ...(SHOW_BATCH
+            ? [
+                {
+                  title: t('batch.batchManagement'),
+                  icon: 'qr_code_scanner',
+                  to: '/batch-management',
+                  routeName: 'batch-management',
+                } as NavigationItem,
+              ]
+            : []),
         ],
       },
 
@@ -467,22 +530,26 @@
       },
 
       // Analytics Section
-      {
-        id: 'analytics',
-        title: t('nav.sections.analytics'),
-        items: [
-          {
-            title: t('nav.analytics'),
-            icon: 'insights',
-            to: '/analytics',
-            routeName: 'analytics',
-          },
-        ],
-      },
+      ...(SHOW_ANALYTICS
+        ? [
+            {
+              id: 'analytics',
+              title: t('nav.sections.analytics'),
+              items: [
+                {
+                  title: t('nav.analytics'),
+                  icon: 'insights',
+                  to: '/analytics',
+                  routeName: 'analytics',
+                },
+              ],
+            } as NavigationSection,
+          ]
+        : []),
     ];
 
-    // Add admin section for admin users
-    if (isAdmin.value) {
+    // Add admin section for admin users (hidden in MVP)
+    if (isAdmin.value && SHOW_ADMIN) {
       sections.push({
         id: 'admin',
         title: t('nav.sections.administration'),
@@ -499,12 +566,52 @@
             to: '/style-guide',
             routeName: 'style-guide',
           },
+          {
+            title: 'Style Sandbox',
+            icon: 'science',
+            to: '/style-sandbox',
+            routeName: 'style-sandbox',
+          },
+          {
+            title: 'Dialogs Gallery',
+            icon: 'view_carousel',
+            to: '/dialogs-gallery',
+            routeName: 'dialogs-gallery',
+          },
+        ],
+      });
+    }
+
+    // Add demo tools section for demo user
+    if (isDemoUser.value) {
+      sections.push({
+        id: 'demo',
+        title: t('demo.title') || 'Demo',
+        items: [
+          {
+            title: 'Style Sandbox',
+            icon: 'science',
+            to: '/style-sandbox',
+            routeName: 'style-sandbox',
+          },
+          {
+            title: 'Dialogs Gallery',
+            icon: 'view_carousel',
+            to: '/dialogs-gallery',
+            routeName: 'dialogs-gallery',
+          },
+          {
+            title: t('nav.styleGuide'),
+            icon: 'palette',
+            to: '/style-guide',
+            routeName: 'style-guide',
+          },
         ],
       });
     }
 
     // Add platform section for platform owner users
-    if (userProfile.value?.role === 'platform_owner') {
+    if (userProfile.value?.role === 'platform_owner' && SHOW_PLATFORM) {
       sections.push({
         id: 'platform',
         title: t('nav.sections.platform'),
@@ -752,6 +859,29 @@
         }
       }
 
+      .menu-toggle-btn {
+        background: rgba(255, 255, 255, 0.55);
+        border: 1px solid rgba(0, 0, 0, 0.06);
+        backdrop-filter: blur(8px);
+        -webkit-backdrop-filter: blur(8px);
+        transition:
+          transform 160ms ease,
+          background-color 160ms ease,
+          border-color 160ms ease,
+          box-shadow 160ms ease;
+
+        &:hover {
+          background: rgba(255, 255, 255, 0.7);
+          border-color: rgba(0, 0, 0, 0.08);
+          box-shadow: var(--shadow-sm);
+        }
+
+        &:active {
+          transform: translateY(0);
+          box-shadow: var(--shadow-xs, 0 1px 2px rgba(0, 0, 0, 0.12));
+        }
+      }
+
       .header-icon {
         font-size: 24px;
         line-height: 1;
@@ -855,6 +985,12 @@
         transform 220ms ease;
     }
 
+    // Fixed-height top logo for mini drawer only
+    .top-logo-section {
+      height: 72px;
+      border-bottom: 1px solid var(--sidebar-border);
+    }
+
     .clinic-info-section {
       padding: var(--space-6);
       border-bottom: 1px solid var(--sidebar-border);
@@ -864,10 +1000,16 @@
 
       .clinic-details {
         .clinic-name {
-          font-weight: var(--font-weight-medium);
-          font-size: var(--text-sm);
-          color: rgba(255, 255, 255, 0.8);
+          /* Clear, high-contrast title style */
+          font-weight: var(--font-weight-semibold);
+          font-size: 1rem; /* 16px for clarity */
+          line-height: 1.25rem;
+          color: rgba(255, 255, 255, 0.92);
           margin: 0;
+          letter-spacing: 0.005em;
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
         }
 
         .clinic-plan {

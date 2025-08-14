@@ -237,112 +237,93 @@
       <q-icon name="list_alt" size="64px" class="text-grey-4" />
       <div class="text-h6 q-mt-md text-grey-6">
         {{
-          hasActiveFilters ? 'Geen resultaten gevonden' : 'Geen bestellijsten'
+          hasActiveFilters
+            ? $t('orderLists.emptyFiltered')
+            : $t('orderLists.empty')
         }}
       </div>
       <div class="text-body2 q-mt-sm text-grey-5">
         {{
           hasActiveFilters
-            ? 'Probeer andere filters'
-            : 'Maak je eerste bestellijst aan'
+            ? $t('orderLists.tryOtherFilters')
+            : $t('orderLists.createFirstList')
         }}
       </div>
-      <q-btn
-        v-if="!hasActiveFilters"
-        @click="showCreateDialog = true"
-        color="primary"
-        label="Nieuwe lijst"
-        class="q-mt-md"
-      />
+        <q-btn
+          v-if="!hasActiveFilters"
+          @click="showCreateDialog = true"
+          color="primary"
+          :label="$t('orderLists.newList')"
+          class="q-mt-md"
+        />
     </div>
 
     <!-- Global Advice Dialog -->
-    <q-dialog v-model="showGlobalAdviceDialog" position="top">
-      <q-card style="width: 500px; max-width: 90vw">
-        <q-card-section class="q-pb-none">
-          <div class="text-h6">Globaal Besteladvies</div>
-          <div class="text-caption text-grey-6">
-            Overzicht van alle items die besteld moeten worden
+    <BaseDialog
+      v-model="showGlobalAdviceDialog"
+      :title="$t('orderLists.globalAdvice')"
+      icon="lightbulb"
+      size="md"
+    >
+      <div v-if="globalOrderAdvice">
+        <div class="row q-gutter-md q-mb-md">
+          <div class="col text-center">
+            <div class="text-h5 text-negative">
+              {{ globalOrderAdvice.items_by_urgency.critical.length }}
+            </div>
+            <div class="text-caption">Kritiek</div>
           </div>
-        </q-card-section>
+          <div class="col text-center">
+            <div class="text-h5 text-warning">
+              {{ globalOrderAdvice.items_by_urgency.high.length }}
+            </div>
+            <div class="text-caption">Hoog</div>
+          </div>
+          <div class="col text-center">
+            <div class="text-h5 text-primary">
+              {{ globalOrderAdvice.items_by_urgency.normal.length }}
+            </div>
+            <div class="text-caption">Normaal</div>
+          </div>
+        </div>
 
-        <q-card-section v-if="globalOrderAdvice">
-          <!-- Summary -->
-          <div class="row q-gutter-md q-mb-md">
-            <div class="col text-center">
-              <div class="text-h5 text-negative">
-                {{ globalOrderAdvice.items_by_urgency.critical.length }}
-              </div>
-              <div class="text-caption">Kritiek</div>
-            </div>
-            <div class="col text-center">
-              <div class="text-h5 text-warning">
-                {{ globalOrderAdvice.items_by_urgency.high.length }}
-              </div>
-              <div class="text-caption">Hoog</div>
-            </div>
-            <div class="col text-center">
+        <div class="q-mb-md">
+          <div class="text-subtitle2 q-mb-xs">Leveranciers betrokken:</div>
+          <div class="row q-gutter-xs">
+            <q-chip
+              v-for="supplier in globalOrderAdvice.suppliers_involved"
+              :key="supplier"
+              color="primary"
+              text-color="white"
+              :label="supplier"
+              size="sm"
+            />
+          </div>
+        </div>
+
+        <div class="q-mb-md">
+          <div class="row items-center">
+            <div class="col">
+              <div class="text-subtitle2">Totale kosten:</div>
               <div class="text-h5 text-primary">
-                {{ globalOrderAdvice.items_by_urgency.normal.length }}
+                €{{ globalOrderAdvice.total_estimated_cost.toFixed(2) }}
               </div>
-              <div class="text-caption">Normaal</div>
             </div>
-          </div>
-
-          <!-- Suppliers -->
-          <div class="q-mb-md">
-            <div class="text-subtitle2 q-mb-xs">Leveranciers betrokken:</div>
-            <div class="row q-gutter-xs">
-              <q-chip
-                v-for="supplier in globalOrderAdvice.suppliers_involved"
-                :key="supplier"
-                color="primary"
-                text-color="white"
-                :label="supplier"
-                size="sm"
-              />
-            </div>
-          </div>
-
-          <!-- Cost breakdown -->
-          <div class="q-mb-md">
-            <div class="row items-center">
-              <div class="col">
-                <div class="text-subtitle2">Totale kosten:</div>
-                <div class="text-h5 text-primary">
-                  €{{ globalOrderAdvice.total_estimated_cost.toFixed(2) }}
-                </div>
-              </div>
-              <div class="col-auto">
-                <div class="text-subtitle2">Items:</div>
-                <div class="text-h6">
-                  {{ globalOrderAdvice.total_items_to_order }}
-                </div>
+            <div class="col-auto">
+              <div class="text-subtitle2">Items:</div>
+              <div class="text-subtitle1">
+                {{ globalOrderAdvice.total_items_to_order }}
               </div>
             </div>
           </div>
-        </q-card-section>
+        </div>
+      </div>
 
-        <q-card-actions align="right" class="q-pa-md">
-          <q-btn
-            flat
-            label="Sluiten"
-            v-close-popup
-            class="app-btn-secondary"
-            no-caps
-          />
-          <q-btn
-            @click="orderAllUrgentItems"
-            :loading="processingGlobalOrder"
-            color="primary"
-            label="Alles bestellen"
-            class="app-btn-primary"
-            unelevated
-            no-caps
-          />
-        </q-card-actions>
-      </q-card>
-    </q-dialog>
+      <template #actions>
+        <q-btn flat :label="$t('common.close')" @click="showGlobalAdviceDialog = false" />
+        <q-btn @click="orderAllUrgentItems" :loading="processingGlobalOrder" color="primary" :label="$t('orderLists.orderAll')" />
+      </template>
+    </BaseDialog>
 
     <!-- Mobile Counting Interface Dialog -->
     <q-dialog
@@ -373,6 +354,7 @@
 </template>
 
 <script setup lang="ts">
+  // Dialog baseline: this page uses BaseDialog for global advice modal
   import { ref, computed, onMounted, watch } from 'vue';
   import { useQuasar } from 'quasar';
   import { useRouter } from 'vue-router';
@@ -413,9 +395,15 @@
   const viewMode = computed(() => filterValues.value.viewMode || 'cards');
   const hasActiveFilters = computed(() => {
     return Object.values(filterValues.value).some(value => {
-      if (value === null || value === undefined || value === '') return false;
-      if (Array.isArray(value) && value.length === 0) return false;
-      if (typeof value === 'boolean' && value === false) return false;
+      if (value === null || value === undefined || value === '') {
+        return false;
+      }
+      if (Array.isArray(value) && value.length === 0) {
+        return false;
+      }
+      if (typeof value === 'boolean' && value === false) {
+        return false;
+      }
       return true;
     });
   });
@@ -630,7 +618,9 @@
     const suggestions = orderListsStore.orderSuggestions || [];
     const items = suggestions.filter(item => item.order_list_id === listId);
 
-    if (items.length === 0) return undefined;
+    if (items.length === 0) {
+      return undefined;
+    }
 
     const itemsByUrgency = {
       critical: items.filter(item => item.urgency_level === 'critical'),
@@ -696,9 +686,8 @@
       }
 
       // Split orders by suppliers
-      const splitResult = await orderListsStore.splitOrdersBySupplier(
-        urgentItems
-      );
+      const splitResult =
+        await orderListsStore.splitOrdersBySupplier(urgentItems);
 
       $q.notify({
         type: 'positive',

@@ -595,7 +595,9 @@
   });
 
   const topPriorityItems = computed(() => {
-    if (!props.reorderAdvice) return [];
+    if (!props.reorderAdvice) {
+      return [];
+    }
 
     return [
       ...props.reorderAdvice.items_by_urgency.critical,
@@ -630,7 +632,9 @@
 
   const nextAutoCheck = computed(() => {
     const autoReorderEnabled = (props.orderList as any).auto_reorder_enabled;
-    if (!autoReorderEnabled) return 'Niet gepland';
+    if (!autoReorderEnabled) {
+      return 'Niet gepland';
+    }
 
     const lastCheck = (props.orderList as any).last_auto_check
       ? new Date((props.orderList as any).last_auto_check)
@@ -645,14 +649,22 @@
   });
 
   const getListIcon = () => {
-    if ((props.orderList as any).auto_reorder_enabled) return 'schedule';
-    if (hasUrgentItems.value) return 'warning';
+    if ((props.orderList as any).auto_reorder_enabled) {
+      return 'schedule';
+    }
+    if (hasUrgentItems.value) {
+      return 'warning';
+    }
     return 'list_alt';
   };
 
   const getIconColor = () => {
-    if (hasUrgentItems.value) return 'negative';
-    if ((props.orderList as any).auto_reorder_enabled) return 'info';
+    if (hasUrgentItems.value) {
+      return 'negative';
+    }
+    if ((props.orderList as any).auto_reorder_enabled) {
+      return 'info';
+    }
     return 'primary';
   };
 
@@ -711,7 +723,9 @@
   };
 
   const createQuickOrder = async () => {
-    if (!props.reorderAdvice) return;
+    if (!props.reorderAdvice) {
+      return;
+    }
 
     creatingOrder.value = true;
     try {
@@ -776,7 +790,9 @@
   };
 
   const orderCriticalItems = async () => {
-    if (!props.reorderAdvice?.items_by_urgency.critical.length) return;
+    if (!props.reorderAdvice?.items_by_urgency.critical.length) {
+      return;
+    }
 
     creatingOrder.value = true;
     try {

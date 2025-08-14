@@ -74,7 +74,6 @@ module.exports = {
     'no-var': 'warn',
     'prefer-const': 'warn',
     'prefer-arrow-callback': 'warn',
-    'no-misleading-character-class': 'warn',
 
     // Disable base no-unused-vars in favor of TypeScript version
     'no-unused-vars': 'off',
@@ -84,6 +83,8 @@ module.exports = {
       files: ['*.vue'],
       rules: {
         '@typescript-eslint/no-unused-vars': 'off',
+        // Reduce noise from component name casing during cleanup
+        'vue/component-definition-name-casing': 'warn',
       },
     },
     {
