@@ -1,18 +1,16 @@
 import { ref } from 'vue';
+import type { Ref } from 'vue';
 import { supabase } from '@/boot/supabase';
 import { inventoryLogger } from '@/utils/logger';
 import { ErrorHandler } from '@/utils/service-error-handler';
-import type { StockMovement, StockUpdateRequest } from '@/types/inventory';
+import type {
+  StockMovement,
+  StockUpdateRequest,
+  MovementWithRelations,
+  MovementType,
+} from '@/types/inventory';
 
-// Movement with product data included
-interface MovementWithRelations extends StockMovement {
-  quantity_before?: number; // Add missing property
-  product?: {
-    id: string;
-    name: string;
-    sku: string;
-  };
-}
+// Using shared MovementWithRelations from types
 
 export function useInventoryMovements(
   currentPracticeId: Ref<string | null>,
@@ -21,6 +19,8 @@ export function useInventoryMovements(
 ) {
   // State
   const stockMovements = ref<MovementWithRelations[]>([]);
+  const stockMovementsTotal = ref<number>(0);
+  const movementsLoading = ref<boolean>(false);
 
   // Actions - pure inventory operations only
   const updateStockLevel = async (request: StockUpdateRequest) => {
@@ -175,40 +175,76 @@ export function useInventoryMovements(
     }
   };
 
-  const fetchStockMovements = async (practiceId: string, limit = 50) => {
+  const fetchStockMovements = async (
+    practiceId: string,
+    options?: {
+      page?: number;
+      rowsPerPage?: number;
+      sortBy?: string;
+      descending?: boolean;
+      filters?: {
+        dateRange?: { start?: string; end?: string };
+        location_id?: string;
+        movement_type?: MovementType;
+        product_search?: string;
+      };
+    }
+  ) => {
     try {
-      // Use stock_movements table with simplified query
-      const { data, error } = await supabase
-        .from('stock_movements')
-        .select('*')
-        .eq('practice_id', practiceId)
-        .order('created_at', { ascending: false })
-        .limit(limit);
+      movementsLoading.value = true;
+      const page = options?.page ?? 1;
+      const rowsPerPage = options?.rowsPerPage ?? 25;
+      const sortBy = options?.sortBy ?? 'created_at';
+      const descending = options?.descending ?? true;
 
+      const from = (page - 1) * rowsPerPage;
+      const to = from + rowsPerPage - 1;
+
+      let query = supabase
+        .from('stock_movements')
+        .select(
+          `
+          id, practice_id, location_id, product_id, movement_type, quantity_change, quantity_before, quantity_after, reason, notes, created_at,
+          product:products(id, name, sku),
+          location:practice_locations(id, name)
+        `,
+          { count: 'exact' }
+        )
+        .eq('practice_id', practiceId)
+        .order(sortBy, { ascending: !descending })
+        .range(from, to);
+
+      // Filters
+      const f = options?.filters;
+      if (f?.location_id) {
+        query = query.eq('location_id', f.location_id);
+      }
+      if (f?.movement_type) {
+        query = query.eq('movement_type', f.movement_type);
+      }
+      if (f?.dateRange?.start) {
+        query = query.gte('created_at', f.dateRange.start);
+      }
+      if (f?.dateRange?.end) {
+        query = query.lte('created_at', f.dateRange.end);
+      }
+      if (f?.product_search) {
+        const term = `%${f.product_search}%`;
+        // OR match on product name or sku in the joined products table
+        query = query.or(`name.ilike.${term},sku.ilike.${term}`, { foreignTable: 'products' });
+      }
+
+      const { data, error, count } = await query;
       if (error) throw error;
 
-      // Transform stock movements to internal format
-      stockMovements.value = (data || []).map(
-        (
-          movement: StockMovement & { products?: Product; locations?: Location }
-        ) => ({
-          id: movement.id,
-          practice_id: movement.practice_id,
-          location_id: movement.location_id,
-          product_id: movement.product_id,
-          movement_type: movement.movement_type,
-          quantity_change: movement.quantity_change,
-          quantity_before: movement.quantity_before || 0,
-          quantity_after: movement.quantity_after,
-          performed_by: movement.created_by || '',
-          notes: movement.notes,
-          created_at: movement.created_at,
-          product: undefined, // Will be populated separately if needed
-        })
-      ) as MovementWithRelations[];
+      stockMovements.value = (data || []) as unknown as MovementWithRelations[];
+      stockMovementsTotal.value = count ?? 0;
     } catch (error) {
       inventoryLogger.error('Error fetching stock movements:', error);
       throw error;
+    }
+    finally {
+      movementsLoading.value = false;
     }
   };
 
@@ -334,6 +370,8 @@ export function useInventoryMovements(
   return {
     // State
     stockMovements,
+    stockMovementsTotal,
+    movementsLoading,
 
     // Actions
     updateStockLevel,

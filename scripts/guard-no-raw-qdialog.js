@@ -16,9 +16,7 @@ try {
   try {
     const out = run('git diff --cached --name-only');
     files = out.split(/\r?\n/).filter(Boolean);
-  } catch {
-    // ignore
-  }
+  } catch {}
 
   const targetFiles = files.length
     ? files
@@ -28,7 +26,7 @@ try {
   for (const file of targetFiles) {
     if (!file.startsWith('src/') || !file.endsWith('.vue')) continue;
     if (file === 'src/components/base/BaseDialog.vue') continue;
-  const content = run(`git show :${file} 2> NUL || type "${file}"`);
+    const content = run(`git show :${file} 2> NUL || type "${file}"`);
     if (content.includes('<q-dialog')) {
       offenders.push(file);
     }
@@ -39,7 +37,7 @@ try {
     console.error('Please use BaseDialog instead for consistent header/footer, sizing, and a11y.');
     console.error('Offending files:');
     offenders.forEach(f => console.error(' - ' + f));
-    console.error('\nFix: import BaseDialog from "src/components/base/BaseDialog.vue" and replace the raw q-dialog.');
+    console.error('\nFix: import BaseDialog from \"src/components/base/BaseDialog.vue\" and replace the raw q-dialog.');
     process.exit(1);
   }
 } catch (e) {

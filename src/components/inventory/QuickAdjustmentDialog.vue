@@ -1,41 +1,37 @@
 <template>
-  <q-dialog
+  <BaseDialog
     :model-value="modelValue"
     @update:model-value="$emit('update:modelValue', $event)"
-    persistent
-    maximized-on-mobile
+    :title="$t('inventory.quickAdjustment')"
+    :subtitle="$t('inventory.adjustStockLevels')"
+    icon="tune"
+    size="lg"
+    :persistent="true"
   >
-    <q-card style="min-width: 600px; max-width: 800px" class="modern-dialog">
-      <!-- Modern Header -->
-      <q-card-section class="dialog-header bg-primary text-white q-pa-lg">
-        <div class="row items-center">
-          <q-icon name="tune" size="28px" class="q-mr-md" />
-          <div>
-            <div class="text-h5 text-weight-bold">
-              {{ $t('inventory.quickAdjustment') }}
-            </div>
-            <div class="text-subtitle2 opacity-80">
-              {{ $t('inventory.adjustStockLevels') }}
-            </div>
-          </div>
-          <q-space />
-          <!-- Realtime Indicator -->
-          <q-chip
-            v-if="realtimeConnected"
-            size="sm"
-            icon="wifi"
-            color="positive"
-            text-color="white"
-            class="q-mr-sm"
-          >
-            {{ $t('common.live') }}
-          </q-chip>
-          <q-btn icon="close" flat round size="md" v-close-popup />
+    <template #header>
+      <div class="row items-center q-pa-md">
+        <q-icon name="tune" size="24px" class="q-mr-md" />
+        <div class="col">
+          <div class="text-h6">{{ $t('inventory.quickAdjustment') }}</div>
+          <div class="text-subtitle2">{{ $t('inventory.adjustStockLevels') }}</div>
         </div>
-      </q-card-section>
+        <q-space />
+        <q-chip
+          v-if="realtimeConnected"
+          size="sm"
+          icon="wifi"
+          color="positive"
+          text-color="white"
+          class="q-mr-sm"
+          aria-label="Live realtime"
+        >
+          {{ $t('common.live') }}
+        </q-chip>
+      </div>
+    </template>
 
       <!-- Product Selection Step -->
-      <q-card-section v-if="!selectedProduct" class="q-pa-lg">
+      <div v-if="!selectedProduct" class="q-pa-md">
         <div class="step-container">
           <div class="step-header">
             <q-icon name="search" size="20px" color="primary" />
@@ -124,14 +120,15 @@
                 @click="showBarcodeScanner = true"
                 class="scan-button"
                 :title="$t('inventory.scanBarcode')"
+                aria-label="Scan barcode"
               />
             </div>
           </div>
         </div>
-      </q-card-section>
+      </div>
 
       <!-- Enhanced Product Info Card -->
-      <q-card-section v-if="selectedProduct" class="q-pa-lg">
+      <div v-if="selectedProduct" class="q-pa-md">
         <q-card
           flat
           bordered
@@ -218,6 +215,7 @@
                   class="text-grey-6"
                   :title="$t('inventory.changeProduct')"
                   size="lg"
+                  aria-label="Change product"
                 />
               </div>
             </div>
@@ -244,13 +242,10 @@
             </div>
           </q-card-section>
         </q-card>
-      </q-card-section>
+      </div>
 
       <!-- Location Selection (if no location provided) -->
-      <q-card-section
-        v-if="selectedProduct && !selectedLocation"
-        class="q-pa-lg"
-      >
+      <div v-if="selectedProduct && !selectedLocation" class="q-pa-md">
         <div class="step-container">
           <div class="step-header">
             <q-icon name="place" size="20px" color="orange" />
@@ -280,10 +275,10 @@
             </template>
           </q-select>
         </div>
-      </q-card-section>
+      </div>
 
       <!-- Modern Adjustment Form -->
-      <q-card-section v-if="selectedProduct" class="q-pa-lg adjustment-section">
+      <div v-if="selectedProduct" class="q-pa-md adjustment-section">
         <div class="adjustment-container">
           <!-- Step 1: Adjustment Type -->
           <div class="adjustment-step">
@@ -485,22 +480,20 @@
             </q-card-section>
           </q-card>
         </div>
-      </q-card-section>
+      </div>
 
-      <!-- Modern Actions -->
-      <q-card-actions class="modern-actions q-pa-lg bg-grey-1">
+      <!-- Actions -->
+      <template #actions>
         <q-btn
-          :label="$q.screen.xs ? $t('common.cancel') : $t('common.cancel')"
+          :label="$t('common.cancel')"
           flat
           :size="$q.screen.xs ? 'md' : 'lg'"
           class="q-mr-md"
           @click="$emit('update:modelValue', false)"
+          aria-label="Cancel"
         />
-        <q-space />
         <q-btn
-          :label="
-            $q.screen.xs ? $t('inventory.adjust') : $t('inventory.adjustStock')
-          "
+          :label="$t('inventory.adjustStock')"
           color="primary"
           :size="$q.screen.xs ? 'md' : 'lg'"
           unelevated
@@ -508,17 +501,14 @@
           :disable="!isFormValid"
           @click="performAdjustment"
           class="save-button"
+          aria-label="Adjust stock"
         >
           <template v-slot:loading>
             <q-spinner-hourglass class="on-left" />
-            {{
-              $q.screen.xs
-                ? $t('inventory.adjusting')
-                : $t('inventory.adjusting')
-            }}
+            {{ $t('inventory.adjusting') }}
           </template>
         </q-btn>
-      </q-card-actions>
+      </template>
 
       <!-- Validation Summary -->
       <q-banner
@@ -544,11 +534,9 @@
           </li>
         </ul>
       </q-banner>
-    </q-card>
-
     <!-- Barcode Scanner -->
     <BarcodeScanner v-model="showBarcodeScanner" @scan="handleBarcodeScan" />
-  </q-dialog>
+  </BaseDialog>
 </template>
 
 <script setup lang="ts">
@@ -561,6 +549,7 @@
   import { useClinicStore } from 'src/stores/clinic';
   import { realtimeService } from 'src/services/supabase';
   import BarcodeScanner from 'src/components/BarcodeScanner.vue';
+  import BaseDialog from 'src/components/base/BaseDialog.vue';
   import type {
     StockUpdateRequest,
     MovementType,

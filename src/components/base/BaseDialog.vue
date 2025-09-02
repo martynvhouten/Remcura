@@ -17,7 +17,7 @@
     @hide="onHide"
     @escape-key="onEscapeKey"
   >
-    <div :class="cardClasses" @keydown="onKeyDown">
+    <div :class="cardClasses" @keydown="onKeyDown" ref="dialogRef">
       <!-- Loading Overlay -->
       <div v-if="loading" class="dialog-loading-overlay">
         <div class="loading-spinner"></div>
@@ -58,9 +58,12 @@
         class="dialog-header"
         :class="[headerClass, headerVariantClass, statusColorClass]"
       >
-        <div class="header-content">
+        <template v-if="slots.header">
+          <slot name="header" />
+        </template>
+        <div v-else class="header-content">
           <div v-if="icon" class="header-icon-container">
-            <div class="header-icon" :class="iconVariantClass">
+            <div class="header-icon">
               <q-icon :name="icon" :size="iconSize" />
             </div>
           </div>
@@ -70,16 +73,17 @@
               {{ subtitle }}
             </p>
           </div>
-          <button
+          <q-btn
             v-if="closable"
-            type="button"
-            @click="onClose"
+            flat
+            round
+            dense
+            icon="close"
             class="close-btn"
             :aria-label="$t('common.closeDialog') || 'Close dialog'"
-            :disabled="loading || actionsDisabled"
-          >
-            <q-icon name="close" class="icon-size-base" />
-          </button>
+            :disable="isCloseDisabled"
+            @click="onClose"
+          />
         </div>
       </header>
 
@@ -102,41 +106,25 @@
         <!-- Standard Actions -->
         <div v-else class="standard-actions">
           <!-- Secondary Action -->
-          <button
+          <q-btn
             v-if="secondaryAction"
-            type="button"
+            :label="secondaryAction.label"
+            :icon="secondaryAction.icon"
+            :disable="isSecondaryDisabled"
+            class="app-btn app-btn-secondary"
             @click="onSecondaryAction"
-            :disabled="loading || actionsDisabled || secondaryAction.disabled"
-            :class="['app-btn', secondaryAction.class || 'app-btn-secondary']"
-          >
-            <q-icon
-              v-if="secondaryAction.icon"
-              :name="secondaryAction.icon"
-              class="icon-size-sm"
-            />
-            {{ secondaryAction.label }}
-          </button>
+          />
 
           <!-- Primary Action -->
-          <button
+          <q-btn
             v-if="primaryAction"
-            type="button"
+            :label="primaryAction.label"
+            :icon="primaryAction.icon"
+            :loading="primaryActionLoading"
+            :disable="isPrimaryDisabled"
+            class="app-btn app-btn-primary"
             @click="onPrimaryAction"
-            :disabled="loading || actionsDisabled || primaryAction.disabled"
-            :class="['app-btn', primaryAction.class || 'app-btn-primary']"
-          >
-            <div v-if="primaryActionLoading" class="btn-loading">
-              <div class="btn-spinner"></div>
-            </div>
-            <template v-else>
-              <q-icon
-                v-if="primaryAction.icon"
-                :name="primaryAction.icon"
-                class="icon-size-sm"
-              />
-              {{ primaryAction.label }}
-            </template>
-          </button>
+          />
         </div>
       </footer>
     </div>
@@ -297,7 +285,7 @@
   }
 
   const props = withDefaults(defineProps<Props>(), {
-    persistent: true,
+    persistent: false,
     maximized: false,
     preventMobileFullscreen: false,
     position: 'standard',
@@ -367,6 +355,18 @@
 
   const headerVariantClass = computed(() => `header-${props.headerVariant}`);
   const statusColorClass = computed(() => `header-${props.statusColor}`);
+  const iconVariantClass = computed(() => `icon-${props.headerVariant}`);
+
+  // Normalized disabled states for native buttons (boolean, not undefined)
+  const isCloseDisabled = computed(
+    () => Boolean(props.loading || props.actionsDisabled)
+  );
+  const isPrimaryDisabled = computed(
+    () => Boolean(props.loading || props.actionsDisabled || props.primaryAction?.disabled)
+  );
+  const isSecondaryDisabled = computed(
+    () => Boolean(props.loading || props.actionsDisabled || props.secondaryAction?.disabled)
+  );
 
   // Methods
   const onShow = () => {
@@ -402,7 +402,7 @@
   };
 
   const onEscapeKey = () => {
-    if (props.keyboardShortcuts) {
+    if (props.keyboardShortcuts && !props.persistent) {
       emit('escape');
       onClose();
     }
@@ -471,7 +471,8 @@
     transform: translateY(0);
     transition: var(--transition-base);
     max-height: 90vh;
-    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
     font-family: var(--font-family-primary);
 
     // Loading state
@@ -662,6 +663,7 @@
   .dialog-header {
     position: relative;
     border-bottom: 1px solid var(--border-primary);
+    padding: 0;
 
     // Header variants
     &.header-gradient {
@@ -724,14 +726,14 @@
       display: flex;
       align-items: center;
       gap: var(--space-4);
-      padding: var(--space-6) var(--space-8);
+      padding: var(--space-4) var(--space-6);
 
       .header-icon-container {
         flex-shrink: 0;
 
         .header-icon {
-          width: 48px;
-          height: 48px;
+          width: 40px;
+          height: 40px;
           border-radius: var(--radius-xl);
           display: flex;
           align-items: center;
@@ -746,8 +748,8 @@
         flex: 1;
         min-width: 0;
 
-        .dialog-title {
-          font-size: var(--text-2xl);
+          .dialog-title {
+          font-size: var(--text-xl);
           font-weight: var(--font-weight-bold);
           margin: 0 0 var(--space-1) 0;
           line-height: var(--leading-tight);
@@ -755,7 +757,7 @@
         }
 
         .dialog-subtitle {
-          font-size: var(--text-base);
+          font-size: var(--text-sm);
           margin: 0;
           opacity: 0.85;
           line-height: var(--leading-normal);
@@ -800,12 +802,13 @@
   // ===================================================================
 
   .dialog-content {
-    padding: var(--space-8);
+    padding: var(--space-6);
     font-size: var(--text-base);
     line-height: var(--leading-relaxed);
     color: var(--text-primary);
     min-height: 0;
     flex: 1;
+    overflow-y: auto;
 
     &:empty {
       display: none;
@@ -836,13 +839,16 @@
   // ===================================================================
 
   .dialog-footer {
-    padding: var(--space-6) var(--space-8) var(--space-8);
+    padding: var(--space-4) var(--space-6) var(--space-6);
     background: var(--bg-secondary);
     border-top: 1px solid var(--border-primary);
     display: flex;
     justify-content: flex-end;
     gap: var(--space-3);
     align-items: center;
+    position: sticky;
+    bottom: 0;
+    z-index: 1;
 
     .standard-actions,
     .custom-actions {
@@ -854,7 +860,7 @@
     // Button styles using app design system
     .app-btn {
       min-width: 120px;
-      height: 44px;
+      height: var(--control-height-md);
       border-radius: var(--radius-lg);
       font-weight: var(--font-weight-semibold);
       font-size: var(--text-sm);

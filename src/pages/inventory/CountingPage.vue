@@ -346,7 +346,6 @@
       field: 'name',
       sortable: true,
       align: 'left' as const,
-      style: 'width: 200px',
       classes: 'col-name',
       headerClasses: 'col-name',
     },
@@ -356,7 +355,6 @@
       field: 'status',
       sortable: true,
       align: 'center' as const,
-      style: 'width: 120px',
       classes: 'col-status',
       headerClasses: 'col-status',
     },
@@ -644,7 +642,7 @@
     }
 
     .mini-progress {
-      width: 100px;
+      width: 100%;
     }
   }
 

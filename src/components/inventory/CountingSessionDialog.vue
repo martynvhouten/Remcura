@@ -3,7 +3,7 @@
     v-model="dialogVisible"
     :title="$t('inventory.startCountingSession')"
     icon="checklist"
-    max-width="600px"
+    size="sm"
     @hide="onHide"
   >
     <q-form @submit="onSubmit" class="counting-session-form">
@@ -242,12 +242,7 @@
         auto_adjust_stock: form.value.autoAdjustStock,
         notes: form.value.notes || '',
       };
-
-      // In a real implementation, this would create the session via the counting store
-      // const sessionId = await countingStore.createSession(request)
-
-      // For now, simulate creating a session
-      const sessionId = `session_${Date.now()}`;
+      const session = await countingStore.startCountingSession(request);
 
       $q.notify({
         type: 'positive',
@@ -255,7 +250,7 @@
         position: 'top',
       });
 
-      emit('session-created', sessionId);
+      emit('session-created', session.id);
       dialogVisible.value = false;
     } catch (error) {
       console.error('Error creating counting session:', error);

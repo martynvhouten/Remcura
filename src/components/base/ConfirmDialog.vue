@@ -331,7 +331,7 @@
 
     :deep(.q-btn) {
       min-width: 140px;
-      height: 48px;
+      height: var(--control-height-md);
       border-radius: 14px;
       font-weight: var(--font-weight-semibold);
       font-size: var(--text-base);

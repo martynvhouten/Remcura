@@ -13,20 +13,23 @@
     :persistent="persistent || loading"
     :closable="!loading"
     @close="handleClose"
-  >
-    <!-- Form Content -->
-    <q-form
-      @submit="handleSubmit"
-      @reset="handleReset"
-      class="form-dialog-content"
     >
+    <!-- Form Content -->
+      <q-form
+        @submit="handleSubmit"
+        @reset="handleReset"
+        class="form-dialog-content"
+        aria-live="polite"
+      >
       <slot />
 
       <!-- Form validation errors summary -->
-      <div
-        v-if="showErrorSummary && formErrors.length > 0"
-        class="error-summary"
-      >
+        <div
+          v-if="showErrorSummary && formErrors.length > 0"
+          class="error-summary"
+          role="alert"
+          aria-live="assertive"
+        >
         <q-banner inline-actions class="text-negative">
           <template v-slot:avatar>
             <q-icon name="error" />
@@ -230,10 +233,29 @@
     display: flex;
     flex-direction: column;
     gap: var(--space-6);
+  }
 
-    // Use global field system - no custom overrides
+  /* Form Grid helpers per spec */
+  :global(.form-grid) {
+    display: grid;
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+    gap: var(--space-4);
+  }
 
-    // All form field styling handled by global field system
+  :global(.col-12) { grid-column: span 12 / span 12; }
+  :global(.col-6) { grid-column: span 12 / span 12; }
+  :global(.col-4) { grid-column: span 12 / span 12; }
+  :global(.col-3) { grid-column: span 12 / span 12; }
+
+  @media (min-width: 768px) {
+    :global(.col-6) { grid-column: span 6 / span 6; }
+    :global(.col-4) { grid-column: span 6 / span 6; }
+    :global(.col-3) { grid-column: span 6 / span 6; }
+  }
+
+  @media (min-width: 1024px) {
+    :global(.col-4) { grid-column: span 4 / span 4; }
+    :global(.col-3) { grid-column: span 3 / span 3; }
   }
 
   .error-summary {
@@ -314,7 +336,7 @@
 
       :deep(.q-btn) {
         min-width: 140px;
-        height: 48px;
+        height: var(--control-height-md);
         border-radius: 14px;
         font-weight: var(--font-weight-semibold);
         font-size: var(--text-base);

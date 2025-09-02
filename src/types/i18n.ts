@@ -1,5 +1,5 @@
 // Internationalization types
-export type SupportedLocale = 'en' | 'nl' | 'es';
+export type SupportedLocale = 'nl';
 
 export type MessageLanguages = SupportedLocale;
 

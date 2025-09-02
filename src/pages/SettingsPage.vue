@@ -129,34 +129,8 @@
               </div>
             </BaseCard>
 
-            <!-- Language Setting -->
-            <BaseCard padding="sm">
-              <div class="setting-item">
-                <div class="setting-info">
-                  <div class="setting-label" id="language-label">
-                    {{ $t('settings.language') }}
-                  </div>
-                  <div class="setting-description">
-                    {{ $t('settings.selectLanguage') }}
-                  </div>
-                </div>
-                <div class="setting-control">
-                  <q-select
-                    v-model="selectedLanguage"
-                    :options="languageOptions"
-                    @update:model-value="changeLanguage"
-                    option-value="value"
-                    option-label="label"
-                    emit-value
-                    map-options
-                    outlined
-                    dense
-                    style="width: 150px"
-                    :aria-labelledby="'language-label'"
-                  />
-                </div>
-              </div>
-            </BaseCard>
+            <!-- Language Setting (hidden for NL-only) -->
+            <!-- Removed language selector until multi-locale returns -->
 
             <!-- Theme Setting -->
             <BaseCard padding="sm">
@@ -410,7 +384,6 @@
   // State
   const saving = ref(false);
   const isDarkMode = ref($q.dark.isActive);
-  const selectedLanguage = ref(getCurrentLocale());
   const selectedTheme = ref(getCurrentThemeName());
 
   // Computed properties
@@ -437,12 +410,6 @@
     browserNotifications: false,
   });
 
-  const languageOptions = [
-    { label: t('settings.languages.dutch'), value: 'nl' },
-    { label: t('settings.languages.english'), value: 'en' },
-    { label: t('settings.languages.spanish'), value: 'es' },
-  ];
-
   // Methods
   const toggleDarkMode = (value: boolean) => {
     $q.dark.set(value);
@@ -466,21 +433,7 @@
       themeName;
     $q.notify({
       type: 'positive',
-      message: `${$t('settingspa.positive')} ${themeLabel} toegepast`,
-      position: 'top-right',
-      timeout: 2000,
-    });
-  };
-
-  const changeLanguage = (locale: SupportedLocale) => {
-    selectedLanguage.value = locale;
-    setI18nLanguage(locale);
-
-    const languageLabel =
-      languageOptions.find(option => option.value === locale)?.label || locale;
-    $q.notify({
-      type: 'positive',
-      message: t('settings.languageChanged', { language: languageLabel }),
+      message: t('settings.colorSchemeTitle') + `: ${themeLabel} toegepast`,
       position: 'top-right',
       timeout: 2000,
     });

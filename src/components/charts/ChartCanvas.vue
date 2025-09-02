@@ -1,188 +1,111 @@
 <template>
-  <div class="chart-wrapper">
-    <canvas ref="chartCanvas" class="chart-canvas" />
-
-    <div v-if="!ready || isEmpty" class="chart-fallback">
-      <q-icon name="bar_chart" size="4em" class="text-grey-4 q-mb-md" />
-      <div class="text-subtitle2 text-grey-6">
-        {{ $t('platform.chart.loading') }}
-      </div>
-    </div>
+  <div class="chart-canvas-wrapper">
+    <canvas ref="canvasEl" :height="height"></canvas>
   </div>
 </template>
 
 <script setup lang="ts">
-  import {
-    ref,
-    watch,
-    onMounted,
-    onBeforeUnmount,
-    nextTick,
-    computed,
-  } from 'vue';
-  import { useI18n } from 'vue-i18n';
+  import { onMounted, onUnmounted, ref, watch } from 'vue';
+  import { Chart, ChartData, ChartOptions } from 'chart.js/auto';
 
-  interface Dataset {
+  interface DatasetInput {
     label: string;
     data: number[];
     color?: string;
+    backgroundColor?: string | string[];
+    borderColor?: string | string[];
   }
 
   interface Props {
-    type: 'bar' | 'line' | 'doughnut' | 'pie';
+    type: string;
     labels: string[];
-    datasets: Dataset[];
+    datasets: DatasetInput[];
+    options?: ChartOptions;
     height?: number | string;
-    options?: Record<string, any>;
   }
 
-  const props = withDefaults(defineProps<Props>(), {
-    type: 'bar',
-    labels: () => [],
-    datasets: () => [],
-    height: 240,
-    options: () => ({}),
-  });
-
+  const props = withDefaults(defineProps<Props>(), { height: 240 });
   const emit = defineEmits<{
-    'datapoint-click': [
-      payload: {
-        label: string;
-        value: number;
-        datasetIndex: number;
-        index: number;
-      },
-    ];
+    (e: 'datapoint-click', payload: { label: string; value: number }): void;
   }>();
 
-  const { t } = useI18n();
+  const canvasEl = ref<HTMLCanvasElement | null>(null);
+  let chart: Chart | null = null;
 
-  const chartCanvas = ref<HTMLCanvasElement | null>(null);
-  const chartInstance = ref<any>(null);
-  const ready = ref(false);
-
-  const isEmpty = computed(
-    () => !props.labels?.length || !props.datasets?.length
-  );
-
-  function getDefaultOptions() {
+  function buildData(): ChartData {
     return {
-      responsive: true,
-      maintainAspectRatio: false,
-      plugins: {
-        legend: { display: true, position: 'bottom' as const },
-        tooltip: { enabled: true },
-      },
-      onClick: (_evt: any, elements: any[]) => {
-        if (!elements || elements.length === 0) return;
-        const el = elements[0];
-        const datasetIndex = el.datasetIndex;
-        const index = el.index;
-        const label = props.labels[index];
-        const value = props.datasets[datasetIndex]?.data[index] ?? 0;
-        emit('datapoint-click', { label, value, datasetIndex, index });
-      },
-      scales:
-        props.type === 'doughnut' || props.type === 'pie'
-          ? undefined
-          : {
-              y: { beginAtZero: true },
-              x: {},
-            },
-    };
+      labels: props.labels,
+      datasets: props.datasets.map(ds => ({
+        label: ds.label,
+        data: ds.data,
+        backgroundColor: ds.backgroundColor || ds.color || 'rgba(33,150,243,0.4)',
+        borderColor: ds.borderColor || ds.color || 'rgba(33,150,243,1)',
+        borderWidth: 2,
+        fill: props.type === 'line' ? false : true,
+      })),
+    } as ChartData;
   }
 
-  function buildConfig() {
-    const datasets = props.datasets.map(ds => ({
-      label: ds.label,
-      data: ds.data,
-      backgroundColor: ds.color || 'rgba(33, 150, 243, 0.6)',
-      borderColor: ds.color || 'rgba(33, 150, 243, 1)',
-      borderWidth: 2,
-      fill: props.type === 'line' ? false : true,
-      tension: props.type === 'line' ? 0.3 : undefined,
-    }));
-
-    return {
+  function renderChart() {
+    if (!canvasEl.value) return;
+    chart?.destroy();
+    chart = new Chart(canvasEl.value.getContext('2d')!, {
       type: props.type as any,
-      data: { labels: props.labels, datasets },
+      data: buildData(),
       options: {
-        ...getDefaultOptions(),
-        ...(props.options || {}),
-      },
-    };
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: { legend: { display: true, position: 'bottom' } },
+        ...props.options,
+        // Click handler
+        onClick: (_event, activeElements) => {
+          if (!chart || activeElements.length === 0) return;
+          const { index, datasetIndex } = activeElements[0];
+          const label = props.labels?.[index] ?? '';
+          const value = (props.datasets?.[datasetIndex]?.data || [])[index] ?? 0;
+          emit('datapoint-click', { label, value });
+        },
+      } as ChartOptions,
+    });
   }
 
-  async function initChart() {
-    try {
-      const { Chart, registerables } = await import('chart.js');
-      Chart.register(...registerables);
+  onMounted(() => {
+    renderChart();
+  });
 
-      if (!chartCanvas.value) return;
-      const ctx = chartCanvas.value.getContext('2d');
-      if (!ctx) return;
-
-      const config = buildConfig();
-      chartInstance.value = new Chart(ctx, config);
-      ready.value = true;
-    } catch (e) {
-      ready.value = false;
-    }
-  }
-
-  function destroyChart() {
-    if (chartInstance.value) {
-      chartInstance.value.destroy();
-      chartInstance.value = null;
-    }
-  }
-
-  async function refreshChart() {
-    await nextTick();
-    if (!chartInstance.value) {
-      await initChart();
-      return;
-    }
-    const config = buildConfig();
-    chartInstance.value.config.type = config.type;
-    chartInstance.value.config.data = config.data;
-    chartInstance.value.config.options = config.options;
-    chartInstance.value.update();
-  }
+  onUnmounted(() => {
+    chart?.destroy();
+    chart = null;
+  });
 
   watch(
     () => [props.type, props.labels, props.datasets, props.options],
-    refreshChart,
+    () => {
+      if (!chart) {
+        renderChart();
+        return;
+      }
+      chart.config.type = props.type as any;
+      chart.data = buildData();
+      chart.options = { ...chart.options, ...props.options } as ChartOptions;
+      chart.update();
+    },
     { deep: true }
   );
-
-  onMounted(async () => {
-    await nextTick();
-    await initChart();
-  });
-
-  onBeforeUnmount(() => {
-    destroyChart();
-  });
 </script>
 
 <style scoped>
-  .chart-wrapper {
+  .chart-canvas-wrapper {
     position: relative;
     width: 100%;
-    min-height: 220px;
+    height: 100%;
+    min-height: 160px;
   }
-  .chart-canvas {
-    width: 100%;
-    height: v-bind('height + "px"');
-  }
-  .chart-fallback {
-    position: absolute;
-    inset: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-direction: column;
-    text-align: center;
+
+  canvas {
+    display: block;
+    width: 100% !important;
   }
 </style>
+
+

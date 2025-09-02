@@ -2,8 +2,8 @@
   <PageLayout>
     <template #header>
       <PageTitle
-        :title="$t('inventory.stockMovements')"
-        :subtitle="$t('inventory.movementHistory')"
+        :title="$t('inventory.movements.title')"
+        :subtitle="$t('inventory.movements.subtitle')"
         icon="timeline"
       >
         <template #actions>
@@ -13,7 +13,7 @@
             icon="refresh"
             size="md"
             @click="refreshData"
-            :loading="inventoryStore.loading"
+             :loading="inventoryStore.movementsLoading"
             class="app-btn-refresh"
           >
             <q-tooltip>{{ $t('common.refresh') }}</q-tooltip>
@@ -39,18 +39,34 @@
         @change="handleFilterChange"
         @reset="handleFilterReset"
         @clear="handleFilterClear"
-        :loading="inventoryStore.loading"
+         :loading="inventoryStore.movementsLoading"
         collapsible
         class="movements-filter-panel"
       />
     </div>
 
+    <!-- Error Banner -->
+    <q-banner
+      v-if="errorState.visible"
+      dense
+      class="q-mb-md bg-negative text-white"
+      rounded
+    >
+      <div class="row items-center">
+        <q-icon name="error_outline" class="q-mr-sm" />
+        <div class="col">{{ errorState.message }}</div>
+        <div class="col-auto">
+          <q-btn flat dense color="white" :label="$t('common.retry')" @click="errorState.retry?.()" />
+        </div>
+      </div>
+    </q-banner>
+
     <!-- Main Content -->
     <div class="movements-content">
       <!-- Loading State -->
-      <div v-if="inventoryStore.loading" class="loading-container">
+      <div v-if="inventoryStore.movementsLoading" class="loading-container">
         <q-spinner-dots size="xl" color="primary" />
-        <p class="loading-text">{{ $t('inventory.loadingMovements') }}</p>
+        <p class="loading-text">{{ $t('inventory.movements.loading') }}</p>
       </div>
 
       <!-- Movements Table -->
@@ -59,14 +75,18 @@
           :rows="filteredMovements"
           :columns="columns"
           row-key="id"
-          :pagination="pagination"
-          :loading="inventoryStore.loading"
-          :no-data-label="$t('inventory.noMovementsFound')"
+          v-model:pagination="pagination"
+          :rows-number="inventoryStore.stockMovementsTotal || 0"
+          :loading="inventoryStore.movementsLoading"
+          :no-data-label="$t('inventory.movements.noData')"
           class="movements-table"
           flat
           bordered
           separator="cell"
         >
+          <template #loading>
+            <q-inner-loading showing color="primary" />
+          </template>
           <!-- Movement Type Column -->
           <template v-slot:body-cell-movement_type="props">
             <q-td :props="props">
@@ -248,7 +268,7 @@
 </template>
 
 <script setup lang="ts">
-  import { ref, computed, onMounted, onBeforeUnmount } from 'vue';
+  import { ref, computed, onMounted, onBeforeUnmount, watch } from 'vue';
   import { useI18n } from 'vue-i18n';
   import { useQuasar } from 'quasar';
   import { useAuthStore } from 'src/stores/auth';
@@ -282,6 +302,8 @@
   const showMovementDetails = ref(false);
   const selectedMovement = ref<MovementWithRelations | null>(null);
   const isUnmounted = ref(false);
+  const errorState = ref<{ visible: boolean; message: string; retry?: () => void }>({ visible: false, message: '' });
+  const demoMovements = ref<MovementWithRelations[]>([]);
 
   // Filter system styles
   const filterValues = ref<FilterValues>({});
@@ -297,57 +319,7 @@
   // Computed properties
   const practiceId = computed(() => authStore.userProfile?.clinic_id || '');
 
-  const filteredMovements = computed(() => {
-    let movements = [...inventoryStore.stockMovements];
-
-    // Filter by movement type
-    if (filterValues.value.movement_type) {
-      movements = movements.filter(
-        m => m.movement_type === filterValues.value.movement_type
-      );
-    }
-
-    // Filter by location
-    if (filterValues.value.location_id) {
-      movements = movements.filter(
-        m => m.location_id === filterValues.value.location_id
-      );
-    }
-
-    // Filter by date range
-    if (
-      filterValues.value.date_range &&
-      typeof filterValues.value.date_range === 'object'
-    ) {
-      const dateRange = filterValues.value.date_range as {
-        start?: string;
-        end?: string;
-      };
-      if (dateRange.start && dateRange.end) {
-        movements = movements.filter(m => {
-          const movementDate = new Date(m.created_at);
-          return (
-            movementDate >= new Date(dateRange.start!) &&
-            movementDate <= new Date(dateRange.end!)
-          );
-        });
-      }
-    }
-
-    // Filter by product search
-    if (filterValues.value.product_search) {
-      const searchTerm = String(
-        filterValues.value.product_search
-      ).toLowerCase();
-      movements = movements.filter(
-        m =>
-          m.product?.name?.toLowerCase().includes(searchTerm) ||
-          m.product?.sku?.toLowerCase().includes(searchTerm)
-      );
-    }
-
-    return movements;
-  });
+  const filteredMovements = computed(() => (practiceId.value ? inventoryStore.stockMovements : demoMovements.value));
 
   const columns = computed(() => [
     {
@@ -403,31 +375,125 @@
 
   // Methods
   const refreshData = async () => {
-    if (!practiceId.value) return;
-
+    if (!practiceId.value) {
+      // Demo fallback
+      demoMovements.value = generateDemoMovements();
+      errorState.value = { visible: false, message: '' };
+      return;
+    }
     try {
-      await inventoryStore.fetchStockMovements(practiceId.value, 200);
-      $q.notify({
-        type: 'positive',
-        message: t('common.dataRefreshed'),
-        position: 'top',
+      await inventoryStore.fetchStockMovements(practiceId.value, {
+        page: pagination.value.page,
+        rowsPerPage: pagination.value.rowsPerPage,
+        sortBy: pagination.value.sortBy,
+        descending: pagination.value.descending,
+        filters: {
+          dateRange: filterValues.value.date_range as { start?: string; end?: string } | undefined,
+          location_id: (filterValues.value.location_id as string) || undefined,
+          movement_type: (filterValues.value.movement_type as any) || undefined,
+          product_search: (filterValues.value.product_search as string) || undefined,
+        },
       });
+      errorState.value = { visible: false, message: '' };
+      $q.notify({ type: 'positive', message: t('common.dataRefreshed'), position: 'top' });
     } catch (error) {
       console.error('Error refreshing movements:', error);
-      $q.notify({
-        type: 'negative',
-        message: t('common.refreshFailed'),
-        position: 'top',
-      });
+      errorState.value = {
+        visible: true,
+        message: t('inventory.movements.loadError'),
+        retry: async () => {
+          await refreshData();
+        },
+      };
     }
   };
 
+  // Demo data
+  const generateDemoMovements = (): MovementWithRelations[] => {
+    const now = new Date();
+    const iso = (d: Date) => d.toISOString();
+    return [
+      {
+        id: 'demo-mv-1',
+        practice_id: 'demo',
+        location_id: 'loc-1',
+        product_id: 'prod-1',
+        movement_type: 'receipt',
+        quantity_change: 20,
+        quantity_before: 10,
+        quantity_after: 30,
+        created_at: iso(new Date(now.getTime() - 3600 * 1000)),
+        notes: 'Demo ontvangst',
+        product: { id: 'prod-1', name: 'Handschoenen M', sku: 'GLV-M' },
+        location: { id: 'loc-1', name: 'Demo Magazijn', code: 'WH1', location_type: 'warehouse' } as any,
+      },
+      {
+        id: 'demo-mv-2',
+        practice_id: 'demo',
+        location_id: 'loc-1',
+        product_id: 'prod-2',
+        movement_type: 'usage',
+        quantity_change: -3,
+        quantity_before: 12,
+        quantity_after: 9,
+        created_at: iso(new Date(now.getTime() - 2 * 3600 * 1000)),
+        notes: 'Verbruik behandelkamer',
+        product: { id: 'prod-2', name: 'Desinfectiemiddel 500ml', sku: 'DSF-500' },
+        location: { id: 'loc-1', name: 'Demo Magazijn', code: 'WH1', location_type: 'warehouse' } as any,
+      },
+      {
+        id: 'demo-mv-3',
+        practice_id: 'demo',
+        location_id: 'loc-2',
+        product_id: 'prod-3',
+        movement_type: 'adjustment',
+        quantity_change: 5,
+        quantity_before: 0,
+        quantity_after: 5,
+        created_at: iso(new Date(now.getTime() - 3 * 3600 * 1000)),
+        notes: 'Aanvulling',
+        product: { id: 'prod-3', name: 'Pleisters set', sku: 'PLS-SET' },
+        location: { id: 'loc-2', name: 'Behandelkamer 1', code: 'TR1', location_type: 'treatment' } as any,
+      },
+      {
+        id: 'demo-mv-4',
+        practice_id: 'demo',
+        location_id: 'loc-2',
+        product_id: 'prod-1',
+        movement_type: 'transfer',
+        quantity_change: 4,
+        quantity_before: 2,
+        quantity_after: 6,
+        created_at: iso(new Date(now.getTime() - 4 * 3600 * 1000)),
+        notes: 'Van magazijn naar behandelkamer',
+        product: { id: 'prod-1', name: 'Handschoenen M', sku: 'GLV-M' },
+        location: { id: 'loc-2', name: 'Behandelkamer 1', code: 'TR1', location_type: 'treatment' } as any,
+      },
+    ] as MovementWithRelations[];
+  };
+
   const exportMovements = () => {
-    $q.notify({
-      type: 'info',
-      message: t('common.comingSoon'),
-      position: 'top',
-    });
+    const rows = inventoryStore.stockMovements as MovementWithRelations[];
+    const header = ['type', 'sku', 'product_name', 'delta', 'location', 'created_at', 'note'];
+    const csvRows = [header.join(',')];
+    for (const r of rows) {
+      const type = r.movement_type;
+      const sku = r.product?.sku ?? '';
+      const name = r.product?.name ?? '';
+      const delta = String(r.quantity_change ?? 0);
+      const loc = r.location?.name ?? '';
+      const created = new Date(r.created_at).toISOString();
+      const note = (r.notes ?? '').replace(/"/g, '""');
+      const line = [type, sku, name, delta, loc, created, `"${note}` + '"'].join(',');
+      csvRows.push(line);
+    }
+    const blob = new Blob([csvRows.join('\n')], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `movements_${new Date().toISOString()}.csv`;
+    a.click();
+    URL.revokeObjectURL(url);
   };
 
   const viewMovementDetails = (movement: MovementWithRelations) => {
@@ -534,6 +600,17 @@
   onBeforeUnmount(() => {
     isUnmounted.value = true;
   });
+
+  // React to filter and pagination changes for server-side fetch
+  watch(
+    () => ({ ...pagination.value, ...filterValues.value, practice: practiceId.value }),
+    async () => {
+      if (practiceId.value) {
+        await refreshData();
+      }
+    },
+    { deep: true }
+  );
 </script>
 
 <style lang="scss" scoped>
@@ -570,7 +647,7 @@
   }
 
   .movements-table-card {
-    overflow: hidden;
+    overflow: visible;
   }
 
   .product-info {

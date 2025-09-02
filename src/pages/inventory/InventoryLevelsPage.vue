@@ -33,7 +33,8 @@
         >
           <div class="kpi-content">
             <div class="kpi-value">
-              {{ filteredStockLevels.length }}
+              <q-skeleton v-if="loading" type="text" width="48px" />
+              <template v-else>{{ filteredStockLevels.length }}</template>
             </div>
             <div class="kpi-subtitle">{{ $t('inventory.products') }}</div>
           </div>
@@ -49,7 +50,8 @@
         >
           <div class="kpi-content">
             <div class="kpi-value">
-              {{ clinicStore.locations.length }}
+              <q-skeleton v-if="loading" type="text" width="48px" />
+              <template v-else>{{ clinicStore.locations.length }}</template>
             </div>
             <div class="kpi-subtitle">{{ $t('inventory.locations') }}</div>
           </div>
@@ -65,9 +67,10 @@
         >
           <div class="kpi-content">
             <div class="kpi-value">
-              {{
-                loading ? '...' : inventoryStore.realtimeConnected ? '🔄' : '✓'
-              }}
+              <q-skeleton v-if="loading" type="text" width="24px" />
+              <template v-else>
+                {{ inventoryStore.realtimeConnected ? '🔄' : '✓' }}
+              </template>
             </div>
             <div class="kpi-subtitle">
               {{
@@ -89,13 +92,30 @@
         >
           <div class="kpi-content">
             <div class="kpi-value">
-              {{ lastUpdated ? formatTime(lastUpdated) : '-' }}
+              <q-skeleton v-if="loading" type="text" width="48px" />
+              <template v-else>{{ lastUpdated ? formatTime(lastUpdated) : '-' }}</template>
             </div>
             <div class="kpi-subtitle">{{ $t('inventory.lastSync') }}</div>
           </div>
         </BaseCard>
       </div>
     </div>
+
+    <!-- Error Banner -->
+    <q-banner
+      v-if="errorState.visible"
+      dense
+      class="q-mb-md bg-negative text-white"
+      rounded
+    >
+      <div class="row items-center">
+        <q-icon name="error_outline" class="q-mr-sm" />
+        <div class="col">{{ errorState.message }}</div>
+        <div class="col-auto">
+          <q-btn flat dense color="white" :label="$t('common.retry')" @click="onRetry" />
+        </div>
+      </div>
+    </q-banner>
 
     <!-- Modern FilterPanel Component -->
     <div class="filters-section q-mb-lg">
@@ -299,6 +319,8 @@
   import { useAuthStore } from 'src/stores/auth';
   import { useClinicStore } from 'src/stores/clinic';
   import { useInventoryStore } from 'src/stores/inventory';
+  import { ServiceErrorHandler } from 'src/utils/service-error-handler';
+  import type { StockUpdateRequest } from 'src/types/inventory';
   import type {
     FilterValues,
     FilterChangeEvent,
@@ -315,8 +337,26 @@
   const loading = ref(false);
   const adjusting = ref(false);
   const showAdjustDialog = ref(false);
-  const selectedStockLevel = ref<any>(null);
+  interface StockLevelRow {
+    id: string;
+    product_id: string;
+    location_id: string;
+    current_quantity: number;
+    minimum_quantity: number;
+    last_counted_at?: string | null;
+    product_name: string;
+    product_sku: string | null;
+    product_category: string | null;
+    product_unit: string;
+    location_name: string;
+    stock_status: string;
+  }
+
+  const selectedStockLevel = ref<StockLevelRow | null>(null);
   const lastUpdated = ref<Date | null>(null);
+  const errorState = ref<{ visible: boolean; message: string; retry?: () => void }>(
+    { visible: false, message: '' }
+  );
 
   // New filter state for FilterPanel
   const filterValues = ref<FilterValues>({});
@@ -327,7 +367,8 @@
   const adjustmentReason = ref('');
 
   // Data
-  const stockLevels = ref<any[]>([]);
+  const stockLevels = ref<StockLevelRow[]>([]);
+  const isDemoMode = computed(() => !authStore.clinicId);
 
   // Filter event handlers
   const handleFilterChange = (event: FilterChangeEvent) => {
@@ -519,6 +560,13 @@
   const loadStockLevels = async () => {
     try {
       loading.value = true;
+      // Demo fallback: no practice selected
+      if (!authStore.clinicId) {
+        stockLevels.value = generateDemoStockLevels();
+        await updateLastSync();
+        errorState.value = { visible: false, message: '' };
+        return;
+      }
       const { data, error } = await supabase
         .from('stock_levels')
         .select(
@@ -550,16 +598,41 @@
           level.minimum_stock || 0
         ),
       }));
-
-      lastUpdated.value = new Date();
+      await updateLastSync();
+      errorState.value = { visible: false, message: '' };
     } catch (error: any) {
-      console.error('Failed to load stock levels:', error);
-      $q.notify({
-        type: 'negative',
+      ServiceErrorHandler.handle(error, {
+        service: 'InventoryLevels',
+        operation: 'loadStockLevels',
+        metadata: { practiceId: authStore.clinicId },
+      }, { rethrow: false });
+      errorState.value = {
+        visible: true,
         message: t('inventory.loadError'),
-      });
+        retry: async () => {
+          await loadStockLevels();
+        },
+      };
     } finally {
       loading.value = false;
+    }
+  };
+
+  const updateLastSync = async () => {
+    try {
+      const { data, error } = await supabase
+        .from('stock_movements')
+        .select('created_at')
+        .eq('practice_id', authStore.clinicId)
+        .order('created_at', { ascending: false })
+        .limit(1);
+      if (!error && data && data.length > 0) {
+        lastUpdated.value = new Date(data[0].created_at);
+      } else {
+        lastUpdated.value = new Date();
+      }
+    } catch {
+      lastUpdated.value = new Date();
     }
   };
 
@@ -605,55 +678,168 @@
   };
 
   const performAdjustment = async () => {
-    if (!selectedStockLevel.value || !adjustmentQuantity.value) {
-      return;
-    }
+    if (!selectedStockLevel.value || !adjustmentQuantity.value) return;
 
     try {
       adjusting.value = true;
 
-      let newQuantity = selectedStockLevel.value.current_quantity;
-
+      const currentQty = selectedStockLevel.value.current_quantity;
+      let targetQty = currentQty;
       switch (adjustmentType.value) {
         case 'add':
-          newQuantity += adjustmentQuantity.value;
+          targetQty = currentQty + adjustmentQuantity.value;
           break;
         case 'remove':
-          newQuantity = Math.max(0, newQuantity - adjustmentQuantity.value);
+          targetQty = Math.max(0, currentQty - adjustmentQuantity.value);
           break;
         case 'set':
-          newQuantity = adjustmentQuantity.value;
+          targetQty = adjustmentQuantity.value;
           break;
       }
+      const delta = targetQty - currentQty;
+      if (delta === 0) {
+        closeAdjustDialog();
+        return;
+      }
 
-      const { error } = await supabase
-        .from('stock_levels')
-        .update({
-          current_quantity: newQuantity,
-          available_quantity: newQuantity, // Assuming no reservations for simplicity
-        })
-        .eq('id', selectedStockLevel.value.id);
+      // Demo fallback: update local state only, no persistence
+      if (!authStore.clinicId) {
+        // Update local list to reflect change
+        const idx = stockLevels.value.findIndex(
+          s => s.id === selectedStockLevel.value!.id
+        );
+        if (idx !== -1) {
+          const updated: StockLevelRow = {
+            ...stockLevels.value[idx],
+            current_quantity: Math.max(0, targetQty),
+            stock_status: determineStockStatus(
+              Math.max(0, targetQty),
+              stockLevels.value[idx].minimum_quantity || 0
+            ),
+          };
+          stockLevels.value.splice(idx, 1, updated);
+        }
+        $q.notify({ type: 'positive', message: t('inventory.stockAdjusted') });
+        closeAdjustDialog();
+        await updateLastSync();
+        return;
+      }
 
-      if (error) throw error;
+      // Prefer RPC if available, fallback to store update
+      const tryRpc = async () => {
+        return await supabase.rpc('update_stock_level', {
+          p_practice_id: authStore.clinicId,
+          p_location_id: selectedStockLevel.value!.location_id,
+          p_product_id: selectedStockLevel.value!.product_id,
+          p_quantity_change: delta,
+          p_movement_type: 'adjustment',
+          p_performed_by: authStore.user?.id || null,
+          p_reference_type: 'manual_adjustment',
+          p_reference_id: selectedStockLevel.value!.id,
+          p_reason_code: 'manual_adjustment',
+          p_notes: adjustmentReason.value || null,
+        });
+      };
 
-      // TODO: Record stock movement in stock_movements table
+      let rpcOk = false;
+      try {
+        const { error: rpcError } = await tryRpc();
+        if (!rpcError) rpcOk = true;
+      } catch {
+        rpcOk = false;
+      }
 
-      $q.notify({
-        type: 'positive',
-        message: t('inventory.stockAdjusted'),
-      });
+      if (!rpcOk) {
+        const request: StockUpdateRequest = {
+          practice_id: authStore.clinicId!,
+          location_id: selectedStockLevel.value.location_id,
+          product_id: selectedStockLevel.value.product_id,
+          quantity_change: delta,
+          movement_type: 'adjustment',
+          reason_code: 'manual_adjustment',
+          notes: adjustmentReason.value || '',
+        };
+        await inventoryStore.updateStockLevel(request);
+      }
 
+      $q.notify({ type: 'positive', message: t('inventory.stockAdjusted') });
       closeAdjustDialog();
       await loadStockLevels();
     } catch (error: any) {
-      console.error('Failed to adjust stock:', error);
-      $q.notify({
-        type: 'negative',
+      ServiceErrorHandler.handle(error, {
+        service: 'InventoryLevels',
+        operation: 'performAdjustment',
+        metadata: {
+          practiceId: authStore.clinicId,
+          productId: selectedStockLevel.value?.product_id,
+          locationId: selectedStockLevel.value?.location_id,
+        },
+      }, { rethrow: false });
+      errorState.value = {
+        visible: true,
         message: t('inventory.adjustError'),
-      });
+        retry: async () => {
+          await performAdjustment();
+        },
+      };
     } finally {
       adjusting.value = false;
     }
+  };
+
+  const onRetry = async () => {
+    const retry = errorState.value.retry;
+    errorState.value = { visible: false, message: '' };
+    if (retry) await retry(); else await loadStockLevels();
+  };
+
+  // Demo data generator
+  const generateDemoStockLevels = (): StockLevelRow[] => {
+    const demo: StockLevelRow[] = [
+      {
+        id: 'demo-1',
+        product_id: 'prod-1',
+        location_id: 'loc-1',
+        current_quantity: 24,
+        minimum_quantity: 10,
+        last_counted_at: null,
+        product_name: 'Handschoenen Maat M',
+        product_sku: 'GLV-M',
+        product_category: 'Verbruik',
+        product_unit: 'pcs',
+        location_name: 'Demo Magazijn',
+        stock_status: determineStockStatus(24, 10),
+      },
+      {
+        id: 'demo-2',
+        product_id: 'prod-2',
+        location_id: 'loc-1',
+        current_quantity: 5,
+        minimum_quantity: 8,
+        last_counted_at: null,
+        product_name: 'Desinfectiemiddel 500ml',
+        product_sku: 'DSF-500',
+        product_category: 'Hygiëne',
+        product_unit: 'btl',
+        location_name: 'Demo Magazijn',
+        stock_status: determineStockStatus(5, 8),
+      },
+      {
+        id: 'demo-3',
+        product_id: 'prod-3',
+        location_id: 'loc-2',
+        current_quantity: 0,
+        minimum_quantity: 2,
+        last_counted_at: null,
+        product_name: 'Pleisters set',
+        product_sku: 'PLS-SET',
+        product_category: 'EHBO',
+        product_unit: 'set',
+        location_name: 'Behandelkamer 1',
+        stock_status: determineStockStatus(0, 2),
+      },
+    ];
+    return demo;
   };
 
   // Lifecycle

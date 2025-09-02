@@ -1,5 +1,6 @@
 import { createI18n } from 'vue-i18n';
 import type { SupportedLocale } from '@/types/i18n';
+export type { SupportedLocale } from '@/types/i18n';
 
 // Always use lazy loading to avoid require() issues in Vite
 const ENABLE_LAZY_LOADING = true;
@@ -10,9 +11,7 @@ let messages: Record<SupportedLocale, any> = {} as any;
 // Get saved locale from localStorage or default to 'nl'
 const getSavedLocale = (): SupportedLocale => {
   const saved = localStorage.getItem('remcura_locale');
-  if (saved && ['en', 'nl', 'es'].includes(saved)) {
-    return saved as SupportedLocale;
-  }
+  // We only support Dutch now; ignore any previously saved en/es
   return 'nl';
 };
 
@@ -41,7 +40,7 @@ const missingHandler = (
 // Use composition mode for Vue 3 compatibility
 export const i18n = createI18n({
   locale: getSavedLocale(),
-  fallbackLocale: 'en',
+  fallbackLocale: 'nl',
   messages: ENABLE_LAZY_LOADING ? {} : messages, // Empty in production for lazy loading
   legacy: false, // Use composition mode for Vue 3 compatibility
   globalInjection: true,
@@ -140,7 +139,7 @@ export const logTranslationStats = () => {
     return;
   }
 
-  const locales: SupportedLocale[] = ['nl', 'en', 'es'];
+  const locales: SupportedLocale[] = ['nl'];
   console.group('🌐 Translation Coverage Statistics');
 
   locales.forEach(locale => {
@@ -162,7 +161,7 @@ export const preloadAllLanguages = async (): Promise<void> => {
     return Promise.resolve();
   }
 
-  const locales: SupportedLocale[] = ['nl', 'en', 'es'];
+  const locales: SupportedLocale[] = ['nl'];
   const loadPromises = locales.map(locale => loadLanguageAsync(locale));
 
   try {

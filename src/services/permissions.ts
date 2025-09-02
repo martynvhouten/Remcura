@@ -127,7 +127,9 @@ export class PermissionService {
     try {
       const { data: isPo } = await supabase.rpc('is_platform_owner');
       if (isPo === true) return true;
-    } catch {}
+    } catch {
+      // ignore
+    }
     const isPlatformOwnerFallback =
       !!(authStore.user as any)?.app_metadata?.role &&
       (authStore.user as any).app_metadata.role === 'platform_owner';
@@ -241,7 +243,9 @@ export class PermissionService {
     try {
       const { data: isPo } = await supabase.rpc('is_platform_owner');
       if (isPo === true) return 'platform_owner';
-    } catch {}
+    } catch {
+      // ignore
+    }
     const isPlatformOwnerFallback =
       !!(authStore.user as any)?.app_metadata?.role &&
       (authStore.user as any).app_metadata.role === 'platform_owner';
