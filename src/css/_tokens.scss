@@ -1,0 +1,48 @@
+/* Design tokens for controls and shared variables */
+
+@layer base {
+  :root {
+    /* Control sizing (per dialog spec) */
+    --control-height-sm: 36px;
+    --control-height-md: 44px;
+    --control-height-lg: 52px;
+
+    --control-pad-x: 12px;
+    --control-pad-y: 8px;
+
+    /* Radii */
+    --radius-sm: 4px;
+    --radius-md: 12px;
+    --radius-lg: 12px;
+    --radius-xl: 20px;
+
+    /* Spacing aliases (map to existing scale in app.scss) */
+    --space-2: 8px;
+    --space-3: 12px;
+    --space-4: 16px;
+    --space-5: 20px;
+    --space-6: 24px;
+
+    /* Shadows (fallbacks align to existing app.scss tokens) */
+    --shadow-md: var(--shadow-md, 0 10px 15px -3px rgba(0,0,0,.1));
+    --shadow-lg: var(--shadow-lg, 0 20px 25px -5px rgba(0,0,0,.1));
+
+    /* Color aliases for surfaces and texts (map to existing tokens) */
+    --color-surface: var(--bg-secondary);
+    --color-surface-elevated: var(--bg-primary);
+    --color-border: var(--border-primary);
+    --color-text: var(--text-primary);
+    --color-muted: var(--text-secondary);
+    --color-primary: var(--brand-primary);
+    --color-danger: var(--brand-danger);
+
+    /* Focus ring */
+    --focus-ring: 0 0 0 3px rgba(30, 58, 138, 0.15);
+    --focus-ring-color: rgba(30, 58, 138, 0.3);
+
+    /* Typography */
+    --control-font-sm: 0.875rem;
+    --control-font-md: 0.9375rem;
+    --control-font-lg: 1rem;
+  }
+}

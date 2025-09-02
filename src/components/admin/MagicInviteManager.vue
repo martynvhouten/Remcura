@@ -278,7 +278,9 @@
 
   // Computed
   const qrCodeUrl = computed(() => {
-    if (!generatedInvite.value) return '';
+    if (!generatedInvite.value) {
+      return '';
+    }
     const joinUrl = `${window.location.origin}/join/${generatedInvite.value.magic_code}`;
     return `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(
       joinUrl
@@ -304,8 +306,8 @@
         newInvite.value.role === 'member'
           ? '🏥'
           : newInvite.value.role === 'admin'
-          ? '👩‍⚕️'
-          : '💊';
+            ? '👩‍⚕️'
+            : '💊';
 
       generatedInvite.value = {
         id: Date.now().toString(),

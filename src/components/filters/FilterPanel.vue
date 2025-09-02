@@ -321,7 +321,7 @@
     // Filter toggle button styling is now handled by app-btn-filter class in app.scss
   }
 
-  // Premium smooth filter slide transition - Optimized for performance
+  // Filter slide transition
   .filter-slide-enter-active {
     transition: all 0.35s cubic-bezier(0.25, 0.8, 0.25, 1);
     will-change: transform, opacity;
@@ -348,13 +348,13 @@
     transform: translateY(0) scale(1);
   }
 
-  // Modern filter content panel
+  // Filter content panel
   .filter-content {
     background: #ffffff;
     border: 1px solid #e1e5e9;
-    border-radius: 8px; // More rounded for modern look
+    border-radius: 8px; // Rounded corners
     padding: 24px; // Slightly more padding
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08); // Subtle modern shadow
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08); // Subtle shadow
     overflow: hidden; // Prevent content overflow during animation
 
     // Performance optimizations for smooth animation

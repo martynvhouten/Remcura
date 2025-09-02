@@ -300,7 +300,9 @@
 
   // Computed
   const previewMagicCode = computed(() => {
-    if (!userName.value) return t('upgrade.previewCode');
+    if (!userName.value) {
+      return t('upgrade.previewCode');
+    }
     const cleanName = userName.value
       .split(' ')[0]
       .toUpperCase()
@@ -309,7 +311,9 @@
   });
 
   const canCreate = computed(() => {
-    if (!userName.value) return false;
+    if (!userName.value) {
+      return false;
+    }
 
     if (selectedOption.value === 'email_password') {
       return emailForm.value.email && emailForm.value.password.length >= 6;

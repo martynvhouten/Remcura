@@ -25,7 +25,7 @@
           </div>
         </div>
 
-        <!-- Error Number with Modern Typography -->
+        <!-- Error number typography -->
         <div class="error-number" aria-hidden="true">
           <span class="number-4">4</span>
           <span class="number-0">0</span>

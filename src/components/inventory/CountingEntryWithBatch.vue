@@ -491,7 +491,7 @@
   .new-batch-input {
     border: 1px dashed var(--grey-4);
     border-radius: 4px;
-    padding: 12px;
+    padding: var(--control-pad-y) var(--control-pad-x);
     background-color: var(--grey-1);
   }
 
@@ -516,7 +516,7 @@
     }
 
     .new-batch-input {
-      padding: 8px;
+      padding: var(--control-pad-y);
     }
   }
 </style>

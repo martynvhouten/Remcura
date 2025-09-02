@@ -60,7 +60,7 @@
             <q-btn
               @click="addProduct"
               icon="add"
-              label="Product toevoegen"
+            :label="$t('orderLists.addProduct')"
               color="primary"
               unelevated
               no-caps
@@ -74,20 +74,28 @@
               no-caps
               class="secondary-action"
             />
+          <q-btn
+            @click="confirmPlaceAll = true"
+            icon="shopping_cart_checkout"
+            color="primary"
+            no-caps
+            class="primary-action"
+            :label="$t('orderLists.orderAll')"
+          />
             <q-btn flat round icon="more_vert" class="menu-btn">
               <q-menu>
                 <q-list dense>
-                  <q-item clickable @click="duplicateList" v-close-popup>
+                <q-item clickable @click="duplicateList" v-close-popup>
                     <q-item-section avatar>
                       <q-icon name="content_copy" />
                     </q-item-section>
-                    <q-item-section>Dupliceren</q-item-section>
+                  <q-item-section>{{ $t('common.duplicate') }}</q-item-section>
                   </q-item>
-                  <q-item clickable @click="exportList" v-close-popup>
+                <q-item clickable @click="exportList" v-close-popup>
                     <q-item-section avatar>
                       <q-icon name="download" />
                     </q-item-section>
-                    <q-item-section>Exporteren</q-item-section>
+                  <q-item-section>{{ $t('common.export') }}</q-item-section>
                   </q-item>
                   <q-separator />
                   <q-item
@@ -99,7 +107,7 @@
                     <q-item-section avatar>
                       <q-icon name="delete" />
                     </q-item-section>
-                    <q-item-section>Verwijderen</q-item-section>
+                  <q-item-section>{{ $t('common.delete') }}</q-item-section>
                   </q-item>
                 </q-list>
               </q-menu>
@@ -334,13 +342,13 @@
     <!-- Add Product Dialog -->
     <FormDialog
       v-model="showAddProductDialog"
-      title="Product toevoegen"
-      subtitle="Zoek en selecteer een product"
+      :title="$t('orderLists.addProduct')"
+      :subtitle="$t('orderLists.addProductSubtitle')"
       icon="add_shopping_cart"
       size="md"
       :loading="addingProduct"
       :can-submit="!!(selectedProduct && newItemQuantity)"
-      submit-button-text="Toevoegen"
+      :submit-button-text="$t('common.add')"
       @submit="confirmAddProduct"
       @cancel="showAddProductDialog = false"
     >
@@ -350,7 +358,7 @@
           :options="filteredProducts"
           option-label="name"
           option-value="id"
-          label="Zoek product"
+          :label="$t('products.search')"
           outlined
           use-input
           clearable
@@ -374,13 +382,29 @@
 
         <q-input
           v-model.number="newItemQuantity"
-          label="Aanbevolen hoeveelheid"
+          :label="$t('orderLists.recommendedQty')"
           type="number"
           min="1"
           outlined
         />
       </div>
     </FormDialog>
+
+    <!-- Confirm place all dialog -->
+    <q-dialog v-model="confirmPlaceAll">
+      <q-card>
+        <q-card-section class="text-h6">
+          {{ $t('orderLists.confirmPlaceAllTitle') }}
+        </q-card-section>
+        <q-card-section>
+          {{ $t('orderLists.confirmPlaceAllBody') }}
+        </q-card-section>
+        <q-card-actions align="right">
+          <q-btn flat :label="$t('common.cancel')" v-close-popup />
+          <q-btn color="primary" :label="$t('orderLists.orderAll')" @click="orderAll()" />
+        </q-card-actions>
+      </q-card>
+    </q-dialog>
   </div>
 </template>
 
@@ -418,6 +442,7 @@
   const orderList = ref<OrderListWithItems | null>(null);
   const orderListItems = ref<any[]>([]);
   const showAddProductDialog = ref(false);
+  const confirmPlaceAll = ref(false);
   const selectedProduct = ref<any>(null);
   const newItemQuantity = ref(1);
   const filteredProducts = ref<any[]>([]);
@@ -487,7 +512,9 @@
 
   // Computed
   const statusColor = computed(() => {
-    if (!orderList.value) return 'grey';
+    if (!orderList.value) {
+      return 'grey';
+    }
     switch (orderList.value.status) {
       case 'ready':
         return 'positive';
@@ -507,7 +534,9 @@
   });
 
   const statusLabel = computed(() => {
-    if (!orderList.value) return 'Onbekend';
+    if (!orderList.value) {
+      return 'Onbekend';
+    }
     switch (orderList.value.status) {
       case 'ready':
         return 'Klaar';
@@ -599,7 +628,9 @@
   };
 
   const loadOrderListItems = async () => {
-    if (!orderList.value) return;
+    if (!orderList.value) {
+      return;
+    }
 
     loadingItems.value = true;
     try {
@@ -632,8 +663,12 @@
   };
 
   const getStockColor = (current: number, minimum: number) => {
-    if (current === 0) return 'negative';
-    if (current <= minimum) return 'warning';
+    if (current === 0) {
+      return 'negative';
+    }
+    if (current <= minimum) {
+      return 'warning';
+    }
     return 'positive';
   };
 
@@ -688,7 +723,9 @@
   };
 
   const confirmAddProduct = async () => {
-    if (!selectedProduct.value || !orderList.value) return;
+    if (!selectedProduct.value || !orderList.value) {
+      return;
+    }
 
     addingProduct.value = true;
     try {
@@ -771,6 +808,22 @@
         type: 'negative',
         message: 'Kon lijst niet dupliceren',
       });
+    }
+  };
+
+  const orderAll = async () => {
+    try {
+      confirmPlaceAll.value = false;
+      processingGlobalOrder.value = true;
+      // Delegate to min/max orchestration if available
+      if (orderListsStore.applyOrderSuggestions) {
+        await orderListsStore.applyOrderSuggestions();
+      }
+      $q.notify({ type: 'positive', message: $t('orderLists.ordersCreated') as string });
+    } catch (err) {
+      $q.notify({ type: 'negative', message: $t('orderLists.processingError') as string });
+    } finally {
+      processingGlobalOrder.value = false;
     }
   };
 
@@ -868,7 +921,7 @@
 
   .table-count {
     font-size: 13px;
-    color: #666;
+    color: var(--text-secondary);
     font-weight: 500;
   }
 
@@ -885,17 +938,17 @@
   .medical-table {
     margin-top: 0;
   }
-  /* Modern Order List Detail Page Design */
+  /* Order list detail page styles */
   .order-detail-page {
     min-height: 100vh;
-    background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+    background: linear-gradient(135deg, var(--neutral-50) 0%, var(--neutral-200) 100%);
   }
 
   /* Page Header */
   .page-header {
-    background: white;
-    border-bottom: 1px solid rgba(0, 0, 0, 0.08);
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+    background: var(--bg-secondary);
+    border-bottom: 1px solid var(--border-primary);
+    box-shadow: var(--shadow-sm);
   }
 
   .header-content {
@@ -912,27 +965,27 @@
   }
 
   .back-btn {
-    color: #6b7280;
+    color: var(--text-secondary);
     width: 36px;
     height: 36px;
   }
 
   .back-btn:hover {
-    background: rgba(0, 0, 0, 0.08);
+    background: var(--hover-bg);
   }
 
   .breadcrumb-text {
     font-size: 14px;
-    color: #6b7280;
+    color: var(--text-secondary);
   }
 
   .breadcrumb-separator {
-    color: #d1d5db;
+    color: var(--neutral-300);
   }
 
   .breadcrumb-current {
     font-size: 14px;
-    color: #1f2937;
+    color: var(--text-primary);
     font-weight: 500;
   }
 
@@ -956,8 +1009,8 @@
     border-radius: 16px;
     background: linear-gradient(
       135deg,
-      rgba(25, 118, 210, 0.1),
-      rgba(25, 118, 210, 0.2)
+      rgba(30, 58, 138, 0.08),
+      rgba(30, 58, 138, 0.16)
     );
     display: flex;
     align-items: center;
@@ -973,14 +1026,14 @@
   .page-title {
     font-size: 28px;
     font-weight: 700;
-    color: #1f2937;
+    color: var(--text-primary);
     margin: 0 0 8px 0;
     line-height: 1.2;
   }
 
   .page-subtitle {
     font-size: 16px;
-    color: #6b7280;
+    color: var(--text-secondary);
     margin: 0 0 12px 0;
     line-height: 1.4;
   }
@@ -1000,13 +1053,13 @@
   }
 
   .meta-separator {
-    color: #d1d5db;
+    color: var(--neutral-300);
     font-weight: 500;
   }
 
   .meta-text {
     font-size: 14px;
-    color: #6b7280;
+    color: var(--text-secondary);
     font-weight: 500;
   }
 
@@ -1033,11 +1086,11 @@
   .menu-btn {
     width: 40px;
     height: 40px;
-    color: #6b7280;
+    color: var(--text-secondary);
   }
 
   .menu-btn:hover {
-    background: rgba(0, 0, 0, 0.08);
+    background: var(--hover-bg);
   }
 
   /* Main Content */
@@ -1059,12 +1112,14 @@
   }
 
   .stat-card {
-    background: white;
-    border-radius: 12px;
+    background: var(--bg-secondary);
+    border-radius: var(--radius-lg);
     padding: 20px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
-    border: 1px solid rgba(0, 0, 0, 0.06);
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    box-shadow: var(--shadow-sm);
+    border: 1px solid var(--border-primary);
+    transition:
+      transform 0.2s ease,
+      box-shadow 0.2s ease;
     display: flex;
     align-items: center;
     gap: 16px;
@@ -1072,14 +1127,14 @@
 
   .stat-card:hover {
     transform: translateY(-2px);
-    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+    box-shadow: var(--shadow-md);
   }
 
   .stat-icon {
     width: 48px;
     height: 48px;
-    border-radius: 12px;
-    background: rgba(25, 118, 210, 0.1);
+    border-radius: var(--radius-lg);
+    background: var(--hover-bg);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -1093,14 +1148,14 @@
   .stat-value {
     font-size: 20px;
     font-weight: 700;
-    color: #1f2937;
+    color: var(--text-primary);
     line-height: 1.2;
     margin-bottom: 4px;
   }
 
   .stat-label {
     font-size: 13px;
-    color: #6b7280;
+    color: var(--text-secondary);
     font-weight: 500;
     text-transform: uppercase;
     letter-spacing: 0.5px;
@@ -1108,10 +1163,10 @@
 
   /* Products Section */
   .products-section {
-    background: white;
-    border-radius: 16px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
-    border: 1px solid rgba(0, 0, 0, 0.06);
+    background: var(--bg-secondary);
+    border-radius: var(--radius-xl);
+    box-shadow: var(--shadow-sm);
+    border: 1px solid var(--border-primary);
     overflow: hidden;
   }
 
@@ -1120,12 +1175,8 @@
     align-items: center;
     justify-content: space-between;
     padding: 24px 32px;
-    border-bottom: 1px solid rgba(0, 0, 0, 0.08);
-    background: linear-gradient(
-      135deg,
-      #f8fafc 0%,
-      rgba(248, 250, 252, 0.5) 100%
-    );
+    border-bottom: 1px solid var(--border-primary);
+    background: linear-gradient(135deg, var(--neutral-50) 0%, rgba(248, 250, 252, 0.5) 100%);
   }
 
   .section-title {
@@ -1137,13 +1188,13 @@
   .section-title h2 {
     font-size: 20px;
     font-weight: 600;
-    color: #1f2937;
+    color: var(--text-primary);
     margin: 0;
   }
 
   .item-count {
-    background: rgba(25, 118, 210, 0.1);
-    color: #1976d2;
+    background: var(--hover-bg);
+    color: var(--brand-primary-light);
     padding: 4px 8px;
     border-radius: 6px;
     font-size: 12px;
@@ -1157,13 +1208,13 @@
   }
 
   .refresh-btn {
-    color: #6b7280;
+    color: var(--text-secondary);
     width: 36px;
     height: 36px;
   }
 
   .refresh-btn:hover {
-    background: rgba(0, 0, 0, 0.08);
+    background: var(--hover-bg);
   }
 
   /* Products Table Container */
@@ -1189,13 +1240,13 @@
   .empty-state h3 {
     font-size: 18px;
     font-weight: 600;
-    color: #4b5563;
+    color: var(--text-primary);
     margin: 0 0 8px 0;
   }
 
   .empty-state p {
     font-size: 14px;
-    color: #6b7280;
+    color: var(--text-secondary);
     margin: 0 0 24px 0;
   }
 
@@ -1208,16 +1259,18 @@
   }
 
   .product-card {
-    background: #f8fafc;
-    border: 1px solid rgba(0, 0, 0, 0.06);
-    border-radius: 12px;
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    background: var(--neutral-50);
+    border: 1px solid var(--border-primary);
+    border-radius: var(--radius-lg);
+    transition:
+      transform 0.2s ease,
+      box-shadow 0.2s ease;
     overflow: hidden;
   }
 
   .product-card:hover {
     transform: translateY(-2px);
-    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+    box-shadow: var(--shadow-md);
   }
 
   .product-header {
@@ -1225,8 +1278,8 @@
     align-items: center;
     justify-content: space-between;
     padding: 16px 20px;
-    background: white;
-    border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+    background: var(--bg-secondary);
+    border-bottom: 1px solid var(--border-primary);
   }
 
   .product-info {
@@ -1240,8 +1293,8 @@
   .product-icon {
     width: 36px;
     height: 36px;
-    border-radius: 8px;
-    background: rgba(25, 118, 210, 0.1);
+    border-radius: var(--radius-md);
+    background: var(--hover-bg);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -1256,7 +1309,7 @@
   .product-name {
     font-size: 14px;
     font-weight: 600;
-    color: #1f2937;
+    color: var(--text-primary);
     margin: 0 0 4px 0;
     line-height: 1.3;
     word-break: break-word;
@@ -1264,19 +1317,19 @@
 
   .product-sku {
     font-size: 12px;
-    color: #6b7280;
+    color: var(--text-secondary);
     margin: 0;
-    font-family: 'Monaco', 'Menlo', monospace;
+    font-family: var(--font-family-mono);
   }
 
   .product-menu {
     width: 32px;
     height: 32px;
-    color: #6b7280;
+    color: var(--text-secondary);
   }
 
   .product-menu:hover {
-    background: rgba(0, 0, 0, 0.08);
+    background: var(--hover-bg);
   }
 
   .product-content {
@@ -1291,7 +1344,7 @@
     display: block;
     font-size: 13px;
     font-weight: 500;
-    color: #374151;
+    color: var(--text-primary);
     margin-bottom: 8px;
   }
 
@@ -1304,14 +1357,14 @@
   .quantity-btn {
     width: 32px;
     height: 32px;
-    color: #6b7280;
-    border: 1px solid rgba(0, 0, 0, 0.12);
-    border-radius: 6px;
+    color: var(--text-secondary);
+    border: 1px solid var(--border-primary);
+    border-radius: var(--radius-sm);
   }
 
   .quantity-btn:hover {
-    background: rgba(0, 0, 0, 0.08);
-    border-color: rgba(0, 0, 0, 0.2);
+    background: var(--hover-bg);
+    border-color: var(--hover-border);
   }
 
   .quantity-input {
@@ -1337,18 +1390,18 @@
 
   .meta-label {
     font-size: 13px;
-    color: #6b7280;
+    color: var(--text-secondary);
     font-weight: 500;
   }
 
   .meta-value {
     font-size: 13px;
-    color: #1f2937;
+    color: var(--text-primary);
     font-weight: 600;
   }
 
   .total-price {
-    color: #059669;
+    color: var(--brand-success-light);
     font-size: 14px;
   }
 
@@ -1411,42 +1464,42 @@
 
   /* Dark Mode Support */
   .body--dark .order-detail-page {
-    background: linear-gradient(135deg, #1f2937 0%, #111827 100%);
+    background: var(--bg-primary);
   }
 
   .body--dark .page-header {
-    background: #374151;
-    border-bottom-color: rgba(255, 255, 255, 0.1);
+    background: var(--bg-secondary);
+    border-bottom-color: var(--border-primary);
   }
 
   .body--dark .page-title {
-    color: #f9fafb;
+    color: var(--text-primary);
   }
 
   .body--dark .page-subtitle {
-    color: #d1d5db;
+    color: var(--text-secondary);
   }
 
   .body--dark .stat-card,
   .body--dark .products-section {
-    background: #374151;
-    border-color: rgba(255, 255, 255, 0.1);
+    background: var(--bg-secondary);
+    border-color: var(--border-primary);
   }
 
   .body--dark .product-card {
-    background: #4b5563;
+    background: var(--bg-secondary);
   }
 
   .body--dark .product-header {
-    background: #374151;
-    border-bottom-color: rgba(255, 255, 255, 0.1);
+    background: var(--bg-secondary);
+    border-bottom-color: var(--border-primary);
   }
 
   .body--dark .product-name {
-    color: #f9fafb;
+    color: var(--text-primary);
   }
 
   .body--dark .meta-value {
-    color: #f9fafb;
+    color: var(--text-primary);
   }
 </style>

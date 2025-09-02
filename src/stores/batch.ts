@@ -121,6 +121,9 @@ export const useBatchStore = defineStore('batch', () => {
 
       if (filters?.practiceId) {
         query = query.eq('practice_id', filters.practiceId);
+      } else {
+        // Safety: prevent cross-practice data when practice is not provided
+        query = query.is('practice_id', null);
       }
 
       if (filters?.productId) {
@@ -155,15 +158,10 @@ export const useBatchStore = defineStore('batch', () => {
             (new Date(batch.expiry_date).getTime() - new Date().getTime()) /
               (1000 * 60 * 60 * 24)
           );
-          if (daysUntilExpiry <= 7) {
-            return 'critical';
-          }
-          if (daysUntilExpiry <= 14) {
-            return 'high';
-          }
-          if (daysUntilExpiry <= 30) {
-            return 'warning';
-          }
+          if (daysUntilExpiry < 0) return 'expired';
+          if (daysUntilExpiry <= 7) return 'critical';
+          if (daysUntilExpiry <= 14) return 'high';
+          if (daysUntilExpiry <= 30) return 'warning';
           return 'normal';
         })(),
       }));
@@ -187,6 +185,7 @@ export const useBatchStore = defineStore('batch', () => {
       loading.value = true;
       error.value = null;
 
+      // Try RPC first
       const { data, error: fetchError } = await supabase.rpc(
         'get_expiring_batches',
         {
@@ -195,7 +194,53 @@ export const useBatchStore = defineStore('batch', () => {
         }
       );
 
-      if (fetchError) throw fetchError;
+      if (fetchError) {
+        // Fallback to server-side filter
+        const today = new Date();
+        const until = new Date();
+        until.setDate(today.getDate() + daysAhead);
+        const { data: fallbackData, error: fbError } = await supabase
+          .from('product_batches')
+          .select(`
+            id, product_id, location_id, batch_number, expiry_date, current_quantity,
+            product:products!inner(id, name, sku),
+            location:practice_locations!inner(id, name)
+          `)
+          .eq('practice_id', practiceId)
+          .lte('expiry_date', until.toISOString())
+          .gte('expiry_date', today.toISOString())
+          .order('expiry_date', { ascending: true });
+
+        if (fbError) throw fbError;
+
+        expiringBatches.value = (fallbackData || []).map((row: any) => ({
+          batch_id: row.id,
+          product_id: row.product_id,
+          product_name: row.product?.name,
+          product_sku: row.product?.sku,
+          location_id: row.location_id,
+          location_name: row.location?.name,
+          batch_number: row.batch_number,
+          expiry_date: row.expiry_date,
+          current_quantity: row.current_quantity,
+          days_until_expiry: Math.ceil(
+            (new Date(row.expiry_date).getTime() - new Date().getTime()) /
+              (1000 * 60 * 60 * 24)
+          ),
+          urgency_level: (() => {
+            const d = Math.ceil(
+              (new Date(row.expiry_date).getTime() - new Date().getTime()) /
+                (1000 * 60 * 60 * 24)
+            );
+            if (d < 0) return 'expired';
+            if (d <= 7) return 'critical';
+            if (d <= 14) return 'high';
+            if (d <= 30) return 'warning';
+            return 'normal';
+          })(),
+        }));
+        return expiringBatches.value;
+      }
 
       expiringBatches.value = data || [];
       return expiringBatches.value;
@@ -229,7 +274,36 @@ export const useBatchStore = defineStore('batch', () => {
         }
       );
 
-      if (fetchError) throw fetchError;
+      if (fetchError) {
+        // Fallback: query batches and compute FIFO
+        const { data: rows, error: fbError } = await supabase
+          .from('product_batches')
+          .select('id, batch_number, current_quantity, expiry_date')
+          .eq('product_id', productId)
+          .eq('location_id', locationId)
+          .eq('status', 'active')
+          .gt('current_quantity', 0)
+          .order('expiry_date', { ascending: true });
+
+        if (fbError) throw fbError;
+
+        const result: FifoBatch[] = [] as any;
+        let remaining = quantity;
+        for (const row of rows || []) {
+          if (remaining <= 0) break;
+          const useQty = Math.min(row.current_quantity, remaining);
+          result.push({
+            batch_id: row.id,
+            batch_number: row.batch_number,
+            available_quantity: row.current_quantity,
+            expiry_date: row.expiry_date,
+            use_quantity: useQty,
+          });
+          remaining -= useQty;
+        }
+        fifoBatches.value = result;
+        return fifoBatches.value;
+      }
 
       fifoBatches.value = data || [];
       return fifoBatches.value;

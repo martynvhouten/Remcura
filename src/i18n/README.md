@@ -7,24 +7,22 @@ geavanceerde features voor ontwikkelaars en automatische workflows.
 
 ## 🌍 Ondersteunde Talen
 
-- **Nederlands (nl)** - Primaire/Master taal ⭐
-- **Engels (en)** - Fallback taal
-- **Spaans (es)** - Aanvullende taal
+- **Nederlands (nl)** - Primaire én fallback taal ⭐
 
 ## 📁 Verbeterde Structuur
 
 ```
 src/i18n/
 ├── index.ts          # Hoofd configuratie + lazy loading
-├── en/
-│   ├── index.ts      # Engelse vertalingen
-│   └── filters.ts    # Engelse filter vertalingen
+├── en/               # (legacy) niet actief
+│   ├── index.ts
+│   └── filters.ts
 ├── nl/
 │   ├── index.ts      # Nederlandse vertalingen (master)
 │   └── filters.ts    # Nederlandse filter vertalingen
-├── es/
-│   ├── index.ts      # Spaanse vertalingen
-│   └── filters.ts    # Spaanse filter vertalingen
+├── es/               # (legacy) niet actief
+│   ├── index.ts
+│   └── filters.ts
 └── README.md         # Deze documentatie
 ```
 

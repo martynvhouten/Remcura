@@ -539,9 +539,8 @@
           createRequest.notes = form.value.notes;
         }
 
-        const newOrderList = await orderListsStore.createOrderList(
-          createRequest
-        );
+        const newOrderList =
+          await orderListsStore.createOrderList(createRequest);
 
         // Add items to the new order list
         for (const item of orderListItems.value) {
@@ -612,7 +611,7 @@
 
 <style lang="scss" scoped>
   // ===================================================================
-  // MODERN ORDERLIST DIALOG STYLING
+  // Order list dialog styles
   // ===================================================================
 
   .orderlist-dialog-content {

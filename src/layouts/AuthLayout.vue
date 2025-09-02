@@ -275,14 +275,27 @@
     border: 1px solid rgba(255, 255, 255, 0.2);
     border-radius: var(--radius-2xl);
     padding: var(--space-8);
-    box-shadow: var(--shadow-lg);
-    transition: all var(--transition-base);
+    // Enhanced layered shadows for subtle 3D effect
+    box-shadow:
+      0 24px 48px rgba(0, 0, 0, 0.14),
+      0 12px 24px rgba(0, 0, 0, 0.08),
+      0 1px 0 rgba(255, 255, 255, 0.6) inset,
+      0 -1px 0 rgba(0, 0, 0, 0.06) inset;
+    transition:
+      box-shadow var(--transition-base),
+      border-color var(--transition-base),
+      background-color var(--transition-base);
     max-width: 480px;
     width: 100%;
 
     &:hover {
-      transform: translateY(-1px);
-      box-shadow: var(--shadow-xl);
+      // Keep card in place; only soften/harden shadow a bit
+      transform: none;
+      box-shadow:
+        0 28px 56px rgba(0, 0, 0, 0.16),
+        0 14px 28px rgba(0, 0, 0, 0.1),
+        0 1px 0 rgba(255, 255, 255, 0.65) inset,
+        0 -1px 0 rgba(0, 0, 0, 0.07) inset;
     }
   }
 
@@ -290,9 +303,10 @@
     background: rgba(41, 37, 36, 0.95);
     border: 1px solid rgba(255, 255, 255, 0.15);
     box-shadow:
-      0 20px 60px rgba(0, 0, 0, 0.4),
-      0 8px 24px rgba(0, 0, 0, 0.2),
-      inset 0 1px 0 rgba(255, 255, 255, 0.1);
+      0 28px 56px rgba(0, 0, 0, 0.45),
+      0 12px 24px rgba(0, 0, 0, 0.28),
+      inset 0 1px 0 rgba(255, 255, 255, 0.1),
+      inset 0 -1px 0 rgba(0, 0, 0, 0.35);
   }
 
   // Header section

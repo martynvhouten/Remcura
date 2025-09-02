@@ -88,6 +88,18 @@
         </q-card-actions>
       </BaseCard>
 
+      <!-- Error Banner -->
+      <AlertCard
+        v-else-if="loadError"
+        type="error"
+        :title="$t('common.error')"
+        :message="$t('counting.sessionLoadFailed')"
+      >
+        <template #actions>
+          <q-btn color="primary" :label="$t('common.retry')" @click="loadSession" />
+        </template>
+      </AlertCard>
+
       <!-- Session Content -->
       <template v-else>
         <!-- Session Summary -->
@@ -175,6 +187,16 @@
           </template>
 
           <div class="medical-table">
+            <AlertCard
+              v-if="entriesError"
+              type="error"
+              :title="$t('common.error')"
+              :message="$t('counting.entriesLoadFailed')"
+            >
+              <template #actions>
+                <q-btn color="primary" :label="$t('common.retry')" @click="loadCountingEntries" />
+              </template>
+            </AlertCard>
             <q-table
               :rows="countingEntries"
               :columns="resultsColumns"
@@ -276,6 +298,8 @@
   const countingProducts = ref<CountingProduct[]>([]);
   const countingEntries = ref<CountingEntry[]>([]);
   const entriesLoading = ref(false);
+  const loadError = ref(false);
+  const entriesError = ref(false);
 
   // Pagination
   const pagination = ref({
@@ -339,7 +363,6 @@
       field: 'product_id',
       sortable: true,
       align: 'left' as const,
-      style: 'width: 200px',
     },
     {
       name: 'system_quantity',
@@ -374,20 +397,15 @@
   // Methods
   const loadSession = async () => {
     try {
-      await countingStore.fetchSessions(authStore.userProfile?.clinic_id || '');
-      if (
-        session.value?.status === 'completed' ||
-        session.value?.status === 'approved'
-      ) {
+      loadError.value = false;
+      const practiceId = authStore.userProfile?.clinic_id || '';
+      const s = await countingStore.fetchSessionById(practiceId, props.sessionId);
+      if (s && (s.status === 'completed' || s.status === 'approved')) {
         await loadCountingEntries();
       }
     } catch (error) {
       console.error('Error loading session:', error);
-      $q.notify({
-        type: 'negative',
-        message: t('counting.sessionLoadFailed'),
-        position: 'top',
-      });
+      loadError.value = true;
     }
   };
 
@@ -396,8 +414,10 @@
     try {
       await countingStore.fetchCountingEntries(props.sessionId);
       countingEntries.value = countingStore.countingEntries;
+      entriesError.value = false;
     } catch (error) {
       console.error('Error loading counting entries:', error);
+      entriesError.value = true;
     } finally {
       entriesLoading.value = false;
     }
@@ -443,16 +463,44 @@
       persistent: true,
     }).onOk(async () => {
       try {
-        await countingStore.updateSession(props.sessionId, {
-          status: 'approved',
-          approved_at: new Date().toISOString(),
-          approved_by: authStore.user?.id || '',
-        });
+        const { movementIds } = await countingStore.postCountingSession(
+          props.sessionId
+        );
 
-        $q.notify({
+        const notify = $q.notify({
           type: 'positive',
           message: t('counting.sessionApproved'),
           position: 'top',
+          timeout: 8000,
+          actions: movementIds.length
+            ? [
+                {
+                  label: t('common.undo'),
+                  color: 'white',
+                  handler: async () => {
+                    try {
+                      const undone = await countingStore.undoLastPosting(
+                        props.sessionId
+                      );
+                      if (undone) {
+                        $q.notify({
+                          type: 'info',
+                          message: t('common.changesReverted'),
+                          position: 'top',
+                        });
+                        await loadSession();
+                      }
+                    } catch (e) {
+                      $q.notify({
+                        type: 'negative',
+                        message: t('common.actionFailed'),
+                        position: 'top',
+                      });
+                    }
+                  },
+                },
+              ]
+            : [],
         });
 
         await loadSession();
@@ -566,7 +614,7 @@
       }
 
       .progress-bar {
-        width: 100px;
+        width: 100%;
       }
     }
 

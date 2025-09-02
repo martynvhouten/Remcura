@@ -7,6 +7,27 @@
         icon="space_dashboard"
       >
         <template #actions>
+          <!-- Practice Switcher (only for platform owners) -->
+          <q-select
+            v-if="isPlatformOwner"
+            v-model="selectedPracticeId"
+            :options="practiceOptions"
+            option-value="id"
+            option-label="name"
+            emit-value
+            map-options
+            dense
+            outlined
+            style="min-width: 260px; margin-right: 12px"
+            :label="$t('dashboard.selectPractice')"
+            :loading="loadingPractices"
+            @update:model-value="handlePracticeChange"
+          >
+            <template #prepend>
+              <q-icon name="business" />
+            </template>
+          </q-select>
+
           <!-- Demo Role Switcher -->
           <q-select
             v-model="selectedDemoRole"
@@ -39,12 +60,7 @@
               </q-item>
             </template>
 
-            <template #selected>
-              <div class="row items-center q-gutter-xs">
-                <q-icon :name="selectedRoleIcon" class="icon-size-sm" />
-                <span>{{ selectedRoleLabel }}</span>
-              </div>
-            </template>
+            <!-- use default selected rendering -->
           </q-select>
 
           <q-btn
@@ -207,6 +223,7 @@
   import { useQuasar } from 'quasar';
   import { useRouter } from 'vue-router';
   import { useAuthStore } from 'src/stores/auth';
+  import { supabase } from '@/boot/supabase';
   import {
     practiceDashboardService,
     type PracticeDashboardData,
@@ -235,6 +252,13 @@
     () => (userProfile.value?.role || 'assistant') as UserRole
   );
   const selectedDemoRole = ref(userRole.value);
+  const isPlatformOwner = computed(() => userRole.value === 'platform_owner');
+
+  // Practice selection for platform owners
+  const practices = ref<Array<{ id: string; name: string }>>([]);
+  const selectedPracticeId = ref<string | null>(authStore.clinicId || null);
+  const loadingPractices = ref(false);
+  const practiceOptions = computed(() => practices.value);
 
   const dashboardConfig = computed(() =>
     practiceDashboardService.getRoleConfig(selectedDemoRole.value)
@@ -288,7 +312,10 @@
     try {
       loading.value = true;
       const role = selectedDemoRole.value || userRole.value || 'assistant';
-      const practiceId = authStore.clinicId || authStore.selectedPractice?.id;
+      const practiceId =
+        selectedPracticeId.value ||
+        authStore.clinicId ||
+        authStore.selectedPractice?.id;
 
       if (!practiceId) {
         throw new Error(t('dashboard.errors.practiceIdMissing'));
@@ -353,7 +380,10 @@
       await new Promise(resolve => setTimeout(resolve, 300));
 
       // Load new dashboard data
-      const practiceId = authStore.clinicId || authStore.selectedPractice?.id;
+      const practiceId =
+        selectedPracticeId.value ||
+        authStore.clinicId ||
+        authStore.selectedPractice?.id;
       if (practiceId) {
         dashboardData.value = await practiceDashboardService.getDashboardData(
           roleValue as UserRole,
@@ -378,6 +408,30 @@
     } finally {
       loading.value = false;
     }
+  }
+
+  async function loadPracticesForOwner() {
+    if (!isPlatformOwner.value) return;
+    loadingPractices.value = true;
+    try {
+      const { data, error } = await supabase
+        .from('practices')
+        .select('id, name')
+        .order('name');
+      if (error) throw error;
+      practices.value = data || [];
+      if (!selectedPracticeId.value && practices.value.length > 0) {
+        selectedPracticeId.value = practices.value[0].id;
+      }
+    } catch (e) {
+      console.error('Failed to load practices for owner', e);
+    } finally {
+      loadingPractices.value = false;
+    }
+  }
+
+  async function handlePracticeChange() {
+    await loadDashboard();
   }
 
   function getDemoRoleLabel(role: string): string {
@@ -420,8 +474,9 @@
     return classMap[type] || classMap.default;
   };
 
-  onMounted(() => {
-    loadDashboard();
+  onMounted(async () => {
+    await loadPracticesForOwner();
+    await loadDashboard();
   });
 </script>
 
@@ -648,14 +703,6 @@
     width: 360px;
     max-width: 360px;
     flex: 0 0 360px;
-
-    // Ensure text truncates identically
-    :deep(.q-field__native),
-    :deep(.q-field__selected) {
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
   }
 
   body.body--dark .demo-role-switcher {

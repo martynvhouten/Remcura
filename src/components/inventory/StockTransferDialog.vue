@@ -1,23 +1,15 @@
 <template>
-  <q-dialog
+  <BaseDialog
     :model-value="modelValue"
     @update:model-value="$emit('update:modelValue', $event)"
-    persistent
-    maximized-on-mobile
+    :title="$t('inventory.stockTransfer')"
+    icon="swap_horiz"
+    size="lg"
+    :persistent="true"
   >
-    <q-card style="min-width: 600px; max-width: 800px">
-      <!-- Header -->
-      <q-card-section class="row items-center q-pb-none">
-        <div class="text-h6">
-          <q-icon name="swap_horiz" class="q-mr-sm" />
-          {{ $t('inventory.stockTransfer') }}
-        </div>
-        <q-space />
-        <q-btn icon="close" flat round dense v-close-popup />
-      </q-card-section>
 
       <!-- Product Selector (when no product selected) -->
-      <q-card-section v-if="!selectedProduct" class="q-pt-none">
+      <div v-if="!selectedProduct" class="q-pa-md">
         <div class="text-subtitle2 q-mb-md">
           {{ $t('inventory.selectProduct') }}
         </div>
@@ -57,10 +49,10 @@
             />
           </div>
         </div>
-      </q-card-section>
+      </div>
 
       <!-- Product Preview (when product selected) -->
-      <q-card-section v-if="selectedProduct" class="q-pt-none">
+      <div v-if="selectedProduct" class="q-pa-md q-pt-none">
         <div class="product-preview">
           <div class="row items-center q-gutter-md">
             <q-avatar size="48px" color="grey-3">
@@ -96,10 +88,10 @@
             </div>
           </div>
         </div>
-      </q-card-section>
+      </div>
 
       <!-- Transfer Form -->
-      <q-card-section>
+      <div class="q-pa-md">
         <div class="q-gutter-md">
           <!-- From Location -->
           <div>
@@ -308,28 +300,33 @@
             </div>
           </div>
         </div>
-      </q-card-section>
+      </div>
 
       <!-- Actions -->
-      <q-card-actions align="right" class="q-pa-md">
-        <q-btn
-          flat
-          :label="$t('common.cancel')"
-          @click="$emit('update:modelValue', false)"
-        />
-        <q-btn
-          color="primary"
-          :label="$t('inventory.executeTransfer')"
-          :loading="transferLoading"
-          :disable="!isValidTransfer"
-          @click="executeTransfer"
-        />
-      </q-card-actions>
-    </q-card>
+      <template #actions>
+        <div class="row items-center q-gutter-sm q-pa-sm">
+          <q-space />
+          <q-btn
+            flat
+            :label="$t('common.cancel')"
+            @click="$emit('update:modelValue', false)"
+            aria-label="Cancel"
+          />
+          <q-btn
+            color="primary"
+            :label="$t('inventory.executeTransfer')"
+            :loading="transferLoading"
+            :disable="!isValidTransfer"
+            @click="executeTransfer"
+            aria-label="Execute transfer"
+          />
+        </div>
+      </template>
+    </BaseDialog>
 
     <!-- Barcode Scanner -->
     <BarcodeScanner v-model="showBarcodeScanner" @scan="handleBarcodeScan" />
-  </q-dialog>
+  </BaseDialog>
 </template>
 
 <script setup lang="ts">
@@ -340,6 +337,7 @@
   import { useClinicStore } from 'src/stores/clinic';
   import { formatDate } from 'src/utils/date';
   import BarcodeScanner from 'src/components/BarcodeScanner.vue';
+  import BaseDialog from 'src/components/base/BaseDialog.vue';
 
   // Props & Emits
   interface Props {

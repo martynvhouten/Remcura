@@ -868,19 +868,19 @@
     width: 100%;
     min-width: 0;
 
-    // Fix the parent field height to match control height
+    // Fix the parent field height to match control height via tokens
     :deep(.q-field) {
-      min-height: 40px;
-      height: 40px;
+      min-height: var(--control-height-md);
+      height: var(--control-height-md);
     }
 
     // Compact Magento-style field control with perfect centering
     :deep(.q-field__control) {
       background-color: var(--bg-primary);
       border: 1px solid var(--border-primary);
-      border-radius: 4px;
-      min-height: 40px; // Consistent 40px height
-      height: 40px; // Fixed height for perfect consistency
+      border-radius: var(--radius-md);
+      min-height: var(--control-height-md);
+      height: var(--control-height-md);
       padding: 0 12px; // Restored padding for proper spacing
       transition: border-color 0.2s ease;
       display: flex; // Enable flex for proper centering
@@ -894,7 +894,8 @@
     // Focus state
     :deep(.q-field--focused .q-field__control) {
       border-color: var(--brand-primary);
-      box-shadow: 0 0 0 2px rgba(30, 58, 138, 0.1);
+      box-shadow: 0 0 0 3px var(--focus-ring-color, rgba(30, 58, 138, 0.3));
+      border-color: transparent;
     }
 
     // Native input styling with perfect vertical centering
@@ -902,9 +903,9 @@
       font-size: 14px;
       color: var(--text-primary);
       line-height: 1.4;
-      padding: 8px 0; // Reduced padding to fit 40px
-      height: 40px; // Force 40px height
-      min-height: 40px;
+      padding: var(--control-pad-y) 0;
+      height: var(--control-height-md);
+      min-height: var(--control-height-md);
       display: flex;
       align-items: center; // Perfect vertical centering
     }
@@ -928,7 +929,7 @@
       height: 100%; // Take full height
       display: flex;
       align-items: center; // Perfect vertical centering
-      min-height: 38px; // Match field control height minus border
+      min-height: calc(var(--control-height-md) - 2px);
       padding: 0; // Remove any extra padding
     }
 
@@ -1002,7 +1003,7 @@
     display: flex;
     align-items: center;
     gap: 8px;
-    min-height: 40px;
+    min-height: var(--control-height-md);
   }
 
   .filter-checkbox-magento {
@@ -1040,8 +1041,8 @@
 
     // Ensure range inputs have exact same height and centering as other fields
     :deep(.q-field__control) {
-      min-height: 42px; // Match main field height
-      height: 42px; // Match main field height
+      min-height: var(--control-height-md);
+      height: var(--control-height-md);
       display: flex; // Enable flex for proper centering
       align-items: center; // Perfect vertical centering
     }
@@ -1078,16 +1079,16 @@
 
       .filter-range-input {
         :deep(.q-field__control) {
-          min-height: 40px; // Match mobile field height
-          height: 40px; // Fixed height consistency
+          min-height: var(--control-height-md);
+          height: var(--control-height-md);
         }
       }
     }
 
     .filter-input-magento {
       :deep(.q-field__control) {
-        min-height: 40px; // Touch-friendly but compact
-        height: 40px; // Fixed height consistency
+        min-height: var(--control-height-md);
+        height: var(--control-height-md);
         font-size: 16px; // Prevent zoom on iOS
         display: flex; // Maintain flex for centering
         align-items: center; // Perfect vertical centering

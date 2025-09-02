@@ -8,8 +8,8 @@
 const fs = require('fs');
 const path = require('path');
 
-// Taal configuratie
-const LANGUAGES = ['en', 'nl', 'es'];
+// Taal configuratie (voor nu alleen Nederlands)
+const LANGUAGES = ['nl'];
 const I18N_DIR = path.join(__dirname, '../src/i18n');
 
 /**

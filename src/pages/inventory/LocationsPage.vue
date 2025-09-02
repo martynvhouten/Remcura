@@ -56,7 +56,7 @@
       </div>
     </q-banner>
 
-    <!-- Modern FilterPanel Component -->
+    <!-- FilterPanel component -->
     <div class="filters-section q-mb-lg">
       <FilterPanel
         :preset="locationsFilterPreset"
@@ -148,7 +148,7 @@
   // Data
   const loading = ref(false);
 
-  // Modern Filter System
+  // Filter system styles
   const filterValues = ref<FilterValues>({});
 
   // Sample data for demonstration - using computed to ensure reactivity with translations

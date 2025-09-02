@@ -9,6 +9,14 @@
       :loading="loading"
       class="platform-table"
     >
+      <!-- Error slot from BaseDashboardWidget (if parent provides) -->
+      <template v-if="error" #no-data>
+        <div class="full-width row flex-center text-negative q-gutter-sm">
+          <q-icon size="2em" name="error" />
+          <span>{{ error }}</span>
+        </div>
+      </template>
+
       <template v-slot:no-data>
         <div class="full-width row flex-center text-grey-6 q-gutter-sm">
           <q-icon size="2em" name="info" />
@@ -32,10 +40,12 @@
       headers?: string[];
       rows?: any[][];
       columns?: any[];
+      error?: string;
     };
   }
 
   const props = defineProps<Props>();
+  const error = computed(() => props.data?.error || '');
 
   // Reactive state
   const loading = ref(false);

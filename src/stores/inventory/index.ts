@@ -38,6 +38,7 @@ export const useInventoryStore = defineStore('inventory', () => {
 
     // State from movements
     stockMovements: movements.stockMovements,
+    stockMovementsTotal: movements.stockMovementsTotal,
 
     // State from alerts
     orderSuggestions: alerts.orderSuggestions,

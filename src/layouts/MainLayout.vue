@@ -1,6 +1,6 @@
 <template>
   <q-layout view="lHh Lpr lFf" class="layout-modern">
-    <!-- Modern Header with Glass Morphism Effect -->
+    <!-- Header with glass effect -->
     <q-header
       elevated
       class="header-modern glass"
@@ -11,22 +11,19 @@
         <q-btn
           flat
           round
-          size="lg"
-          icon="view_sidebar"
-          class="menu-toggle-btn"
-          :aria-label="t('nav.openNavigation') || 'Open navigation menu'"
+          size="xl"
+          class="menu-toggle-btn header-btn"
+          :aria-label="isMiniDrawer ? (t('nav.openNavigation') || 'Open navigation') : (t('nav.closeNavigation') || 'Collapse navigation')"
+          :aria-expanded="!isMiniDrawer"
           @click="toggleLeftDrawer"
-        />
+        >
+          <q-icon :name="isMiniDrawer ? 'menu' : 'menu_open'" class="header-icon header-icon-lg" />
+          <q-tooltip>
+            {{ isMiniDrawer ? (t('nav.openNavigation') || 'Open navigation') : (t('nav.closeNavigation') || 'Collapse navigation') }}
+          </q-tooltip>
+        </q-btn>
 
         <div class="brand-section">
-          <q-avatar
-            size="32px"
-            color="white"
-            text-color="primary"
-            class="brand-avatar"
-          >
-            <q-icon name="local_hospital" class="icon-size-sm" />
-          </q-avatar>
           <div class="brand-text">
             <div class="brand-title">{{ t('brand.name') }}</div>
           </div>
@@ -40,10 +37,9 @@
           <q-btn
             flat
             round
-            icon="notifications"
             @click="goToNotifications"
             :aria-label="t('nav.notifications')"
-            class="action-btn"
+            class="header-btn"
           >
             <q-badge
               v-if="notificationStore.hasUnreadNotifications"
@@ -55,6 +51,7 @@
             >
               {{ notificationStore.unreadCount }}
             </q-badge>
+            <q-icon name="notifications" class="header-icon" />
             <q-tooltip>{{ t('nav.notifications') }}</q-tooltip>
           </q-btn>
 
@@ -62,35 +59,24 @@
           <q-btn
             flat
             round
-            :icon="$q.dark.isActive ? 'light_mode' : 'dark_mode'"
             @click="toggleDarkMode"
             :aria-label="
               $q.dark.isActive ? t('nav.lightMode') : t('nav.darkMode')
             "
-            class="action-btn"
+            class="header-btn"
           >
+            <q-icon
+              :name="$q.dark.isActive ? 'light_mode' : 'dark_mode'"
+              class="header-icon"
+            />
             <q-tooltip>{{
               $q.dark.isActive ? t('nav.lightMode') : t('nav.darkMode')
             }}</q-tooltip>
           </q-btn>
 
           <!-- User Menu -->
-          <q-btn
-            flat
-            round
-            icon="person"
-            :aria-label="t('nav.userMenu')"
-            class="user-menu-btn"
-          >
-            <!-- Demo indicator badge -->
-            <q-badge
-              v-if="isDemoUser"
-              color="amber"
-              floating
-              class="demo-badge"
-            >
-              <q-icon name="science" class="icon-size-xs" />
-            </q-badge>
+          <q-btn flat round :aria-label="t('nav.userMenu')" class="header-btn">
+            <q-icon name="person" class="header-icon" />
             <q-menu>
               <q-list>
                 <q-item class="user-info">
@@ -170,20 +156,37 @@
       role="navigation"
       :aria-label="t('common.accessibility.mainNavigation')"
     >
-      <!-- Clinic Info Section -->
-      <div class="clinic-info-section" role="banner">
-        <div class="clinic-avatar">
-          <q-avatar size="48px" color="primary" text-color="white">
-            <q-icon name="apartment" class="icon-size-lg" />
-          </q-avatar>
+      <!--
+        Mini drawer rules:
+        - Top logo area is independent, fixed-height and perfectly centered in mini
+        - Tooltips appear on hover and focus only in mini
+        - Mini hover/active use subtle pill + focus ring; expanded drawer is unchanged
+      -->
+      <div class="flex flex-col h-full">
+        <!-- Top Logo Section (mini only) -->
+        <div
+          v-if="isMiniDrawer"
+          class="top-logo-section flex-none flex items-center justify-center"
+          role="img"
+          aria-label="Remcura"
+        >
+          <img src="/icons/icon-192x192.svg" alt="" class="h-10 w-10" />
         </div>
-        <div class="clinic-details">
-          <div class="clinic-name">{{ clinicName }}</div>
-        </div>
-      </div>
 
-      <!-- Main Navigation -->
-      <q-list class="navigation-list">
+        <!-- Clinic Info Section (expanded only to keep visuals unchanged) -->
+        <div v-else class="clinic-info-section" role="banner">
+          <div class="clinic-avatar">
+            <q-avatar size="48px" color="primary" text-color="white">
+              <q-icon name="apartment" class="icon-size-lg" />
+            </q-avatar>
+          </div>
+        <div class="clinic-details">
+          <div class="clinic-name" :title="clinicName">{{ clinicName }}</div>
+          </div>
+        </div>
+
+        <!-- Main Navigation -->
+        <q-list class="navigation-list flex-1" role="menu">
         <!-- Iterate through sections -->
         <template v-for="section in navigationLinks" :key="section.id">
           <!-- Section Header -->
@@ -197,82 +200,115 @@
 
           <!-- Section Items -->
           <template v-for="item in section.items" :key="item.title">
-            <q-item
-              :to="item.submenu ? undefined : item.to"
-              clickable
-              :active="$route.name === item.routeName || isParentActive(item)"
-              active-class="nav-item-active"
-              class="nav-item"
-              :class="{ 'has-submenu': item.submenu }"
-              :aria-label="
-                item.title + (item.badge ? ' (' + item.badge + ' items)' : '')
-              "
-              :aria-expanded="
-                item.submenu ? isSubmenuExpanded(item.routeName) : undefined
-              "
-              @click="handleItemClick(item)"
-            >
-              <q-item-section avatar>
-                <q-icon :name="item.icon" class="icon-size-base" />
-              </q-item-section>
+              <!-- Mini: icon-only item with tooltip -->
+              <NavIconItem
+                v-if="isMiniDrawer"
+                :icon="item.icon"
+                :label="String(item.title)"
+                :to="item.submenu ? null : item.to"
+                :active="$route.name === item.routeName || isParentActive(item)"
+                :mini="true"
+                :tooltip="String(item.title)"
+                :aria-label="String(item.title)"
+                @click="handleItemClick(item)"
+              />
 
-              <q-item-section class="hide-when-mini">
-                <q-item-label class="nav-item-label" :title="item.title">{{
-                  item.title
-                }}</q-item-label>
-              </q-item-section>
-
-              <q-item-section side v-if="item.badge" class="hide-when-mini">
-                <q-badge
-                  :color="item.badgeColor || 'primary'"
-                  :label="item.badge"
-                  :aria-label="`${item.badge} items requiring attention`"
-                  class="nav-badge"
-                />
-              </q-item-section>
-
-              <!-- Expand/Collapse for submenu -->
-              <q-item-section
-                side
-                v-if="item.submenu"
-                class="submenu-chevron hide-when-mini"
+              <!-- Expanded: original rich item -->
+              <q-item
+                v-else
+                :to="item.submenu ? undefined : item.to"
+                clickable
+                :active="$route.name === item.routeName || isParentActive(item)"
+                active-class="nav-item-active"
+                class="nav-item"
+                :class="{ 'has-submenu': item.submenu }"
+                role="menuitem"
+                :aria-current="($route.name === item.routeName || isParentActive(item)) ? 'page' : undefined"
+                :aria-label="
+                  item.title + (item.badge ? ' (' + item.badge + ' items)' : '')
+                "
+                :aria-expanded="
+                  item.submenu ? isSubmenuExpanded(item.routeName) : undefined
+                "
+                @click="handleItemClick(item)"
               >
-                <q-icon
-                  name="expand_more"
-                  size="20px"
-                  :class="[
-                    'chevron-icon',
-                    { expanded: isSubmenuExpanded(item.routeName) },
-                  ]"
-                />
-              </q-item-section>
-            </q-item>
+                <q-item-section avatar>
+                  <q-icon :name="item.icon" class="icon-size-base" />
+                </q-item-section>
+
+                <q-item-section class="hide-when-mini">
+                  <q-item-label class="nav-item-label" :title="item.title">{{
+                    item.title
+                  }}</q-item-label>
+                </q-item-section>
+
+                <q-item-section side v-if="item.badge" class="hide-when-mini">
+                  <q-badge
+                    :color="item.badgeColor || 'primary'"
+                    :label="item.badge"
+                    :aria-label="`${item.badge} items requiring attention`"
+                    class="nav-badge"
+                  />
+                </q-item-section>
+
+                <!-- Expand/Collapse for submenu -->
+                <q-item-section
+                  side
+                  v-if="item.submenu"
+                  class="submenu-chevron hide-when-mini"
+                >
+                  <q-icon
+                    name="expand_more"
+                    size="20px"
+                    :class="[
+                      'chevron-icon',
+                      { expanded: isSubmenuExpanded(item.routeName) },
+                    ]"
+                  />
+                </q-item-section>
+              </q-item>
 
             <!-- Submenu Items -->
             <q-slide-transition v-if="item.submenu">
               <div v-show="isSubmenuExpanded(item.routeName)">
-                <q-item
-                  v-for="subItem in item.submenu"
-                  :key="subItem.title"
-                  :to="subItem.to"
-                  clickable
-                  :active="$route.name === subItem.routeName"
-                  active-class="nav-item-active"
-                  class="nav-item nav-sub-item"
-                  :aria-label="subItem.title"
-                >
-                  <q-item-section avatar class="sub-item-avatar">
-                    <q-icon :name="subItem.icon" class="icon-size-sm" />
-                  </q-item-section>
+                  <template v-for="subItem in item.submenu" :key="subItem.title">
+                    <!-- Mini: icon-only sub item -->
+                    <NavIconItem
+                      v-if="isMiniDrawer"
+                      :icon="subItem.icon"
+                      :label="String(subItem.title)"
+                      :to="subItem.to"
+                      :active="$route.name === subItem.routeName"
+                      :mini="true"
+                      :tooltip="String(subItem.title)"
+                      :aria-label="String(subItem.title)"
+                    />
 
-                  <q-item-section class="hide-when-mini">
-                    <q-item-label
-                      class="nav-item-label"
-                      :title="subItem.title"
-                      >{{ subItem.title }}</q-item-label
+                    <!-- Expanded: original rich sub item -->
+                    <q-item
+                      v-else
+                      :to="subItem.to"
+                      clickable
+                      :active="$route.name === subItem.routeName"
+                      active-class="nav-item-active"
+                      class="nav-item nav-sub-item"
+                      role="menuitem"
+                      :aria-current="($route.name === subItem.routeName) ? 'page' : undefined"
+                      :aria-label="subItem.title"
                     >
-                  </q-item-section>
-                </q-item>
+                      <q-item-section avatar class="sub-item-avatar">
+                        <q-icon :name="subItem.icon" class="icon-size-sm" />
+                      </q-item-section>
+
+                      <q-item-section class="hide-when-mini">
+                        <q-item-label
+                          class="nav-item-label"
+                          :title="subItem.title"
+                          >{{ subItem.title }}</q-item-label
+                        >
+                      </q-item-section>
+                    </q-item>
+                  </template>
               </div>
             </q-slide-transition>
           </template>
@@ -285,32 +321,33 @@
             class="navigation-separator"
           />
         </template>
-      </q-list>
+        </q-list>
 
-      <!-- Spacer -->
-      <q-space />
+        <!-- Spacer -->
+        <q-space />
 
-      <!-- Footer Section -->
-      <div class="drawer-footer">
-        <q-item
-          class="upgrade-item glass-card"
-          clickable
-          tabindex="0"
-          role="button"
-          :aria-label="t('nav.upgradePlan')"
-        >
-          <q-item-section avatar>
-            <q-icon name="upgrade" color="accent" />
-          </q-item-section>
-          <q-item-section>
-            <q-item-label class="text-weight-medium">{{
-              t('nav.upgradePlan')
-            }}</q-item-label>
-            <q-item-label caption>{{
-              t('nav.getAdvancedFeatures')
-            }}</q-item-label>
-          </q-item-section>
-        </q-item>
+        <!-- Footer Section -->
+        <div class="drawer-footer flex-none">
+          <q-item
+            class="upgrade-item glass-card"
+            clickable
+            tabindex="0"
+            role="button"
+            :aria-label="t('nav.upgradePlan')"
+          >
+            <q-item-section avatar>
+              <q-icon name="upgrade" color="accent" />
+            </q-item-section>
+            <q-item-section>
+              <q-item-label class="text-weight-medium">{{
+                t('nav.upgradePlan')
+              }}</q-item-label>
+              <q-item-label caption>{{
+                t('nav.getAdvancedFeatures')
+              }}</q-item-label>
+            </q-item-section>
+          </q-item>
+        </div>
       </div>
     </q-drawer>
 
@@ -332,6 +369,7 @@
   import { useAuthStore } from 'src/stores/auth';
   import { useClinicStore } from 'src/stores/clinic';
   import { useNotificationStore } from 'src/stores/notifications';
+  import NavIconItem from 'src/components/navigation/NavIconItem.vue';
 
   // Type definitions for navigation
   interface NavigationItem {
@@ -379,6 +417,12 @@
 
   // Enhanced navigation links with more details
   const navigationLinks = computed((): NavigationSection[] => {
+    // Re-enable all sections in navigation
+    const SHOW_ANALYTICS = true;
+    const SHOW_BATCH = true;
+    const SHOW_ADMIN = true;
+    const SHOW_PLATFORM = true;
+
     const sections = [
       // Main Section - Dashboard and notifications
       {
@@ -410,7 +454,7 @@
           {
             title: t('nav.inventory'),
             icon: 'inventory_2',
-            to: '/inventory/levels', // Redirect directly to levels instead of main inventory
+            to: '/inventory/levels',
             routeName: 'inventory-levels',
             submenu: [
               {
@@ -439,12 +483,17 @@
               },
             ],
           },
-          {
-            title: t('batch.batchManagement'),
-            icon: 'qr_code_scanner',
-            to: '/batch-management',
-            routeName: 'batch-management',
-          },
+          // Hide batch management in MVP drawer
+          ...(SHOW_BATCH
+            ? [
+                {
+                  title: t('batch.batchManagement'),
+                  icon: 'qr_code_scanner',
+                  to: '/batch-management',
+                  routeName: 'batch-management',
+                } as NavigationItem,
+              ]
+            : []),
         ],
       },
 
@@ -481,22 +530,26 @@
       },
 
       // Analytics Section
-      {
-        id: 'analytics',
-        title: t('nav.sections.analytics'),
-        items: [
-          {
-            title: t('nav.analytics'),
-            icon: 'insights',
-            to: '/analytics',
-            routeName: 'analytics',
-          },
-        ],
-      },
+      ...(SHOW_ANALYTICS
+        ? [
+            {
+              id: 'analytics',
+              title: t('nav.sections.analytics'),
+              items: [
+                {
+                  title: t('nav.analytics'),
+                  icon: 'insights',
+                  to: '/analytics',
+                  routeName: 'analytics',
+                },
+              ],
+            } as NavigationSection,
+          ]
+        : []),
     ];
 
-    // Add admin section for admin users
-    if (isAdmin.value) {
+    // Add admin section for admin users (hidden in MVP)
+    if (isAdmin.value && SHOW_ADMIN) {
       sections.push({
         id: 'admin',
         title: t('nav.sections.administration'),
@@ -513,12 +566,52 @@
             to: '/style-guide',
             routeName: 'style-guide',
           },
+          {
+            title: 'Style Sandbox',
+            icon: 'science',
+            to: '/style-sandbox',
+            routeName: 'style-sandbox',
+          },
+          {
+            title: 'Dialogs Gallery',
+            icon: 'view_carousel',
+            to: '/dialogs-gallery',
+            routeName: 'dialogs-gallery',
+          },
+        ],
+      });
+    }
+
+    // Add demo tools section for demo user
+    if (isDemoUser.value) {
+      sections.push({
+        id: 'demo',
+        title: t('demo.title') || 'Demo',
+        items: [
+          {
+            title: 'Style Sandbox',
+            icon: 'science',
+            to: '/style-sandbox',
+            routeName: 'style-sandbox',
+          },
+          {
+            title: 'Dialogs Gallery',
+            icon: 'view_carousel',
+            to: '/dialogs-gallery',
+            routeName: 'dialogs-gallery',
+          },
+          {
+            title: t('nav.styleGuide'),
+            icon: 'palette',
+            to: '/style-guide',
+            routeName: 'style-guide',
+          },
         ],
       });
     }
 
     // Add platform section for platform owner users
-    if (userProfile.value?.role === 'platform_owner') {
+    if (userProfile.value?.role === 'platform_owner' && SHOW_PLATFORM) {
       sections.push({
         id: 'platform',
         title: t('nav.sections.platform'),
@@ -717,7 +810,7 @@
       box-sizing: border-box;
     }
 
-    // Modern header styling with CSS custom properties approach
+    // Header styling with CSS custom properties
     .header-modern {
       --header-bg: rgba(255, 255, 255, 0.8);
       --header-bg-scrolled: rgba(255, 255, 255, 0.95);
@@ -740,25 +833,63 @@
       width: 100%;
       max-width: 100%;
 
-      .menu-toggle-btn {
+      .header-btn {
         color: var(--neutral-800);
-        border-radius: var(--radius-full);
+        border-radius: var(--radius-lg);
         transition:
-          transform 180ms ease,
-          background-color 180ms ease,
-          color 180ms ease;
-        width: 56px;
-        height: 56px;
-
-        .q-icon {
-          font-size: 30px;
-        }
+          transform 160ms ease,
+          background-color 160ms ease,
+          color 160ms ease,
+          box-shadow 160ms ease;
+        width: 50px;
+        height: 50px;
+        padding: 6px;
 
         &:hover {
           background-color: rgba(var(--q-primary-rgb), 0.12);
           color: var(--brand-primary);
           transform: translateY(-1px);
+          box-shadow: var(--shadow-sm);
         }
+
+        &:focus-visible {
+          outline: 2px solid rgba(var(--brand-primary-rgb), 0.5);
+          outline-offset: 2px;
+          box-shadow: 0 0 0 2px rgba(var(--brand-primary-rgb), 0.15);
+        }
+      }
+
+      .menu-toggle-btn {
+        background: rgba(255, 255, 255, 0.55);
+        border: 1px solid rgba(0, 0, 0, 0.06);
+        backdrop-filter: blur(8px);
+        -webkit-backdrop-filter: blur(8px);
+        transition:
+          transform 160ms ease,
+          background-color 160ms ease,
+          border-color 160ms ease,
+          box-shadow 160ms ease;
+
+        &:hover {
+          background: rgba(255, 255, 255, 0.7);
+          border-color: rgba(0, 0, 0, 0.08);
+          box-shadow: var(--shadow-sm);
+        }
+
+        &:active {
+          transform: translateY(0);
+          box-shadow: var(--shadow-xs, 0 1px 2px rgba(0, 0, 0, 0.12));
+        }
+      }
+
+      .header-icon {
+        font-size: 24px;
+        line-height: 1;
+      }
+
+      .header-icon-lg {
+        font-size: 30px;
+        line-height: 1;
       }
 
       .brand-section {
@@ -767,9 +898,7 @@
         gap: var(--space-3);
         margin-left: var(--space-4);
 
-        .brand-avatar {
-          box-shadow: var(--shadow-sm);
-        }
+        // brand avatar removed
 
         .brand-text {
           .brand-title {
@@ -791,55 +920,6 @@
         display: flex;
         align-items: center;
         gap: var(--space-2);
-
-        .action-btn {
-          color: var(--neutral-700);
-          border-radius: var(--radius-lg);
-          transition:
-            transform 180ms ease,
-            background-color 180ms ease,
-            color 180ms ease;
-          width: 56px;
-          height: 56px;
-
-          .q-icon {
-            font-size: 28px;
-          }
-
-          &:hover {
-            background-color: rgba(var(--q-primary-rgb), 0.12);
-            color: var(--brand-primary);
-            transform: translateY(-1px);
-          }
-
-          &:focus-visible {
-            outline: 2px solid rgba(var(--brand-primary-rgb), 0.5);
-            outline-offset: 2px;
-            box-shadow: 0 0 0 2px rgba(var(--brand-primary-rgb), 0.15);
-          }
-        }
-
-        .user-menu-btn {
-          width: 56px;
-          height: 56px;
-          border-radius: var(--radius-full);
-          padding: var(--space-1);
-          transition:
-            transform 180ms ease,
-            background-color 180ms ease,
-            color 180ms ease;
-
-          .q-icon {
-            font-size: 30px;
-          }
-
-          &:hover {
-            transform: translateY(-1px);
-            box-shadow: var(--shadow-sm);
-            background-color: rgba(var(--q-primary-rgb), 0.12);
-            color: var(--brand-primary);
-          }
-        }
       }
     }
   }
@@ -877,7 +957,7 @@
       }
 
       .header-actions {
-        .action-btn {
+        .header-btn {
           color: var(--neutral-200);
 
           &:hover {
@@ -905,6 +985,12 @@
         transform 220ms ease;
     }
 
+    // Fixed-height top logo for mini drawer only
+    .top-logo-section {
+      height: 72px;
+      border-bottom: 1px solid var(--sidebar-border);
+    }
+
     .clinic-info-section {
       padding: var(--space-6);
       border-bottom: 1px solid var(--sidebar-border);
@@ -914,10 +1000,16 @@
 
       .clinic-details {
         .clinic-name {
-          font-weight: var(--font-weight-medium);
-          font-size: var(--text-sm);
-          color: rgba(255, 255, 255, 0.8);
+          /* Clear, high-contrast title style */
+          font-weight: var(--font-weight-semibold);
+          font-size: 1rem; /* 16px for clarity */
+          line-height: 1.25rem;
+          color: rgba(255, 255, 255, 0.92);
           margin: 0;
+          letter-spacing: 0.005em;
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
         }
 
         .clinic-plan {
@@ -1190,6 +1282,9 @@
       .navigation-list {
         padding-left: var(--space-2);
         padding-right: var(--space-2);
+        display: flex;
+        flex-direction: column;
+        gap: var(--space-2);
       }
 
       .hide-when-mini {
@@ -1199,6 +1294,11 @@
       .nav-item,
       .nav-sub-item {
         padding-right: 0;
+        justify-content: center;
+        align-items: center;
+        min-height: 48px; // ensure room for 40px icon bubble
+        padding-top: 4px;
+        padding-bottom: 4px;
       }
 
       // Compact clinic header and prevent logo clipping
@@ -1220,10 +1320,10 @@
         border: none;
         border-radius: var(--radius-lg);
       }
+      // In mini mode, show a circular hover around the icon instead of full-row
       .nav-item:hover,
       .nav-sub-item:hover {
-        background: var(--nav-hover-bg);
-        border-radius: var(--radius-lg);
+        background: transparent;
       }
       .nav-item.nav-item-active,
       .nav-sub-item.nav-item-active {
@@ -1256,74 +1356,59 @@
         margin-left: 0;
         border-left: 0;
       }
+
+      // Center avatar icon sections and size consistently
+      .q-item__section--avatar {
+        width: 40px;
+        min-width: 40px;
+        height: 40px;
+        border-radius: var(--radius-full);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        transition:
+          background-color 160ms ease,
+          transform 160ms ease,
+          box-shadow 160ms ease;
+
+        .q-icon {
+          font-size: 22px;
+        }
+      }
+
+      // Hover/active/focus states applied to the circular icon bubble
+      .nav-item:hover .q-item__section--avatar,
+      .nav-sub-item:hover .q-item__section--avatar {
+        background: var(--nav-hover-bg);
+      }
+      .nav-item.nav-item-active .q-item__section--avatar,
+      .nav-sub-item.nav-item-active .q-item__section--avatar {
+        background: rgba(var(--brand-primary-rgb), 0.18);
+        box-shadow: inset 0 0 0 1px var(--sidebar-border);
+      }
+      .nav-item:focus-visible .q-item__section--avatar,
+      .nav-sub-item:focus-visible .q-item__section--avatar {
+        outline: 2px solid rgba(var(--brand-primary-rgb), 0.5);
+        outline-offset: 2px;
+      }
+
+      // Subtiele separator-lijn tussen secties
+      .navigation-separator {
+        margin: var(--space-2) auto;
+        width: 28px;
+        height: 1px;
+        opacity: 0.5;
+      }
     }
   }
 
   // Dark mode styling is now handled by Quasar's native dark prop
   // No custom dark mode CSS needed for navigation drawer
 
-  // Header Actions
-  .header-actions {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    margin: 8px 12px 0 0; // Extra ruimte rechts voor floating badges
-  }
-
-  .header-actions .q-btn {
-    border-radius: 12px;
-    color: var(--neutral-600);
-    background: rgba(255, 255, 255, 0.8);
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    backdrop-filter: blur(8px);
-    transition:
-      transform 180ms ease,
-      background-color 180ms ease,
-      color 180ms ease,
-      box-shadow 180ms ease,
-      border-color 180ms ease;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
-    padding: 6px; // Extra padding binnen de knop voor badges
-
-    &:hover {
-      color: var(--brand-primary);
-      background: rgba(255, 255, 255, 0.92);
-      border-color: rgba(var(--brand-primary-rgb), 0.25);
-      transform: translateY(-1px);
-      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
-    }
-
-    &:focus {
-      outline: none;
-    }
-
-    &:active {
-      transform: translateY(0);
-    }
-
-    &:focus-visible {
-      outline: 2px solid rgba(var(--brand-primary-rgb), 0.5);
-      outline-offset: 2px;
-      box-shadow: 0 0 0 2px rgba(var(--brand-primary-rgb), 0.15);
-      background: rgba(255, 255, 255, 0.95);
-      border-color: rgba(var(--brand-primary-rgb), 0.32);
-    }
-  }
-
-  // Baseline sizes only for buttons without custom sizing classes
-  .header-actions
-    .q-btn:not(.action-btn):not(.user-menu-btn):not(.menu-toggle-btn) {
-    width: 48px;
-    height: 48px;
-  }
-  .header-actions
-    .q-btn:not(.action-btn):not(.user-menu-btn):not(.menu-toggle-btn)
-    .q-icon {
-    font-size: 22px;
-  }
+  // Removed generic .header-actions button styling to avoid conflicts.
 
   // Notification badge styling - floating next to icon
-  .header-actions .q-btn .q-badge {
+  .layout-modern .toolbar-modern .header-actions .q-btn .q-badge {
     font-size: 11px;
     font-weight: 600;
     min-width: 18px;
@@ -1337,7 +1422,7 @@
   }
 
   // Demo badge styling (geel icoontje) - floating next to icon
-  .header-actions .q-btn .demo-badge {
+  .layout-modern .toolbar-modern .header-actions .q-btn .demo-badge {
     font-size: 10px;
     min-width: 16px;
     height: 16px;
@@ -1348,7 +1433,7 @@
   }
 
   // User menu
-  .header-actions .q-menu .q-list {
+  .layout-modern .toolbar-modern .header-actions .q-menu .q-list {
     min-width: 280px;
     border-radius: 12px;
     padding: 8px;
@@ -1383,7 +1468,7 @@
 
   // Dark mode
   body.body--dark {
-    .header-actions .q-btn {
+    .layout-modern .toolbar-modern .header-actions .q-btn {
       color: var(--neutral-300);
       background: rgba(0, 0, 0, 0.6);
       border-color: rgba(255, 255, 255, 0.1);
@@ -1395,7 +1480,7 @@
       }
     }
 
-    .header-actions .q-menu .q-list {
+    .layout-modern .toolbar-modern .header-actions .q-menu .q-list {
       background: rgba(30, 30, 30, 0.95);
       border-color: rgba(255, 255, 255, 0.15);
 

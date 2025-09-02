@@ -1,0 +1,164 @@
+/* Form primitives: input, select, textarea, dropdown built on tokens */
+
+@layer components {
+  /* Base primitive selector hook */
+  .form-control,
+  input:not([type='checkbox']):not([type='radio']):not([type='range']),
+  select,
+  textarea,
+  .dropdown-control {
+    display: inline-flex;
+    align-items: center;
+    width: 100%;
+    min-height: var(--control-height-md);
+    height: var(--control-height-md);
+    padding: var(--control-pad-y) var(--control-pad-x);
+    border: 1px solid var(--border-primary, #e5e7eb);
+    border-radius: var(--radius-lg);
+    background-color: var(--bg-primary, #fff);
+    color: var(--text-primary, #111827);
+    font-size: var(--control-font-md);
+    line-height: 1.4;
+    outline: none;
+    box-shadow: none;
+    transition:
+      box-shadow 150ms ease,
+      border-color 150ms ease;
+  }
+
+  /* Single focus style: ring + transparent border to avoid double edges */
+  .form-control:focus-visible,
+  input:focus-visible,
+  select:focus-visible,
+  textarea:focus-visible,
+  .dropdown-control:focus-visible {
+    border-color: transparent;
+    box-shadow: 0 0 0 3px var(--focus-ring-color, rgba(30, 58, 138, 0.3));
+  }
+  .form-control:focus-visible:hover,
+  input:focus-visible:hover,
+  select:focus-visible:hover,
+  textarea:focus-visible:hover,
+  .dropdown-control:focus-visible:hover {
+    border-color: transparent;
+    box-shadow: 0 0 0 3px var(--focus-ring-color, rgba(30, 58, 138, 0.3));
+  }
+
+  .form-control[disabled],
+  input[disabled],
+  select[disabled],
+  textarea[disabled],
+  .dropdown-control[disabled] {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+
+  /* Remove default outlines for accessibility handled via box-shadow */
+  input:focus-visible,
+  select:focus-visible,
+  textarea:focus-visible,
+  .dropdown-control:focus-visible {
+    outline: none;
+  }
+
+  /* Size utilities */
+  .control-sm {
+    --_h: var(--control-height-sm);
+    --_fz: var(--control-font-sm);
+    min-height: var(--_h);
+    height: var(--_h);
+    font-size: var(--_fz);
+    padding: calc(var(--control-pad-y) - 2px) calc(var(--control-pad-x) - 2px);
+    border-radius: var(--radius-sm);
+  }
+  .control-md {
+    --_h: var(--control-height-md);
+    --_fz: var(--control-font-md);
+    min-height: var(--_h);
+    height: var(--_h);
+    font-size: var(--_fz);
+    padding: var(--control-pad-y) var(--control-pad-x);
+    border-radius: var(--radius-md);
+  }
+  .control-lg {
+    --_h: var(--control-height-lg);
+    --_fz: var(--control-font-lg);
+    min-height: var(--_h);
+    height: var(--_h);
+    font-size: var(--_fz);
+    padding: calc(var(--control-pad-y) + 2px) calc(var(--control-pad-x) + 2px);
+    border-radius: var(--radius-lg);
+  }
+
+  /* Layout utilities */
+  .w-full {
+    width: 100%;
+  }
+  .inline {
+    display: inline-flex;
+  }
+  .block {
+    display: block;
+  }
+}
+
+/* Quasar field alignment hook: apply primitives to .q-field internals without !important */
+@layer components {
+  .q-field {
+    .q-field__control {
+      min-height: var(--control-height-md);
+      height: var(--control-height-md);
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--border-primary, #e5e7eb);
+      background: transparent;
+      box-shadow: none;
+      transition:
+        box-shadow 150ms ease,
+        border-color 150ms ease;
+    }
+
+    /* Ensure focus style matches native: transparent border + ring */
+    &.q-field--focused .q-field__control {
+      border-color: transparent;
+      box-shadow: 0 0 0 3px var(--focus-ring-color, rgba(30, 58, 138, 0.3));
+    }
+    &.q-field--focused .q-field__control:hover {
+      border-color: transparent;
+      box-shadow: 0 0 0 3px var(--focus-ring-color, rgba(30, 58, 138, 0.3));
+    }
+
+    .q-field__native,
+    .q-field__selected {
+      padding: var(--control-pad-y) var(--control-pad-x);
+      font-size: var(--control-font-md);
+      line-height: 1.4;
+      min-height: var(--control-height-md);
+      height: var(--control-height-md);
+      display: flex;
+      align-items: center;
+    }
+
+    &.control-sm .q-field__control,
+    &.control-sm .q-field__native,
+    &.control-sm .q-field__selected {
+      height: var(--control-height-sm);
+      min-height: var(--control-height-sm);
+      font-size: var(--control-font-sm);
+    }
+
+    &.control-lg .q-field__control,
+    &.control-lg .q-field__native,
+    &.control-lg .q-field__selected {
+      height: var(--control-height-lg);
+      min-height: var(--control-height-lg);
+      font-size: var(--control-font-lg);
+    }
+
+    /* Remove Quasar pseudo underline to prevent double borders */
+    .q-field__control::before,
+    .q-field__control::after {
+      display: none;
+      content: none;
+    }
+  }
+}

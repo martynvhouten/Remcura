@@ -400,7 +400,9 @@
   };
 
   const formatLastLogin = (lastLogin?: string): string => {
-    if (!lastLogin) return t('admin.never');
+    if (!lastLogin) {
+      return t('admin.never');
+    }
 
     const date = new Date(lastLogin);
     const now = new Date();
@@ -474,7 +476,9 @@
   };
 
   const copyMagicCode = async (member: EnhancedPermanentUser | null) => {
-    if (!member?.personal_magic_code) return;
+    if (!member?.personal_magic_code) {
+      return;
+    }
 
     try {
       await navigator.clipboard.writeText(member.personal_magic_code);

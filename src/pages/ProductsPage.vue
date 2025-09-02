@@ -48,7 +48,7 @@
     </template>
 
     <div class="products-page">
-      <!-- Modern FilterPanel Component -->
+      <!-- FilterPanel component -->
       <div class="filters-section q-mb-lg">
         <FilterPanel
           :preset="productsFilterPreset"
