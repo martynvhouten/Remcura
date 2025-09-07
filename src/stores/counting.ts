@@ -144,7 +144,7 @@ export const useCountingStore = defineStore('counting', () => {
         query = query.in('product_id', session.product_ids);
       }
 
-      const { data, error } = await query as any;
+      const { data, error } = (await query) as any;
 
       if (error) throw error;
 
@@ -167,21 +167,23 @@ export const useCountingStore = defineStore('counting', () => {
       };
 
       availableProducts.value =
-        ((data as StockLevelRow[] | null)?.map((item: StockLevelRow) => {
+        (data as StockLevelRow[] | null)?.map((item: StockLevelRow) => {
           const product: CountingProduct = {
-          id: item.product.id,
-          name: item.product.name,
-          sku: item.product.sku,
-          current_system_quantity: item.current_quantity,
-          location_name: item.location.name,
+            id: item.product.id,
+            name: item.product.name,
+            sku: item.product.sku,
+            current_system_quantity: item.current_quantity,
+            location_name: item.location.name,
           };
           if (item.product.category) product.category = item.product.category;
           if (item.product.brand) product.brand = item.product.brand;
           if (item.product.unit) product.unit = item.product.unit;
-          if (item.product.image_url) product.image_url = item.product.image_url;
-          if (item.last_counted_at) product.last_counted_at = item.last_counted_at;
+          if (item.product.image_url)
+            product.image_url = item.product.image_url;
+          if (item.last_counted_at)
+            product.last_counted_at = item.last_counted_at;
           return product;
-        }) || []);
+        }) || [];
 
       // Update session with product count
       if (currentSession.value) {
@@ -190,7 +192,10 @@ export const useCountingStore = defineStore('counting', () => {
         });
       }
     } catch (error) {
-      countingLogger.error('Error fetching products for session', error as Error);
+      countingLogger.error(
+        'Error fetching products for session',
+        error as Error
+      );
       throw error;
     }
   };
@@ -229,23 +234,26 @@ export const useCountingStore = defineStore('counting', () => {
           additional_data: { productId, locationId },
         });
 
-      const systemQuantity = (stockLevel as unknown as { current_quantity?: number } | null)?.current_quantity || 0;
+      const systemQuantity =
+        (stockLevel as unknown as { current_quantity?: number } | null)
+          ?.current_quantity || 0;
       const variance = countedQuantity - systemQuantity;
 
       // Create counting entry
-      const payload: Database['public']['Tables']['counting_entries']['Insert'] = {
-        counting_session_id: currentSession.value.id,
-            practice_id: currentSession.value.practice_id,
-            location_id: locationId,
-            product_id: productId,
-            system_quantity: systemQuantity,
-            counted_quantity: countedQuantity,
-        counted_by: authStore.user?.id || null,
-        confidence_level: options.confidenceLevel || null,
-        batch_number: options.batchNumber || null,
-        expiry_date: options.expiryDate || null,
-        notes: options.notes || null,
-      };
+      const payload: Database['public']['Tables']['counting_entries']['Insert'] =
+        {
+          counting_session_id: currentSession.value.id,
+          practice_id: currentSession.value.practice_id,
+          location_id: locationId,
+          product_id: productId,
+          system_quantity: systemQuantity,
+          counted_quantity: countedQuantity,
+          counted_by: authStore.user?.id || null,
+          confidence_level: options.confidenceLevel || null,
+          batch_number: options.batchNumber || null,
+          expiry_date: options.expiryDate || null,
+          notes: options.notes || null,
+        };
 
       const { data: entry, error: entryError } = await supabase
         .from('counting_entries')
@@ -326,7 +334,10 @@ export const useCountingStore = defineStore('counting', () => {
       isCountingMode.value = false;
       return true;
     } catch (error) {
-      countingLogger.error('Error completing counting session:', error as Error);
+      countingLogger.error(
+        'Error completing counting session:',
+        error as Error
+      );
       throw error;
     }
   };
@@ -361,13 +372,16 @@ export const useCountingStore = defineStore('counting', () => {
       product_id: row.product_id,
       system_quantity: row.system_quantity,
       counted_quantity: row.counted_quantity,
-      variance: row.variance_quantity ?? (row.counted_quantity - row.system_quantity),
+      variance:
+        row.variance_quantity ?? row.counted_quantity - row.system_quantity,
       count_method: 'manual',
-      confidence_level: (row.confidence_level as 'low' | 'medium' | 'high') || 'high',
+      confidence_level:
+        (row.confidence_level as 'low' | 'medium' | 'high') || 'high',
       recount_required: false,
       counted_by: row.counted_by,
       counted_at: row.counted_at || row.created_at,
-      status: Math.abs((row.variance_quantity ?? 0)) > 0 ? 'discrepancy' : 'verified',
+      status:
+        Math.abs(row.variance_quantity ?? 0) > 0 ? 'discrepancy' : 'verified',
       notes: row.notes || undefined,
       batch_number: row.batch_number || undefined,
       expiry_date: row.expiry_date || undefined,
@@ -423,30 +437,33 @@ export const useCountingStore = defineStore('counting', () => {
     updates: Partial<CountingSession>
   ) => {
     try {
-      const { data, error } = await supabase
-        .from('counting_sessions')
-        .update(updates)
-        .eq('id', sessionId)
-        .select()
-        .single();
+      const practiceId =
+        currentSession.value?.practice_id ||
+        authStore.userProfile?.clinic_id ||
+        '';
+      // Enforce practice_id guard on update
+      const { safeUpdateByIdAndPractice } = await import(
+        '@/services/safeUpdate'
+      );
+      const data = await safeUpdateByIdAndPractice<CountingSession>(
+        'counting_sessions',
+        sessionId,
+        practiceId,
+        updates
+      );
 
-      if (error)
-        handleSupabaseError(error, {
-          service: 'countingStore',
-          method: 'updateSession',
-          additional_data: { sessionId },
-        });
+      if (!data) throw new Error('Failed to update counting session');
 
       if (currentSession.value?.id === sessionId) {
-        currentSession.value = (data as unknown as CountingSession);
+        currentSession.value = data as unknown as CountingSession;
       }
 
       const index = sessions.value.findIndex(s => s.id === sessionId);
       if (index >= 0) {
-        sessions.value[index] = (data as unknown as CountingSession);
+        sessions.value[index] = data as unknown as CountingSession;
       }
 
-      return (data as unknown as CountingSession);
+      return data as unknown as CountingSession;
     } catch (error) {
       countingLogger.error('Error updating session:', error as Error);
       throw error;
@@ -499,7 +516,10 @@ export const useCountingStore = defineStore('counting', () => {
       currentSession.value = (data as unknown as CountingSession) || null;
       return currentSession.value;
     } catch (error) {
-      countingLogger.error('Error fetching counting session by id:', error as Error);
+      countingLogger.error(
+        'Error fetching counting session by id:',
+        error as Error
+      );
       throw error;
     }
   };
@@ -611,25 +631,29 @@ export const useCountingStore = defineStore('counting', () => {
               additional_data: { sessionId },
             });
 
-          const beforeQty = (level as unknown as { current_quantity?: number } | null)?.current_quantity || 0;
+          const beforeQty =
+            (level as unknown as { current_quantity?: number } | null)
+              ?.current_quantity || 0;
           const afterQty = beforeQty + (entry.variance_quantity as number);
 
-          const { error: mvErr } = await supabase.from('stock_movements').insert([
-            {
-              practice_id: entry.practice_id,
-              location_id: entry.location_id,
-              product_id: entry.product_id,
-              movement_type: 'count',
-              quantity_change: entry.variance_quantity as number,
-              quantity_before: beforeQty,
-              quantity_after: afterQty,
-              reference_type: 'counting_session',
-              reference_id: sessionId,
-              reason_code: 'count_correction',
-              notes,
-              performed_by: authStore.user?.id,
-            },
-          ]);
+          const { error: mvErr } = await supabase
+            .from('stock_movements')
+            .insert([
+              {
+                practice_id: entry.practice_id,
+                location_id: entry.location_id,
+                product_id: entry.product_id,
+                movement_type: 'count',
+                quantity_change: entry.variance_quantity as number,
+                quantity_before: beforeQty,
+                quantity_after: afterQty,
+                reference_type: 'counting_session',
+                reference_id: sessionId,
+                reason_code: 'count_correction',
+                notes,
+                performed_by: authStore.user?.id,
+              },
+            ]);
           if (mvErr)
             handleSupabaseError(mvErr, {
               service: 'countingStore',
@@ -733,7 +757,9 @@ export const useCountingStore = defineStore('counting', () => {
               method: 'undo.fallback.loadLevel',
               additional_data: { sessionId },
             });
-          const beforeQty = (level as unknown as { current_quantity?: number } | null)?.current_quantity || 0;
+          const beforeQty =
+            (level as unknown as { current_quantity?: number } | null)
+              ?.current_quantity || 0;
           const afterQty = beforeQty - (mv.quantity_change as number);
           const { error: updErr } = await supabase
             .from('stock_levels')
