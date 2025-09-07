@@ -71,8 +71,7 @@ export function useOrderListsItems(orderLists: Ref<OrderListWithItems[]>) {
       const { error } = await supabase
         .from('order_list_items')
         .delete()
-        .eq('id', itemId)
-        .eq('practice_id', orderLists.value[0]?.practice_id || '');
+        .eq('id', itemId);
 
       if (error) throw error;
 
@@ -113,8 +112,7 @@ export function useOrderListsItems(orderLists: Ref<OrderListWithItems[]>) {
       const { error } = await supabase
         .from('order_list_items')
         .update(updateData)
-        .eq('id', itemId)
-        .eq('practice_id', orderLists.value[0]?.practice_id || '');
+        .eq('id', itemId);
 
       if (error) throw error;
 
@@ -168,8 +166,7 @@ export function useOrderListsItems(orderLists: Ref<OrderListWithItems[]>) {
           total_value: totalValue,
           updated_at: new Date().toISOString(),
         })
-        .eq('id', orderListId)
-        .eq('practice_id', orderList.practice_id || '');
+        .eq('id', orderListId);
 
       if (error) throw error;
 

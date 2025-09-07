@@ -158,6 +158,7 @@ export class AdminService {
         updated_at: new Date().toISOString(),
       })
       .eq('id', locationId)
+      .eq('practice_id', this.authStore?.userProfile?.clinic_id || '')
       .select()
       .single();
 

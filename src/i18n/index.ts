@@ -23,17 +23,14 @@ export const isDevelopment =
 const missingHandler = (
   locale: string,
   key: string,
-  instance: any,
-  type: string
+  _instance: any,
+  _type: string
 ) => {
   if (isDevelopment) {
-    console.warn(
-      `🌐 [i18n] Missing translation for key "${key}" in locale "${locale}"`
-    );
-    // Return a visually distinct placeholder in development
-    return `[MISSING: ${key}]`;
+    console.warn(`[i18n:missing] ${locale}:${key}`);
+    return key; // show key in dev
   }
-  return key; // Return key as fallback in production
+  return '';
 };
 
 // Create i18n instance

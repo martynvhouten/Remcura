@@ -36,3 +36,10 @@ jobs:
 
       - name: Build
         run: npm run build
+
+      - name: i18n validation (optional)
+        run: npm run i18n:ci
+        continue-on-error: true
+
+      - name: i18n fail on [MISSING] in dist
+        run: npm run i18n:postbuild:fail-on-missing

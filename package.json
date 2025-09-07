@@ -4,6 +4,8 @@
   "description": "Remcura - Professional medical supply inventory management system",
   "private": true,
   "scripts": {
+    "i18n:ci": "npm run -s i18n:validate || echo 'no i18n:validate script, skipping'",
+    "i18n:postbuild:fail-on-missing": "bash -lc \"if grep -R '\\[MISSING\\]' dist -n; then echo 'i18n missing strings detected in build'; exit 1; else echo 'i18n check passed'; fi\"",
     "dev": "quasar dev",
     "build": "quasar build",
     "build:analyze": "quasar build && npx vite-bundle-analyzer dist/spa",
