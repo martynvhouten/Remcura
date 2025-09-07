@@ -78,22 +78,33 @@ We've successfully implemented comprehensive GS1 standards support:
 - npm or yarn
 - Supabase account
 
-### Installation
+### Quickstart
+
+1. Install dependencies
 
 ```bash
-# Clone the repository
-git clone https://github.com/your-org/remcura.git
-
-# Install dependencies
 npm install
+```
 
-# Set up environment variables
-cp .env.example .env
-# Edit .env with your Supabase credentials
+2. Configure environment
 
-# Start development server
+```bash
+cp env.example .env
+# Fill VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY
+```
+
+3. Start dev server
+
+```bash
 npm run dev
 ```
+
+### CI
+
+- GitHub Actions workflow runs `npm run ci` on `main` and PRs.
+- Add the following repository secrets:
+  - `VITE_SUPABASE_URL`
+  - `VITE_SUPABASE_ANON_KEY`
 
 ### GS1 Data Import
 
