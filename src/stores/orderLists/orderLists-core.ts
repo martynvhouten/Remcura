@@ -166,7 +166,8 @@ export function useOrderListsCore() {
           ...(request.supplier_id && { supplier_id: request.supplier_id }),
           updated_at: new Date().toISOString(),
         })
-        .eq('id', request.id);
+        .eq('id', request.id)
+        .eq('practice_id', authStore.userProfile?.clinic_id || '');
 
       if (error) throw error;
 
@@ -207,7 +208,8 @@ export function useOrderListsCore() {
       const { error } = await supabase
         .from('order_lists')
         .delete()
-        .eq('id', id);
+        .eq('id', id)
+        .eq('practice_id', authStore.userProfile?.clinic_id || '');
 
       if (error) throw error;
 
@@ -250,7 +252,8 @@ export function useOrderListsCore() {
       const { error } = await supabase
         .from('order_lists')
         .update(updateData)
-        .eq('id', orderListId);
+        .eq('id', orderListId)
+        .eq('practice_id', authStore.userProfile?.clinic_id || '');
 
       if (error) throw error;
 

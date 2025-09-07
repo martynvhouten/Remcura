@@ -93,6 +93,7 @@ export const useSuppliersStore = defineStore('suppliers', () => {
         .from('suppliers')
         .update(updates)
         .eq('id', id)
+        .eq('practice_id', authStore.userProfile?.clinic_id || '')
         .select()
         .single();
 
@@ -202,6 +203,7 @@ export const useSuppliersStore = defineStore('suppliers', () => {
               : undefined,
         })
         .eq('id', id)
+        .eq('practice_id', authStore.userProfile?.clinic_id || '')
         .select()
         .single();
 

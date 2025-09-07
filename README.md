@@ -80,31 +80,14 @@ We've successfully implemented comprehensive GS1 standards support:
 
 ### Quickstart
 
-1. Install dependencies
-
-```bash
-npm install
-```
-
-2. Configure environment
-
-```bash
-cp env.example .env
-# Fill VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY
-```
-
-3. Start dev server
-
-```bash
-npm run dev
-```
+1. cp env.example .env and fill VITE_SUPABASE_URL, VITE_SUPABASE_ANON_KEY
+2. npm ci
+3. npm run dev
 
 ### CI
 
-- GitHub Actions workflow runs `npm run ci` on `main` and PRs.
-- Add the following repository secrets:
-  - `VITE_SUPABASE_URL`
-  - `VITE_SUPABASE_ANON_KEY`
+- On push to main: lint + typecheck + build
+- Secrets configured in GitHub → Settings → Secrets and variables → Actions
 
 ### GS1 Data Import
 

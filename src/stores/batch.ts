@@ -201,11 +201,13 @@ export const useBatchStore = defineStore('batch', () => {
         until.setDate(today.getDate() + daysAhead);
         const { data: fallbackData, error: fbError } = await supabase
           .from('product_batches')
-          .select(`
+          .select(
+            `
             id, product_id, location_id, batch_number, expiry_date, current_quantity,
             product:products!inner(id, name, sku),
             location:practice_locations!inner(id, name)
-          `)
+          `
+          )
           .eq('practice_id', practiceId)
           .lte('expiry_date', until.toISOString())
           .gte('expiry_date', today.toISOString())
@@ -378,6 +380,7 @@ export const useBatchStore = defineStore('batch', () => {
       loading.value = true;
       error.value = null;
 
+      const practiceId = updates.practice_id as string | undefined;
       const { data, error: updateError } = await supabase
         .from('product_batches')
         .update({
@@ -385,6 +388,7 @@ export const useBatchStore = defineStore('batch', () => {
           updated_at: new Date().toISOString(),
         })
         .eq('id', id)
+        .eq(practiceId ? 'practice_id' : 'id', practiceId ? practiceId : id)
         .select()
         .single();
 
@@ -441,10 +445,12 @@ export const useBatchStore = defineStore('batch', () => {
       loading.value = true;
       error.value = null;
 
+      const practiceId = batches.value.find(b => b.id === id)?.practice_id;
       const { error: deleteError } = await supabase
         .from('product_batches')
         .delete()
-        .eq('id', id);
+        .eq('id', id)
+        .eq(practiceId ? 'practice_id' : 'id', practiceId ? practiceId : id);
 
       if (deleteError) throw deleteError;
 
