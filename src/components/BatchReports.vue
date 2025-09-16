@@ -364,7 +364,7 @@
 
       // Apply report type specific filters
       switch (selectedReport.value) {
-        case 'expiry-analysis':
+        case 'expiry-analysis': {
           // Show batches expiring in next 90 days
           const futureDate = new Date();
           futureDate.setDate(futureDate.getDate() + 90);
@@ -373,6 +373,7 @@
             futureDate.toISOString().split('T')[0]
           );
           break;
+        }
 
         case 'low-stock':
           query = query.lt('current_quantity', 10); // Batches with low quantity
