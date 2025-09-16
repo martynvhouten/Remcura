@@ -326,7 +326,6 @@
 
     <!-- Barcode Scanner -->
     <BarcodeScanner v-model="showBarcodeScanner" @scan="handleBarcodeScan" />
-  </BaseDialog>
 </template>
 
 <script setup lang="ts">
@@ -565,7 +564,7 @@
   };
 
   // Product selection functions
-  const filterProducts = (val: string, update: Function) => {
+  const filterProducts = (val: string, update: (cb: () => void) => void) => {
     update(() => {
       if (val === '') {
         availableProducts.value = [];

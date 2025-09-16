@@ -1,0 +1,1788 @@
+
+C:\Users\MartijnvanHoutenRemk\OneDrive - Remka B.V\Documenten\Remcura\src\components\BarcodeScanner.vue
+    5:5   warning  Attribute "position" should go before "@update:model-value"         vue/attributes-order
+    6:5   warning  Attribute "persistent" should go before "@update:model-value"       vue/attributes-order
+    7:5   warning  Attribute "maximized" should go before "@update:model-value"        vue/attributes-order
+    8:5   warning  Attribute "transition-show" should go before "@update:model-value"  vue/attributes-order
+    9:5   warning  Attribute "transition-hide" should go before "@update:model-value"  vue/attributes-order
+   38:13  warning  Attribute ":title" should go before "@click"                        vue/attributes-order
+   65:15  warning  Attribute ":loading" should go before "@click"                      vue/attributes-order
+   82:15  warning  Attribute ":loading" should go before "@click"                      vue/attributes-order
+  151:17  warning  Attribute "class" should go before "@keyup.enter"                   vue/attributes-order
+  161:21  warning  Attribute ":disable" should go before "@click"                      vue/attributes-order
+  179:11  warning  Attribute "class" should go before "@click"                         vue/attributes-order
+  188:11  warning  Attribute ":disable" should go before "@click"                      vue/attributes-order
+  189:11  warning  Attribute "class" should go before "@click"                         vue/attributes-order
+  198:11  warning  Attribute ":disable" should go before "@click"                      vue/attributes-order
+  286:24  warning  Forbidden non-null assertion                                        @typescript-eslint/no-non-null-assertion
+  306:49  warning  Unexpected any. Specify a different type                            @typescript-eslint/no-explicit-any
+  338:45  warning  Unexpected any. Specify a different type                            @typescript-eslint/no-explicit-any
+  351:19  warning  Unexpected any. Specify a different type                            @typescript-eslint/no-explicit-any
+  429:48  warning  Forbidden non-null assertion                                        @typescript-eslint/no-non-null-assertion
+  430:32  warning  Forbidden non-null assertion                                        @typescript-eslint/no-non-null-assertion
+  504:56  warning  Unexpected any. Specify a different type                            @typescript-eslint/no-explicit-any
+
+C:\Users\MartijnvanHoutenRemk\OneDrive - Remka B.V\Documenten\Remcura\src\components\BatchInput.vue
+   16:9   warning  Attribute ":loading" should go before "@update:model-value"                   vue/attributes-order
+   47:13  warning  Attribute ":title" should go before "@click"                                  vue/attributes-order
+  164:5   warning  Prop 'modelValue' requires default value to be set                            vue/require-default-prop
+  173:5   warning  Prop 'locationId' requires default value to be set                            vue/require-default-prop
+  235:9   error    Duplicate key 'required'. May cause name collision in script or template tag  vue/no-dupe-keys
+
+C:\Users\MartijnvanHoutenRemk\OneDrive - Remka B.V\Documenten\Remcura\src\components\BatchOverview.vue
+   47:17  warning  Expected '#avatar' instead of 'v-slot:avatar'                                vue/v-slot-style
+   54:17  warning  Expected '#action' instead of 'v-slot:action'                                vue/v-slot-style
+   79:19  warning  Expected '#body-cell-product' instead of 'v-slot:body-cell-product'          vue/v-slot-style
+   98:19  warning  Expected '#body-cell-batchNumber' instead of 'v-slot:body-cell-batchNumber'  vue/v-slot-style
+  117:19  warning  Expected '#body-cell-location' instead of 'v-slot:body-cell-location'        vue/v-slot-style
+  130:19  warning  Expected '#body-cell-quantity' instead of 'v-slot:body-cell-quantity'        vue/v-slot-style
+  156:19  warning  Expected '#body-cell-expiry' instead of 'v-slot:body-cell-expiry'            vue/v-slot-style
+  186:19  warning  Expected '#body-cell-status' instead of 'v-slot:body-cell-status'            vue/v-slot-style
+  199:19  warning  Expected '#body-cell-actions' instead of 'v-slot:body-cell-actions'          vue/v-slot-style
+  220:17  warning  Attribute ":disable" should go before "@click"                               vue/attributes-order
+  586:32  warning  Unexpected any. Specify a different type                                     @typescript-eslint/no-explicit-any
+
+C:\Users\MartijnvanHoutenRemk\OneDrive - Remka B.V\Documenten\Remcura\src\components\BatchRegistrationForm.vue
+   17:34  warning  Attribute "class" should go before "@submit"                                                                                                                                                                                                                                                                                                                                                                        vue/attributes-order
+   33:15  warning  Attribute ":rules" should go before "@filter"                                                                                                                                                                                                                                                                                                                                                                       vue/attributes-order
+   34:15  warning  Attribute "emit-value" should go before "@filter"                                                                                                                                                                                                                                                                                                                                                                   vue/attributes-order
+   35:15  warning  Attribute "map-options" should go before "@filter"                                                                                                                                                                                                                                                                                                                                                                  vue/attributes-order
+   37:25  warning  Expected '#option' instead of 'v-slot:option'                                                                                                                                                                                                                                                                                                                                                                       vue/v-slot-style
+   77:25  warning  Expected '#prepend' instead of 'v-slot:prepend'                                                                                                                                                                                                                                                                                                                                                                     vue/v-slot-style
+   90:25  warning  Expected '#prepend' instead of 'v-slot:prepend'                                                                                                                                                                                                                                                                                                                                                                     vue/v-slot-style
+  109:25  warning  Expected '#prepend' instead of 'v-slot:prepend'                                                                                                                                                                                                                                                                                                                                                                     vue/v-slot-style
+  122:25  warning  Expected '#prepend' instead of 'v-slot:prepend'                                                                                                                                                                                                                                                                                                                                                                     vue/v-slot-style
+  145:25  warning  Expected '#prepend' instead of 'v-slot:prepend'                                                                                                                                                                                                                                                                                                                                                                     vue/v-slot-style
+  160:25  warning  Expected '#prepend' instead of 'v-slot:prepend'                                                                                                                                                                                                                                                                                                                                                                     vue/v-slot-style
+  184:13  warning  Attribute ":disable" should go before "@click"                                                                                                                                                                                                                                                                                                                                                                      vue/attributes-order
+  212:5   warning  Prop 'prefilledProductId' requires default value to be set                                                                                                                                                                                                                                                                                                                                                          vue/require-default-prop
+  213:5   warning  Prop 'prefilledLocationId' requires default value to be set                                                                                                                                                                                                                                                                                                                                                         vue/require-default-prop
+  222:22  warning  Unexpected any. Specify a different type                                                                                                                                                                                                                                                                                                                                                                            @typescript-eslint/no-explicit-any
+  235:30  warning  Unexpected any. Specify a different type                                                                                                                                                                                                                                                                                                                                                                            @typescript-eslint/no-explicit-any
+  299:48  error    Don't use `Function` as a type. The `Function` type accepts any function-like value.
+It provides no type safety when calling the function, which can be a common source of bugs.
+It also accepts things like class declarations, which will throw at runtime as they will not be called with `new`.
+If you are expecting the function to accept certain arguments, you should explicitly define the function shape  @typescript-eslint/ban-types
+
+C:\Users\MartijnvanHoutenRemk\OneDrive - Remka B.V\Documenten\Remcura\src\components\BatchReports.vue
+   17:17  warning  Attribute "class" should go before "@click"     vue/attributes-order
+   87:17  warning  Attribute ":loading" should go before "@click"  vue/attributes-order
+  192:26  warning  Unexpected any. Specify a different type        @typescript-eslint/no-explicit-any
+  369:11  error    Unexpected lexical declaration in case block    no-case-declarations
+  588:31  warning  Unexpected any. Specify a different type        @typescript-eslint/no-explicit-any
+
+C:\Users\MartijnvanHoutenRemk\OneDrive - Remka B.V\Documenten\Remcura\src\components\ExpiringBatchesList.vue
+  13:19  warning  Expected '#body-cell-urgency' instead of 'v-slot:body-cell-urgency'  vue/v-slot-style
+  25:19  warning  Expected '#body-cell-actions' instead of 'v-slot:body-cell-actions'  vue/v-slot-style
+
+C:\Users\MartijnvanHoutenRemk\OneDrive - Remka B.V\Documenten\Remcura\src\components\FifoBatchManager.vue
+   10:50  warning  Attribute "class" should go before "@submit"  vue/attributes-order
+  108:17  warning  Attribute "icon" should go before "@click"    vue/attributes-order
+  109:17  warning  Attribute "class" should go before "@click"   vue/attributes-order
+  126:39  warning  Unexpected any. Specify a different type      @typescript-eslint/no-explicit-any
+  135:27  warning  Unexpected any. Specify a different type      @typescript-eslint/no-explicit-any
+
+C:\Users\MartijnvanHoutenRemk\OneDrive - Remka B.V\Documenten\Remcura\src\components\PageLayout.vue
+  33:5  warning  Prop 'backgroundColor' requires default value to be set  vue/require-default-prop
+
+C:\Users\MartijnvanHoutenRemk\OneDrive - Remka B.V\Documenten\Remcura\src\components\PageTitle.vue
+  17:15  warning  Attribute ":id" should go before "class"          vue/attributes-order
+  74:5   warning  Prop 'subtitle' requires default value to be set  vue/require-default-prop
+  75:5   warning  Prop 'icon' requires default value to be set      vue/require-default-prop
+  78:5   warning  Prop 'badge' requires default value to be set     vue/require-default-prop
+  80:5   warning  Prop 'meta' requires default value to be set      vue/require-default-prop
+  91:21  warning  Unexpected any. Specify a different type          @typescript-eslint/no-explicit-any
+
+C:\Users\MartijnvanHoutenRemk\OneDrive - Remka B.V\Documenten\Remcura\src\components\UseBatchDialog.vue
+   50:34  warning  Attribute "class" should go before "@submit"     vue/attributes-order
+   67:25  warning  Expected '#prepend' instead of 'v-slot:prepend'  vue/v-slot-style
+   70:25  warning  Expected '#append' instead of 'v-slot:append'    vue/v-slot-style
+   76:19  warning  Attribute "size" should go before "@click"       vue/attributes-order
+  105:47  warning  Attribute "v-if" should go before "class"        vue/attributes-order
+  158:13  warning  Attribute ":disable" should go before "@click"   vue/attributes-order
+
+C:\Users\MartijnvanHoutenRemk\OneDrive - Remka B.V\Documenten\Remcura\src\components\admin\DemoResetCard.vue
+  41:13  warning  Attribute ":loading" should go before "@click"  vue/attributes-order
+  42:13  warning  Attribute "color" should go before "@click"     vue/attributes-order
+  43:13  warning  Attribute "icon" should go before "@click"      vue/attributes-order
+  44:13  warning  Attribute ":label" should go before "@click"    vue/attributes-order
+  45:13  warning  Attribute "class" should go before "@click"     vue/attributes-order
+  46:13  warning  Attribute ":disable" should go before "@click"  vue/attributes-order
+
+C:\Users\MartijnvanHoutenRemk\OneDrive - Remka B.V\Documenten\Remcura\src\components\admin\MagicInviteManager.vue
+   85:15  warning  Attribute ":loading" should go before "@click"    vue/attributes-order
+   86:15  warning  Attribute "class" should go before "@click"       vue/attributes-order
+  115:15  warning  Attribute ":tooltip" should go before "@click"    vue/attributes-order
+  140:15  warning  Attribute "unelevated" should go before "@click"  vue/attributes-order
+  147:15  warning  Attribute "unelevated" should go before "@click"  vue/attributes-order
+  154:15  warning  Attribute "unelevated" should go before "@click"  vue/attributes-order
+  194:17  warning  Attribute ":tooltip" should go before "@click"    vue/attributes-order
+  202:17  warning  Attribute ":tooltip" should go before "@click"    vue/attributes-order
+
+C:\Users\MartijnvanHoutenRemk\OneDrive - Remka B.V\Documenten\Remcura\src\components\admin\TeamOverview.vue
+  111:21  warning  Attribute ":class" should go before "@click"         vue/attributes-order
+  162:19  warning  Attribute ":disable" should go before "@click.stop"  vue/attributes-order
+  298:51  warning  Attribute "v-close-popup" should go before ":label"  vue/attributes-order
+  320:27  warning  Unexpected any. Specify a different type             @typescript-eslint/no-explicit-any
+  322:30  warning  Unexpected any. Specify a different type             @typescript-eslint/no-explicit-any
+  339:48  warning  Unexpected any. Specify a different type             @typescript-eslint/no-explicit-any
+
+C:\Users\MartijnvanHoutenRemk\OneDrive - Remka B.V\Documenten\Remcura\src\components\auth\UpgradeToMemberDialog.vue
+   49:13  warning  Attribute "clickable" should go before "@click"  vue/attributes-order
+  100:13  warning  Attribute "clickable" should go before "@click"  vue/attributes-order
+  114:17  warning  Attribute "v-if" should go before "class"        vue/attributes-order
+  164:13  warning  Attribute "clickable" should go before "@click"  vue/attributes-order
+  223:23  warning  Expected '#prepend' instead of 'v-slot:prepend'  vue/v-slot-style
+  241:13  warning  Attribute "class" should go before "@click"      vue/attributes-order
+  248:13  warning  Attribute "class" should go before "@click"      vue/attributes-order
+  264:13  warning  Unexpected any. Specify a different type         @typescript-eslint/no-explicit-any
+  265:15  warning  Unexpected any. Specify a different type         @typescript-eslint/no-explicit-any
+  271:35  warning  Unexpected any. Specify a different type         @typescript-eslint/no-explicit-any
+
+C:\Users\MartijnvanHoutenRemk\OneDrive - Remka B.V\Documenten\Remcura\src\components\base\BaseDialog.vue
+    5:5   warning  Attribute ":persistent" should go before "@update:model-value"        vue/attributes-order
+    6:5   warning  Attribute ":maximized" should go before "@update:model-value"         vue/attributes-order
+    7:5   warning  Attribute ":position" should go before "@update:model-value"          vue/attributes-order
+    8:5   warning  Attribute ":full-width" should go before "@update:model-value"        vue/attributes-order
+    9:5   warning  Attribute ":transition-show" should go before "@update:model-value"   vue/attributes-order
+   10:5   warning  Attribute ":transition-hide" should go before "@update:model-value"   vue/attributes-order
+   11:5   warning  Attribute ":class" should go before "@update:model-value"             vue/attributes-order
+   12:5   warning  Attribute "role" should go before "@update:model-value"               vue/attributes-order
+   13:5   warning  Attribute ":aria-labelledby" should go before "@update:model-value"   vue/attributes-order
+   14:5   warning  Attribute ":aria-describedby" should go before "@update:model-value"  vue/attributes-order
+   15:5   warning  Attribute "aria-modal" should go before "@update:model-value"         vue/attributes-order
+   20:52  warning  Attribute "ref" should go before "@keydown"                           vue/attributes-order
+   71:38  warning  Attribute ":id" should go before "class"                              vue/attributes-order
+   72:56  warning  Attribute ":id" should go before "class"                              vue/attributes-order
+  178:5   warning  Prop 'title' requires default value to be set                         vue/require-default-prop
+  181:5   warning  Prop 'subtitle' requires default value to be set                      vue/require-default-prop
+  184:5   warning  Prop 'icon' requires default value to be set                          vue/require-default-prop
+  214:5   warning  Prop 'headerClass' requires default value to be set                   vue/require-default-prop
+  217:5   warning  Prop 'contentClass' requires default value to be set                  vue/require-default-prop
+  220:5   warning  Prop 'footerClass' requires default value to be set                   vue/require-default-prop
+  223:5   warning  Prop 'dialogClass' requires default value to be set                   vue/require-default-prop
+  241:5   warning  Prop 'loadingText' requires default value to be set                   vue/require-default-prop
+  247:5   warning  Prop 'primaryAction' requires default value to be set                 vue/require-default-prop
+  250:5   warning  Prop 'secondaryAction' requires default value to be set               vue/require-default-prop
+  256:5   warning  Prop 'steps' requires default value to be set                         vue/require-default-prop
+  271:5   warning  Prop 'confirmCloseMessage' requires default value to be set           vue/require-default-prop
+
+C:\Users\MartijnvanHoutenRemk\OneDrive - Remka B.V\Documenten\Remcura\src\components\base\ConfirmDialog.vue
+   5:5   warning  Attribute ":title" should go before "@update:model-value"           vue/attributes-order
+   6:5   warning  Attribute ":icon" should go before "@update:model-value"            vue/attributes-order
+   7:5   warning  Attribute ":size" should go before "@update:model-value"            vue/attributes-order
+   8:5   warning  Attribute ":variant" should go before "@update:model-value"         vue/attributes-order
+   9:5   warning  Attribute ":header-variant" should go before "@update:model-value"  vue/attributes-order
+  10:5   warning  Attribute ":loading" should go before "@update:model-value"         vue/attributes-order
+  11:5   warning  Attribute "persistent" should go before "@update:model-value"       vue/attributes-order
+  61:11  warning  Attribute ":disable" should go before "@click"                      vue/attributes-order
+  70:11  warning  Attribute ":disable" should go before "@click"                      vue/attributes-order
+  71:11  warning  Attribute ":icon" should go before "@click"                         vue/attributes-order
+  87:5   warning  Prop 'details' requires default value to be set                     vue/require-default-prop
+  89:5   warning  Prop 'warningText' requires default value to be set                 vue/require-default-prop
+  90:5   warning  Prop 'consequences' requires default value to be set                vue/require-default-prop
+  95:5   warning  Prop 'confirmButtonIcon' requires default value to be set           vue/require-default-prop
+
+C:\Users\MartijnvanHoutenRemk\OneDrive - Remka B.V\Documenten\Remcura\src\components\base\FormDialog.vue
+    5:5   warning  Attribute ":title" should go before "@update:model-value"           vue/attributes-order
+    6:5   warning  Attribute ":subtitle" should go before "@update:model-value"        vue/attributes-order
+    7:5   warning  Attribute ":icon" should go before "@update:model-value"            vue/attributes-order
+    8:5   warning  Attribute ":size" should go before "@update:model-value"            vue/attributes-order
+    9:5   warning  Attribute ":variant" should go before "@update:model-value"         vue/attributes-order
+   10:5   warning  Attribute ":header-variant" should go before "@update:model-value"  vue/attributes-order
+   11:5   warning  Attribute ":loading" should go before "@update:model-value"         vue/attributes-order
+   12:5   warning  Attribute ":loading-text" should go before "@update:model-value"    vue/attributes-order
+   13:5   warning  Attribute ":persistent" should go before "@update:model-value"      vue/attributes-order
+   14:5   warning  Attribute ":closable" should go before "@update:model-value"        vue/attributes-order
+   21:9   warning  Attribute "class" should go before "@reset"                         vue/attributes-order
+   22:9   warning  Attribute "aria-live" should go before "@reset"                     vue/attributes-order
+   34:21  warning  Expected '#avatar' instead of 'v-slot:avatar'                       vue/v-slot-style
+   67:13  warning  Attribute ":disable" should go before "@click"                      vue/attributes-order
+   76:13  warning  Attribute ":disable" should go before "@click"                      vue/attributes-order
+   85:13  warning  Attribute ":disable" should go before "@click"                      vue/attributes-order
+   86:13  warning  Attribute ":icon" should go before "@click"                         vue/attributes-order
+  102:5   warning  Prop 'subtitle' requires default value to be set                    vue/require-default-prop
+  103:5   warning  Prop 'icon' requires default value to be set                        vue/require-default-prop
+  113:5   warning  Prop 'submitButtonIcon' requires default value to be set            vue/require-default-prop
+
+C:\Users\MartijnvanHoutenRemk\OneDrive - Remka B.V\Documenten\Remcura\src\components\base\OptimizedImage.vue
+  65:5  warning  Prop 'width' requires default value to be set        vue/require-default-prop
+  66:5  warning  Prop 'height' requires default value to be set       vue/require-default-prop
+  78:5  warning  Prop 'aspectRatio' requires default value to be set  vue/require-default-prop
+
+C:\Users\MartijnvanHoutenRemk\OneDrive - Remka B.V\Documenten\Remcura\src\components\cards\AlertCard.vue
+   38:49  warning  Attribute ":id" should go before "class"              vue/attributes-order
+   60:13  warning  Attribute ":aria-label" should go before "@click"     vue/attributes-order
+   83:5   warning  Prop 'title' requires default value to be set         vue/require-default-prop
+   84:5   warning  Prop 'subtitle' requires default value to be set      vue/require-default-prop
+   85:5   warning  Prop 'icon' requires default value to be set          vue/require-default-prop
+   86:5   warning  Prop 'iconColor' requires default value to be set     vue/require-default-prop
+  104:5   warning  Prop 'cardClass' requires default value to be set     vue/require-default-prop
+  105:5   warning  Prop 'headerClass' requires default value to be set   vue/require-default-prop
+  106:5   warning  Prop 'contentClass' requires default value to be set  vue/require-default-prop
+  107:5   warning  Prop 'actionsClass' requires default value to be set  vue/require-default-prop
+
+C:\Users\MartijnvanHoutenRemk\OneDrive - Remka B.V\Documenten\Remcura\src\components\cards\BaseCard.vue
+  26:49  warning  Attribute ":id" should go before "class"              vue/attributes-order
+  58:5   warning  Prop 'title' requires default value to be set         vue/require-default-prop
+  59:5   warning  Prop 'subtitle' requires default value to be set      vue/require-default-prop
+  60:5   warning  Prop 'icon' requires default value to be set          vue/require-default-prop
+  61:5   warning  Prop 'iconColor' requires default value to be set     vue/require-default-prop
+  74:5   warning  Prop 'cardClass' requires default value to be set     vue/require-default-prop
+  75:5   warning  Prop 'headerClass' requires default value to be set   vue/require-default-prop
+  76:5   warning  Prop 'contentClass' requires default value to be set  vue/require-default-prop
+  77:5   warning  Prop 'actionsClass' requires default value to be set  vue/require-default-prop
+
+C:\Users\MartijnvanHoutenRemk\OneDrive - Remka B.V\Documenten\Remcura\src\components\cards\BaseDashboardWidget.example.vue
+  40:13  warning  Attribute ":loading" should go before "@click"  vue/attributes-order
+  86:13  warning  Attribute ":label" should go before "@click"    vue/attributes-order
+  87:13  warning  Attribute "class" should go before "@click"     vue/attributes-order
+
+C:\Users\MartijnvanHoutenRemk\OneDrive - Remka B.V\Documenten\Remcura\src\components\cards\BaseDashboardWidget.vue
+  91:16  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  93:16  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  95:14  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  97:14  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+C:\Users\MartijnvanHoutenRemk\OneDrive - Remka B.V\Documenten\Remcura\src\components\cards\InteractiveCard.vue
+  29:49  warning  Attribute ":id" should go before "class"              vue/attributes-order
+  71:5   warning  Prop 'title' requires default value to be set         vue/require-default-prop
+  72:5   warning  Prop 'subtitle' requires default value to be set      vue/require-default-prop
+  73:5   warning  Prop 'icon' requires default value to be set          vue/require-default-prop
+  74:5   warning  Prop 'iconColor' requires default value to be set     vue/require-default-prop
+  92:5   warning  Prop 'cardClass' requires default value to be set     vue/require-default-prop
+  93:5   warning  Prop 'headerClass' requires default value to be set   vue/require-default-prop
+  94:5   warning  Prop 'contentClass' requires default value to be set  vue/require-default-prop
+  95:5   warning  Prop 'actionsClass' requires default value to be set  vue/require-default-prop
+
+C:\Users\MartijnvanHoutenRemk\OneDrive - Remka B.V\Documenten\Remcura\src\components\charts\ChartCanvas.vue
+  23:5   warning  Prop 'options' requires default value to be set  vue/require-default-prop
+  52:23  warning  Forbidden non-null assertion                     @typescript-eslint/no-non-null-assertion
+  53:27  warning  Unexpected any. Specify a different type         @typescript-eslint/no-explicit-any
+  88:41  warning  Unexpected any. Specify a different type         @typescript-eslint/no-explicit-any
+
+C:\Users\MartijnvanHoutenRemk\OneDrive - Remka B.V\Documenten\Remcura\src\components\dashboard\DynamicWidget.vue
+  46:26  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  92:37  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+C:\Users\MartijnvanHoutenRemk\OneDrive - Remka B.V\Documenten\Remcura\src\components\dashboard\widgets\AlertWidget.vue
+  81:9  warning  Attribute "class" should go before "@click"  vue/attributes-order
+
+C:\Users\MartijnvanHoutenRemk\OneDrive - Remka B.V\Documenten\Remcura\src\components\dashboard\widgets\ChartWidget.vue
+   3:32  warning  Attribute "v-if" should go before "class"          vue/attributes-order
+  16:31  warning  Attribute "v-if" should go before "class"          vue/attributes-order
+  29:31  warning  Attribute "v-if" should go before "class"          vue/attributes-order
+  77:5   warning  Prop 'locations' requires default value to be set  vue/require-default-prop
+  78:5   warning  Prop 'suppliers' requires default value to be set  vue/require-default-prop
+  99:37  warning  Unexpected any. Specify a different type           @typescript-eslint/no-explicit-any
+
+C:\Users\MartijnvanHoutenRemk\OneDrive - Remka B.V\Documenten\Remcura\src\components\dashboard\widgets\ListWidget.vue
+   82:41  warning  Attribute "v-if" should go before "class"  vue/attributes-order
+  240:36  warning  Unexpected any. Specify a different type   @typescript-eslint/no-explicit-any
+  250:36  warning  Unexpected any. Specify a different type   @typescript-eslint/no-explicit-any
+  257:29  warning  Unexpected any. Specify a different type   @typescript-eslint/no-explicit-any
+
+C:\Users\MartijnvanHoutenRemk\OneDrive - Remka B.V\Documenten\Remcura\src\components\dashboard\widgets\QuickActionWidget.vue
+  5:5  warning  Attribute "class" should go before "@click"  vue/attributes-order
+
+C:\Users\MartijnvanHoutenRemk\OneDrive - Remka B.V\Documenten\Remcura\src\components\filters\FilterField.vue
+   13:9   warning  Attribute ":placeholder" should go before "@update:model-value"       vue/attributes-order
+   14:9   warning  Attribute "outlined" should go before "@update:model-value"           vue/attributes-order
+   15:9   warning  Attribute ":clearable" should go before "@update:model-value"         vue/attributes-order
+   16:9   warning  Attribute ":debounce" should go before "@update:model-value"          vue/attributes-order
+   17:9   warning  Attribute ":disable" should go before "@update:model-value"           vue/attributes-order
+   18:9   warning  Attribute ":readonly" should go before "@update:model-value"          vue/attributes-order
+   19:9   warning  Attribute ":loading" should go before "@update:model-value"           vue/attributes-order
+   20:9   warning  Attribute "class" should go before "@update:model-value"              vue/attributes-order
+   21:9   warning  Attribute "hide-bottom-space" should go before "@update:model-value"  vue/attributes-order
+   23:37  warning  Expected '#prepend' instead of 'v-slot:prepend'                       vue/v-slot-style
+   26:46  warning  Expected '#append' instead of 'v-slot:append'                         vue/v-slot-style
+   33:13  warning  Attribute ":disable" should go before "@click"                        vue/attributes-order
+   34:13  warning  Attribute "size" should go before "@click"                            vue/attributes-order
+   35:13  warning  Attribute "class" should go before "@click"                           vue/attributes-order
+   51:9   warning  Attribute ":options" should go before "@update:model-value"           vue/attributes-order
+   52:9   warning  Attribute ":placeholder" should go before "@update:model-value"       vue/attributes-order
+   53:9   warning  Attribute "outlined" should go before "@update:model-value"           vue/attributes-order
+   54:9   warning  Attribute ":clearable" should go before "@update:model-value"         vue/attributes-order
+   55:9   warning  Attribute ":disable" should go before "@update:model-value"           vue/attributes-order
+   56:9   warning  Attribute ":readonly" should go before "@update:model-value"          vue/attributes-order
+   57:9   warning  Attribute ":loading" should go before "@update:model-value"           vue/attributes-order
+   58:9   warning  Attribute "option-value" should go before "@update:model-value"       vue/attributes-order
+   59:9   warning  Attribute "option-label" should go before "@update:model-value"       vue/attributes-order
+   60:9   warning  Attribute "emit-value" should go before "@update:model-value"         vue/attributes-order
+   61:9   warning  Attribute "map-options" should go before "@update:model-value"        vue/attributes-order
+   62:9   warning  Attribute "class" should go before "@update:model-value"              vue/attributes-order
+   63:9   warning  Attribute "hide-bottom-space" should go before "@update:model-value"  vue/attributes-order
+   64:9   warning  Attribute "max-height" should go before "@update:model-value"         vue/attributes-order
+   65:9   warning  Attribute "behavior" should go before "@update:model-value"           vue/attributes-order
+   67:37  warning  Expected '#prepend' instead of 'v-slot:prepend'                       vue/v-slot-style
+   70:19  warning  Expected '#option' instead of 'v-slot:option'                         vue/v-slot-style
+  103:9   warning  Attribute ":options" should go before "@update:model-value"           vue/attributes-order
+  104:9   warning  Attribute ":placeholder" should go before "@update:model-value"       vue/attributes-order
+  105:9   warning  Attribute "outlined" should go before "@update:model-value"           vue/attributes-order
+  106:9   warning  Attribute ":clearable" should go before "@update:model-value"         vue/attributes-order
+  107:9   warning  Attribute ":disable" should go before "@update:model-value"           vue/attributes-order
+  108:9   warning  Attribute ":readonly" should go before "@update:model-value"          vue/attributes-order
+  109:9   warning  Attribute ":loading" should go before "@update:model-value"           vue/attributes-order
+  110:9   warning  Attribute "option-value" should go before "@update:model-value"       vue/attributes-order
+  111:9   warning  Attribute "option-label" should go before "@update:model-value"       vue/attributes-order
+  112:9   warning  Attribute "emit-value" should go before "@update:model-value"         vue/attributes-order
+  113:9   warning  Attribute "map-options" should go before "@update:model-value"        vue/attributes-order
+  114:9   warning  Attribute "multiple" should go before "@update:model-value"           vue/attributes-order
+  115:9   warning  Attribute "use-chips" should go before "@update:model-value"          vue/attributes-order
+  116:9   warning  Attribute "class" should go before "@update:model-value"              vue/attributes-order
+  117:9   warning  Attribute "hide-bottom-space" should go before "@update:model-value"  vue/attributes-order
+  118:9   warning  Attribute "max-height" should go before "@update:model-value"         vue/attributes-order
+  119:9   warning  Attribute "behavior" should go before "@update:model-value"           vue/attributes-order
+  121:37  warning  Expected '#prepend' instead of 'v-slot:prepend'                       vue/v-slot-style
+  124:19  warning  Expected '#selected' instead of 'v-slot:selected'                     vue/v-slot-style
+  134:15  warning  Attribute "size" should go before "@remove"                           vue/attributes-order
+  135:15  warning  Attribute "class" should go before "@remove"                          vue/attributes-order
+  155:11  warning  Attribute ":color" should go before "@update:model-value"             vue/attributes-order
+  156:11  warning  Attribute ":disable" should go before "@update:model-value"           vue/attributes-order
+  157:11  warning  Attribute ":readonly" should go before "@update:model-value"          vue/attributes-order
+  158:11  warning  Attribute "size" should go before "@update:model-value"               vue/attributes-order
+  159:11  warning  Attribute "class" should go before "@update:model-value"              vue/attributes-order
+  182:9   warning  Attribute ":placeholder" should go before "@update:model-value"       vue/attributes-order
+  183:9   warning  Attribute "outlined" should go before "@update:model-value"           vue/attributes-order
+  184:9   warning  Attribute ":clearable" should go before "@update:model-value"         vue/attributes-order
+  185:9   warning  Attribute ":disable" should go before "@update:model-value"           vue/attributes-order
+  186:9   warning  Attribute ":readonly" should go before "@update:model-value"          vue/attributes-order
+  187:9   warning  Attribute ":loading" should go before "@update:model-value"           vue/attributes-order
+  188:9   warning  Attribute "type" should go before "@update:model-value"               vue/attributes-order
+  189:9   warning  Attribute ":step" should go before "@update:model-value"              vue/attributes-order
+  190:9   warning  Attribute "class" should go before "@update:model-value"              vue/attributes-order
+  191:9   warning  Attribute "hide-bottom-space" should go before "@update:model-value"  vue/attributes-order
+  193:37  warning  Expected '#prepend' instead of 'v-slot:prepend'                       vue/v-slot-style
+  196:41  warning  Expected '#append' instead of 'v-slot:append'                         vue/v-slot-style
+  216:11  warning  Attribute "placeholder" should go before "@update:model-value"        vue/attributes-order
+  217:11  warning  Attribute "type" should go before "@update:model-value"               vue/attributes-order
+  218:11  warning  Attribute ":step" should go before "@update:model-value"              vue/attributes-order
+  219:11  warning  Attribute "outlined" should go before "@update:model-value"           vue/attributes-order
+  220:11  warning  Attribute "class" should go before "@update:model-value"              vue/attributes-order
+  221:11  warning  Attribute "hide-bottom-space" should go before "@update:model-value"  vue/attributes-order
+  223:43  warning  Expected '#append' instead of 'v-slot:append'                         vue/v-slot-style
+  233:11  warning  Attribute "placeholder" should go before "@update:model-value"        vue/attributes-order
+  234:11  warning  Attribute "type" should go before "@update:model-value"               vue/attributes-order
+  235:11  warning  Attribute ":step" should go before "@update:model-value"              vue/attributes-order
+  236:11  warning  Attribute "outlined" should go before "@update:model-value"           vue/attributes-order
+  237:11  warning  Attribute "class" should go before "@update:model-value"              vue/attributes-order
+  238:11  warning  Attribute "hide-bottom-space" should go before "@update:model-value"  vue/attributes-order
+  240:43  warning  Expected '#append' instead of 'v-slot:append'                         vue/v-slot-style
+  257:9   warning  Attribute ":placeholder" should go before "@update:model-value"       vue/attributes-order
+  258:9   warning  Attribute "outlined" should go before "@update:model-value"           vue/attributes-order
+  259:9   warning  Attribute ":clearable" should go before "@update:model-value"         vue/attributes-order
+  260:9   warning  Attribute ":disable" should go before "@update:model-value"           vue/attributes-order
+  261:9   warning  Attribute ":readonly" should go before "@update:model-value"          vue/attributes-order
+  262:9   warning  Attribute ":loading" should go before "@update:model-value"           vue/attributes-order
+  263:9   warning  Attribute "class" should go before "@update:model-value"              vue/attributes-order
+  264:9   warning  Attribute "hide-bottom-space" should go before "@update:model-value"  vue/attributes-order
+  266:37  warning  Expected '#prepend' instead of 'v-slot:prepend'                       vue/v-slot-style
+  269:19  warning  Expected '#append' instead of 'v-slot:append'                         vue/v-slot-style
+  279:17  warning  Attribute "mask" should go before "@update:model-value"               vue/attributes-order
+  308:11  warning  Attribute "placeholder" should go before "@update:model-value"        vue/attributes-order
+  309:11  warning  Attribute "outlined" should go before "@update:model-value"           vue/attributes-order
+  310:11  warning  Attribute "class" should go before "@update:model-value"              vue/attributes-order
+  311:11  warning  Attribute "hide-bottom-space" should go before "@update:model-value"  vue/attributes-order
+  313:21  warning  Expected '#append' instead of 'v-slot:append'                         vue/v-slot-style
+  325:19  warning  Attribute "mask" should go before "@update:model-value"               vue/attributes-order
+  347:11  warning  Attribute "placeholder" should go before "@update:model-value"        vue/attributes-order
+  348:11  warning  Attribute "outlined" should go before "@update:model-value"           vue/attributes-order
+  349:11  warning  Attribute "class" should go before "@update:model-value"              vue/attributes-order
+  350:11  warning  Attribute "hide-bottom-space" should go before "@update:model-value"  vue/attributes-order
+  352:21  warning  Expected '#append' instead of 'v-slot:append'                         vue/v-slot-style
+  364:19  warning  Attribute "mask" should go before "@update:model-value"               vue/attributes-order
+  392:9   warning  Attribute ":options" should go before "@update:model-value"           vue/attributes-order
+  393:9   warning  Attribute ":placeholder" should go before "@update:model-value"       vue/attributes-order
+  394:9   warning  Attribute "outlined" should go before "@update:model-value"           vue/attributes-order
+  395:9   warning  Attribute ":clearable" should go before "@update:model-value"         vue/attributes-order
+  396:9   warning  Attribute ":disable" should go before "@update:model-value"           vue/attributes-order
+  397:9   warning  Attribute ":readonly" should go before "@update:model-value"          vue/attributes-order
+  398:9   warning  Attribute ":loading" should go before "@update:model-value"           vue/attributes-order
+  399:9   warning  Attribute "option-value" should go before "@update:model-value"       vue/attributes-order
+  400:9   warning  Attribute "option-label" should go before "@update:model-value"       vue/attributes-order
+  401:9   warning  Attribute "emit-value" should go before "@update:model-value"         vue/attributes-order
+  402:9   warning  Attribute "map-options" should go before "@update:model-value"        vue/attributes-order
+  403:9   warning  Attribute "class" should go before "@update:model-value"              vue/attributes-order
+  404:9   warning  Attribute "hide-bottom-space" should go before "@update:model-value"  vue/attributes-order
+  405:9   warning  Attribute "max-height" should go before "@update:model-value"         vue/attributes-order
+  406:9   warning  Attribute "behavior" should go before "@update:model-value"           vue/attributes-order
+  408:37  warning  Expected '#prepend' instead of 'v-slot:prepend'                       vue/v-slot-style
+  411:19  warning  Expected '#option' instead of 'v-slot:option'                         vue/v-slot-style
+  421:19  warning  Expected '#selected' instead of 'v-slot:selected'                     vue/v-slot-style
+  480:20  warning  Unexpected any. Specify a different type                              @typescript-eslint/no-explicit-any
+  528:32  warning  Unexpected any. Specify a different type                              @typescript-eslint/no-explicit-any
+  541:57  warning  Unexpected any. Specify a different type                              @typescript-eslint/no-explicit-any
+  553:66  warning  Unexpected any. Specify a different type                              @typescript-eslint/no-explicit-any
+  556:63  warning  Unexpected any. Specify a different type                              @typescript-eslint/no-explicit-any
+  576:66  warning  Unexpected any. Specify a different type                              @typescript-eslint/no-explicit-any
+  579:50  warning  Unexpected any. Specify a different type                              @typescript-eslint/no-explicit-any
+  586:34  warning  Unexpected any. Specify a different type                              @typescript-eslint/no-explicit-any
+  671:25  warning  Forbidden non-null assertion                                          @typescript-eslint/no-non-null-assertion
+  672:25  warning  Forbidden non-null assertion                                          @typescript-eslint/no-non-null-assertion
+  722:33  warning  Unexpected any. Specify a different type                              @typescript-eslint/no-explicit-any
+
+C:\Users\MartijnvanHoutenRemk\OneDrive - Remka B.V\Documenten\Remcura\src\components\filters\FilterPanel.vue
+    8:9   warning  Attribute "class" should go before "@click"      vue/attributes-order
+    9:9   warning  Attribute ":class" should go before "@click"     vue/attributes-order
+   10:9   warning  Attribute "size" should go before "@click"       vue/attributes-order
+   11:9   warning  Attribute "padding" should go before "@click"    vue/attributes-order
+   13:19  warning  Expected '#default' instead of 'v-slot:default'  vue/v-slot-style
+   52:17  warning  Attribute ":loading" should go before "@scan"    vue/attributes-order
+   53:17  warning  Attribute ":disabled" should go before "@scan"   vue/attributes-order
+   54:17  warning  Attribute ":readonly" should go before "@scan"   vue/attributes-order
+   73:17  warning  Attribute ":loading" should go before "@scan"    vue/attributes-order
+   74:17  warning  Attribute ":disabled" should go before "@scan"   vue/attributes-order
+   75:17  warning  Attribute ":readonly" should go before "@scan"   vue/attributes-order
+   87:13  warning  Attribute ":disable" should go before "@click"   vue/attributes-order
+   88:13  warning  Attribute "class" should go before "@click"      vue/attributes-order
+   89:13  warning  Attribute "size" should go before "@click"       vue/attributes-order
+   90:13  warning  Attribute "padding" should go before "@click"    vue/attributes-order
+   96:13  warning  Attribute ":disable" should go before "@click"   vue/attributes-order
+   97:13  warning  Attribute "class" should go before "@click"      vue/attributes-order
+   98:13  warning  Attribute "size" should go before "@click"       vue/attributes-order
+   99:13  warning  Attribute "padding" should go before "@click"    vue/attributes-order
+  234:54  warning  Unexpected any. Specify a different type         @typescript-eslint/no-explicit-any
+  258:12  warning  Unexpected any. Specify a different type         @typescript-eslint/no-explicit-any
+  259:16  warning  Unexpected any. Specify a different type         @typescript-eslint/no-explicit-any
+
+C:\Users\MartijnvanHoutenRemk\OneDrive - Remka B.V\Documenten\Remcura\src\components\inventory\CountingEntryWithBatch.vue
+  116:13  warning  Attribute "size" should go before "@click"             vue/attributes-order
+  181:11  warning  Attribute ":loading" should go before "@click"         vue/attributes-order
+  182:11  warning  Attribute ":disable" should go before "@click"         vue/attributes-order
+  183:11  warning  Attribute "unelevated" should go before "@click"       vue/attributes-order
+  210:5   warning  Prop 'existingEntry' requires default value to be set  vue/require-default-prop
+  234:28  warning  Unexpected any. Specify a different type               @typescript-eslint/no-explicit-any
+
+C:\Users\MartijnvanHoutenRemk\OneDrive - Remka B.V\Documenten\Remcura\src\components\inventory\CountingSessionDialog.vue
+    9:32  warning  Attribute "class" should go before "@submit"      vue/attributes-order
+   20:19  warning  Expected '#prepend' instead of 'v-slot:prepend'   vue/v-slot-style
+   36:19  warning  Expected '#prepend' instead of 'v-slot:prepend'   vue/v-slot-style
+   54:19  warning  Expected '#prepend' instead of 'v-slot:prepend'   vue/v-slot-style
+   57:19  warning  Expected '#option' instead of 'v-slot:option'     vue/v-slot-style
+   99:19  warning  Expected '#prepend' instead of 'v-slot:prepend'   vue/v-slot-style
+  111:9   warning  Attribute ":loading" should go before "@click"    vue/attributes-order
+  112:9   warning  Attribute "unelevated" should go before "@click"  vue/attributes-order
+
+C:\Users\MartijnvanHoutenRemk\OneDrive - Remka B.V\Documenten\Remcura\src\components\inventory\MobileCountingInterface.vue
+   13:15  warning  Attribute "round" should go before "@click"                                   vue/attributes-order
+   14:15  warning  Attribute "flat" should go before "@click"                                    vue/attributes-order
+   15:15  warning  Attribute "icon" should go before "@click"                                    vue/attributes-order
+   16:15  warning  Attribute "color" should go before "@click"                                   vue/attributes-order
+   17:15  warning  Attribute "size" should go before "@click"                                    vue/attributes-order
+   28:15  warning  Attribute "round" should go before "@click"                                   vue/attributes-order
+   29:15  warning  Attribute "flat" should go before "@click"                                    vue/attributes-order
+   30:15  warning  Attribute ":icon" should go before "@click"                                   vue/attributes-order
+   31:15  warning  Attribute "color" should go before "@click"                                   vue/attributes-order
+   32:15  warning  Attribute "size" should go before "@click"                                    vue/attributes-order
+   47:17  warning  Attribute "class" should go before "@click"                                   vue/attributes-order
+   48:17  warning  Attribute ":class" should go before "@click"                                  vue/attributes-order
+   60:21  warning  Attribute "v-if" should go before "name"                                      vue/attributes-order
+   62:47  warning  Attribute "v-else" should go before "name"                                    vue/attributes-order
+   68:17  warning  Attribute "class" should go before "@click"                                   vue/attributes-order
+   69:17  warning  Attribute ":class" should go before "@click"                                  vue/attributes-order
+   81:21  warning  Attribute "v-if" should go before "name"                                      vue/attributes-order
+   83:47  warning  Attribute "v-else" should go before "name"                                    vue/attributes-order
+   91:17  warning  Attribute ":disable" should go before "@click"                                vue/attributes-order
+   92:17  warning  Attribute "color" should go before "@click"                                   vue/attributes-order
+   93:17  warning  Attribute "size" should go before "@click"                                    vue/attributes-order
+   94:17  warning  Attribute "class" should go before "@click"                                   vue/attributes-order
+   95:17  warning  Attribute "no-caps" should go before "@click"                                 vue/attributes-order
+  115:15  warning  Attribute "round" should go before "@click"                                   vue/attributes-order
+  116:15  warning  Attribute "flat" should go before "@click"                                    vue/attributes-order
+  117:15  warning  Attribute "icon" should go before "@click"                                    vue/attributes-order
+  118:15  warning  Attribute "color" should go before "@click"                                   vue/attributes-order
+  119:15  warning  Attribute "size" should go before "@click"                                    vue/attributes-order
+  139:47  warning  Attribute "class" should go before "@click"                                   vue/attributes-order
+  179:19  warning  Attribute "class" should go before "@click"                                   vue/attributes-order
+  186:19  warning  Attribute ":class" should go before "@click"                                  vue/attributes-order
+  194:47  warning  Attribute "class" should go before "@click"                                   vue/attributes-order
+  253:56  warning  Attribute "class" should go before "@click"                                   vue/attributes-order
+  257:46  warning  Attribute "class" should go before "@click"                                   vue/attributes-order
+  304:15  warning  Unexpected any. Specify a different type                                      @typescript-eslint/no-explicit-any
+  305:16  warning  Unexpected any. Specify a different type                                      @typescript-eslint/no-explicit-any
+  338:9   error    Duplicate key 'products'. May cause name collision in script or template tag  vue/no-dupe-keys
+  342:24  warning  Unexpected any. Specify a different type                                      @typescript-eslint/no-explicit-any
+  439:42  warning  Unexpected any. Specify a different type                                      @typescript-eslint/no-explicit-any
+  484:56  warning  Unexpected any. Specify a different type                                      @typescript-eslint/no-explicit-any
+  665:19  warning  Unexpected any. Specify a different type                                      @typescript-eslint/no-explicit-any
+  666:18  warning  Unexpected any. Specify a different type                                      @typescript-eslint/no-explicit-any
+  670:22  warning  Unexpected any. Specify a different type                                      @typescript-eslint/no-explicit-any
+  671:19  warning  Unexpected any. Specify a different type                                      @typescript-eslint/no-explicit-any
+  672:24  warning  Unexpected any. Specify a different type                                      @typescript-eslint/no-explicit-any
+
+C:\Users\MartijnvanHoutenRemk\OneDrive - Remka B.V\Documenten\Remcura\src\components\inventory\ProductCountingCard.vue
+   50:11  warning  Attribute "ref" should go before "@blur"        vue/attributes-order
+   51:11  warning  Attribute "readonly" should go before "@blur"   vue/attributes-order
+   52:11  warning  Attribute "inputmode" should go before "@blur"  vue/attributes-order
+   60:43  warning  Attribute "class" should go before "@click"     vue/attributes-order
+   61:43  warning  Attribute "class" should go before "@click"     vue/attributes-order
+   62:43  warning  Attribute "class" should go before "@click"     vue/attributes-order
+   65:43  warning  Attribute "class" should go before "@click"     vue/attributes-order
+   66:43  warning  Attribute "class" should go before "@click"     vue/attributes-order
+   67:43  warning  Attribute "class" should go before "@click"     vue/attributes-order
+   70:43  warning  Attribute "class" should go before "@click"     vue/attributes-order
+   71:43  warning  Attribute "class" should go before "@click"     vue/attributes-order
+   72:43  warning  Attribute "class" should go before "@click"     vue/attributes-order
+   78:13  warning  Attribute "class" should go before "@click"     vue/attributes-order
+   79:13  warning  Attribute ":class" should go before "@click"    vue/attributes-order
+   86:43  warning  Attribute "class" should go before "@click"     vue/attributes-order
+   87:39  warning  Attribute "class" should go before "@click"     vue/attributes-order
+  126:9   warning  Attribute "outline" should go before "@click"   vue/attributes-order
+  127:9   warning  Attribute "color" should go before "@click"     vue/attributes-order
+  128:9   warning  Attribute "no-caps" should go before "@click"   vue/attributes-order
+  129:9   warning  Attribute "class" should go before "@click"     vue/attributes-order
+  137:9   warning  Attribute "outline" should go before "@click"   vue/attributes-order
+  138:9   warning  Attribute "color" should go before "@click"     vue/attributes-order
+  139:9   warning  Attribute "no-caps" should go before "@click"   vue/attributes-order
+  140:9   warning  Attribute "class" should go before "@click"     vue/attributes-order
+  148:9   warning  Attribute "color" should go before "@click"     vue/attributes-order
+  149:9   warning  Attribute ":disable" should go before "@click"  vue/attributes-order
+  150:9   warning  Attribute ":loading" should go before "@click"  vue/attributes-order
+  151:9   warning  Attribute "no-caps" should go before "@click"   vue/attributes-order
+  152:9   warning  Attribute "class" should go before "@click"     vue/attributes-order
+
+C:\Users\MartijnvanHoutenRemk\OneDrive - Remka B.V\Documenten\Remcura\src\components\inventory\QuickAdjustmentDialog.vue
+     5:5   warning  Attribute ":title" should go before "@update:model-value"       vue/attributes-order
+     6:5   warning  Attribute ":subtitle" should go before "@update:model-value"    vue/attributes-order
+     7:5   warning  Attribute "icon" should go before "@update:model-value"         vue/attributes-order
+     8:5   warning  Attribute "size" should go before "@update:model-value"         vue/attributes-order
+     9:5   warning  Attribute ":persistent" should go before "@update:model-value"  vue/attributes-order
+    56:17  warning  Attribute "class" should go before "@update:model-value"        vue/attributes-order
+    57:17  warning  Attribute ":loading" should go before "@update:model-value"     vue/attributes-order
+    59:27  warning  Expected '#prepend' instead of 'v-slot:prepend'                 vue/v-slot-style
+    62:27  warning  Expected '#option' instead of 'v-slot:option'                   vue/v-slot-style
+    92:27  warning  Expected '#no-option' instead of 'v-slot:no-option'             vue/v-slot-style
+   121:17  warning  Attribute "class" should go before "@click"                     vue/attributes-order
+   122:17  warning  Attribute ":title" should go before "@click"                    vue/attributes-order
+   123:17  warning  Attribute "aria-label" should go before "@click"                vue/attributes-order
+   168:19  warning  Attribute "v-if" should go before "class"                       vue/attributes-order
+   186:57  warning  Attribute "v-if" should go before "class"                       vue/attributes-order
+   215:19  warning  Attribute "class" should go before "@click"                     vue/attributes-order
+   216:19  warning  Attribute ":title" should go before "@click"                    vue/attributes-order
+   217:19  warning  Attribute "size" should go before "@click"                      vue/attributes-order
+   218:19  warning  Attribute "aria-label" should go before "@click"                vue/attributes-order
+   273:23  warning  Expected '#prepend' instead of 'v-slot:prepend'                 vue/v-slot-style
+   321:31  warning  Expected '#prepend' instead of 'v-slot:prepend'                 vue/v-slot-style
+   324:31  warning  Expected '#append' instead of 'v-slot:append'                   vue/v-slot-style
+   347:21  warning  Attribute "class" should go before "@click"                     vue/attributes-order
+   378:25  warning  Expected '#prepend' instead of 'v-slot:prepend'                 vue/v-slot-style
+   408:25  warning  Expected '#prepend' instead of 'v-slot:prepend'                 vue/v-slot-style
+   493:11  warning  Attribute "aria-label" should go before "@click"                vue/attributes-order
+   503:11  warning  Attribute "class" should go before "@click"                     vue/attributes-order
+   504:11  warning  Attribute "aria-label" should go before "@click"                vue/attributes-order
+   506:21  warning  Expected '#loading' instead of 'v-slot:loading'                 vue/v-slot-style
+   520:19  warning  Expected '#avatar' instead of 'v-slot:avatar'                   vue/v-slot-style
+   563:5   warning  Prop 'selectedProduct' requires default value to be set         vue/require-default-prop
+   563:23  warning  Unexpected any. Specify a different type                        @typescript-eslint/no-explicit-any
+   564:5   warning  Prop 'selectedLocation' requires default value to be set        vue/require-default-prop
+   573:32  warning  Unexpected any. Specify a different type                        @typescript-eslint/no-explicit-any
+   574:35  warning  Unexpected any. Specify a different type                        @typescript-eslint/no-explicit-any
+   593:39  warning  Unexpected any. Specify a different type                        @typescript-eslint/no-explicit-any
+   594:33  warning  Unexpected any. Specify a different type                        @typescript-eslint/no-explicit-any
+   599:40  warning  Unexpected any. Specify a different type                        @typescript-eslint/no-explicit-any
+   603:32  warning  Unexpected any. Specify a different type                        @typescript-eslint/no-explicit-any
+   661:46  warning  Unexpected any. Specify a different type                        @typescript-eslint/no-explicit-any
+   784:46  warning  Unexpected any. Specify a different type                        @typescript-eslint/no-explicit-any
+   791:41  warning  Unexpected any. Specify a different type                        @typescript-eslint/no-explicit-any
+   793:19  warning  Unexpected any. Specify a different type                        @typescript-eslint/no-explicit-any
+   793:57  warning  Unexpected any. Specify a different type                        @typescript-eslint/no-explicit-any
+   805:40  warning  Unexpected any. Specify a different type                        @typescript-eslint/no-explicit-any
+   807:19  warning  Unexpected any. Specify a different type                        @typescript-eslint/no-explicit-any
+   807:57  warning  Unexpected any. Specify a different type                        @typescript-eslint/no-explicit-any
+   834:54  warning  Unexpected any. Specify a different type                        @typescript-eslint/no-explicit-any
+   890:39  warning  Unexpected any. Specify a different type                        @typescript-eslint/no-explicit-any
+  1020:21  warning  Unexpected any. Specify a different type                        @typescript-eslint/no-explicit-any
+  1049:34  warning  Unexpected any. Specify a different type                        @typescript-eslint/no-explicit-any
+  1096:21  warning  Unexpected any. Specify a different type                        @typescript-eslint/no-explicit-any
+
+C:\Users\MartijnvanHoutenRemk\OneDrive - Remka B.V\Documenten\Remcura\src\components\inventory\RealTimeIndicator.vue
+  11:30  warning  Attribute "v-if" should go before "class"  vue/attributes-order
+
+C:\Users\MartijnvanHoutenRemk\OneDrive - Remka B.V\Documenten\Remcura\src\components\inventory\StockTransferDialog.vue
+    5:5   warning  Attribute ":title" should go before "@update:model-value"                                                                                                                                                                                                                                                                                                                                                           vue/attributes-order
+    6:5   warning  Attribute "icon" should go before "@update:model-value"                                                                                                                                                                                                                                                                                                                                                             vue/attributes-order
+    7:5   warning  Attribute "size" should go before "@update:model-value"                                                                                                                                                                                                                                                                                                                                                             vue/attributes-order
+    8:5   warning  Attribute ":persistent" should go before "@update:model-value"                                                                                                                                                                                                                                                                                                                                                      vue/attributes-order
+   30:25  warning  Expected '#prepend' instead of 'v-slot:prepend'                                                                                                                                                                                                                                                                                                                                                                     vue/v-slot-style
+   33:25  warning  Expected '#no-option' instead of 'v-slot:no-option'                                                                                                                                                                                                                                                                                                                                                                 vue/v-slot-style
+  111:25  warning  Expected '#option' instead of 'v-slot:option'                                                                                                                                                                                                                                                                                                                                                                       vue/v-slot-style
+  160:25  warning  Expected '#option' instead of 'v-slot:option'                                                                                                                                                                                                                                                                                                                                                                       vue/v-slot-style
+  211:21  warning  Attribute ":disable" should go before "@click"                                                                                                                                                                                                                                                                                                                                                                      vue/attributes-order
+  217:21  warning  Attribute ":disable" should go before "@click"                                                                                                                                                                                                                                                                                                                                                                      vue/attributes-order
+  313:13  warning  Attribute "aria-label" should go before "@click"                                                                                                                                                                                                                                                                                                                                                                    vue/attributes-order
+  321:13  warning  Attribute "aria-label" should go before "@click"                                                                                                                                                                                                                                                                                                                                                                    vue/attributes-order
+  329:3   error    Parsing error: x-invalid-end-tag                                                                                                                                                                                                                                                                                                                                                                                    vue/no-parsing-error
+  345:22  warning  Unexpected any. Specify a different type                                                                                                                                                                                                                                                                                                                                                                            @typescript-eslint/no-explicit-any
+  346:5   warning  Prop 'currentLocation' requires default value to be set                                                                                                                                                                                                                                                                                                                                                             vue/require-default-prop
+  346:23  warning  Unexpected any. Specify a different type                                                                                                                                                                                                                                                                                                                                                                            @typescript-eslint/no-explicit-any
+  355:38  warning  Unexpected any. Specify a different type                                                                                                                                                                                                                                                                                                                                                                            @typescript-eslint/no-explicit-any
+  356:35  warning  Unexpected any. Specify a different type                                                                                                                                                                                                                                                                                                                                                                            @typescript-eslint/no-explicit-any
+  366:28  warning  Unexpected any. Specify a different type                                                                                                                                                                                                                                                                                                                                                                            @typescript-eslint/no-explicit-any
+  367:26  warning  Unexpected any. Specify a different type                                                                                                                                                                                                                                                                                                                                                                            @typescript-eslint/no-explicit-any
+  368:29  warning  Unexpected any. Specify a different type                                                                                                                                                                                                                                                                                                                                                                            @typescript-eslint/no-explicit-any
+  375:39  warning  Unexpected any. Specify a different type                                                                                                                                                                                                                                                                                                                                                                            @typescript-eslint/no-explicit-any
+  376:33  warning  Unexpected any. Specify a different type                                                                                                                                                                                                                                                                                                                                                                            @typescript-eslint/no-explicit-any
+  424:23  warning  Unexpected any. Specify a different type                                                                                                                                                                                                                                                                                                                                                                            @typescript-eslint/no-explicit-any
+  425:20  warning  Unexpected any. Specify a different type                                                                                                                                                                                                                                                                                                                                                                            @typescript-eslint/no-explicit-any
+  432:13  warning  Unexpected any. Specify a different type                                                                                                                                                                                                                                                                                                                                                                            @typescript-eslint/no-explicit-any
+  432:21  warning  Unexpected any. Specify a different type                                                                                                                                                                                                                                                                                                                                                                            @typescript-eslint/no-explicit-any
+  486:39  warning  Unexpected any. Specify a different type                                                                                                                                                                                                                                                                                                                                                                            @typescript-eslint/no-explicit-any
+  498:38  warning  Unexpected any. Specify a different type                                                                                                                                                                                                                                                                                                                                                                            @typescript-eslint/no-explicit-any
+  568:48  error    Don't use `Function` as a type. The `Function` type accepts any function-like value.
+It provides no type safety when calling the function, which can be a common source of bugs.
+It also accepts things like class declarations, which will throw at runtime as they will not be called with `new`.
+If you are expecting the function to accept certain arguments, you should explicitly define the function shape  @typescript-eslint/ban-types
+  579:39  warning  Unexpected any. Specify a different type                                                                                                                                                                                                                                                                                                                                                                            @typescript-eslint/no-explicit-any
+
+C:\Users\MartijnvanHoutenRemk\OneDrive - Remka B.V\Documenten\Remcura\src\components\layout\DemoBanner.vue
+  18:15  warning  Expected '#action' instead of 'v-slot:action'  vue/v-slot-style
+
+C:\Users\MartijnvanHoutenRemk\OneDrive - Remka B.V\Documenten\Remcura\src\components\orderLists\AdvancedOrderListCard.vue
+   56:50  warning  Attribute "v-close-popup" should go before "@click"    vue/attributes-order
+   63:50  warning  Attribute "v-close-popup" should go before "@click"    vue/attributes-order
+   70:47  warning  Attribute "v-close-popup" should go before "@click"    vue/attributes-order
+   82:11  warning  Attribute "class" should go before "@click"            vue/attributes-order
+   83:11  warning  Attribute "v-close-popup" should go before "@click"    vue/attributes-order
+  115:13  warning  Attribute ":loading" should go before "@click"         vue/attributes-order
+  116:13  warning  Attribute "color" should go before "@click"            vue/attributes-order
+  117:13  warning  Attribute "size" should go before "@click"             vue/attributes-order
+  118:13  warning  Attribute "class" should go before "@click"            vue/attributes-order
+  160:50  warning  Attribute "v-if" should go before "class"              vue/attributes-order
+  257:11  warning  Attribute ":loading" should go before "@click"         vue/attributes-order
+  258:11  warning  Attribute "icon" should go before "@click"             vue/attributes-order
+  259:11  warning  Attribute ":label" should go before "@click"           vue/attributes-order
+  260:11  warning  Attribute "color" should go before "@click"            vue/attributes-order
+  261:11  warning  Attribute "unelevated" should go before "@click"       vue/attributes-order
+  262:11  warning  Attribute "no-caps" should go before "@click"          vue/attributes-order
+  263:11  warning  Attribute "size" should go before "@click"             vue/attributes-order
+  264:11  warning  Attribute "class" should go before "@click"            vue/attributes-order
+  269:11  warning  Attribute "icon" should go before "@click"             vue/attributes-order
+  270:11  warning  Attribute "label" should go before "@click"            vue/attributes-order
+  271:11  warning  Attribute "color" should go before "@click"            vue/attributes-order
+  272:11  warning  Attribute "outline" should go before "@click"          vue/attributes-order
+  273:11  warning  Attribute "no-caps" should go before "@click"          vue/attributes-order
+  274:11  warning  Attribute "size" should go before "@click"             vue/attributes-order
+  275:11  warning  Attribute "class" should go before "@click"            vue/attributes-order
+  283:11  warning  Attribute "flat" should go before "@click"             vue/attributes-order
+  284:11  warning  Attribute "round" should go before "@click"            vue/attributes-order
+  285:11  warning  Attribute "dense" should go before "@click"            vue/attributes-order
+  286:11  warning  Attribute "icon" should go before "@click"             vue/attributes-order
+  287:11  warning  Attribute "color" should go before "@click"            vue/attributes-order
+  288:11  warning  Attribute "size" should go before "@click"             vue/attributes-order
+  289:11  warning  Attribute "class" should go before "@click"            vue/attributes-order
+  296:11  warning  Attribute "flat" should go before "@click"             vue/attributes-order
+  297:11  warning  Attribute "round" should go before "@click"            vue/attributes-order
+  298:11  warning  Attribute "dense" should go before "@click"            vue/attributes-order
+  299:11  warning  Attribute "icon" should go before "@click"             vue/attributes-order
+  300:11  warning  Attribute "color" should go before "@click"            vue/attributes-order
+  301:11  warning  Attribute "size" should go before "@click"             vue/attributes-order
+  302:11  warning  Attribute "class" should go before "@click"            vue/attributes-order
+  309:11  warning  Attribute "flat" should go before "@click"             vue/attributes-order
+  310:11  warning  Attribute "round" should go before "@click"            vue/attributes-order
+  311:11  warning  Attribute "dense" should go before "@click"            vue/attributes-order
+  312:11  warning  Attribute "icon" should go before "@click"             vue/attributes-order
+  313:11  warning  Attribute "color" should go before "@click"            vue/attributes-order
+  314:11  warning  Attribute "size" should go before "@click"             vue/attributes-order
+  315:11  warning  Attribute "class" should go before "@click"            vue/attributes-order
+  444:13  warning  Attribute ":loading" should go before "@click"         vue/attributes-order
+  445:13  warning  Attribute "color" should go before "@click"            vue/attributes-order
+  446:13  warning  Attribute "label" should go before "@click"            vue/attributes-order
+  469:5   warning  Prop 'reorderAdvice' requires default value to be set  vue/require-default-prop
+  618:52  warning  Unexpected any. Specify a different type               @typescript-eslint/no-explicit-any
+  619:50  warning  Unexpected any. Specify a different type               @typescript-eslint/no-explicit-any
+  624:43  warning  Unexpected any. Specify a different type               @typescript-eslint/no-explicit-any
+  625:38  warning  Unexpected any. Specify a different type               @typescript-eslint/no-explicit-any
+  634:52  warning  Unexpected any. Specify a different type               @typescript-eslint/no-explicit-any
+  639:43  warning  Unexpected any. Specify a different type               @typescript-eslint/no-explicit-any
+  640:38  warning  Unexpected any. Specify a different type               @typescript-eslint/no-explicit-any
+  645:30  warning  Unexpected any. Specify a different type               @typescript-eslint/no-explicit-any
+  652:29  warning  Unexpected any. Specify a different type               @typescript-eslint/no-explicit-any
+  665:29  warning  Unexpected any. Specify a different type               @typescript-eslint/no-explicit-any
+  871:50  warning  Unexpected any. Specify a different type               @typescript-eslint/no-explicit-any
+
+C:\Users\MartijnvanHoutenRemk\OneDrive - Remka B.V\Documenten\Remcura\src\components\orderLists\SimpleOrderListCard.vue
+  55:9  warning  Attribute "icon" should go before "@click.stop"     vue/attributes-order
+  56:9  warning  Attribute "label" should go before "@click.stop"    vue/attributes-order
+  57:9  warning  Attribute "color" should go before "@click.stop"    vue/attributes-order
+  58:9  warning  Attribute "outline" should go before "@click.stop"  vue/attributes-order
+  59:9  warning  Attribute "no-caps" should go before "@click.stop"  vue/attributes-order
+  60:9  warning  Attribute "size" should go before "@click.stop"     vue/attributes-order
+  61:9  warning  Attribute "class" should go before "@click.stop"    vue/attributes-order
+
+C:\Users\MartijnvanHoutenRemk\OneDrive - Remka B.V\Documenten\Remcura\src\components\platform\DynamicPlatformWidget.vue
+  51:26  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  96:37  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+C:\Users\MartijnvanHoutenRemk\OneDrive - Remka B.V\Documenten\Remcura\src\components\platform\widgets\ChartWidget.vue
+  79:29  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  97:27  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+C:\Users\MartijnvanHoutenRemk\OneDrive - Remka B.V\Documenten\Remcura\src\components\platform\widgets\ListWidget.vue
+   5:32  warning  Attribute "v-if" should go before "avatar"   vue/attributes-order
+  17:33  warning  Attribute "v-if" should go before "caption"  vue/attributes-order
+  22:30  warning  Attribute "v-if" should go before "side"     vue/attributes-order
+  53:15  warning  Unexpected any. Specify a different type     @typescript-eslint/no-explicit-any
+  54:16  warning  Unexpected any. Specify a different type     @typescript-eslint/no-explicit-any
+
+C:\Users\MartijnvanHoutenRemk\OneDrive - Remka B.V\Documenten\Remcura\src\components\platform\widgets\MetricWidget.vue
+   69:26  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  129:36  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  183:32  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  203:31  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+C:\Users\MartijnvanHoutenRemk\OneDrive - Remka B.V\Documenten\Remcura\src\components\platform\widgets\SystemWidget.vue
+  237:26  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  304:36  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  354:31  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+C:\Users\MartijnvanHoutenRemk\OneDrive - Remka B.V\Documenten\Remcura\src\components\platform\widgets\TableWidget.vue
+  20:17  warning  Expected '#no-data' instead of 'v-slot:no-data'                                               vue/v-slot-style
+  20:17  error    An element cannot have multiple '<template>' elements which are distributed to the same slot  vue/valid-v-slot
+  41:14  warning  Unexpected any. Specify a different type                                                      @typescript-eslint/no-explicit-any
+  42:17  warning  Unexpected any. Specify a different type                                                      @typescript-eslint/no-explicit-any
+  63:22  warning  Unexpected any. Specify a different type                                                      @typescript-eslint/no-explicit-any
+
+C:\Users\MartijnvanHoutenRemk\OneDrive - Remka B.V\Documenten\Remcura\src\components\products\AdvancedSearchDialog.vue
+  372:9   warning  Attribute ":disable" should go before "@click"                                  vue/attributes-order
+  373:9   warning  Attribute "icon" should go before "@click"                                      vue/attributes-order
+  374:9   warning  Attribute "unelevated" should go before "@click"                                vue/attributes-order
+  381:23  warning  The "preview-table" event has been triggered but not declared on `defineEmits`  vue/require-explicit-emits
+  382:9   warning  Attribute "icon" should go before "@click"                                      vue/attributes-order
+  420:30  warning  Unexpected any. Specify a different type                                        @typescript-eslint/no-explicit-any
+
+C:\Users\MartijnvanHoutenRemk\OneDrive - Remka B.V\Documenten\Remcura\src\components\products\OrderListDialog.vue
+   19:43  warning  Attribute "class" should go before "@submit"                                         vue/attributes-order
+   28:15  warning  Attribute "ref" should go before "outlined"                                          vue/attributes-order
+   99:15  warning  Attribute ":disable" should go before "@click"                                       vue/attributes-order
+  100:15  warning  Attribute "unelevated" should go before "@click"                                     vue/attributes-order
+  101:15  warning  Attribute "no-caps" should go before "@click"                                        vue/attributes-order
+  164:21  warning  Attribute "size" should go before "@click"                                           vue/attributes-order
+  200:9   warning  Attribute ":loading" should go before "@click"                                       vue/attributes-order
+  201:9   warning  Attribute ":disable" should go before "@click"                                       vue/attributes-order
+  202:9   warning  Attribute "unelevated" should go before "@click"                                     vue/attributes-order
+  230:21  warning  Expected '#option' instead of 'v-slot:option'                                        vue/v-slot-style
+  270:11  warning  Attribute ":disable" should go before "@click"                                       vue/attributes-order
+  339:9   error    Duplicate key 'selectedProduct'. May cause name collision in script or template tag  vue/no-dupe-keys
+  440:48  warning  Unexpected any. Specify a different type                                             @typescript-eslint/no-explicit-any
+
+C:\Users\MartijnvanHoutenRemk\OneDrive - Remka B.V\Documenten\Remcura\src\components\products\ProductDetailsDialog.vue
+  373:9  warning  Attribute "unelevated" should go before "@click"  vue/attributes-order
+
+C:\Users\MartijnvanHoutenRemk\OneDrive - Remka B.V\Documenten\Remcura\src\components\products\ProductFormDialog.vue
+   11:32  warning  Attribute "class" should go before "@submit"   vue/attributes-order
+   22:11  warning  Attribute "ref" should go before ":rules"      vue/attributes-order
+  102:21  warning  Expected '#append' instead of 'v-slot:append'  vue/v-slot-style
+  216:25  warning  Unexpected any. Specify a different type       @typescript-eslint/no-explicit-any
+  287:33  warning  Unexpected any. Specify a different type       @typescript-eslint/no-explicit-any
+  288:43  warning  Unexpected any. Specify a different type       @typescript-eslint/no-explicit-any
+  289:46  warning  Unexpected any. Specify a different type       @typescript-eslint/no-explicit-any
+  291:29  warning  Unexpected any. Specify a different type       @typescript-eslint/no-explicit-any
+
+C:\Users\MartijnvanHoutenRemk\OneDrive - Remka B.V\Documenten\Remcura\src\components\products\ShoppingCartDialog.vue
+    5:5   warning  Attribute "maximized" should go before "@update:model-value"        vue/attributes-order
+    6:5   warning  Attribute "transition-show" should go before "@update:model-value"  vue/attributes-order
+    7:5   warning  Attribute "transition-hide" should go before "@update:model-value"  vue/attributes-order
+   13:46  warning  Attribute "v-close-popup" should go before "dense"                  vue/attributes-order
+  141:63  warning  Attribute "v-close-popup" should go before "color"                  vue/attributes-order
+
+C:\Users\MartijnvanHoutenRemk\OneDrive - Remka B.V\Documenten\Remcura\src\components\tables\SmartTable.vue
+   21:9   warning  Attribute "v-model:pagination" should go before ":loading"  vue/attributes-order
+   30:47  warning  Expected '#[slot]' instead of 'v-slot:[slot]'               vue/v-slot-style
+   42:9   warning  Attribute "v-model:pagination" should go before ":loading"  vue/attributes-order
+   52:47  warning  Expected '#[slot]' instead of 'v-slot:[slot]'               vue/v-slot-style
+   70:47  warning  Expected '#[slot]' instead of 'v-slot:[slot]'               vue/v-slot-style
+  113:5   warning  Prop 'data' requires default value to be set                vue/require-default-prop
+  113:12  warning  Unexpected any. Specify a different type                    @typescript-eslint/no-explicit-any
+  114:14  warning  Unexpected any. Specify a different type                    @typescript-eslint/no-explicit-any
+  115:30  warning  Unexpected any. Specify a different type                    @typescript-eslint/no-explicit-any
+  135:24  warning  Unexpected any. Specify a different type                    @typescript-eslint/no-explicit-any
+
+C:\Users\MartijnvanHoutenRemk\OneDrive - Remka B.V\Documenten\Remcura\src\components\tables\UnifiedTable.vue
+   46:28  warning  Unexpected any. Specify a different type               @typescript-eslint/no-explicit-any
+   46:36  warning  Unexpected any. Specify a different type               @typescript-eslint/no-explicit-any
+   53:20  warning  Unexpected any. Specify a different type               @typescript-eslint/no-explicit-any
+   53:30  warning  Unexpected any. Specify a different type               @typescript-eslint/no-explicit-any
+   66:11  warning  Unexpected any. Specify a different type               @typescript-eslint/no-explicit-any
+   70:5   warning  Prop 'noDataMessage' requires default value to be set  vue/require-default-prop
+   89:29  warning  Unexpected any. Specify a different type               @typescript-eslint/no-explicit-any
+  128:41  warning  Unexpected any. Specify a different type               @typescript-eslint/no-explicit-any
+
+C:\Users\MartijnvanHoutenRemk\OneDrive - Remka B.V\Documenten\Remcura\src\components\tables\VirtualizedTable.vue
+   22:11  warning  Attribute "class" should go before "@click"  vue/attributes-order
+   84:20  warning  Unexpected any. Specify a different type     @typescript-eslint/no-explicit-any
+   88:11  warning  Unexpected any. Specify a different type     @typescript-eslint/no-explicit-any
+  174:27  warning  Unexpected any. Specify a different type     @typescript-eslint/no-explicit-any
+  178:33  warning  Unexpected any. Specify a different type     @typescript-eslint/no-explicit-any
+
+C:\Users\MartijnvanHoutenRemk\OneDrive - Remka B.V\Documenten\Remcura\src\composables\useBulkData.ts
+    1:15  warning  'Ref' is defined but never used. Allowed unused vars must match /^_/u  @typescript-eslint/no-unused-vars
+   19:29  warning  Unexpected any. Specify a different type                               @typescript-eslint/no-explicit-any
+   43:44  warning  Unexpected any. Specify a different type                               @typescript-eslint/no-explicit-any
+   68:29  warning  Unexpected any. Specify a different type                               @typescript-eslint/no-explicit-any
+   96:48  warning  Unexpected any. Specify a different type                               @typescript-eslint/no-explicit-any
+  121:29  warning  Unexpected any. Specify a different type                               @typescript-eslint/no-explicit-any
+  148:46  warning  Unexpected any. Specify a different type                               @typescript-eslint/no-explicit-any
+  170:38  warning  Unexpected any. Specify a different type                               @typescript-eslint/no-explicit-any
+  175:39  warning  Unexpected any. Specify a different type                               @typescript-eslint/no-explicit-any
+  199:28  warning  Unexpected any. Specify a different type                               @typescript-eslint/no-explicit-any
+
+C:\Users\MartijnvanHoutenRemk\OneDrive - Remka B.V\Documenten\Remcura\src\composables\useCache.ts
+    1:15  warning  'Ref' is defined but never used. Allowed unused vars must match /^_/u  @typescript-eslint/no-unused-vars
+   20:30  warning  Unexpected any. Specify a different type                               @typescript-eslint/no-explicit-any
+  238:24  warning  Unexpected any. Specify a different type                               @typescript-eslint/no-explicit-any
+  338:35  warning  Unexpected any. Specify a different type                               @typescript-eslint/no-explicit-any
+
+C:\Users\MartijnvanHoutenRemk\OneDrive - Remka B.V\Documenten\Remcura\src\composables\useDebounce.ts
+   7:49  warning  Unexpected any. Specify a different type                                                @typescript-eslint/no-explicit-any
+   7:59  warning  Unexpected any. Specify a different type                                                @typescript-eslint/no-explicit-any
+  73:11  warning  'debouncedFn' is assigned a value but never used. Allowed unused vars must match /^_/u  @typescript-eslint/no-unused-vars
+
+C:\Users\MartijnvanHoutenRemk\OneDrive - Remka B.V\Documenten\Remcura\src\composables\useFormValidation.ts
+   11:23  warning  Unexpected any. Specify a different type                                            @typescript-eslint/no-explicit-any
+   43:22  warning  Unexpected any. Specify a different type                                            @typescript-eslint/no-explicit-any
+   66:22  warning  Unexpected any. Specify a different type                                            @typescript-eslint/no-explicit-any
+  130:28  warning  Unexpected any. Specify a different type                                            @typescript-eslint/no-explicit-any
+  138:15  warning  Unexpected any. Specify a different type                                            @typescript-eslint/no-explicit-any
+  146:15  warning  Unexpected any. Specify a different type                                            @typescript-eslint/no-explicit-any
+  152:17  warning  Unexpected any. Specify a different type                                            @typescript-eslint/no-explicit-any
+  153:15  warning  Unexpected any. Specify a different type                                            @typescript-eslint/no-explicit-any
+  194:11  warning  'unwatch' is assigned a value but never used. Allowed unused vars must match /^_/u  @typescript-eslint/no-unused-vars
+
+C:\Users\MartijnvanHoutenRemk\OneDrive - Remka B.V\Documenten\Remcura\src\composables\useFormatting.ts
+  1:10  warning  'computed' is defined but never used. Allowed unused vars must match /^_/u  @typescript-eslint/no-unused-vars
+
+C:\Users\MartijnvanHoutenRemk\OneDrive - Remka B.V\Documenten\Remcura\src\composables\useSmartTable.ts
+   11:17  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   12:14  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   13:24  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   45:23  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   46:28  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   47:27  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   59:38  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   76:11  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  131:32  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  135:26  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  147:55  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  208:40  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  225:26  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  232:50  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+C:\Users\MartijnvanHoutenRemk\OneDrive - Remka B.V\Documenten\Remcura\src\composables\useTableSorting.ts
+    1:15  warning  'Ref' is defined but never used. Allowed unused vars must match /^_/u  @typescript-eslint/no-unused-vars
+   13:26  warning  Unexpected any. Specify a different type                               @typescript-eslint/no-explicit-any
+   13:34  warning  Unexpected any. Specify a different type                               @typescript-eslint/no-explicit-any
+   29:34  warning  Unexpected any. Specify a different type                               @typescript-eslint/no-explicit-any
+   52:31  warning  Unexpected any. Specify a different type                               @typescript-eslint/no-explicit-any
+   52:39  warning  Unexpected any. Specify a different type                               @typescript-eslint/no-explicit-any
+   59:11  warning  'aVal' is never reassigned. Use 'const' instead                        prefer-const
+   60:11  warning  'bVal' is never reassigned. Use 'const' instead                        prefer-const
+  106:31  warning  Unexpected any. Specify a different type                               @typescript-eslint/no-explicit-any
+  106:52  warning  Unexpected any. Specify a different type                               @typescript-eslint/no-explicit-any
+  118:26  warning  Unexpected any. Specify a different type                               @typescript-eslint/no-explicit-any
+  130:29  warning  Unexpected any. Specify a different type                               @typescript-eslint/no-explicit-any
+
+C:\Users\MartijnvanHoutenRemk\OneDrive - Remka B.V\Documenten\Remcura\src\examples\BaseDialogExamples.vue
+  10:47  warning  Attribute "class" should go before "@click"           vue/attributes-order
+  19:50  warning  Attribute "class" should go before "@click"           vue/attributes-order
+  28:49  warning  Attribute "class" should go before "@click"           vue/attributes-order
+  54:44  warning  Attribute "class" should go before "@submit.prevent"  vue/attributes-order
+
+C:\Users\MartijnvanHoutenRemk\OneDrive - Remka B.V\Documenten\Remcura\src\i18n\index.ts
+    9:5   warning  'messages' is never reassigned. Use 'const' instead                                   prefer-const
+    9:39  warning  Unexpected any. Specify a different type                                              @typescript-eslint/no-explicit-any
+    9:52  warning  Unexpected any. Specify a different type                                              @typescript-eslint/no-explicit-any
+   13:9   warning  'saved' is assigned a value but never used. Allowed unused vars must match /^_/u      @typescript-eslint/no-unused-vars
+   26:14  warning  Unexpected any. Specify a different type                                              @typescript-eslint/no-explicit-any
+  103:26  warning  Unexpected any. Specify a different type                                              @typescript-eslint/no-explicit-any
+  112:33  warning  Unexpected any. Specify a different type                                              @typescript-eslint/no-explicit-any
+  144:13  warning  'isLoaded' is assigned a value but never used. Allowed unused vars must match /^_/u   @typescript-eslint/no-unused-vars
+  179:7   warning  'countKeys' is assigned a value but never used. Allowed unused vars must match /^_/u  @typescript-eslint/no-unused-vars
+  179:25  warning  Unexpected any. Specify a different type                                              @typescript-eslint/no-explicit-any
+
+C:\Users\MartijnvanHoutenRemk\OneDrive - Remka B.V\Documenten\Remcura\src\layouts\MainLayout.vue
+   41:13  warning  Attribute ":aria-label" should go before "@click"       vue/attributes-order
+   42:13  warning  Attribute "class" should go before "@click"             vue/attributes-order
+   63:13  warning  Attribute ":aria-label" should go before "@click"       vue/attributes-order
+   66:13  warning  Attribute "class" should go before "@click"             vue/attributes-order
+  112:35  warning  Attribute "v-close-popup" should go before "clickable"  vue/attributes-order
+  119:35  warning  Attribute "v-close-popup" should go before "clickable"  vue/attributes-order
+  130:19  warning  Attribute "v-close-popup" should go before "clickable"  vue/attributes-order
+  132:19  warning  Attribute "class" should go before "@click"             vue/attributes-order
+  245:38  warning  Attribute "v-if" should go before "side"                vue/attributes-order
+  257:19  warning  Attribute "v-if" should go before "side"                vue/attributes-order
+
+C:\Users\MartijnvanHoutenRemk\OneDrive - Remka B.V\Documenten\Remcura\src\pages\AdminDashboard.vue
+   12:13  warning  Attribute ":loading" should go before "@click"                                     vue/attributes-order
+   13:13  warning  Attribute "class" should go before "@click"                                        vue/attributes-order
+   21:13  warning  Attribute "unelevated" should go before "@click"                                   vue/attributes-order
+   22:13  warning  Attribute "no-caps" should go before "@click"                                      vue/attributes-order
+   23:13  warning  Attribute "class" should go before "@click"                                        vue/attributes-order
+   29:13  warning  Attribute "unelevated" should go before "@click"                                   vue/attributes-order
+   30:13  warning  Attribute "no-caps" should go before "@click"                                      vue/attributes-order
+   31:13  warning  Attribute "class" should go before "@click"                                        vue/attributes-order
+  112:11  warning  Attribute "unelevated" should go before "@click"                                   vue/attributes-order
+  113:11  warning  Attribute "no-caps" should go before "@click"                                      vue/attributes-order
+  114:11  warning  Attribute "class" should go before "@click"                                        vue/attributes-order
+  120:11  warning  Attribute "unelevated" should go before "@click"                                   vue/attributes-order
+  121:11  warning  Attribute "no-caps" should go before "@click"                                      vue/attributes-order
+  122:11  warning  Attribute "class" should go before "@click"                                        vue/attributes-order
+  128:11  warning  Attribute "unelevated" should go before "@click"                                   vue/attributes-order
+  129:11  warning  Attribute "no-caps" should go before "@click"                                      vue/attributes-order
+  130:11  warning  Attribute "class" should go before "@click"                                        vue/attributes-order
+  137:11  warning  Attribute "unelevated" should go before "@click"                                   vue/attributes-order
+  138:11  warning  Attribute "no-caps" should go before "@click"                                      vue/attributes-order
+  139:11  warning  Attribute "class" should go before "@click"                                        vue/attributes-order
+  145:11  warning  Attribute "unelevated" should go before "@click"                                   vue/attributes-order
+  146:11  warning  Attribute "no-caps" should go before "@click"                                      vue/attributes-order
+  147:11  warning  Attribute "class" should go before "@click"                                        vue/attributes-order
+  212:23  warning  Expected '#body-cell-role' instead of 'v-slot:body-cell-role'                      vue/v-slot-style
+  224:23  warning  Expected '#body-cell-lastActive' instead of 'v-slot:body-cell-lastActive'          vue/v-slot-style
+  230:23  warning  Expected '#body-cell-actions' instead of 'v-slot:body-cell-actions'                vue/v-slot-style
+  286:23  warning  Expected '#body-cell-isMain' instead of 'v-slot:body-cell-isMain'                  vue/v-slot-style
+  300:23  warning  Expected '#body-cell-isActive' instead of 'v-slot:body-cell-isActive'              vue/v-slot-style
+  314:23  warning  Expected '#body-cell-actions' instead of 'v-slot:body-cell-actions'                vue/v-slot-style
+  369:23  warning  Expected '#body-cell-permissionType' instead of 'v-slot:body-cell-permissionType'  vue/v-slot-style
+  381:23  warning  Expected '#body-cell-expiresAt' instead of 'v-slot:body-cell-expiresAt'            vue/v-slot-style
+  399:23  warning  Expected '#body-cell-actions' instead of 'v-slot:body-cell-actions'                vue/v-slot-style
+
+C:\Users\MartijnvanHoutenRemk\OneDrive - Remka B.V\Documenten\Remcura\src\pages\AnalyticsPage.vue
+   16:13  warning  Attribute ":loading" should go before "@click"                   vue/attributes-order
+   17:13  warning  Attribute "class" should go before "@click"                      vue/attributes-order
+   25:13  warning  Attribute ":loading" should go before "@click"                   vue/attributes-order
+   26:13  warning  Attribute "unelevated" should go before "@click"                 vue/attributes-order
+   27:13  warning  Attribute "no-caps" should go before "@click"                    vue/attributes-order
+   28:13  warning  Attribute "class" should go before "@click"                      vue/attributes-order
+   43:11  warning  Attribute "option-value" should go before "@update:model-value"  vue/attributes-order
+   44:11  warning  Attribute "option-label" should go before "@update:model-value"  vue/attributes-order
+   45:11  warning  Attribute "emit-value" should go before "@update:model-value"    vue/attributes-order
+   46:11  warning  Attribute "map-options" should go before "@update:model-value"   vue/attributes-order
+   47:11  warning  Attribute "style" should go before "@update:model-value"         vue/attributes-order
+  204:25  warning  Expected '#no-data' instead of 'v-slot:no-data'                  vue/v-slot-style
+  231:23  warning  Expected '#no-data' instead of 'v-slot:no-data'                  vue/v-slot-style
+  254:23  warning  Expected '#no-data' instead of 'v-slot:no-data'                  vue/v-slot-style
+
+C:\Users\MartijnvanHoutenRemk\OneDrive - Remka B.V\Documenten\Remcura\src\pages\BatchManagementPage.vue
+   27:13  warning  Attribute ":loading" should go before "@click"    vue/attributes-order
+   28:13  warning  Attribute "class" should go before "@click"       vue/attributes-order
+   37:13  warning  Attribute "unelevated" should go before "@click"  vue/attributes-order
+   38:13  warning  Attribute "no-caps" should go before "@click"     vue/attributes-order
+   39:13  warning  Attribute "class" should go before "@click"       vue/attributes-order
+  177:15  warning  Attribute ":class" should go before "@click"      vue/attributes-order
+  201:13  warning  Attribute "unelevated" should go before "@click"  vue/attributes-order
+  202:13  warning  Attribute "color" should go before "@click"       vue/attributes-order
+  203:13  warning  Attribute "class" should go before "@click"       vue/attributes-order
+  209:13  warning  Attribute "unelevated" should go before "@click"  vue/attributes-order
+  210:13  warning  Attribute ":color" should go before "@click"      vue/attributes-order
+  211:13  warning  Attribute "class" should go before "@click"       vue/attributes-order
+  219:21  warning  Expected '#avatar' instead of 'v-slot:avatar'     vue/v-slot-style
+  223:21  warning  Expected '#action' instead of 'v-slot:action'     vue/v-slot-style
+  232:21  warning  Expected '#avatar' instead of 'v-slot:avatar'     vue/v-slot-style
+  243:21  warning  Expected '#action' instead of 'v-slot:action'     vue/v-slot-style
+  249:15  warning  Attribute "size" should go before "@click"        vue/attributes-order
+  630:31  warning  Unexpected any. Specify a different type          @typescript-eslint/no-explicit-any
+  700:41  warning  Unexpected any. Specify a different type          @typescript-eslint/no-explicit-any
+
+C:\Users\MartijnvanHoutenRemk\OneDrive - Remka B.V\Documenten\Remcura\src\pages\DashboardPage.vue
+   44:13  warning  Attribute "color" should go before "@update:model-value"     vue/attributes-order
+   45:13  warning  Attribute ":loading" should go before "@update:model-value"  vue/attributes-order
+   46:13  warning  Attribute "class" should go before "@update:model-value"     vue/attributes-order
+   72:13  warning  Attribute ":loading" should go before "@click"               vue/attributes-order
+   73:13  warning  Attribute "class" should go before "@click"                  vue/attributes-order
+   83:13  warning  Attribute "class" should go before "@click"                  vue/attributes-order
+  102:13  warning  Attribute "unelevated" should go before "@click"             vue/attributes-order
+  103:13  warning  Attribute "no-caps" should go before "@click"                vue/attributes-order
+  104:13  warning  Attribute ":class" should go before "@click"                 vue/attributes-order
+  189:11  warning  Attribute "unelevated" should go before "@click"             vue/attributes-order
+  190:11  warning  Attribute "no-caps" should go before "@click"                vue/attributes-order
+  191:11  warning  Attribute "class" should go before "@click"                  vue/attributes-order
+  360:51  warning  Unexpected any. Specify a different type                     @typescript-eslint/no-explicit-any
+
+C:\Users\MartijnvanHoutenRemk\OneDrive - Remka B.V\Documenten\Remcura\src\pages\ErrorNotFound.vue
+   56:13  warning  Attribute "class" should go before "@click"        vue/attributes-order
+   57:13  warning  Attribute "unelevated" should go before "@click"   vue/attributes-order
+   58:13  warning  Attribute "no-caps" should go before "@click"      vue/attributes-order
+   59:13  warning  Attribute ":aria-label" should go before "@click"  vue/attributes-order
+   66:13  warning  Attribute "class" should go before "@click"        vue/attributes-order
+   67:13  warning  Attribute "outline" should go before "@click"      vue/attributes-order
+   68:13  warning  Attribute "no-caps" should go before "@click"      vue/attributes-order
+   69:13  warning  Attribute ":aria-label" should go before "@click"  vue/attributes-order
+   83:15  warning  Attribute "role" should go before "@click"         vue/attributes-order
+   84:15  warning  Attribute "tabindex" should go before "@click"     vue/attributes-order
+   85:15  warning  Attribute ":aria-label" should go before "@click"  vue/attributes-order
+   99:15  warning  Attribute "role" should go before "@click"         vue/attributes-order
+  100:15  warning  Attribute "tabindex" should go before "@click"     vue/attributes-order
+  101:15  warning  Attribute ":aria-label" should go before "@click"  vue/attributes-order
+  115:15  warning  Attribute "role" should go before "@click"         vue/attributes-order
+  116:15  warning  Attribute "tabindex" should go before "@click"     vue/attributes-order
+  117:15  warning  Attribute ":aria-label" should go before "@click"  vue/attributes-order
+  131:15  warning  Attribute "role" should go before "@click"         vue/attributes-order
+  132:15  warning  Attribute "tabindex" should go before "@click"     vue/attributes-order
+  133:15  warning  Attribute ":aria-label" should go before "@click"  vue/attributes-order
+
+C:\Users\MartijnvanHoutenRemk\OneDrive - Remka B.V\Documenten\Remcura\src\pages\NotificationsPage.vue
+   15:11  warning  Attribute ":loading" should go before "@click"     vue/attributes-order
+   16:11  warning  Attribute "class" should go before "@click"        vue/attributes-order
+   35:15  warning  Attribute "size" should go before "@click"         vue/attributes-order
+   42:15  warning  Attribute "size" should go before "@click"         vue/attributes-order
+   52:15  warning  Attribute ":disable" should go before "@click"     vue/attributes-order
+   53:15  warning  Attribute "size" should go before "@click"         vue/attributes-order
+   54:15  warning  Attribute "color" should go before "@click"        vue/attributes-order
+   61:15  warning  Attribute "size" should go before "@click"         vue/attributes-order
+   62:15  warning  Attribute "color" should go before "@click"        vue/attributes-order
+   63:15  warning  Attribute "class" should go before "@click"        vue/attributes-order
+  113:15  warning  Attribute "v-ripple" should go before "clickable"  vue/attributes-order
+
+C:\Users\MartijnvanHoutenRemk\OneDrive - Remka B.V\Documenten\Remcura\src\pages\OrderListDetailPage.vue
+   12:13  warning  Attribute "class" should go before "@click"               vue/attributes-order
+   62:15  warning  Attribute "icon" should go before "@click"                vue/attributes-order
+   63:13  warning  Attribute ":label" should go before "@click"              vue/attributes-order
+   64:15  warning  Attribute "color" should go before "@click"               vue/attributes-order
+   65:15  warning  Attribute "unelevated" should go before "@click"          vue/attributes-order
+   66:15  warning  Attribute "no-caps" should go before "@click"             vue/attributes-order
+   67:15  warning  Attribute "class" should go before "@click"               vue/attributes-order
+   71:15  warning  Attribute "icon" should go before "@click"                vue/attributes-order
+   72:15  warning  Attribute "outline" should go before "@click"             vue/attributes-order
+   73:15  warning  Attribute "color" should go before "@click"               vue/attributes-order
+   74:15  warning  Attribute "no-caps" should go before "@click"             vue/attributes-order
+   75:15  warning  Attribute "class" should go before "@click"               vue/attributes-order
+   79:13  warning  Attribute "icon" should go before "@click"                vue/attributes-order
+   80:13  warning  Attribute "color" should go before "@click"               vue/attributes-order
+   81:13  warning  Attribute "no-caps" should go before "@click"             vue/attributes-order
+   82:13  warning  Attribute "class" should go before "@click"               vue/attributes-order
+   83:13  warning  Attribute ":label" should go before "@click"              vue/attributes-order
+   88:58  warning  Attribute "v-close-popup" should go before "@click"       vue/attributes-order
+   94:55  warning  Attribute "v-close-popup" should go before "@click"       vue/attributes-order
+  104:21  warning  Attribute "v-close-popup" should go before "@click"       vue/attributes-order
+  105:21  warning  Attribute "class" should go before "@click"               vue/attributes-order
+  128:19  warning  Expected '#avatar' instead of 'v-slot:avatar'             vue/v-slot-style
+  132:19  warning  Expected '#action' instead of 'v-slot:action'             vue/v-slot-style
+  144:11  warning  Attribute "v-model" should go before ":preset"            vue/attributes-order
+  148:11  warning  Attribute ":loading" should go before "@clear"            vue/attributes-order
+  149:11  warning  Attribute "collapsible" should go before "@clear"         vue/attributes-order
+  150:11  warning  Attribute "class" should go before "@clear"               vue/attributes-order
+  172:15  warning  Attribute ":loading" should go before "@click"            vue/attributes-order
+  173:15  warning  Attribute "color" should go before "@click"               vue/attributes-order
+  174:15  warning  Attribute "size" should go before "@click"                vue/attributes-order
+  197:11  warning  Attribute "icon" should go before "@click"                vue/attributes-order
+  198:11  warning  Attribute "label" should go before "@click"               vue/attributes-order
+  199:11  warning  Attribute "color" should go before "@click"               vue/attributes-order
+  200:11  warning  Attribute "unelevated" should go before "@click"          vue/attributes-order
+  201:11  warning  Attribute "no-caps" should go before "@click"             vue/attributes-order
+  258:19  warning  Attribute ":disable" should go before "@click"            vue/attributes-order
+  259:19  warning  Attribute "class" should go before "@click"               vue/attributes-order
+  269:19  warning  Attribute "style" should go before "@update:model-value"  vue/attributes-order
+  277:19  warning  Attribute "class" should go before "@click"               vue/attributes-order
+  366:11  warning  Attribute ":loading" should go before "@filter"           vue/attributes-order
+  368:21  warning  Expected '#option' instead of 'v-slot:option'             vue/v-slot-style
+  403:52  warning  Attribute "v-close-popup" should go before ":label"       vue/attributes-order
+  443:30  warning  Unexpected any. Specify a different type                  @typescript-eslint/no-explicit-any
+  446:31  warning  Unexpected any. Specify a different type                  @typescript-eslint/no-explicit-any
+  448:32  warning  Unexpected any. Specify a different type                  @typescript-eslint/no-explicit-any
+  482:20  warning  Unexpected any. Specify a different type                  @typescript-eslint/no-explicit-any
+  491:20  warning  Unexpected any. Specify a different type                  @typescript-eslint/no-explicit-any
+  768:43  warning  Unexpected any. Specify a different type                  @typescript-eslint/no-explicit-any
+  787:36  warning  Unexpected any. Specify a different type                  @typescript-eslint/no-explicit-any
+  792:36  warning  Unexpected any. Specify a different type                  @typescript-eslint/no-explicit-any
+  801:48  warning  Forbidden non-null assertion                              @typescript-eslint/no-non-null-assertion
+  845:47  warning  Forbidden non-null assertion                              @typescript-eslint/no-non-null-assertion
+  868:27  warning  Unexpected any. Specify a different type                  @typescript-eslint/no-explicit-any
+  875:35  warning  Unexpected any. Specify a different type                  @typescript-eslint/no-explicit-any
+
+C:\Users\MartijnvanHoutenRemk\OneDrive - Remka B.V\Documenten\Remcura\src\pages\OrderListsPage.vue
+   11:11  warning  Attribute "color" should go before "@click"                          vue/attributes-order
+   12:11  warning  Attribute "icon" should go before "@click"                           vue/attributes-order
+   13:11  warning  Attribute "label" should go before "@click"                          vue/attributes-order
+   14:11  warning  Attribute "class" should go before "@click"                          vue/attributes-order
+   15:11  warning  Attribute "unelevated" should go before "@click"                     vue/attributes-order
+   16:11  warning  Attribute "no-caps" should go before "@click"                        vue/attributes-order
+   20:11  warning  Attribute "color" should go before "@click"                          vue/attributes-order
+   21:11  warning  Attribute "icon" should go before "@click"                           vue/attributes-order
+   22:11  warning  Attribute "label" should go before "@click"                          vue/attributes-order
+   23:11  warning  Attribute "class" should go before "@click"                          vue/attributes-order
+   24:11  warning  Attribute "outline" should go before "@click"                        vue/attributes-order
+   25:11  warning  Attribute "no-caps" should go before "@click"                        vue/attributes-order
+   33:19  warning  Expected '#avatar' instead of 'v-slot:avatar'                        vue/v-slot-style
+   44:19  warning  Expected '#action' instead of 'v-slot:action'                        vue/v-slot-style
+   49:13  warning  Attribute ":loading" should go before "@click"                       vue/attributes-order
+   50:13  warning  Attribute "class" should go before "@click"                          vue/attributes-order
+   51:13  warning  Attribute "no-caps" should go before "@click"                        vue/attributes-order
+   57:13  warning  Attribute "class" should go before "@click"                          vue/attributes-order
+   58:13  warning  Attribute "no-caps" should go before "@click"                        vue/attributes-order
+  123:9   warning  Attribute "v-model" should go before ":preset"                       vue/attributes-order
+  127:9   warning  Attribute ":loading" should go before "@clear"                       vue/attributes-order
+  128:9   warning  Attribute "collapsible" should go before "@clear"                    vue/attributes-order
+  129:9   warning  Attribute "class" should go before "@clear"                          vue/attributes-order
+  157:19  warning  Expected '#body-cell-name' instead of 'v-slot:body-cell-name'        vue/v-slot-style
+  166:19  warning  Expected '#body-cell-status' instead of 'v-slot:body-cell-status'    vue/v-slot-style
+  175:19  warning  Expected '#body-cell-urgency' instead of 'v-slot:body-cell-urgency'  vue/v-slot-style
+  198:19  warning  Expected '#body-cell-actions' instead of 'v-slot:body-cell-actions'  vue/v-slot-style
+  206:15  warning  Attribute "class" should go before "@click"                          vue/attributes-order
+  223:21  warning  Attribute "class" should go before "@click"                          vue/attributes-order
+  255:11  warning  Attribute "color" should go before "@click"                          vue/attributes-order
+  256:11  warning  Attribute ":label" should go before "@click"                         vue/attributes-order
+  257:11  warning  Attribute "class" should go before "@click"                          vue/attributes-order
+  324:45  warning  Attribute ":loading" should go before "@click"                       vue/attributes-order
+  324:78  warning  Attribute "color" should go before "@click"                          vue/attributes-order
+  324:94  warning  Attribute ":label" should go before "@click"                         vue/attributes-order
+  485:42  warning  Unexpected any. Specify a different type                             @typescript-eslint/no-explicit-any
+
+C:\Users\MartijnvanHoutenRemk\OneDrive - Remka B.V\Documenten\Remcura\src\pages\OrdersPage.vue
+   12:13  warning  Attribute ":loading" should go before "@click"                                                     vue/attributes-order
+   13:13  warning  Attribute "class" should go before "@click"                                                        vue/attributes-order
+   21:13  warning  Attribute ":loading" should go before "@click"                                                     vue/attributes-order
+   22:13  warning  Attribute "unelevated" should go before "@click"                                                   vue/attributes-order
+   23:13  warning  Attribute "no-caps" should go before "@click"                                                      vue/attributes-order
+   24:13  warning  Attribute "class" should go before "@click"                                                        vue/attributes-order
+   30:13  warning  Attribute "unelevated" should go before "@click"                                                   vue/attributes-order
+   31:13  warning  Attribute "no-caps" should go before "@click"                                                      vue/attributes-order
+   32:13  warning  Attribute "class" should go before "@click"                                                        vue/attributes-order
+   38:13  warning  Attribute "unelevated" should go before "@click"                                                   vue/attributes-order
+   39:13  warning  Attribute "no-caps" should go before "@click"                                                      vue/attributes-order
+   40:13  warning  Attribute "class" should go before "@click"                                                        vue/attributes-order
+   50:9   warning  Attribute "v-model" should go before ":preset"                                                     vue/attributes-order
+   54:9   warning  Attribute ":loading" should go before "@clear"                                                     vue/attributes-order
+   55:9   warning  Attribute "collapsible" should go before "@clear"                                                  vue/attributes-order
+   56:9   warning  Attribute "class" should go before "@clear"                                                        vue/attributes-order
+   66:9   warning  Attribute "v-model:selected" should go before ":loading"                                           vue/attributes-order
+   74:19  warning  Expected '#body-cell-status' instead of 'v-slot:body-cell-status'                                  vue/v-slot-style
+   86:19  warning  Expected '#body-cell-order_date' instead of 'v-slot:body-cell-order_date'                          vue/v-slot-style
+   92:19  warning  Expected '#body-cell-total_amount' instead of 'v-slot:body-cell-total_amount'                      vue/v-slot-style
+   98:19  warning  Expected '#body-cell-expected_delivery_date' instead of 'v-slot:body-cell-expected_delivery_date'  vue/v-slot-style
+  104:19  warning  Expected '#body-cell-actions' instead of 'v-slot:body-cell-actions'                                vue/v-slot-style
+  244:22  warning  Unexpected any. Specify a different type                                                           @typescript-eslint/no-explicit-any
+  487:21  warning  Unexpected any. Specify a different type                                                           @typescript-eslint/no-explicit-any
+  505:29  warning  Unexpected any. Specify a different type                                                           @typescript-eslint/no-explicit-any
+  512:29  warning  Unexpected any. Specify a different type                                                           @typescript-eslint/no-explicit-any
+  519:33  warning  Unexpected any. Specify a different type                                                           @typescript-eslint/no-explicit-any
+  553:21  warning  Unexpected any. Specify a different type                                                           @typescript-eslint/no-explicit-any
+
+C:\Users\MartijnvanHoutenRemk\OneDrive - Remka B.V\Documenten\Remcura\src\pages\ProductsPage.vue
+   16:13  warning  Attribute ":loading" should go before "@click"     vue/attributes-order
+   17:13  warning  Attribute "class" should go before "@click"        vue/attributes-order
+   26:13  warning  Attribute "unelevated" should go before "@click"   vue/attributes-order
+   27:13  warning  Attribute "no-caps" should go before "@click"      vue/attributes-order
+   28:13  warning  Attribute "class" should go before "@click"        vue/attributes-order
+   34:13  warning  Attribute ":disable" should go before "@click"     vue/attributes-order
+   35:13  warning  Attribute "unelevated" should go before "@click"   vue/attributes-order
+   36:13  warning  Attribute "no-caps" should go before "@click"      vue/attributes-order
+   37:13  warning  Attribute "class" should go before "@click"        vue/attributes-order
+   55:11  warning  Attribute "v-model" should go before ":preset"     vue/attributes-order
+   59:11  warning  Attribute ":loading" should go before "@clear"     vue/attributes-order
+   60:11  warning  Attribute "collapsible" should go before "@clear"  vue/attributes-order
+   61:11  warning  Attribute "class" should go before "@clear"        vue/attributes-order
+  409:42  warning  Unexpected any. Specify a different type           @typescript-eslint/no-explicit-any
+  409:56  warning  Unexpected any. Specify a different type           @typescript-eslint/no-explicit-any
+  756:43  warning  Unexpected any. Specify a different type           @typescript-eslint/no-explicit-any
+  771:42  warning  Unexpected any. Specify a different type           @typescript-eslint/no-explicit-any
+  823:42  warning  Unexpected any. Specify a different type           @typescript-eslint/no-explicit-any
+  832:34  warning  Unexpected any. Specify a different type           @typescript-eslint/no-explicit-any
+
+C:\Users\MartijnvanHoutenRemk\OneDrive - Remka B.V\Documenten\Remcura\src\pages\SettingsPage.vue
+   20:13  warning  Attribute ":loading" should go before "@click"                        vue/attributes-order
+   21:13  warning  Attribute "class" should go before "@click"                           vue/attributes-order
+   29:13  warning  Attribute ":loading" should go before "@click"                        vue/attributes-order
+   30:13  warning  Attribute "unelevated" should go before "@click"                      vue/attributes-order
+   31:13  warning  Attribute "no-caps" should go before "@click"                         vue/attributes-order
+   32:13  warning  Attribute "class" should go before "@click"                           vue/attributes-order
+   56:25  warning  Expected '#prepend' instead of 'v-slot:prepend'                       vue/v-slot-style
+   68:25  warning  Expected '#prepend' instead of 'v-slot:prepend'                       vue/v-slot-style
+   80:25  warning  Expected '#prepend' instead of 'v-slot:prepend'                       vue/v-slot-style
+  105:46  warning  Attribute "id" should go before "class"                               vue/attributes-order
+  116:21  warning  Attribute "color" should go before "@update:model-value"              vue/attributes-order
+  117:21  warning  Attribute "size" should go before "@update:model-value"               vue/attributes-order
+  118:21  warning  Attribute ":aria-labelledby" should go before "@update:model-value"   vue/attributes-order
+  119:21  warning  Attribute ":aria-describedby" should go before "@update:model-value"  vue/attributes-order
+  139:46  warning  Attribute "id" should go before "class"                               vue/attributes-order
+  151:21  warning  Attribute "option-value" should go before "@update:model-value"       vue/attributes-order
+  152:21  warning  Attribute "option-label" should go before "@update:model-value"       vue/attributes-order
+  153:21  warning  Attribute "emit-value" should go before "@update:model-value"         vue/attributes-order
+  154:21  warning  Attribute "map-options" should go before "@update:model-value"        vue/attributes-order
+  155:21  warning  Attribute "outlined" should go before "@update:model-value"           vue/attributes-order
+  156:21  warning  Attribute "dense" should go before "@update:model-value"              vue/attributes-order
+  157:21  warning  Attribute "style" should go before "@update:model-value"              vue/attributes-order
+  158:21  warning  Attribute ":aria-labelledby" should go before "@update:model-value"   vue/attributes-order
+  190:25  warning  Expected '#prepend' instead of 'v-slot:prepend'                       vue/v-slot-style
+  205:25  warning  Expected '#prepend' instead of 'v-slot:prepend'                       vue/v-slot-style
+  220:25  warning  Expected '#prepend' instead of 'v-slot:prepend'                       vue/v-slot-style
+  235:25  warning  Expected '#prepend' instead of 'v-slot:prepend'                       vue/v-slot-style
+
+C:\Users\MartijnvanHoutenRemk\OneDrive - Remka B.V\Documenten\Remcura\src\pages\StyleSandbox.vue
+  67:31  warning  Attribute "v-close-popup" should go before "clickable"  vue/attributes-order
+  70:31  warning  Attribute "v-close-popup" should go before "clickable"  vue/attributes-order
+
+C:\Users\MartijnvanHoutenRemk\OneDrive - Remka B.V\Documenten\Remcura\src\pages\SuppliersPage.vue
+   16:13  warning  Attribute ":loading" should go before "@click"     vue/attributes-order
+   17:13  warning  Attribute "class" should go before "@click"        vue/attributes-order
+   25:13  warning  Attribute "unelevated" should go before "@click"   vue/attributes-order
+   26:13  warning  Attribute "no-caps" should go before "@click"      vue/attributes-order
+   27:13  warning  Attribute "class" should go before "@click"        vue/attributes-order
+   33:13  warning  Attribute "unelevated" should go before "@click"   vue/attributes-order
+   34:13  warning  Attribute "no-caps" should go before "@click"      vue/attributes-order
+   35:13  warning  Attribute "class" should go before "@click"        vue/attributes-order
+   45:9   warning  Attribute "v-model" should go before ":preset"     vue/attributes-order
+   49:9   warning  Attribute ":loading" should go before "@clear"     vue/attributes-order
+   50:9   warning  Attribute "collapsible" should go before "@clear"  vue/attributes-order
+   51:9   warning  Attribute "class" should go before "@clear"        vue/attributes-order
+  173:17  warning  Attribute ":loading" should go before "@click"     vue/attributes-order
+  455:19  warning  Attribute ":loading" should go before "@click"     vue/attributes-order
+  456:19  warning  Attribute "unelevated" should go before "@click"   vue/attributes-order
+  463:19  warning  Attribute "unelevated" should go before "@click"   vue/attributes-order
+  470:19  warning  Attribute "unelevated" should go before "@click"   vue/attributes-order
+  515:31  warning  Unexpected any. Specify a different type           @typescript-eslint/no-explicit-any
+  516:32  warning  Unexpected any. Specify a different type           @typescript-eslint/no-explicit-any
+  544:33  warning  Unexpected any. Specify a different type           @typescript-eslint/no-explicit-any
+  547:25  warning  Unexpected any. Specify a different type           @typescript-eslint/no-explicit-any
+
+C:\Users\MartijnvanHoutenRemk\OneDrive - Remka B.V\Documenten\Remcura\src\pages\auth\LoginPage.vue
+    3:43  warning  Attribute "class" should go before "@submit.prevent"       vue/attributes-order
+    3:62  warning  Attribute "novalidate" should go before "@submit.prevent"  vue/attributes-order
+   21:25  warning  Expected '#prepend' instead of 'v-slot:prepend'            vue/v-slot-style
+   46:25  warning  Expected '#prepend' instead of 'v-slot:prepend'            vue/v-slot-style
+   49:25  warning  Expected '#append' instead of 'v-slot:append'              vue/v-slot-style
+   56:19  warning  Attribute "class" should go before "@click"                vue/attributes-order
+   57:19  warning  Attribute "tabindex" should go before "@click"             vue/attributes-order
+   58:19  warning  Attribute ":aria-label" should go before "@click"          vue/attributes-order
+  114:13  warning  Attribute "class" should go before "@click"                vue/attributes-order
+  115:13  warning  Attribute "icon" should go before "@click"                 vue/attributes-order
+  116:13  warning  Attribute "unelevated" should go before "@click"           vue/attributes-order
+  117:13  warning  Attribute "no-caps" should go before "@click"              vue/attributes-order
+  118:13  warning  Attribute ":loading" should go before "@click"             vue/attributes-order
+  119:13  warning  Attribute "size" should go before "@click"                 vue/attributes-order
+  127:13  warning  Attribute "class" should go before "@click"                vue/attributes-order
+  128:13  warning  Attribute "icon" should go before "@click"                 vue/attributes-order
+  129:13  warning  Attribute "unelevated" should go before "@click"           vue/attributes-order
+  130:13  warning  Attribute "no-caps" should go before "@click"              vue/attributes-order
+  131:13  warning  Attribute ":loading" should go before "@click"             vue/attributes-order
+  132:13  warning  Attribute "size" should go before "@click"                 vue/attributes-order
+  145:13  warning  Attribute "class" should go before "@click"                vue/attributes-order
+  146:13  warning  Attribute ":icon" should go before "@click"                vue/attributes-order
+  149:13  warning  Attribute "unelevated" should go before "@click"           vue/attributes-order
+  150:13  warning  Attribute "no-caps" should go before "@click"              vue/attributes-order
+  151:13  warning  Attribute "padding" should go before "@click"              vue/attributes-order
+  157:13  warning  Attribute "class" should go before "@click"                vue/attributes-order
+  158:13  warning  Attribute "unelevated" should go before "@click"           vue/attributes-order
+  159:13  warning  Attribute "no-caps" should go before "@click"              vue/attributes-order
+
+C:\Users\MartijnvanHoutenRemk\OneDrive - Remka B.V\Documenten\Remcura\src\pages\auth\MagicJoinPage.vue
+   25:13  warning  Attribute "autofocus" should go before "@input"                                                                      vue/attributes-order
+   27:23  warning  Expected '#prepend' instead of 'v-slot:prepend'                                                                      vue/v-slot-style
+   30:23  warning  Expected '#append' instead of 'v-slot:append'                                                                        vue/v-slot-style
+   76:15  warning  Attribute "class" should go before "@click"                                                                          vue/attributes-order
+   83:15  warning  Attribute "class" should go before "@click"                                                                          vue/attributes-order
+  199:29  warning  Unexpected any. Specify a different type                                                                             @typescript-eslint/no-explicit-any
+  200:31  warning  Unexpected any. Specify a different type                                                                             @typescript-eslint/no-explicit-any
+  293:52  warning  Unexpected any. Specify a different type                                                                             @typescript-eslint/no-explicit-any
+  301:11  warning  Use "@ts-expect-error" instead of "@ts-ignore", as "@ts-ignore" will do nothing if the following line is error-free  @typescript-eslint/ban-ts-comment
+  325:47  warning  Unexpected any. Specify a different type                                                                             @typescript-eslint/no-explicit-any
+  365:52  warning  Unexpected any. Specify a different type                                                                             @typescript-eslint/no-explicit-any
+  436:56  warning  Unexpected any. Specify a different type                                                                             @typescript-eslint/no-explicit-any
+  443:28  warning  Unexpected any. Specify a different type                                                                             @typescript-eslint/no-explicit-any
+  475:30  warning  Unexpected any. Specify a different type                                                                             @typescript-eslint/no-explicit-any
+
+C:\Users\MartijnvanHoutenRemk\OneDrive - Remka B.V\Documenten\Remcura\src\pages\inventory\CountingPage.vue
+   16:13  warning  Attribute ":loading" should go before "@click"                             vue/attributes-order
+   17:13  warning  Attribute "class" should go before "@click"                                vue/attributes-order
+   33:23  warning  Expected '#prepend' instead of 'v-slot:prepend'                            vue/v-slot-style
+   42:13  warning  Attribute "unelevated" should go before "@click"                           vue/attributes-order
+   43:13  warning  Attribute "no-caps" should go before "@click"                              vue/attributes-order
+   44:13  warning  Attribute "class" should go before "@click"                                vue/attributes-order
+  125:13  warning  Attribute ":disable" should go before "@click"                             vue/attributes-order
+  151:21  warning  Expected '#body-cell-name' instead of 'v-slot:body-cell-name'              vue/v-slot-style
+  163:21  warning  Expected '#body-cell-status' instead of 'v-slot:body-cell-status'          vue/v-slot-style
+  176:21  warning  Expected '#body-cell-progress' instead of 'v-slot:body-cell-progress'      vue/v-slot-style
+  198:21  warning  Expected '#body-cell-started_at' instead of 'v-slot:body-cell-started_at'  vue/v-slot-style
+  208:21  warning  Expected '#body-cell-actions' instead of 'v-slot:body-cell-actions'        vue/v-slot-style
+  219:19  warning  Attribute ":title" should go before "@click"                               vue/attributes-order
+  228:19  warning  Attribute ":title" should go before "@click"                               vue/attributes-order
+  238:19  warning  Attribute ":title" should go before "@click"                               vue/attributes-order
+
+C:\Users\MartijnvanHoutenRemk\OneDrive - Remka B.V\Documenten\Remcura\src\pages\inventory\CountingSessionPage.vue
+   46:15  warning  Attribute ":disable" should go before "@click"                         vue/attributes-order
+   47:15  warning  Attribute "unelevated" should go before "@click"                       vue/attributes-order
+   56:15  warning  Attribute "unelevated" should go before "@click"                       vue/attributes-order
+  211:25  warning  Expected '#body-cell-product' instead of 'v-slot:body-cell-product'    vue/v-slot-style
+  211:51  warning  Variable 'props' is already declared in the upper scope                vue/no-template-shadow
+  227:25  warning  Expected '#body-cell-variance' instead of 'v-slot:body-cell-variance'  vue/v-slot-style
+  227:52  warning  Variable 'props' is already declared in the upper scope                vue/no-template-shadow
+  240:25  warning  Expected '#body-cell-status' instead of 'v-slot:body-cell-status'      vue/v-slot-style
+  240:50  warning  Variable 'props' is already declared in the upper scope                vue/no-template-shadow
+
+C:\Users\MartijnvanHoutenRemk\OneDrive - Remka B.V\Documenten\Remcura\src\pages\inventory\InventoryLevelsPage.vue
+   17:13  warning  Attribute "class" should go before "@click"        vue/attributes-order
+  124:9   warning  Attribute "v-model" should go before ":preset"     vue/attributes-order
+  128:9   warning  Attribute ":loading" should go before "@clear"     vue/attributes-order
+  129:9   warning  Attribute "collapsible" should go before "@clear"  vue/attributes-order
+  130:9   warning  Attribute "class" should go before "@clear"        vue/attributes-order
+  379:74  warning  Unexpected any. Specify a different type           @typescript-eslint/no-explicit-any
+  514:41  warning  Unexpected any. Specify a different type           @typescript-eslint/no-explicit-any
+  523:45  warning  Unexpected any. Specify a different type           @typescript-eslint/no-explicit-any
+  584:52  warning  Unexpected any. Specify a different type           @typescript-eslint/no-explicit-any
+  603:21  warning  Unexpected any. Specify a different type           @typescript-eslint/no-explicit-any
+  653:36  warning  Unexpected any. Specify a different type           @typescript-eslint/no-explicit-any
+  661:36  warning  Unexpected any. Specify a different type           @typescript-eslint/no-explicit-any
+  668:35  warning  Unexpected any. Specify a different type           @typescript-eslint/no-explicit-any
+  709:25  warning  Forbidden non-null assertion                       @typescript-eslint/no-non-null-assertion
+  732:26  warning  Forbidden non-null assertion                       @typescript-eslint/no-non-null-assertion
+  733:25  warning  Forbidden non-null assertion                       @typescript-eslint/no-non-null-assertion
+  738:27  warning  Forbidden non-null assertion                       @typescript-eslint/no-non-null-assertion
+  754:24  warning  Forbidden non-null assertion                       @typescript-eslint/no-non-null-assertion
+  768:21  warning  Unexpected any. Specify a different type           @typescript-eslint/no-explicit-any
+  851:68  warning  Unexpected any. Specify a different type           @typescript-eslint/no-explicit-any
+
+C:\Users\MartijnvanHoutenRemk\OneDrive - Remka B.V\Documenten\Remcura\src\pages\inventory\LocationsPage.vue
+   50:17  warning  Expected '#avatar' instead of 'v-slot:avatar'                        vue/v-slot-style
+   63:9   warning  Attribute "v-model" should go before ":preset"                       vue/attributes-order
+   67:9   warning  Attribute ":loading" should go before "@clear"                       vue/attributes-order
+   68:9   warning  Attribute "collapsible" should go before "@clear"                    vue/attributes-order
+   69:9   warning  Attribute "class" should go before "@clear"                          vue/attributes-order
+  102:19  warning  Expected '#body-cell-actions' instead of 'v-slot:body-cell-actions'  vue/v-slot-style
+
+C:\Users\MartijnvanHoutenRemk\OneDrive - Remka B.V\Documenten\Remcura\src\pages\inventory\MobileCountingTestPage.vue
+  16:13  warning  Attribute ":color" should go before "@click"   vue/attributes-order
+  17:13  warning  Attribute "label" should go before "@click"    vue/attributes-order
+  18:13  warning  Attribute "size" should go before "@click"     vue/attributes-order
+  22:13  warning  Attribute ":color" should go before "@click"   vue/attributes-order
+  23:13  warning  Attribute "label" should go before "@click"    vue/attributes-order
+  24:13  warning  Attribute "size" should go before "@click"     vue/attributes-order
+  28:13  warning  Attribute ":color" should go before "@click"   vue/attributes-order
+  29:13  warning  Attribute "label" should go before "@click"    vue/attributes-order
+  30:13  warning  Attribute "size" should go before "@click"     vue/attributes-order
+  36:11  warning  Attribute ":icon" should go before "@click"    vue/attributes-order
+  37:11  warning  Attribute ":label" should go before "@click"   vue/attributes-order
+  38:11  warning  Attribute "outline" should go before "@click"  vue/attributes-order
+  39:11  warning  Attribute "size" should go before "@click"     vue/attributes-order
+
+C:\Users\MartijnvanHoutenRemk\OneDrive - Remka B.V\Documenten\Remcura\src\pages\inventory\MovementsPage.vue
+   16:14   warning  Attribute ":loading" should go before "@click"                                       vue/attributes-order
+   17:13   warning  Attribute "class" should go before "@click"                                          vue/attributes-order
+   26:13   warning  Attribute "unelevated" should go before "@click"                                     vue/attributes-order
+   27:13   warning  Attribute "no-caps" should go before "@click"                                        vue/attributes-order
+   28:13   warning  Attribute "class" should go before "@click"                                          vue/attributes-order
+   38:9    warning  Attribute "v-model" should go before ":preset"                                       vue/attributes-order
+   42:10   warning  Attribute ":loading" should go before "@clear"                                       vue/attributes-order
+   43:9    warning  Attribute "collapsible" should go before "@clear"                                    vue/attributes-order
+   44:9    warning  Attribute "class" should go before "@clear"                                          vue/attributes-order
+   78:11   warning  Attribute "v-model:pagination" should go before "row-key"                            vue/attributes-order
+   91:21   warning  Expected '#body-cell-movement_type' instead of 'v-slot:body-cell-movement_type'      vue/v-slot-style
+  104:21   warning  Expected '#body-cell-product' instead of 'v-slot:body-cell-product'                  vue/v-slot-style
+  118:21   warning  Expected '#body-cell-quantity_change' instead of 'v-slot:body-cell-quantity_change'  vue/v-slot-style
+  134:21   warning  Expected '#body-cell-location' instead of 'v-slot:body-cell-location'                vue/v-slot-style
+  141:21   warning  Expected '#body-cell-created_at' instead of 'v-slot:body-cell-created_at'            vue/v-slot-style
+  151:21   warning  Expected '#body-cell-notes' instead of 'v-slot:body-cell-notes'                      vue/v-slot-style
+  161:21   warning  Expected '#body-cell-actions' instead of 'v-slot:body-cell-actions'                  vue/v-slot-style
+  169:17   warning  Attribute ":title" should go before "@click"                                         vue/attributes-order
+  393:63   warning  Unexpected any. Specify a different type                                             @typescript-eslint/no-explicit-any
+  428:102  warning  Unexpected any. Specify a different type                                             @typescript-eslint/no-explicit-any
+  442:102  warning  Unexpected any. Specify a different type                                             @typescript-eslint/no-explicit-any
+  456:104  warning  Unexpected any. Specify a different type                                             @typescript-eslint/no-explicit-any
+  470:104  warning  Unexpected any. Specify a different type                                             @typescript-eslint/no-explicit-any
+
+C:\Users\MartijnvanHoutenRemk\OneDrive - Remka B.V\Documenten\Remcura\src\pages\platform\ApiDocsPage.vue
+  75:19  warning  Expected '#body-cell-method' instead of 'v-slot:body-cell-method'  vue/v-slot-style
+  87:19  warning  Expected '#body-cell-status' instead of 'v-slot:body-cell-status'  vue/v-slot-style
+
+C:\Users\MartijnvanHoutenRemk\OneDrive - Remka B.V\Documenten\Remcura\src\pages\platform\BackupPage.vue
+   24:11  warning  Attribute ":loading" should go before "@click"                       vue/attributes-order
+   88:19  warning  Expected '#body-cell-status' instead of 'v-slot:body-cell-status'    vue/v-slot-style
+  100:19  warning  Expected '#body-cell-actions' instead of 'v-slot:body-cell-actions'  vue/v-slot-style
+  204:35  warning  Unexpected any. Specify a different type                             @typescript-eslint/no-explicit-any
+  209:34  warning  Unexpected any. Specify a different type                             @typescript-eslint/no-explicit-any
+  214:33  warning  Unexpected any. Specify a different type                             @typescript-eslint/no-explicit-any
+
+C:\Users\MartijnvanHoutenRemk\OneDrive - Remka B.V\Documenten\Remcura\src\pages\platform\CreatePracticePage.vue
+  29:46  warning  Attribute "class" should go before "@submit"  vue/attributes-order
+
+C:\Users\MartijnvanHoutenRemk\OneDrive - Remka B.V\Documenten\Remcura\src\pages\platform\MonitoringPage.vue
+  80:19  warning  Expected '#body-cell-severity' instead of 'v-slot:body-cell-severity'  vue/v-slot-style
+  92:19  warning  Expected '#body-cell-status' instead of 'v-slot:body-cell-status'      vue/v-slot-style
+
+C:\Users\MartijnvanHoutenRemk\OneDrive - Remka B.V\Documenten\Remcura\src\pages\platform\PracticesPage.vue
+   39:19  warning  Expected '#body-cell-status' instead of 'v-slot:body-cell-status'    vue/v-slot-style
+   51:19  warning  Expected '#body-cell-actions' instead of 'v-slot:body-cell-actions'  vue/v-slot-style
+  131:35  warning  Unexpected any. Specify a different type                             @typescript-eslint/no-explicit-any
+  136:35  warning  Unexpected any. Specify a different type                             @typescript-eslint/no-explicit-any
+
+C:\Users\MartijnvanHoutenRemk\OneDrive - Remka B.V\Documenten\Remcura\src\pages\platform\SystemLogsPage.vue
+  41:19  warning  Expected '#body-cell-level' instead of 'v-slot:body-cell-level'  vue/v-slot-style
+
+C:\Users\MartijnvanHoutenRemk\OneDrive - Remka B.V\Documenten\Remcura\src\router\index.ts
+   22:22  warning  Unexpected function expression                                          prefer-arrow-callback
+  127:21  warning  'to' is defined but never used. Allowed unused args must match /^_/u    @typescript-eslint/no-unused-vars
+  127:25  warning  'from' is defined but never used. Allowed unused args must match /^_/u  @typescript-eslint/no-unused-vars
+
+C:\Users\MartijnvanHoutenRemk\OneDrive - Remka B.V\Documenten\Remcura\src\services\admin.ts
+    8:3   warning  'Practice' is defined but never used. Allowed unused vars must match /^_/u         @typescript-eslint/no-unused-vars
+   55:30  warning  Unexpected any. Specify a different type                                           @typescript-eslint/no-explicit-any
+   56:30  warning  Unexpected any. Specify a different type                                           @typescript-eslint/no-explicit-any
+   57:28  warning  Unexpected any. Specify a different type                                           @typescript-eslint/no-explicit-any
+  510:31  warning  Unexpected any. Specify a different type                                           @typescript-eslint/no-explicit-any
+  511:31  warning  Unexpected any. Specify a different type                                           @typescript-eslint/no-explicit-any
+  512:30  warning  Unexpected any. Specify a different type                                           @typescript-eslint/no-explicit-any
+  516:11  warning  'userId' is assigned a value but never used. Allowed unused vars must match /^_/u  @typescript-eslint/no-unused-vars
+
+C:\Users\MartijnvanHoutenRemk\OneDrive - Remka B.V\Documenten\Remcura\src\services\analytics.ts
+   32:32  warning  Unexpected any. Specify a different type                                     @typescript-eslint/no-explicit-any
+  502:60  warning  Unexpected any. Specify a different type                                     @typescript-eslint/no-explicit-any
+  520:53  warning  Unexpected any. Specify a different type                                     @typescript-eslint/no-explicit-any
+  539:5   warning  'startDate' is defined but never used. Allowed unused args must match /^_/u  @typescript-eslint/no-unused-vars
+  540:5   warning  'endDate' is defined but never used. Allowed unused args must match /^_/u    @typescript-eslint/no-unused-vars
+  541:14  warning  Unexpected any. Specify a different type                                     @typescript-eslint/no-explicit-any
+  611:14  warning  Unexpected any. Specify a different type                                     @typescript-eslint/no-explicit-any
+  649:14  warning  Unexpected any. Specify a different type                                     @typescript-eslint/no-explicit-any
+  667:44  warning  Unexpected any. Specify a different type                                     @typescript-eslint/no-explicit-any
+  685:14  warning  Unexpected any. Specify a different type                                     @typescript-eslint/no-explicit-any
+  753:5   warning  'startDate' is defined but never used. Allowed unused args must match /^_/u  @typescript-eslint/no-unused-vars
+  754:5   warning  'endDate' is defined but never used. Allowed unused args must match /^_/u    @typescript-eslint/no-unused-vars
+  755:14  warning  Unexpected any. Specify a different type                                     @typescript-eslint/no-explicit-any
+  774:42  warning  Unexpected any. Specify a different type                                     @typescript-eslint/no-explicit-any
+  793:5   warning  'daysAhead' is defined but never used. Allowed unused args must match /^_/u  @typescript-eslint/no-unused-vars
+  794:14  warning  Unexpected any. Specify a different type                                     @typescript-eslint/no-explicit-any
+  812:42  warning  Unexpected any. Specify a different type                                     @typescript-eslint/no-explicit-any
+  835:14  warning  Unexpected any. Specify a different type                                     @typescript-eslint/no-explicit-any
+  946:31  warning  Unexpected any. Specify a different type                                     @typescript-eslint/no-explicit-any
+
+C:\Users\MartijnvanHoutenRemk\OneDrive - Remka B.V\Documenten\Remcura\src\services\dashboard\platform-dashboard.ts
+   10:24  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  368:44  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  407:59  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  409:45  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  411:42  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  414:53  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  414:68  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  618:29  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+C:\Users\MartijnvanHoutenRemk\OneDrive - Remka B.V\Documenten\Remcura\src\services\dashboard\practice-dashboard.ts
+     5:36  warning  'RoleDashboardConfig' is defined but never used. Allowed unused vars must match /^_/u  @typescript-eslint/no-unused-vars
+    12:24  warning  Unexpected any. Specify a different type                                               @typescript-eslint/no-explicit-any
+   190:43  warning  Unexpected any. Specify a different type                                               @typescript-eslint/no-explicit-any
+   270:20  warning  Unexpected any. Specify a different type                                               @typescript-eslint/no-explicit-any
+   517:20  warning  Unexpected any. Specify a different type                                               @typescript-eslint/no-explicit-any
+   519:23  warning  Unexpected any. Specify a different type                                               @typescript-eslint/no-explicit-any
+   557:26  warning  Unexpected any. Specify a different type                                               @typescript-eslint/no-explicit-any
+   593:43  warning  Unexpected any. Specify a different type                                               @typescript-eslint/no-explicit-any
+   594:39  warning  Unexpected any. Specify a different type                                               @typescript-eslint/no-explicit-any
+   626:30  warning  Unexpected any. Specify a different type                                               @typescript-eslint/no-explicit-any
+   655:45  warning  Unexpected any. Specify a different type                                               @typescript-eslint/no-explicit-any
+   656:44  warning  Unexpected any. Specify a different type                                               @typescript-eslint/no-explicit-any
+   745:28  warning  Unexpected any. Specify a different type                                               @typescript-eslint/no-explicit-any
+   799:43  warning  Unexpected any. Specify a different type                                               @typescript-eslint/no-explicit-any
+   871:46  warning  Unexpected any. Specify a different type                                               @typescript-eslint/no-explicit-any
+   878:42  warning  Unexpected any. Specify a different type                                               @typescript-eslint/no-explicit-any
+   962:42  warning  Unexpected any. Specify a different type                                               @typescript-eslint/no-explicit-any
+   995:43  warning  Unexpected any. Specify a different type                                               @typescript-eslint/no-explicit-any
+  1047:52  warning  Unexpected any. Specify a different type                                               @typescript-eslint/no-explicit-any
+  1182:47  warning  Unexpected any. Specify a different type                                               @typescript-eslint/no-explicit-any
+  1183:53  warning  Unexpected any. Specify a different type                                               @typescript-eslint/no-explicit-any
+  1205:52  warning  Unexpected any. Specify a different type                                               @typescript-eslint/no-explicit-any
+  1270:29  warning  'practiceId' is defined but never used. Allowed unused args must match /^_/u           @typescript-eslint/no-unused-vars
+  1302:32  warning  'practiceId' is defined but never used. Allowed unused args must match /^_/u           @typescript-eslint/no-unused-vars
+
+C:\Users\MartijnvanHoutenRemk\OneDrive - Remka B.V\Documenten\Remcura\src\services\integration\inventoryOrderIntegration.ts
+  301:13  warning  'totalErrors' is assigned a value but never used. Allowed unused vars must match /^_/u  @typescript-eslint/no-unused-vars
+  322:18  warning  Unexpected any. Specify a different type                                                @typescript-eslint/no-explicit-any
+  323:20  warning  Unexpected any. Specify a different type                                                @typescript-eslint/no-explicit-any
+  324:25  warning  Unexpected any. Specify a different type                                                @typescript-eslint/no-explicit-any
+  325:19  warning  Unexpected any. Specify a different type                                                @typescript-eslint/no-explicit-any
+  326:24  warning  Unexpected any. Specify a different type                                                @typescript-eslint/no-explicit-any
+  327:23  warning  Unexpected any. Specify a different type                                                @typescript-eslint/no-explicit-any
+  367:62  warning  Unexpected any. Specify a different type                                                @typescript-eslint/no-explicit-any
+  387:67  warning  Unexpected any. Specify a different type                                                @typescript-eslint/no-explicit-any
+  406:66  warning  Unexpected any. Specify a different type                                                @typescript-eslint/no-explicit-any
+
+C:\Users\MartijnvanHoutenRemk\OneDrive - Remka B.V\Documenten\Remcura\src\services\inventory\automationService.ts
+  133:65  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  150:22  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+C:\Users\MartijnvanHoutenRemk\OneDrive - Remka B.V\Documenten\Remcura\src\services\magento\index.ts
+    4:3   warning  'ServiceErrorHandler' is defined but never used. Allowed unused vars must match /^_/u  @typescript-eslint/no-unused-vars
+  147:14  warning  Unexpected any. Specify a different type                                               @typescript-eslint/no-explicit-any
+  175:15  warning  'errorBody' is assigned a value but never used. Allowed unused vars must match /^_/u   @typescript-eslint/no-unused-vars
+
+C:\Users\MartijnvanHoutenRemk\OneDrive - Remka B.V\Documenten\Remcura\src\services\magicInvites.ts
+  354:32  warning  'inviteId' is defined but never used. Allowed unused args must match /^_/u  @typescript-eslint/no-unused-vars
+  367:31  warning  Unexpected any. Specify a different type                                    @typescript-eslint/no-explicit-any
+  399:60  warning  Unexpected any. Specify a different type                                    @typescript-eslint/no-explicit-any
+
+C:\Users\MartijnvanHoutenRemk\OneDrive - Remka B.V\Documenten\Remcura\src\services\monitoring.ts
+  101:14  warning  'eventName' is defined but never used. Allowed unused args must match /^_/u   @typescript-eslint/no-unused-vars
+  101:33  warning  'properties' is defined but never used. Allowed unused args must match /^_/u  @typescript-eslint/no-unused-vars
+  101:61  warning  Unexpected any. Specify a different type                                      @typescript-eslint/no-explicit-any
+  189:20  warning  'metric' is defined but never used. Allowed unused args must match /^_/u      @typescript-eslint/no-unused-vars
+  189:36  warning  'value' is defined but never used. Allowed unused args must match /^_/u       @typescript-eslint/no-unused-vars
+  189:51  warning  'unit' is defined but never used. Allowed unused args must match /^_/u        @typescript-eslint/no-unused-vars
+  233:29  warning  Unexpected any. Specify a different type                                      @typescript-eslint/no-explicit-any
+  253:37  warning  'config' is defined but never used. Allowed unused args must match /^_/u      @typescript-eslint/no-unused-vars
+
+C:\Users\MartijnvanHoutenRemk\OneDrive - Remka B.V\Documenten\Remcura\src\services\notifications.ts
+    5:3   warning  'PushToken' is defined but never used. Allowed unused vars must match /^_/u  @typescript-eslint/no-unused-vars
+  239:16  warning  Unexpected any. Specify a different type                                     @typescript-eslint/no-explicit-any
+  350:12  warning  Unexpected any. Specify a different type                                     @typescript-eslint/no-explicit-any
+  375:12  warning  Unexpected any. Specify a different type                                     @typescript-eslint/no-explicit-any
+
+C:\Users\MartijnvanHoutenRemk\OneDrive - Remka B.V\Documenten\Remcura\src\services\offline.ts
+    4:3   warning  'Bestellijst' is defined but never used. Allowed unused vars must match /^_/u   @typescript-eslint/no-unused-vars
+    7:3   warning  'ShoppingCart' is defined but never used. Allowed unused vars must match /^_/u  @typescript-eslint/no-unused-vars
+  182:11  warning  Unexpected any. Specify a different type                                        @typescript-eslint/no-explicit-any
+  477:58  warning  Unexpected any. Specify a different type                                        @typescript-eslint/no-explicit-any
+
+C:\Users\MartijnvanHoutenRemk\OneDrive - Remka B.V\Documenten\Remcura\src\services\offline\action-queue.ts
+    8:9   warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   50:11  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  299:57  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+C:\Users\MartijnvanHoutenRemk\OneDrive - Remka B.V\Documenten\Remcura\src\services\offline\index.ts
+    1:10  warning  'ref' is defined but never used. Allowed unused vars must match /^_/u                    @typescript-eslint/no-unused-vars
+    1:15  warning  'computed' is defined but never used. Allowed unused vars must match /^_/u               @typescript-eslint/no-unused-vars
+  100:11  warning  Unexpected any. Specify a different type                                                 @typescript-eslint/no-explicit-any
+  156:13  warning  'successCount' is assigned a value but never used. Allowed unused vars must match /^_/u  @typescript-eslint/no-unused-vars
+
+C:\Users\MartijnvanHoutenRemk\OneDrive - Remka B.V\Documenten\Remcura\src\services\offline\network-monitor.ts
+  97:13  warning  'response' is assigned a value but never used. Allowed unused vars must match /^_/u  @typescript-eslint/no-unused-vars
+
+C:\Users\MartijnvanHoutenRemk\OneDrive - Remka B.V\Documenten\Remcura\src\services\orderOrchestration\centralOrderService.ts
+  355:14  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  385:20  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+C:\Users\MartijnvanHoutenRemk\OneDrive - Remka B.V\Documenten\Remcura\src\services\orderProcessing.ts
+    5:3   warning  'OrderItem' is defined but never used. Allowed unused vars must match /^_/u           @typescript-eslint/no-unused-vars
+    7:3   warning  'ShoppingCart' is defined but never used. Allowed unused vars must match /^_/u        @typescript-eslint/no-unused-vars
+    8:3   warning  'Product' is defined but never used. Allowed unused vars must match /^_/u             @typescript-eslint/no-unused-vars
+   10:3   warning  'ExportFormat' is defined but never used. Allowed unused vars must match /^_/u        @typescript-eslint/no-unused-vars
+  411:11  warning  'emailBody' is assigned a value but never used. Allowed unused vars must match /^_/u  @typescript-eslint/no-unused-vars
+  492:26  warning  Unexpected any. Specify a different type                                              @typescript-eslint/no-explicit-any
+
+C:\Users\MartijnvanHoutenRemk\OneDrive - Remka B.V\Documenten\Remcura\src\services\permanentUsers.ts
+    5:3   warning  'DeviceToken' is defined but never used. Allowed unused vars must match /^_/u                                        @typescript-eslint/no-unused-vars
+    6:3   warning  'UserSession' is defined but never used. Allowed unused vars must match /^_/u                                        @typescript-eslint/no-unused-vars
+    7:3   warning  'MagicInvite' is defined but never used. Allowed unused vars must match /^_/u                                        @typescript-eslint/no-unused-vars
+   46:12  warning  Unexpected any. Specify a different type                                                                             @typescript-eslint/no-explicit-any
+  102:7   warning  Use "@ts-expect-error" instead of "@ts-ignore", as "@ts-ignore" will do nothing if the following line is error-free  @typescript-eslint/ban-ts-comment
+  113:14  warning  Unexpected any. Specify a different type                                                                             @typescript-eslint/no-explicit-any
+  197:7   warning  Use "@ts-expect-error" instead of "@ts-ignore", as "@ts-ignore" will do nothing if the following line is error-free  @typescript-eslint/ban-ts-comment
+  358:5   warning  Forbidden non-null assertion                                                                                         @typescript-eslint/no-non-null-assertion
+  359:5   warning  Forbidden non-null assertion                                                                                         @typescript-eslint/no-non-null-assertion
+  360:5   warning  Forbidden non-null assertion                                                                                         @typescript-eslint/no-non-null-assertion
+
+C:\Users\MartijnvanHoutenRemk\OneDrive - Remka B.V\Documenten\Remcura\src\services\permissions.ts
+  134:28  warning  Unexpected any. Specify a different type                                              @typescript-eslint/no-explicit-any
+  135:26  warning  Unexpected any. Specify a different type                                              @typescript-eslint/no-explicit-any
+  250:28  warning  Unexpected any. Specify a different type                                              @typescript-eslint/no-explicit-any
+  251:26  warning  Unexpected any. Specify a different type                                              @typescript-eslint/no-explicit-any
+  341:9   warning  'authStore' is assigned a value but never used. Allowed unused vars must match /^_/u  @typescript-eslint/no-unused-vars
+
+C:\Users\MartijnvanHoutenRemk\OneDrive - Remka B.V\Documenten\Remcura\src\services\stockMovements.ts
+   66:5  warning  'batchNumber' is defined but never used. Allowed unused args must match /^_/u  @typescript-eslint/no-unused-vars
+   94:5  warning  'batchNumber' is defined but never used. Allowed unused args must match /^_/u  @typescript-eslint/no-unused-vars
+  122:5  warning  'batchNumber' is defined but never used. Allowed unused args must match /^_/u  @typescript-eslint/no-unused-vars
+
+C:\Users\MartijnvanHoutenRemk\OneDrive - Remka B.V\Documenten\Remcura\src\services\supabase.ts
+   14:3   warning  'ProductWithItems' is defined but never used. Allowed unused vars must match /^_/u  @typescript-eslint/no-unused-vars
+  352:50  warning  Unexpected any. Specify a different type                                            @typescript-eslint/no-explicit-any
+  365:52  warning  Unexpected any. Specify a different type                                            @typescript-eslint/no-explicit-any
+
+C:\Users\MartijnvanHoutenRemk\OneDrive - Remka B.V\Documenten\Remcura\src\services\supplierAgnostic\multiSupplierOrderListService.ts
+    3:15  warning  'OrderListWithItems' is defined but never used. Allowed unused vars must match /^_/u  @typescript-eslint/no-unused-vars
+    4:15  warning  'SupplierOrder' is defined but never used. Allowed unused vars must match /^_/u       @typescript-eslint/no-unused-vars
+   96:21  warning  Unexpected any. Specify a different type                                              @typescript-eslint/no-explicit-any
+  192:21  warning  Unexpected any. Specify a different type                                              @typescript-eslint/no-explicit-any
+  272:21  warning  Unexpected any. Specify a different type                                              @typescript-eslint/no-explicit-any
+  328:21  warning  Unexpected any. Specify a different type                                              @typescript-eslint/no-explicit-any
+  404:21  warning  Unexpected any. Specify a different type                                              @typescript-eslint/no-explicit-any
+  550:21  warning  Unexpected any. Specify a different type                                              @typescript-eslint/no-explicit-any
+  623:21  warning  Unexpected any. Specify a different type                                              @typescript-eslint/no-explicit-any
+
+C:\Users\MartijnvanHoutenRemk\OneDrive - Remka B.V\Documenten\Remcura\src\services\supplierIntegration\apiService.ts
+   62:29  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  135:21  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  159:15  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  308:21  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  325:61  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  376:25  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  405:21  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  487:10  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  526:15  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  553:61  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  576:21  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+C:\Users\MartijnvanHoutenRemk\OneDrive - Remka B.V\Documenten\Remcura\src\services\supplierIntegration\ediService.ts
+  154:21  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  379:61  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  416:21  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  432:15  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+C:\Users\MartijnvanHoutenRemk\OneDrive - Remka B.V\Documenten\Remcura\src\services\supplierIntegration\pdfService.ts
+  116:21  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  140:15  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  141:15  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  463:15  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  464:15  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  593:21  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  606:15  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+C:\Users\MartijnvanHoutenRemk\OneDrive - Remka B.V\Documenten\Remcura\src\stores\auth.ts
+  299:25  warning  Unexpected any. Specify a different type                                                    @typescript-eslint/no-explicit-any
+  301:45  warning  Unexpected any. Specify a different type                                                    @typescript-eslint/no-explicit-any
+  451:9   warning  'setDemoAuthData' is assigned a value but never used. Allowed unused vars must match /^_/u  @typescript-eslint/no-unused-vars
+  491:30  warning  Unexpected any. Specify a different type                                                    @typescript-eslint/no-explicit-any
+  492:36  warning  Unexpected any. Specify a different type                                                    @typescript-eslint/no-explicit-any
+  531:29  warning  Unexpected any. Specify a different type                                                    @typescript-eslint/no-explicit-any
+  532:27  warning  Unexpected any. Specify a different type                                                    @typescript-eslint/no-explicit-any
+  591:30  warning  Unexpected any. Specify a different type                                                    @typescript-eslint/no-explicit-any
+  593:30  warning  Unexpected any. Specify a different type                                                    @typescript-eslint/no-explicit-any
+  594:30  warning  Unexpected any. Specify a different type                                                    @typescript-eslint/no-explicit-any
+
+C:\Users\MartijnvanHoutenRemk\OneDrive - Remka B.V\Documenten\Remcura\src\stores\batch.ts
+    5:8   warning  'ProductBatch' is defined but never used. Allowed unused vars must match /^_/u  @typescript-eslint/no-unused-vars
+  218:64  warning  Unexpected any. Specify a different type                                        @typescript-eslint/no-explicit-any
+  292:43  warning  Unexpected any. Specify a different type                                        @typescript-eslint/no-explicit-any
+
+C:\Users\MartijnvanHoutenRemk\OneDrive - Remka B.V\Documenten\Remcura\src\stores\counting.ts
+  110:49  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  147:48  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  366:43  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  411:46  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  548:36  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  601:46  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  692:65  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  694:18  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  731:45  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+C:\Users\MartijnvanHoutenRemk\OneDrive - Remka B.V\Documenten\Remcura\src\stores\inventory\inventory-alerts.ts
+   17:24  warning  Unexpected any. Specify a different type                                      @typescript-eslint/no-explicit-any
+   18:24  warning  Unexpected any. Specify a different type                                      @typescript-eslint/no-explicit-any
+  101:30  warning  'productId' is defined but never used. Allowed unused args must match /^_/u   @typescript-eslint/no-unused-vars
+  101:49  warning  'locationId' is defined but never used. Allowed unused args must match /^_/u  @typescript-eslint/no-unused-vars
+
+C:\Users\MartijnvanHoutenRemk\OneDrive - Remka B.V\Documenten\Remcura\src\stores\inventory\inventory-core.ts
+  1:15  warning  'computed' is defined but never used. Allowed unused vars must match /^_/u  @typescript-eslint/no-unused-vars
+
+C:\Users\MartijnvanHoutenRemk\OneDrive - Remka B.V\Documenten\Remcura\src\stores\inventory\inventory-movements.ts
+   18:3   warning  'fetchStockLevels' is defined but never used. Allowed unused args must match /^_/u  @typescript-eslint/no-unused-vars
+   57:41  warning  Unexpected any. Specify a different type                                            @typescript-eslint/no-explicit-any
+  279:33  warning  Unexpected any. Specify a different type                                            @typescript-eslint/no-explicit-any
+  280:52  warning  Unexpected any. Specify a different type                                            @typescript-eslint/no-explicit-any
+
+C:\Users\MartijnvanHoutenRemk\OneDrive - Remka B.V\Documenten\Remcura\src\stores\inventory\inventory-realtime.ts
+  12:32  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  13:32  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  18:25  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  19:25  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+C:\Users\MartijnvanHoutenRemk\OneDrive - Remka B.V\Documenten\Remcura\src\stores\notifications.ts
+   8:29  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  43:19  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+C:\Users\MartijnvanHoutenRemk\OneDrive - Remka B.V\Documenten\Remcura\src\stores\orderLists\orderLists-core.ts
+  8:3  warning  'OrderListItem' is defined but never used. Allowed unused vars must match /^_/u  @typescript-eslint/no-unused-vars
+
+C:\Users\MartijnvanHoutenRemk\OneDrive - Remka B.V\Documenten\Remcura\src\stores\orderLists\orderLists-integration.ts
+  131:5  warning  'orderListId' is defined but never used. Allowed unused args must match /^_/u  @typescript-eslint/no-unused-vars
+
+C:\Users\MartijnvanHoutenRemk\OneDrive - Remka B.V\Documenten\Remcura\src\stores\orderLists\orderLists-minmax.ts
+    5:15  warning  'OrderListWithItems' is defined but never used. Allowed unused vars must match /^_/u  @typescript-eslint/no-unused-vars
+  145:57  warning  'item' is defined but never used. Allowed unused args must match /^_/u                @typescript-eslint/no-unused-vars
+  307:9   warning  Forbidden non-null assertion                                                          @typescript-eslint/no-non-null-assertion
+  315:24  warning  Forbidden non-null assertion                                                          @typescript-eslint/no-non-null-assertion
+
+C:\Users\MartijnvanHoutenRemk\OneDrive - Remka B.V\Documenten\Remcura\src\stores\orderLists\orderLists-realtime.ts
+    6:15  warning  'ReorderSuggestion' is defined but never used. Allowed unused vars must match /^_/u               @typescript-eslint/no-unused-vars
+   14:33  warning  Unexpected any. Specify a different type                                                          @typescript-eslint/no-explicit-any
+   15:34  warning  Unexpected any. Specify a different type                                                          @typescript-eslint/no-explicit-any
+   16:37  warning  Unexpected any. Specify a different type                                                          @typescript-eslint/no-explicit-any
+   20:7   warning  'currentPracticeId' is never reassigned. Use 'const' instead                                      prefer-const
+   44:13  warning  'orderListItemsChannel' is assigned a value but never used. Allowed unused vars must match /^_/u  @typescript-eslint/no-unused-vars
+  157:10  warning  Unexpected any. Specify a different type                                                          @typescript-eslint/no-explicit-any
+  158:10  warning  Unexpected any. Specify a different type                                                          @typescript-eslint/no-explicit-any
+  204:10  warning  Unexpected any. Specify a different type                                                          @typescript-eslint/no-explicit-any
+  205:10  warning  Unexpected any. Specify a different type                                                          @typescript-eslint/no-explicit-any
+  266:10  warning  Unexpected any. Specify a different type                                                          @typescript-eslint/no-explicit-any
+  267:10  warning  Unexpected any. Specify a different type                                                          @typescript-eslint/no-explicit-any
+
+C:\Users\MartijnvanHoutenRemk\OneDrive - Remka B.V\Documenten\Remcura\src\stores\orderLists\orderLists-supplier-splitting.ts
+    1:15  warning  'computed' is defined but never used. Allowed unused vars must match /^_/u            @typescript-eslint/no-unused-vars
+    5:15  warning  'OrderListWithItems' is defined but never used. Allowed unused vars must match /^_/u  @typescript-eslint/no-unused-vars
+   54:19  warning  Unexpected any. Specify a different type                                              @typescript-eslint/no-explicit-any
+  103:21  warning  'suppliers' is assigned a value but never used. Allowed unused vars must match /^_/u  @typescript-eslint/no-unused-vars
+  206:31  warning  Forbidden non-null assertion                                                          @typescript-eslint/no-non-null-assertion
+
+C:\Users\MartijnvanHoutenRemk\OneDrive - Remka B.V\Documenten\Remcura\src\stores\products\index.ts
+  2:10  warning  'useAuthStore' is defined but never used. Allowed unused vars must match /^_/u  @typescript-eslint/no-unused-vars
+
+C:\Users\MartijnvanHoutenRemk\OneDrive - Remka B.V\Documenten\Remcura\src\stores\products\products-core.ts
+    4:10  warning  'productService' is defined but never used. Allowed unused vars must match /^_/u           @typescript-eslint/no-unused-vars
+   10:8   warning  'UserLoggedOutPayload' is defined but never used. Allowed unused vars must match /^_/u     @typescript-eslint/no-unused-vars
+   23:6   warning  'StockLevel' is defined but never used. Allowed unused vars must match /^_/u               @typescript-eslint/no-unused-vars
+  119:37  warning  Unexpected any. Specify a different type                                                   @typescript-eslint/no-explicit-any
+  147:37  warning  Unexpected any. Specify a different type                                                   @typescript-eslint/no-explicit-any
+  154:37  warning  Unexpected any. Specify a different type                                                   @typescript-eslint/no-explicit-any
+  238:5   warning  'hasMagentoData' is assigned a value but never used. Allowed unused vars must match /^_/u  @typescript-eslint/no-unused-vars
+  275:43  warning  Unexpected any. Specify a different type                                                   @typescript-eslint/no-explicit-any
+  347:66  warning  Unexpected any. Specify a different type                                                   @typescript-eslint/no-explicit-any
+  348:19  warning  Unexpected any. Specify a different type                                                   @typescript-eslint/no-explicit-any
+  351:34  warning  Unexpected any. Specify a different type                                                   @typescript-eslint/no-explicit-any
+  356:64  warning  Unexpected any. Specify a different type                                                   @typescript-eslint/no-explicit-any
+  382:43  warning  Unexpected any. Specify a different type                                                   @typescript-eslint/no-explicit-any
+  432:38  warning  Unexpected any. Specify a different type                                                   @typescript-eslint/no-explicit-any
+  433:42  warning  Unexpected any. Specify a different type                                                   @typescript-eslint/no-explicit-any
+  436:28  warning  Unexpected any. Specify a different type                                                   @typescript-eslint/no-explicit-any
+  495:41  warning  Unexpected any. Specify a different type                                                   @typescript-eslint/no-explicit-any
+  587:45  warning  Unexpected any. Specify a different type                                                   @typescript-eslint/no-explicit-any
+
+C:\Users\MartijnvanHoutenRemk\OneDrive - Remka B.V\Documenten\Remcura\src\types\analytics.ts
+  64:31  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  65:31  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+C:\Users\MartijnvanHoutenRemk\OneDrive - Remka B.V\Documenten\Remcura\src\types\events.ts
+  2:31  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  7:13  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+C:\Users\MartijnvanHoutenRemk\OneDrive - Remka B.V\Documenten\Remcura\src\types\inventory.ts
+  33:38  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+C:\Users\MartijnvanHoutenRemk\OneDrive - Remka B.V\Documenten\Remcura\src\types\logging.ts
+  10:20  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  11:11  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  33:36  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  39:13  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  41:28  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+C:\Users\MartijnvanHoutenRemk\OneDrive - Remka B.V\Documenten\Remcura\src\types\magento.ts
+   92:10  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  108:10  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+C:\Users\MartijnvanHoutenRemk\OneDrive - Remka B.V\Documenten\Remcura\src\types\notifications.ts
+  9:10  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+C:\Users\MartijnvanHoutenRemk\OneDrive - Remka B.V\Documenten\Remcura\src\types\offline.ts
+  14:9  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+C:\Users\MartijnvanHoutenRemk\OneDrive - Remka B.V\Documenten\Remcura\src\types\permissions.ts
+  23:31  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+C:\Users\MartijnvanHoutenRemk\OneDrive - Remka B.V\Documenten\Remcura\src\types\validation.ts
+  3:11  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+C:\Users\MartijnvanHoutenRemk\OneDrive - Remka B.V\Documenten\Remcura\src\utils\eventBus.ts
+    1:10  warning  'reactive' is defined but never used. Allowed unused vars must match /^_/u  @typescript-eslint/no-unused-vars
+   27:10  warning  Unexpected any. Specify a different type                                    @typescript-eslint/no-explicit-any
+   32:28  warning  Forbidden non-null assertion                                                @typescript-eslint/no-non-null-assertion
+   63:12  warning  Unexpected any. Specify a different type                                    @typescript-eslint/no-explicit-any
+   77:18  warning  Unexpected any. Specify a different type                                    @typescript-eslint/no-explicit-any
+  258:40  warning  Unexpected any. Specify a different type                                    @typescript-eslint/no-explicit-any
+
+C:\Users\MartijnvanHoutenRemk\OneDrive - Remka B.V\Documenten\Remcura\src\utils\i18n-service.ts
+  24:56  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+C:\Users\MartijnvanHoutenRemk\OneDrive - Remka B.V\Documenten\Remcura\src\utils\logger.ts
+   6:34  warning  'LogEntry' is defined but never used. Allowed unused vars must match /^_/u  @typescript-eslint/no-unused-vars
+  52:60  warning  Unexpected any. Specify a different type                                    @typescript-eslint/no-explicit-any
+
+C:\Users\MartijnvanHoutenRemk\OneDrive - Remka B.V\Documenten\Remcura\src\utils\service-error-handler.ts
+  114:13  warning  'message' is assigned a value but never used. Allowed unused vars must match /^_/u     @typescript-eslint/no-unused-vars
+  124:28  warning  Unexpected any. Specify a different type                                               @typescript-eslint/no-explicit-any
+  270:11  warning  'logContext' is assigned a value but never used. Allowed unused vars must match /^_/u  @typescript-eslint/no-unused-vars
+
+✖ 1488 problems (8 errors, 1480 warnings)
+  0 errors and 872 warnings potentially fixable with the `--fix` option.
+

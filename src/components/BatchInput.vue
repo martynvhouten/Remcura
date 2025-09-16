@@ -34,7 +34,7 @@
         :placeholder="$t('batch.enterBatchNumber')"
         outlined
         dense
-        :rules="[required]"
+        :rules="[requiredRule]"
         @blur="onBatchNumberChange"
       >
         <template #append>
@@ -56,7 +56,7 @@
         type="date"
         outlined
         dense
-        :rules="[required, validateExpiryDate]"
+        :rules="[requiredRule, validateExpiryDate]"
       />
 
       <!-- Quantity Input -->
@@ -68,7 +68,7 @@
         step="1"
         outlined
         dense
-        :rules="[required, validateQuantity]"
+        :rules="[requiredRule, validateQuantity]"
       >
         <template #append>
           <span class="text-caption">{{ selectedProduct?.unit || '' }}</span>
@@ -232,7 +232,7 @@
   });
 
   // Validation rules
-  const required = (val: string | number) =>
+  const requiredRule = (val: string | number) =>
     (!!val && val !== '') || t('validation.required');
 
   const validateExpiryDate = (val: string) => {
