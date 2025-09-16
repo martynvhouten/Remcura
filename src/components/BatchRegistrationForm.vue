@@ -296,7 +296,7 @@
     return true;
   };
 
-  const filterProducts = (val: string, update: Function) => {
+  const filterProducts = (val: string, update: (cb: () => void) => void) => {
     // Product filtering logic
     update(() => {
       productOptions.value = [];
