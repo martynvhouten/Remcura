@@ -213,7 +213,7 @@
 
       <q-card-section class="q-pt-none">
         <q-select
-          v-model="selectedProduct"
+          v-model="selectedProductId"
           :options="availableProducts"
           :label="$t('orderLists.selectProduct')"
           outlined
