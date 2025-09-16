@@ -302,7 +302,6 @@
   const props = withDefaults(defineProps<Props>(), {
     orderList: null,
     orderLists: () => [],
-    selectedProduct: null,
   });
 
   const emit = defineEmits<{
