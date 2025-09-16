@@ -335,7 +335,7 @@
 
   const orderListItems = ref<OrderListItem[]>([]);
   const showAddProductDialog = ref(false);
-  const selectedProduct = ref('');
+  const selectedProductId = ref('');
   const newItemQuantity = ref(1);
   const newItemNotes = ref('');
   const availableProducts = ref<ProductWithStock[]>([]);
@@ -398,7 +398,7 @@
       urgent_order: false,
     };
     orderListItems.value = [];
-    selectedProduct.value = '';
+    selectedProductId.value = '';
     newItemQuantity.value = 1;
     newItemNotes.value = '';
   };
@@ -452,9 +452,9 @@
   };
 
   const addProduct = () => {
-    if (!selectedProduct.value || !newItemQuantity.value) return;
+    if (!selectedProductId.value || !newItemQuantity.value) return;
 
-    const product = productsStore.getProductById(selectedProduct.value);
+    const product = productsStore.getProductById(selectedProductId.value);
     if (!product) return;
 
     const supplierProduct = product.supplier_products?.find(
@@ -488,7 +488,7 @@
 
   const cancelAddProduct = () => {
     showAddProductDialog.value = false;
-    selectedProduct.value = '';
+    selectedProductId.value = '';
     newItemQuantity.value = 1;
     newItemNotes.value = '';
   };
