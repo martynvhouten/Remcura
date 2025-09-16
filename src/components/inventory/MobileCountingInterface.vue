@@ -335,14 +335,14 @@
   const scanInterval = ref<number | null>(null);
 
   // Data
-  const products = ref<Product[]>([]);
+  const productsList = ref<Product[]>([]);
   const recentCounts = ref<CountEntry[]>([]);
 
   // Barcode Detection
   let barcodeDetector: any = null;
 
   // Computed
-  const totalProducts = computed(() => products.value.length);
+  const totalProducts = computed(() => productsList.value.length);
   const countedProducts = computed(() => recentCounts.value.length);
   const discrepancies = computed(
     () => recentCounts.value.filter(c => c.variance !== 0).length
@@ -536,13 +536,13 @@
   const handleBarcodeScan = async (barcode: string) => {
     try {
       // Find product by barcode
-      const foundProduct = products.value.find(
+      const foundProduct = productsList.value.find(
         p => p.barcode === barcode || p.gtin === barcode || p.sku === barcode
       );
 
       if (foundProduct) {
         // Set current product index
-        const productIndex = products.value.findIndex(
+        const productIndex = productsList.value.findIndex(
           p => p.id === foundProduct.id
         );
         if (productIndex !== -1) {
@@ -660,7 +660,7 @@
     }
 
     // Initialize products list
-    products.value = inventoryStore.stockLevels.map(s => ({
+    productsList.value = inventoryStore.stockLevels.map(s => ({
       id: s.product_id,
       name: (s as any).product?.name || 'Onbekend product',
       sku: (s as any).product?.sku || '',
