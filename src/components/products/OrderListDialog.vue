@@ -16,16 +16,18 @@
         <div class="orderlist-details-panel">
           <h3 class="panel-title">{{ $t('orderLists.details') }}</h3>
 
-          <q-form @submit="saveOrderList" class="orderlist-form">
+          <q-form class="q-gutter-md" @submit="onSubmit">
             <q-input
+              ref="nameInput"
               v-model="form.name"
               :label="$t('orderLists.name')"
               :rules="[
-                val => !!val || $t('orderLists.nameRequired'),
-                val => val.length >= 3 || $t('orderLists.nameMinLength'),
+                val => !!val || $t('validation.required'),
+                val =>
+                  val.length >= 3 || $t('validation.minLength', { min: 3 }),
               ]"
               outlined
-              ref="nameInput"
+              autofocus
             />
 
             <q-input
@@ -95,10 +97,10 @@
               :label="$t('orderLists.addProduct')"
               color="primary"
               icon="add"
-              @click="showAddProductDialog = true"
               :disable="!form.supplier_id"
               unelevated
               no-caps
+              @click="showAddProductDialog = true"
             />
           </div>
 
@@ -160,8 +162,8 @@
                     round
                     color="negative"
                     icon="delete"
-                    @click="removeItem(index)"
                     size="sm"
+                    @click="removeItem(index)"
                   />
                 </div>
               </div>
@@ -192,14 +194,14 @@
     </div>
 
     <template #actions>
-      <q-btn :label="$t('common.cancel')" flat @click="closeDialog" />
+      <q-btn flat :label="$t('common.cancel')" @click="closeDialog" />
       <q-btn
         :label="$t('common.save')"
         color="primary"
-        @click="saveOrderList"
         :loading="orderListsStore.saving"
         :disable="!isFormValid"
         unelevated
+        @click="saveOrderList"
       />
     </template>
   </BaseDialog>
@@ -227,7 +229,7 @@
           input-debounce="300"
           @filter="filterProducts"
         >
-          <template v-slot:option="scope">
+          <template #option="scope">
             <q-item v-bind="scope.itemProps">
               <q-item-section>
                 <q-item-label>{{ scope.opt.name }}</q-item-label>
@@ -262,12 +264,12 @@
       </q-card-section>
 
       <q-card-actions align="right">
-        <q-btn :label="$t('common.cancel')" flat @click="cancelAddProduct" />
+        <q-btn flat :label="$t('common.cancel')" @click="cancelAddProduct" />
         <q-btn
           :label="$t('common.add')"
           color="primary"
+          :disable="!selectedProductId || !newItemQuantity"
           @click="addProduct"
-          :disable="!selectedProduct || !newItemQuantity"
         />
       </q-card-actions>
     </q-card>
@@ -302,6 +304,7 @@
   const props = withDefaults(defineProps<Props>(), {
     orderList: null,
     orderLists: () => [],
+    selectedProduct: null,
   });
 
   const emit = defineEmits<{
@@ -436,7 +439,10 @@
     orderListItems.value.splice(index, 1);
   };
 
-  const filterProducts = (val: string, update: any) => {
+  const filterProducts = (
+    val: string,
+    update: (callback: () => void) => void
+  ) => {
     update(() => {
       if (val === '') {
         availableProducts.value = filteredProducts.value;
@@ -457,32 +463,24 @@
     const product = productsStore.getProductById(selectedProductId.value);
     if (!product) return;
 
-    const supplierProduct = product.supplier_products?.find(
-      sp => sp.supplier_id === form.value.supplier_id
+    const existingItem = orderListItems.value.find(
+      item => item.product_id === product.id
     );
-    if (!supplierProduct) return;
 
-    const newItem: OrderListItem = {
-      id: `temp_${Date.now()}`,
-      order_list_id: props.orderList?.id || '',
-      practice_id: authStore.clinicId || '',
-      product_id: product.id,
-      supplier_product_id: supplierProduct.id,
-      requested_quantity: newItemQuantity.value,
-      unit_price: supplierProduct.unit_price,
-      total_price: supplierProduct.unit_price * newItemQuantity.value,
-      currency: supplierProduct.currency,
-      suggestion_source: 'manual',
-      status: 'pending',
-      created_at: new Date().toISOString(),
-      updated_at: new Date().toISOString(),
-    };
-
-    if (newItemNotes.value) {
-      newItem.notes = newItemNotes.value;
+    if (existingItem) {
+      existingItem.requested_quantity += newItemQuantity.value;
+      existingItem.notes = newItemNotes.value;
+    } else {
+      orderListItems.value.push({
+        product_id: product.id,
+        product,
+        requested_quantity: newItemQuantity.value,
+        notes: newItemNotes.value,
+        status: 'pending',
+        id: `${product.id}-${Date.now()}`,
+      });
     }
 
-    orderListItems.value.push(newItem);
     cancelAddProduct();
   };
 

@@ -1,14 +1,12 @@
 // Logging and error handling types
 export type LogLevel = 'debug' | 'info' | 'warn' | 'error';
 
+export type LogPrimitive = string | number | boolean | null | undefined;
+
 export type LogData =
-  | string
-  | number
-  | boolean
-  | null
-  | undefined
-  | Record<string, any>
-  | Array<any>
+  | LogPrimitive
+  | Record<string, unknown>
+  | Array<unknown>
   | Error;
 
 export interface LogEntry {
@@ -21,24 +19,42 @@ export interface LogEntry {
 
 export type ErrorLike =
   | Error
-  | { message?: string; code?: string; status?: number }
-  | string
-  | unknown;
+  | {
+      message?: string;
+      code?: string;
+      status?: number;
+      statusCode?: number;
+      error?: {
+        message?: string;
+        code?: string;
+      };
+      response?: {
+        status?: number;
+        statusText?: string;
+        data?: {
+          message?: string;
+        };
+      };
+      details?: string;
+    }
+  | string;
 
 export interface ServiceErrorContext {
   service: string;
-  method: string;
-  user_id?: string;
-  practice_id?: string;
-  additional_data?: Record<string, any>;
+  operation: string;
+  userId?: string;
+  practiceId?: string;
+  metadata?: Record<string, unknown>;
 }
 
 export interface AppError {
-  code: string;
+  code?: string;
   message: string;
-  details?: any;
-  timestamp: Date;
-  context?: Record<string, any>;
+  details?: LogData;
+  timestamp?: Date;
+  context?: string;
+  metadata?: Record<string, unknown>;
+  originalError?: Error;
 }
 
 export enum ErrorCategory {

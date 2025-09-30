@@ -1,9 +1,26 @@
 import { ref, onUnmounted } from 'vue';
 import { realtimeService } from '@/boot/supabase';
-import { orderLogger } from '@/utils/logger';
+import { createLogger } from '@/utils/logger';
 import { createEventEmitter, StoreEvents } from '@/utils/eventBus';
 import type { OrderListWithItems } from '@/types/stores';
-import type { ReorderSuggestion } from './orderLists-minmax';
+import type {
+  RealtimePostgresChangesPayload,
+  RealtimePostgresInsertPayload,
+  RealtimePostgresUpdatePayload,
+  RealtimePostgresDeletePayload,
+} from '@supabase/supabase-js';
+import type { Tables } from '@/types';
+import type { RealtimeChannel } from '@supabase/supabase-js';
+
+const orderLoggerWithContext = createLogger('OrderListsRealtime');
+const infoLog = (message: string, data?: Record<string, unknown>): void =>
+  data
+    ? orderLoggerWithContext.structured(message, data)
+    : orderLoggerWithContext.info(message);
+const errorLog = (message: string, data?: Record<string, unknown>): void =>
+  data
+    ? orderLoggerWithContext.structured(message, data)
+    : orderLoggerWithContext.error(message);
 
 export function useOrderListsRealtime() {
   // Event emitter for store communication
@@ -11,134 +28,164 @@ export function useOrderListsRealtime() {
 
   // Real-time state
   const realtimeConnected = ref(false);
-  const orderListsChannel = ref<any>(null);
-  const stockLevelsChannel = ref<any>(null);
-  const supplierOrdersChannel = ref<any>(null);
+  const orderListsChannel = ref<RealtimeChannel | null>(null);
+  const orderListItemsChannel = ref<RealtimeChannel | null>(null);
+  const stockLevelsChannel = ref<RealtimeChannel | null>(null);
+  const supplierOrdersChannel = ref<RealtimeChannel | null>(null);
   const lastSyncAt = ref<Date | null>(null);
 
   // Configuration for external functions
-  let currentPracticeId = ref<string | null>(null);
+  const currentPracticeId = ref<string | null>(null);
   let refreshOrderLists: ((practiceId: string) => Promise<void>) | null = null;
   let refreshReorderSuggestions:
     | ((practiceId: string) => Promise<void>)
     | null = null;
 
+  type RealtimeEventType = 'INSERT' | 'UPDATE' | 'DELETE';
+  type OrderListItemRecord = {
+    id: string;
+    minimum_stock: number | null;
+    maximum_stock: number | null;
+    current_stock: number | null;
+  };
+  type StockLevelRecord = {
+    product_id: string;
+    location_id: string;
+    current_quantity: number;
+    minimum_quantity: number | null;
+  };
+  type SupplierOrderRecord = {
+    id: string;
+    status: string;
+  };
+
+  type OrderListPayload = RealtimePostgresChangesPayload<Tables<'order_lists'>>;
+  type OrderListItemPayload = RealtimePostgresChangesPayload<
+    Tables<'order_list_items'>
+  >;
+  type StockLevelPayload = RealtimePostgresChangesPayload<
+    Tables<'stock_levels'>
+  >;
+  type SupplierOrderPayload = RealtimePostgresChangesPayload<
+    Tables<'supplier_orders'>
+  >;
+
   // Real-time functions
   const startRealtimeSubscriptions = (practiceId: string) => {
-    orderLogger.info(
-      '🔄 Starting real-time subscriptions for practice:',
-      practiceId
-    );
+    infoLog('Realtime: starting subscriptions', { practiceId });
 
     try {
       // Subscribe to order lists changes
-      orderListsChannel.value = realtimeService.subscribe({
-        schema: 'public',
-        table: 'order_lists',
-        filter: `practice_id=eq.${practiceId}`,
-        event: '*',
-        callback: handleOrderListChange,
-      });
+      orderListsChannel.value = realtimeService.subscribeToOrderLists(
+        practiceId,
+        handleOrderListChange
+      );
 
-      // Subscribe to order list items changes
-      const orderListItemsChannel = realtimeService.subscribe({
-        schema: 'public',
-        table: 'order_list_items',
-        event: '*',
-        callback: handleOrderListItemChange,
-      });
+      orderListItemsChannel.value = realtimeService.subscribeToOrderListItems(
+        handleOrderListItemChange
+      );
 
-      // Subscribe to stock levels changes (affects reorder suggestions)
-      stockLevelsChannel.value = realtimeService.subscribe({
-        schema: 'public',
-        table: 'stock_levels',
-        filter: `practice_id=eq.${practiceId}`,
-        event: '*',
-        callback: handleStockLevelChange,
-      });
+      stockLevelsChannel.value = realtimeService.subscribeToStockLevels(
+        practiceId,
+        handleStockLevelChange
+      );
 
-      // Subscribe to supplier orders (for order tracking)
-      supplierOrdersChannel.value = realtimeService.subscribe({
-        schema: 'public',
-        table: 'supplier_orders',
-        event: '*',
-        callback: handleSupplierOrderChange,
-      });
+      supplierOrdersChannel.value = realtimeService.subscribeToSupplierOrders(
+        handleSupplierOrderChange
+      );
 
       realtimeConnected.value = true;
-      orderLogger.info('✅ Real-time subscriptions started successfully');
+      infoLog('Realtime: subscriptions started');
     } catch (error) {
-      orderLogger.error('❌ Failed to start real-time subscriptions:', error);
+      errorLog('❌ Failed to start real-time subscriptions', {
+        error: error instanceof Error ? error.message : String(error),
+      });
       realtimeConnected.value = false;
     }
   };
 
-  const stopRealtimeSubscriptions = () => {
-    orderLogger.info('🛑 Stopping real-time subscriptions');
+  const stopRealtimeSubscriptions = async () => {
+    infoLog('Realtime: stopping subscriptions');
 
     try {
       if (orderListsChannel.value) {
-        realtimeService.unsubscribe(orderListsChannel.value);
+        await realtimeService.unsubscribe(orderListsChannel.value);
         orderListsChannel.value = null;
       }
 
-      if (stockLevelsChannel.value) {
-        realtimeService.unsubscribe(stockLevelsChannel.value);
-        stockLevelsChannel.value = null;
-      }
-
-      if (supplierOrdersChannel.value) {
-        realtimeService.unsubscribe(supplierOrdersChannel.value);
-        supplierOrdersChannel.value = null;
+      for (const channelRef of [
+        orderListItemsChannel,
+        stockLevelsChannel,
+        supplierOrdersChannel,
+      ]) {
+        if (channelRef.value) {
+          await realtimeService.unsubscribe(channelRef.value);
+          channelRef.value = null;
+        }
       }
 
       realtimeConnected.value = false;
-      orderLogger.info('✅ Real-time subscriptions stopped');
+      infoLog('Realtime: subscriptions stopped');
     } catch (error) {
-      orderLogger.error('❌ Error stopping real-time subscriptions:', error);
+      errorLog('Error stopping real-time subscriptions', {
+        error: error instanceof Error ? error.message : String(error),
+      });
     }
   };
 
   // Event handlers
-  const handleOrderListChange = async (payload: {
-    eventType: string;
-    new: OrderListWithItems;
-    old: OrderListWithItems;
-  }) => {
-    orderLogger.info(
-      '📡 Order list real-time update:',
-      payload.eventType,
-      payload.new?.name
-    );
+  const handleOrderListChange = async (payload: OrderListPayload) => {
+    const { eventType } = payload;
+    const newRow = payload.new as Tables<'order_lists'> | null;
+    const oldRow = payload.old as Tables<'order_lists'> | null;
+
+    infoLog('Realtime: order list update', {
+      eventType,
+      name: newRow?.name,
+    });
 
     const practiceId = currentPracticeId.value;
     if (!practiceId) return;
 
     try {
-      switch (payload.eventType) {
+      switch (eventType) {
         case 'INSERT':
-          orderLogger.info('📝 New order list created:', payload.new.name);
-          await eventEmitter.emit(StoreEvents.ORDER_LIST_CREATED, {
-            orderList: payload.new,
-            timestamp: new Date().toISOString(),
-          });
+          if (newRow) {
+            infoLog('Realtime: order list created', {
+              name: newRow.name,
+            });
+            await eventEmitter.emit(StoreEvents.ORDER_CREATED, {
+              orderList: { id: newRow.id } as OrderListWithItems,
+              timestamp: new Date().toISOString(),
+            });
+          }
           break;
 
         case 'UPDATE':
-          orderLogger.info('📝 Order list updated:', payload.new.name);
-          await eventEmitter.emit(StoreEvents.ORDER_LIST_UPDATED, {
-            orderList: payload.new,
-            oldOrderList: payload.old,
-            timestamp: new Date().toISOString(),
-          });
+          if (newRow) {
+            infoLog('Realtime: order list updated', {
+              name: newRow.name,
+            });
+            await eventEmitter.emit(StoreEvents.ORDER_UPDATED, {
+              orderList: { id: newRow.id } as OrderListWithItems,
+              oldOrderList: oldRow
+                ? ({ id: oldRow.id } as OrderListWithItems)
+                : null,
+              timestamp: new Date().toISOString(),
+            });
+          }
           break;
 
         case 'DELETE':
-          orderLogger.info('🗑️ Order list deleted:', payload.old.name);
-          await eventEmitter.emit(StoreEvents.ORDER_LIST_DELETED, {
-            orderListId: payload.old.id,
-            timestamp: new Date().toISOString(),
-          });
+          if (oldRow) {
+            infoLog('Realtime: order list deleted', {
+              name: oldRow.name,
+            });
+            await eventEmitter.emit(StoreEvents.ORDER_DELETED, {
+              orderListId: oldRow.id,
+              timestamp: new Date().toISOString(),
+            });
+          }
           break;
       }
 
@@ -146,18 +193,27 @@ export function useOrderListsRealtime() {
       if (refreshOrderLists) {
         await refreshOrderLists(practiceId);
       }
+      await eventEmitter.emit(StoreEvents.DATA_REFRESH_COMPLETED, {
+        scope: 'order_lists',
+        practiceId,
+        timestamp: new Date().toISOString(),
+      });
       lastSyncAt.value = new Date();
     } catch (error) {
-      orderLogger.error('❌ Error handling order list change:', error);
+      errorLog('Error handling order list change', {
+        error: error instanceof Error ? error.message : String(error),
+      });
     }
   };
 
-  const handleOrderListItemChange = async (payload: {
-    eventType: string;
-    new: any;
-    old: any;
-  }) => {
-    orderLogger.info('📡 Order list item real-time update:', payload.eventType);
+  const handleOrderListItemChange = async (payload: OrderListItemPayload) => {
+    const { eventType } = payload;
+    const newRow = payload.new as Tables<'order_list_items'> | null;
+    const oldRow = payload.old as Tables<'order_list_items'> | null;
+
+    infoLog('Realtime: order list item update', {
+      eventType,
+    });
 
     const practiceId = currentPracticeId.value;
     if (!practiceId) return;
@@ -167,23 +223,25 @@ export function useOrderListsRealtime() {
       // 1. Refresh the affected order list
       // 2. Potentially update reorder suggestions
 
-      if (payload.eventType === 'UPDATE' && payload.new && payload.old) {
+      if (eventType === 'UPDATE' && newRow && oldRow) {
         // Check if min/max values changed
         const minMaxChanged =
-          payload.new.minimum_stock !== payload.old.minimum_stock ||
-          payload.new.maximum_stock !== payload.old.maximum_stock ||
-          payload.new.current_stock !== payload.old.current_stock;
+          newRow.minimum_stock !== oldRow.minimum_stock ||
+          newRow.maximum_stock !== oldRow.maximum_stock ||
+          newRow.current_stock !== oldRow.current_stock;
 
         if (minMaxChanged) {
-          orderLogger.info('📊 Min/max values changed, refreshing suggestions');
+          infoLog('Realtime: inventory thresholds updated', {
+            itemId: newRow.id,
+          });
           if (refreshReorderSuggestions) {
             await refreshReorderSuggestions(practiceId);
           }
 
-          await eventEmitter.emit(StoreEvents.ORDER_SUGGESTIONS_UPDATED, {
+          await eventEmitter.emit(StoreEvents.DATA_REFRESH_REQUESTED, {
+            scope: 'reorder_suggestions',
             practiceId,
-            itemId: payload.new.id,
-            changeType: 'min_max_updated',
+            itemId: newRow.id,
             timestamp: new Date().toISOString(),
           });
         }
@@ -195,47 +253,55 @@ export function useOrderListsRealtime() {
       }
       lastSyncAt.value = new Date();
     } catch (error) {
-      orderLogger.error('❌ Error handling order list item change:', error);
+      errorLog('Error handling order list item change', {
+        error: error instanceof Error ? error.message : String(error),
+      });
     }
   };
 
-  const handleStockLevelChange = async (payload: {
-    eventType: string;
-    new: any;
-    old: any;
-  }) => {
-    orderLogger.info('📡 Stock level real-time update:', payload.eventType);
+  const handleStockLevelChange = async (payload: StockLevelPayload) => {
+    const { eventType } = payload;
+    const newRow = payload.new as Tables<'stock_levels'> | null;
+    const oldRow = payload.old as Tables<'stock_levels'> | null;
+
+    infoLog('Realtime: stock level update', {
+      eventType,
+    });
 
     const practiceId = currentPracticeId.value;
     if (!practiceId) return;
 
     try {
-      if (payload.eventType === 'UPDATE' && payload.new && payload.old) {
+      if (eventType === 'UPDATE' && newRow && oldRow) {
         const quantityChanged =
-          payload.new.current_quantity !== payload.old.current_quantity;
+          newRow.current_quantity !== oldRow.current_quantity;
 
         if (quantityChanged) {
-          orderLogger.info('📦 Stock quantity changed, updating suggestions');
+          infoLog('Realtime: stock quantity changed', {
+            productId: newRow.product_id,
+            locationId: newRow.location_id,
+          });
 
           // Emit stock level updated event
-          await eventEmitter.emit(StoreEvents.STOCK_LEVEL_UPDATED, {
-            productId: payload.new.product_id,
-            locationId: payload.new.location_id,
-            oldQuantity: payload.old.current_quantity,
-            newQuantity: payload.new.current_quantity,
+          await eventEmitter.emit(StoreEvents.DATA_REFRESH_REQUESTED, {
+            scope: 'stock_levels',
+            productId: newRow.product_id,
+            locationId: newRow.location_id,
+            changeType: 'quantity_change',
             timestamp: new Date().toISOString(),
           });
 
           // Check if this triggers low stock alert
-          const minQuantity = payload.new.minimum_quantity || 0;
+          const minQuantity = newRow.minimum_quantity ?? 0;
           if (
-            payload.new.current_quantity <= minQuantity &&
-            payload.old.current_quantity > minQuantity
+            newRow.current_quantity <= minQuantity &&
+            oldRow.current_quantity > minQuantity
           ) {
-            await eventEmitter.emit(StoreEvents.LOW_STOCK_ALERT, {
-              productId: payload.new.product_id,
-              locationId: payload.new.location_id,
-              currentQuantity: payload.new.current_quantity,
+            await eventEmitter.emit(StoreEvents.DATA_REFRESH_REQUESTED, {
+              scope: 'low_stock_alert',
+              productId: newRow.product_id,
+              locationId: newRow.location_id,
+              currentQuantity: newRow.current_quantity,
               minimumQuantity: minQuantity,
               timestamp: new Date().toISOString(),
             });
@@ -246,9 +312,10 @@ export function useOrderListsRealtime() {
             await refreshReorderSuggestions(practiceId);
           }
 
-          await eventEmitter.emit(StoreEvents.ORDER_SUGGESTIONS_UPDATED, {
+          await eventEmitter.emit(StoreEvents.DATA_REFRESH_COMPLETED, {
+            scope: 'order_suggestions',
             practiceId,
-            itemId: payload.new.product_id,
+            itemId: newRow.product_id,
             changeType: 'stock_updated',
             timestamp: new Date().toISOString(),
           });
@@ -257,48 +324,64 @@ export function useOrderListsRealtime() {
 
       lastSyncAt.value = new Date();
     } catch (error) {
-      orderLogger.error('❌ Error handling stock level change:', error);
+      errorLog('Error handling stock level change', {
+        error: error instanceof Error ? error.message : String(error),
+      });
     }
   };
 
-  const handleSupplierOrderChange = async (payload: {
-    eventType: string;
-    new: any;
-    old: any;
-  }) => {
-    orderLogger.info('📡 Supplier order real-time update:', payload.eventType);
+  const handleSupplierOrderChange = async (payload: SupplierOrderPayload) => {
+    const { eventType } = payload;
+    const newRow = payload.new as Tables<'supplier_orders'> | null;
+    const oldRow = payload.old as Tables<'supplier_orders'> | null;
+
+    infoLog('Realtime: supplier order update', {
+      eventType,
+    });
 
     try {
-      if (payload.eventType === 'UPDATE' && payload.new && payload.old) {
-        const statusChanged = payload.new.status !== payload.old.status;
+      if (eventType === 'UPDATE' && newRow && oldRow) {
+        const statusChanged = newRow.status !== oldRow.status;
 
         if (statusChanged) {
-          orderLogger.info(
-            `📬 Supplier order status changed: ${payload.old.status} → ${payload.new.status}`
-          );
+          infoLog('Realtime: supplier order status changed', {
+            orderId: newRow.id,
+            from: oldRow.status,
+            to: newRow.status,
+          });
 
-          await eventEmitter.emit(StoreEvents.ORDER_STATUS_CHANGED, {
-            orderId: payload.new.id,
-            supplierOrderId: payload.new.id,
-            oldStatus: payload.old.status,
-            newStatus: payload.new.status,
+          await eventEmitter.emit(StoreEvents.DATA_REFRESH_REQUESTED, {
+            scope: 'supplier_orders',
+            orderId: newRow.id,
+            oldStatus: oldRow.status,
+            newStatus: newRow.status,
             timestamp: new Date().toISOString(),
           });
 
-          // If order is delivered, we might want to update stock levels
-          if (payload.new.status === 'delivered') {
-            orderLogger.info(
-              '📦 Order delivered, stock levels may need updating'
-            );
+          if (newRow.status === 'delivered') {
+            infoLog('Realtime: supplier order delivered', {
+              orderId: newRow.id,
+            });
 
             const practiceId = currentPracticeId.value;
             if (practiceId) {
-              // Small delay to allow database triggers to process
               setTimeout(async () => {
-                if (refreshReorderSuggestions) {
-                  await refreshReorderSuggestions(practiceId);
+                try {
+                  if (refreshReorderSuggestions) {
+                    await refreshReorderSuggestions(practiceId);
+                  }
+                  if (refreshOrderLists) {
+                    await refreshOrderLists(practiceId);
+                  }
+                } catch (refreshError) {
+                  errorLog('Error during post-delivery refresh', {
+                    error:
+                      refreshError instanceof Error
+                        ? refreshError.message
+                        : String(refreshError),
+                  });
                 }
-              }, 2000);
+              }, 1000);
             }
           }
         }
@@ -306,21 +389,21 @@ export function useOrderListsRealtime() {
 
       lastSyncAt.value = new Date();
     } catch (error) {
-      orderLogger.error('❌ Error handling supplier order change:', error);
+      errorLog('Error handling supplier order change', {
+        error: error instanceof Error ? error.message : String(error),
+      });
     }
   };
 
   // Periodic sync function (backup for real-time)
-  const periodicSync = ref<NodeJS.Timeout | null>(null);
+  const periodicSync = ref<ReturnType<typeof setInterval> | null>(null);
 
   const startPeriodicSync = (practiceId: string, intervalMs = 60000) => {
     stopPeriodicSync();
 
     periodicSync.value = setInterval(async () => {
       if (!realtimeConnected.value) {
-        orderLogger.info(
-          '🔄 Periodic sync: real-time disconnected, syncing data'
-        );
+        infoLog('🔄 Periodic sync: real-time disconnected, syncing data');
         try {
           const promises = [];
           if (refreshOrderLists) {
@@ -332,19 +415,21 @@ export function useOrderListsRealtime() {
           await Promise.all(promises);
           lastSyncAt.value = new Date();
         } catch (error) {
-          orderLogger.error('❌ Periodic sync failed:', error);
+          errorLog('Periodic sync failed', {
+            error: error instanceof Error ? error.message : String(error),
+          });
         }
       }
     }, intervalMs);
 
-    orderLogger.info(`⏰ Started periodic sync every ${intervalMs}ms`);
+    infoLog(`⏰ Started periodic sync every ${intervalMs}ms`);
   };
 
   const stopPeriodicSync = () => {
     if (periodicSync.value) {
       clearInterval(periodicSync.value);
       periodicSync.value = null;
-      orderLogger.info('⏰ Stopped periodic sync');
+      infoLog('⏰ Stopped periodic sync');
     }
   };
 
@@ -367,7 +452,7 @@ export function useOrderListsRealtime() {
 
       if (timeSinceLastSync > maxSyncAge) {
         connectionHealth.value = 'warning';
-        orderLogger.warn(
+        infoLog(
           '⚠️ Real-time connection health warning: no sync in 5+ minutes'
         );
       } else {
@@ -381,7 +466,7 @@ export function useOrderListsRealtime() {
 
   // Cleanup
   onUnmounted(() => {
-    stopRealtimeSubscriptions();
+    void stopRealtimeSubscriptions();
     stopPeriodicSync();
     clearInterval(healthCheckInterval);
   });
@@ -394,7 +479,7 @@ export function useOrderListsRealtime() {
     enablePeriodicSync?: boolean;
     syncIntervalMs?: number;
   }) => {
-    orderLogger.info('🚀 Setting up real-time order lists system');
+    infoLog('🚀 Setting up real-time order lists system');
 
     // Configure external functions
     currentPracticeId.value = config.practiceId;
@@ -409,11 +494,11 @@ export function useOrderListsRealtime() {
       startPeriodicSync(config.practiceId, config.syncIntervalMs);
     }
 
-    orderLogger.info('✅ Real-time order lists system configured');
+    infoLog('✅ Real-time order lists system configured');
   };
 
   const teardownRealtime = () => {
-    orderLogger.info('🛑 Tearing down real-time order lists system');
+    infoLog('🛑 Tearing down real-time order lists system');
 
     stopRealtimeSubscriptions();
     stopPeriodicSync();
@@ -423,7 +508,7 @@ export function useOrderListsRealtime() {
     refreshOrderLists = null;
     refreshReorderSuggestions = null;
 
-    orderLogger.info('✅ Real-time order lists system torn down');
+    infoLog('✅ Real-time order lists system torn down');
   };
 
   return {

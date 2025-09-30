@@ -1,11 +1,15 @@
 import { defineStore } from 'pinia';
 import { ref, computed } from 'vue';
-import { supabase } from 'src/boot/supabase';
+import { supabase } from '@/boot/supabase';
 import { useAuthStore } from './auth';
+import type { Database } from '@/types';
 
 export const useNotificationStore = defineStore('notifications', () => {
+  type NotificationRecord =
+    Database['public']['Tables']['notifications']['Row'];
+
   // State
-  const notifications = ref<any[]>([]);
+  const notifications = ref<NotificationRecord[]>([]);
   const loading = ref(false);
   const error = ref<string | null>(null);
 
@@ -39,9 +43,11 @@ export const useNotificationStore = defineStore('notifications', () => {
         throw fetchError;
       }
 
-      notifications.value = data || [];
-    } catch (err: any) {
-      error.value = err.message || 'Failed to load notifications';
+      notifications.value = data ?? [];
+    } catch (err: unknown) {
+      const message =
+        err instanceof Error ? err.message : 'Failed to load notifications';
+      error.value = message;
       console.error('Error loading notifications:', err);
     } finally {
       loading.value = false;

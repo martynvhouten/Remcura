@@ -46,6 +46,7 @@
 <script setup lang="ts">
   import { computed } from 'vue';
   import { useI18n } from 'vue-i18n';
+  import { useSlots } from 'vue';
 
   // Types
   export interface BaseDashboardWidgetProps {
@@ -59,12 +60,36 @@
     cardClass?: string;
   }
 
+  interface WidgetMetric {
+    label: string;
+    value: string | number;
+    trend?: 'up' | 'down' | 'flat';
+  }
+
+  interface WidgetAction {
+    label: string;
+    icon?: string;
+    handler: () => void;
+  }
+
+  interface WidgetDataset {
+    label: string;
+    value: number;
+  }
+
   // Props
   const props = withDefaults(defineProps<BaseDashboardWidgetProps>(), {
-    title: undefined,
     loading: false,
-    hideHeader: false,
+    title: undefined,
+    subtitle: undefined,
+    icon: undefined,
+    iconColor: 'primary',
+    iconVariant: 'default',
+    padding: 'md',
     cardClass: '',
+    headerClass: '',
+    contentClass: '',
+    actionsClass: '',
   });
 
   // Composables
@@ -86,43 +111,33 @@
   });
 
   // Define slots for better TypeScript support
-  defineSlots<{
-    /** Main widget content */
-    default(): any;
-    /** Actions section in the header (buttons, menus, etc.) */
-    actions(): any;
-    /** Optional error state content */
-    error(): any;
-    /** Optional empty state content */
-    empty(): any;
-  }>();
+  const slots = useSlots() as {
+    default?: (props?: Record<string, unknown>) => unknown;
+    actions?: (props?: Record<string, unknown>) => unknown;
+    error?: (props?: Record<string, unknown>) => unknown;
+    empty?: (props?: Record<string, unknown>) => unknown;
+  };
 </script>
 
 <style lang="scss" scoped>
   .base-dashboard-widget {
     // CSS Variables for theming
-    --widget-background: var(--surface, #ffffff);
-    --widget-border: var(--border-color, rgba(0, 0, 0, 0.08));
-    --widget-shadow: var(
-      --shadow-md,
-      0 4px 6px -1px rgba(0, 0, 0, 0.1),
-      0 2px 4px -1px rgba(0, 0, 0, 0.06)
-    );
-    --widget-text-primary: var(--text-primary, #1f2937);
-    --widget-text-muted: var(--text-muted, #6b7280);
+    --widget-background: var(--surface);
+    --widget-border: var(--border-primary);
+    --widget-shadow: var(--shadow-md);
+    --widget-text-primary: var(--text-primary);
+    --widget-text-muted: var(--text-secondary);
 
     // Base styling
     background: var(--widget-background);
     border: 1px solid var(--widget-border);
     box-shadow: var(--widget-shadow);
-    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    transition: var(--transition-base);
 
     // Interactive states: keep card in place
     &:hover {
       transform: none;
-      box-shadow:
-        0 10px 15px -3px rgba(0, 0, 0, 0.1),
-        0 4px 6px -2px rgba(0, 0, 0, 0.05);
+      box-shadow: var(--shadow-lg);
     }
 
     // Loading state

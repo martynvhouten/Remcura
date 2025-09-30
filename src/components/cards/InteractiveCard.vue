@@ -25,9 +25,13 @@
           </div>
 
           <!-- Title and Subtitle -->
-          <div v-if="title || subtitle" class="card-text-content">
-            <h3 v-if="title" class="card-title" :id="titleId">{{ title }}</h3>
-            <p v-if="subtitle" class="card-subtitle">{{ subtitle }}</p>
+          <div v-if="title || subtitle" class="interactive-card__title">
+            <h3 v-if="title" :id="titleId" class="interactive-card__heading">
+              {{ title }}
+            </h3>
+            <p v-if="subtitle" class="interactive-card__subtitle">
+              {{ subtitle }}
+            </p>
           </div>
 
           <!-- Custom header content -->
@@ -99,10 +103,20 @@
   }
 
   const props = withDefaults(defineProps<Props>(), {
+    title: undefined,
+    subtitle: undefined,
+    icon: undefined,
+    iconColor: 'primary',
     iconVariant: 'default',
     padding: 'md',
-    role: 'button',
+    disabled: false,
+    loading: false,
     showClickIndicator: false,
+    role: 'article',
+    cardClass: '',
+    headerClass: '',
+    contentClass: '',
+    actionsClass: '',
   });
 
   const emit = defineEmits<{
@@ -179,7 +193,7 @@
 <style scoped lang="scss">
   .interactive-card {
     border-radius: 12px;
-    background: var(--card-background, #ffffff);
+    background: var(--surface);
     border: 1px solid var(--card-border, rgba(0, 0, 0, 0.08));
     box-shadow: var(
       --card-shadow,

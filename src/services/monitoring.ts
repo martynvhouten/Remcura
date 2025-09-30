@@ -3,6 +3,27 @@
  * Placeholder for production monitoring tools like Sentry, LogRocket, etc.
  */
 
+import type { Router } from 'vue-router';
+import { logger } from '@/utils/logger';
+
+type StructuredLogger = ReturnType<typeof logger.createContext>;
+
+const createStructuredLogger = (context: string) => {
+  const base = logger.createContext(context);
+  return {
+    info: (message: string, data?: Record<string, unknown>) =>
+      data ? base.structured(message, data) : base.info(message),
+    warn: (message: string, data?: Record<string, unknown>) =>
+      data ? base.structured(message, data) : base.warn(message),
+    error: (message: string, data?: Record<string, unknown>) =>
+      data ? base.structured(message, data) : base.error(message),
+  } satisfies StructuredLogger & {
+    info: (message: string, data?: Record<string, unknown>) => void;
+    warn: (message: string, data?: Record<string, unknown>) => void;
+    error: (message: string, data?: Record<string, unknown>) => void;
+  };
+};
+
 export interface MonitoringConfig {
   dsn?: string;
   environment: 'development' | 'staging' | 'production';
@@ -18,60 +39,51 @@ export interface ErrorContext {
   sessionId?: string;
 }
 
+interface TrackingProperties {
+  [key: string]: string | number | boolean | undefined;
+}
+
 class MonitoringService {
   private config: MonitoringConfig | null = null;
   private isInitialized = false;
   private router: Router | null = null;
 
-  /**
-   * Initialize monitoring service
-   */
   async initialize(config: MonitoringConfig, router?: Router): Promise<void> {
     this.config = config;
-    this.router = router;
+    this.router = router ?? null;
 
-    // TODO: Initialize monitoring service based on environment
     if (config.environment === 'production') {
-      // Initialize Sentry
       await this.initializeSentry(config);
-
-      // Example: Initialize LogRocket
-      // await this.initializeLogRocket(config)
-
-      // Example: Initialize custom analytics
-      // await this.initializeCustomAnalytics(config)
     }
 
     this.isInitialized = true;
   }
 
-  /**
-   * Track application errors
-   */
   captureError(error: Error, context?: ErrorContext): void {
     if (!this.isInitialized || !this.config) {
+      // eslint-disable-next-line no-console
       console.error('Monitoring service not initialized', error);
       return;
     }
 
-    // Always log to console in development
     if (this.config.environment !== 'production') {
+      // eslint-disable-next-line no-console
       console.error('Captured error:', error, context);
     }
 
-    // Send to Sentry in production
     if (this.config.environment === 'production') {
-      this.sendToSentry(error, context);
+      void this.sendToSentry(error, context);
     }
   }
 
-  /**
-   * Send error to Sentry
-   */
   private async sendToSentry(
     error: Error,
     context?: ErrorContext
   ): Promise<void> {
+    if (!this.config) {
+      return;
+    }
+
     try {
       const Sentry = await import('@sentry/vue');
 
@@ -80,51 +92,51 @@ class MonitoringService {
           scope.setUser({ id: context.userId });
         }
 
-        scope.setTag('environment', this.config?.environment || 'unknown');
+        scope.setTag('environment', this.config?.environment ?? 'unknown');
         scope.setContext('error_context', {
-          url: context?.url || window.location.href,
-          userAgent: context?.userAgent || navigator.userAgent,
-          timestamp: context?.timestamp || new Date().toISOString(),
+          url:
+            context?.url ??
+            (typeof window !== 'undefined' ? window.location.href : undefined),
+          userAgent:
+            context?.userAgent ??
+            (typeof navigator !== 'undefined'
+              ? navigator.userAgent
+              : undefined),
+          timestamp: context?.timestamp ?? new Date().toISOString(),
           sessionId: context?.sessionId,
         });
 
         Sentry.captureException(error);
       });
     } catch (sentryError) {
+      // eslint-disable-next-line no-console
       console.error('Failed to send error to Sentry:', sentryError);
     }
   }
 
-  /**
-   * Track custom events/metrics
-   */
-  trackEvent(eventName: string, properties?: Record<string, any>): void {
+  trackEvent(eventName: string, properties?: TrackingProperties): void {
     if (!this.isInitialized || !this.config) {
       return;
     }
 
-    // TODO: Send to analytics service
-    // Example:
-    // analytics.track(eventName, properties)
+    if (this.config.environment !== 'production') {
+      // eslint-disable-next-line no-console
+      console.debug('Tracking event:', eventName, properties);
+    }
+
+    // Hook for production analytics services
   }
 
-  /**
-   * Set user context for error tracking
-   */
   setUserContext(user: { id: string; email?: string; role?: string }): void {
     if (!this.isInitialized) {
       return;
     }
 
-    // Update Sentry user context in production
     if (this.config?.environment === 'production') {
-      this.setSentryUser(user);
+      void this.setSentryUser(user);
     }
   }
 
-  /**
-   * Set Sentry user context
-   */
   private async setSentryUser(user: {
     id: string;
     email?: string;
@@ -133,22 +145,23 @@ class MonitoringService {
     try {
       const Sentry = await import('@sentry/vue');
 
-      // Only include defined properties
       const sentryUser: { id: string; email?: string; role?: string } = {
         id: user.id,
       };
-      if (user.email) sentryUser.email = user.email;
-      if (user.role) sentryUser.role = user.role;
+      if (user.email) {
+        sentryUser.email = user.email;
+      }
+      if (user.role) {
+        sentryUser.role = user.role;
+      }
 
       Sentry.setUser(sentryUser);
     } catch (error) {
+      // eslint-disable-next-line no-console
       console.error('Failed to set Sentry user:', error);
     }
   }
 
-  /**
-   * Add custom breadcrumb for debugging
-   */
   addBreadcrumb(
     message: string,
     category?: string,
@@ -159,13 +172,10 @@ class MonitoringService {
     }
 
     if (this.config?.environment === 'production') {
-      this.addSentryBreadcrumb(message, category, level);
+      void this.addSentryBreadcrumb(message, category, level);
     }
   }
 
-  /**
-   * Add Sentry breadcrumb
-   */
   private async addSentryBreadcrumb(
     message: string,
     category?: string,
@@ -175,107 +185,99 @@ class MonitoringService {
       const Sentry = await import('@sentry/vue');
       Sentry.addBreadcrumb({
         message,
-        category: category || 'custom',
-        level: level || 'info',
+        category: category ?? 'custom',
+        level: level ?? 'info',
       });
     } catch (error) {
+      // eslint-disable-next-line no-console
       console.error('Failed to add Sentry breadcrumb:', error);
     }
   }
 
-  /**
-   * Track performance metrics
-   */
   trackPerformance(metric: string, value: number, unit?: string): void {
     if (!this.isInitialized) {
       return;
     }
 
-    // TODO: Send performance data
-    // Example:
-    // analytics.track('performance', { metric, value, unit })
+    if (this.config?.environment !== 'production') {
+      // eslint-disable-next-line no-console
+      console.debug('Performance metric:', { metric, value, unit });
+    }
   }
 
-  // Private methods for service initialization
-
   private async initializeSentry(config: MonitoringConfig): Promise<void> {
-    if (!config.dsn && config.environment === 'production') {
+    if (!config.dsn) {
+      // eslint-disable-next-line no-console
       console.warn('Sentry DSN not provided for production environment');
       return;
     }
 
-    // Dynamically import Sentry to avoid bundling in development
-    if (config.environment === 'production' && config.dsn) {
+    try {
+      const Sentry = await import('@sentry/vue');
+
+      const integrations: unknown[] = [];
+
       try {
-        const Sentry = await import('@sentry/vue');
-
-        // Create integrations array
-        const integrations: Integration[] = [];
-
-        // Add browser tracing if available
-        try {
-          const { browserTracingIntegration } = await import('@sentry/vue');
-          integrations.push(
-            browserTracingIntegration({
-              router: this.router,
-            })
-          );
-        } catch (tracingError) {
-          console.warn('Browser tracing not available:', tracingError);
-        }
-
-        Sentry.init({
-          dsn: config.dsn,
-          environment: config.environment,
-          release: config.version,
-          integrations,
-          tracesSampleRate: config.environment === 'production' ? 0.1 : 1.0,
-          beforeSend(event: any) {
-            // Filter out development-related errors
-            if (config.environment !== 'production') {
-              return event;
-            }
-
-            // Filter out specific errors in production
-            if (event.exception?.values?.[0]?.value?.includes('Non-Error')) {
-              return null;
-            }
-
-            return event;
-          },
-        });
-      } catch (error) {
-        console.error('Failed to initialize Sentry:', error);
+        const { browserTracingIntegration } = await import('@sentry/vue');
+        integrations.push(
+          browserTracingIntegration({
+            router: this.router ?? undefined,
+          })
+        );
+      } catch (tracingError) {
+        // eslint-disable-next-line no-console
+        console.warn('Browser tracing not available:', tracingError);
       }
-    }
-  }
 
-  private async initializeLogRocket(config: MonitoringConfig): Promise<void> {
-    // TODO: Implement LogRocket initialization
-    // import LogRocket from 'logrocket'
-    //
-    // LogRocket.init('your-app-id', {
-    //   release: config.version,
-    //   console: {
-    //     shouldAggregateConsoleErrors: true,
-    //   },
-    // })
+      Sentry.init({
+        dsn: config.dsn,
+        environment: config.environment,
+        release: config.version,
+        integrations,
+        tracesSampleRate: config.environment === 'production' ? 0.1 : 1.0,
+        beforeSend(event) {
+          if (config.environment !== 'production') {
+            return event;
+          }
+
+          const exception = event?.exception?.values?.[0]?.value ?? '';
+          if (
+            typeof exception === 'string' &&
+            exception.includes('Non-Error')
+          ) {
+            return null;
+          }
+
+          return event;
+        },
+      });
+    } catch (error) {
+      // eslint-disable-next-line no-console
+      console.error('Failed to initialize Sentry:', error);
+    }
   }
 }
 
-// Export singleton instance
 export const monitoringService = new MonitoringService();
 
-// Helper function to initialize monitoring in main.ts
 export async function initializeMonitoring(router?: Router): Promise<void> {
   const config: MonitoringConfig = {
     environment: import.meta.env.PROD ? 'production' : 'development',
-    version: '1.0.0', // TODO: Get from package.json
-    // Only include dsn if it's defined
-    ...(import.meta.env.VITE_SENTRY_DSN && {
-      dsn: import.meta.env.VITE_SENTRY_DSN,
-    }),
+    version: '1.0.0',
+    ...(import.meta.env.VITE_SENTRY_DSN
+      ? { dsn: import.meta.env.VITE_SENTRY_DSN }
+      : {}),
   };
 
   await monitoringService.initialize(config, router);
 }
+
+export const captureStructuredError = (
+  error: Error,
+  metadata: Record<string, unknown> = {}
+): void => {
+  monitoringService.captureError(error, {
+    timestamp: new Date().toISOString(),
+    ...metadata,
+  });
+};

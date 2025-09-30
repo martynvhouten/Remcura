@@ -3,55 +3,104 @@
     <template #header>
       <PageTitle
         title="Design System Style Guide"
-        subtitle="Complete design system for the Remcura application"
-        icon="style"
+        subtitle="Single source of truth for Remcura UI system"
+        icon="palette"
       />
     </template>
 
     <div class="style-guide">
+      <!-- Token Inspector -->
+      <div class="style-section">
+        <h2 class="section-title">🎛️ Live Token Inspector</h2>
+        <p class="section-description">
+          Experiment with design tokens in real-time. Changes reflect instantly
+          across all components.
+        </p>
+        <TokenInspector />
+      </div>
+
       <!-- Colors Section -->
       <div class="style-section">
-        <h2 class="section-title">🎨 {{ $t('settings.colorsSection') }}</h2>
+        <h2 class="section-title">🎨 Color System</h2>
+        <p class="section-description">
+          Our color system is built on CSS custom properties that automatically
+          adapt to light and dark modes.
+        </p>
 
         <div class="color-showcase">
-          <!-- Primary Colors -->
+          <!-- Brand Colors -->
           <div class="color-group">
-            <h4>Primary Colors</h4>
+            <h4>Brand Colors</h4>
             <div class="color-row">
-              <div class="color-card" style="background: var(--q-primary)">
+              <div class="color-card" style="background: var(--brand-primary)">
                 <div class="color-value">Primary</div>
-                <div class="color-hex">#3B82F6</div>
+                <div class="color-var">--brand-primary</div>
               </div>
-              <div class="color-card" style="background: var(--q-secondary)">
+              <div
+                class="color-card"
+                style="background: var(--brand-secondary)"
+              >
                 <div class="color-value">Secondary</div>
-                <div class="color-hex">#64748B</div>
+                <div class="color-var">--brand-secondary</div>
               </div>
-              <div class="color-card" style="background: var(--q-accent)">
+              <div class="color-card" style="background: var(--brand-accent)">
                 <div class="color-value">Accent</div>
-                <div class="color-hex">#8B5CF6</div>
+                <div class="color-var">--brand-accent</div>
               </div>
             </div>
           </div>
 
-          <!-- Status Colors -->
+          <!-- Semantic Colors -->
           <div class="color-group">
-            <h4>Status Colors</h4>
+            <h4>Semantic Colors</h4>
             <div class="color-row">
-              <div class="color-card" style="background: var(--q-positive)">
-                <div class="color-value">Positive</div>
-                <div class="color-hex">#22C55E</div>
+              <div class="color-card" style="background: var(--brand-success)">
+                <div class="color-value">Success</div>
+                <div class="color-var">--brand-success</div>
               </div>
-              <div class="color-card" style="background: var(--q-negative)">
-                <div class="color-value">Negative</div>
-                <div class="color-hex">#EF4444</div>
+              <div class="color-card" style="background: var(--brand-danger)">
+                <div class="color-value">Danger</div>
+                <div class="color-var">--brand-danger</div>
               </div>
-              <div class="color-card" style="background: var(--q-warning)">
+              <div class="color-card" style="background: var(--brand-warning)">
                 <div class="color-value">Warning</div>
-                <div class="color-hex">#F59E0B</div>
+                <div class="color-var">--brand-warning</div>
               </div>
-              <div class="color-card" style="background: var(--q-info)">
+              <div class="color-card" style="background: var(--brand-info)">
                 <div class="color-value">Info</div>
-                <div class="color-hex">#0EA5E9</div>
+                <div class="color-var">--brand-info</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Neutral Palette -->
+          <div class="color-group">
+            <h4>Neutral Palette</h4>
+            <div class="color-row">
+              <div
+                class="color-card"
+                style="background: var(--neutral-50); color: var(--neutral-900)"
+              >
+                <div class="color-value">Neutral 50</div>
+                <div class="color-var">--neutral-50</div>
+              </div>
+              <div
+                class="color-card"
+                style="
+                  background: var(--neutral-200);
+                  color: var(--neutral-900);
+                "
+              >
+                <div class="color-value">Neutral 200</div>
+                <div class="color-var">--neutral-200</div>
+              </div>
+              <div class="color-card" style="background: var(--neutral-500)">
+                <div class="color-value">Neutral 500</div>
+                <div class="color-var">--neutral-500</div>
+              </div>
+              <div class="color-card" style="background: var(--neutral-800)">
+                <div class="color-value">Neutral 800</div>
+                <div class="color-var">--neutral-800</div>
               </div>
             </div>
           </div>
@@ -60,61 +109,91 @@
 
       <!-- Typography Section -->
       <div class="style-section">
-        <h2 class="section-title">📝 {{ $t('settings.typographySection') }}</h2>
+        <h2 class="section-title">📝 Typography System</h2>
+        <p class="section-description">
+          Typography scale using CSS custom properties with consistent font
+          weights and line heights.
+        </p>
 
         <div class="typography-showcase">
           <div class="text-example">
-            <h1 class="text-h1">Heading 1 - Display Large</h1>
-            <div class="text-meta">36px, Bold, Line Height 1.2</div>
+            <h1 class="text-h1">Heading 1 - Page Title</h1>
+            <div class="text-meta">
+              var(--text-4xl), var(--font-weight-black), var(--leading-tight)
+            </div>
           </div>
 
           <div class="text-example">
-            <h2 class="text-h2">Heading 2 - Display Medium</h2>
-            <div class="text-meta">28px, Semibold, Line Height 1.25</div>
+            <h2 class="text-h2">Heading 2 - Section Title</h2>
+            <div class="text-meta">
+              var(--text-3xl), var(--font-weight-extrabold),
+              var(--leading-tight)
+            </div>
           </div>
 
           <div class="text-example">
-            <h3 class="text-h3">Heading 3 - Display Small</h3>
-            <div class="text-meta">24px, Semibold, Line Height 1.3</div>
+            <h3 class="text-h3">Heading 3 - Subsection</h3>
+            <div class="text-meta">
+              var(--text-2xl), var(--font-weight-bold), var(--leading-tight)
+            </div>
           </div>
 
           <div class="text-example">
-            <h4 class="text-h4">Heading 4 - Title Large</h4>
-            <div class="text-meta">20px, Semibold, Line Height 1.4</div>
+            <h4 class="text-h4">Heading 4 - Card Title</h4>
+            <div class="text-meta">
+              var(--text-xl), var(--font-weight-bold), var(--leading-normal)
+            </div>
           </div>
 
           <div class="text-example">
-            <h5 class="text-h5">Heading 5 - Title Medium</h5>
-            <div class="text-meta">18px, Medium, Line Height 1.4</div>
+            <h5 class="text-h5">Heading 5 - Small Header</h5>
+            <div class="text-meta">
+              var(--text-lg), var(--font-weight-semibold), var(--leading-normal)
+            </div>
           </div>
 
           <div class="text-example">
-            <h6 class="text-h6">Heading 6 - Title Small</h6>
-            <div class="text-meta">16px, Medium, Line Height 1.5</div>
+            <h6 class="text-h6">Heading 6 - Label</h6>
+            <div class="text-meta">
+              var(--text-base), var(--font-weight-semibold),
+              var(--leading-normal)
+            </div>
           </div>
 
           <div class="text-example">
-            <p class="text-body1">Body 1 - Primary text for most content</p>
-            <div class="text-meta">16px, Regular, Line Height 1.6</div>
-          </div>
-
-          <div class="text-example">
-            <p class="text-body2">Body 2 - Secondary text for descriptions</p>
-            <div class="text-meta">14px, Regular, Line Height 1.5</div>
-          </div>
-
-          <div class="text-example">
-            <p class="text-caption">
-              Caption - Small text for labels and metadata
+            <p class="text-body">
+              Body text - Primary content text with good readability
             </p>
-            <div class="text-meta">12px, Regular, Line Height 1.4</div>
+            <div class="text-meta">
+              var(--text-base), var(--font-weight-normal), var(--leading-normal)
+            </div>
+          </div>
+
+          <div class="text-example">
+            <p class="text-sm">
+              Small text - Secondary descriptions and metadata
+            </p>
+            <div class="text-meta">
+              var(--text-sm), var(--font-weight-normal), var(--leading-normal)
+            </div>
+          </div>
+
+          <div class="text-example">
+            <p class="text-xs">Extra small - Captions and fine print</p>
+            <div class="text-meta">
+              var(--text-xs), var(--font-weight-normal), var(--leading-relaxed)
+            </div>
           </div>
         </div>
       </div>
 
       <!-- Button System -->
       <div class="style-section">
-        <h2 class="section-title">🔘 {{ $t('settings.buttonsSection') }}</h2>
+        <h2 class="section-title">🔘 Button System</h2>
+        <p class="section-description">
+          Consistent button styling using the useButtons composable with proper
+          states and accessibility.
+        </p>
 
         <div class="button-showcase">
           <div class="button-group">
@@ -122,27 +201,24 @@
             <div class="button-row">
               <q-btn color="primary" label="Primary" />
               <q-btn color="primary" icon="add" label="With Icon" />
-              <q-btn color="primary" icon="download" />
+              <q-btn color="primary" icon="download" round />
               <q-btn color="primary" label="Loading" loading />
+              <q-btn color="primary" label="Disabled" disable />
             </div>
           </div>
 
           <div class="button-group">
-            <h4>Secondary Buttons</h4>
+            <h4>Button Variants</h4>
             <div class="button-row">
+              <q-btn unelevated color="primary" label="Unelevated" />
               <q-btn outline color="primary" label="Outline" />
               <q-btn flat color="primary" label="Flat" />
-              <q-btn
-                unelevated
-                color="grey-3"
-                text-color="grey-8"
-                label="Neutral"
-              />
+              <q-btn push color="primary" label="Push" />
             </div>
           </div>
 
           <div class="button-group">
-            <h4>Status Buttons</h4>
+            <h4>Semantic Colors</h4>
             <div class="button-row">
               <q-btn color="positive" label="Success" icon="check" />
               <q-btn color="negative" label="Danger" icon="warning" />
@@ -154,69 +230,384 @@
           <div class="button-group">
             <h4>Button Sizes</h4>
             <div class="button-row items-end">
-              <q-btn size="xs" color="primary" label="Extra Small" />
+              <q-btn size="xs" color="primary" label="XS" />
               <q-btn size="sm" color="primary" label="Small" />
               <q-btn size="md" color="primary" label="Medium" />
               <q-btn size="lg" color="primary" label="Large" />
             </div>
           </div>
+
+          <div class="button-group">
+            <h4>Interactive States</h4>
+            <div class="button-row">
+              <q-btn color="primary" label="Normal" />
+              <q-btn color="primary" label="Hover" class="hover-demo" />
+              <q-btn color="primary" label="Focus" class="focus-demo" />
+              <q-btn color="primary" label="Active" class="active-demo" />
+            </div>
+          </div>
         </div>
       </div>
 
-      <!-- NEW Card Design System -->
+      <!-- Form Controls -->
+      <div class="style-section">
+        <h2 class="section-title">📝 Form Controls</h2>
+        <p class="section-description">
+          Unified form styling with consistent heights, focus states, and
+          validation.
+        </p>
+
+        <div class="form-showcase">
+          <div class="form-group">
+            <h4>Input Fields</h4>
+            <div class="form-row">
+              <q-input
+                outlined
+                v-model="sampleText"
+                label="Standard Input"
+                placeholder="Enter text..."
+                style="flex: 1"
+              />
+              <q-input
+                outlined
+                v-model="sampleEmail"
+                type="email"
+                label="Email Input"
+                placeholder="user@example.com"
+                style="flex: 1"
+              />
+            </div>
+          </div>
+
+          <div class="form-group">
+            <h4>Select Fields</h4>
+            <div class="form-row">
+              <q-select
+                outlined
+                v-model="sampleSelect"
+                :options="selectOptions"
+                label="Single Select"
+                style="flex: 1"
+              />
+              <q-select
+                outlined
+                v-model="sampleMultiple"
+                :options="selectOptions"
+                multiple
+                label="Multiple Select"
+                style="flex: 1"
+              />
+            </div>
+          </div>
+
+          <div class="form-group">
+            <h4>Form States</h4>
+            <div class="form-row">
+              <q-input
+                outlined
+                v-model="sampleError"
+                label="Error State"
+                error
+                error-message="This field is required"
+                style="flex: 1"
+              />
+              <q-input
+                outlined
+                v-model="sampleDisabled"
+                label="Disabled State"
+                disable
+                style="flex: 1"
+              />
+            </div>
+          </div>
+
+          <div class="form-group">
+            <h4>Other Controls</h4>
+            <div class="form-controls">
+              <q-checkbox v-model="sampleCheck" label="Checkbox option" />
+              <q-radio
+                v-model="sampleRadio"
+                val="option1"
+                label="Radio option 1"
+              />
+              <q-radio
+                v-model="sampleRadio"
+                val="option2"
+                label="Radio option 2"
+              />
+              <q-toggle v-model="sampleToggle" label="Toggle switch" />
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Dialog System -->
+      <div class="style-section">
+        <h2 class="section-title">💬 Dialog System</h2>
+        <p class="section-description">
+          BaseDialog and FormDialog components with proper focus management and
+          accessibility.
+        </p>
+
+        <div class="dialog-showcase">
+          <div class="dialog-group">
+            <h4>Dialog Types</h4>
+            <div class="button-row">
+              <q-btn
+                color="primary"
+                label="Info Dialog"
+                @click="showInfoDialog = true"
+              />
+              <q-btn
+                color="warning"
+                label="Confirm Dialog"
+                @click="showConfirmDialog = true"
+              />
+              <q-btn
+                color="positive"
+                label="Form Dialog"
+                @click="showFormDialog = true"
+              />
+              <q-btn
+                color="negative"
+                label="Destructive Dialog"
+                @click="showDestructiveDialog = true"
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Table System -->
+      <div class="style-section">
+        <h2 class="section-title">📊 Table System</h2>
+        <p class="section-description">
+          Unified table styling with loading states, empty states, and
+          responsive design.
+        </p>
+
+        <div class="table-showcase">
+          <div class="table-demo">
+            <q-table
+              :rows="sampleTableData"
+              :columns="sampleTableColumns"
+              row-key="id"
+              :loading="tableLoading"
+              :pagination="{ rowsPerPage: 5 }"
+              class="medical-table"
+            >
+              <template v-slot:top>
+                <div class="table-header">
+                  <h4>Sample Data Table</h4>
+                  <div class="table-actions">
+                    <q-btn
+                      flat
+                      icon="refresh"
+                      @click="refreshTable"
+                      :loading="tableLoading"
+                    />
+                    <q-btn color="primary" icon="add" label="Add Item" />
+                  </div>
+                </div>
+              </template>
+
+              <template v-slot:body-cell-status="props">
+                <q-td :props="props">
+                  <q-chip
+                    :color="getStatusColor(props.value)"
+                    text-color="white"
+                    :label="props.value"
+                    size="sm"
+                  />
+                </q-td>
+              </template>
+
+              <template v-slot:body-cell-actions="props">
+                <q-td :props="props">
+                  <q-btn flat icon="edit" size="sm" />
+                  <q-btn flat icon="delete" size="sm" color="negative" />
+                </q-td>
+              </template>
+            </q-table>
+          </div>
+        </div>
+      </div>
+
+      <!-- Alert System -->
+      <div class="style-section">
+        <h2 class="section-title">🚨 Alert & Toast System</h2>
+        <p class="section-description">
+          Notification system with proper ARIA live regions and semantic colors.
+        </p>
+
+        <div class="alert-showcase">
+          <div class="alert-group">
+            <h4>Alert Types</h4>
+            <div class="alert-examples">
+              <q-banner class="alert-info" rounded>
+                <template v-slot:avatar>
+                  <q-icon name="info" />
+                </template>
+                <strong>Information:</strong> This is an informational message
+                with important details.
+                <template v-slot:action>
+                  <q-btn flat label="Dismiss" />
+                </template>
+              </q-banner>
+
+              <q-banner class="alert-success" rounded>
+                <template v-slot:avatar>
+                  <q-icon name="check_circle" />
+                </template>
+                <strong>Success:</strong> Operation completed successfully!
+                <template v-slot:action>
+                  <q-btn flat label="View Details" />
+                </template>
+              </q-banner>
+
+              <q-banner class="alert-warning" rounded>
+                <template v-slot:avatar>
+                  <q-icon name="warning" />
+                </template>
+                <strong>Warning:</strong> Please review the following items
+                before proceeding.
+                <template v-slot:action>
+                  <q-btn flat label="Review" />
+                </template>
+              </q-banner>
+
+              <q-banner class="alert-error" rounded>
+                <template v-slot:avatar>
+                  <q-icon name="error" />
+                </template>
+                <strong>Error:</strong> An error occurred while processing your
+                request.
+                <template v-slot:action>
+                  <q-btn flat label="Retry" />
+                </template>
+              </q-banner>
+            </div>
+          </div>
+
+          <div class="toast-group">
+            <h4>Toast Notifications</h4>
+            <div class="button-row">
+              <q-btn
+                color="info"
+                label="Show Info Toast"
+                @click="showToast('info')"
+              />
+              <q-btn
+                color="positive"
+                label="Show Success Toast"
+                @click="showToast('positive')"
+              />
+              <q-btn
+                color="warning"
+                label="Show Warning Toast"
+                @click="showToast('warning')"
+              />
+              <q-btn
+                color="negative"
+                label="Show Error Toast"
+                @click="showToast('negative')"
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Loading & Empty States -->
+      <div class="style-section">
+        <h2 class="section-title">⏳ Loading & Empty States</h2>
+        <p class="section-description">
+          Consistent loading indicators and empty state patterns.
+        </p>
+
+        <div class="states-showcase">
+          <div class="state-group">
+            <h4>Loading States</h4>
+            <div class="state-examples">
+              <div class="state-card">
+                <h5>Skeleton Loading</h5>
+                <div class="skeleton-demo">
+                  <q-skeleton type="text" width="60%" />
+                  <q-skeleton type="text" width="80%" />
+                  <q-skeleton type="text" width="40%" />
+                </div>
+              </div>
+
+              <div class="state-card">
+                <h5>Spinner Loading</h5>
+                <div class="spinner-demo">
+                  <q-spinner-dots size="40px" color="primary" />
+                  <p>Loading data...</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="state-group">
+            <h4>Empty States</h4>
+            <div class="state-examples">
+              <div class="state-card empty-state">
+                <q-icon name="inbox" size="48px" color="grey-5" />
+                <h5>No items found</h5>
+                <p>There are no items to display at this time.</p>
+                <q-btn color="primary" label="Add Item" />
+              </div>
+
+              <div class="state-card empty-state">
+                <q-icon name="search_off" size="48px" color="grey-5" />
+                <h5>No search results</h5>
+                <p>Try adjusting your search criteria.</p>
+                <q-btn flat color="primary" label="Clear Filters" />
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Card Design System -->
       <CardStyleGuide />
 
       <!-- Shadows System -->
       <div class="style-section">
-        <h2 class="section-title">🌟 {{ $t('settings.shadowsSection') }}</h2>
+        <h2 class="section-title">🌟 Shadow System</h2>
+        <p class="section-description">
+          Elevation system using CSS custom properties that adapt to light and
+          dark modes.
+        </p>
 
         <div class="shadow-showcase">
-          <div
-            class="shadow-card"
-            style="
-              box-shadow:
-                0 1px 3px rgba(0, 0, 0, 0.08),
-                0 1px 2px rgba(0, 0, 0, 0.06);
-            "
-          >
-            <div class="shadow-label">Base Shadow</div>
-            <div class="shadow-value">New card system default</div>
+          <div class="shadow-card" style="box-shadow: var(--shadow-xs)">
+            <div class="shadow-label">Extra Small</div>
+            <div class="shadow-value">var(--shadow-xs)</div>
           </div>
 
-          <div
-            class="shadow-card"
-            style="
-              box-shadow:
-                0 8px 25px rgba(0, 0, 0, 0.12),
-                0 4px 10px rgba(0, 0, 0, 0.08);
-            "
-          >
-            <div class="shadow-label">Hover Shadow</div>
-            <div class="shadow-value">Interactive card hover</div>
+          <div class="shadow-card" style="box-shadow: var(--shadow-sm)">
+            <div class="shadow-label">Small</div>
+            <div class="shadow-value">var(--shadow-sm)</div>
           </div>
 
-          <div
-            class="shadow-card"
-            style="
-              box-shadow:
-                0 2px 4px rgba(0, 0, 0, 0.06),
-                0 1px 2px rgba(0, 0, 0, 0.04);
-            "
-          >
-            <div class="shadow-label">Interactive Shadow</div>
-            <div class="shadow-value">Interactive card default</div>
+          <div class="shadow-card" style="box-shadow: var(--shadow-base)">
+            <div class="shadow-label">Base</div>
+            <div class="shadow-value">var(--shadow-base)</div>
           </div>
 
-          <div
-            class="shadow-card"
-            style="
-              box-shadow:
-                0 4px 6px rgba(0, 0, 0, 0.1),
-                0 1px 3px rgba(0, 0, 0, 0.08);
-            "
-          >
-            <div class="shadow-label">Medium Shadow</div>
-            <div class="shadow-value">Elevated elements</div>
+          <div class="shadow-card" style="box-shadow: var(--shadow-md)">
+            <div class="shadow-label">Medium</div>
+            <div class="shadow-value">var(--shadow-md)</div>
+          </div>
+
+          <div class="shadow-card" style="box-shadow: var(--shadow-lg)">
+            <div class="shadow-label">Large</div>
+            <div class="shadow-value">var(--shadow-lg)</div>
+          </div>
+
+          <div class="shadow-card" style="box-shadow: var(--shadow-xl)">
+            <div class="shadow-label">Extra Large</div>
+            <div class="shadow-value">var(--shadow-xl)</div>
           </div>
         </div>
       </div>
@@ -312,36 +703,63 @@
       <!-- Border Radius System -->
       <div class="style-section">
         <h2 class="section-title">📐 Border Radius System</h2>
+        <p class="section-description">
+          Consistent border radius scale using CSS custom properties.
+        </p>
 
         <div class="radius-showcase">
           <div class="radius-item">
-            <div class="radius-demo" style="border-radius: 4px"></div>
+            <div
+              class="radius-demo"
+              style="border-radius: var(--radius-sm)"
+            ></div>
             <div class="radius-label">Small</div>
-            <div class="radius-value">4px</div>
+            <div class="radius-value">var(--radius-sm)</div>
           </div>
 
           <div class="radius-item">
-            <div class="radius-demo" style="border-radius: 8px"></div>
+            <div
+              class="radius-demo"
+              style="border-radius: var(--radius-base)"
+            ></div>
+            <div class="radius-label">Base</div>
+            <div class="radius-value">var(--radius-base)</div>
+          </div>
+
+          <div class="radius-item">
+            <div
+              class="radius-demo"
+              style="border-radius: var(--radius-md)"
+            ></div>
             <div class="radius-label">Medium</div>
-            <div class="radius-value">8px</div>
+            <div class="radius-value">var(--radius-md)</div>
           </div>
 
           <div class="radius-item">
-            <div class="radius-demo" style="border-radius: 12px"></div>
+            <div
+              class="radius-demo"
+              style="border-radius: var(--radius-lg)"
+            ></div>
             <div class="radius-label">Large (Cards)</div>
-            <div class="radius-value">12px</div>
+            <div class="radius-value">var(--radius-lg)</div>
           </div>
 
           <div class="radius-item">
-            <div class="radius-demo" style="border-radius: 16px"></div>
+            <div
+              class="radius-demo"
+              style="border-radius: var(--radius-xl)"
+            ></div>
             <div class="radius-label">Extra Large</div>
-            <div class="radius-value">16px</div>
+            <div class="radius-value">var(--radius-xl)</div>
           </div>
 
           <div class="radius-item">
-            <div class="radius-demo" style="border-radius: 50%"></div>
-            <div class="radius-label">Round</div>
-            <div class="radius-value">50%</div>
+            <div
+              class="radius-demo"
+              style="border-radius: var(--radius-full)"
+            ></div>
+            <div class="radius-label">Full</div>
+            <div class="radius-value">var(--radius-full)</div>
           </div>
         </div>
       </div>
@@ -349,48 +767,52 @@
       <!-- Spacing System -->
       <div class="style-section">
         <h2 class="section-title">📏 Spacing System</h2>
+        <p class="section-description">
+          8-point grid system using CSS custom properties for consistent
+          spacing.
+        </p>
 
         <div class="spacing-showcase">
           <div class="spacing-item">
-            <div class="spacing-demo" style="width: 4px"></div>
-            <div class="spacing-label">XS</div>
-            <div class="spacing-value">4px</div>
+            <div class="spacing-demo" style="width: var(--space-1)"></div>
+            <div class="spacing-label">Space 1</div>
+            <div class="spacing-value">var(--space-1)</div>
           </div>
 
           <div class="spacing-item">
-            <div class="spacing-demo" style="width: 8px"></div>
-            <div class="spacing-label">SM</div>
-            <div class="spacing-value">8px</div>
+            <div class="spacing-demo" style="width: var(--space-2)"></div>
+            <div class="spacing-label">Space 2</div>
+            <div class="spacing-value">var(--space-2)</div>
           </div>
 
           <div class="spacing-item">
-            <div class="spacing-demo" style="width: 12px"></div>
-            <div class="spacing-label">MD</div>
-            <div class="spacing-value">12px</div>
+            <div class="spacing-demo" style="width: var(--space-3)"></div>
+            <div class="spacing-label">Space 3</div>
+            <div class="spacing-value">var(--space-3)</div>
           </div>
 
           <div class="spacing-item">
-            <div class="spacing-demo" style="width: 16px"></div>
-            <div class="spacing-label">LG</div>
-            <div class="spacing-value">16px</div>
+            <div class="spacing-demo" style="width: var(--space-4)"></div>
+            <div class="spacing-label">Space 4</div>
+            <div class="spacing-value">var(--space-4)</div>
           </div>
 
           <div class="spacing-item">
-            <div class="spacing-demo" style="width: 20px"></div>
-            <div class="spacing-label">XL</div>
-            <div class="spacing-value">20px</div>
+            <div class="spacing-demo" style="width: var(--space-5)"></div>
+            <div class="spacing-label">Space 5</div>
+            <div class="spacing-value">var(--space-5)</div>
           </div>
 
           <div class="spacing-item">
-            <div class="spacing-demo" style="width: 24px"></div>
-            <div class="spacing-label">2XL</div>
-            <div class="spacing-value">24px</div>
+            <div class="spacing-demo" style="width: var(--space-6)"></div>
+            <div class="spacing-label">Space 6</div>
+            <div class="spacing-value">var(--space-6)</div>
           </div>
 
           <div class="spacing-item">
-            <div class="spacing-demo" style="width: 32px"></div>
-            <div class="spacing-label">3XL</div>
-            <div class="spacing-value">32px</div>
+            <div class="spacing-demo" style="width: var(--space-8)"></div>
+            <div class="spacing-label">Space 8</div>
+            <div class="spacing-value">var(--space-8)</div>
           </div>
         </div>
       </div>
@@ -400,9 +822,124 @@
 
 <script setup lang="ts">
   import { ref } from 'vue';
+  import { useQuasar } from 'quasar';
   import PageLayout from 'src/components/PageLayout.vue';
   import PageTitle from 'src/components/PageTitle.vue';
   import CardStyleGuide from 'src/components/cards/CardStyleGuide.vue';
+  import TokenInspector from 'src/components/TokenInspector.vue';
+
+  const $q = useQuasar();
+
+  // Form demo data
+  const sampleText = ref('Sample text');
+  const sampleEmail = ref('user@example.com');
+  const sampleSelect = ref(null);
+  const sampleMultiple = ref([]);
+  const sampleError = ref('');
+  const sampleDisabled = ref('Disabled value');
+  const sampleCheck = ref(true);
+  const sampleRadio = ref('option1');
+  const sampleToggle = ref(false);
+
+  const selectOptions = ['Option 1', 'Option 2', 'Option 3', 'Option 4'];
+
+  // Dialog states
+  const showInfoDialog = ref(false);
+  const showConfirmDialog = ref(false);
+  const showFormDialog = ref(false);
+  const showDestructiveDialog = ref(false);
+
+  // Table demo data
+  const tableLoading = ref(false);
+  const sampleTableData = ref([
+    { id: 1, name: 'Product A', status: 'Active', quantity: 150, price: 29.99 },
+    { id: 2, name: 'Product B', status: 'Inactive', quantity: 0, price: 19.99 },
+    { id: 3, name: 'Product C', status: 'Active', quantity: 75, price: 39.99 },
+    {
+      id: 4,
+      name: 'Product D',
+      status: 'Pending',
+      quantity: 200,
+      price: 49.99,
+    },
+    { id: 5, name: 'Product E', status: 'Active', quantity: 50, price: 24.99 },
+  ]);
+
+  const sampleTableColumns = [
+    {
+      name: 'name',
+      label: 'Product Name',
+      field: 'name',
+      align: 'left' as const,
+      sortable: true,
+    },
+    {
+      name: 'status',
+      label: 'Status',
+      field: 'status',
+      align: 'center' as const,
+      sortable: true,
+    },
+    {
+      name: 'quantity',
+      label: 'Quantity',
+      field: 'quantity',
+      align: 'right' as const,
+      sortable: true,
+    },
+    {
+      name: 'price',
+      label: 'Price',
+      field: 'price',
+      align: 'right' as const,
+      sortable: true,
+      format: (val: number) => `$${val.toFixed(2)}`,
+    },
+    {
+      name: 'actions',
+      label: 'Actions',
+      field: 'actions',
+      align: 'center' as const,
+    },
+  ];
+
+  // Helper functions
+  function getStatusColor(status: string) {
+    switch (status) {
+      case 'Active':
+        return 'positive';
+      case 'Inactive':
+        return 'negative';
+      case 'Pending':
+        return 'warning';
+      default:
+        return 'grey';
+    }
+  }
+
+  function refreshTable() {
+    tableLoading.value = true;
+    setTimeout(() => {
+      tableLoading.value = false;
+    }, 1000);
+  }
+
+  function showToast(type: string) {
+    const messages = {
+      info: 'This is an informational message',
+      positive: 'Operation completed successfully!',
+      warning: 'Please review your input',
+      negative: 'An error occurred',
+    };
+
+    $q.notify({
+      type,
+      message: messages[type as keyof typeof messages],
+      position: 'top-right',
+      timeout: 3000,
+      actions: [{ icon: 'close', color: 'white' }],
+    });
+  }
 </script>
 
 <style scoped lang="scss">
@@ -461,17 +998,17 @@
       display: flex;
       flex-direction: column;
       justify-content: space-between;
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      box-shadow: var(--shadow-md);
 
       .color-value {
         font-weight: 600;
         font-size: 14px;
       }
 
-      .color-hex {
+      .color-var {
         font-size: 11px;
         opacity: 0.9;
-        font-family: monospace;
+        font-family: var(--font-family-mono);
       }
     }
   }
@@ -491,10 +1028,10 @@
       }
 
       .text-meta {
-        font-size: 12px;
-        color: var(--text-secondary);
-        margin-top: 8px;
-        font-family: monospace;
+        font-size: var(--text-xs);
+        color: var(--text-tertiary);
+        margin-top: var(--space-2);
+        font-family: var(--font-family-mono);
       }
     }
   }
@@ -503,21 +1040,228 @@
   .button-showcase {
     display: flex;
     flex-direction: column;
-    gap: 32px;
+    gap: var(--space-8);
 
     .button-group {
       h4 {
-        font-size: 18px;
-        font-weight: 600;
-        margin: 0 0 16px 0;
+        font-size: var(--text-lg);
+        font-weight: var(--font-weight-semibold);
+        margin: 0 0 var(--space-4) 0;
         color: var(--text-primary);
       }
 
       .button-row {
         display: flex;
-        gap: 12px;
+        gap: var(--space-3);
         flex-wrap: wrap;
         align-items: center;
+      }
+    }
+
+    // Interactive state demos
+    .hover-demo:hover {
+      transform: translateY(-1px);
+      box-shadow: var(--shadow-md);
+    }
+
+    .focus-demo {
+      outline: 2px solid var(--focus-ring-color);
+      outline-offset: var(--focus-ring-offset);
+    }
+
+    .active-demo {
+      transform: translateY(1px);
+      box-shadow: var(--shadow-sm);
+    }
+  }
+
+  // Form showcase
+  .form-showcase {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-6);
+
+    .form-group {
+      h4 {
+        font-size: var(--text-lg);
+        font-weight: var(--font-weight-semibold);
+        margin: 0 0 var(--space-4) 0;
+        color: var(--text-primary);
+      }
+
+      .form-row {
+        display: flex;
+        gap: var(--space-4);
+        flex-wrap: wrap;
+      }
+
+      .form-controls {
+        display: flex;
+        gap: var(--space-6);
+        flex-wrap: wrap;
+        align-items: center;
+      }
+    }
+  }
+
+  // Dialog showcase
+  .dialog-showcase {
+    .dialog-group {
+      h4 {
+        font-size: var(--text-lg);
+        font-weight: var(--font-weight-semibold);
+        margin: 0 0 var(--space-4) 0;
+        color: var(--text-primary);
+      }
+    }
+  }
+
+  // Table showcase
+  .table-showcase {
+    .table-demo {
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      box-shadow: var(--shadow-sm);
+
+      .table-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: var(--space-4);
+
+        h4 {
+          margin: 0;
+          font-size: var(--text-lg);
+          font-weight: var(--font-weight-semibold);
+          color: var(--text-primary);
+        }
+
+        .table-actions {
+          display: flex;
+          gap: var(--space-2);
+        }
+      }
+    }
+  }
+
+  // Alert showcase
+  .alert-showcase {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-6);
+
+    .alert-group {
+      h4 {
+        font-size: var(--text-lg);
+        font-weight: var(--font-weight-semibold);
+        margin: 0 0 var(--space-4) 0;
+        color: var(--text-primary);
+      }
+
+      .alert-examples {
+        display: flex;
+        flex-direction: column;
+        gap: var(--space-4);
+
+        .alert-info {
+          background: rgba(30, 64, 175, 0.1);
+          border-left: 4px solid var(--brand-info);
+          color: var(--brand-info);
+        }
+
+        .alert-success {
+          background: rgba(5, 150, 105, 0.1);
+          border-left: 4px solid var(--brand-success);
+          color: var(--brand-success);
+        }
+
+        .alert-warning {
+          background: rgba(217, 119, 6, 0.1);
+          border-left: 4px solid var(--brand-warning);
+          color: var(--brand-warning);
+        }
+
+        .alert-error {
+          background: rgba(185, 28, 28, 0.1);
+          border-left: 4px solid var(--brand-danger);
+          color: var(--brand-danger);
+        }
+      }
+    }
+
+    .toast-group {
+      h4 {
+        font-size: var(--text-lg);
+        font-weight: var(--font-weight-semibold);
+        margin: 0 0 var(--space-4) 0;
+        color: var(--text-primary);
+      }
+    }
+  }
+
+  // States showcase
+  .states-showcase {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-6);
+
+    .state-group {
+      h4 {
+        font-size: var(--text-lg);
+        font-weight: var(--font-weight-semibold);
+        margin: 0 0 var(--space-4) 0;
+        color: var(--text-primary);
+      }
+
+      .state-examples {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: var(--space-4);
+      }
+    }
+
+    .state-card {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-primary);
+      border-radius: var(--radius-lg);
+      padding: var(--space-6);
+      text-align: center;
+
+      h5 {
+        margin: 0 0 var(--space-3) 0;
+        font-size: var(--text-base);
+        font-weight: var(--font-weight-semibold);
+        color: var(--text-primary);
+      }
+
+      &.empty-state {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: var(--space-3);
+
+        p {
+          margin: 0;
+          color: var(--text-secondary);
+        }
+      }
+    }
+
+    .skeleton-demo {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-2);
+    }
+
+    .spinner-demo {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: var(--space-3);
+
+      p {
+        margin: 0;
+        color: var(--text-secondary);
       }
     }
   }
@@ -529,7 +1273,7 @@
     gap: 24px;
 
     .shadow-card {
-      background: var(--card-background, #ffffff);
+      background: var(--surface);
       border-radius: 12px;
       padding: 24px;
       text-align: center;
@@ -611,9 +1355,9 @@
       }
 
       .radius-value {
-        font-size: 12px;
+        font-size: var(--text-xs);
         color: var(--text-secondary);
-        font-family: monospace;
+        font-family: var(--font-family-mono);
       }
     }
   }
@@ -643,9 +1387,9 @@
       }
 
       .spacing-value {
-        font-size: 12px;
+        font-size: var(--text-xs);
         color: var(--text-secondary);
-        font-family: monospace;
+        font-family: var(--font-family-mono);
       }
     }
   }

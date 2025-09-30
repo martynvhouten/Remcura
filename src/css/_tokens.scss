@@ -1,33 +1,290 @@
-/* Design tokens for controls and shared variables */
+/* ===================================================================
+   REMCURA DESIGN TOKENS - SINGLE SOURCE OF TRUTH
+   All design tokens for the Remcura application
+   =================================================================== */
 
 @layer base {
   :root {
-    /* Control sizing (per dialog spec) */
+    /* ===================================================================
+       BRAND COLORS - MEDICAL BLUE THEME
+       =================================================================== */
+    --brand-primary: #1e3a8a; /* Deep Medical Blue - Professional & trustworthy */
+    --brand-primary-dark: #1e40af; /* Rich Blue for contrast */
+    --brand-primary-light: #3b82f6; /* Bright Blue for accents */
+    --brand-secondary: #0f766e; /* Deep Teal - Clean & calming */
+    --brand-accent: #0d9488; /* Medical Teal - Attention & trust */
+
+    /* Semantic Colors - Enhanced for Medical Context */
+    --brand-success: #065f46; /* Deep Emerald - Natural & healing */
+    --brand-success-light: #059669; /* Lighter emerald for UI elements */
+    --brand-warning: #d97706; /* Warm Orange - Professional warning */
+    --brand-warning-light: #f59e0b; /* Lighter orange for UI */
+    --brand-danger: #b91c1c; /* Deep Red - Clear alerts */
+    --brand-danger-light: #dc2626; /* Lighter red for UI */
+    --brand-info: #1e40af; /* Rich Blue - Informative & calm */
+    --brand-info-light: #3b82f6; /* Lighter blue for UI */
+
+    /* Medical-specific colors */
+    --medical-urgent: #ea580c; /* Urgent orange */
+    --medical-critical: var(--brand-danger); /* Emergency red */
+    --medical-caution: var(--brand-warning); /* Caution amber */
+    --medical-stable: var(--brand-success); /* Stable green */
+    --medical-optimal: var(--brand-accent); /* Optimal teal */
+
+    /* Stock level indicators */
+    --stock-critical: var(--brand-danger); /* Out of stock - red */
+    --stock-low: var(--brand-warning); /* Low stock - amber */
+    --stock-adequate: var(--brand-success); /* Adequate - green */
+    --stock-overstocked: #0891b2; /* Overstocked - blue */
+
+    /* Equipment status colors */
+    --equipment-inactive: var(--neutral-500); /* Gray for inactive */
+    --equipment-maintenance: var(--brand-warning); /* Amber for maintenance */
+    --equipment-active: var(--brand-success); /* Green for active */
+
+    /* ===================================================================
+       QUASAR BRAND MAPPING - Map Quasar variables to our tokens
+       =================================================================== */
+    --q-primary: var(--brand-primary);
+    --q-secondary: var(--brand-secondary);
+    --q-accent: var(--brand-accent);
+    --q-positive: var(--brand-success-light);
+    --q-negative: var(--brand-danger-light);
+    --q-warning: var(--brand-warning-light);
+    --q-info: var(--brand-info-light);
+    --q-dark: var(--neutral-900);
+
+    /* Additional Quasar color mappings */
+    --q-success: var(--brand-success-light);
+    --q-error: var(--brand-danger-light);
+    --q-danger: var(--brand-danger-light);
+
+    /* ===================================================================
+       NEUTRAL PALETTE - Professional & Warm
+       =================================================================== */
+    --neutral-50: #fafaf9; /* Warm white */
+    --neutral-100: #f5f5f4; /* Very light warm gray */
+    --neutral-200: #e7e5e4; /* Light warm gray */
+    --neutral-300: #d6d3d1; /* Medium light warm gray */
+    --neutral-400: #a8a29e; /* Medium warm gray */
+    --neutral-500: #78716c; /* Medium warm gray */
+    --neutral-600: #57534e; /* Dark warm gray */
+    --neutral-700: #44403c; /* Darker warm gray */
+    --neutral-800: #292524; /* Very dark warm gray */
+    --neutral-900: #1c1917; /* Almost black warm */
+
+    /* ===================================================================
+       SEMANTIC UI COLORS - Light Mode
+       =================================================================== */
+    --bg-primary: var(--neutral-50); /* Primary background */
+    --bg-secondary: var(
+      --neutral-100
+    ); /* Secondary background (cards, panels) */
+    --bg-tertiary: var(--neutral-200); /* Tertiary background (hover states) */
+
+    /* Surface Colors - Clean Neutral Backgrounds */
+    --surface: #ffffff; /* Unified clean white surface for all containers */
+    --color-surface: var(--surface); /* Legacy alias - use --surface instead */
+    --color-surface-secondary: var(
+      --neutral-50
+    ); /* Subtle off-white for secondary surfaces */
+
+    --text-primary: var(--neutral-900); /* Primary text */
+    --text-secondary: var(--neutral-600); /* Secondary text */
+    --text-tertiary: var(--neutral-500); /* Tertiary text (muted) */
+    --border-primary: var(--neutral-200); /* Primary borders */
+    --border-secondary: var(--neutral-300); /* Secondary borders */
+
+    /* ===================================================================
+       TYPOGRAPHY SYSTEM
+       =================================================================== */
+    --font-family:
+      'Plus Jakarta Sans', system-ui, -apple-system, 'Segoe UI', Roboto, Arial,
+      sans-serif;
+    --font-family-primary: var(--font-family);
+    --font-family-display: var(--font-family);
+    --font-family-mono: 'JetBrains Mono', 'SF Mono', 'Monaco', monospace;
+    --font-sans: var(--font-family);
+
+    /* Font Weights */
+    --font-weight-light: 300;
+    --font-weight-normal: 400;
+    --font-weight-medium: 500;
+    --font-weight-semibold: 600;
+    --font-weight-bold: 700;
+    --font-weight-extrabold: 800;
+    --font-weight-black: 900;
+
+    /* Font Sizes */
+    --text-xs: 0.75rem;
+    --text-sm: 0.875rem;
+    --text-base: 1rem;
+    --text-lg: 1.125rem;
+    --text-xl: 1.25rem;
+    --text-2xl: 1.5rem;
+    --text-3xl: 1.875rem;
+    --text-4xl: 2.25rem;
+
+    /* Line Heights */
+    --leading-tight: 1.25;
+    --leading-normal: 1.5;
+    --leading-relaxed: 1.625;
+
+    /* ===================================================================
+       SPACING SYSTEM - 8pt Grid
+       =================================================================== */
+    --space-1: 0.25rem; /* 4px */
+    --space-2: 0.5rem; /* 8px */
+    --space-3: 0.75rem; /* 12px */
+    --space-4: 1rem; /* 16px */
+    --space-5: 1.25rem; /* 20px */
+    --space-6: 1.5rem; /* 24px */
+    --space-8: 2rem; /* 32px */
+    --space-12: 3rem; /* 48px */
+
+    /* ===================================================================
+       BORDER RADIUS SYSTEM
+       =================================================================== */
+    --radius-sm: 0.25rem; /* 4px */
+    --radius-base: 0.5rem; /* 8px */
+    --radius-md: 0.75rem; /* 12px */
+    --radius-lg: 0.75rem; /* 12px - Standard for cards */
+    --radius-xl: 1rem; /* 16px */
+    --radius-2xl: 1.5rem; /* 24px */
+    --radius-full: 9999px;
+
+    /* ===================================================================
+       SHADOW SYSTEM - Professional & Consistent
+       =================================================================== */
+    --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.08); /* Buttons, small controls */
+    --shadow-md: 0 2px 6px rgba(0, 0, 0, 0.1); /* Cards, widgets */
+    --shadow-lg: 0 4px 12px rgba(0, 0, 0, 0.12); /* Dialogs, modals, menus */
+
+    /* Legacy aliases for compatibility */
+    --shadow-xs: var(--shadow-sm);
+    --shadow-base: var(--shadow-md);
+    --shadow-xl: var(--shadow-lg);
+
+    /* ===================================================================
+       CONTROL SIZING
+       =================================================================== */
     --control-height-sm: 36px;
     --control-height-md: 44px;
     --control-height-lg: 52px;
-
     --control-pad-x: 12px;
     --control-pad-y: 8px;
 
-    /* Radii */
-    --radius-sm: 4px;
-    --radius-md: 12px;
-    --radius-lg: 12px;
-    --radius-xl: 20px;
+    /* ===================================================================
+       INTERACTIVE STATES
+       =================================================================== */
+    --hover-bg: rgba(30, 58, 138, 0.08);
+    --hover-border: rgba(30, 58, 138, 0.2);
+    --focus-ring: 0 0 0 3px rgba(30, 58, 138, 0.15);
+    --focus-ring-color: rgba(30, 58, 138, 0.3);
+    --focus-ring-offset: 2px;
 
-    /* Spacing aliases (map to existing scale in app.scss) */
-    --space-2: 8px;
-    --space-3: 12px;
-    --space-4: 16px;
-    --space-5: 20px;
-    --space-6: 24px;
+    /* ===================================================================
+       NAVIGATION & SIDEBAR TOKENS
+       =================================================================== */
+    --sidebar-bg: #111827; /* Softer than pure black */
+    --sidebar-border: rgba(255, 255, 255, 0.08);
+    --nav-hover-bg: rgba(255, 255, 255, 0.06);
+    --nav-active-bg: rgba(255, 255, 255, 0.1);
 
-    /* Shadows (fallbacks align to existing app.scss tokens) */
-    --shadow-md: var(--shadow-md, 0 10px 15px -3px rgba(0,0,0,.1));
-    --shadow-lg: var(--shadow-lg, 0 20px 25px -5px rgba(0,0,0,.1));
+    /* ===================================================================
+       GLASS MORPHISM TOKENS
+       =================================================================== */
+    --glass-bg: rgba(255, 255, 255, 0.08);
+    --glass-border: rgba(255, 255, 255, 0.12);
+    --glass-backdrop: blur(20px);
+    --glass-shadow: 0 8px 32px rgba(31, 38, 135, 0.12);
 
-    /* Color aliases for surfaces and texts (map to existing tokens) */
+    /* ===================================================================
+       TRANSITIONS
+       =================================================================== */
+    --transition-fast: 150ms cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-base: 250ms cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-slow: 350ms cubic-bezier(0.4, 0, 0.2, 1);
+
+    /* ===================================================================
+       BUTTON GRADIENTS
+       =================================================================== */
+    --btn-gradient-primary: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%);
+    --btn-gradient-primary-hover: linear-gradient(
+      135deg,
+      #1e40af 0%,
+      #2563eb 100%
+    );
+    --btn-gradient-success: linear-gradient(135deg, #065f46 0%, #059669 100%);
+    --btn-gradient-success-hover: linear-gradient(
+      135deg,
+      #047857 0%,
+      #10b981 100%
+    );
+    --btn-gradient-warning: linear-gradient(135deg, #d97706 0%, #f59e0b 100%);
+    --btn-gradient-warning-hover: linear-gradient(
+      135deg,
+      #b45309 0%,
+      #d97706 100%
+    );
+    --btn-gradient-danger: linear-gradient(135deg, #b91c1c 0%, #dc2626 100%);
+    --btn-gradient-danger-hover: linear-gradient(
+      135deg,
+      #991b1b 0%,
+      #b91c1c 100%
+    );
+
+    /* ===================================================================
+       BUTTON SHADOWS
+       =================================================================== */
+    --btn-shadow-base: 0 2px 8px rgba(30, 58, 138, 0.12);
+    --btn-shadow-hover: 0 8px 25px rgba(30, 58, 138, 0.25);
+    --btn-shadow-active: 0 2px 4px rgba(30, 58, 138, 0.2);
+    --btn-shadow-outline: 0 2px 8px rgba(30, 58, 138, 0.08);
+
+    /* ===================================================================
+       BUTTON SIZING
+       =================================================================== */
+    --btn-height-sm: 32px;
+    --btn-height-base: 40px;
+    --btn-height-lg: 48px;
+    --btn-height-xl: 56px;
+
+    --btn-padding-sm: 0 12px;
+    --btn-padding-base: 0 20px;
+    --btn-padding-lg: 0 24px;
+    --btn-padding-xl: 0 32px;
+
+    --btn-font-sm: 0.75rem;
+    --btn-font-base: 0.875rem;
+    --btn-font-lg: 1rem;
+    --btn-font-xl: 1.125rem;
+
+    --btn-radius: 12px;
+    --btn-radius-sm: 8px;
+    --btn-radius-lg: 16px;
+    --btn-radius-xl: 20px;
+
+    /* ===================================================================
+       ICON SIZES
+       =================================================================== */
+    --icon-xs: 12px;
+    --icon-sm: 16px;
+    --icon-base: 20px;
+    --icon-lg: 24px;
+    --icon-xl: 32px;
+    --icon-2xl: 48px;
+
+    /* ===================================================================
+       CONTROL TYPOGRAPHY
+       =================================================================== */
+    --control-font-sm: var(--text-sm);
+    --control-font-md: var(--text-base);
+    --control-font-lg: var(--text-lg);
+
+    /* ===================================================================
+       ALIASES FOR BACKWARD COMPATIBILITY
+       =================================================================== */
     --color-surface: var(--bg-secondary);
     --color-surface-elevated: var(--bg-primary);
     --color-border: var(--border-primary);
@@ -35,14 +292,70 @@
     --color-muted: var(--text-secondary);
     --color-primary: var(--brand-primary);
     --color-danger: var(--brand-danger);
+  }
 
-    /* Focus ring */
+  /* ===================================================================
+     DARK MODE TOKENS
+     =================================================================== */
+  html.dark {
+    /* Inverted Neutral Palette */
+    --neutral-50: #1c1917; /* Dark background */
+    --neutral-100: #292524; /* Slightly lighter dark */
+    --neutral-200: #44403c; /* Medium dark */
+    --neutral-300: #57534e; /* Border colors */
+    --neutral-400: #78716c; /* Muted elements */
+    --neutral-500: #a8a29e; /* Secondary text */
+    --neutral-600: #d6d3d1; /* Primary text */
+    --neutral-700: #e7e5e4; /* High contrast text */
+    --neutral-800: #f5f5f4; /* Highest contrast text */
+    --neutral-900: #fafaf9; /* Pure white text */
+
+    /* Dark Mode Semantic Colors */
+    --bg-primary: var(--neutral-50);
+    --bg-secondary: var(--neutral-100);
+    --bg-tertiary: var(--neutral-200);
+
+    /* Surface Colors - Dark Mode */
+    --surface: #1e1e1e; /* Unified clean dark surface for all containers */
+    --color-surface: var(--surface); /* Legacy alias - use --surface instead */
+    --color-surface-secondary: #2a2a2a; /* Slightly lighter dark surface for secondary elements */
+
+    --text-primary: var(--neutral-900);
+    --text-secondary: var(--neutral-600);
+    --text-tertiary: var(--neutral-500);
+    --border-primary: var(--neutral-200);
+    --border-secondary: var(--neutral-300);
+
+    /* Dark Mode Interactive States */
+    --hover-bg: rgba(30, 58, 138, 0.12);
+    --hover-border: rgba(30, 58, 138, 0.25);
     --focus-ring: 0 0 0 3px rgba(30, 58, 138, 0.15);
-    --focus-ring-color: rgba(30, 58, 138, 0.3);
 
-    /* Typography */
-    --control-font-sm: 0.875rem;
-    --control-font-md: 0.9375rem;
-    --control-font-lg: 1rem;
+    /* Enhanced Shadows for Dark Mode */
+    --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.3); /* Buttons, small controls */
+    --shadow-md: 0 2px 6px rgba(0, 0, 0, 0.32); /* Cards, widgets */
+    --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.36); /* Dialogs, modals, menus */
+
+    /* Legacy aliases for compatibility */
+    --shadow-xs: var(--shadow-sm);
+    --shadow-base: var(--shadow-md);
+    --shadow-xl: var(--shadow-lg);
+
+    /* Dark Mode Navigation & Sidebar */
+    --sidebar-bg: #0f172a; /* Deeper slate */
+    --sidebar-border: rgba(255, 255, 255, 0.08);
+    --nav-hover-bg: rgba(255, 255, 255, 0.06);
+    --nav-active-bg: rgba(255, 255, 255, 0.1);
+
+    /* Dark Mode Glass Morphism */
+    --glass-bg: rgba(0, 0, 0, 0.08);
+    --glass-border: rgba(255, 255, 255, 0.08);
+    --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+
+    /* Dark Mode Button Shadows */
+    --btn-shadow-base: 0 2px 8px rgba(0, 0, 0, 0.3);
+    --btn-shadow-hover: 0 8px 25px rgba(0, 0, 0, 0.4);
+    --btn-shadow-active: 0 2px 4px rgba(0, 0, 0, 0.25);
+    --btn-shadow-outline: 0 2px 8px rgba(0, 0, 0, 0.2);
   }
 }

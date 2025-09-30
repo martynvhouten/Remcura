@@ -50,6 +50,7 @@
             icon="shopping_cart"
             size="sm"
             color="primary"
+            type="button"
             @click="createOrder(item)"
           >
             <q-tooltip>Bestellen</q-tooltip>
@@ -61,6 +62,7 @@
             icon="edit"
             size="sm"
             color="primary"
+            type="button"
             @click="updateStock(item)"
           >
             <q-tooltip>Voorraad bijwerken</q-tooltip>
@@ -77,8 +79,9 @@
         color="primary"
         icon="visibility"
         label="Bekijk alle"
-        @click="viewAllAlerts"
         class="full-width"
+        type="button"
+        @click="viewAllAlerts"
       />
     </div>
   </BaseDashboardWidget>

@@ -1,11 +1,7 @@
 import { supabase } from 'src/boot/supabase';
 import { v4 as uuidv4 } from 'uuid';
-import type {
-  PermanentUser,
-  DeviceToken,
-  UserSession,
-  MagicInvite,
-} from 'src/types/supabase';
+import type { PermanentUser, MagicInvite } from 'src/types/supabase';
+import type { TablesInsert } from 'src/types/supabase.generated';
 
 // 🚀 PERMANENT USERS SERVICE
 // Handles the complete upgrade flow from guest to permanent team member
@@ -213,12 +209,22 @@ export class PermanentUserService {
         })
         .eq('id', request.invite_id);
 
-      // Create device token if device_remember method
+      // Create device token array entry if requested
       if (
         request.login_method === 'device_remember' &&
         request.device_fingerprint
       ) {
-        await this.createDeviceToken(newUser.id, request.device_fingerprint);
+        await supabase
+          .from('permanent_users')
+          .update({
+            device_tokens: [
+              {
+                fingerprint: request.device_fingerprint,
+                created_at: new Date().toISOString(),
+              },
+            ],
+          })
+          .eq('id', newUser.id);
       }
 
       return {
@@ -297,16 +303,16 @@ export class PermanentUserService {
         .eq('id', userId)
         .single();
 
-      const sessionData = {
+      const sessionData: TablesInsert<'user_sessions'> = {
         id: uuidv4(),
         user_id: userId,
-        practice_id: user?.practice_id || '',
+        practice_id: user?.practice_id ?? '',
         session_token: sessionToken,
         login_method: loginMethod,
         device_fingerprint: this.getDeviceFingerprint(),
         ip_address: await this.getClientIP(),
         user_agent: navigator.userAgent,
-        expires_at: new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString(), // 24 hours
+        expires_at: new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString(),
         is_active: true,
       };
 

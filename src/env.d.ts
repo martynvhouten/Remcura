@@ -14,6 +14,8 @@ interface ImportMetaEnv {
   readonly VITE_MAGENTO_API_TOKEN?: string;
   readonly VITE_SENTRY_DSN?: string;
   readonly VITE_GOOGLE_ANALYTICS_ID?: string;
+  readonly VITE_PLATFORM_OWNER_EMAIL?: string;
+  readonly VITE_PLATFORM_OWNER_PASSWORD?: string;
 }
 
 interface ImportMeta {

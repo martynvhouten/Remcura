@@ -19,7 +19,7 @@
   >
     <div :class="cardClasses" @keydown="onKeyDown" ref="dialogRef">
       <!-- Loading Overlay -->
-      <div v-if="loading" class="dialog-loading-overlay">
+      <div v-if="loading" class="dlg__loading-overlay">
         <div class="loading-spinner"></div>
         <p class="loading-text">{{ loadingText || $t('common.loading') }}</p>
       </div>
@@ -55,7 +55,7 @@
       <!-- Dialog Header -->
       <header
         v-if="hasHeader"
-        class="dialog-header"
+        class="dlg__header"
         :class="[headerClass, headerVariantClass, statusColorClass]"
       >
         <template v-if="slots.header">
@@ -68,8 +68,8 @@
             </div>
           </div>
           <div class="header-text">
-            <h1 class="dialog-title" :id="titleId">{{ title }}</h1>
-            <p v-if="subtitle" class="dialog-subtitle" :id="subtitleId">
+            <h1 class="dlg__title" :id="titleId">{{ title }}</h1>
+            <p v-if="subtitle" class="dlg__subtitle" :id="subtitleId">
               {{ subtitle }}
             </p>
           </div>
@@ -88,14 +88,14 @@
       </header>
 
       <!-- Dialog Content -->
-      <main class="dialog-content" :class="contentClass">
+      <main class="dlg__body" :class="contentClass">
         <slot />
       </main>
 
       <!-- Dialog Footer -->
       <footer
         v-if="hasActions || primaryAction || secondaryAction"
-        class="dialog-footer"
+        class="dlg__footer"
         :class="footerClass"
       >
         <!-- Custom Actions Slot -->
@@ -111,7 +111,7 @@
             :label="secondaryAction.label"
             :icon="secondaryAction.icon"
             :disable="isSecondaryDisabled"
-            class="app-btn app-btn-secondary"
+            flat
             @click="onSecondaryAction"
           />
 
@@ -122,7 +122,8 @@
             :icon="primaryAction.icon"
             :loading="primaryActionLoading"
             :disable="isPrimaryDisabled"
-            class="app-btn app-btn-primary"
+            unelevated
+            color="primary"
             @click="onPrimaryAction"
           />
         </div>
@@ -332,23 +333,18 @@
   const hasActions = computed(() => !!slots.actions);
 
   const cardClasses = computed(() => {
-    const classes = ['app-dialog-card'];
+    const classes = ['dlg'];
 
-    // Variant classes
-    classes.push(`dialog-${props.variant}`);
-
-    // Size classes
-    classes.push(`dialog-${props.size}`);
+    // Size classes using new unified system
+    classes.push(`dlg--${props.size}`);
 
     // Loading state
     if (props.loading) {
-      classes.push('dialog-loading');
+      classes.push('dlg--loading');
     }
 
-    // Mobile fullscreen
-    if (isMobile.value && !props.preventMobileFullscreen) {
-      classes.push('dialog-mobile-fullscreen');
-    }
+    // Mobile fullscreen handled by CSS media queries
+    // No need for JavaScript-based mobile detection
 
     return classes;
   });
@@ -358,14 +354,18 @@
   const iconVariantClass = computed(() => `icon-${props.headerVariant}`);
 
   // Normalized disabled states for native buttons (boolean, not undefined)
-  const isCloseDisabled = computed(
-    () => Boolean(props.loading || props.actionsDisabled)
+  const isCloseDisabled = computed(() =>
+    Boolean(props.loading || props.actionsDisabled)
   );
-  const isPrimaryDisabled = computed(
-    () => Boolean(props.loading || props.actionsDisabled || props.primaryAction?.disabled)
+  const isPrimaryDisabled = computed(() =>
+    Boolean(
+      props.loading || props.actionsDisabled || props.primaryAction?.disabled
+    )
   );
-  const isSecondaryDisabled = computed(
-    () => Boolean(props.loading || props.actionsDisabled || props.secondaryAction?.disabled)
+  const isSecondaryDisabled = computed(() =>
+    Boolean(
+      props.loading || props.actionsDisabled || props.secondaryAction?.disabled
+    )
   );
 
   // Methods
@@ -458,158 +458,31 @@
 
 <style lang="scss" scoped>
   // ===================================================================
-  // ENTERPRISE DIALOG SYSTEM - CONSISTENT WITH APP DESIGN SYSTEM
+  // BASEDIALOG - USES UNIFIED DIALOG SYSTEM
+  // Component-specific styles only, shared styles in _dialogs.scss
   // ===================================================================
 
-  .app-dialog-card {
-    position: relative;
-    background: var(--bg-primary);
-    border-radius: var(--radius-2xl);
-    overflow: hidden;
-    box-shadow: var(--shadow-2xl);
-    border: 1px solid var(--border-primary);
-    transform: translateY(0);
-    transition: var(--transition-base);
-    max-height: 90vh;
-    display: flex;
-    flex-direction: column;
-    font-family: var(--font-family-primary);
-
-    // Loading state
-    &.dialog-loading {
-      pointer-events: none;
-
-      .dialog-loading-overlay {
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        background: rgba(255, 255, 255, 0.95);
-        backdrop-filter: blur(4px);
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        gap: var(--space-4);
-        z-index: 10;
-        border-radius: var(--radius-2xl);
-
-        .loading-spinner {
-          width: 32px;
-          height: 32px;
-          border: 3px solid var(--neutral-200);
-          border-top: 3px solid var(--brand-primary);
-          border-radius: var(--radius-full);
-          animation: spin 1s linear infinite;
-        }
-
-        .loading-text {
-          font-size: var(--text-sm);
-          color: var(--text-secondary);
-          font-weight: var(--font-weight-medium);
-          margin: 0;
-        }
-      }
-    }
-
-    // Size variants
-    &.dialog-sm {
-      width: 100%;
-      max-width: 420px;
-    }
-
-    &.dialog-md {
-      width: 100%;
-      max-width: 640px;
-    }
-
-    &.dialog-lg {
-      width: 100%;
-      max-width: 840px;
-    }
-
-    &.dialog-xl {
-      width: 100%;
-      max-width: 1080px;
-    }
-
-    &.dialog-full {
-      width: 95vw;
-      max-width: none;
-      height: 90vh;
-      max-height: none;
-    }
-
-    // Mobile fullscreen
-    &.dialog-mobile-fullscreen {
-      width: 100vw;
-      height: 100vh;
-      max-width: none;
-      max-height: none;
-      border-radius: 0;
-    }
-
-    // Style variants
-    &.dialog-elegant {
-      background: linear-gradient(
-        135deg,
-        var(--bg-primary) 0%,
-        var(--bg-secondary) 100%
-      );
-      border: 1px solid var(--border-primary);
-    }
-
-    &.dialog-modern {
-      background: var(--bg-primary);
-      box-shadow: var(--shadow-2xl);
-    }
-
-    &.dialog-glass {
-      background: var(--glass-bg);
-      backdrop-filter: var(--glass-backdrop);
-      -webkit-backdrop-filter: var(--glass-backdrop);
-      border: 1px solid var(--glass-border);
-      box-shadow: var(--glass-shadow);
-    }
-
-    &.dialog-minimal {
-      background: var(--bg-primary);
-      border: none;
-      box-shadow: var(--shadow-lg);
-    }
-
-    &.dialog-standard {
-      background: var(--bg-primary);
-      border: 1px solid var(--border-primary);
-      box-shadow: var(--shadow-md);
-    }
-  }
-
-  // ===================================================================
-  // STEP INDICATOR
-  // ===================================================================
-
+  // Step indicator for wizard dialogs
   .dialog-steps {
-    background: var(--bg-secondary);
-    border-bottom: 1px solid var(--border-primary);
-    padding: var(--space-6) var(--space-8);
+    background: var(--surface);
+    border-bottom: var(--dlg-border);
+    padding: var(--dlg-pad);
 
     .steps-container {
       display: flex;
       justify-content: center;
-      gap: var(--space-8);
+      gap: var(--dlg-gap);
       max-width: 600px;
       margin: 0 auto;
 
       .step-item {
         display: flex;
         align-items: center;
-        gap: var(--space-2);
-        font-size: var(--text-sm);
-        font-weight: var(--font-weight-medium);
-        color: var(--text-tertiary);
-        transition: var(--transition-base);
+        gap: 8px;
+        font-size: 14px;
+        font-weight: 500;
+        color: var(--text-muted);
+        font-family: var(--font-family);
 
         &.step-active {
           color: var(--brand-primary);
@@ -622,15 +495,15 @@
         .step-indicator {
           width: 24px;
           height: 24px;
-          border-radius: var(--radius-full);
+          border-radius: 50%;
           display: flex;
           align-items: center;
           justify-content: center;
-          font-size: var(--text-xs);
-          font-weight: var(--font-weight-bold);
+          font-size: 12px;
+          font-weight: 600;
           background: var(--neutral-200);
-          color: var(--text-secondary);
-          transition: var(--transition-base);
+          color: var(--text-muted);
+          font-family: var(--font-family);
         }
 
         &.step-active .step-indicator {
@@ -647,7 +520,7 @@
 
     @media (max-width: 640px) {
       .steps-container {
-        gap: var(--space-4);
+        gap: 8px;
 
         .step-label {
           display: none;
@@ -656,15 +529,8 @@
     }
   }
 
-  // ===================================================================
-  // HEADER STYLES
-  // ===================================================================
-
-  .dialog-header {
-    position: relative;
-    border-bottom: 1px solid var(--border-primary);
-    padding: 0;
-
+  // Header variant styles (colors only, layout handled by unified system)
+  .dlg__header {
     // Header variants
     &.header-gradient {
       background: linear-gradient(
@@ -684,13 +550,13 @@
 
     &.header-minimal {
       background: transparent;
-      color: var(--text-primary);
+      color: var(--text);
     }
 
     &.header-glass {
-      background: var(--glass-bg);
+      background: rgba(255, 255, 255, 0.8);
       backdrop-filter: blur(12px);
-      color: var(--text-primary);
+      color: var(--text);
     }
 
     // Status colors
@@ -723,311 +589,31 @@
     }
 
     .header-content {
-      display: flex;
-      align-items: center;
-      gap: var(--space-4);
-      padding: var(--space-4) var(--space-6);
-
       .header-icon-container {
-        flex-shrink: 0;
-
         .header-icon {
-          width: 40px;
-          height: 40px;
-          border-radius: var(--radius-xl);
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          background: rgba(255, 255, 255, 0.15);
-          color: currentColor;
-          transition: var(--transition-base);
-        }
-      }
-
-      .header-text {
-        flex: 1;
-        min-width: 0;
-
-          .dialog-title {
-          font-size: var(--text-xl);
-          font-weight: var(--font-weight-bold);
-          margin: 0 0 var(--space-1) 0;
-          line-height: var(--leading-tight);
-          color: currentColor;
-        }
-
-        .dialog-subtitle {
-          font-size: var(--text-sm);
-          margin: 0;
-          opacity: 0.85;
-          line-height: var(--leading-normal);
-          font-weight: var(--font-weight-medium);
-          color: currentColor;
-        }
-      }
-
-      .close-btn {
-        flex-shrink: 0;
-        width: 40px;
-        height: 40px;
-        border-radius: var(--radius-lg);
-        border: none;
-        background: rgba(255, 255, 255, 0.1);
-        color: currentColor;
-        cursor: pointer;
-        transition: var(--transition-base);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-
-        &:hover:not(:disabled) {
           background: rgba(255, 255, 255, 0.2);
-          transform: scale(1.05);
-        }
-
-        &:active {
-          transform: scale(0.95);
-        }
-
-        &:disabled {
-          opacity: 0.5;
-          cursor: not-allowed;
+          color: currentColor;
         }
       }
     }
   }
 
-  // ===================================================================
-  // CONTENT STYLES
-  // ===================================================================
-
-  .dialog-content {
-    padding: var(--space-6);
-    font-size: var(--text-base);
-    line-height: var(--leading-relaxed);
-    color: var(--text-primary);
-    min-height: 0;
-    flex: 1;
-    overflow-y: auto;
-
-    &:empty {
-      display: none;
-    }
-
-    // Better typography
-    :deep(p) {
-      margin: 0 0 var(--space-4) 0;
-
-      &:last-child {
-        margin-bottom: 0;
-      }
-    }
-
-    :deep(h1, h2, h3, h4, h5, h6) {
-      font-weight: var(--font-weight-semibold);
-      color: var(--text-primary);
-      margin: 0 0 var(--space-3) 0;
-    }
-
-    :deep(h3) {
-      font-size: var(--text-lg);
-    }
-  }
-
-  // ===================================================================
-  // FOOTER STYLES
-  // ===================================================================
-
-  .dialog-footer {
-    padding: var(--space-4) var(--space-6) var(--space-6);
-    background: var(--bg-secondary);
-    border-top: 1px solid var(--border-primary);
-    display: flex;
-    justify-content: flex-end;
-    gap: var(--space-3);
-    align-items: center;
-    position: sticky;
-    bottom: 0;
-    z-index: 1;
-
-    .standard-actions,
-    .custom-actions {
-      display: flex;
-      gap: var(--space-3);
-      align-items: center;
-    }
-
-    // Button styles using app design system
-    .app-btn {
-      min-width: 120px;
-      height: var(--control-height-md);
-      border-radius: var(--radius-lg);
-      font-weight: var(--font-weight-semibold);
-      font-size: var(--text-sm);
-      font-family: var(--font-family-primary);
-      letter-spacing: 0.01em;
-      transition: var(--transition-base);
-      border: none;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: var(--space-2);
-      text-transform: none;
-      position: relative;
-
-      &:disabled {
-        opacity: 0.6;
-        cursor: not-allowed;
-        transform: none;
-      }
-
-      .btn-loading {
-        position: absolute;
-        inset: 0;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-
-        .btn-spinner {
-          width: 16px;
-          height: 16px;
-          border: 2px solid rgba(255, 255, 255, 0.3);
-          border-top: 2px solid white;
-          border-radius: var(--radius-full);
-          animation: spin 1s linear infinite;
-        }
-      }
-    }
-
-    @media (max-width: 640px) {
-      flex-direction: column-reverse;
-      align-items: stretch;
-      gap: var(--space-3);
-
-      .standard-actions,
-      .custom-actions {
-        flex-direction: column-reverse;
-        align-items: stretch;
-      }
-
-      .app-btn {
-        width: 100%;
-        min-width: auto;
-      }
-    }
-  }
-
-  // ===================================================================
-  // DARK MODE ADAPTATIONS
-  // ===================================================================
-
+  // Dark mode adaptations for component-specific styles
   body.body--dark {
-    .app-dialog-card {
-      background: var(--bg-primary);
-      border: 1px solid var(--border-primary);
-      box-shadow: var(--shadow-2xl);
-
-      &.dialog-elegant {
-        background: linear-gradient(
-          135deg,
-          var(--bg-primary) 0%,
-          var(--bg-secondary) 100%
-        );
-      }
-
-      &.dialog-glass {
-        background: var(--glass-bg);
-        border: 1px solid var(--glass-border);
-      }
-
-      &.dialog-loading .dialog-loading-overlay {
-        background: rgba(0, 0, 0, 0.9);
-
-        .loading-text {
-          color: var(--text-secondary);
-        }
-      }
+    .dialog-steps {
+      background: var(--surface);
+      border-bottom: var(--dlg-border);
     }
 
-    .dialog-header {
+    .dlg__header {
       &.header-minimal {
-        color: var(--text-primary);
-        border-bottom: 1px solid var(--border-primary);
+        color: var(--text);
       }
 
       &.header-glass {
-        background: var(--glass-bg);
-        color: var(--text-primary);
-        border-bottom: 1px solid var(--border-primary);
+        background: rgba(0, 0, 0, 0.8);
+        color: var(--text);
       }
     }
-
-    .dialog-content {
-      color: var(--text-primary);
-    }
-
-    .dialog-footer {
-      background: var(--bg-secondary);
-      border-top: 1px solid var(--border-primary);
-    }
-
-    .dialog-steps {
-      background: var(--bg-secondary);
-      border-bottom: 1px solid var(--border-primary);
-    }
-  }
-
-  // ===================================================================
-  // ANIMATIONS
-  // ===================================================================
-
-  @keyframes spin {
-    0% {
-      transform: rotate(0deg);
-    }
-    100% {
-      transform: rotate(360deg);
-    }
-  }
-
-  // Enhanced scroll behavior
-  .app-dialog-card {
-    scrollbar-width: thin;
-    scrollbar-color: var(--neutral-300) transparent;
-
-    &::-webkit-scrollbar {
-      width: 8px;
-    }
-
-    &::-webkit-scrollbar-track {
-      background: transparent;
-      border-radius: var(--radius-2xl);
-    }
-
-    &::-webkit-scrollbar-thumb {
-      background: var(--neutral-300);
-      border-radius: var(--radius-2xl);
-      border: 2px solid transparent;
-      background-clip: content-box;
-    }
-
-    &::-webkit-scrollbar-thumb:hover {
-      background: var(--neutral-400);
-    }
-
-    &::-webkit-scrollbar-corner {
-      background: transparent;
-    }
-  }
-
-  // Focus states
-  .close-btn:focus-visible {
-    outline: 3px solid rgba(255, 255, 255, 0.4);
-    outline-offset: 2px;
-  }
-
-  body.body--dark .close-btn:focus-visible {
-    outline-color: rgba(255, 255, 255, 0.2);
   }
 </style>

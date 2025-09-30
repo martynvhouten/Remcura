@@ -1,45 +1,56 @@
-import { ref, computed } from 'vue';
+import { ref, computed, type Ref } from 'vue';
 import { supabase } from '@/boot/supabase';
 import { inventoryLogger } from '@/utils/logger';
-import type { OrderSuggestion, StockAlert } from '@/types/inventory';
+import type {
+  OrderSuggestion,
+  StockAlert,
+  UrgencyLevel,
+  StockLevelView,
+} from '@/types/inventory';
 
-export function useInventoryAlerts(stockLevels: Ref<StockLevel[]>) {
+const normalizeUrgency = (value: string | null | undefined): UrgencyLevel => {
+  switch (value) {
+    case 'critical':
+    case 'high':
+    case 'medium':
+    case 'low':
+      return value;
+    default:
+      return 'low';
+  }
+};
+
+export function useInventoryAlerts(stockLevels: Ref<StockLevelView[]>) {
   // State
   const orderSuggestions = ref<OrderSuggestion[]>([]);
 
-  // Computed properties
   const criticalAlerts = computed<StockAlert[]>(() => {
     const alerts: StockAlert[] = [];
 
-    stockLevels.value.forEach((stockLevel: StockLevel) => {
-      // Low stock alerts - using minimum_stock instead of minimum_quantity
-      const minimumStock =
-        (stockLevel as any).minimum_stock ||
-        (stockLevel as any).minimum_quantity ||
-        10;
+    stockLevels.value.forEach(stockLevel => {
+      const minimumStock = stockLevel.minimum_quantity ?? 0;
       if (stockLevel.current_quantity <= minimumStock) {
         alerts.push({
+          id: `${stockLevel.product_id}-${stockLevel.location_id}-low`,
           product_id: stockLevel.product_id,
-          location_id: stockLevel.location_id,
+          location_id: stockLevel.location_id ?? '',
           type: 'low_stock',
-          current_quantity: stockLevel.current_quantity,
-          threshold_quantity: minimumStock,
-          title:
+          current_stock: stockLevel.current_quantity,
+          minimum_stock: minimumStock,
+          message:
             stockLevel.current_quantity === 0 ? 'Out of Stock' : 'Low Stock',
-          message: `Current stock: ${stockLevel.current_quantity}, Minimum: ${minimumStock}`,
           created_at: new Date().toISOString(),
         });
       }
 
-      // Negative stock alerts (if allowed)
       if (stockLevel.current_quantity < 0) {
         alerts.push({
+          id: `${stockLevel.product_id}-${stockLevel.location_id}-negative`,
           product_id: stockLevel.product_id,
-          location_id: stockLevel.location_id,
+          location_id: stockLevel.location_id ?? '',
           type: 'out_of_stock',
-          current_quantity: stockLevel.current_quantity,
-          threshold_quantity: 0,
-          title: 'Negative Stock',
+          current_stock: stockLevel.current_quantity,
+          minimum_stock: 0,
           message: `Stock level is below zero: ${stockLevel.current_quantity}`,
           created_at: new Date().toISOString(),
         });
@@ -47,7 +58,6 @@ export function useInventoryAlerts(stockLevels: Ref<StockLevel[]>) {
     });
 
     return alerts.sort((a, b) => {
-      // Sort by severity: out_of_stock first, then low_stock
       if (a.type === 'out_of_stock' && b.type !== 'out_of_stock') {
         return -1;
       }
@@ -60,60 +70,70 @@ export function useInventoryAlerts(stockLevels: Ref<StockLevel[]>) {
 
   const fetchOrderSuggestions = async (practiceId: string) => {
     try {
-      // Use RPC function to get order suggestions based on current stock levels
       const { data, error } = await supabase.rpc('get_order_advice', {
         practice_uuid: practiceId,
       });
 
       if (error) throw error;
 
-      orderSuggestions.value = (data || []).map((item: StockLevel) => ({
-        product_id: item.product_id,
-        product_name: item.product_name,
-        product_sku: item.product_sku,
-        location_id: item.location_id || '',
-        location_name: item.location_name || 'Main Location',
-        current_stock: item.current_stock,
-        minimum_stock: item.minimum_stock,
-        suggested_quantity: item.suggested_quantity,
-        preferred_supplier_id: item.preferred_supplier_id || null,
-        supplier_name: item.supplier_name,
-        urgency_level: item.urgency_level,
-        days_until_stockout: item.days_until_stockout || 0,
-      }));
+      const locationMap = new Map<string, string>();
+      stockLevels.value.forEach(level => {
+        const locationId = level.location_id ?? '';
+        if (!locationMap.has(locationId)) {
+          locationMap.set(locationId, level.location_name ?? 'Main Location');
+        }
+      });
+
+      const rows = (data ?? []) as Array<{
+        product_id: string;
+        product_name: string;
+        product_sku: string;
+        current_stock: number;
+        minimum_stock: number;
+        suggested_quantity: number;
+        urgency_level: string | null;
+        location_id?: string | null;
+        preferred_supplier_id?: string | null;
+        supplier_name?: string | null;
+        days_until_stockout?: number | null;
+      }>;
+
+      orderSuggestions.value = rows.map(item => {
+        const locationId = item.location_id ?? '';
+        return {
+          product_id: item.product_id,
+          product_name: item.product_name,
+          product_sku: item.product_sku,
+          location_id: locationId,
+          location_name: locationMap.get(locationId) ?? 'Main Location',
+          current_stock: item.current_stock,
+          minimum_stock: item.minimum_stock,
+          suggested_quantity: item.suggested_quantity,
+          preferred_supplier_id: item.preferred_supplier_id ?? null,
+          supplier_name: item.supplier_name ?? null,
+          urgency_level: normalizeUrgency(item.urgency_level),
+          days_until_stockout: item.days_until_stockout ?? null,
+        } satisfies OrderSuggestion;
+      });
     } catch (error) {
-      inventoryLogger.error('Error fetching order suggestions:', error);
+      inventoryLogger.error('Error fetching order suggestions:', {
+        error: error instanceof Error ? error.message : String(error),
+      });
       throw error;
     }
   };
 
-  const getProductStockAtLocation = (
-    productId: string,
-    locationId: string
-  ): number => {
+  const getProductStockAtLocation = (productId: string, locationId: string) => {
     const stockLevel = stockLevels.value.find(
-      (sl: StockLevel) =>
-        sl.product_id === productId && sl.location_id === locationId
+      sl => sl.product_id === productId && (sl.location_id ?? '') === locationId
     );
-    return stockLevel?.current_quantity || 0;
-  };
-
-  const getProductBatches = (productId: string, locationId: string) => {
-    // This would query product_batches table
-    // For now, return empty array as this functionality is handled by the batch store
-    return [];
+    return stockLevel?.current_quantity ?? 0;
   };
 
   return {
-    // State
     orderSuggestions,
-
-    // Computed
     criticalAlerts,
-
-    // Actions
     fetchOrderSuggestions,
     getProductStockAtLocation,
-    getProductBatches,
   };
 }

@@ -607,7 +607,7 @@
     gap: 24px;
 
     .token-group {
-      background: var(--card-background, #ffffff);
+      background: var(--surface);
       border: 1px solid var(--card-border, rgba(0, 0, 0, 0.08));
       border-radius: 12px;
       padding: 20px;
@@ -657,15 +657,15 @@
     margin-top: 8px;
 
     &--base {
-      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08), 0 1px 2px rgba(0, 0, 0, 0.06);
+      box-shadow: var(--shadow-sm);
     }
 
     &--interactive {
-      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.06), 0 1px 2px rgba(0, 0, 0, 0.04);
+      box-shadow: var(--shadow-md);
     }
 
     &--hover {
-      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.12), 0 4px 10px rgba(0, 0, 0, 0.08);
+      box-shadow: var(--shadow-lg);
     }
   }
 

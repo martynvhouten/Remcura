@@ -1,331 +1,333 @@
 <template>
   <BaseDialog
     :model-value="modelValue"
-    @update:model-value="$emit('update:modelValue', $event)"
     :title="$t('inventory.stockTransfer')"
     icon="swap_horiz"
     size="lg"
     :persistent="true"
+    @update:model-value="$emit('update:modelValue', $event)"
   >
-
-      <!-- Product Selector (when no product selected) -->
-      <div v-if="!selectedProduct" class="q-pa-md">
-        <div class="text-subtitle2 q-mb-md">
-          {{ $t('inventory.selectProduct') }}
-        </div>
-        <div class="row q-gutter-md">
-          <div class="col">
-            <q-select
-              v-model="internalSelectedProduct"
-              :options="availableProducts"
-              option-label="name"
-              option-value="id"
-              :label="$t('inventory.searchProduct')"
-              outlined
-              clearable
-              use-input
-              @filter="filterProducts"
-              @update:model-value="onProductSelected"
-            >
-              <template v-slot:prepend>
-                <q-icon name="search" />
-              </template>
-              <template v-slot:no-option>
-                <q-item>
-                  <q-item-section class="text-grey">
-                    {{ $t('inventory.noProductsFound') }}
-                  </q-item-section>
-                </q-item>
-              </template>
-            </q-select>
-          </div>
-          <div class="col-auto">
-            <q-btn
-              icon="qr_code_scanner"
-              color="primary"
-              outline
-              :label="$t('inventory.scanBarcode')"
-              @click="showBarcodeScanner = true"
-            />
-          </div>
-        </div>
+    <!-- Product Selector (when no product selected) -->
+    <div v-if="!selectedProduct" class="q-pa-md">
+      <div class="text-subtitle2 q-mb-md">
+        {{ $t('inventory.selectProduct') }}
       </div>
-
-      <!-- Product Preview (when product selected) -->
-      <div v-if="selectedProduct" class="q-pa-md q-pt-none">
-        <div class="product-preview">
-          <div class="row items-center q-gutter-md">
-            <q-avatar size="48px" color="grey-3">
-              <q-img
-                v-if="selectedProduct.image_url"
-                :src="selectedProduct.image_url"
-                :alt="selectedProduct.name"
-              />
-              <q-icon
-                v-else
-                name="inventory"
-                class="icon-size-lg"
-                color="grey-6"
-              />
-            </q-avatar>
-            <div class="col">
-              <div class="text-subtitle1 text-weight-medium">
-                {{ selectedProduct.name }}
-              </div>
-              <div class="text-caption text-grey-6">
-                {{ selectedProduct.sku }} • {{ selectedProduct.brand }}
-              </div>
-              <div class="text-caption text-primary">
-                <q-btn
-                  icon="edit"
-                  flat
-                  dense
-                  size="sm"
-                  :label="$t('inventory.changeProduct')"
-                  @click="clearSelectedProduct"
-                />
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Transfer Form -->
-      <div class="q-pa-md">
-        <div class="q-gutter-md">
-          <!-- From Location -->
-          <div>
-            <label class="text-subtitle2 q-mb-sm block">
-              {{ $t('inventory.fromLocation') }}
-            </label>
-            <q-select
-              v-model="fromLocation"
-              :options="availableFromLocations"
-              option-label="name"
-              option-value="id"
-              outlined
-              dense
-              :disable="!selectedProduct"
-              @update:model-value="onFromLocationChange"
-            >
-              <template v-slot:option="scope">
-                <q-item v-bind="scope.itemProps">
-                  <q-item-section>
-                    <q-item-label>{{ scope.opt.name }}</q-item-label>
-                    <q-item-label caption>
-                      {{ $t('inventory.availableStock') }}:
-                      {{ getLocationStock(scope.opt.id) }}
-                    </q-item-label>
-                  </q-item-section>
-                </q-item>
-              </template>
-            </q-select>
-          </div>
-
-          <!-- To Location -->
-          <div>
-            <label class="text-subtitle2 q-mb-sm block">
-              {{ $t('inventory.toLocation') }}
-            </label>
-            <q-select
-              v-model="toLocation"
-              :options="availableToLocations"
-              option-label="name"
-              option-value="id"
-              outlined
-              dense
-              :disable="!fromLocation"
-            />
-          </div>
-
-          <!-- Batch Selection (if product requires batch tracking) -->
-          <div
-            v-if="
-              selectedProduct?.requires_batch_tracking &&
-              availableBatches.length > 0
-            "
+      <div class="row q-gutter-md">
+        <div class="col">
+          <q-select
+            v-model="internalSelectedProduct"
+            :options="availableProducts"
+            option-label="name"
+            option-value="id"
+            :label="$t('inventory.searchProduct')"
+            outlined
+            clearable
+            use-input
+            @filter="filterProducts"
+            @update:model-value="onProductSelected"
           >
-            <label class="text-subtitle2 q-mb-sm block">
-              {{ $t('inventory.selectBatch') }}
-            </label>
-            <q-select
-              v-model="selectedBatch"
-              :options="availableBatches"
-              option-label="batchDisplay"
-              option-value="id"
-              outlined
-              dense
-              :disable="!fromLocation"
-            >
-              <template v-slot:option="scope">
-                <q-item v-bind="scope.itemProps">
-                  <q-item-section>
-                    <q-item-label>{{ scope.opt.batch_number }}</q-item-label>
-                    <q-item-label caption>
-                      {{ $t('inventory.expiryDate') }}:
-                      {{ formatDate(scope.opt.expiry_date) }} •
-                      {{ $t('inventory.available') }}:
-                      {{ scope.opt.available_quantity }}
-                    </q-item-label>
-                  </q-item-section>
-                  <q-item-section side>
-                    <q-chip
-                      :color="getBatchStatusColor(scope.opt)"
-                      text-color="white"
-                      size="sm"
-                    >
-                      {{ getBatchStatusText(scope.opt) }}
-                    </q-chip>
-                  </q-item-section>
-                </q-item>
-              </template>
-            </q-select>
-          </div>
+            <template #prepend>
+              <q-icon name="search" />
+            </template>
+            <template #no-option>
+              <q-item>
+                <q-item-section class="text-grey">
+                  {{ $t('inventory.noProductsFound') }}
+                </q-item-section>
+              </q-item>
+            </template>
+          </q-select>
+        </div>
+        <div class="col-auto">
+          <q-btn
+            icon="qr_code_scanner"
+            color="primary"
+            outline
+            :label="$t('inventory.scanBarcode')"
+            @click="showBarcodeScanner = true"
+          />
+        </div>
+      </div>
+    </div>
 
-          <!-- Quantity -->
-          <div>
-            <label class="text-subtitle2 q-mb-sm block">
-              {{ $t('inventory.quantityToTransfer') }}
-            </label>
-            <div class="row q-gutter-sm">
-              <div class="col">
-                <q-input
-                  v-model.number="transferQuantity"
-                  type="number"
-                  outlined
-                  dense
-                  min="1"
-                  :max="maxTransferQuantity"
-                  :disable="!fromLocation || !toLocation"
-                  :suffix="selectedProduct?.unit || ''"
+    <!-- Product Preview (when product selected) -->
+    <div v-if="selectedProduct" class="q-pa-md q-pt-none">
+      <div class="product-preview">
+        <div class="row items-center q-gutter-md">
+          <q-avatar size="48px" color="grey-3">
+            <q-img
+              v-if="selectedProduct.image_url"
+              :src="selectedProduct.image_url"
+              :alt="selectedProduct.name"
+            />
+            <q-icon
+              v-else
+              name="inventory"
+              class="icon-size-lg"
+              color="grey-6"
+            />
+          </q-avatar>
+          <div class="col">
+            <div class="text-subtitle1 text-weight-medium">
+              {{ selectedProduct.name }}
+            </div>
+            <div class="text-caption text-grey-6">
+              {{ selectedProduct.sku }} • {{ selectedProduct.brand }}
+            </div>
+            <div class="text-caption text-primary">
+              <q-btn
+                icon="edit"
+                flat
+                dense
+                size="sm"
+                :label="$t('inventory.changeProduct')"
+                @click="clearSelectedProduct"
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Transfer Form -->
+    <div class="q-pa-md">
+      <div class="q-gutter-md">
+        <!-- From Location -->
+        <div>
+          <label class="text-subtitle2 q-mb-sm block">
+            {{ $t('inventory.fromLocation') }}
+          </label>
+          <q-select
+            v-model="fromLocation"
+            :options="availableFromLocations"
+            option-label="name"
+            option-value="id"
+            outlined
+            dense
+            :disable="!selectedProduct"
+            @update:model-value="onFromLocationChange"
+          >
+            <template #option="scope">
+              <q-item v-bind="scope.itemProps">
+                <q-item-section>
+                  <q-item-label>{{ scope.opt.name }}</q-item-label>
+                  <q-item-label caption>
+                    {{ $t('inventory.availableStock') }}:
+                    {{ getLocationStock(scope.opt.id) }}
+                  </q-item-label>
+                </q-item-section>
+              </q-item>
+            </template>
+          </q-select>
+        </div>
+
+        <!-- To Location -->
+        <div>
+          <label class="text-subtitle2 q-mb-sm block">
+            {{ $t('inventory.toLocation') }}
+          </label>
+          <q-select
+            v-model="toLocation"
+            :options="availableToLocations"
+            option-label="name"
+            option-value="id"
+            outlined
+            dense
+            :disable="!fromLocation"
+          />
+        </div>
+
+        <!-- Batch Selection (if product requires batch tracking) -->
+        <div
+          v-if="
+            selectedProduct?.requires_batch_tracking &&
+            availableBatches.length > 0
+          "
+        >
+          <label class="text-subtitle2 q-mb-sm block">
+            {{ $t('inventory.selectBatch') }}
+          </label>
+          <q-select
+            v-model="selectedBatch"
+            :options="availableBatches"
+            option-label="batchDisplay"
+            option-value="id"
+            outlined
+            dense
+            :disable="!fromLocation"
+          >
+            <template #option="scope">
+              <q-item v-bind="scope.itemProps">
+                <q-item-section>
+                  <q-item-label>{{ scope.opt.batch_number }}</q-item-label>
+                  <q-item-label caption>
+                    {{ $t('inventory.expiryDate') }}:
+                    {{ formatDate(scope.opt.expiry_date) }} •
+                    {{ $t('inventory.available') }}:
+                    {{ scope.opt.available_quantity }}
+                  </q-item-label>
+                </q-item-section>
+                <q-item-section side>
+                  <q-chip
+                    :color="getBatchStatusColor(scope.opt)"
+                    text-color="white"
+                    size="sm"
+                  >
+                    {{ getBatchStatusText(scope.opt) }}
+                  </q-chip>
+                </q-item-section>
+              </q-item>
+            </template>
+          </q-select>
+        </div>
+
+        <!-- Quantity -->
+        <div>
+          <label class="text-subtitle2 q-mb-sm block">
+            {{ $t('inventory.quantityToTransfer') }}
+          </label>
+          <div class="row q-gutter-sm">
+            <div class="col">
+              <q-input
+                v-model.number="transferQuantity"
+                type="number"
+                outlined
+                dense
+                min="1"
+                :max="maxTransferQuantity"
+                :disable="!fromLocation || !toLocation"
+                :suffix="selectedProduct?.unit || ''"
+              />
+            </div>
+            <div class="col-auto">
+              <q-btn-group outline>
+                <q-btn
+                  v-for="amount in quickAmounts"
+                  :key="amount"
+                  :label="amount.toString()"
+                  color="primary"
+                  outline
+                  unelevated
+                  size="sm"
+                  @click="setQuickAmount(amount)"
                 />
-              </div>
-              <div class="col-auto">
-                <q-btn-group outline>
-                  <q-btn
-                    v-for="amount in quickAmounts"
-                    :key="amount"
-                    :label="amount"
-                    size="sm"
-                    @click="setQuickAmount(amount)"
-                    :disable="amount > maxTransferQuantity"
-                  />
-                  <q-btn
-                    :label="$t('common.all')"
-                    size="sm"
-                    @click="setQuickAmount(maxTransferQuantity)"
-                    :disable="maxTransferQuantity <= 0"
-                  />
-                </q-btn-group>
-              </div>
-            </div>
-            <div
-              v-if="maxTransferQuantity > 0"
-              class="text-caption text-grey-6 q-mt-xs"
-            >
-              {{ $t('inventory.maxAvailable') }}: {{ maxTransferQuantity }}
-              {{ selectedProduct?.unit }}
+                <q-btn
+                  color="primary"
+                  :label="$t('inventory.transferFullStock')"
+                  outline
+                  icon="all_inbox"
+                  @click="setQuickAmount(maxTransferQuantity)"
+                />
+              </q-btn-group>
             </div>
           </div>
-
-          <!-- Reason -->
-          <div>
-            <label class="text-subtitle2 q-mb-sm block">
-              {{ $t('inventory.transferReason') }}
-            </label>
-            <q-select
-              v-model="transferReason"
-              :options="reasonOptions"
-              outlined
-              dense
-              :disable="!fromLocation || !toLocation"
-            />
+          <div
+            v-if="maxTransferQuantity > 0"
+            class="text-caption text-grey-6 q-mt-xs"
+          >
+            {{ $t('inventory.maxAvailable') }}: {{ maxTransferQuantity }}
+            {{ selectedProduct?.unit }}
           </div>
+        </div>
 
-          <!-- Notes -->
-          <div>
-            <label class="text-subtitle2 q-mb-sm block">
-              {{ $t('inventory.notes') }} ({{ $t('common.optional') }})
-            </label>
-            <q-input
-              v-model="notes"
-              type="textarea"
-              outlined
-              dense
-              rows="2"
-              :placeholder="$t('inventory.transferNotesPlaceholder')"
-            />
+        <!-- Reason -->
+        <div>
+          <label class="text-subtitle2 q-mb-sm block">
+            {{ $t('inventory.transferReason') }}
+          </label>
+          <q-select
+            v-model="transferReason"
+            :options="reasonOptions"
+            outlined
+            dense
+            :disable="!fromLocation || !toLocation"
+          />
+        </div>
+
+        <!-- Notes -->
+        <div>
+          <label class="text-subtitle2 q-mb-sm block">
+            {{ $t('inventory.notes') }} ({{ $t('common.optional') }})
+          </label>
+          <q-input
+            v-model="notes"
+            type="textarea"
+            outlined
+            dense
+            rows="2"
+            :placeholder="$t('inventory.transferNotesPlaceholder')"
+          />
+        </div>
+
+        <!-- Transfer Preview -->
+        <div v-if="isValidTransfer" class="transfer-preview">
+          <q-separator class="q-my-md" />
+          <div class="text-subtitle2 q-mb-sm">
+            {{ $t('inventory.transferPreview') }}
           </div>
-
-          <!-- Transfer Preview -->
-          <div v-if="isValidTransfer" class="transfer-preview">
-            <q-separator class="q-my-md" />
-            <div class="text-subtitle2 q-mb-sm">
-              {{ $t('inventory.transferPreview') }}
-            </div>
-            <div class="preview-card">
-              <q-card flat bordered>
-                <q-card-section class="q-pa-sm">
-                  <div class="row items-center q-gutter-sm">
-                    <div class="col text-center">
-                      <div class="text-body2 text-weight-medium">
-                        {{ fromLocation?.name }}
-                      </div>
-                      <div class="text-h6 text-negative">
-                        -{{ transferQuantity }}
-                      </div>
-                      <div class="text-caption">
-                        {{ getCurrentStock() - transferQuantity }}
-                        {{ $t('inventory.remaining') }}
-                      </div>
+          <div class="preview-card">
+            <q-card flat bordered>
+              <q-card-section class="q-pa-sm">
+                <div class="row items-center q-gutter-sm">
+                  <div class="col text-center">
+                    <div class="text-body2 text-weight-medium">
+                      {{ fromLocation?.name }}
                     </div>
-                    <div class="col-auto">
-                      <q-icon name="arrow_forward" size="md" color="primary" />
+                    <div class="text-h6 text-negative">
+                      -{{ transferQuantity }}
                     </div>
-                    <div class="col text-center">
-                      <div class="text-body2 text-weight-medium">
-                        {{ toLocation?.name }}
-                      </div>
-                      <div class="text-h6 text-positive">
-                        +{{ transferQuantity }}
-                      </div>
-                      <div class="text-caption">
-                        {{ getToLocationCurrentStock() + transferQuantity }}
-                        {{ $t('inventory.newTotal') }}
-                      </div>
+                    <div class="text-caption">
+                      {{ getCurrentStock() - transferQuantity }}
+                      {{ $t('inventory.remaining') }}
                     </div>
                   </div>
-                </q-card-section>
-              </q-card>
-            </div>
+                  <div class="col-auto">
+                    <q-icon name="arrow_forward" size="md" color="primary" />
+                  </div>
+                  <div class="col text-center">
+                    <div class="text-body2 text-weight-medium">
+                      {{ toLocation?.name }}
+                    </div>
+                    <div class="text-h6 text-positive">
+                      +{{ transferQuantity }}
+                    </div>
+                    <div class="text-caption">
+                      {{ getToLocationCurrentStock() + transferQuantity }}
+                      {{ $t('inventory.newTotal') }}
+                    </div>
+                  </div>
+                </div>
+              </q-card-section>
+            </q-card>
           </div>
         </div>
       </div>
+    </div>
 
-      <!-- Actions -->
-      <template #actions>
-        <div class="row items-center q-gutter-sm q-pa-sm">
-          <q-space />
-          <q-btn
-            flat
-            :label="$t('common.cancel')"
-            @click="$emit('update:modelValue', false)"
-            aria-label="Cancel"
-          />
-          <q-btn
-            color="primary"
-            :label="$t('inventory.executeTransfer')"
-            :loading="transferLoading"
-            :disable="!isValidTransfer"
-            @click="executeTransfer"
-            aria-label="Execute transfer"
-          />
-        </div>
-      </template>
-    </BaseDialog>
+    <!-- Actions -->
+    <template #actions>
+      <div class="row items-center q-gutter-sm q-pa-sm">
+        <q-space />
+        <q-btn
+          flat
+          :label="$t('common.cancel')"
+          aria-label="Cancel"
+          @click="$emit('update:modelValue', false)"
+        />
+        <q-btn
+          color="primary"
+          :label="$t('inventory.executeTransfer')"
+          :loading="transferLoading"
+          :disable="!isValidTransfer"
+          aria-label="Execute transfer"
+          @click="executeTransfer"
+        />
+      </div>
+    </template>
+  </BaseDialog>
 
-    <!-- Barcode Scanner -->
-    <BarcodeScanner v-model="showBarcodeScanner" @scan="handleBarcodeScan" />
+  <!-- Barcode Scanner -->
+  <BarcodeScanner v-model="showBarcodeScanner" @scan="handleBarcodeScan" />
 </template>
 
 <script setup lang="ts">
@@ -337,22 +339,28 @@
   import { formatDate } from 'src/utils/date';
   import BarcodeScanner from 'src/components/BarcodeScanner.vue';
   import BaseDialog from 'src/components/base/BaseDialog.vue';
+  import type {
+    LocationSummary,
+    ProductBatchSummary,
+    ProductWithStock,
+    StockTransferRequest,
+  } from 'src/types/inventory';
 
-  // Props & Emits
   interface Props {
     modelValue: boolean;
-    selectedProduct: any;
-    currentLocation?: any;
+    selectedProduct: ProductWithStock;
+    currentLocation?: LocationSummary;
   }
 
   const props = withDefaults(defineProps<Props>(), {
     modelValue: false,
+    currentLocation: null,
   });
 
   const emit = defineEmits<{
     'update:modelValue': [value: boolean];
     'transfer-completed': [transfer: any];
-    'product-selected': [product: any];
+    'product-selected': [product: ProductWithStock | null];
   }>();
 
   // Composition
@@ -362,17 +370,19 @@
   const clinicStore = useClinicStore();
 
   // State
-  const fromLocation = ref<any>(null);
-  const toLocation = ref<any>(null);
-  const selectedBatch = ref<any>(null);
+  const fromLocation = ref<LocationSummary | null>(
+    props.currentLocation ?? null
+  );
+  const toLocation = ref<LocationSummary | null>(null);
+  const selectedBatch = ref<ProductBatchSummary | null>(null);
   const transferQuantity = ref<number>(1);
   const transferReason = ref('location_rebalance');
   const notes = ref('');
   const transferLoading = ref(false);
 
   // Product selection state
-  const internalSelectedProduct = ref<any>(null);
-  const availableProducts = ref<any[]>([]);
+  const internalSelectedProduct = ref<ProductWithStock>(props.selectedProduct);
+  const availableProducts = ref<ProductWithStock[]>([]);
   const showBarcodeScanner = ref(false);
 
   // Quick amount buttons
@@ -409,26 +419,28 @@
   });
 
   // Available batches for the selected product and location
-  const availableBatches = computed(() => {
+  const availableBatches = computed<ProductBatchSummary[]>(() => {
     if (
       !props.selectedProduct?.requires_batch_tracking ||
       !fromLocation.value
     ) {
-      return [];
+      return [] as any[];
     }
 
     // Get batches for this product at the from location
-    return inventoryStore
-      .getProductBatches(props.selectedProduct.id, fromLocation.value.id)
-      .filter((batch: any) => batch.available_quantity > 0)
-      .map((batch: any) => ({
+    const batches = inventoryStore.getProductBatches(
+      props.selectedProduct.id,
+      fromLocation.value.id
+    );
+
+    return batches
+      .filter(batch => batch.available_quantity > 0)
+      .map(batch => ({
         ...batch,
-        batchDisplay: `${batch.batch_number} (${formatDate(
-          batch.expiry_date
-        )})`,
+        batchDisplay: `${batch.batch_number} (${formatDate(batch.expiry_date)})`,
       }))
       .sort(
-        (a: any, b: any) =>
+        (a, b) =>
           new Date(a.expiry_date).getTime() - new Date(b.expiry_date).getTime()
       );
   });
@@ -458,7 +470,6 @@
 
   // Methods
   const getLocationStock = (locationId: string): number => {
-    if (!props.selectedProduct) return 0;
     return inventoryStore.getProductStockAtLocation(
       props.selectedProduct.id,
       locationId
@@ -482,7 +493,7 @@
     transferQuantity.value = Math.min(amount, maxTransferQuantity.value);
   };
 
-  const getBatchStatusColor = (batch: any): string => {
+  const getBatchStatusColor = (batch: ProductBatchSummary): string => {
     const daysToExpiry = Math.ceil(
       (new Date(batch.expiry_date).getTime() - new Date().getTime()) /
         (1000 * 60 * 60 * 24)
@@ -494,7 +505,7 @@
     return 'positive';
   };
 
-  const getBatchStatusText = (batch: any): string => {
+  const getBatchStatusText = (batch: ProductBatchSummary): string => {
     const daysToExpiry = Math.ceil(
       (new Date(batch.expiry_date).getTime() - new Date().getTime()) /
         (1000 * 60 * 60 * 24)
@@ -512,17 +523,18 @@
     transferLoading.value = true;
 
     try {
-      const transferData = {
+      const transfer: StockTransferRequest = {
+        practice_id: props.selectedProduct.practice_id,
         product_id: props.selectedProduct.id,
-        from_location_id: fromLocation.value.id,
-        to_location_id: toLocation.value.id,
+        from_location_id: fromLocation.value?.id ?? '',
+        to_location_id: toLocation.value?.id ?? '',
         quantity: transferQuantity.value,
         reason: transferReason.value,
         notes: notes.value,
-        batch_id: selectedBatch.value?.id || null,
+        batch_id: selectedBatch.value?.id ?? null,
       };
 
-      await inventoryStore.executeStockTransfer(transferData);
+      await inventoryStore.executeStockTransfer(transfer);
 
       $q.notify({
         type: 'positive',
@@ -535,7 +547,7 @@
         }),
       });
 
-      emit('transfer-completed', transferData);
+      emit('transfer-completed', transfer);
       emit('update:modelValue', false);
 
       // Reset form
@@ -564,7 +576,10 @@
   };
 
   // Product selection functions
-  const filterProducts = (val: string, update: (cb: () => void) => void) => {
+  const filterProducts = (
+    val: string,
+    update: (callback: () => void) => void
+  ) => {
     update(() => {
       if (val === '') {
         availableProducts.value = [];
@@ -575,9 +590,8 @@
     });
   };
 
-  const onProductSelected = (product: any) => {
+  const onProductSelected = (product: ProductWithStock | null) => {
     if (product) {
-      // Emit to parent that we want to switch products
       emit('product-selected', product);
     }
   };
@@ -590,11 +604,12 @@
   const handleBarcodeScan = async (barcode: string) => {
     try {
       // This would search for products by barcode
-      $q.notify({
+      const notificationOptions: QNotifyCreateOptions = {
         type: 'info',
         message: t('inventory.barcodeScanned', { barcode }),
         icon: 'qr_code_scanner',
-      });
+      };
+      $q.notify(notificationOptions);
     } catch (error) {
       console.error('Error processing barcode:', error);
       $q.notify({

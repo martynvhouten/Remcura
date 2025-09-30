@@ -4,13 +4,13 @@
     <div class="filter-panel-header">
       <q-btn
         unelevated
-        @click="toggleFilters"
         class="filter-toggle-btn app-btn-filter"
         :class="{ active: isFiltersVisible }"
         size="md"
         padding="12px 20px"
+        @click="toggleFilters"
       >
-        <template v-slot:default>
+        <template #default>
           <q-icon
             :name="updatePending ? 'hourglass_empty' : 'tune'"
             :class="updatePending ? 'animate-spin' : ''"
@@ -41,6 +41,9 @@
               <FilterField
                 :field="field"
                 :model-value="modelValue[field.id]"
+                :loading="loading"
+                :disabled="disabled"
+                :readonly="readonly"
                 @update:model-value="
                   value => handleFieldChange(field.id, value)
                 "
@@ -49,9 +52,6 @@
                     handleFieldChangeEvent(field, value, oldValue)
                 "
                 @scan="value => handleScanEvent(field, value)"
-                :loading="loading"
-                :disabled="disabled"
-                :readonly="readonly"
               />
             </div>
           </template>
@@ -62,6 +62,9 @@
               <FilterField
                 :field="field"
                 :model-value="modelValue[field.id]"
+                :loading="loading"
+                :disabled="disabled"
+                :readonly="readonly"
                 @update:model-value="
                   value => handleFieldChange(field.id, value)
                 "
@@ -70,9 +73,6 @@
                     handleFieldChangeEvent(field, value, oldValue)
                 "
                 @scan="value => handleScanEvent(field, value)"
-                :loading="loading"
-                :disabled="disabled"
-                :readonly="readonly"
               />
             </div>
           </template>
@@ -83,20 +83,20 @@
           <q-btn
             unelevated
             :label="t('filters.filterPanel.clearAllFilters')"
-            @click="handleClearAll"
             :disable="disabled || activeFiltersCount === 0"
             class="filter-btn filter-btn--clear app-btn-secondary"
             size="sm"
             padding="10px 18px"
+            @click="handleClearAll"
           />
           <q-btn
             unelevated
             :label="t('filters.filterPanel.applyFilters')"
-            @click="handleApplyFilters"
             :disable="disabled"
             class="filter-btn filter-btn--apply app-btn-primary"
             size="sm"
             padding="10px 20px"
+            @click="handleApplyFilters"
           />
         </div>
       </div>
@@ -115,6 +115,7 @@
     FilterField as FilterFieldType,
     FilterChangeEvent,
     FilterResetEvent,
+    FilterValue,
   } from '@/types/filters';
 
   interface Props {
@@ -231,8 +232,8 @@
       300 // 300ms debounce delay
     );
 
-  const handleFieldChange = (fieldId: string, value: any) => {
-    const newValues = { ...props.modelValue, [fieldId]: value };
+  const handleFieldChange = (fieldId: string, value: FilterValue) => {
+    const newValues: FilterValues = { ...props.modelValue, [fieldId]: value };
 
     // Clean up null/undefined values
     if (value === null || value === undefined || value === '') {
@@ -255,8 +256,8 @@
 
   const handleFieldChangeEvent = (
     field: FilterFieldType,
-    value: any,
-    oldValue?: any
+    value: FilterValue,
+    oldValue?: FilterValue
   ) => {
     const changeEvent: FilterChangeEvent = {
       field: field.id,

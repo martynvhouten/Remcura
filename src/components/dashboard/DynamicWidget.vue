@@ -11,7 +11,8 @@
         icon="refresh"
         size="sm"
         :loading="widget.loading || loading"
-        @click="$emit('refresh', widget.id)"
+        type="button"
+        @click="triggerRefresh"
       >
         <q-tooltip>{{ $t('dashboard.actions.refresh') }}</q-tooltip>
       </q-btn>
@@ -29,7 +30,6 @@
 
 <script setup lang="ts">
   import { computed } from 'vue';
-  import { useI18n } from 'vue-i18n';
   import { BaseDashboardWidget } from '@/components/cards';
 
   // Import widget components
@@ -39,11 +39,19 @@
   import AlertWidget from './widgets/AlertWidget.vue';
   import QuickActionWidget from './widgets/QuickActionWidget.vue';
 
+  type WidgetKind =
+    | 'metric'
+    | 'chart'
+    | 'list'
+    | 'alert'
+    | 'quickAction'
+    | 'table';
+
   export interface DashboardWidget {
     id: string;
     title: string;
-    type: 'metric' | 'chart' | 'list' | 'alert' | 'quickAction' | 'table';
-    data: Record<string, any>;
+    type: WidgetKind;
+    data: Record<string, unknown>;
     size: 'small' | 'medium' | 'large';
     position: number;
     visible: boolean;
@@ -66,8 +74,6 @@
     refresh: [widgetId: string];
   }>();
 
-  const { t } = useI18n();
-
   // Computed properties
   const widgetComponent = computed(() => {
     switch (props.widget.type) {
@@ -88,15 +94,14 @@
     }
   });
 
-  const widgetProps = computed(() => {
-    const baseProps: Record<string, any> = {};
-
-    // Pass chartType for chart widgets
+  const widgetProps = computed((): Record<string, unknown> => {
     if (props.widget.type === 'chart') {
-      baseProps.chartType = determineChartType();
+      return {
+        chartType: determineChartType(),
+      };
     }
 
-    return baseProps;
+    return {};
   });
 
   const hasActions = computed(() => {
@@ -105,6 +110,10 @@
       (props.widget.type === 'chart' || props.widget.type === 'list')
     );
   });
+
+  const triggerRefresh = () => {
+    emit('refresh', props.widget.id);
+  };
 
   function determineChartType(): 'bar' | 'line' | 'pie' {
     // Determine chart type based on widget data or ID

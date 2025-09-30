@@ -9,12 +9,12 @@
         <div class="method-header">
           <div class="header-content">
             <q-btn
-              @click="$emit('close')"
               round
               flat
               icon="close"
               color="white"
               size="md"
+              @click="$emit('close')"
             />
             <div class="session-info">
               <h1 class="main-title">{{ $t('counting.title') }}</h1>
@@ -24,12 +24,12 @@
               </p>
             </div>
             <q-btn
-              @click="toggleFullscreen"
               round
               flat
               :icon="isFullscreen ? 'fullscreen_exit' : 'fullscreen'"
               color="white"
               size="md"
+              @click="toggleFullscreen"
             />
           </div>
         </div>
@@ -43,9 +43,9 @@
 
             <div class="method-options">
               <q-card
-                @click="selectMethod('scan')"
                 class="method-option cursor-pointer"
                 :class="{ selected: selectedMethod === 'scan' }"
+                @click="selectMethod('scan')"
               >
                 <div class="method-icon scan-icon">
                   <q-icon name="qr_code_scanner" />
@@ -56,17 +56,17 @@
                 </div>
                 <div class="method-indicator">
                   <q-icon
-                    name="radio_button_unchecked"
                     v-if="selectedMethod !== 'scan'"
+                    name="radio_button_unchecked"
                   />
-                  <q-icon name="check_circle" v-else />
+                  <q-icon v-else name="check_circle" />
                 </div>
               </q-card>
 
               <q-card
-                @click="selectMethod('manual')"
                 class="method-option cursor-pointer"
                 :class="{ selected: selectedMethod === 'manual' }"
+                @click="selectMethod('manual')"
               >
                 <div class="method-icon manual-icon">
                   <q-icon name="edit" />
@@ -77,22 +77,22 @@
                 </div>
                 <div class="method-indicator">
                   <q-icon
-                    name="radio_button_unchecked"
                     v-if="selectedMethod !== 'manual'"
+                    name="radio_button_unchecked"
                   />
-                  <q-icon name="check_circle" v-else />
+                  <q-icon v-else name="check_circle" />
                 </div>
               </q-card>
             </div>
 
             <div class="method-actions">
               <q-btn
-                @click="startCounting"
                 :disable="!selectedMethod"
                 color="primary"
                 size="lg"
                 class="full-width"
                 no-caps
+                @click="startCounting"
               >
                 <q-icon name="arrow_forward" class="q-mr-sm" />
                 {{ $t('counting.method.continue') }}
@@ -111,12 +111,12 @@
           <div class="header-background"></div>
           <div class="header-content">
             <q-btn
-              @click="goBack"
               round
               flat
               icon="arrow_back"
               color="white"
               size="md"
+              @click="goBack"
             />
 
             <div class="progress-info">
@@ -136,7 +136,7 @@
               </div>
             </div>
 
-            <button @click="toggleFullscreen" class="fullscreen-btn">
+            <button class="fullscreen-btn" @click="toggleFullscreen">
               <q-icon :name="isFullscreen ? 'fullscreen_exit' : 'fullscreen'" />
             </button>
           </div>
@@ -175,15 +175,15 @@
               <div class="camera-controls">
                 <button
                   v-if="canSwitchCamera"
-                  @click="switchCamera"
                   class="camera-control-btn"
+                  @click="switchCamera"
                 >
                   <q-icon name="flip_camera_android" />
                 </button>
                 <button
                   v-if="hasFlash"
-                  @click="toggleFlash"
                   :class="['camera-control-btn', { active: flashEnabled }]"
+                  @click="toggleFlash"
                 >
                   <q-icon :name="flashEnabled ? 'flash_off' : 'flash_on'" />
                 </button>
@@ -191,7 +191,7 @@
             </div>
 
             <div class="scanner-actions">
-              <button @click="switchToManual" class="switch-method-btn">
+              <button class="switch-method-btn" @click="switchToManual">
                 <q-icon name="edit" />
                 <span>{{ $t('counting.scanner.switchToManual') }}</span>
               </button>
@@ -250,11 +250,11 @@
           </div>
 
           <div class="completion-actions">
-            <button @click="$emit('session-complete')" class="complete-btn">
+            <button class="complete-btn" @click="$emit('session-complete')">
               <q-icon name="check" />
               <span>{{ $t('counting.completeSession') }}</span>
             </button>
-            <button @click="restartCounting" class="restart-btn">
+            <button class="restart-btn" @click="restartCounting">
               <q-icon name="refresh" />
               <span>{{ $t('common.restart') }}</span>
             </button>
@@ -298,12 +298,14 @@
   type CountingStep = 'method-selection' | 'counting' | 'complete';
 
   // Props
-  const props = defineProps<{
+  interface Props {
     locationId?: string;
     practiceId?: string;
-    session?: any;
-    products?: any[];
-  }>();
+    session?: unknown;
+    products?: Product[];
+  }
+
+  const props = defineProps<Props>();
 
   // Emits
   const emit = defineEmits<{
@@ -335,11 +337,19 @@
   const scanInterval = ref<number | null>(null);
 
   // Data
-  const productsList = ref<Product[]>([]);
+  const productsList = ref<Product[]>(props.products ?? []);
   const recentCounts = ref<CountEntry[]>([]);
 
   // Barcode Detection
-  let barcodeDetector: any = null;
+  type BarcodeDetectionResult = { rawValue: string };
+  interface BarcodeDetectorInstance {
+    detect: (video: HTMLVideoElement) => Promise<BarcodeDetectionResult[]>;
+  }
+  interface BarcodeDetectorConstructor {
+    new (): BarcodeDetectorInstance;
+  }
+
+  let barcodeDetector: BarcodeDetectorInstance | null = null;
 
   // Computed
   const totalProducts = computed(() => productsList.value.length);
@@ -354,8 +364,8 @@
   });
 
   const currentProduct = computed(() => {
-    if (currentProductIndex.value >= products.value.length) return null;
-    return products.value[currentProductIndex.value];
+    if (currentProductIndex.value >= productsList.value.length) return null;
+    return productsList.value[currentProductIndex.value];
   });
 
   const currentStock = computed(() => {
@@ -436,8 +446,14 @@
 
       // Initialize barcode detection
       if ('BarcodeDetector' in window) {
-        barcodeDetector = new (window as any).BarcodeDetector();
-        startScanning();
+        const Detector = (
+          window as { BarcodeDetector?: BarcodeDetectorConstructor }
+        ).BarcodeDetector;
+
+        if (Detector) {
+          barcodeDetector = new Detector();
+          startScanning();
+        }
       }
     } catch (error) {
       console.error('Camera access failed:', error);
@@ -481,7 +497,7 @@
       const videoTrack = currentStream.value.getVideoTracks()[0];
       if (videoTrack) {
         await videoTrack.applyConstraints({
-          advanced: [{ torch: !flashEnabled.value } as any],
+          advanced: [{ torch: !flashEnabled.value }],
         });
         flashEnabled.value = !flashEnabled.value;
       }
@@ -660,17 +676,19 @@
     }
 
     // Initialize products list
-    productsList.value = inventoryStore.stockLevels.map(s => ({
-      id: s.product_id,
-      name: (s as any).product?.name || 'Onbekend product',
-      sku: (s as any).product?.sku || '',
-      current_stock: s.current_quantity || 0,
-      minimum_stock: s.minimum_stock || 0,
-      maximum_stock: s.maximum_stock || 100,
-      barcode: (s as any).product?.barcode,
-      gtin: (s as any).product?.gtin,
-      image_url: (s as any).product?.image_url,
-    }));
+    if (!props.products || props.products.length === 0) {
+      productsList.value = inventoryStore.stockLevels.map(stock => ({
+        id: stock.product_id,
+        name: stock.product?.name ?? 'Onbekend product',
+        sku: stock.product?.sku ?? '',
+        current_stock: stock.current_quantity ?? 0,
+        minimum_stock: stock.minimum_stock ?? 0,
+        maximum_stock: stock.maximum_stock ?? 100,
+        barcode: stock.product?.barcode,
+        gtin: stock.product?.gtin,
+        image_url: stock.product?.image_url,
+      }));
+    }
 
     // Listen for fullscreen changes
     document.addEventListener('fullscreenchange', () => {
@@ -748,7 +766,7 @@
           font-weight: var(--font-weight-bold);
           margin-bottom: 0.25rem;
           color: white;
-          font-family: var(--font-family-heading);
+          font-family: var(--font-family);
         }
 
         .session-subtitle {
@@ -787,7 +805,7 @@
         font-size: 1.5rem;
         font-weight: var(--font-weight-bold);
         color: var(--text-primary);
-        font-family: var(--font-family-heading);
+        font-family: var(--font-family);
       }
 
       p {
@@ -812,7 +830,9 @@
         border-radius: var(--radius-base);
         background: var(--bg-primary);
         cursor: pointer;
-        transition: transform 0.2s ease, box-shadow 0.2s ease;
+        transition:
+          transform 0.2s ease,
+          box-shadow 0.2s ease;
         text-align: left;
         width: 100%;
 
@@ -846,7 +866,9 @@
           align-items: center;
           justify-content: center;
           font-size: 24px;
-          transition: background-color 0.2s ease, color 0.2s ease;
+          transition:
+            background-color 0.2s ease,
+            color 0.2s ease;
           flex-shrink: 0;
         }
 
@@ -1239,12 +1261,12 @@
       }
 
       .restart-btn {
-        background: #f8fafc;
+        background: var(--color-surface-secondary);
         color: #64748b;
         border: 2px solid #e2e8f0;
 
         &:hover {
-          background: #f1f5f9;
+          background: var(--bg-tertiary);
           border-color: #cbd5e0;
         }
       }
@@ -1278,7 +1300,9 @@
 
   .slide-up-enter-active,
   .slide-up-leave-active {
-    transition: transform 0.3s ease, opacity 0.3s ease;
+    transition:
+      transform 0.3s ease,
+      opacity 0.3s ease;
     will-change: transform, opacity;
   }
 

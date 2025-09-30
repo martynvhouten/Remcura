@@ -9,7 +9,6 @@
 
       <q-input
         :model-value="modelValue as string"
-        @update:model-value="handleChange"
         :placeholder="field.placeholder ? $t(field.placeholder as string) : ''"
         outlined
         :clearable="field.clearable"
@@ -19,20 +18,21 @@
         :loading="loading"
         class="filter-input-magento filter-input--text"
         hide-bottom-space
+        @update:model-value="handleChange"
       >
-        <template v-if="field.icon" v-slot:prepend>
+        <template v-if="field.icon" #prepend>
           <q-icon :name="field.icon" class="filter-icon icon-size-sm" />
         </template>
-        <template v-if="field.scannerButton" v-slot:append>
+        <template v-if="field.scannerButton" #append>
           <q-btn
             flat
             round
             dense
             icon="qr_code_scanner"
-            @click="handleScan"
             :disable="disabled"
             size="sm"
             class="filter-scanner-btn"
+            @click="handleScan"
           />
         </template>
       </q-input>
@@ -47,7 +47,6 @@
 
       <q-select
         :model-value="modelValue"
-        @update:model-value="handleChange"
         :options="selectOptions"
         :placeholder="field.placeholder ? $t(field.placeholder as string) : ''"
         outlined
@@ -63,11 +62,12 @@
         hide-bottom-space
         max-height="200px"
         behavior="menu"
+        @update:model-value="handleChange"
       >
-        <template v-if="field.icon" v-slot:prepend>
+        <template v-if="field.icon" #prepend>
           <q-icon :name="field.icon" size="16px" class="filter-icon" />
         </template>
-        <template v-slot:option="scope">
+        <template #option="scope">
           <q-item v-bind="scope.itemProps" dense>
             <q-item-section v-if="scope.opt.icon" avatar>
               <q-icon
@@ -99,7 +99,6 @@
 
       <q-select
         :model-value="modelValue"
-        @update:model-value="handleChange"
         :options="selectOptions"
         :placeholder="field.placeholder ? $t(field.placeholder as string) : ''"
         outlined
@@ -117,11 +116,12 @@
         hide-bottom-space
         max-height="200px"
         behavior="menu"
+        @update:model-value="handleChange"
       >
-        <template v-if="field.icon" v-slot:prepend>
+        <template v-if="field.icon" #prepend>
           <q-icon :name="field.icon" class="filter-icon icon-size-sm" />
         </template>
-        <template v-slot:selected>
+        <template #selected>
           <div class="flex flex-wrap gap-1">
             <q-chip
               v-for="value in Array.isArray(modelValue) ? modelValue : []"
@@ -130,9 +130,9 @@
               dense
               color="primary"
               text-color="white"
-              @remove="removeMultiSelectValue(value)"
               size="xs"
               class="text-xs"
+              @remove="removeMultiSelectValue(value)"
             >
               {{ getOptionLabel(value) }}
             </q-chip>
@@ -151,12 +151,12 @@
       <div class="filter-checkbox-container">
         <q-checkbox
           :model-value="modelValue"
-          @update:model-value="handleChange"
           :color="field.color || 'primary'"
           :disable="disabled"
           :readonly="readonly"
           size="sm"
           class="filter-checkbox-magento"
+          @update:model-value="handleChange"
         />
         <label v-if="field.label" class="filter-checkbox-label">
           <q-icon
@@ -178,7 +178,6 @@
 
       <q-input
         :model-value="String(modelValue || '')"
-        @update:model-value="handleChange"
         :placeholder="field.placeholder ? $t(field.placeholder as string) : ''"
         outlined
         :clearable="field.clearable"
@@ -189,11 +188,12 @@
         :step="field.step || 1"
         class="filter-input-magento filter-input--number"
         hide-bottom-space
+        @update:model-value="handleChange"
       >
-        <template v-if="field.icon" v-slot:prepend>
+        <template v-if="field.icon" #prepend>
           <q-icon :name="field.icon" class="filter-icon icon-size-sm" />
         </template>
-        <template v-if="field.currency" v-slot:append>
+        <template v-if="field.currency" #append>
           <span class="filter-currency">{{ field.currency }}</span>
         </template>
       </q-input>
@@ -212,15 +212,15 @@
       <div class="filter-range-container">
         <q-input
           :model-value="rangeValue.min || ''"
-          @update:model-value="value => handleRangeChange('min', value)"
           placeholder="Van"
           type="number"
           :step="field.step || 1"
           outlined
           class="filter-range-input filter-input-magento"
           hide-bottom-space
+          @update:model-value="value => handleRangeChange('min', value)"
         >
-          <template v-if="field.currency" v-slot:append>
+          <template v-if="field.currency" #append>
             <span class="filter-currency">{{ field.currency }}</span>
           </template>
         </q-input>
@@ -229,15 +229,15 @@
 
         <q-input
           :model-value="rangeValue.max || ''"
-          @update:model-value="value => handleRangeChange('max', value)"
           placeholder="Tot"
           type="number"
           :step="field.step || 1"
           outlined
           class="filter-range-input filter-input-magento"
           hide-bottom-space
+          @update:model-value="value => handleRangeChange('max', value)"
         >
-          <template v-if="field.currency" v-slot:append>
+          <template v-if="field.currency" #append>
             <span class="filter-currency">{{ field.currency }}</span>
           </template>
         </q-input>
@@ -253,7 +253,6 @@
 
       <q-input
         :model-value="String(modelValue || '')"
-        @update:model-value="handleChange"
         :placeholder="field.placeholder ? $t(field.placeholder as string) : ''"
         outlined
         :clearable="field.clearable"
@@ -262,11 +261,12 @@
         :loading="loading"
         class="filter-input-magento filter-input--date"
         hide-bottom-space
+        @update:model-value="handleChange"
       >
-        <template v-if="field.icon" v-slot:prepend>
+        <template v-if="field.icon" #prepend>
           <q-icon :name="field.icon" size="16px" class="filter-icon" />
         </template>
-        <template v-slot:append>
+        <template #append>
           <q-icon name="event" class="filter-date-icon icon-size-sm">
             <q-popup-proxy
               cover
@@ -275,8 +275,8 @@
             >
               <q-date
                 :model-value="modelValue"
-                @update:model-value="handleChange"
                 mask="YYYY-MM-DD"
+                @update:model-value="handleChange"
               >
                 <div class="row items-center justify-end">
                   <q-btn
@@ -304,13 +304,13 @@
       <div class="filter-range-container">
         <q-input
           :model-value="dateRangeValue.start || ''"
-          @update:model-value="value => handleDateRangeChange('start', value)"
           placeholder="Van"
           outlined
           class="filter-range-input filter-input-magento"
           hide-bottom-space
+          @update:model-value="value => handleDateRangeChange('start', value)"
         >
-          <template v-slot:append>
+          <template #append>
             <q-icon name="event" class="filter-date-icon icon-size-sm">
               <q-popup-proxy
                 cover
@@ -319,10 +319,10 @@
               >
                 <q-date
                   :model-value="dateRangeValue.start"
+                  mask="YYYY-MM-DD"
                   @update:model-value="
                     value => handleDateRangeChange('start', value)
                   "
-                  mask="YYYY-MM-DD"
                 >
                   <div class="row items-center justify-end">
                     <q-btn
@@ -343,13 +343,13 @@
 
         <q-input
           :model-value="dateRangeValue.end || ''"
-          @update:model-value="value => handleDateRangeChange('end', value)"
           placeholder="Tot"
           outlined
           class="filter-range-input filter-input-magento"
           hide-bottom-space
+          @update:model-value="value => handleDateRangeChange('end', value)"
         >
-          <template v-slot:append>
+          <template #append>
             <q-icon name="event" class="filter-date-icon" size="16px">
               <q-popup-proxy
                 cover
@@ -358,10 +358,10 @@
               >
                 <q-date
                   :model-value="dateRangeValue.end"
+                  mask="YYYY-MM-DD"
                   @update:model-value="
                     value => handleDateRangeChange('end', value)
                   "
-                  mask="YYYY-MM-DD"
                 >
                   <div class="row items-center justify-end">
                     <q-btn
@@ -388,7 +388,6 @@
       <div v-else class="filter-field-label-spacer"></div>
       <q-select
         :model-value="modelValue"
-        @update:model-value="handleChange"
         :options="selectOptions"
         :placeholder="field.placeholder ? $t(field.placeholder as string) : ''"
         outlined
@@ -404,11 +403,12 @@
         hide-bottom-space
         max-height="200px"
         behavior="menu"
+        @update:model-value="handleChange"
       >
-        <template v-if="field.icon" v-slot:prepend>
+        <template v-if="field.icon" #prepend>
           <q-icon :name="field.icon" size="16px" class="filter-icon" />
         </template>
-        <template v-slot:option="scope">
+        <template #option="scope">
           <q-item v-bind="scope.itemProps" dense>
             <q-item-section side>
               <country-flag :country="scope.opt.value" size="small" />
@@ -418,7 +418,7 @@
             </q-item-section>
           </q-item>
         </template>
-        <template v-slot:selected>
+        <template #selected>
           <div v-if="modelValue" class="flex items-center gap-2">
             <country-flag :country="String(modelValue)" size="small" />
             <span class="text-sm">{{ getSelectedCountryLabel() }}</span>
@@ -448,6 +448,7 @@
     FilterField,
     FilterValue,
     FilterDataSource,
+    FilterOption,
   } from '@/types/filters';
 
   interface Props {
@@ -476,9 +477,7 @@
   const { t } = useI18n();
 
   // State
-  const selectOptions = ref<
-    Array<{ value: any; label: string; icon?: string; color?: string }>
-  >([]);
+  const selectOptions = ref<FilterOption[]>([]);
   const optionsLoading = ref(false);
 
   // Computed
@@ -496,24 +495,26 @@
     return classes;
   });
 
-  const rangeValue = computed(() => {
+  type FilterRange = { min?: number; max?: number };
+  type FilterDateRangeValue = { start?: string; end?: string };
+  const rangeValue = computed<FilterRange>(() => {
     if (
       props.field.type === 'number_range' &&
       typeof props.modelValue === 'object' &&
       props.modelValue !== null
     ) {
-      return props.modelValue as { min?: number; max?: number };
+      return props.modelValue as FilterRange;
     }
     return { min: undefined, max: undefined };
   });
 
-  const dateRangeValue = computed(() => {
+  const dateRangeValue = computed<FilterDateRangeValue>(() => {
     if (
       props.field.type === 'date_range' &&
       typeof props.modelValue === 'object' &&
       props.modelValue !== null
     ) {
-      return props.modelValue as { start?: string; end?: string };
+      return props.modelValue as FilterDateRangeValue;
     }
     return { start: undefined, end: undefined };
   });
@@ -525,7 +526,9 @@
     emit('change', value, oldValue);
   };
 
-  const isEmptyValue = (value: any): boolean => {
+  const isEmptyValue = (
+    value: FilterValue | FilterValue[] | undefined
+  ): boolean => {
     if (value === null || value === undefined || value === '') {
       return true;
     }
@@ -538,9 +541,15 @@
     return false;
   };
 
-  const handleRangeChange = (key: 'min' | 'max', value: any) => {
+  const handleRangeChange = (
+    key: 'min' | 'max',
+    value: number | string | null
+  ) => {
     const currentRange = rangeValue.value;
-    const newRange = { ...currentRange, [key]: value };
+    const newRange: FilterRange = {
+      ...currentRange,
+      [key]: value ?? undefined,
+    };
 
     // Clean up null/undefined values
     if (isEmptyValue(newRange.min)) {
@@ -550,12 +559,20 @@
       delete newRange.max;
     }
 
-    handleChange(Object.keys(newRange).length > 0 ? (newRange as any) : null);
+    handleChange(
+      Object.keys(newRange).length > 0 ? (newRange as FilterValue) : null
+    );
   };
 
-  const handleDateRangeChange = (key: 'start' | 'end', value: any) => {
+  const handleDateRangeChange = (
+    key: 'start' | 'end',
+    value: string | null
+  ) => {
     const currentRange = dateRangeValue.value;
-    const newRange = { ...currentRange, [key]: value };
+    const newRange: FilterDateRangeValue = {
+      ...currentRange,
+      [key]: value && value.trim() !== '' ? value : undefined,
+    };
 
     // Clean up null/undefined values
     if (
@@ -573,19 +590,21 @@
       delete newRange.end;
     }
 
-    handleChange(Object.keys(newRange).length > 0 ? (newRange as any) : null);
+    handleChange(
+      Object.keys(newRange).length > 0 ? (newRange as FilterValue) : null
+    );
   };
 
-  const removeMultiSelectValue = (valueToRemove: any) => {
+  const removeMultiSelectValue = (valueToRemove: FilterValue) => {
     if (Array.isArray(props.modelValue)) {
       const newValues = props.modelValue.filter(v => v !== valueToRemove);
       handleChange(newValues);
     }
   };
 
-  const getOptionLabel = (value: any) => {
+  const getOptionLabel = (value: FilterValue) => {
     const option = selectOptions.value.find(opt => opt.value === value);
-    return option?.label || value;
+    return option?.label || String(value);
   };
 
   const handleScan = () => {
@@ -598,7 +617,7 @@
     const option = selectOptions.value.find(
       opt => opt.value === props.modelValue
     );
-    return option?.label || props.modelValue;
+    return option?.label || String(props.modelValue ?? '');
   };
 
   // Load select options based on data source
@@ -621,12 +640,23 @@
     }
 
     if (dataSource.type === 'supabase' && dataSource.table) {
+      const { valueField, labelField } = dataSource;
+
+      if (!valueField || !labelField) {
+        console.warn(
+          'Supabase data source requires both valueField and labelField to be defined',
+          dataSource
+        );
+        selectOptions.value = [];
+        return;
+      }
+
       try {
         optionsLoading.value = true;
 
         let query = supabase
           .from(dataSource.table)
-          .select(`${dataSource.valueField}, ${dataSource.labelField}`);
+          .select(`${valueField}, ${labelField}`);
 
         // Apply filters
         if (dataSource.filters) {
@@ -667,9 +697,9 @@
         }
 
         if (data) {
-          let options = data.map(item => ({
-            value: item[dataSource.valueField!],
-            label: item[dataSource.labelField!],
+          let options = (data as Array<Record<string, unknown>>).map(item => ({
+            value: item[valueField],
+            label: item[labelField],
           }));
 
           // Handle distinct client-side
@@ -718,39 +748,36 @@
       // Empty object
       if (Object.keys(value).length === 0) return false;
 
-      // Cast to any for flexible property access
-      const objValue = value as any;
-
       // For range objects with min/max, only consider it "has value" if at least one meaningful value exists
-      if ('min' in objValue || 'max' in objValue) {
+      if ('min' in value || 'max' in value) {
+        const range = value as FilterRange;
         const hasMin =
-          objValue.min !== null &&
-          objValue.min !== undefined &&
-          objValue.min !== '' &&
-          objValue.min !== 0;
+          range.min !== null &&
+          range.min !== undefined &&
+          range.min !== '' &&
+          range.min !== 0;
         const hasMax =
-          objValue.max !== null &&
-          objValue.max !== undefined &&
-          objValue.max !== '' &&
-          objValue.max !== 0;
+          range.max !== null &&
+          range.max !== undefined &&
+          range.max !== '' &&
+          range.max !== 0;
         return hasMin || hasMax;
       }
 
       // For date range objects with start/end
-      if ('start' in objValue || 'end' in objValue) {
+      if ('start' in value || 'end' in value) {
+        const range = value as FilterDateRangeValue;
         const hasStart =
-          objValue.start !== null &&
-          objValue.start !== undefined &&
-          objValue.start !== '';
+          range.start !== null &&
+          range.start !== undefined &&
+          range.start !== '';
         const hasEnd =
-          objValue.end !== null &&
-          objValue.end !== undefined &&
-          objValue.end !== '';
+          range.end !== null && range.end !== undefined && range.end !== '';
         return hasStart || hasEnd;
       }
 
       // For other objects, check if any values are meaningful
-      return Object.values(objValue).some(
+      return Object.values(value).some(
         v => v !== null && v !== undefined && v !== ''
       );
     }

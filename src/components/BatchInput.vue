@@ -152,7 +152,10 @@
   import { useProductStore } from 'src/stores/product';
   import { useAuthStore } from 'src/stores/auth';
   import BaseSelect from 'src/components/base/BaseSelect.vue';
-  import type { Product, ProductBatchWithDetails } from 'src/types/inventory';
+  import type {
+    ProductBatchWithDetails,
+    ProductWithStock,
+  } from 'src/types/inventory';
   import { useFormatting } from 'src/composables/useFormatting';
 
   // Lazy load barcode scanner
@@ -205,7 +208,7 @@
   const { formatDate } = useFormatting();
 
   // Reactive state
-  const selectedProduct = ref<Product | null>(null);
+  const selectedProduct = ref<ProductWithStock | null>(null);
   const batchNumber = ref('');
   const expiryDate = ref('');
   const quantity = ref<number | null>(null);
@@ -215,9 +218,10 @@
 
   // Computed
   const productOptions = computed(() => {
-    return productStore.activeProducts.map(product => ({
+    return productStore.products.map(product => ({
       ...product,
-      display_name: `${product.name} (${product.sku})`,
+      label: `${product.name} (${product.sku})`,
+      value: product.id,
     }));
   });
 
@@ -249,7 +253,7 @@
   };
 
   // Methods
-  const onProductChange = async (product: Product | null) => {
+  const onProductChange = async (product: ProductWithStock | null) => {
     selectedProduct.value = product;
     existingBatches.value = [];
 
@@ -356,7 +360,7 @@
     newValue => {
       if (newValue) {
         if (newValue.productId) {
-          const product = productStore.activeProducts.find(
+          const product = productStore.products.find(
             p => p.id === newValue.productId
           );
           selectedProduct.value = product || null;

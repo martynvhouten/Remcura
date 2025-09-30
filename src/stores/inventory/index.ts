@@ -9,8 +9,7 @@ export const useInventoryStore = defineStore('inventory', () => {
   const core = useInventoryCore();
   const movements = useInventoryMovements(
     core.currentPracticeId,
-    core.currentUserId,
-    core.fetchStockLevels
+    core.currentUserId
   );
   const alerts = useInventoryAlerts(core.stockLevels);
   const realtime = useInventoryRealtime(
@@ -61,7 +60,6 @@ export const useInventoryStore = defineStore('inventory', () => {
     // Actions from alerts
     fetchOrderSuggestions: alerts.fetchOrderSuggestions,
     getProductStockAtLocation: alerts.getProductStockAtLocation,
-    getProductBatches: alerts.getProductBatches,
 
     // Actions from realtime
     startRealtimeSubscription: realtime.startRealtimeSubscription,

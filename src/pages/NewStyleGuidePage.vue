@@ -326,7 +326,7 @@
     gap: 24px;
 
     .migration-example {
-      background: var(--card-background, #ffffff);
+      background: var(--surface);
       border: 1px solid var(--card-border, rgba(0, 0, 0, 0.08));
       border-radius: 12px;
       padding: 20px;
@@ -343,7 +343,7 @@
       }
 
       pre {
-        background: #f8f9fa;
+        background: var(--color-surface-secondary);
         border: 1px solid #e9ecef;
         border-radius: 8px;
         padding: 16px;

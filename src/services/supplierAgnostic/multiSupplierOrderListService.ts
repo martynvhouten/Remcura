@@ -1,43 +1,29 @@
 import { supabase } from '@/boot/supabase';
 import { orderLogger } from '@/utils/logger';
-import type { OrderListWithItems } from '@/types/stores';
 import type { SupplierOrder } from '@/stores/orderLists/orderLists-supplier-splitting';
+import type { OrderListWithItems } from '@/types/stores';
+import type {
+  OrderListDTO,
+  OrderListInsert,
+  OrderListItemDTO,
+  OrderListItemInsert,
+  OrderListItemRow,
+  OrderListRow,
+  ProductRow,
+  StockLevelRow,
+  SupplierProductRow,
+} from '@/types/inventory';
+import {
+  mapOrderListItemRowToDTO,
+  mapOrderListRowToDTO,
+  mapStockLevelRowToView,
+} from '@/types/inventory';
 
-export interface MultiSupplierOrderListItem {
-  id: string;
-  order_list_id: string;
-  product_id: string;
-  product_name: string;
-  sku: string;
-  supplier_id: string;
-  supplier_name: string;
-  supplier_sku?: string;
-  minimum_stock: number;
-  maximum_stock: number;
-  current_stock: number;
-  unit_price: number;
-  currency: string;
-  pack_size: number;
-  order_multiple: number;
-  lead_time_days: number;
-  is_preferred_supplier: boolean;
-  created_at: string;
-  updated_at: string;
-}
+type SupplierProductWithSupplier = SupplierProductRow & {
+  suppliers: { id: string; name: string } | null;
+};
 
-export interface SupplierAgnosticOrderList {
-  id: string;
-  practice_id: string;
-  name: string;
-  description?: string;
-  department?: string;
-  location?: string;
-  is_active: boolean;
-  auto_reorder: boolean;
-  items: MultiSupplierOrderListItem[];
-  created_at: string;
-  updated_at: string;
-}
+export type SupplierAgnosticOrderList = OrderListWithItems;
 
 export interface OrderListAnalytics {
   total_items: number;
@@ -63,24 +49,20 @@ export class MultiSupplierOrderListService {
     practice_id: string;
     name: string;
     description?: string;
-    department?: string;
-    location?: string;
-    auto_reorder?: boolean;
+    location_id: string;
+    auto_reorder_enabled?: boolean;
   }): Promise<SupplierAgnosticOrderList> {
     try {
       orderLogger.info('Creating new supplier-agnostic order list:', data.name);
 
       const { data: orderList, error } = await supabase
         .from('order_lists')
-        .insert({
+        .insert<OrderListInsert>({
           practice_id: data.practice_id,
           name: data.name,
-          description: data.description,
-          department: data.department,
-          location: data.location,
-          auto_reorder: data.auto_reorder || false,
-          is_active: true,
-          supplier_agnostic: true, // New field to mark as multi-supplier
+          description: data.description ?? null,
+          location_id: data.location_id,
+          auto_reorder_enabled: data.auto_reorder_enabled ?? false,
         })
         .select()
         .single();
@@ -90,9 +72,9 @@ export class MultiSupplierOrderListService {
       orderLogger.info('✅ Order list created successfully:', orderList.id);
 
       return {
-        ...orderList,
+        ...mapOrderListRowToDTO(orderList as OrderListRow),
         items: [],
-      };
+      } satisfies SupplierAgnosticOrderList;
     } catch (error: any) {
       orderLogger.error('❌ Failed to create order list:', error);
       throw new Error(`Failed to create order list: ${error.message}`);
@@ -111,7 +93,7 @@ export class MultiSupplierOrderListService {
       maximum_stock: number;
       is_preferred_supplier?: boolean;
     }
-  ): Promise<MultiSupplierOrderListItem> {
+  ): Promise<OrderListItemDTO> {
     try {
       orderLogger.info('Adding product to order list:', {
         orderListId,
@@ -123,9 +105,9 @@ export class MultiSupplierOrderListService {
         await Promise.all([
           supabase
             .from('products')
-            .select('name, sku')
+            .select('id, name, sku')
             .eq('id', data.product_id)
-            .single(),
+            .single<ProductRow>(),
           supabase
             .from('supplier_products')
             .select(
@@ -133,22 +115,21 @@ export class MultiSupplierOrderListService {
             supplier_sku,
             cost_price,
             currency,
-            pack_size,
-            order_multiple,
             lead_time_days,
+            supplier_id,
             suppliers (id, name)
           `
             )
             .eq('product_id', data.product_id)
             .eq('supplier_id', data.supplier_id)
-            .single(),
+            .single<SupplierProductWithSupplier>(),
           supabase
             .from('stock_levels')
             .select('current_quantity')
             .eq('product_id', data.product_id)
             .order('created_at', { ascending: false })
             .limit(1)
-            .maybeSingle(),
+            .maybeSingle<StockLevelRow>(),
         ]);
 
       if (productResult.error) throw productResult.error;
@@ -156,39 +137,66 @@ export class MultiSupplierOrderListService {
 
       const product = productResult.data;
       const supplierProduct = supplierProductResult.data;
-      const currentStock = stockResult.data?.current_quantity || 0;
+      const currentStock = stockResult.data
+        ? mapStockLevelRowToView(stockResult.data).current_quantity
+        : null;
+
+      if (!product || !supplierProduct) {
+        throw new Error('Product or supplier product could not be loaded');
+      }
 
       // Insert order list item
       const { data: orderListItem, error } = await supabase
         .from('order_list_items')
-        .insert({
+        .insert<OrderListItemInsert>({
           order_list_id: orderListId,
           product_id: data.product_id,
-          supplier_id: data.supplier_id,
+          supplier_product_id: supplierProduct.id,
+          preferred_supplier_id: data.supplier_id,
           minimum_stock: data.minimum_stock,
           maximum_stock: data.maximum_stock,
           current_stock: currentStock,
           unit_price: supplierProduct.cost_price,
-          is_preferred_supplier: data.is_preferred_supplier || false,
+          ordered_quantity: data.minimum_stock,
+          suggested_quantity: data.minimum_stock,
+          total_price:
+            (supplierProduct.cost_price ?? 0) * Math.max(data.minimum_stock, 0),
         })
-        .select()
-        .single();
+        .select(
+          `
+          *,
+          product:products(id, name, sku),
+          supplier_product:supplier_products(id, supplier_id, supplier_sku, cost_price, currency, lead_time_days),
+          supplier:suppliers!order_list_items_preferred_supplier_id_fkey(id, name)
+        `
+        )
+        .single<OrderListItemRow>();
 
       if (error) throw error;
 
       orderLogger.info('✅ Product added to order list successfully');
 
+      const dto = mapOrderListItemRowToDTO(orderListItem);
       return {
-        ...orderListItem,
-        product_name: product.name,
-        sku: product.sku,
-        supplier_name: supplierProduct.suppliers.name,
-        supplier_sku: supplierProduct.supplier_sku,
-        currency: supplierProduct.currency || 'EUR',
-        pack_size: supplierProduct.pack_size || 1,
-        order_multiple: supplierProduct.order_multiple || 1,
-        lead_time_days: supplierProduct.lead_time_days || 1,
-      };
+        ...dto,
+        product: {
+          ...(dto.product ?? {}),
+          id: product.id,
+          name: product.name,
+          sku: product.sku,
+        } as OrderListItemDTO['product'],
+        supplier_product: supplierProduct
+          ? ({
+              ...(dto.supplier_product ?? {}),
+              id: supplierProduct.id,
+              supplier_id: supplierProduct.supplier_id,
+              supplier_sku: supplierProduct.supplier_sku ?? null,
+              cost_price: supplierProduct.cost_price ?? null,
+              currency: supplierProduct.currency ?? null,
+              lead_time_days: supplierProduct.lead_time_days ?? null,
+            } as OrderListItemDTO['supplier_product'])
+          : dto.supplier_product,
+      } satisfies OrderListItemDTO;
     } catch (error: any) {
       orderLogger.error('❌ Failed to add product to order list:', error);
       throw new Error(`Failed to add product to order list: ${error.message}`);
@@ -201,7 +209,7 @@ export class MultiSupplierOrderListService {
   async updateItemSupplier(
     itemId: string,
     newSupplierId: string
-  ): Promise<MultiSupplierOrderListItem> {
+  ): Promise<OrderListItemDTO> {
     try {
       orderLogger.info('Updating supplier for order list item:', {
         itemId,
@@ -222,12 +230,12 @@ export class MultiSupplierOrderListService {
         .from('supplier_products')
         .select(
           `
+          id,
           supplier_sku,
           cost_price,
           currency,
-          pack_size,
-          order_multiple,
           lead_time_days,
+          supplier_id,
           suppliers (id, name)
         `
         )
@@ -241,7 +249,8 @@ export class MultiSupplierOrderListService {
       const { data: updatedItem, error: updateError } = await supabase
         .from('order_list_items')
         .update({
-          supplier_id: newSupplierId,
+          supplier_product_id: supplierProduct.id,
+          preferred_supplier_id: newSupplierId,
           unit_price: supplierProduct.cost_price,
           updated_at: new Date().toISOString(),
         })
@@ -249,26 +258,30 @@ export class MultiSupplierOrderListService {
         .select(
           `
           *,
-          products (name, sku)
+          product:products(id, name, sku),
+          supplier_product:supplier_products(id, supplier_id, supplier_sku, cost_price, currency, lead_time_days),
+          supplier:suppliers!order_list_items_preferred_supplier_id_fkey(id, name)
         `
         )
-        .single();
+        .single<OrderListItemRow>();
 
       if (updateError) throw updateError;
 
       orderLogger.info('✅ Supplier updated successfully');
 
+      const dto = mapOrderListItemRowToDTO(updatedItem);
       return {
-        ...updatedItem,
-        product_name: updatedItem.products.name,
-        sku: updatedItem.products.sku,
-        supplier_name: supplierProduct.suppliers.name,
-        supplier_sku: supplierProduct.supplier_sku,
-        currency: supplierProduct.currency || 'EUR',
-        pack_size: supplierProduct.pack_size || 1,
-        order_multiple: supplierProduct.order_multiple || 1,
-        lead_time_days: supplierProduct.lead_time_days || 1,
-      };
+        ...dto,
+        supplier_product: {
+          ...(dto.supplier_product ?? {}),
+          id: supplierProduct.id,
+          supplier_id: supplierProduct.supplier_id,
+          supplier_sku: supplierProduct.supplier_sku ?? null,
+          cost_price: supplierProduct.cost_price ?? null,
+          currency: supplierProduct.currency ?? null,
+          lead_time_days: supplierProduct.lead_time_days ?? null,
+        } as OrderListItemDTO['supplier_product'],
+      } satisfies OrderListItemDTO;
     } catch (error: any) {
       orderLogger.error('❌ Failed to update item supplier:', error);
       throw new Error(`Failed to update item supplier: ${error.message}`);
@@ -310,18 +323,18 @@ export class MultiSupplierOrderListService {
 
       if (error) throw error;
 
-      const lowestPrice = supplierProducts[0]?.cost_price || 0;
+      const lowestPrice = supplierProducts[0]?.cost_price ?? 0;
 
       return supplierProducts.map(sp => ({
         supplier_id: sp.supplier_id,
-        supplier_name: sp.suppliers.name,
-        supplier_sku: sp.supplier_sku,
-        cost_price: sp.cost_price,
+        supplier_name: sp.suppliers?.name ?? '',
+        supplier_sku: sp.supplier_sku ?? undefined,
+        cost_price: sp.cost_price ?? 0,
         currency: sp.currency || 'EUR',
-        lead_time_days: sp.lead_time_days || 1,
-        is_available: sp.is_available,
+        lead_time_days: sp.lead_time_days ?? 1,
+        is_available: sp.is_available ?? false,
         price_difference_percent:
-          lowestPrice > 0
+          lowestPrice > 0 && sp.cost_price !== null
             ? ((sp.cost_price - lowestPrice) / lowestPrice) * 100
             : 0,
       }));
@@ -355,34 +368,59 @@ export class MultiSupplierOrderListService {
       if (error) throw error;
 
       const totalItems = items.length;
-      const suppliersCount = new Set(items.map(item => item.suppliers.id)).size;
-      const lowStockItems = items.filter(
-        item => item.current_stock <= item.minimum_stock
-      ).length;
+      const suppliersCount = new Set(
+        items
+          .map(item => item.suppliers?.id)
+          .filter((id): id is string => Boolean(id))
+      ).size;
+      const lowStockItems = items.filter(item => {
+        const current = item.current_stock ?? 0;
+        const minimum = item.minimum_stock ?? 0;
+        return current <= minimum;
+      }).length;
       const outOfStockItems = items.filter(
-        item => item.current_stock === 0
+        item => (item.current_stock ?? 0) === 0
       ).length;
-      const totalValue = items.reduce((sum, item) => sum + item.unit_price, 0);
+      const totalValue = items.reduce(
+        (sum, item) => sum + (item.unit_price ?? 0),
+        0
+      );
       const avgLeadTime =
-        items.reduce((sum, item) => sum + item.lead_time_days, 0) / totalItems;
+        items.reduce(
+          (sum, item) => sum + (item.supplier_product?.lead_time_days ?? 0),
+          0
+        ) / (totalItems || 1);
 
       // Supplier breakdown
-      const supplierMap = new Map();
+      const supplierMap = new Map<
+        string,
+        {
+          supplier_id: string;
+          supplier_name: string;
+          item_count: number;
+          total_value: number;
+          total_lead_time: number;
+        }
+      >();
       items.forEach(item => {
-        const supplierId = item.suppliers.id;
+        const supplierId = item.suppliers?.id;
+        if (!supplierId) {
+          return;
+        }
         if (!supplierMap.has(supplierId)) {
           supplierMap.set(supplierId, {
             supplier_id: supplierId,
-            supplier_name: item.suppliers.name,
+            supplier_name: item.suppliers?.name ?? '',
             item_count: 0,
             total_value: 0,
             total_lead_time: 0,
           });
         }
         const supplier = supplierMap.get(supplierId);
+        if (!supplier) return;
         supplier.item_count++;
-        supplier.total_value += item.unit_price;
-        supplier.total_lead_time += item.lead_time_days;
+        supplier.total_value += item.unit_price ?? 0;
+        supplier.total_lead_time += item.supplier_product?.lead_time_days ?? 0;
       });
 
       const supplierBreakdown = Array.from(supplierMap.values()).map(
@@ -442,16 +480,25 @@ export class MultiSupplierOrderListService {
           `
           id,
           product_id,
-          supplier_id,
+          supplier_product_id,
+          preferred_supplier_id,
           unit_price,
-          suppliers (name, lead_time_days)
+          supplier_product:supplier_products(id, supplier_id, supplier_sku, cost_price, currency, lead_time_days),
+          suppliers (id, name, lead_time_days)
         `
         )
         .eq('order_list_id', orderListId);
 
       if (itemsError) throw itemsError;
 
-      const recommendations = [];
+      const recommendations: Array<{
+        item_id: string;
+        current_supplier: string;
+        recommended_supplier: string;
+        price_savings: number;
+        lead_time_improvement: number;
+        reason: string;
+      }> = [];
       let totalSavings = 0;
       let totalLeadTimeImprovement = 0;
 
@@ -462,36 +509,44 @@ export class MultiSupplierOrderListService {
 
         if (alternatives.length <= 1) continue; // No alternatives
 
-        const currentPrice = item.unit_price;
-        const currentLeadTime = item.suppliers?.lead_time_days || 7;
+        const currentPrice = item.unit_price ?? 0;
+        const currentLeadTime = item.supplier_product?.lead_time_days ?? 7;
+        const currentSupplierId =
+          item.preferred_supplier_id ??
+          item.supplier_product?.supplier_id ??
+          null;
 
         let bestAlternative;
 
         switch (criteria.prioritize) {
           case 'price':
             bestAlternative = alternatives
-              .filter(alt => alt.supplier_id !== item.supplier_id)
+              .filter(alt => alt.supplier_id !== currentSupplierId)
               .filter(alt => alt.cost_price < currentPrice)
               .sort((a, b) => a.cost_price - b.cost_price)[0];
             break;
 
           case 'lead_time':
             bestAlternative = alternatives
-              .filter(alt => alt.supplier_id !== item.supplier_id)
+              .filter(alt => alt.supplier_id !== currentSupplierId)
               .filter(alt => alt.lead_time_days < currentLeadTime)
               .sort((a, b) => a.lead_time_days - b.lead_time_days)[0];
             break;
 
           case 'balanced':
             bestAlternative = alternatives
-              .filter(alt => alt.supplier_id !== item.supplier_id)
+              .filter(alt => alt.supplier_id !== currentSupplierId)
               .map(alt => ({
                 ...alt,
-                // 40% weight on lead time
                 score:
-                  ((currentPrice - alt.cost_price) / currentPrice) * 0.6 + // 60% weight on price
-                  ((currentLeadTime - alt.lead_time_days) / currentLeadTime) *
-                    0.4,
+                  (currentPrice > 0
+                    ? ((currentPrice - alt.cost_price) / currentPrice) * 0.6
+                    : 0) +
+                  (currentLeadTime > 0
+                    ? ((currentLeadTime - alt.lead_time_days) /
+                        currentLeadTime) *
+                      0.4
+                    : 0),
               }))
               .filter(alt => alt.score > 0)
               .sort((a, b) => b.score - a.score)[0];
@@ -522,7 +577,7 @@ export class MultiSupplierOrderListService {
 
           recommendations.push({
             item_id: item.id,
-            current_supplier: item.suppliers?.name || 'Unknown',
+            current_supplier: item.suppliers?.name ?? 'Unknown',
             recommended_supplier: bestAlternative.supplier_name,
             price_savings: priceSavings,
             lead_time_improvement: leadTimeImprovement,
@@ -563,8 +618,7 @@ export class MultiSupplierOrderListService {
     newData: {
       name: string;
       description?: string;
-      department?: string;
-      location?: string;
+      location_id: string;
     }
   ): Promise<SupplierAgnosticOrderList> {
     try {
@@ -576,10 +630,10 @@ export class MultiSupplierOrderListService {
         .select(
           `
           practice_id,
-          auto_reorder,
+          auto_reorder_enabled,
           order_list_items (
             product_id,
-            supplier_id,
+            preferred_supplier_id,
             minimum_stock,
             maximum_stock,
             is_preferred_supplier
@@ -587,32 +641,54 @@ export class MultiSupplierOrderListService {
         `
         )
         .eq('id', orderListId)
-        .single();
+        .single<
+          OrderListRow & {
+            order_list_items: Array<
+              OrderListItemRow & {
+                preferred_supplier_id?: string | null;
+                supplier_id?: string | null;
+              }
+            >;
+          }
+        >();
 
       if (listError) throw listError;
 
       // Create new order list
+      if (!newData.location_id) {
+        throw new Error('Location is required to duplicate order list');
+      }
+
       const newOrderList = await this.createOrderList({
         practice_id: originalList.practice_id,
         name: newData.name,
         description: newData.description,
-        department: newData.department,
-        location: newData.location,
-        auto_reorder: originalList.auto_reorder,
+        location_id: newData.location_id,
+        auto_reorder_enabled: originalList.auto_reorder_enabled ?? false,
       });
 
       // Copy all items
-      const itemPromises = originalList.order_list_items.map(item =>
-        this.addProductToOrderList(newOrderList.id, {
-          product_id: item.product_id,
-          supplier_id: item.supplier_id,
-          minimum_stock: item.minimum_stock,
-          maximum_stock: item.maximum_stock,
-          is_preferred_supplier: item.is_preferred_supplier,
-        })
-      );
+      const itemPromises = originalList.order_list_items.map(item => {
+        const supplierId =
+          item.preferred_supplier_id ??
+          (item as { supplier_id?: string | null }).supplier_id ??
+          null;
 
-      const items = await Promise.all(itemPromises);
+        if (!supplierId) {
+          return Promise.resolve(null);
+        }
+
+        return this.addProductToOrderList(newOrderList.id, {
+          product_id: item.product_id,
+          supplier_id: supplierId,
+          minimum_stock: item.minimum_stock ?? 0,
+          maximum_stock: item.maximum_stock ?? 0,
+        });
+      });
+
+      const items = (await Promise.all(itemPromises)).filter(
+        (item): item is OrderListItemDTO => item !== null
+      );
 
       orderLogger.info('✅ Order list duplicated successfully');
 

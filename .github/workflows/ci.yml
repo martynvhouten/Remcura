@@ -22,24 +22,20 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Set environment
-        run: |
-          echo "VITE_SUPABASE_URL=${{ secrets.VITE_SUPABASE_URL }}" >> $GITHUB_ENV
-          echo "VITE_SUPABASE_ANON_KEY=${{ secrets.VITE_SUPABASE_ANON_KEY }}" >> $GITHUB_ENV
-
       - name: Lint
-        run: npm run lint
+        run: npm run lint --if-present
 
-      - name: Typecheck
-        run: npm run typecheck
-        continue-on-error: true
+      - name: Type check
+        run: npm run typecheck --if-present
+
+      - name: i18n check
+        run: npm run i18n:check --if-present
 
       - name: Build
         run: npm run build
+        env:
+          VITE_SUPABASE_URL: ${{ secrets.VITE_SUPABASE_URL }}
+          VITE_SUPABASE_ANON_KEY: ${{ secrets.VITE_SUPABASE_ANON_KEY }}
 
-      - name: i18n validation (optional)
-        run: npm run i18n:ci
-        continue-on-error: true
-
-      - name: i18n fail on [MISSING] in dist
-        run: npm run i18n:postbuild:fail-on-missing
+      - name: Test
+        run: npm test --if-present

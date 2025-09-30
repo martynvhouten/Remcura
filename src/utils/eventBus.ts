@@ -1,53 +1,66 @@
-import { reactive } from 'vue';
 import { logger } from './logger';
 import type {
   EventCallback,
   EventUnsubscribe,
-  StoreEvent,
   EventBusOptions,
 } from '@/types/events';
 
+export interface BaseStoreEvent<T = unknown> {
+  type: string;
+  source?: string;
+  data?: T;
+  timestamp?: string;
+}
+
+interface InternalEvent<T = unknown> extends BaseStoreEvent<T> {
+  timestamp: string;
+}
+
+type ListenerMap = Map<string, Set<EventCallback<unknown>>>;
+
 class EventBus {
-  private listeners = new Map<string, Set<EventCallback>>();
+  private listeners: ListenerMap = new Map();
+
   private options: EventBusOptions;
-  private eventHistory: StoreEvent[] = [];
-  private maxHistorySize = 100;
+
+  private eventHistory: InternalEvent<unknown>[] = [];
+
+  private readonly maxHistorySize: number;
 
   constructor(options: EventBusOptions = {}) {
+    const defaultMaxListeners = 10;
+    const defaultHistorySize = 100;
+
     this.options = {
-      enableLogging: import.meta.env.DEV,
-      maxListeners: 10,
+      enableLogging: Boolean(import.meta.env.DEV),
+      maxListeners: defaultMaxListeners,
       ...options,
     };
+
+    this.maxHistorySize = defaultHistorySize;
   }
 
-  /**
-   * Subscribe to an event
-   */
-  on<T = any>(eventType: string, callback: EventCallback<T>): EventUnsubscribe {
-    if (!this.listeners.has(eventType)) {
-      this.listeners.set(eventType, new Set());
-    }
+  on<T = unknown>(
+    eventType: string,
+    callback: EventCallback<T>
+  ): EventUnsubscribe {
+    const listeners = this.getOrCreateListeners<T>(eventType);
 
-    const eventListeners = this.listeners.get(eventType)!;
-
-    // Check max listeners limit
-    if (eventListeners.size >= (this.options.maxListeners || 10)) {
+    if (listeners.size >= (this.options.maxListeners ?? 10)) {
       logger.warn(
         `Max listeners (${this.options.maxListeners}) reached for event: ${eventType}`
       );
     }
 
-    eventListeners.add(callback);
+    listeners.add(callback as EventCallback<unknown>);
 
     if (this.options.enableLogging) {
       logger.debug(`Subscribed to event: ${eventType}`, 'EventBus');
     }
 
-    // Return unsubscribe function
     return () => {
-      eventListeners.delete(callback);
-      if (eventListeners.size === 0) {
+      listeners.delete(callback as EventCallback<unknown>);
+      if (listeners.size === 0) {
         this.listeners.delete(eventType);
       }
 
@@ -57,36 +70,29 @@ class EventBus {
     };
   }
 
-  /**
-   * Subscribe to an event only once
-   */
-  once<T = any>(
+  once<T = unknown>(
     eventType: string,
     callback: EventCallback<T>
   ): EventUnsubscribe {
-    const unsubscribe = this.on(eventType, async (data: T) => {
+    const unsubscribe = this.on<T>(eventType, async data => {
       unsubscribe();
       await callback(data);
     });
     return unsubscribe;
   }
 
-  /**
-   * Emit an event
-   */
-  async emit<T = any>(
+  async emit<T = unknown>(
     eventType: string,
     data?: T,
     source = 'unknown'
   ): Promise<void> {
-    const event: StoreEvent = {
+    const event: InternalEvent<T> = {
       type: eventType,
       source,
-      data,
+      data: data as T,
       timestamp: new Date().toISOString(),
     };
 
-    // Add to history
     this.eventHistory.push(event);
     if (this.eventHistory.length > this.maxHistorySize) {
       this.eventHistory.shift();
@@ -99,7 +105,9 @@ class EventBus {
       });
     }
 
-    const listeners = this.listeners.get(eventType);
+    const listeners = this.listeners.get(eventType) as
+      | Set<EventCallback<T>>
+      | undefined;
     if (!listeners || listeners.size === 0) {
       if (this.options.enableLogging) {
         logger.debug(`No listeners for event: ${eventType}`, 'EventBus');
@@ -107,32 +115,33 @@ class EventBus {
       return;
     }
 
-    // Execute all listeners
     const promises: Promise<void>[] = [];
     listeners.forEach(callback => {
       try {
-        const result = callback(data);
+        const result = callback(data as T);
         if (result instanceof Promise) {
-          promises.push(result);
+          promises.push(result.then(() => undefined));
         }
       } catch (error) {
-        logger.error(`Error in event listener for ${eventType}:`, error);
+        logger.error(`Error in event listener for ${eventType}:`, 'EventBus', {
+          error: error instanceof Error ? error.message : String(error),
+        });
       }
     });
 
-    // Wait for all async listeners to complete
     if (promises.length > 0) {
       try {
         await Promise.all(promises);
       } catch (error) {
-        logger.error(`Error in async event listeners for ${eventType}:`, error);
+        logger.error(
+          `Error in async event listeners for ${eventType}:`,
+          'EventBus',
+          { error: error instanceof Error ? error.message : String(error) }
+        );
       }
     }
   }
 
-  /**
-   * Remove all listeners for an event type
-   */
   off(eventType: string): void {
     this.listeners.delete(eventType);
     if (this.options.enableLogging) {
@@ -140,9 +149,6 @@ class EventBus {
     }
   }
 
-  /**
-   * Remove all listeners
-   */
   clear(): void {
     this.listeners.clear();
     this.eventHistory = [];
@@ -151,120 +157,78 @@ class EventBus {
     }
   }
 
-  /**
-   * Get event history for debugging
-   */
-  getEventHistory(eventType?: string): StoreEvent[] {
-    if (eventType) {
-      return this.eventHistory.filter(event => event.type === eventType);
-    }
-    return [...this.eventHistory];
+  getEventHistory<T = unknown>(eventType?: string): InternalEvent<T>[] {
+    const events = eventType
+      ? this.eventHistory.filter(event => event.type === eventType)
+      : this.eventHistory;
+
+    return events.map(event => ({
+      ...event,
+      data: event.data as T,
+    }));
   }
 
-  /**
-   * Get active listeners count
-   */
   getListenersCount(eventType?: string): number {
     if (eventType) {
-      return this.listeners.get(eventType)?.size || 0;
+      return this.listeners.get(eventType)?.size ?? 0;
     }
 
     let total = 0;
-    this.listeners.forEach(listeners => {
-      total += listeners.size;
+    this.listeners.forEach(listenerSet => {
+      total += listenerSet.size;
     });
     return total;
   }
 
-  /**
-   * Check if there are listeners for an event
-   */
   hasListeners(eventType: string): boolean {
-    return (this.listeners.get(eventType)?.size || 0) > 0;
+    return (this.listeners.get(eventType)?.size ?? 0) > 0;
+  }
+
+  private getOrCreateListeners<T>(eventType: string): Set<EventCallback<T>> {
+    if (!this.listeners.has(eventType)) {
+      this.listeners.set(eventType, new Set());
+    }
+
+    return this.listeners.get(eventType) as Set<EventCallback<T>>;
   }
 }
 
-// Create singleton instance
 export const eventBus = new EventBus();
 
-// Common store events
 export const StoreEvents = {
-  // Authentication events
   USER_LOGGED_IN: 'user:logged_in',
   USER_LOGGED_OUT: 'user:logged_out',
   USER_PROFILE_UPDATED: 'user:profile_updated',
-
-  // Data refresh events
   DATA_REFRESH_REQUESTED: 'data:refresh_requested',
   DATA_REFRESH_COMPLETED: 'data:refresh_completed',
-
-  // Product events
-  PRODUCT_CREATED: 'product:created',
-  PRODUCT_UPDATED: 'product:updated',
-  PRODUCT_DELETED: 'product:deleted',
-  PRODUCTS_LOADED: 'products:loaded',
-
-  // Inventory events
-  STOCK_UPDATED: 'stock:updated',
-  STOCK_TRANSFER: 'stock:transfer',
-  LOW_STOCK_ALERT: 'stock:low_stock_alert',
-
-  // Order events
+  INVENTORY_SYNC_REQUESTED: 'inventory:sync_requested',
+  INVENTORY_SYNC_COMPLETED: 'inventory:sync_completed',
   ORDER_CREATED: 'order:created',
   ORDER_UPDATED: 'order:updated',
-  ORDER_STATUS_CHANGED: 'order:status_changed',
-
-  // Order List events (advanced min/max system)
-  ORDER_LIST_CREATED: 'order_list:created',
-  ORDER_LIST_UPDATED: 'order_list:updated',
-  ORDER_LIST_DELETED: 'order_list:deleted',
-  ORDER_SUGGESTIONS_UPDATED: 'order_list:suggestions_updated',
-  ORDERS_CREATED_FROM_ADVICE: 'order_list:orders_created_from_advice',
-  ORDER_SPLIT_COMPLETED: 'order_list:split_completed',
-  ORDERS_SENT_TO_SUPPLIERS: 'order_list:sent_to_suppliers',
-  STOCK_LEVEL_UPDATED: 'order_list:stock_level_updated',
-
-  // Supplier events
-  SUPPLIER_CREATED: 'supplier:created',
-  SUPPLIER_UPDATED: 'supplier:updated',
-
-  // System events
-  PRACTICE_CHANGED: 'system:practice_changed',
-  OFFLINE_MODE_CHANGED: 'system:offline_mode_changed',
-  ERROR_OCCURRED: 'system:error_occurred',
+  ORDER_DELETED: 'order:deleted',
+  PRODUCTS_UPDATED: 'products:updated',
+  SUPPLIERS_UPDATED: 'suppliers:updated',
+  INVENTORY_LEVELS_UPDATED: 'inventory:levels_updated',
+  INVENTORY_ALERT_TRIGGERED: 'inventory:alert_triggered',
+  ORDERS_SENT_TO_SUPPLIERS: 'orders:sent_to_suppliers',
 } as const;
 
-// Type for store event types
-export type StoreEventType = (typeof StoreEvents)[keyof typeof StoreEvents];
+export const StoreEventsOrderLists = {
+  ORDERS_CREATED_FROM_ADVICE: 'orderlists:orders_created_from_advice',
+} as const;
 
-// Type-safe event payload interfaces
-export interface UserLoggedInPayload {
-  user: { id: string; email?: string } | null;
-  profile: { clinic_id?: string } | null;
-  clinicId: string | null;
-}
+export type StoreEventKey = keyof typeof StoreEvents;
 
-export interface UserLoggedOutPayload {
-  timestamp: string;
-}
-
-export interface ProductsLoadedPayload {
-  practiceId: string;
-  productCount: number;
-  timestamp: string;
-}
-
-// Helper function to create typed event emitters
-export function createEventEmitter<T = any>(source: string) {
-  return {
-    emit: (eventType: string, data?: T) =>
-      eventBus.emit(eventType, data, source),
-    on: <U = T>(eventType: string, callback: EventCallback<U>) =>
-      eventBus.on(eventType, callback),
-    once: <U = T>(eventType: string, callback: EventCallback<U>) =>
-      eventBus.once(eventType, callback),
-    off: (eventType: string) => eventBus.off(eventType),
-  };
-}
-
-export default eventBus;
+export const createEventEmitter = (context: string) => ({
+  on: <T = unknown>(
+    event: StoreEventKey | string,
+    callback: EventCallback<T>
+  ) => eventBus.on(event, data => callback(data as T)),
+  once: <T = unknown>(
+    event: StoreEventKey | string,
+    callback: EventCallback<T>
+  ) => eventBus.once(event, data => callback(data as T)),
+  emit: <T = unknown>(event: StoreEventKey | string, data?: T) =>
+    eventBus.emit(event, data, context),
+  off: (event: StoreEventKey | string) => eventBus.off(event),
+});

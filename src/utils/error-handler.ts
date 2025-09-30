@@ -1,14 +1,15 @@
 import { Notify } from 'quasar';
-import type { AppError } from '@/types/logging';
+import type { AppError, LogData } from '@/types/logging';
 
 export class ErrorHandler {
   static handle(error: Error | AppError, context?: string): void {
     const appError = this.normalizeError(error, context);
 
-    // Log error for debugging
-    console.error(`[${appError.context}]`, appError.originalError || appError);
+    console.error(
+      `[${appError.context ?? 'Unknown'}]`,
+      appError.originalError ?? appError
+    );
 
-    // Show user-friendly notification
     Notify.create({
       type: 'negative',
       message: appError.message,
@@ -28,7 +29,6 @@ export class ErrorHandler {
   }
 
   static normalizeError(error: Error | AppError, context?: string): AppError {
-    // Check if this is already an AppError (has message and optionally code/context)
     if (
       'message' in error &&
       typeof error.message === 'string' &&
@@ -37,20 +37,19 @@ export class ErrorHandler {
       const appError = error as AppError;
       return {
         ...appError,
-        context:
-          context !== undefined ? context : appError.context || 'Unknown',
+        context: context ?? appError.context ?? 'Unknown',
       };
     }
 
     return {
       message: this.getErrorMessage(error as Error),
-      context: context || 'Unknown',
+      context: context ?? 'Unknown',
       originalError: error as Error,
+      timestamp: new Date(),
     };
   }
 
   static getErrorMessage(error: Error): string {
-    // Handle common Supabase errors
     if (error.message.includes('JWT')) {
       return 'Je sessie is verlopen. Log opnieuw in.';
     }
@@ -71,7 +70,6 @@ export class ErrorHandler {
   }
 }
 
-// Composable for use in components
 export function useErrorHandler() {
   return {
     handleError: (error: Error | AppError, context?: string) =>

@@ -50,13 +50,7 @@ export interface FilterDataSource {
   }>;
 
   // For static sources
-  options?: Array<{
-    value: string | number | boolean;
-    label: string;
-    icon?: string;
-    color?: string;
-    disabled?: boolean;
-  }>;
+  options?: FilterOption[];
 
   // For computed sources
   computation?: {
@@ -64,6 +58,14 @@ export interface FilterDataSource {
     logic: string;
     dependencies?: string[];
   };
+}
+
+export interface FilterOption {
+  value: string | number | boolean;
+  label: string;
+  icon?: string;
+  color?: string;
+  disabled?: boolean;
 }
 
 // === Filter Field Validation ===

@@ -1,3 +1,32 @@
+export interface LowStockItemDTO {
+  productId: string;
+  productName: string;
+  currentQuantity: number;
+  minimumQuantity: number;
+  locationId?: string;
+  locationName?: string;
+  availableQuantity?: number;
+  reservedQuantity?: number;
+  preferredSupplierId?: string | null;
+  lastMovementAt?: string | null;
+  productSku?: string | null;
+  unitPrice?: number | null;
+}
+
+export interface StockTurnoverRateDTO {
+  productId: string;
+  productName: string;
+  totalUsed: number;
+  averageStock: number;
+  turnoverRate: number;
+}
+
+export interface TopUsedProductDTO {
+  productId: string;
+  productName: string;
+  totalUsed: number;
+  usageCount: number;
+}
 // Analytics and metrics types
 export interface AnalyticsDateRange {
   startDate: string;
@@ -20,10 +49,10 @@ export interface OrderMetrics {
   averageOrderSize: number;
   ordersByStatus: Record<string, number>;
   frequentlyOrderedItems: Array<{
-    product_name: string;
-    total_quantity: number;
-    order_count: number;
-    product_id: string;
+    productName: string;
+    totalQuantity: number;
+    orderCount: number;
+    productId: string;
   }>;
   orderTrends: Record<string, number>;
 }
@@ -34,9 +63,9 @@ export interface ProductMetrics {
   lowStockAlerts: number;
   stockEntryTrends: Record<string, number>;
   mostUpdatedProducts: Array<{
-    product_name: string;
-    update_count: number;
-    product_id: string;
+    productName: string;
+    updateCount: number;
+    productId: string;
   }>;
 }
 
@@ -46,10 +75,16 @@ export interface UserActivityMetrics {
   averageSessionDuration: number;
   usersByRole: Record<string, number>;
   mostActiveUsers: Array<{
-    user_id: string;
-    session_count: number;
-    total_duration: number;
-    practice_name?: string;
+    userId: string;
+    sessionCount: number;
+    totalDuration: number;
+    practiceName?: string;
+  }>;
+  userList?: Array<{
+    userId: string;
+    activityCount: number;
+    lastActivity: string;
+    totalEvents: number;
   }>;
 }
 
@@ -68,4 +103,40 @@ export interface AuditLogEntry {
   timestamp: string;
   success: boolean;
   error_message?: string;
+}
+
+export interface UsageAnalytics {
+  id: string;
+  practiceId: string;
+  userId: string | null;
+  locationId: string | null;
+  eventType: string;
+  eventData: Record<string, unknown> | null;
+  sessionId: string | null;
+  userAgent: string | null;
+  ipAddress: string | null;
+  createdAt: string;
+}
+
+export interface AnalyticsStockLevelDTO {
+  productId: string;
+  locationId: string;
+  currentQuantity: number;
+  minimumQuantity: number;
+  reservedQuantity: number;
+  availableQuantity: number;
+  productName?: string;
+  locationName?: string;
+  preferredSupplierId?: string | null;
+  updatedAt?: string | null;
+}
+
+export interface OrderListStatusDTO {
+  id: string;
+  practiceId: string;
+  supplierId: string | null;
+  status: string | null;
+  totalItems: number;
+  totalCost: number;
+  updatedAt: string | null;
 }

@@ -1,0 +1,252 @@
+name: CI
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main, develop]
+  schedule:
+    # Run security scans weekly
+    - cron: '0 2 * * 1'
+
+env:
+  NODE_VERSION: '20'
+  CACHE_VERSION: 'v1'
+
+jobs:
+  # Job 1: Code Quality & Security
+  quality:
+    name: Code Quality & Security
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # Full history for better analysis
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+
+      - name: Cache node_modules
+        uses: actions/cache@v4
+        with:
+          path: node_modules
+          key: ${{ runner.os }}-node-${{ env.CACHE_VERSION }}-${{ hashFiles('package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-${{ env.CACHE_VERSION }}-
+
+      - name: Install dependencies
+        run: npm ci --prefer-offline --no-audit
+
+      - name: ESLint
+        run: npm run lint
+
+      - name: Stylelint
+        run: npm run stylelint
+
+      - name: Prettier check
+        run: npx prettier --check "**/*.{js,ts,vue,scss,html,md,json}" --ignore-path .gitignore
+
+      - name: Security audit
+        run: npm audit --audit-level=moderate
+
+      - name: Dependency vulnerability scan
+        uses: actions/dependency-review-action@v4
+        if: github.event_name == 'pull_request'
+
+  # Job 2: Type Checking & Testing
+  test:
+    name: Tests & Type Checking
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    strategy:
+      matrix:
+        node-version: ['18', '20']
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'npm'
+
+      - name: Cache node_modules
+        uses: actions/cache@v4
+        with:
+          path: node_modules
+          key: ${{ runner.os }}-node-${{ matrix.node-version }}-${{ env.CACHE_VERSION }}-${{ hashFiles('package-lock.json') }}
+
+      - name: Install dependencies
+        run: npm ci --prefer-offline --no-audit
+
+      - name: Type checking
+        run: npm run typecheck
+
+      - name: Run tests
+        run: npm test
+        if: hashFiles('test/**/*') != '' || hashFiles('src/**/*.test.*') != ''
+
+      - name: Generate coverage report
+        run: npm run test:coverage
+        if: matrix.node-version == '20' && (hashFiles('test/**/*') != '' || hashFiles('src/**/*.test.*') != '')
+
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v4
+        if: matrix.node-version == '20' && (hashFiles('test/**/*') != '' || hashFiles('src/**/*.test.*') != '')
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          file: ./coverage/lcov.info
+          fail_ci_if_error: false
+
+  # Job 3: Build & Internationalization
+  build:
+    name: Build & i18n Validation
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    needs: [quality]
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+
+      - name: Cache node_modules
+        uses: actions/cache@v4
+        with:
+          path: node_modules
+          key: ${{ runner.os }}-node-${{ env.CACHE_VERSION }}-${{ hashFiles('package-lock.json') }}
+
+      - name: Install dependencies
+        run: npm ci --prefer-offline --no-audit
+
+      - name: Set environment variables
+        run: |
+          echo "VITE_SUPABASE_URL=${{ secrets.VITE_SUPABASE_URL }}" >> $GITHUB_ENV
+          echo "VITE_SUPABASE_ANON_KEY=${{ secrets.VITE_SUPABASE_ANON_KEY }}" >> $GITHUB_ENV
+
+      - name: i18n validation
+        run: npm run i18n:validate
+
+      - name: Build application
+        run: npm run build
+
+      - name: Check for missing i18n strings in build
+        run: npm run i18n:postbuild:fail-on-missing
+
+      - name: Bundle size analysis
+        run: |
+          if [ -d "dist/spa/assets" ]; then
+            echo "## Bundle Size Report" >> $GITHUB_STEP_SUMMARY
+            echo "| File | Size |" >> $GITHUB_STEP_SUMMARY
+            echo "|------|------|" >> $GITHUB_STEP_SUMMARY
+            find dist/spa/assets -name "*.js" -o -name "*.css" | while read file; do
+              size=$(du -h "$file" | cut -f1)
+              echo "| $(basename "$file") | $size |" >> $GITHUB_STEP_SUMMARY
+            done
+          fi
+
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-files
+          path: dist/
+          retention-days: 7
+
+  # Job 4: Performance & Security Scans
+  security-performance:
+    name: Security & Performance
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    needs: [build]
+    if: github.event_name == 'pull_request' || github.event_name == 'schedule'
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Download build artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: build-files
+          path: dist/
+
+      - name: Run Lighthouse CI
+        uses: treosh/lighthouse-ci-action@v12
+        with:
+          configPath: './.lighthouserc.json'
+          uploadArtifacts: true
+          temporaryPublicStorage: true
+        continue-on-error: true
+
+      - name: CodeQL Analysis
+        uses: github/codeql-action/init@v3
+        with:
+          languages: javascript-typescript
+
+      - name: Perform CodeQL Analysis
+        uses: github/codeql-action/analyze@v3
+
+  # Job 5: Deployment Readiness (PR only)
+  deployment-check:
+    name: Deployment Readiness
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    needs: [quality, test, build]
+    if: github.event_name == 'pull_request'
+
+    steps:
+      - name: Download build artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: build-files
+          path: dist/
+
+      - name: Verify build structure
+        run: |
+          echo "Checking build structure..."
+          ls -la dist/spa/
+
+          # Check required files exist
+          test -f dist/spa/index.html || (echo "Missing index.html" && exit 1)
+          test -d dist/spa/assets || (echo "Missing assets directory" && exit 1)
+
+          echo "✅ Build structure verified"
+
+      - name: Check bundle size limits
+        run: |
+          # Check if any JS bundle exceeds 1MB
+          find dist/spa/assets -name "*.js" -size +1M | while read file; do
+            echo "⚠️  Large bundle detected: $file ($(du -h "$file" | cut -f1))"
+          done
+
+          # Fail if main bundle is too large (adjust threshold as needed)
+          main_bundle=$(find dist/spa/assets -name "index*.js" | head -1)
+          if [ -f "$main_bundle" ]; then
+            size=$(stat -c%s "$main_bundle")
+            if [ $size -gt 2097152 ]; then # 2MB limit
+              echo "❌ Main bundle too large: $(du -h "$main_bundle" | cut -f1)"
+              exit 1
+            fi
+          fi
+
+      - name: Deployment summary
+        run: |
+          echo "## 🚀 Deployment Readiness Report" >> $GITHUB_STEP_SUMMARY
+          echo "✅ All quality checks passed" >> $GITHUB_STEP_SUMMARY
+          echo "✅ Build completed successfully" >> $GITHUB_STEP_SUMMARY
+          echo "✅ Bundle size within limits" >> $GITHUB_STEP_SUMMARY
+          echo "✅ Ready for deployment" >> $GITHUB_STEP_SUMMARY

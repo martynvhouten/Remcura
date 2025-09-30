@@ -11,6 +11,7 @@
 @import './_reset.scss';
 @import './_typography.scss';
 @import './_primitives.forms.scss';
+@import './_dialogs.scss';
 @import './_utilities.scss';
 
 /* Fonts are loaded once in index.html head to avoid duplicate @imports */
@@ -25,221 +26,10 @@ body.body--light {
 
 // ===================================================================
 // CSS CUSTOM PROPERTIES & DESIGN TOKENS
-// (Existing tokens kept for compatibility; prefer tokens in _tokens.scss)
+// All tokens are now centralized in _tokens.scss
 // ===================================================================
 
-@layer base {
-  :root {
-    // Brand colors – medical blue theme
-    --brand-primary: #1e3a8a; // Deep Medical Blue - Professional & trustworthy
-    --brand-primary-dark: #1e40af; // Rich Blue for contrast
-    --brand-primary-light: #3b82f6; // Bright Blue for accents
-    --brand-secondary: #0f766e; // Deep Teal - Clean & calming
-    --brand-accent: #0d9488; // Medical Teal - Attention & trust
-
-    // Semantic Colors - Enhanced for Medical Context
-    --brand-success: #065f46; // Deep Emerald - Natural & healing
-    --brand-success-light: #059669; // Lighter emerald for UI elements
-    --brand-warning: #d97706; // Warm Orange - Professional warning
-    --brand-warning-light: #f59e0b; // Lighter orange for UI
-    --brand-danger: #b91c1c; // Deep Red - Clear alerts
-    --brand-danger-light: #dc2626; // Lighter red for UI
-    --brand-info: #1e40af; // Rich Blue - Informative & calm
-    --brand-info-light: #3b82f6; // Lighter blue for UI
-
-    // Extended Brand Palette for Rich Medical UI
-    --brand-navy: #1e3a8a; // Deep navy tone
-    --brand-navy-light: #1e40af; // Lighter navy
-    --brand-emerald: #065f46; // Deep Emerald - Health & growth
-    --brand-emerald-light: #059669; // Lighter emerald
-    --brand-cyan: #0e7490; // Medical Cyan - Clean technology
-    --brand-cyan-light: #0891b2; // Lighter cyan
-    --brand-slate: #334155; // Slate neutrals
-    --brand-slate-light: #475569; // Lighter slate
-
-    // Professional Neutral Palette - Warmer & More Sophisticated
-    --neutral-50: #fafaf9; // Warm white
-    --neutral-100: #f5f5f4; // Very light warm gray
-    --neutral-200: #e7e5e4; // Light warm gray
-    --neutral-300: #d6d3d1; // Medium light warm gray
-    --neutral-400: #a8a29e; // Medium warm gray
-    --neutral-500: #78716c; // Medium warm gray
-    --neutral-600: #57534e; // Dark warm gray
-    --neutral-700: #44403c; // Darker warm gray
-    --neutral-800: #292524; // Very dark warm gray
-    --neutral-900: #1c1917; // Almost black warm
-
-    // Semantic UI Colors - Light Mode
-    --bg-primary: #fafaf9; // Primary background
-    --bg-secondary: #f5f5f4; // Secondary background (cards, panels)
-    --bg-tertiary: #e7e5e4; // Tertiary background (hover states)
-    --text-primary: #1c1917; // Primary text
-    --text-secondary: #57534e; // Secondary text
-    --text-tertiary: #78716c; // Tertiary text (muted)
-    --border-primary: #e7e5e4; // Primary borders
-    --border-secondary: #d6d3d1; // Secondary borders
-
-    // Typography - Poppins Font Stack for Medical Platform (Better Font Weights)
-    --font-family-primary:
-      'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'San Francisco',
-      'Helvetica Neue', Arial, sans-serif;
-    --font-family-display:
-      'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'San Francisco',
-      'Helvetica Neue', Arial, sans-serif;
-    --font-family-mono:
-      'JetBrains Mono', 'SF Mono', 'Monaco', 'Cascadia Code', 'Roboto Mono',
-      'Courier New', monospace;
-
-    // Enhanced Poppins Font Weights - Much Better for Headers & Labels
-    --font-weight-light: 300;
-    --font-weight-normal: 400;
-    --font-weight-medium: 500;
-    --font-weight-semibold: 600;
-    --font-weight-bold: 700;
-    --font-weight-extrabold: 800;
-    --font-weight-black: 900;
-
-    // Font sizes - proper scale
-    --text-xs: 0.75rem;
-    --text-sm: 0.875rem;
-    --text-base: 1rem;
-    --text-lg: 1.125rem;
-    --text-xl: 1.25rem;
-    --text-2xl: 1.5rem;
-    --text-3xl: 1.875rem;
-    --text-4xl: 2.25rem;
-
-    // Line heights
-    --leading-tight: 1.25;
-    --leading-normal: 1.5;
-    --leading-relaxed: 1.625;
-
-    // Spacing (8pt grid)
-    --space-1: 0.25rem;
-    --space-2: 0.5rem;
-    --space-3: 0.75rem;
-    --space-4: 1rem;
-    --space-5: 1.25rem;
-    --space-6: 1.5rem;
-    --space-8: 2rem;
-    --space-12: 3rem;
-
-    // Icon sizes - standardized
-    --icon-xs: 12px;
-    --icon-sm: 16px;
-    --icon-base: 20px;
-    --icon-lg: 24px;
-    --icon-xl: 32px;
-    --icon-2xl: 48px;
-    --icon-3xl: 64px;
-    --icon-4xl: 96px;
-    --icon-5xl: 120px;
-
-    // Border radius scale
-    --radius-sm: 0.25rem;
-    --radius-base: 0.5rem;
-    --radius-lg: 0.75rem;
-    --radius-xl: 1rem;
-    --radius-2xl: 1.5rem;
-    --radius-3xl: 2rem;
-    --radius-full: 9999px;
-
-    // Enhanced Shadows - More sophisticated depth
-    --shadow-xs: 0 1px 2px 0 rgba(0, 0, 0, 0.02);
-    --shadow-sm:
-      0 1px 3px 0 rgba(0, 0, 0, 0.06), 0 1px 2px -1px rgba(0, 0, 0, 0.04);
-    --shadow-base:
-      0 4px 6px -1px rgba(0, 0, 0, 0.08), 0 2px 4px -2px rgba(0, 0, 0, 0.05);
-    --shadow-md:
-      0 10px 15px -3px rgba(0, 0, 0, 0.08), 0 4px 6px -4px rgba(0, 0, 0, 0.05);
-    --shadow-lg:
-      0 20px 25px -5px rgba(0, 0, 0, 0.08), 0 8px 10px -6px rgba(0, 0, 0, 0.05);
-    --shadow-xl: 0 25px 50px -12px rgba(0, 0, 0, 0.12);
-    --shadow-2xl: 0 50px 100px -20px rgba(0, 0, 0, 0.15);
-
-    // Glass Morphism - Enhanced
-    --glass-bg: rgba(255, 255, 255, 0.08);
-    --glass-border: rgba(255, 255, 255, 0.12);
-    --glass-backdrop: blur(20px);
-    --glass-shadow: 0 8px 32px rgba(31, 38, 135, 0.12);
-
-    // Transitions - Smoother and more refined
-    --transition-fast: 150ms cubic-bezier(0.4, 0, 0.2, 1);
-    --transition-base: 250ms cubic-bezier(0.4, 0, 0.2, 1);
-    --transition-slow: 350ms cubic-bezier(0.4, 0, 0.2, 1);
-    --transition-bounce: 400ms cubic-bezier(0.68, -0.55, 0.265, 1.55);
-
-    // Navigation & Sidebar theme tokens
-    --sidebar-bg: #111827; /* softer than pure black */
-    --sidebar-border: rgba(255, 255, 255, 0.08);
-    --nav-hover-bg: rgba(255, 255, 255, 0.06);
-    --nav-active-bg: rgba(255, 255, 255, 0.1);
-
-    // Interactive States - Medical Blue Theme
-    --hover-bg: rgba(30, 58, 138, 0.08);
-    --hover-border: rgba(30, 58, 138, 0.2);
-    --focus-ring: 0 0 0 3px rgba(30, 58, 138, 0.12);
-    --focus-ring-offset: 2px;
-
-    // Medical-specific color system
-    --medical-critical: #dc2626; // Emergency red
-    --medical-urgent: #ea580c; // Urgent orange
-    --medical-caution: #f59e0b; // Caution amber
-    --medical-stable: #059669; // Stable green
-    --medical-optimal: #0d9488; // Optimal teal
-
-    // Stock level indicators
-    --stock-critical: #dc2626; // Out of stock - red
-    --stock-low: #f59e0b; // Low stock - amber
-    --stock-adequate: #059669; // Adequate - green
-    --stock-overstocked: #0891b2; // Overstocked - blue
-
-    // Medical equipment colors
-    --equipment-inactive: #6b7280; // Gray for inactive
-    --equipment-maintenance: #f59e0b; // Amber for maintenance
-    --equipment-active: #059669; // Green for active
-  }
-}
-
-// Dark mode variables - Enhanced warm dark theme
-body.body--dark {
-  --neutral-50: #1c1917; // Dark background (equivalent to light mode's light bg)
-  --neutral-100: #292524; // Slightly lighter dark background
-  --neutral-200: #44403c; // Medium dark background
-  --neutral-300: #57534e; // Border colors
-  --neutral-400: #78716c; // Muted elements
-  --neutral-500: #a8a29e; // Secondary text
-  --neutral-600: #d6d3d1; // Primary text
-  --neutral-700: #e7e5e4; // High contrast text
-  --neutral-800: #f5f5f4; // Highest contrast text
-  --neutral-900: #fafaf9; // Pure white text
-
-  // Semantic UI Colors - Dark Mode
-  --bg-primary: #1c1917; // Primary background (dark)
-  --bg-secondary: #292524; // Secondary background (cards, panels)
-  --bg-tertiary: #44403c; // Tertiary background (hover states)
-  --text-primary: #fafaf9; // Primary text (light)
-  --text-secondary: #d6d3d1; // Secondary text
-  --text-tertiary: #a8a29e; // Tertiary text (muted)
-  --border-primary: #44403c; // Primary borders
-  --border-secondary: #57534e; // Secondary borders
-
-  // Enhanced dark mode glass effects
-  --glass-bg: rgba(0, 0, 0, 0.08);
-  --glass-border: rgba(255, 255, 255, 0.08);
-  --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
-
-  // Dark mode interactive states - Medical Blue Theme
-  --hover-bg: rgba(30, 58, 138, 0.12);
-  --hover-border: rgba(30, 58, 138, 0.25);
-  --focus-ring: 0 0 0 3px rgba(30, 58, 138, 0.15);
-
-  // Sidebar tokens in dark mode
-  --sidebar-bg: #0f172a; /* deeper slate */
-  --sidebar-border: rgba(255, 255, 255, 0.08);
-  --nav-hover-bg: rgba(255, 255, 255, 0.06);
-  --nav-active-bg: rgba(255, 255, 255, 0.1);
-}
+// Dark mode variables are centralized in _tokens.scss
 
 // ===================================================================
 // GLOBAL RESET & BASE STYLES
@@ -251,7 +41,7 @@ body.body--dark {
 
 @layer base {
   body {
-    font-family: var(--font-family-primary);
+    font-family: var(--font-family);
     font-weight: var(--font-weight-normal);
     line-height: 1.5;
     color: var(--text-primary);
@@ -268,35 +58,35 @@ body.body--dark {
 // ===================================================================
 
 .text-h1 {
-  font-family: var(--font-family-display);
+  font-family: var(--font-family);
   font-size: var(--text-4xl);
   font-weight: var(--font-weight-black); // 900 - Much bolder for main headers
   line-height: var(--leading-tight);
   letter-spacing: -0.02em;
 }
 .text-h2 {
-  font-family: var(--font-family-display);
+  font-family: var(--font-family);
   font-size: var(--text-3xl);
   font-weight: var(--font-weight-extrabold); // 800 - Strong for section headers
   line-height: var(--leading-tight);
   letter-spacing: -0.015em;
 }
 .text-h3 {
-  font-family: var(--font-family-display);
+  font-family: var(--font-family);
   font-size: var(--text-2xl);
   font-weight: var(--font-weight-bold); // 700 - Bold for subsection headers
   line-height: var(--leading-tight);
   letter-spacing: -0.01em;
 }
 .text-h4 {
-  font-family: var(--font-family-display);
+  font-family: var(--font-family);
   font-size: var(--text-xl);
   font-weight: var(--font-weight-bold); // 700 - Bold for card headers
   line-height: var(--leading-normal);
   letter-spacing: -0.005em;
 }
 .text-h5 {
-  font-family: var(--font-family-display);
+  font-family: var(--font-family);
   font-size: var(--text-lg);
   font-weight: var(
     --font-weight-semibold
@@ -304,7 +94,7 @@ body.body--dark {
   line-height: var(--leading-normal);
 }
 .text-h6 {
-  font-family: var(--font-family-display);
+  font-family: var(--font-family);
   font-size: var(--text-base);
   font-weight: var(--font-weight-semibold); // 600 - Semibold for labels
   line-height: var(--leading-normal);
@@ -316,7 +106,7 @@ body.body--dark {
 
 // Medical-specific typography presets
 .text-medical-heading {
-  font-family: var(--font-family-display);
+  font-family: var(--font-family);
   font-size: var(--text-2xl);
   font-weight: var(--font-weight-extrabold); // 800 - Much stronger
   color: var(--brand-primary);
@@ -325,7 +115,7 @@ body.body--dark {
 }
 
 .text-data-primary {
-  font-family: var(--font-family-primary);
+  font-family: var(--font-family);
   font-size: var(--text-lg);
   font-weight: var(--font-weight-bold); // 700 - Bold for important data
   color: var(--text-primary);
@@ -334,7 +124,7 @@ body.body--dark {
 }
 
 .text-data-secondary {
-  font-family: var(--font-family-primary);
+  font-family: var(--font-family);
   font-size: var(--text-base);
   font-weight: var(--font-weight-semibold); // 600 - Upgraded from medium
   color: var(--text-secondary);
@@ -343,7 +133,7 @@ body.body--dark {
 }
 
 .text-label-emphasis {
-  font-family: var(--font-family-primary);
+  font-family: var(--font-family);
   font-size: var(--text-sm);
   font-weight: var(--font-weight-bold); // 700 - Much bolder for labels
   color: var(--text-primary);
@@ -352,7 +142,7 @@ body.body--dark {
 }
 
 .text-caption-medical {
-  font-family: var(--font-family-primary);
+  font-family: var(--font-family);
   font-size: var(--text-xs);
   font-weight: var(--font-weight-semibold); // 600 - Upgraded from medium
   color: var(--text-tertiary);
@@ -365,7 +155,7 @@ body.body--dark {
 
 // Form label styles
 .label-form {
-  font-family: var(--font-family-primary);
+  font-family: var(--font-family);
   font-size: var(--text-sm);
   font-weight: var(--font-weight-bold); // 700 - Bold for form labels
   color: var(--text-primary);
@@ -376,7 +166,7 @@ body.body--dark {
 
 // Card title styles
 .title-card {
-  font-family: var(--font-family-display);
+  font-family: var(--font-family);
   font-size: var(--text-lg);
   font-weight: var(--font-weight-bold); // 700 - Bold for card titles
   color: var(--text-primary);
@@ -386,7 +176,7 @@ body.body--dark {
 
 // Section header styles
 .title-section {
-  font-family: var(--font-family-display);
+  font-family: var(--font-family);
   font-size: var(--text-xl);
   font-weight: var(--font-weight-extrabold); // 800 - Extra bold for sections
   color: var(--text-primary);
@@ -397,7 +187,7 @@ body.body--dark {
 
 // Page title styles
 .title-page {
-  font-family: var(--font-family-display);
+  font-family: var(--font-family);
   font-size: var(--text-3xl);
   font-weight: var(--font-weight-black); // 900 - Maximum weight for page titles
   color: var(--text-primary);
@@ -407,7 +197,7 @@ body.body--dark {
 
 // Table header styles
 .label-table-header {
-  font-family: var(--font-family-primary);
+  font-family: var(--font-family);
   font-size: var(--text-xs);
   font-weight: var(--font-weight-bold); // 700 - Bold for table headers
   color: var(--text-primary);
@@ -417,21 +207,21 @@ body.body--dark {
 
 // Button text styles
 .text-button {
-  font-family: var(--font-family-primary);
+  font-family: var(--font-family);
   font-weight: var(--font-weight-semibold); // 600 - Semibold for buttons
   letter-spacing: 0.025em;
 }
 
 // Highlight text styles
 .text-highlight {
-  font-family: var(--font-family-primary);
+  font-family: var(--font-family);
   font-weight: var(--font-weight-bold); // 700 - Bold for highlighted content
   color: var(--brand-primary);
 }
 
 // Status text styles
 .text-status {
-  font-family: var(--font-family-primary);
+  font-family: var(--font-family);
   font-size: var(--text-sm);
   font-weight: var(--font-weight-semibold); // 600 - Semibold for status
   text-transform: uppercase;
@@ -581,16 +371,25 @@ body .q-icon {
 // QUASAR COMPONENT OVERRIDES (MINIMAL)
 // ===================================================================
 
+/* Button Shadow Defaults */
+.q-btn:not(.q-btn--flat):not(.q-btn--outline) {
+  box-shadow: var(--shadow-sm); /* Buttons use small shadow */
+
+  &:hover:not(.disabled):not(.q-btn--loading) {
+    box-shadow: var(--shadow-md);
+  }
+}
+
 .q-card {
   border-radius: var(--radius-xl);
-  box-shadow: var(--shadow-sm);
+  box-shadow: var(--shadow-md); /* Cards use medium shadow */
   transition: all var(--transition-base);
   border: 1px solid var(--border-primary);
-  background: var(--bg-secondary);
+  background: var(--surface);
   color: var(--text-primary);
 
   &:hover {
-    box-shadow: var(--shadow-md);
+    box-shadow: var(--shadow-lg);
     transform: translateY(-1px);
   }
 }
@@ -601,7 +400,7 @@ body .q-icon {
 }
 
 body.body--dark .q-card {
-  background: var(--bg-secondary);
+  background: var(--surface);
   border-color: var(--border-primary);
   color: var(--text-primary);
 
@@ -611,7 +410,7 @@ body.body--dark .q-card {
 
   // Ensure all card sections have proper dark backgrounds
   .q-card__section {
-    background: var(--bg-secondary);
+    background: var(--surface);
     color: var(--text-primary);
   }
 }
@@ -619,13 +418,13 @@ body.body--dark .q-card {
 // Enhanced card content sections
 .card-content.q-card__section {
   box-shadow: var(--shadow-base);
-  background: var(--bg-secondary);
+  background: var(--surface);
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
 }
 
 body.body--dark .card-content.q-card__section {
-  background: var(--bg-secondary);
+  background: var(--surface);
   box-shadow: var(--shadow-lg);
   color: var(--text-primary);
 }
@@ -648,69 +447,7 @@ body.body--dark .card-content.q-card__section {
 // Button system
 // ===================================================================
 
-// Enhanced button variables for perfect design
-:root {
-  // Button specific design tokens
-  --btn-height-sm: 32px;
-  --btn-height-base: 40px;
-  --btn-height-lg: 48px;
-  --btn-height-xl: 56px;
-
-  --btn-padding-sm: 0 12px;
-  --btn-padding-base: 0 20px;
-  --btn-padding-lg: 0 24px;
-  --btn-padding-xl: 0 32px;
-
-  --btn-font-sm: 0.75rem;
-  --btn-font-base: 0.875rem;
-  --btn-font-lg: 1rem;
-  --btn-font-xl: 1.125rem;
-
-  --btn-radius: 12px;
-  --btn-radius-sm: 8px;
-  --btn-radius-lg: 16px;
-  --btn-radius-xl: 20px;
-
-  // Gradient presets
-  --btn-gradient-primary: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%);
-  --btn-gradient-primary-hover: linear-gradient(
-    135deg,
-    #1e40af 0%,
-    #2563eb 100%
-  );
-  --btn-gradient-success: linear-gradient(135deg, #065f46 0%, #059669 100%);
-  --btn-gradient-success-hover: linear-gradient(
-    135deg,
-    #047857 0%,
-    #10b981 100%
-  );
-  --btn-gradient-warning: linear-gradient(135deg, #d97706 0%, #f59e0b 100%);
-  --btn-gradient-warning-hover: linear-gradient(
-    135deg,
-    #b45309 0%,
-    #d97706 100%
-  );
-  --btn-gradient-danger: linear-gradient(135deg, #b91c1c 0%, #dc2626 100%);
-  --btn-gradient-danger-hover: linear-gradient(
-    135deg,
-    #991b1b 0%,
-    #b91c1c 100%
-  );
-
-  // Button shadows
-  --btn-shadow-base: 0 2px 8px rgba(30, 58, 138, 0.12);
-  --btn-shadow-hover: 0 8px 25px rgba(30, 58, 138, 0.25);
-  --btn-shadow-active: 0 2px 4px rgba(30, 58, 138, 0.2);
-  --btn-shadow-outline: 0 2px 8px rgba(30, 58, 138, 0.08);
-}
-
-// Dark mode button variables
-body.body--dark {
-  --btn-shadow-base: 0 2px 8px rgba(0, 0, 0, 0.3);
-  --btn-shadow-hover: 0 8px 25px rgba(0, 0, 0, 0.4);
-  --btn-shadow-active: 0 2px 4px rgba(0, 0, 0, 0.25);
-  --btn-shadow-outline: 0 2px 8px rgba(0, 0, 0, 0.2);
-}
+// Button variables are now centralized in _tokens.scss
 
 // ===================================================================
 // Button system (no !important)
@@ -1078,10 +815,10 @@ body .q-btn {
 .q-drawer .btn-modern.q-btn,
 body .btn-modern.q-btn {
   // Elevated button shadow
-  box-shadow: 0 4px 14px rgba(30, 58, 138, 0.15);
+  box-shadow: var(--shadow-sm); /* Buttons use small shadow */
 
   &:hover:not(.disabled):not(.q-btn--loading) {
-    box-shadow: 0 8px 20px rgba(30, 58, 138, 0.25);
+    box-shadow: var(--shadow-md);
     transform: translateY(-1px);
   }
 
@@ -1367,14 +1104,19 @@ body.body--dark {
 
 /* =================================================================== */
 /* DROPDOWNS & MENUS - CONSISTENT LIGHT/DARK */
+
 .q-menu {
-  background: var(--bg-secondary);
+  background: var(--surface);
   color: var(--text-primary);
   border: 1px solid var(--border-primary);
   border-radius: var(--radius-lg);
-  box-shadow: var(--shadow-lg);
+  box-shadow: var(--shadow-lg); // Menus use large shadow
   padding: 0; // match light-mode baseline spacing
   box-sizing: border-box; // ensure border/padding don't change computed width vs anchor
+
+  .q-item-section--side {
+    color: var(--text-tertiary);
+  }
 
   .q-list {
     background: transparent;
@@ -1406,7 +1148,7 @@ body.body--dark {
 
 body.body--dark {
   .q-menu {
-    background: var(--bg-secondary);
+    background: var(--surface);
     border-color: var(--border-primary);
 
     .q-item:hover {
@@ -1422,11 +1164,11 @@ body.body--dark {
 // QSelect mobile/fullscreen dialog consistency
 .q-dialog.q-select__dialog {
   .q-card {
-    background: var(--bg-secondary);
+    background: var(--surface);
     color: var(--text-primary);
     border: 1px solid var(--border-primary);
     border-radius: var(--radius-lg);
-    box-shadow: var(--shadow-lg);
+    box-shadow: var(--shadow-lg); /* Dialogs use large shadow */
     box-sizing: border-box;
   }
 
@@ -1450,7 +1192,7 @@ body.body--dark {
 
 body.body--dark .q-dialog.q-select__dialog {
   .q-card {
-    background: var(--bg-secondary);
+    background: var(--surface);
     border-color: var(--border-primary);
   }
 
@@ -1633,7 +1375,7 @@ body.body--dark .glass-card {
 
 // Neumorphism utility classes
 .neumorphism-light {
-  background: #f0f0f3;
+  background: var(--color-surface-secondary);
   box-shadow:
     15px 15px 30px rgba(174, 174, 192, 0.4),
     -15px -15px 30px rgba(255, 255, 255, 0.9);
@@ -1653,7 +1395,7 @@ body.body--dark .glass-card {
 }
 
 body.body--dark .neumorphism-light {
-  background: #2a2d3e;
+  background: var(--color-surface-secondary);
   box-shadow:
     15px 15px 30px rgba(0, 0, 0, 0.4),
     -15px -15px 30px rgba(255, 255, 255, 0.05);
@@ -1663,6 +1405,20 @@ body.body--dark .neumorphism-light {
       8px 8px 16px rgba(0, 0, 0, 0.4),
       -8px -8px 16px rgba(255, 255, 255, 0.08);
   }
+}
+
+// ===================================================================
+// SHADOW UTILITY CLASSES
+// ===================================================================
+
+.elev-sm {
+  box-shadow: var(--shadow-sm) !important;
+}
+.elev-md {
+  box-shadow: var(--shadow-md) !important;
+}
+.elev-lg {
+  box-shadow: var(--shadow-lg) !important;
 }
 
 // Components
@@ -1757,7 +1513,7 @@ body.body--dark .neumorphism-light {
 // Enhanced global card title override with better font weights
 h2.card-title,
 h3.card-title {
-  font-family: var(--font-family-display);
+  font-family: var(--font-family);
   font-size: var(--text-lg);
   font-weight: var(
     --font-weight-bold
@@ -1770,7 +1526,7 @@ h3.card-title {
 // Page titles and main headers with maximum impact
 h1,
 .page-title {
-  font-family: var(--font-family-display);
+  font-family: var(--font-family);
   font-weight: var(--font-weight-black); // 900 - Maximum weight for page titles
   letter-spacing: -0.02em;
 }
@@ -1778,7 +1534,7 @@ h1,
 // Section headers with strong presence
 h2,
 .section-title {
-  font-family: var(--font-family-display);
+  font-family: var(--font-family);
   font-weight: var(--font-weight-extrabold); // 800 - Extra bold for sections
   letter-spacing: -0.015em;
 }
@@ -2094,79 +1850,81 @@ h2,
 
 /* Primary Button - Deep Medical Blue */
 .q-btn--standard.q-btn--rectangle {
-  background: linear-gradient(135deg, #1e3a8a, #1e40af);
+  background: var(--btn-gradient-primary);
   color: white;
   border: none;
+  box-shadow: var(--btn-shadow-base);
 
   &:hover {
-    background: linear-gradient(135deg, #1e40af, #2563eb);
-    box-shadow: 0 8px 25px rgba(30, 58, 138, 0.4);
+    background: var(--btn-gradient-primary-hover);
+    box-shadow: var(--btn-shadow-hover);
   }
 
   &:active {
-    background: linear-gradient(135deg, #1d4ed8, #2563eb);
+    background: var(--btn-gradient-primary-hover);
+    box-shadow: var(--btn-shadow-active);
   }
 }
 
 /* Outline Primary Button */
 .q-btn--outline.q-btn--rectangle {
   background: transparent;
-  border: 2px solid #1e3a8a;
-  color: #1e3a8a;
+  border: 2px solid var(--brand-primary);
+  color: var(--brand-primary);
 
   &:hover {
-    background: linear-gradient(135deg, #1e3a8a, #1e40af);
+    background: var(--btn-gradient-primary);
     color: white;
     border-color: transparent;
-    box-shadow: 0 8px 25px rgba(30, 58, 138, 0.3);
+    box-shadow: var(--btn-shadow-hover);
   }
 }
 
 /* Secondary Button - Teal */
 .q-btn--standard.q-btn--rectangle.bg-secondary,
 .q-btn[color='secondary'] {
-  background: linear-gradient(135deg, #0f766e, #0d9488);
+  background: var(--btn-gradient-success);
   color: white;
 
   &:hover {
-    background: linear-gradient(135deg, #134e4a, #0f766e);
-    box-shadow: 0 8px 25px rgba(15, 118, 110, 0.4);
+    background: var(--btn-gradient-success-hover);
+    box-shadow: var(--btn-shadow-hover);
   }
 }
 
 /* Success Button - Emerald */
 .q-btn--standard.q-btn--rectangle.bg-positive,
 .q-btn[color='positive'] {
-  background: linear-gradient(135deg, #065f46, #047857);
+  background: var(--btn-gradient-success);
   color: white;
 
   &:hover {
-    background: linear-gradient(135deg, #064e3b, #065f46);
-    box-shadow: 0 8px 25px rgba(6, 95, 70, 0.4);
+    background: var(--btn-gradient-success-hover);
+    box-shadow: var(--btn-shadow-hover);
   }
 }
 
 /* Warning Button - Amber */
 .q-btn--standard.q-btn--rectangle.bg-warning,
 .q-btn[color='warning'] {
-  background: linear-gradient(135deg, #d97706, #f59e0b);
+  background: var(--btn-gradient-warning);
   color: white;
 
   &:hover {
-    background: linear-gradient(135deg, #b45309, #d97706);
-    box-shadow: 0 8px 25px rgba(217, 119, 6, 0.4);
+    background: var(--btn-gradient-warning-hover);
+    box-shadow: var(--btn-shadow-hover);
   }
 }
 
 /* Danger Button - Red */
 .q-btn--standard.q-btn--rectangle.bg-negative,
 .q-btn[color='negative'] {
-  background: linear-gradient(135deg, #b91c1c, #dc2626);
+  background: var(--btn-gradient-danger);
   color: white;
 
   &:hover {
-    background: linear-gradient(135deg, #991b1b, #b91c1c);
-    box-shadow: 0 8px 25px rgba(185, 28, 28, 0.4);
+    background: var(--btn-gradient-danger-hover);
+    box-shadow: var(--btn-shadow-hover);
   }
 }
 
@@ -3055,7 +2813,7 @@ html body.body--dark .q-field .q-field__label {
     .medical-table .q-table thead tr th.q-th {
       background: var(--brand-primary);
       color: white;
-      font-family: var(--font-family-primary);
+      font-family: var(--font-family);
       font-weight: var(--font-weight-bold);
       text-transform: uppercase;
       letter-spacing: 0.05em;
@@ -3098,7 +2856,7 @@ html body.body--dark .q-field .q-field__label {
 // Dark mode support for medical tables
 body.body--dark .medical-table {
   .q-table {
-    background: var(--bg-secondary);
+    background: var(--surface);
     border-color: var(--border-primary);
 
     .q-table__top {
@@ -3113,7 +2871,7 @@ body.body--dark .medical-table {
       }
 
       &:nth-child(odd) {
-        background: var(--bg-secondary);
+        background: var(--surface);
       }
 
       &:hover {
@@ -3137,7 +2895,7 @@ body.body--dark .medical-table {
 
     .q-table__bottom {
       border-top-color: var(--border-primary);
-      background: var(--bg-secondary);
+      background: var(--surface);
     }
   }
 }
@@ -3213,7 +2971,7 @@ body.body--dark .medical-table {
 
       .header-title {
         display: block;
-        font-family: var(--font-family-primary);
+        font-family: var(--font-family);
         font-size: var(--text-sm);
         font-weight: var(
           --font-weight-bold
@@ -3227,7 +2985,7 @@ body.body--dark .medical-table {
 
       .header-subtitle {
         display: block;
-        font-family: var(--font-family-primary);
+        font-family: var(--font-family);
         font-size: var(--text-xs);
         font-weight: var(
           --font-weight-medium

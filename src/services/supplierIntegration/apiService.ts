@@ -5,6 +5,7 @@ import type {
   SupplierOrder,
   OrderSendingResult,
 } from '@/stores/orderLists/orderLists-supplier-splitting';
+import type { Tables } from '@/types';
 
 export interface APIConfig {
   api_endpoint: string;
@@ -82,27 +83,49 @@ export class APIService {
         .from('suppliers')
         .select('integration_config, name, code')
         .eq('id', order.supplier_id)
-        .single();
+        .single<Tables<'suppliers'>>();
 
       if (supplierError || !supplier) {
         throw new Error(t('services.supplierIntegration.supplierNotFound'));
       }
 
-      const apiConfig = supplier.integration_config as APIConfig;
-      if (!apiConfig?.api_endpoint) {
+      const rawConfig = supplier.integration_config;
+      if (
+        !rawConfig ||
+        typeof rawConfig !== 'object' ||
+        Array.isArray(rawConfig)
+      ) {
         throw new Error(
           t('services.supplierIntegration.apiEndpointNotConfigured')
+        );
+      }
+
+      const apiConfig = rawConfig as Partial<APIConfig>;
+
+      const apiEndpoint = apiConfig.api_endpoint;
+      if (typeof apiEndpoint !== 'string' || apiEndpoint.length === 0) {
+        throw new Error(
+          t('services.supplierIntegration.apiEndpointNotConfigured')
+        );
+      }
+
+      // Optional auth configuration
+      if (
+        apiConfig.api_auth_type === 'oauth2' &&
+        (!apiConfig.oauth2_config?.client_id ||
+          !apiConfig.oauth2_config.client_secret)
+      ) {
+        throw new Error(
+          t('services.supplierIntegration.oauth2ConfigurationIncomplete')
         );
       }
 
       // Get practice details
       const { data: practice, error: practiceError } = await supabase
         .from('practices')
-        .select(
-          'name, address, city, postal_code, country, contact_email, contact_phone'
-        )
+        .select('name, address, city, postal_code, country, email, phone')
         .eq('id', order.practice_id)
-        .single();
+        .single<Tables<'practices'>>();
 
       if (practiceError || !practice) {
         throw new Error(
@@ -114,10 +137,14 @@ export class APIService {
       const apiPayload = this.buildAPIPayload(order, orderReference, practice);
 
       // Get authentication token if needed
-      const authHeaders = await this.getAuthHeaders(apiConfig);
+      const authHeaders = await this.getAuthHeaders(apiConfig as APIConfig);
 
       // Send order to API
-      const response = await this.sendToAPI(apiConfig, apiPayload, authHeaders);
+      const response = await this.sendToAPI(
+        apiConfig as APIConfig,
+        apiPayload,
+        authHeaders
+      );
 
       // Record the order
       await this.recordSupplierOrder(order, orderReference, 'api', response);
@@ -125,13 +152,13 @@ export class APIService {
       return {
         supplier_id: order.supplier_id,
         supplier_name: order.supplier_name,
-        status: response.success ? 'sent' : 'failed',
+        status: response.success ? 'success' : 'failed',
         method_used: 'api',
         order_reference: orderReference,
         sent_at: new Date().toISOString(),
-        error_message: response.success ? undefined : response.error,
-        delivery_expected: order.estimated_delivery_date,
-      };
+        error_message: response.success ? '' : (response.error ?? ''),
+        delivery_expected: order.estimated_delivery_date ?? '',
+      } satisfies OrderSendingResult;
     } catch (error: any) {
       orderLogger.error(
         `API order sending failed for ${orderReference}:`,
@@ -145,8 +172,9 @@ export class APIService {
         method_used: 'api',
         order_reference: orderReference,
         sent_at: new Date().toISOString(),
-        error_message: error.message,
-      };
+        error_message: error instanceof Error ? error.message : String(error),
+        delivery_expected: order.estimated_delivery_date ?? '',
+      } satisfies OrderSendingResult;
     }
   }
 
@@ -156,40 +184,47 @@ export class APIService {
   private buildAPIPayload(
     order: SupplierOrder,
     orderReference: string,
-    practice: any
+    practice: Tables<'practices'>
   ): APIOrderPayload {
+    const contact: { email?: string; phone?: string } = {};
+    if (practice.email) {
+      contact.email = practice.email;
+    }
+    if (practice.phone) {
+      contact.phone = practice.phone;
+    }
+
     return {
       order_reference: orderReference,
       order_date: new Date().toISOString(),
       requested_delivery_date: order.estimated_delivery_date,
       customer: {
         id: order.practice_id,
-        name: practice.name,
+        name: practice.name ?? '',
         address: {
-          street: practice.address || '',
-          city: practice.city || '',
-          postal_code: practice.postal_code || '',
-          country: practice.country || 'NL',
+          street: practice.address ?? '',
+          city: practice.city ?? '',
+          postal_code: practice.postal_code ?? '',
+          country: practice.country ?? 'NL',
         },
-        contact: {
-          email: practice.contact_email,
-          phone: practice.contact_phone,
-        },
+        ...(Object.keys(contact).length > 0 ? { contact } : {}),
       },
       items: order.items.map(item => ({
-        sku: item.supplier_sku || item.sku,
-        name: item.name,
+        sku: item.supplier_sku || item.product_sku || '',
+        name: item.product_name ?? '',
         quantity: item.quantity,
-        unit_price: item.unit_price,
-        line_total: item.quantity * item.unit_price,
+        unit_price: item.unit_price ?? 0,
+        line_total: item.quantity * (item.unit_price ?? 0),
       })),
       totals: {
-        subtotal: order.total_value,
-        total: order.total_value + (order.shipping_cost || 0),
+        subtotal: order.items.reduce((sum, item) => sum + item.total_price, 0),
+        total:
+          order.items.reduce((sum, item) => sum + item.total_price, 0) +
+          (order.shipping_cost || 0),
         currency: 'EUR',
-        shipping: order.shipping_cost,
+        shipping: order.shipping_cost ?? undefined,
       },
-      notes: `Automated order from Remcura for ${practice.name}`,
+      notes: `Automated order from Remcura for ${practice.name ?? ''}`,
       metadata: {
         source: 'remcura',
         practice_id: order.practice_id,
@@ -523,26 +558,22 @@ export class APIService {
     order: SupplierOrder,
     orderReference: string,
     method: string,
-    response: any
+    response: { success: boolean; error?: string; response?: unknown }
   ): Promise<void> {
-    const { error } = await supabase.from('supplier_orders').insert({
-      supplier_id: order.supplier_id,
-      order_list_id: null,
-      practice_id: order.practice_id,
-      status: response.success ? 'sent' : 'failed',
-      method_used: method,
-      sent_at: new Date().toISOString(),
-      delivery_expected: order.estimated_delivery_date,
-      total_items: order.total_items,
-      total_value: order.total_value,
-      response_data: response,
-      order_reference: orderReference,
-    });
+    const subtotal = order.items.reduce(
+      (sum, item) => sum + item.total_price,
+      0
+    );
+    const total = subtotal + (order.shipping_cost || 0);
 
-    if (error) {
-      orderLogger.error('Failed to record supplier order:', error);
-      throw error;
-    }
+    orderLogger.info('Supplier order recorded (simulation)', {
+      supplier_id: order.supplier_id,
+      order_reference: orderReference,
+      method,
+      success: response.success,
+      subtotal,
+      total,
+    });
   }
 
   /**

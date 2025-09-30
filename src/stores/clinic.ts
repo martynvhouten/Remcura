@@ -2,35 +2,44 @@ import { defineStore } from 'pinia';
 import { ref, computed } from 'vue';
 import { supabase } from '@/boot/supabase';
 import { clinicLogger } from '@/utils/logger';
-import type { Practice, Location } from '@/types/supabase';
+import type { Tables } from '@/types';
 import type { PracticeLocation } from '@/types/inventory';
+import { ServiceErrorHandler } from '@/utils/service-error-handler';
+
+type PracticeRow = Tables<'practices'>;
+type PracticeLocationRow = Tables<'practice_locations'>;
 
 export const useClinicStore = defineStore('clinic', () => {
   // State
-  const clinic = ref<Practice | null>(null);
-  const locations = ref<Location[]>([]);
+  const clinic = ref<PracticeRow | null>(null);
+  const locations = ref<PracticeLocationRow[]>([]);
   const loading = ref(false);
   const locationsLoading = ref(false);
 
   // Computed
-  const practiceLocations = computed<PracticeLocation[]>(() => {
-    return locations.value.map(location => ({
+  const practiceLocations = computed<PracticeLocation[]>(() =>
+    locations.value.map(location => ({
       id: location.id,
-      practice_id: location.practice_id,
       name: location.name,
-      code: location.code || location.name.toUpperCase().replace(/\s+/g, '_'),
-      description: location.description || '',
-      location_type: location.location_type || ('storage' as const),
-      address: location.address || '',
-      is_active: location.is_active !== false, // Default to true if not specified
-      is_main_location: location.is_main_location || false,
-      requires_counting: location.requires_counting !== false, // Default to true
-      allows_negative_stock: location.allows_negative_stock || false,
-      restricted_access: location.restricted_access || false,
-      created_at: location.created_at,
-      updated_at: location.updated_at,
-    }));
-  });
+      code: location.code,
+      practice_id: location.practice_id,
+      description: location.description ?? null,
+      location_type: location.location_type,
+      address: location.address ?? null,
+      floor_level: location.floor_level ?? null,
+      room_number: location.room_number ?? null,
+      is_main_location: location.is_main_location ?? false,
+      requires_counting: location.requires_counting ?? false,
+      allows_negative_stock: location.allows_negative_stock ?? false,
+      restricted_access: location.restricted_access ?? false,
+      access_code: location.access_code ?? null,
+      responsible_user_id: location.responsible_user_id ?? null,
+      created_at: location.created_at ?? null,
+      created_by: location.created_by ?? null,
+      updated_at: location.updated_at ?? null,
+      updated_by: location.updated_by ?? null,
+    }))
+  );
 
   const mainLocation = computed(() => {
     return practiceLocations.value.find(location => location.is_main_location);
@@ -48,13 +57,24 @@ export const useClinicStore = defineStore('clinic', () => {
         .from('practices')
         .select('*')
         .eq('id', clinicId)
-        .single();
+        .single<PracticeRow>();
 
       if (error) throw error;
 
       clinic.value = data;
     } catch (error) {
-      clinicLogger.error('Error fetching practice:', error);
+      clinicLogger.error('Error fetching practice', {
+        error: error instanceof Error ? error.message : String(error),
+      });
+      ServiceErrorHandler.handle(
+        error as Error,
+        {
+          service: 'ClinicStore',
+          operation: 'fetchClinic',
+          metadata: { clinicId },
+        },
+        { rethrow: false, logLevel: 'error' }
+      );
     } finally {
       loading.value = false;
     }
@@ -73,10 +93,20 @@ export const useClinicStore = defineStore('clinic', () => {
 
       if (error) throw error;
 
-      locations.value = data || [];
+      locations.value = (data as PracticeLocationRow[]) || [];
     } catch (error) {
-      clinicLogger.error('Error fetching locations:', error);
-      throw error;
+      clinicLogger.error('Error fetching locations', {
+        error: error instanceof Error ? error.message : String(error),
+      });
+      ServiceErrorHandler.handle(
+        error as Error,
+        {
+          service: 'ClinicStore',
+          operation: 'fetchLocations',
+          metadata: { practiceId },
+        },
+        { rethrow: false, logLevel: 'error' }
+      );
     } finally {
       locationsLoading.value = false;
     }

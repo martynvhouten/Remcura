@@ -1,0 +1,3991 @@
+{
+  "generatedAt": "2025-09-30T14:50:13.878Z",
+  "totalErrors": 989,
+  "totalClusters": 327,
+  "topClusters": [
+    {
+      "module": "src/components/products/ProductDetailsDialog.vue",
+      "errorCode": "TS2339",
+      "count": 42,
+      "occurrences": [
+        {
+          "line": 15,
+          "col": 25,
+          "message": "Property 'image_url' does not exist on type 'ProductWithStock'."
+        },
+        {
+          "line": 134,
+          "col": 25,
+          "message": "Property 'description' does not exist on type 'ProductWithStock'."
+        },
+        {
+          "line": 153,
+          "col": 39,
+          "message": "Property 'gtin' does not exist on type 'ProductWithStock'."
+        },
+        {
+          "line": 160,
+          "col": 41,
+          "message": "Property 'gtin' does not exist on type 'ProductWithStock'."
+        },
+        {
+          "line": 170,
+          "col": 39,
+          "message": "Property 'gpc_brick_code' does not exist on type 'ProductWithStock'."
+        },
+        {
+          "line": 176,
+          "col": 34,
+          "message": "Property 'gpc_brick_code' does not exist on type 'ProductWithStock'."
+        },
+        {
+          "line": 181,
+          "col": 39,
+          "message": "Property 'country_of_origin' does not exist on type 'ProductWithStock'."
+        },
+        {
+          "line": 188,
+          "col": 56,
+          "message": "Property 'country_of_origin' does not exist on type 'ProductWithStock'."
+        },
+        {
+          "line": 189,
+          "col": 55,
+          "message": "Property 'country_of_origin' does not exist on type 'ProductWithStock'."
+        },
+        {
+          "line": 198,
+          "col": 39,
+          "message": "Property 'product_lifecycle_status' does not exist on type 'ProductWithStock'."
+        }
+      ],
+      "messages": [
+        "Property 'image_url' does not exist on type 'ProductWithStock'.",
+        "Property 'description' does not exist on type 'ProductWithStock'.",
+        "Property 'gtin' does not exist on type 'ProductWithStock'.",
+        "Property 'gpc_brick_code' does not exist on type 'ProductWithStock'.",
+        "Property 'country_of_origin' does not exist on type 'ProductWithStock'.",
+        "Property 'product_lifecycle_status' does not exist on type 'ProductWithStock'.",
+        "Property 'net_content_value' does not exist on type 'ProductWithStock'.",
+        "Property 'net_content_uom' does not exist on type 'ProductWithStock'.",
+        "Property 'net_weight' does not exist on type 'ProductWithStock'.",
+        "Property 'gross_weight' does not exist on type 'ProductWithStock'.",
+        "Property 'effective_from_date' does not exist on type 'ProductWithStock'.",
+        "Property 'effective_to_date' does not exist on type 'ProductWithStock'.",
+        "Property 'base_unit_indicator' does not exist on type 'ProductWithStock'.",
+        "Property 'orderable_unit_indicator' does not exist on type 'ProductWithStock'.",
+        "Property 'despatch_unit_indicator' does not exist on type 'ProductWithStock'.",
+        "Property 'stock_status' does not exist on type 'ProductWithStock'."
+      ]
+    },
+    {
+      "module": "src/stores/batch.ts",
+      "errorCode": "TS2339",
+      "count": 25,
+      "occurrences": [
+        {
+          "line": 319,
+          "col": 27,
+          "message": "Property 'practice_id' does not exist on type '{ available_quantity: number; batch_id: string; batch_number: string; expiry_date: string; use_quantity: number; }'."
+        },
+        {
+          "line": 320,
+          "col": 26,
+          "message": "Property 'product_id' does not exist on type '{ available_quantity: number; batch_id: string; batch_number: string; expiry_date: string; use_quantity: number; }'."
+        },
+        {
+          "line": 321,
+          "col": 27,
+          "message": "Property 'location_id' does not exist on type '{ available_quantity: number; batch_id: string; batch_number: string; expiry_date: string; use_quantity: number; }'."
+        },
+        {
+          "line": 322,
+          "col": 27,
+          "message": "Property 'supplier_id' does not exist on type '{ available_quantity: number; batch_id: string; batch_number: string; expiry_date: string; use_quantity: number; }'."
+        },
+        {
+          "line": 325,
+          "col": 29,
+          "message": "Property 'received_date' does not exist on type '{ available_quantity: number; batch_id: string; batch_number: string; expiry_date: string; use_quantity: number; }'."
+        },
+        {
+          "line": 327,
+          "col": 33,
+          "message": "Property 'reserved_quantity' does not exist on type '{ available_quantity: number; batch_id: string; batch_number: string; expiry_date: string; use_quantity: number; }'."
+        },
+        {
+          "line": 329,
+          "col": 25,
+          "message": "Property 'unit_cost' does not exist on type '{ available_quantity: number; batch_id: string; batch_number: string; expiry_date: string; use_quantity: number; }'."
+        },
+        {
+          "line": 330,
+          "col": 26,
+          "message": "Property 'total_cost' does not exist on type '{ available_quantity: number; batch_id: string; batch_number: string; expiry_date: string; use_quantity: number; }'."
+        },
+        {
+          "line": 331,
+          "col": 25,
+          "message": "Property 'currency' does not exist on type '{ available_quantity: number; batch_id: string; batch_number: string; expiry_date: string; use_quantity: number; }'."
+        },
+        {
+          "line": 332,
+          "col": 23,
+          "message": "Property 'status' does not exist on type '{ available_quantity: number; batch_id: string; batch_number: string; expiry_date: string; use_quantity: number; }'."
+        }
+      ],
+      "messages": [
+        "Property 'practice_id' does not exist on type '{ available_quantity: number; batch_id: string; batch_number: string; expiry_date: string; use_quantity: number; }'.",
+        "Property 'product_id' does not exist on type '{ available_quantity: number; batch_id: string; batch_number: string; expiry_date: string; use_quantity: number; }'.",
+        "Property 'location_id' does not exist on type '{ available_quantity: number; batch_id: string; batch_number: string; expiry_date: string; use_quantity: number; }'.",
+        "Property 'supplier_id' does not exist on type '{ available_quantity: number; batch_id: string; batch_number: string; expiry_date: string; use_quantity: number; }'.",
+        "Property 'received_date' does not exist on type '{ available_quantity: number; batch_id: string; batch_number: string; expiry_date: string; use_quantity: number; }'.",
+        "Property 'reserved_quantity' does not exist on type '{ available_quantity: number; batch_id: string; batch_number: string; expiry_date: string; use_quantity: number; }'.",
+        "Property 'unit_cost' does not exist on type '{ available_quantity: number; batch_id: string; batch_number: string; expiry_date: string; use_quantity: number; }'.",
+        "Property 'total_cost' does not exist on type '{ available_quantity: number; batch_id: string; batch_number: string; expiry_date: string; use_quantity: number; }'.",
+        "Property 'currency' does not exist on type '{ available_quantity: number; batch_id: string; batch_number: string; expiry_date: string; use_quantity: number; }'.",
+        "Property 'status' does not exist on type '{ available_quantity: number; batch_id: string; batch_number: string; expiry_date: string; use_quantity: number; }'.",
+        "Property 'product_id' does not exist on type 'UpdateBatchRequest'.",
+        "Property 'location_id' does not exist on type 'UpdateBatchRequest'.",
+        "Property 'supplier_id' does not exist on type 'UpdateBatchRequest'.",
+        "Property 'batch_number' does not exist on type 'UpdateBatchRequest'.",
+        "Property 'supplier_batch_number' does not exist on type 'UpdateBatchRequest'.",
+        "Property 'expiry_date' does not exist on type 'UpdateBatchRequest'.",
+        "Property 'received_date' does not exist on type 'UpdateBatchRequest'.",
+        "Property 'available_quantity' does not exist on type 'UpdateBatchRequest'.",
+        "Property 'total_cost' does not exist on type 'UpdateBatchRequest'.",
+        "Property 'currency' does not exist on type 'UpdateBatchRequest'.",
+        "Property 'purchase_order_number' does not exist on type 'UpdateBatchRequest'.",
+        "Property 'invoice_number' does not exist on type 'UpdateBatchRequest'.",
+        "Property 'value' does not exist on type 'PostgrestError'."
+      ]
+    },
+    {
+      "module": "src/stores/batch.ts",
+      "errorCode": "TS7006",
+      "count": 20,
+      "occurrences": [
+        {
+          "line": 46,
+          "col": 26,
+          "message": "Parameter 'batch' implicitly has an 'any' type."
+        },
+        {
+          "line": 49,
+          "col": 26,
+          "message": "Parameter 'batch' implicitly has an 'any' type."
+        },
+        {
+          "line": 53,
+          "col": 26,
+          "message": "Parameter 'batch' implicitly has an 'any' type."
+        },
+        {
+          "line": 59,
+          "col": 33,
+          "message": "Parameter 'batch' implicitly has an 'any' type."
+        },
+        {
+          "line": 66,
+          "col": 26,
+          "message": "Parameter 'batch' implicitly has an 'any' type."
+        },
+        {
+          "line": 70,
+          "col": 27,
+          "message": "Parameter 'total' implicitly has an 'any' type."
+        },
+        {
+          "line": 70,
+          "col": 34,
+          "message": "Parameter 'batch' implicitly has an 'any' type."
+        },
+        {
+          "line": 78,
+          "col": 25,
+          "message": "Parameter 'batch' implicitly has an 'any' type."
+        },
+        {
+          "line": 89,
+          "col": 25,
+          "message": "Parameter 'batch' implicitly has an 'any' type."
+        },
+        {
+          "line": 100,
+          "col": 25,
+          "message": "Parameter 'batch' implicitly has an 'any' type."
+        }
+      ],
+      "messages": [
+        "Parameter 'batch' implicitly has an 'any' type.",
+        "Parameter 'total' implicitly has an 'any' type.",
+        "Parameter 'batchRow' implicitly has an 'any' type.",
+        "Parameter 'row' implicitly has an 'any' type."
+      ]
+    },
+    {
+      "module": "src/stores/inventory/inventory-alerts.ts",
+      "errorCode": "TS2551",
+      "count": 20,
+      "occurrences": [
+        {
+          "line": 31,
+          "col": 39,
+          "message": "Property 'minimum_quantity' does not exist on type 'StockLevelView'. Did you mean 'minimumQuantity'?"
+        },
+        {
+          "line": 32,
+          "col": 22,
+          "message": "Property 'current_quantity' does not exist on type 'StockLevelView'. Did you mean 'currentQuantity'?"
+        },
+        {
+          "line": 34,
+          "col": 29,
+          "message": "Property 'product_id' does not exist on type 'StockLevelView'. Did you mean 'productId'?"
+        },
+        {
+          "line": 34,
+          "col": 54,
+          "message": "Property 'location_id' does not exist on type 'StockLevelView'. Did you mean 'locationId'?"
+        },
+        {
+          "line": 35,
+          "col": 34,
+          "message": "Property 'product_id' does not exist on type 'StockLevelView'. Did you mean 'productId'?"
+        },
+        {
+          "line": 36,
+          "col": 35,
+          "message": "Property 'location_id' does not exist on type 'StockLevelView'. Did you mean 'locationId'?"
+        },
+        {
+          "line": 38,
+          "col": 37,
+          "message": "Property 'current_quantity' does not exist on type 'StockLevelView'. Did you mean 'currentQuantity'?"
+        },
+        {
+          "line": 40,
+          "col": 31,
+          "message": "Property 'current_quantity' does not exist on type 'StockLevelView'. Did you mean 'currentQuantity'?"
+        },
+        {
+          "line": 45,
+          "col": 22,
+          "message": "Property 'current_quantity' does not exist on type 'StockLevelView'. Did you mean 'currentQuantity'?"
+        },
+        {
+          "line": 47,
+          "col": 29,
+          "message": "Property 'product_id' does not exist on type 'StockLevelView'. Did you mean 'productId'?"
+        }
+      ],
+      "messages": [
+        "Property 'minimum_quantity' does not exist on type 'StockLevelView'. Did you mean 'minimumQuantity'?",
+        "Property 'current_quantity' does not exist on type 'StockLevelView'. Did you mean 'currentQuantity'?",
+        "Property 'product_id' does not exist on type 'StockLevelView'. Did you mean 'productId'?",
+        "Property 'location_id' does not exist on type 'StockLevelView'. Did you mean 'locationId'?",
+        "Property 'location_name' does not exist on type 'StockLevelView'. Did you mean 'locationName'?"
+      ]
+    },
+    {
+      "module": "src/types/inventory.ts",
+      "errorCode": "TS2339",
+      "count": 19,
+      "occurrences": [
+        {
+          "line": 157,
+          "col": 20,
+          "message": "Property 'minimum_quantity' does not exist on type '{ available_quantity: number | null; batch_number: string; created_at: string | null; created_by: string | null; currency: string | null; current_quantity: number; expiry_date: string; ... 17 more ...; updated_at: string | null; } | ProductBatchRowWithRelations'."
+        },
+        {
+          "line": 158,
+          "col": 20,
+          "message": "Property 'maximum_quantity' does not exist on type '{ available_quantity: number | null; batch_number: string; created_at: string | null; created_by: string | null; currency: string | null; current_quantity: number; expiry_date: string; ... 17 more ...; updated_at: string | null; } | ProductBatchRowWithRelations'."
+        },
+        {
+          "line": 159,
+          "col": 25,
+          "message": "Property 'reorder_point' does not exist on type '{ available_quantity: number | null; batch_number: string; created_at: string | null; created_by: string | null; currency: string | null; current_quantity: number; expiry_date: string; ... 17 more ...; updated_at: string | null; } | ProductBatchRowWithRelations'."
+        },
+        {
+          "line": 925,
+          "col": 28,
+          "message": "Property 'minimum_stock' does not exist on type 'ProductWithRelations'."
+        },
+        {
+          "line": 933,
+          "col": 22,
+          "message": "Property 'supplier_id' does not exist on type 'ProductWithRelations'."
+        },
+        {
+          "line": 934,
+          "col": 24,
+          "message": "Property 'supplier_name' does not exist on type 'ProductWithRelations'."
+        },
+        {
+          "line": 935,
+          "col": 24,
+          "message": "Property 'supplier_code' does not exist on type 'ProductWithRelations'."
+        },
+        {
+          "line": 936,
+          "col": 25,
+          "message": "Property 'supplier_phone' does not exist on type 'ProductWithRelations'."
+        },
+        {
+          "line": 937,
+          "col": 25,
+          "message": "Property 'supplier_email' does not exist on type 'ProductWithRelations'."
+        },
+        {
+          "line": 938,
+          "col": 22,
+          "message": "Property 'expiry_date' does not exist on type 'ProductWithRelations'."
+        }
+      ],
+      "messages": [
+        "Property 'minimum_quantity' does not exist on type '{ available_quantity: number | null; batch_number: string; created_at: string | null; created_by: string | null; currency: string | null; current_quantity: number; expiry_date: string; ... 17 more ...; updated_at: string | null; } | ProductBatchRowWithRelations'.",
+        "Property 'maximum_quantity' does not exist on type '{ available_quantity: number | null; batch_number: string; created_at: string | null; created_by: string | null; currency: string | null; current_quantity: number; expiry_date: string; ... 17 more ...; updated_at: string | null; } | ProductBatchRowWithRelations'.",
+        "Property 'reorder_point' does not exist on type '{ available_quantity: number | null; batch_number: string; created_at: string | null; created_by: string | null; currency: string | null; current_quantity: number; expiry_date: string; ... 17 more ...; updated_at: string | null; } | ProductBatchRowWithRelations'.",
+        "Property 'minimum_stock' does not exist on type 'ProductWithRelations'.",
+        "Property 'supplier_id' does not exist on type 'ProductWithRelations'.",
+        "Property 'supplier_name' does not exist on type 'ProductWithRelations'.",
+        "Property 'supplier_code' does not exist on type 'ProductWithRelations'.",
+        "Property 'supplier_phone' does not exist on type 'ProductWithRelations'.",
+        "Property 'supplier_email' does not exist on type 'ProductWithRelations'.",
+        "Property 'expiry_date' does not exist on type 'ProductWithRelations'.",
+        "Property 'gs1_status' does not exist on type 'ProductWithRelations'.",
+        "Property 'batch_status' does not exist on type 'ProductWithRelations'.",
+        "Property 'practice_id' does not exist on type 'ProductWithRelations'.",
+        "Property 'unit_price' does not exist on type 'ProductWithRelations'.",
+        "Property 'lowest_price' does not exist on type 'ProductWithRelations'.",
+        "Property 'updated_at' does not exist on type '{ alternative_suppliers: string[] | null; auto_suggest_enabled: boolean | null; average_consumption: number | null; created_at: string | null; current_stock: number | null; id: string; ... 19 more ...; urgency_level: string | null; }'."
+      ]
+    },
+    {
+      "module": "src/components/inventory/CountingEntryWithBatch.vue",
+      "errorCode": "TS2339",
+      "count": 18,
+      "occurrences": [
+        {
+          "line": 7,
+          "col": 37,
+          "message": "Property 'product' does not exist on type 'CreateComponentPublicInstanceWithMixins<ToResolvedProps<Props, TypeEmitsToOptions<Emits>>, { BaseCard: DefineComponent<{}, {}, any>; BatchInput: DefineComponent<Props, {}, {}, {}, ... 15 more ..., any>; ... 24 more ...; saveEntry: () => Promise<...>; }, ... 23 more ..., { ...; }>'."
+        },
+        {
+          "line": 9,
+          "col": 18,
+          "message": "Property 'product' does not exist on type 'CreateComponentPublicInstanceWithMixins<ToResolvedProps<Props, TypeEmitsToOptions<Emits>>, { BaseCard: DefineComponent<{}, {}, any>; BatchInput: DefineComponent<Props, {}, {}, {}, ... 15 more ..., any>; ... 24 more ...; saveEntry: () => Promise<...>; }, ... 23 more ..., { ...; }>'."
+        },
+        {
+          "line": 9,
+          "col": 38,
+          "message": "Property 'product' does not exist on type 'CreateComponentPublicInstanceWithMixins<ToResolvedProps<Props, TypeEmitsToOptions<Emits>>, { BaseCard: DefineComponent<{}, {}, any>; BatchInput: DefineComponent<Props, {}, {}, {}, ... 15 more ..., any>; ... 24 more ...; saveEntry: () => Promise<...>; }, ... 23 more ..., { ...; }>'."
+        },
+        {
+          "line": 29,
+          "col": 37,
+          "message": "Property 'product' does not exist on type 'CreateComponentPublicInstanceWithMixins<ToResolvedProps<Props, TypeEmitsToOptions<Emits>>, { BaseCard: DefineComponent<{}, {}, any>; BatchInput: DefineComponent<Props, {}, {}, {}, ... 15 more ..., any>; ... 24 more ...; saveEntry: () => Promise<...>; }, ... 23 more ..., { ...; }>'."
+        },
+        {
+          "line": 76,
+          "col": 52,
+          "message": "Property 'product' does not exist on type 'CreateComponentPublicInstanceWithMixins<ToResolvedProps<Props, TypeEmitsToOptions<Emits>>, { BaseCard: DefineComponent<{}, {}, any>; BatchInput: DefineComponent<Props, {}, {}, {}, ... 15 more ..., any>; ... 24 more ...; saveEntry: () => Promise<...>; }, ... 23 more ..., { ...; }>'."
+        },
+        {
+          "line": 102,
+          "col": 29,
+          "message": "Property 'locationId' does not exist on type 'CreateComponentPublicInstanceWithMixins<ToResolvedProps<Props, TypeEmitsToOptions<Emits>>, { BaseCard: DefineComponent<{}, {}, any>; BatchInput: DefineComponent<Props, {}, {}, {}, ... 15 more ..., any>; ... 24 more ...; saveEntry: () => Promise<...>; }, ... 23 more ..., { ...; }>'."
+        },
+        {
+          "line": 136,
+          "col": 45,
+          "message": "Property 'product' does not exist on type 'CreateComponentPublicInstanceWithMixins<ToResolvedProps<Props, TypeEmitsToOptions<Emits>>, { BaseCard: DefineComponent<{}, {}, any>; BatchInput: DefineComponent<Props, {}, {}, {}, ... 15 more ..., any>; ... 24 more ...; saveEntry: () => Promise<...>; }, ... 23 more ..., { ...; }>'."
+        },
+        {
+          "line": 150,
+          "col": 18,
+          "message": "Property 'product' does not exist on type 'CreateComponentPublicInstanceWithMixins<ToResolvedProps<Props, TypeEmitsToOptions<Emits>>, { BaseCard: DefineComponent<{}, {}, any>; BatchInput: DefineComponent<Props, {}, {}, {}, ... 15 more ..., any>; ... 24 more ...; saveEntry: () => Promise<...>; }, ... 23 more ..., { ...; }>'."
+        },
+        {
+          "line": 242,
+          "col": 31,
+          "message": "Property 'product' does not exist on type 'Readonly<MappedOmit<LooseRequired<Props>, \"viewMode\">> & { readonly viewMode: \"full\" | \"lite\"; } & {}'."
+        },
+        {
+          "line": 243,
+          "col": 52,
+          "message": "Property 'locationId' does not exist on type 'Readonly<MappedOmit<LooseRequired<Props>, \"viewMode\">> & { readonly viewMode: \"full\" | \"lite\"; } & {}'."
+        }
+      ],
+      "messages": [
+        "Property 'product' does not exist on type 'CreateComponentPublicInstanceWithMixins<ToResolvedProps<Props, TypeEmitsToOptions<Emits>>, { BaseCard: DefineComponent<{}, {}, any>; BatchInput: DefineComponent<Props, {}, {}, {}, ... 15 more ..., any>; ... 24 more ...; saveEntry: () => Promise<...>; }, ... 23 more ..., { ...; }>'.",
+        "Property 'locationId' does not exist on type 'CreateComponentPublicInstanceWithMixins<ToResolvedProps<Props, TypeEmitsToOptions<Emits>>, { BaseCard: DefineComponent<{}, {}, any>; BatchInput: DefineComponent<Props, {}, {}, {}, ... 15 more ..., any>; ... 24 more ...; saveEntry: () => Promise<...>; }, ... 23 more ..., { ...; }>'.",
+        "Property 'product' does not exist on type 'Readonly<MappedOmit<LooseRequired<Props>, \"viewMode\">> & { readonly viewMode: \"full\" | \"lite\"; } & {}'.",
+        "Property 'locationId' does not exist on type 'Readonly<MappedOmit<LooseRequired<Props>, \"viewMode\">> & { readonly viewMode: \"full\" | \"lite\"; } & {}'.",
+        "Property 'batch_id' does not exist on type '{ session_id: string; product_id: any; location_id: any; system_quantity: any; counted_quantity: number; discrepancy: number; notes: string; counted_by: string; counted_at: string; status: string; }'.",
+        "Property 'batch_id' does not exist on type 'CountingEntryDTO'."
+      ]
+    },
+    {
+      "module": "src/components/inventory/QuickAdjustmentDialog.vue",
+      "errorCode": "TS2339",
+      "count": 17,
+      "occurrences": [
+        {
+          "line": 860,
+          "col": 24,
+          "message": "Property 'barcode' does not exist on type '{ id: string; practiceId: string; sku: string; name: string; category: string | null; brand: string | null; unit: string | null; totalStock: number; availableStock: number; reservedStock: number; ... 9 more ...; raw?: { ...; }; }'."
+        },
+        {
+          "line": 861,
+          "col": 25,
+          "message": "Property 'barcode' does not exist on type '{ id: string; practiceId: string; sku: string; name: string; category: string | null; brand: string | null; unit: string | null; totalStock: number; availableStock: number; reservedStock: number; ... 9 more ...; raw?: { ...; }; }'."
+        },
+        {
+          "line": 870,
+          "col": 32,
+          "message": "Property 'image_url' does not exist on type '{ id: string; practiceId: string; sku: string; name: string; category: string | null; brand: string | null; unit: string | null; totalStock: number; availableStock: number; reservedStock: number; ... 9 more ...; raw?: { ...; }; }'."
+        },
+        {
+          "line": 872,
+          "col": 39,
+          "message": "Property 'current_quantity' does not exist on type '{ id: string; practiceId: string; sku: string; name: string; category: string | null; brand: string | null; unit: string | null; totalStock: number; availableStock: number; reservedStock: number; ... 9 more ...; raw?: { ...; }; }'."
+        },
+        {
+          "line": 873,
+          "col": 39,
+          "message": "Property 'minimum_quantity' does not exist on type '{ id: string; practiceId: string; sku: string; name: string; category: string | null; brand: string | null; unit: string | null; totalStock: number; availableStock: number; reservedStock: number; ... 9 more ...; raw?: { ...; }; }'."
+        },
+        {
+          "line": 874,
+          "col": 28,
+          "message": "Property 'price' does not exist on type '{ id: string; practiceId: string; sku: string; name: string; category: string | null; brand: string | null; unit: string | null; totalStock: number; availableStock: number; reservedStock: number; ... 9 more ...; raw?: { ...; }; }'."
+        },
+        {
+          "line": 875,
+          "col": 34,
+          "message": "Property 'description' does not exist on type '{ id: string; practiceId: string; sku: string; name: string; category: string | null; brand: string | null; unit: string | null; totalStock: number; availableStock: number; reservedStock: number; ... 9 more ...; raw?: { ...; }; }'."
+        },
+        {
+          "line": 876,
+          "col": 30,
+          "message": "Property 'barcode' does not exist on type '{ id: string; practiceId: string; sku: string; name: string; category: string | null; brand: string | null; unit: string | null; totalStock: number; availableStock: number; reservedStock: number; ... 9 more ...; raw?: { ...; }; }'."
+        },
+        {
+          "line": 906,
+          "col": 19,
+          "message": "Property 'barcode' does not exist on type '{ id: string; practiceId: string; sku: string; name: string; category: string | null; brand: string | null; unit: string | null; totalStock: number; availableStock: number; reservedStock: number; ... 9 more ...; raw?: { ...; }; }'."
+        },
+        {
+          "line": 919,
+          "col": 38,
+          "message": "Property 'image_url' does not exist on type '{ id: string; practiceId: string; sku: string; name: string; category: string | null; brand: string | null; unit: string | null; totalStock: number; availableStock: number; reservedStock: number; ... 9 more ...; raw?: { ...; }; }'."
+        }
+      ],
+      "messages": [
+        "Property 'barcode' does not exist on type '{ id: string; practiceId: string; sku: string; name: string; category: string | null; brand: string | null; unit: string | null; totalStock: number; availableStock: number; reservedStock: number; ... 9 more ...; raw?: { ...; }; }'.",
+        "Property 'image_url' does not exist on type '{ id: string; practiceId: string; sku: string; name: string; category: string | null; brand: string | null; unit: string | null; totalStock: number; availableStock: number; reservedStock: number; ... 9 more ...; raw?: { ...; }; }'.",
+        "Property 'current_quantity' does not exist on type '{ id: string; practiceId: string; sku: string; name: string; category: string | null; brand: string | null; unit: string | null; totalStock: number; availableStock: number; reservedStock: number; ... 9 more ...; raw?: { ...; }; }'.",
+        "Property 'minimum_quantity' does not exist on type '{ id: string; practiceId: string; sku: string; name: string; category: string | null; brand: string | null; unit: string | null; totalStock: number; availableStock: number; reservedStock: number; ... 9 more ...; raw?: { ...; }; }'.",
+        "Property 'price' does not exist on type '{ id: string; practiceId: string; sku: string; name: string; category: string | null; brand: string | null; unit: string | null; totalStock: number; availableStock: number; reservedStock: number; ... 9 more ...; raw?: { ...; }; }'.",
+        "Property 'description' does not exist on type '{ id: string; practiceId: string; sku: string; name: string; category: string | null; brand: string | null; unit: string | null; totalStock: number; availableStock: number; reservedStock: number; ... 9 more ...; raw?: { ...; }; }'.",
+        "Property 'subscribeToInventory' does not exist on type '{ subscribeToOrderLists(practiceId: string, callback: (payload: OrderListPayload) => void): RealtimeChannel; subscribeToOrderListItems(callback: (payload: OrderListItemPayload) => void): RealtimeChannel; subscribeToStockLevels(practiceId: string, callback: (payload: StockLevelPayload) => void): RealtimeChannel; subs...'.",
+        "Property 'unsubscribeFromChannel' does not exist on type '{ subscribeToOrderLists(practiceId: string, callback: (payload: OrderListPayload) => void): RealtimeChannel; subscribeToOrderListItems(callback: (payload: OrderListItemPayload) => void): RealtimeChannel; subscribeToStockLevels(practiceId: string, callback: (payload: StockLevelPayload) => void): RealtimeChannel; subs...'."
+      ]
+    },
+    {
+      "module": "src/pages/OrderListsPage.vue",
+      "errorCode": "TS2304",
+      "count": 17,
+      "occurrences": [
+        {
+          "line": 682,
+          "col": 20,
+          "message": "Cannot find name '$t'."
+        },
+        {
+          "line": 694,
+          "col": 18,
+          "message": "Cannot find name '$t'."
+        },
+        {
+          "line": 705,
+          "col": 20,
+          "message": "Cannot find name '$t'."
+        },
+        {
+          "line": 732,
+          "col": 24,
+          "message": "Cannot find name '$t'."
+        },
+        {
+          "line": 741,
+          "col": 24,
+          "message": "Cannot find name '$t'."
+        },
+        {
+          "line": 751,
+          "col": 18,
+          "message": "Cannot find name '$t'."
+        },
+        {
+          "line": 767,
+          "col": 16,
+          "message": "Cannot find name '$t'."
+        },
+        {
+          "line": 778,
+          "col": 18,
+          "message": "Cannot find name '$t'."
+        },
+        {
+          "line": 785,
+          "col": 18,
+          "message": "Cannot find name '$t'."
+        },
+        {
+          "line": 794,
+          "col": 16,
+          "message": "Cannot find name '$t'."
+        }
+      ],
+      "messages": ["Cannot find name '$t'."]
+    },
+    {
+      "module": "src/services/orderOrchestration/centralOrderService.ts",
+      "errorCode": "TS2339",
+      "count": 17,
+      "occurrences": [
+        {
+          "line": 101,
+          "col": 68,
+          "message": "Property 'unit_price' does not exist on type 'ReorderSuggestion'."
+        },
+        {
+          "line": 158,
+          "col": 37,
+          "message": "Property 'total_value' does not exist on type 'SupplierOrder'."
+        },
+        {
+          "line": 248,
+          "col": 24,
+          "message": "Property 'id' does not exist on type 'SelectQueryError<\"column 'order_reference' does not exist on 'supplier_orders'.\">'."
+        },
+        {
+          "line": 249,
+          "col": 32,
+          "message": "Property 'id' does not exist on type 'SelectQueryError<\"column 'order_reference' does not exist on 'supplier_orders'.\">'."
+        },
+        {
+          "line": 250,
+          "col": 27,
+          "message": "Property 'suppliers' does not exist on type 'SelectQueryError<\"column 'order_reference' does not exist on 'supplier_orders'.\">'."
+        },
+        {
+          "line": 251,
+          "col": 29,
+          "message": "Property 'suppliers' does not exist on type 'SelectQueryError<\"column 'order_reference' does not exist on 'supplier_orders'.\">'."
+        },
+        {
+          "line": 252,
+          "col": 23,
+          "message": "Property 'status' does not exist on type 'SelectQueryError<\"column 'order_reference' does not exist on 'supplier_orders'.\">'."
+        },
+        {
+          "line": 253,
+          "col": 31,
+          "message": "Property 'order_reference' does not exist on type 'SelectQueryError<\"column 'order_reference' does not exist on 'supplier_orders'.\">'."
+        },
+        {
+          "line": 254,
+          "col": 31,
+          "message": "Property 'tracking_number' does not exist on type 'SelectQueryError<\"column 'order_reference' does not exist on 'supplier_orders'.\">'."
+        },
+        {
+          "line": 255,
+          "col": 34,
+          "message": "Property 'estimated_delivery_date' does not exist on type 'SelectQueryError<\"column 'order_reference' does not exist on 'supplier_orders'.\">'."
+        }
+      ],
+      "messages": [
+        "Property 'unit_price' does not exist on type 'ReorderSuggestion'.",
+        "Property 'total_value' does not exist on type 'SupplierOrder'.",
+        "Property 'id' does not exist on type 'SelectQueryError<\"column 'order_reference' does not exist on 'supplier_orders'.\">'.",
+        "Property 'suppliers' does not exist on type 'SelectQueryError<\"column 'order_reference' does not exist on 'supplier_orders'.\">'.",
+        "Property 'status' does not exist on type 'SelectQueryError<\"column 'order_reference' does not exist on 'supplier_orders'.\">'.",
+        "Property 'order_reference' does not exist on type 'SelectQueryError<\"column 'order_reference' does not exist on 'supplier_orders'.\">'.",
+        "Property 'tracking_number' does not exist on type 'SelectQueryError<\"column 'order_reference' does not exist on 'supplier_orders'.\">'.",
+        "Property 'estimated_delivery_date' does not exist on type 'SelectQueryError<\"column 'order_reference' does not exist on 'supplier_orders'.\">'.",
+        "Property 'actual_delivery_date' does not exist on type 'SelectQueryError<\"column 'order_reference' does not exist on 'supplier_orders'.\">'.",
+        "Property 'updated_at' does not exist on type 'SelectQueryError<\"column 'order_reference' does not exist on 'supplier_orders'.\">'.",
+        "Property 'data' does not exist on type '(SelectQueryError<\"column 'product_id' does not exist on 'practices'.\"> | SelectQueryError<\"column 'product_id' does not exist on 'counting_sessions'.\"> | ... 34 more ... | SelectQueryError<...>)[]'.",
+        "Property 'estimated_total' does not exist on type '{ auto_reorder_enabled: boolean | null; created_at: string | null; created_by: string | null; description: string | null; id: string; is_template: boolean | null; last_auto_check: string | null; ... 14 more ...; updated_at: string | null; }'."
+      ]
+    },
+    {
+      "module": "src/services/orderProcessing.ts",
+      "errorCode": "TS2304",
+      "count": 15,
+      "occurrences": [
+        {
+          "line": 23,
+          "col": 23,
+          "message": "Cannot find name '$t'."
+        },
+        {
+          "line": 42,
+          "col": 23,
+          "message": "Cannot find name '$t'."
+        },
+        {
+          "line": 52,
+          "col": 23,
+          "message": "Cannot find name '$t'."
+        },
+        {
+          "line": 72,
+          "col": 23,
+          "message": "Cannot find name '$t'."
+        },
+        {
+          "line": 93,
+          "col": 25,
+          "message": "Cannot find name '$t'."
+        },
+        {
+          "line": 119,
+          "col": 23,
+          "message": "Cannot find name '$t'."
+        },
+        {
+          "line": 153,
+          "col": 23,
+          "message": "Cannot find name '$t'."
+        },
+        {
+          "line": 181,
+          "col": 23,
+          "message": "Cannot find name '$t'."
+        },
+        {
+          "line": 193,
+          "col": 23,
+          "message": "Cannot find name '$t'."
+        },
+        {
+          "line": 300,
+          "col": 23,
+          "message": "Cannot find name '$t'."
+        }
+      ],
+      "messages": ["Cannot find name '$t'.", "Cannot find name 'MagentoOrder'."]
+    },
+    {
+      "module": "src/pages/auth/LoginPage.vue",
+      "errorCode": "TS2339",
+      "count": 14,
+      "occurrences": [
+        {
+          "line": 10,
+          "col": 30,
+          "message": "Property 'value' does not exist on type 'FieldValidation'."
+        },
+        {
+          "line": 14,
+          "col": 31,
+          "message": "Property 'error' does not exist on type 'FieldValidation'."
+        },
+        {
+          "line": 15,
+          "col": 37,
+          "message": "Property 'error' does not exist on type 'FieldValidation'."
+        },
+        {
+          "line": 19,
+          "col": 40,
+          "message": "Property 'error' does not exist on type 'FieldValidation'."
+        },
+        {
+          "line": 25,
+          "col": 30,
+          "message": "Property 'error' does not exist on type 'FieldValidation'."
+        },
+        {
+          "line": 26,
+          "col": 24,
+          "message": "Property 'error' does not exist on type 'FieldValidation'."
+        },
+        {
+          "line": 33,
+          "col": 33,
+          "message": "Property 'value' does not exist on type 'FieldValidation'."
+        },
+        {
+          "line": 37,
+          "col": 34,
+          "message": "Property 'error' does not exist on type 'FieldValidation'."
+        },
+        {
+          "line": 38,
+          "col": 40,
+          "message": "Property 'error' does not exist on type 'FieldValidation'."
+        },
+        {
+          "line": 43,
+          "col": 26,
+          "message": "Property 'error' does not exist on type 'FieldValidation'."
+        }
+      ],
+      "messages": [
+        "Property 'value' does not exist on type 'FieldValidation'.",
+        "Property 'error' does not exist on type 'FieldValidation'."
+      ]
+    },
+    {
+      "module": "src/pages/OrdersPage.vue",
+      "errorCode": "TS2339",
+      "count": 14,
+      "occurrences": [
+        {
+          "line": 277,
+          "col": 42,
+          "message": "Property 'from' does not exist on type 'string | number | true | Date | (string | number)[] | { min?: number; max?: number; } | { from?: Date; to?: Date; }'."
+        },
+        {
+          "line": 278,
+          "col": 48,
+          "message": "Property 'from' does not exist on type 'string | number | true | Date | (string | number)[] | { min?: number; max?: number; } | { from?: Date; to?: Date; }'."
+        },
+        {
+          "line": 279,
+          "col": 37,
+          "message": "Property 'to' does not exist on type 'string | number | true | Date | (string | number)[] | { min?: number; max?: number; } | { from?: Date; to?: Date; }'."
+        },
+        {
+          "line": 280,
+          "col": 35,
+          "message": "Property 'to' does not exist on type 'string | number | true | Date | (string | number)[] | { min?: number; max?: number; } | { from?: Date; to?: Date; }'."
+        },
+        {
+          "line": 293,
+          "col": 20,
+          "message": "Property 'min' does not exist on type 'string | number | true | Date | (string | number)[] | { min?: number; max?: number; } | { from?: Date; to?: Date; }'."
+        },
+        {
+          "line": 293,
+          "col": 53,
+          "message": "Property 'max' does not exist on type 'string | number | true | Date | (string | number)[] | { min?: number; max?: number; } | { from?: Date; to?: Date; }'."
+        },
+        {
+          "line": 297,
+          "col": 25,
+          "message": "Property 'min' does not exist on type 'string | number | true | Date | (string | number)[] | { min?: number; max?: number; } | { from?: Date; to?: Date; }'."
+        },
+        {
+          "line": 297,
+          "col": 67,
+          "message": "Property 'min' does not exist on type 'string | number | true | Date | (string | number)[] | { min?: number; max?: number; } | { from?: Date; to?: Date; }'."
+        },
+        {
+          "line": 300,
+          "col": 25,
+          "message": "Property 'max' does not exist on type 'string | number | true | Date | (string | number)[] | { min?: number; max?: number; } | { from?: Date; to?: Date; }'."
+        },
+        {
+          "line": 300,
+          "col": 67,
+          "message": "Property 'max' does not exist on type 'string | number | true | Date | (string | number)[] | { min?: number; max?: number; } | { from?: Date; to?: Date; }'."
+        }
+      ],
+      "messages": [
+        "Property 'from' does not exist on type 'string | number | true | Date | (string | number)[] | { min?: number; max?: number; } | { from?: Date; to?: Date; }'.",
+        "Property 'to' does not exist on type 'string | number | true | Date | (string | number)[] | { min?: number; max?: number; } | { from?: Date; to?: Date; }'.",
+        "Property 'min' does not exist on type 'string | number | true | Date | (string | number)[] | { min?: number; max?: number; } | { from?: Date; to?: Date; }'.",
+        "Property 'max' does not exist on type 'string | number | true | Date | (string | number)[] | { min?: number; max?: number; } | { from?: Date; to?: Date; }'."
+      ]
+    },
+    {
+      "module": "src/services/admin.ts",
+      "errorCode": "TS2551",
+      "count": 13,
+      "occurrences": [
+        {
+          "line": 562,
+          "col": 38,
+          "message": "Property 'event_data' does not exist on type 'UsageAnalytics'. Did you mean 'eventData'?"
+        },
+        {
+          "line": 566,
+          "col": 17,
+          "message": "Property 'event_data' does not exist on type 'UsageAnalytics'. Did you mean 'eventData'?"
+        },
+        {
+          "line": 573,
+          "col": 28,
+          "message": "Property 'practice_id' does not exist on type 'UsageAnalytics'. Did you mean 'practiceId'?"
+        },
+        {
+          "line": 574,
+          "col": 24,
+          "message": "Property 'user_id' does not exist on type 'UsageAnalytics'. Did you mean 'userId'?"
+        },
+        {
+          "line": 575,
+          "col": 23,
+          "message": "Property 'event_data' does not exist on type 'UsageAnalytics'. Did you mean 'eventData'?"
+        },
+        {
+          "line": 576,
+          "col": 30,
+          "message": "Property 'event_data' does not exist on type 'UsageAnalytics'. Did you mean 'eventData'?"
+        },
+        {
+          "line": 577,
+          "col": 28,
+          "message": "Property 'event_data' does not exist on type 'UsageAnalytics'. Did you mean 'eventData'?"
+        },
+        {
+          "line": 578,
+          "col": 27,
+          "message": "Property 'event_data' does not exist on type 'UsageAnalytics'. Did you mean 'eventData'?"
+        },
+        {
+          "line": 579,
+          "col": 27,
+          "message": "Property 'event_data' does not exist on type 'UsageAnalytics'. Did you mean 'eventData'?"
+        },
+        {
+          "line": 580,
+          "col": 25,
+          "message": "Property 'event_data' does not exist on type 'UsageAnalytics'. Did you mean 'eventData'?"
+        }
+      ],
+      "messages": [
+        "Property 'event_data' does not exist on type 'UsageAnalytics'. Did you mean 'eventData'?",
+        "Property 'practice_id' does not exist on type 'UsageAnalytics'. Did you mean 'practiceId'?",
+        "Property 'user_id' does not exist on type 'UsageAnalytics'. Did you mean 'userId'?",
+        "Property 'created_at' does not exist on type 'UsageAnalytics'. Did you mean 'createdAt'?",
+        "Property 'ip_address' does not exist on type 'UsageAnalytics'. Did you mean 'ipAddress'?",
+        "Property 'user_agent' does not exist on type 'UsageAnalytics'. Did you mean 'userAgent'?"
+      ]
+    },
+    {
+      "module": "src/stores/batch.ts",
+      "errorCode": "TS2322",
+      "count": 13,
+      "occurrences": [
+        {
+          "line": 178,
+          "col": 11,
+          "message": "Type '{ id: string; name: string | null; sku: string | null; } | null' is not assignable to type 'Pick<{ active: boolean | null; barcode: string | null; base_unit_indicator: boolean | null; brand: string | null; category: string | null; country_of_origin: string | null; created_at: string | null; ... 24 more ...; updated_at: string | null; }, \"name\" | \"sku\"> | null | undefined'."
+        },
+        {
+          "line": 179,
+          "col": 11,
+          "message": "Type '{ id: string; name: string | null; } | null' is not assignable to type 'Pick<{ access_code: string | null; address: string | null; allows_negative_stock: boolean | null; code: string; created_at: string | null; created_by: string | null; description: string | null; ... 12 more ...; updated_by: string | null; }, \"name\"> | null | undefined'."
+        },
+        {
+          "line": 180,
+          "col": 11,
+          "message": "Type '{ id: string; name: string | null; } | null' is not assignable to type 'Pick<{ address: string | null; api_endpoint: string | null; api_key_encrypted: string | null; api_type: string | null; auto_sync_enabled: boolean | null; business_registration: string | null; ... 27 more ...; website: string | null; }, \"name\"> | null | undefined'."
+        },
+        {
+          "line": 228,
+          "col": 13,
+          "message": "Type '{ id: string; name: string | null; sku: string | null; } | null' is not assignable to type 'Pick<{ active: boolean | null; barcode: string | null; base_unit_indicator: boolean | null; brand: string | null; category: string | null; country_of_origin: string | null; created_at: string | null; ... 24 more ...; updated_at: string | null; }, \"name\" | \"sku\"> | null | undefined'."
+        },
+        {
+          "line": 229,
+          "col": 13,
+          "message": "Type '{ id: string; name: string | null; } | null' is not assignable to type 'Pick<{ access_code: string | null; address: string | null; allows_negative_stock: boolean | null; code: string; created_at: string | null; created_by: string | null; description: string | null; ... 12 more ...; updated_by: string | null; }, \"name\"> | null | undefined'."
+        },
+        {
+          "line": 230,
+          "col": 13,
+          "message": "Type '{ id: string; name: string | null; } | null' is not assignable to type 'Pick<{ address: string | null; api_endpoint: string | null; api_key_encrypted: string | null; api_type: string | null; auto_sync_enabled: boolean | null; business_registration: string | null; ... 27 more ...; website: string | null; }, \"name\"> | null | undefined'."
+        },
+        {
+          "line": 258,
+          "col": 7,
+          "message": "Type '{ batch_id: string; product_id: string; product_name: string; product_sku: string; location_id: string; location_name: string; batch_number: string; expiry_date: string; current_quantity: number; days_until_expiry: number; urgency_level: string; }[]' is not assignable to type 'ExpiringBatch[] | { batch_id: string; product_id: string; product_name: string; product_sku: string; location_id: string; location_name: string; batch_number: string; expiry_date: string; current_quantity: number; days_until_expiry: number; urgency_level: \"warning\" | ... 2 more ... | \"expired\"; }[]'."
+        },
+        {
+          "line": 309,
+          "col": 13,
+          "message": "Type '{ id: string; name: string | null; sku: string | null; } | null' is not assignable to type 'Pick<{ active: boolean | null; barcode: string | null; base_unit_indicator: boolean | null; brand: string | null; category: string | null; country_of_origin: string | null; created_at: string | null; ... 24 more ...; updated_at: string | null; }, \"name\" | \"sku\"> | null | undefined'."
+        },
+        {
+          "line": 310,
+          "col": 13,
+          "message": "Type '{ id: string; name: string | null; } | null' is not assignable to type 'Pick<{ access_code: string | null; address: string | null; allows_negative_stock: boolean | null; code: string; created_at: string | null; created_by: string | null; description: string | null; ... 12 more ...; updated_by: string | null; }, \"name\"> | null | undefined'."
+        },
+        {
+          "line": 311,
+          "col": 13,
+          "message": "Type '{ id: string; name: string | null; } | null' is not assignable to type 'Pick<{ address: string | null; api_endpoint: string | null; api_key_encrypted: string | null; api_type: string | null; auto_sync_enabled: boolean | null; business_registration: string | null; ... 27 more ...; website: string | null; }, \"name\"> | null | undefined'."
+        }
+      ],
+      "messages": [
+        "Type '{ id: string; name: string | null; sku: string | null; } | null' is not assignable to type 'Pick<{ active: boolean | null; barcode: string | null; base_unit_indicator: boolean | null; brand: string | null; category: string | null; country_of_origin: string | null; created_at: string | null; ... 24 more ...; updated_at: string | null; }, \"name\" | \"sku\"> | null | undefined'.",
+        "Type '{ id: string; name: string | null; } | null' is not assignable to type 'Pick<{ access_code: string | null; address: string | null; allows_negative_stock: boolean | null; code: string; created_at: string | null; created_by: string | null; description: string | null; ... 12 more ...; updated_by: string | null; }, \"name\"> | null | undefined'.",
+        "Type '{ id: string; name: string | null; } | null' is not assignable to type 'Pick<{ address: string | null; api_endpoint: string | null; api_key_encrypted: string | null; api_type: string | null; auto_sync_enabled: boolean | null; business_registration: string | null; ... 27 more ...; website: string | null; }, \"name\"> | null | undefined'.",
+        "Type '{ batch_id: string; product_id: string; product_name: string; product_sku: string; location_id: string; location_name: string; batch_number: string; expiry_date: string; current_quantity: number; days_until_expiry: number; urgency_level: string; }[]' is not assignable to type 'ExpiringBatch[] | { batch_id: string; product_id: string; product_name: string; product_sku: string; location_id: string; location_name: string; batch_number: string; expiry_date: string; current_quantity: number; days_until_expiry: number; urgency_level: \"warning\" | ... 2 more ... | \"expired\"; }[]'."
+      ]
+    },
+    {
+      "module": "src/services/admin.ts",
+      "errorCode": "TS2345",
+      "count": 12,
+      "occurrences": [
+        {
+          "line": 84,
+          "col": 45,
+          "message": "Argument of type '\"practice\"' is not assignable to parameter of type 'ResourceType'."
+        },
+        {
+          "line": 142,
+          "col": 45,
+          "message": "Argument of type '\"practice\"' is not assignable to parameter of type 'ResourceType'."
+        },
+        {
+          "line": 185,
+          "col": 45,
+          "message": "Argument of type '\"practice\"' is not assignable to parameter of type 'ResourceType'."
+        },
+        {
+          "line": 240,
+          "col": 45,
+          "message": "Argument of type '\"practice\"' is not assignable to parameter of type 'ResourceType'."
+        },
+        {
+          "line": 282,
+          "col": 45,
+          "message": "Argument of type '\"practice\"' is not assignable to parameter of type 'ResourceType'."
+        },
+        {
+          "line": 478,
+          "col": 44,
+          "message": "Argument of type '\"practice\"' is not assignable to parameter of type 'ResourceType'."
+        },
+        {
+          "line": 553,
+          "col": 45,
+          "message": "Argument of type '\"practice\"' is not assignable to parameter of type 'ResourceType'."
+        },
+        {
+          "line": 602,
+          "col": 45,
+          "message": "Argument of type '\"practice\"' is not assignable to parameter of type 'ResourceType'."
+        },
+        {
+          "line": 707,
+          "col": 45,
+          "message": "Argument of type '\"practice\"' is not assignable to parameter of type 'ResourceType'."
+        },
+        {
+          "line": 761,
+          "col": 45,
+          "message": "Argument of type '\"practice\"' is not assignable to parameter of type 'ResourceType'."
+        }
+      ],
+      "messages": [
+        "Argument of type '\"practice\"' is not assignable to parameter of type 'ResourceType'.",
+        "Argument of type '\"bestellijst\"' is not assignable to parameter of type 'ResourceType'."
+      ]
+    },
+    {
+      "module": "src/services/orderOrchestration/centralOrderService.ts",
+      "errorCode": "TS18048",
+      "count": 12,
+      "occurrences": [
+        {
+          "line": 462,
+          "col": 22,
+          "message": "'order' is possibly 'undefined'."
+        },
+        {
+          "line": 464,
+          "col": 22,
+          "message": "'order' is possibly 'undefined'."
+        },
+        {
+          "line": 465,
+          "col": 18,
+          "message": "'result' is possibly 'undefined'."
+        },
+        {
+          "line": 466,
+          "col": 28,
+          "message": "'order' is possibly 'undefined'."
+        },
+        {
+          "line": 467,
+          "col": 22,
+          "message": "'order' is possibly 'undefined'."
+        },
+        {
+          "line": 468,
+          "col": 22,
+          "message": "'order' is possibly 'undefined'."
+        },
+        {
+          "line": 470,
+          "col": 19,
+          "message": "'result' is possibly 'undefined'."
+        },
+        {
+          "line": 471,
+          "col": 28,
+          "message": "'result' is possibly 'undefined'."
+        },
+        {
+          "line": 472,
+          "col": 26,
+          "message": "'result' is possibly 'undefined'."
+        },
+        {
+          "line": 473,
+          "col": 18,
+          "message": "'result' is possibly 'undefined'."
+        }
+      ],
+      "messages": ["'order' is possibly 'undefined'.", "'result' is possibly 'undefined'."]
+    },
+    {
+      "module": "src/presets/filters/products.ts",
+      "errorCode": "TS2322",
+      "count": 10,
+      "occurrences": [
+        {
+          "line": 29,
+          "col": 7,
+          "message": "Type '\"large\"' is not assignable to type '\"xs\" | \"sm\" | \"md\" | \"lg\"'."
+        },
+        {
+          "line": 51,
+          "col": 7,
+          "message": "Type '\"medium\"' is not assignable to type '\"xs\" | \"sm\" | \"md\" | \"lg\"'."
+        },
+        {
+          "line": 71,
+          "col": 7,
+          "message": "Type '\"medium\"' is not assignable to type '\"xs\" | \"sm\" | \"md\" | \"lg\"'."
+        },
+        {
+          "line": 107,
+          "col": 7,
+          "message": "Type '\"medium\"' is not assignable to type '\"xs\" | \"sm\" | \"md\" | \"lg\"'."
+        },
+        {
+          "line": 123,
+          "col": 7,
+          "message": "Type '\"medium\"' is not assignable to type '\"xs\" | \"sm\" | \"md\" | \"lg\"'."
+        },
+        {
+          "line": 136,
+          "col": 7,
+          "message": "Type '\"small\"' is not assignable to type '\"xs\" | \"sm\" | \"md\" | \"lg\"'."
+        },
+        {
+          "line": 151,
+          "col": 7,
+          "message": "Type '\"medium\"' is not assignable to type '\"xs\" | \"sm\" | \"md\" | \"lg\"'."
+        },
+        {
+          "line": 176,
+          "col": 7,
+          "message": "Type '\"medium\"' is not assignable to type '\"xs\" | \"sm\" | \"md\" | \"lg\"'."
+        },
+        {
+          "line": 200,
+          "col": 7,
+          "message": "Type '\"medium\"' is not assignable to type '\"xs\" | \"sm\" | \"md\" | \"lg\"'."
+        },
+        {
+          "line": 238,
+          "col": 7,
+          "message": "Type '\"medium\"' is not assignable to type '\"xs\" | \"sm\" | \"md\" | \"lg\"'."
+        }
+      ],
+      "messages": [
+        "Type '\"large\"' is not assignable to type '\"xs\" | \"sm\" | \"md\" | \"lg\"'.",
+        "Type '\"medium\"' is not assignable to type '\"xs\" | \"sm\" | \"md\" | \"lg\"'.",
+        "Type '\"small\"' is not assignable to type '\"xs\" | \"sm\" | \"md\" | \"lg\"'."
+      ]
+    },
+    {
+      "module": "src/pages/inventory/CountingSessionPage.vue",
+      "errorCode": "TS2339",
+      "count": 9,
+      "occurrences": [
+        {
+          "line": 25,
+          "col": 28,
+          "message": "Property 'products_counted' does not exist on type '{ approved_at: string | null; approved_by: string | null; completed_at: string | null; completed_by: string | null; count_all_products: boolean | null; created_at: string | null; ... 17 more ...; total_discrepancy_value?: number | null; }'."
+        },
+        {
+          "line": 31,
+          "col": 27,
+          "message": "Property 'products_counted' does not exist on type '{ approved_at: string | null; approved_by: string | null; completed_at: string | null; completed_by: string | null; count_all_products: boolean | null; created_at: string | null; ... 17 more ...; total_discrepancy_value?: number | null; }'."
+        },
+        {
+          "line": 120,
+          "col": 48,
+          "message": "Property 'session_type' does not exist on type '{ approved_at: string | null; approved_by: string | null; completed_at: string | null; completed_by: string | null; count_all_products: boolean | null; created_at: string | null; ... 17 more ...; total_discrepancy_value?: number | null; }'."
+        },
+        {
+          "line": 137,
+          "col": 55,
+          "message": "Property 'products_counted' does not exist on type '{ approved_at: string | null; approved_by: string | null; completed_at: string | null; completed_by: string | null; count_all_products: boolean | null; created_at: string | null; ... 17 more ...; total_discrepancy_value?: number | null; }'."
+        },
+        {
+          "line": 147,
+          "col": 50,
+          "message": "Property 'discrepancies_found' does not exist on type '{ approved_at: string | null; approved_by: string | null; completed_at: string | null; completed_by: string | null; count_all_products: boolean | null; created_at: string | null; ... 17 more ...; total_discrepancy_value?: number | null; }'."
+        },
+        {
+          "line": 150,
+          "col": 30,
+          "message": "Property 'discrepancies_found' does not exist on type '{ approved_at: string | null; approved_by: string | null; completed_at: string | null; completed_by: string | null; count_all_products: boolean | null; created_at: string | null; ... 17 more ...; total_discrepancy_value?: number | null; }'."
+        },
+        {
+          "line": 320,
+          "col": 53,
+          "message": "Property 'session_type' does not exist on type '{ approved_at: string | null; approved_by: string | null; completed_at: string | null; completed_by: string | null; count_all_products: boolean | null; created_at: string | null; ... 17 more ...; total_discrepancy_value?: number | null; }'."
+        },
+        {
+          "line": 356,
+          "col": 43,
+          "message": "Property 'products_counted' does not exist on type '{ approved_at: string | null; approved_by: string | null; completed_at: string | null; completed_by: string | null; count_all_products: boolean | null; created_at: string | null; ... 17 more ...; total_discrepancy_value?: number | null; }'."
+        },
+        {
+          "line": 416,
+          "col": 36,
+          "message": "Property 'entries' does not exist on type 'void'."
+        }
+      ],
+      "messages": [
+        "Property 'products_counted' does not exist on type '{ approved_at: string | null; approved_by: string | null; completed_at: string | null; completed_by: string | null; count_all_products: boolean | null; created_at: string | null; ... 17 more ...; total_discrepancy_value?: number | null; }'.",
+        "Property 'session_type' does not exist on type '{ approved_at: string | null; approved_by: string | null; completed_at: string | null; completed_by: string | null; count_all_products: boolean | null; created_at: string | null; ... 17 more ...; total_discrepancy_value?: number | null; }'.",
+        "Property 'discrepancies_found' does not exist on type '{ approved_at: string | null; approved_by: string | null; completed_at: string | null; completed_by: string | null; count_all_products: boolean | null; created_at: string | null; ... 17 more ...; total_discrepancy_value?: number | null; }'.",
+        "Property 'entries' does not exist on type 'void'."
+      ]
+    },
+    {
+      "module": "src/components/inventory/StockTransferDialog.vue",
+      "errorCode": "TS2339",
+      "count": 8,
+      "occurrences": [
+        {
+          "line": 60,
+          "col": 39,
+          "message": "Property 'image_url' does not exist on type 'ProductWithStock'."
+        },
+        {
+          "line": 61,
+          "col": 39,
+          "message": "Property 'image_url' does not exist on type 'ProductWithStock'."
+        },
+        {
+          "line": 144,
+          "col": 32,
+          "message": "Property 'requires_batch_tracking' does not exist on type 'ProductWithStock'."
+        },
+        {
+          "line": 423,
+          "col": 31,
+          "message": "Property 'requires_batch_tracking' does not exist on type 'ProductWithStock'."
+        },
+        {
+          "line": 430,
+          "col": 36,
+          "message": "Property 'getProductBatches' does not exist on type 'Store<\"inventory\", Pick<{ stockLevels: Ref<{ id: string; practiceId: string; productId: string; locationId: string; currentQuantity: number; availableQuantity: number; reservedQuantity: number; minimumQuantity: number; ... 16 more ...; raw?: { ...; }; }[], StockLevelView[] | { ...; }[]>; ... 17 more ...; refreshData...'."
+        },
+        {
+          "line": 451,
+          "col": 31,
+          "message": "Property 'requires_batch_tracking' does not exist on type 'ProductWithStock'."
+        },
+        {
+          "line": 452,
+          "col": 34,
+          "message": "Property 'available_quantity' does not exist on type '{ id: string; batch_number: string; expiry_date: string; current_quantity: number; urgency: ExpiryUrgencyLevel; }'."
+        },
+        {
+          "line": 466,
+          "col": 32,
+          "message": "Property 'requires_batch_tracking' does not exist on type 'ProductWithStock'."
+        }
+      ],
+      "messages": [
+        "Property 'image_url' does not exist on type 'ProductWithStock'.",
+        "Property 'requires_batch_tracking' does not exist on type 'ProductWithStock'.",
+        "Property 'getProductBatches' does not exist on type 'Store<\"inventory\", Pick<{ stockLevels: Ref<{ id: string; practiceId: string; productId: string; locationId: string; currentQuantity: number; availableQuantity: number; reservedQuantity: number; minimumQuantity: number; ... 16 more ...; raw?: { ...; }; }[], StockLevelView[] | { ...; }[]>; ... 17 more ...; refreshData...'.",
+        "Property 'available_quantity' does not exist on type '{ id: string; batch_number: string; expiry_date: string; current_quantity: number; urgency: ExpiryUrgencyLevel; }'."
+      ]
+    },
+    {
+      "module": "src/services/inventory/automationService.ts",
+      "errorCode": "TS2345",
+      "count": 8,
+      "occurrences": [
+        {
+          "line": 60,
+          "col": 42,
+          "message": "Argument of type 'undefined' is not assignable to parameter of type 'string'."
+        },
+        {
+          "line": 124,
+          "col": 70,
+          "message": "Argument of type 'unknown' is not assignable to parameter of type 'LogData'."
+        },
+        {
+          "line": 202,
+          "col": 13,
+          "message": "Argument of type 'unknown' is not assignable to parameter of type 'LogData'."
+        },
+        {
+          "line": 215,
+          "col": 71,
+          "message": "Argument of type 'unknown' is not assignable to parameter of type 'LogData'."
+        },
+        {
+          "line": 281,
+          "col": 13,
+          "message": "Argument of type 'unknown' is not assignable to parameter of type 'LogData'."
+        },
+        {
+          "line": 300,
+          "col": 70,
+          "message": "Argument of type 'unknown' is not assignable to parameter of type 'LogData'."
+        },
+        {
+          "line": 353,
+          "col": 46,
+          "message": "Argument of type '\"maximum_quantity\"' is not assignable to parameter of type '\"get_order_advice\" | \"calculate_next_run_time\" | \"calculate_order_suggestions\" | \"check_and_create_stock_alerts\" | \"check_user_permission\" | \"check_user_permission_v2\" | ... 29 more ... | \"validate_personal_magic_code\"'."
+        },
+        {
+          "line": 397,
+          "col": 70,
+          "message": "Argument of type 'unknown' is not assignable to parameter of type 'LogData'."
+        }
+      ],
+      "messages": [
+        "Argument of type 'undefined' is not assignable to parameter of type 'string'.",
+        "Argument of type 'unknown' is not assignable to parameter of type 'LogData'.",
+        "Argument of type '\"maximum_quantity\"' is not assignable to parameter of type '\"get_order_advice\" | \"calculate_next_run_time\" | \"calculate_order_suggestions\" | \"check_and_create_stock_alerts\" | \"check_user_permission\" | \"check_user_permission_v2\" | ... 29 more ... | \"validate_personal_magic_code\"'."
+      ]
+    },
+    {
+      "module": "src/services/offline.ts",
+      "errorCode": "TS2345",
+      "count": 8,
+      "occurrences": [
+        {
+          "line": 164,
+          "col": 63,
+          "message": "Argument of type 'unknown' is not assignable to parameter of type 'LogData'."
+        },
+        {
+          "line": 284,
+          "col": 51,
+          "message": "Argument of type 'unknown' is not assignable to parameter of type 'LogData'."
+        },
+        {
+          "line": 329,
+          "col": 17,
+          "message": "Argument of type 'unknown' is not assignable to parameter of type '{}'."
+        },
+        {
+          "line": 343,
+          "col": 17,
+          "message": "Argument of type 'unknown' is not assignable to parameter of type '{}'."
+        },
+        {
+          "line": 428,
+          "col": 59,
+          "message": "Argument of type 'unknown' is not assignable to parameter of type 'LogData'."
+        },
+        {
+          "line": 446,
+          "col": 59,
+          "message": "Argument of type 'unknown' is not assignable to parameter of type 'LogData'."
+        },
+        {
+          "line": 465,
+          "col": 62,
+          "message": "Argument of type 'unknown' is not assignable to parameter of type 'LogData'."
+        },
+        {
+          "line": 483,
+          "col": 62,
+          "message": "Argument of type 'unknown' is not assignable to parameter of type 'LogData'."
+        }
+      ],
+      "messages": [
+        "Argument of type 'unknown' is not assignable to parameter of type 'LogData'.",
+        "Argument of type 'unknown' is not assignable to parameter of type '{}'."
+      ]
+    },
+    {
+      "module": "src/stores/products/products-filters.ts",
+      "errorCode": "TS2339",
+      "count": 8,
+      "occurrences": [
+        {
+          "line": 24,
+          "col": 15,
+          "message": "Property 'minimumStock' does not exist on type 'ProductWithStock'."
+        },
+        {
+          "line": 34,
+          "col": 19,
+          "message": "Property 'description' does not exist on type 'ProductWithStock'."
+        },
+        {
+          "line": 88,
+          "col": 38,
+          "message": "Property 'updatedAt' does not exist on type 'ProductWithStock'."
+        },
+        {
+          "line": 88,
+          "col": 53,
+          "message": "Property 'createdAt' does not exist on type 'ProductWithStock'."
+        },
+        {
+          "line": 89,
+          "col": 38,
+          "message": "Property 'updatedAt' does not exist on type 'ProductWithStock'."
+        },
+        {
+          "line": 89,
+          "col": 53,
+          "message": "Property 'createdAt' does not exist on type 'ProductWithStock'."
+        },
+        {
+          "line": 193,
+          "col": 72,
+          "message": "Property 'minimumStock' does not exist on type 'ProductWithStock'."
+        },
+        {
+          "line": 199,
+          "col": 32,
+          "message": "Property 'minimumStock' does not exist on type 'ProductWithStock'."
+        }
+      ],
+      "messages": [
+        "Property 'minimumStock' does not exist on type 'ProductWithStock'.",
+        "Property 'description' does not exist on type 'ProductWithStock'.",
+        "Property 'updatedAt' does not exist on type 'ProductWithStock'.",
+        "Property 'createdAt' does not exist on type 'ProductWithStock'."
+      ]
+    },
+    {
+      "module": "src/types/inventory.ts",
+      "errorCode": "TS2551",
+      "count": 8,
+      "occurrences": [
+        {
+          "line": 104,
+          "col": 58,
+          "message": "Property 'product_name' does not exist on type 'ProductBatchRowWithRelations'. Did you mean 'productName'?"
+        },
+        {
+          "line": 407,
+          "col": 14,
+          "message": "Property 'location_name' does not exist on type 'StockLevelRowWithRelations'. Did you mean 'locationName'?"
+        },
+        {
+          "line": 407,
+          "col": 40,
+          "message": "Property 'practice_locations' does not exist on type 'StockLevelRowWithRelations'. Did you mean 'practiceLocations'?"
+        },
+        {
+          "line": 408,
+          "col": 32,
+          "message": "Property 'product_name' does not exist on type 'StockLevelRowWithRelations'. Did you mean 'productName'?"
+        },
+        {
+          "line": 409,
+          "col": 32,
+          "message": "Property 'stock_status' does not exist on type 'StockLevelRowWithRelations'. Did you mean 'stockStatus'?"
+        },
+        {
+          "line": 410,
+          "col": 39,
+          "message": "Property 'average_consumption' does not exist on type 'StockLevelRowWithRelations'. Did you mean 'averageConsumption'?"
+        },
+        {
+          "line": 411,
+          "col": 42,
+          "message": "Property 'reorder_recommendation' does not exist on type 'StockLevelRowWithRelations'. Did you mean 'reorderRecommendation'?"
+        },
+        {
+          "line": 413,
+          "col": 42,
+          "message": "Property 'preferred_supplier_name' does not exist on type 'StockLevelRowWithRelations'. Did you mean 'preferred_supplier_id'?"
+        }
+      ],
+      "messages": [
+        "Property 'product_name' does not exist on type 'ProductBatchRowWithRelations'. Did you mean 'productName'?",
+        "Property 'location_name' does not exist on type 'StockLevelRowWithRelations'. Did you mean 'locationName'?",
+        "Property 'practice_locations' does not exist on type 'StockLevelRowWithRelations'. Did you mean 'practiceLocations'?",
+        "Property 'product_name' does not exist on type 'StockLevelRowWithRelations'. Did you mean 'productName'?",
+        "Property 'stock_status' does not exist on type 'StockLevelRowWithRelations'. Did you mean 'stockStatus'?",
+        "Property 'average_consumption' does not exist on type 'StockLevelRowWithRelations'. Did you mean 'averageConsumption'?",
+        "Property 'reorder_recommendation' does not exist on type 'StockLevelRowWithRelations'. Did you mean 'reorderRecommendation'?",
+        "Property 'preferred_supplier_name' does not exist on type 'StockLevelRowWithRelations'. Did you mean 'preferred_supplier_id'?"
+      ]
+    },
+    {
+      "module": "src/components/inventory/MobileCountingInterface.vue",
+      "errorCode": "TS2551",
+      "count": 7,
+      "occurrences": [
+        {
+          "line": 679,
+          "col": 19,
+          "message": "Property 'product_id' does not exist on type '{ id: string; practiceId: string; productId: string; locationId: string; currentQuantity: number; availableQuantity: number; reservedQuantity: number; minimumQuantity: number; maximumQuantity: number | null; ... 15 more ...; raw?: { ...; }; }'. Did you mean 'productId'?"
+        },
+        {
+          "line": 680,
+          "col": 21,
+          "message": "Property 'product' does not exist on type '{ id: string; practiceId: string; productId: string; locationId: string; currentQuantity: number; availableQuantity: number; reservedQuantity: number; minimumQuantity: number; maximumQuantity: number | null; ... 15 more ...; raw?: { ...; }; }'. Did you mean 'productId'?"
+        },
+        {
+          "line": 681,
+          "col": 20,
+          "message": "Property 'product' does not exist on type '{ id: string; practiceId: string; productId: string; locationId: string; currentQuantity: number; availableQuantity: number; reservedQuantity: number; minimumQuantity: number; maximumQuantity: number | null; ... 15 more ...; raw?: { ...; }; }'. Did you mean 'productId'?"
+        },
+        {
+          "line": 682,
+          "col": 30,
+          "message": "Property 'current_quantity' does not exist on type '{ id: string; practiceId: string; productId: string; locationId: string; currentQuantity: number; availableQuantity: number; reservedQuantity: number; minimumQuantity: number; maximumQuantity: number | null; ... 15 more ...; raw?: { ...; }; }'. Did you mean 'currentQuantity'?"
+        },
+        {
+          "line": 685,
+          "col": 24,
+          "message": "Property 'product' does not exist on type '{ id: string; practiceId: string; productId: string; locationId: string; currentQuantity: number; availableQuantity: number; reservedQuantity: number; minimumQuantity: number; maximumQuantity: number | null; ... 15 more ...; raw?: { ...; }; }'. Did you mean 'productId'?"
+        },
+        {
+          "line": 686,
+          "col": 21,
+          "message": "Property 'product' does not exist on type '{ id: string; practiceId: string; productId: string; locationId: string; currentQuantity: number; availableQuantity: number; reservedQuantity: number; minimumQuantity: number; maximumQuantity: number | null; ... 15 more ...; raw?: { ...; }; }'. Did you mean 'productId'?"
+        },
+        {
+          "line": 687,
+          "col": 26,
+          "message": "Property 'product' does not exist on type '{ id: string; practiceId: string; productId: string; locationId: string; currentQuantity: number; availableQuantity: number; reservedQuantity: number; minimumQuantity: number; maximumQuantity: number | null; ... 15 more ...; raw?: { ...; }; }'. Did you mean 'productId'?"
+        }
+      ],
+      "messages": [
+        "Property 'product_id' does not exist on type '{ id: string; practiceId: string; productId: string; locationId: string; currentQuantity: number; availableQuantity: number; reservedQuantity: number; minimumQuantity: number; maximumQuantity: number | null; ... 15 more ...; raw?: { ...; }; }'. Did you mean 'productId'?",
+        "Property 'product' does not exist on type '{ id: string; practiceId: string; productId: string; locationId: string; currentQuantity: number; availableQuantity: number; reservedQuantity: number; minimumQuantity: number; maximumQuantity: number | null; ... 15 more ...; raw?: { ...; }; }'. Did you mean 'productId'?",
+        "Property 'current_quantity' does not exist on type '{ id: string; practiceId: string; productId: string; locationId: string; currentQuantity: number; availableQuantity: number; reservedQuantity: number; minimumQuantity: number; maximumQuantity: number | null; ... 15 more ...; raw?: { ...; }; }'. Did you mean 'currentQuantity'?"
+      ]
+    },
+    {
+      "module": "src/components/products/OrderListDialog.vue",
+      "errorCode": "TS7006",
+      "count": 7,
+      "occurrences": [
+        {
+          "line": 368,
+          "col": 8,
+          "message": "Parameter 'sum' implicitly has an 'any' type."
+        },
+        {
+          "line": 368,
+          "col": 13,
+          "message": "Parameter 'item' implicitly has an 'any' type."
+        },
+        {
+          "line": 375,
+          "col": 8,
+          "message": "Parameter 'sum' implicitly has an 'any' type."
+        },
+        {
+          "line": 375,
+          "col": 13,
+          "message": "Parameter 'item' implicitly has an 'any' type."
+        },
+        {
+          "line": 385,
+          "col": 9,
+          "message": "Parameter 'sp' implicitly has an 'any' type."
+        },
+        {
+          "line": 388,
+          "col": 9,
+          "message": "Parameter 'item' implicitly has an 'any' type."
+        },
+        {
+          "line": 465,
+          "col": 7,
+          "message": "Parameter 'item' implicitly has an 'any' type."
+        }
+      ],
+      "messages": [
+        "Parameter 'sum' implicitly has an 'any' type.",
+        "Parameter 'item' implicitly has an 'any' type.",
+        "Parameter 'sp' implicitly has an 'any' type."
+      ]
+    },
+    {
+      "module": "src/pages/AdminDashboard.vue",
+      "errorCode": "TS2304",
+      "count": 7,
+      "occurrences": [
+        {
+          "line": 822,
+          "col": 16,
+          "message": "Cannot find name '$t'."
+        },
+        {
+          "line": 829,
+          "col": 16,
+          "message": "Cannot find name '$t'."
+        },
+        {
+          "line": 840,
+          "col": 18,
+          "message": "Cannot find name '$t'."
+        },
+        {
+          "line": 869,
+          "col": 18,
+          "message": "Cannot find name '$t'."
+        },
+        {
+          "line": 899,
+          "col": 16,
+          "message": "Cannot find name '$t'."
+        },
+        {
+          "line": 913,
+          "col": 16,
+          "message": "Cannot find name '$t'."
+        },
+        {
+          "line": 923,
+          "col": 16,
+          "message": "Cannot find name '$t'."
+        }
+      ],
+      "messages": ["Cannot find name '$t'."]
+    },
+    {
+      "module": "src/services/dashboard/platform-dashboard.ts",
+      "errorCode": "TS2345",
+      "count": 7,
+      "occurrences": [
+        {
+          "line": 83,
+          "col": 66,
+          "message": "Argument of type 'unknown' is not assignable to parameter of type 'LogData'."
+        },
+        {
+          "line": 152,
+          "col": 64,
+          "message": "Argument of type 'unknown' is not assignable to parameter of type 'LogData'."
+        },
+        {
+          "line": 169,
+          "col": 46,
+          "message": "Argument of type 'string | undefined' is not assignable to parameter of type 'string'."
+        },
+        {
+          "line": 175,
+          "col": 11,
+          "message": "Argument of type 'unknown' is not assignable to parameter of type 'ErrorLike'."
+        },
+        {
+          "line": 187,
+          "col": 38,
+          "message": "Argument of type 'string | undefined' is not assignable to parameter of type 'string'."
+        },
+        {
+          "line": 512,
+          "col": 62,
+          "message": "Argument of type 'string | undefined' is not assignable to parameter of type 'PropertyKey'."
+        },
+        {
+          "line": 553,
+          "col": 11,
+          "message": "Argument of type 'unknown' is not assignable to parameter of type 'ErrorLike'."
+        }
+      ],
+      "messages": [
+        "Argument of type 'unknown' is not assignable to parameter of type 'LogData'.",
+        "Argument of type 'string | undefined' is not assignable to parameter of type 'string'.",
+        "Argument of type 'unknown' is not assignable to parameter of type 'ErrorLike'.",
+        "Argument of type 'string | undefined' is not assignable to parameter of type 'PropertyKey'."
+      ]
+    },
+    {
+      "module": "src/services/inventory/automationService.ts",
+      "errorCode": "TS2339",
+      "count": 7,
+      "occurrences": [
+        {
+          "line": 255,
+          "col": 68,
+          "message": "Property 'id' does not exist on type 'SelectQueryError<\"column 'order_reference' does not exist on 'supplier_orders'.\">'."
+        },
+        {
+          "line": 264,
+          "col": 29,
+          "message": "Property 'id' does not exist on type 'SelectQueryError<\"column 'order_reference' does not exist on 'supplier_orders'.\">'."
+        },
+        {
+          "line": 267,
+          "col": 28,
+          "message": "Property 'id' does not exist on type 'SelectQueryError<\"column 'order_reference' does not exist on 'supplier_orders'.\">'."
+        },
+        {
+          "line": 275,
+          "col": 64,
+          "message": "Property 'order_reference' does not exist on type 'SelectQueryError<\"column 'order_reference' does not exist on 'supplier_orders'.\">'."
+        },
+        {
+          "line": 276,
+          "col": 29,
+          "message": "Property 'suppliers' does not exist on type 'SelectQueryError<\"column 'order_reference' does not exist on 'supplier_orders'.\">'."
+        },
+        {
+          "line": 280,
+          "col": 58,
+          "message": "Property 'id' does not exist on type 'SelectQueryError<\"column 'order_reference' does not exist on 'supplier_orders'.\">'."
+        },
+        {
+          "line": 285,
+          "col": 28,
+          "message": "Property 'id' does not exist on type 'SelectQueryError<\"column 'order_reference' does not exist on 'supplier_orders'.\">'."
+        }
+      ],
+      "messages": [
+        "Property 'id' does not exist on type 'SelectQueryError<\"column 'order_reference' does not exist on 'supplier_orders'.\">'.",
+        "Property 'order_reference' does not exist on type 'SelectQueryError<\"column 'order_reference' does not exist on 'supplier_orders'.\">'.",
+        "Property 'suppliers' does not exist on type 'SelectQueryError<\"column 'order_reference' does not exist on 'supplier_orders'.\">'."
+      ]
+    },
+    {
+      "module": "src/services/orderOrchestration/centralOrderService.ts",
+      "errorCode": "TS2345",
+      "count": 7,
+      "occurrences": [
+        {
+          "line": 119,
+          "col": 64,
+          "message": "Argument of type 'unknown' is not assignable to parameter of type 'LogData'."
+        },
+        {
+          "line": 181,
+          "col": 65,
+          "message": "Argument of type 'unknown' is not assignable to parameter of type 'LogData'."
+        },
+        {
+          "line": 219,
+          "col": 63,
+          "message": "Argument of type 'unknown' is not assignable to parameter of type 'LogData'."
+        },
+        {
+          "line": 260,
+          "col": 57,
+          "message": "Argument of type 'unknown' is not assignable to parameter of type 'LogData'."
+        },
+        {
+          "line": 293,
+          "col": 9,
+          "message": "Argument of type '{ value: any; }' is not assignable to parameter of type 'Ref<string | null, string | null>'."
+        },
+        {
+          "line": 350,
+          "col": 65,
+          "message": "Argument of type 'unknown' is not assignable to parameter of type 'LogData'."
+        },
+        {
+          "line": 494,
+          "col": 43,
+          "message": "Argument of type '\"reserved_quantity\"' is not assignable to parameter of type '\"get_order_advice\" | \"calculate_next_run_time\" | \"calculate_order_suggestions\" | \"check_and_create_stock_alerts\" | \"check_user_permission\" | \"check_user_permission_v2\" | ... 29 more ... | \"validate_personal_magic_code\"'."
+        }
+      ],
+      "messages": [
+        "Argument of type 'unknown' is not assignable to parameter of type 'LogData'.",
+        "Argument of type '{ value: any; }' is not assignable to parameter of type 'Ref<string | null, string | null>'.",
+        "Argument of type '\"reserved_quantity\"' is not assignable to parameter of type '\"get_order_advice\" | \"calculate_next_run_time\" | \"calculate_order_suggestions\" | \"check_and_create_stock_alerts\" | \"check_user_permission\" | \"check_user_permission_v2\" | ... 29 more ... | \"validate_personal_magic_code\"'."
+      ]
+    },
+    {
+      "module": "src/stores/products/products-inventory.ts",
+      "errorCode": "TS2339",
+      "count": 7,
+      "occurrences": [
+        {
+          "line": 8,
+          "col": 11,
+          "message": "Property 'minimumStock' does not exist on type 'ProductWithStock'."
+        },
+        {
+          "line": 65,
+          "col": 49,
+          "message": "Property 'minimumStock' does not exist on type 'ProductWithStock'."
+        },
+        {
+          "line": 113,
+          "col": 41,
+          "message": "Property 'minimumStock' does not exist on type 'ProductWithStock'."
+        },
+        {
+          "line": 231,
+          "col": 48,
+          "message": "Property 'expiry_date' does not exist on type 'ProductWithStock'."
+        },
+        {
+          "line": 250,
+          "col": 19,
+          "message": "Property 'expiry_date' does not exist on type 'ProductWithStock'."
+        },
+        {
+          "line": 251,
+          "col": 47,
+          "message": "Property 'expiry_date' does not exist on type 'ProductWithStock'."
+        },
+        {
+          "line": 258,
+          "col": 34,
+          "message": "Property 'expiry_date' does not exist on type 'ProductWithStock'."
+        }
+      ],
+      "messages": [
+        "Property 'minimumStock' does not exist on type 'ProductWithStock'.",
+        "Property 'expiry_date' does not exist on type 'ProductWithStock'."
+      ]
+    },
+    {
+      "module": "src/components/inventory/CountingEntryWithBatch.vue",
+      "errorCode": "TS2678",
+      "count": 6,
+      "occurrences": [
+        {
+          "line": 289,
+          "col": 14,
+          "message": "Type '\"completed\"' is not comparable to type '\"discrepancy\" | \"verified\" | \"pending\"'."
+        },
+        {
+          "line": 291,
+          "col": 14,
+          "message": "Type '\"reviewed\"' is not comparable to type '\"discrepancy\" | \"verified\" | \"pending\"'."
+        },
+        {
+          "line": 293,
+          "col": 14,
+          "message": "Type '\"flagged\"' is not comparable to type '\"discrepancy\" | \"verified\" | \"pending\"'."
+        },
+        {
+          "line": 305,
+          "col": 14,
+          "message": "Type '\"completed\"' is not comparable to type '\"discrepancy\" | \"verified\" | \"pending\"'."
+        },
+        {
+          "line": 307,
+          "col": 14,
+          "message": "Type '\"reviewed\"' is not comparable to type '\"discrepancy\" | \"verified\" | \"pending\"'."
+        },
+        {
+          "line": 309,
+          "col": 14,
+          "message": "Type '\"flagged\"' is not comparable to type '\"discrepancy\" | \"verified\" | \"pending\"'."
+        }
+      ],
+      "messages": [
+        "Type '\"completed\"' is not comparable to type '\"discrepancy\" | \"verified\" | \"pending\"'.",
+        "Type '\"reviewed\"' is not comparable to type '\"discrepancy\" | \"verified\" | \"pending\"'.",
+        "Type '\"flagged\"' is not comparable to type '\"discrepancy\" | \"verified\" | \"pending\"'."
+      ]
+    },
+    {
+      "module": "src/components/products/OrderListDialog.vue",
+      "errorCode": "TS2339",
+      "count": 6,
+      "occurrences": [
+        {
+          "line": 19,
+          "col": 48,
+          "message": "Property 'onSubmit' does not exist on type 'CreateComponentPublicInstanceWithMixins<ToResolvedProps<Props, { \"update:modelValue\": (value: boolean) => any; saved: () => any; createOrderList: (orderList: OrderListWithItems) => any; addToExisting: (orderListId: string, product: ProductWithStock) => any; }>, ... 24 more ..., { ...; }>'."
+        },
+        {
+          "line": 416,
+          "col": 32,
+          "message": "Property 'notes' does not exist on type 'OrderListWithItems'."
+        },
+        {
+          "line": 418,
+          "col": 27,
+          "message": "Property 'auto_suggest_quantities' does not exist on type 'OrderListWithItems'."
+        },
+        {
+          "line": 419,
+          "col": 39,
+          "message": "Property 'urgent_order' does not exist on type 'OrderListWithItems'."
+        },
+        {
+          "line": 513,
+          "col": 25,
+          "message": "Property 'notes' does not exist on type 'UpdateOrderListRequest'."
+        },
+        {
+          "line": 534,
+          "col": 25,
+          "message": "Property 'notes' does not exist on type 'CreateOrderListRequest'."
+        }
+      ],
+      "messages": [
+        "Property 'onSubmit' does not exist on type 'CreateComponentPublicInstanceWithMixins<ToResolvedProps<Props, { \"update:modelValue\": (value: boolean) => any; saved: () => any; createOrderList: (orderList: OrderListWithItems) => any; addToExisting: (orderListId: string, product: ProductWithStock) => any; }>, ... 24 more ..., { ...; }>'.",
+        "Property 'notes' does not exist on type 'OrderListWithItems'.",
+        "Property 'auto_suggest_quantities' does not exist on type 'OrderListWithItems'.",
+        "Property 'urgent_order' does not exist on type 'OrderListWithItems'.",
+        "Property 'notes' does not exist on type 'UpdateOrderListRequest'.",
+        "Property 'notes' does not exist on type 'CreateOrderListRequest'."
+      ]
+    },
+    {
+      "module": "src/components/tables/SmartTable.vue",
+      "errorCode": "TS2322",
+      "count": 6,
+      "occurrences": [
+        {
+          "line": 20,
+          "col": 10,
+          "message": "Type 'Record<string, unknown>[]' is not assignable to type '{ name: string; label: string; field: string | ((row: any) => any); required?: boolean; align?: \"left\" | \"right\" | \"center\"; sortable?: boolean; sort?: (a: any, b: any, rowA: any, rowB: any) => number; ... 6 more ...; headerClasses?: string; }[]'."
+        },
+        {
+          "line": 27,
+          "col": 10,
+          "message": "Type '(props: { pagination: TablePagination; }) => Promise<void>' is not assignable to type '(requestProp: { pagination: { sortBy: string; descending: boolean; page: number; rowsPerPage: number; rowsNumber?: number; }; filter?: any; getCellValue: (col: any, row: any) => any; }) => void'."
+        },
+        {
+          "line": 41,
+          "col": 10,
+          "message": "Type 'Record<string, unknown>[]' is not assignable to type '{ name: string; label: string; field: string | ((row: any) => any); required?: boolean; align?: \"left\" | \"right\" | \"center\"; sortable?: boolean; sort?: (a: any, b: any, rowA: any, rowB: any) => number; ... 6 more ...; headerClasses?: string; }[]'."
+        },
+        {
+          "line": 49,
+          "col": 10,
+          "message": "Type '(props: { pagination: TablePagination; }) => Promise<void>' is not assignable to type '(requestProp: { pagination: { sortBy: string; descending: boolean; page: number; rowsPerPage: number; rowsNumber?: number; }; filter?: any; getCellValue: (col: any, row: any) => any; }) => void'."
+        },
+        {
+          "line": 62,
+          "col": 10,
+          "message": "Type 'Record<string, unknown>[]' is not assignable to type 'Column[]'."
+        },
+        {
+          "line": 63,
+          "col": 10,
+          "message": "Type 'string | RowKeyFn<TableRow>' is not assignable to type 'string'."
+        }
+      ],
+      "messages": [
+        "Type 'Record<string, unknown>[]' is not assignable to type '{ name: string; label: string; field: string | ((row: any) => any); required?: boolean; align?: \"left\" | \"right\" | \"center\"; sortable?: boolean; sort?: (a: any, b: any, rowA: any, rowB: any) => number; ... 6 more ...; headerClasses?: string; }[]'.",
+        "Type '(props: { pagination: TablePagination; }) => Promise<void>' is not assignable to type '(requestProp: { pagination: { sortBy: string; descending: boolean; page: number; rowsPerPage: number; rowsNumber?: number; }; filter?: any; getCellValue: (col: any, row: any) => any; }) => void'.",
+        "Type 'Record<string, unknown>[]' is not assignable to type 'Column[]'.",
+        "Type 'string | RowKeyFn<TableRow>' is not assignable to type 'string'."
+      ]
+    },
+    {
+      "module": "src/pages/inventory/CountingPage.vue",
+      "errorCode": "TS2339",
+      "count": 6,
+      "occurrences": [
+        {
+          "line": 75,
+          "col": 34,
+          "message": "Property 'products_counted' does not exist on type '{ approved_at: string | null; approved_by: string | null; completed_at: string | null; completed_by: string | null; count_all_products: boolean | null; created_at: string | null; ... 17 more ...; total_discrepancy_value?: number | null; }'."
+        },
+        {
+          "line": 81,
+          "col": 33,
+          "message": "Property 'products_counted' does not exist on type '{ approved_at: string | null; approved_by: string | null; completed_at: string | null; completed_by: string | null; count_all_products: boolean | null; created_at: string | null; ... 17 more ...; total_discrepancy_value?: number | null; }'."
+        },
+        {
+          "line": 93,
+          "col": 52,
+          "message": "Property 'session_type' does not exist on type '{ approved_at: string | null; approved_by: string | null; completed_at: string | null; completed_by: string | null; count_all_products: boolean | null; created_at: string | null; ... 17 more ...; total_discrepancy_value?: number | null; }'."
+        },
+        {
+          "line": 104,
+          "col": 38,
+          "message": "Property 'discrepancies_found' does not exist on type '{ approved_at: string | null; approved_by: string | null; completed_at: string | null; completed_by: string | null; count_all_products: boolean | null; created_at: string | null; ... 17 more ...; total_discrepancy_value?: number | null; }'."
+        },
+        {
+          "line": 107,
+          "col": 34,
+          "message": "Property 'discrepancies_found' does not exist on type '{ approved_at: string | null; approved_by: string | null; completed_at: string | null; completed_by: string | null; count_all_products: boolean | null; created_at: string | null; ... 17 more ...; total_discrepancy_value?: number | null; }'."
+        },
+        {
+          "line": 125,
+          "col": 37,
+          "message": "Property 'products_counted' does not exist on type '{ approved_at: string | null; approved_by: string | null; completed_at: string | null; completed_by: string | null; count_all_products: boolean | null; created_at: string | null; ... 17 more ...; total_discrepancy_value?: number | null; }'."
+        }
+      ],
+      "messages": [
+        "Property 'products_counted' does not exist on type '{ approved_at: string | null; approved_by: string | null; completed_at: string | null; completed_by: string | null; count_all_products: boolean | null; created_at: string | null; ... 17 more ...; total_discrepancy_value?: number | null; }'.",
+        "Property 'session_type' does not exist on type '{ approved_at: string | null; approved_by: string | null; completed_at: string | null; completed_by: string | null; count_all_products: boolean | null; created_at: string | null; ... 17 more ...; total_discrepancy_value?: number | null; }'.",
+        "Property 'discrepancies_found' does not exist on type '{ approved_at: string | null; approved_by: string | null; completed_at: string | null; completed_by: string | null; count_all_products: boolean | null; created_at: string | null; ... 17 more ...; total_discrepancy_value?: number | null; }'."
+      ]
+    },
+    {
+      "module": "src/pages/inventory/MovementsPage.vue",
+      "errorCode": "TS2339",
+      "count": 6,
+      "occurrences": [
+        {
+          "line": 16,
+          "col": 39,
+          "message": "Property 'movementsLoading' does not exist on type 'Store<\"inventory\", Pick<{ stockLevels: Ref<{ id: string; practiceId: string; productId: string; locationId: string; currentQuantity: number; availableQuantity: number; reservedQuantity: number; minimumQuantity: number; ... 16 more ...; raw?: { ...; }; }[], StockLevelView[] | { ...; }[]>; ... 17 more ...; refreshData...'."
+        },
+        {
+          "line": 42,
+          "col": 35,
+          "message": "Property 'movementsLoading' does not exist on type 'Store<\"inventory\", Pick<{ stockLevels: Ref<{ id: string; practiceId: string; productId: string; locationId: string; currentQuantity: number; availableQuantity: number; reservedQuantity: number; minimumQuantity: number; ... 16 more ...; raw?: { ...; }; }[], StockLevelView[] | { ...; }[]>; ... 17 more ...; refreshData...'."
+        },
+        {
+          "line": 67,
+          "col": 33,
+          "message": "Property 'movementsLoading' does not exist on type 'Store<\"inventory\", Pick<{ stockLevels: Ref<{ id: string; practiceId: string; productId: string; locationId: string; currentQuantity: number; availableQuantity: number; reservedQuantity: number; minimumQuantity: number; ... 16 more ...; raw?: { ...; }; }[], StockLevelView[] | { ...; }[]>; ... 17 more ...; refreshData...'."
+        },
+        {
+          "line": 80,
+          "col": 36,
+          "message": "Property 'movementsLoading' does not exist on type 'Store<\"inventory\", Pick<{ stockLevels: Ref<{ id: string; practiceId: string; productId: string; locationId: string; currentQuantity: number; availableQuantity: number; reservedQuantity: number; minimumQuantity: number; ... 16 more ...; raw?: { ...; }; }[], StockLevelView[] | { ...; }[]>; ... 17 more ...; refreshData...'."
+        },
+        {
+          "line": 238,
+          "col": 37,
+          "message": "Property 'reason_code' does not exist on type '{ batch_id: string | null; batch_number: string | null; created_at: string | null; created_by: string | null; expiry_date: string | null; id: string; location_id: string; movement_type: string; ... 12 more ...; to_location?: { ...; } | null; }'."
+        },
+        {
+          "line": 241,
+          "col": 47,
+          "message": "Property 'reason_code' does not exist on type '{ batch_id: string | null; batch_number: string | null; created_at: string | null; created_by: string | null; expiry_date: string | null; id: string; location_id: string; movement_type: string; ... 12 more ...; to_location?: { ...; } | null; }'."
+        }
+      ],
+      "messages": [
+        "Property 'movementsLoading' does not exist on type 'Store<\"inventory\", Pick<{ stockLevels: Ref<{ id: string; practiceId: string; productId: string; locationId: string; currentQuantity: number; availableQuantity: number; reservedQuantity: number; minimumQuantity: number; ... 16 more ...; raw?: { ...; }; }[], StockLevelView[] | { ...; }[]>; ... 17 more ...; refreshData...'.",
+        "Property 'reason_code' does not exist on type '{ batch_id: string | null; batch_number: string | null; created_at: string | null; created_by: string | null; expiry_date: string | null; id: string; location_id: string; movement_type: string; ... 12 more ...; to_location?: { ...; } | null; }'."
+      ]
+    },
+    {
+      "module": "src/pages/OrderListDetailPage.vue",
+      "errorCode": "TS2678",
+      "count": 6,
+      "occurrences": [
+        {
+          "line": 519,
+          "col": 12,
+          "message": "Type '\"ready\"' is not comparable to type '\"draft\" | \"completed\" | \"cancelled\" | \"active\" | \"submitted\" | null'."
+        },
+        {
+          "line": 525,
+          "col": 12,
+          "message": "Type '\"confirmed\"' is not comparable to type '\"draft\" | \"completed\" | \"cancelled\" | \"active\" | \"submitted\" | null'."
+        },
+        {
+          "line": 527,
+          "col": 12,
+          "message": "Type '\"delivered\"' is not comparable to type '\"draft\" | \"completed\" | \"cancelled\" | \"active\" | \"submitted\" | null'."
+        },
+        {
+          "line": 541,
+          "col": 12,
+          "message": "Type '\"ready\"' is not comparable to type '\"draft\" | \"completed\" | \"cancelled\" | \"active\" | \"submitted\" | null'."
+        },
+        {
+          "line": 547,
+          "col": 12,
+          "message": "Type '\"confirmed\"' is not comparable to type '\"draft\" | \"completed\" | \"cancelled\" | \"active\" | \"submitted\" | null'."
+        },
+        {
+          "line": 549,
+          "col": 12,
+          "message": "Type '\"delivered\"' is not comparable to type '\"draft\" | \"completed\" | \"cancelled\" | \"active\" | \"submitted\" | null'."
+        }
+      ],
+      "messages": [
+        "Type '\"ready\"' is not comparable to type '\"draft\" | \"completed\" | \"cancelled\" | \"active\" | \"submitted\" | null'.",
+        "Type '\"confirmed\"' is not comparable to type '\"draft\" | \"completed\" | \"cancelled\" | \"active\" | \"submitted\" | null'.",
+        "Type '\"delivered\"' is not comparable to type '\"draft\" | \"completed\" | \"cancelled\" | \"active\" | \"submitted\" | null'."
+      ]
+    },
+    {
+      "module": "src/pages/ProductsPage.vue",
+      "errorCode": "TS2304",
+      "count": 6,
+      "occurrences": [
+        {
+          "line": 660,
+          "col": 23,
+          "message": "Cannot find name 'filteredProducts'."
+        },
+        {
+          "line": 761,
+          "col": 32,
+          "message": "Cannot find name 'filteredProducts'."
+        },
+        {
+          "line": 766,
+          "col": 16,
+          "message": "Cannot find name 'filteredProducts'."
+        },
+        {
+          "line": 834,
+          "col": 5,
+          "message": "Cannot find name 'tableRequestHandler'."
+        },
+        {
+          "line": 835,
+          "col": 5,
+          "message": "Cannot find name 'pagination'."
+        },
+        {
+          "line": 835,
+          "col": 35,
+          "message": "Cannot find name 'filteredProducts'."
+        }
+      ],
+      "messages": [
+        "Cannot find name 'filteredProducts'.",
+        "Cannot find name 'tableRequestHandler'.",
+        "Cannot find name 'pagination'."
+      ]
+    },
+    {
+      "module": "src/services/dashboard/practice-dashboard.ts",
+      "errorCode": "TS2345",
+      "count": 6,
+      "occurrences": [
+        {
+          "line": 220,
+          "col": 62,
+          "message": "Argument of type 'string | null' is not assignable to parameter of type 'string'."
+        },
+        {
+          "line": 239,
+          "col": 55,
+          "message": "Argument of type 'unknown' is not assignable to parameter of type 'LogData'."
+        },
+        {
+          "line": 265,
+          "col": 11,
+          "message": "Argument of type 'string | undefined' is not assignable to parameter of type 'string'."
+        },
+        {
+          "line": 275,
+          "col": 11,
+          "message": "Argument of type 'unknown' is not assignable to parameter of type 'ErrorLike'."
+        },
+        {
+          "line": 795,
+          "col": 9,
+          "message": "Argument of type 'unknown' is not assignable to parameter of type 'ErrorLike'."
+        },
+        {
+          "line": 1190,
+          "col": 54,
+          "message": "Argument of type 'unknown' is not assignable to parameter of type 'LogData'."
+        }
+      ],
+      "messages": [
+        "Argument of type 'string | null' is not assignable to parameter of type 'string'.",
+        "Argument of type 'unknown' is not assignable to parameter of type 'LogData'.",
+        "Argument of type 'string | undefined' is not assignable to parameter of type 'string'.",
+        "Argument of type 'unknown' is not assignable to parameter of type 'ErrorLike'."
+      ]
+    },
+    {
+      "module": "src/services/integration/inventoryOrderIntegration.ts",
+      "errorCode": "TS2345",
+      "count": 6,
+      "occurrences": [
+        {
+          "line": 102,
+          "col": 59,
+          "message": "Argument of type 'unknown' is not assignable to parameter of type 'LogData'."
+        },
+        {
+          "line": 199,
+          "col": 11,
+          "message": "Argument of type '{ product_id: any; product_name: any; sku: any; location_id: any; location_name: any; current_stock: any; minimum_stock: any; reorder_point: any; calculated_order_quantity: any; unit_price: any; ... 7 more ...; stock_trend: string; }[]' is not assignable to parameter of type 'ReorderSuggestion[]'."
+        },
+        {
+          "line": 226,
+          "col": 11,
+          "message": "Argument of type '{ product_id: any; product_name: any; sku: any; location_id: any; location_name: any; current_stock: any; minimum_stock: any; reorder_point: any; calculated_order_quantity: any; unit_price: any; ... 7 more ...; stock_trend: string; }[]' is not assignable to parameter of type 'ReorderSuggestion[]'."
+        },
+        {
+          "line": 242,
+          "col": 64,
+          "message": "Argument of type 'unknown' is not assignable to parameter of type 'LogData'."
+        },
+        {
+          "line": 313,
+          "col": 63,
+          "message": "Argument of type 'unknown' is not assignable to parameter of type 'LogData'."
+        },
+        {
+          "line": 360,
+          "col": 71,
+          "message": "Argument of type 'unknown' is not assignable to parameter of type 'LogData'."
+        }
+      ],
+      "messages": [
+        "Argument of type 'unknown' is not assignable to parameter of type 'LogData'.",
+        "Argument of type '{ product_id: any; product_name: any; sku: any; location_id: any; location_name: any; current_stock: any; minimum_stock: any; reorder_point: any; calculated_order_quantity: any; unit_price: any; ... 7 more ...; stock_trend: string; }[]' is not assignable to parameter of type 'ReorderSuggestion[]'."
+      ]
+    },
+    {
+      "module": "src/services/magento/index.ts",
+      "errorCode": "TS2304",
+      "count": 6,
+      "occurrences": [
+        {
+          "line": 149,
+          "col": 23,
+          "message": "Cannot find name '$t'."
+        },
+        {
+          "line": 177,
+          "col": 21,
+          "message": "Cannot find name '$t'."
+        },
+        {
+          "line": 193,
+          "col": 34,
+          "message": "Cannot find name '$t'."
+        },
+        {
+          "line": 517,
+          "col": 23,
+          "message": "Cannot find name '$t'."
+        },
+        {
+          "line": 575,
+          "col": 23,
+          "message": "Cannot find name '$t'."
+        },
+        {
+          "line": 611,
+          "col": 23,
+          "message": "Cannot find name '$t'."
+        }
+      ],
+      "messages": ["Cannot find name '$t'."]
+    },
+    {
+      "module": "src/services/magicInvites.ts",
+      "errorCode": "TS2322",
+      "count": 6,
+      "occurrences": [
+        {
+          "line": 106,
+          "col": 9,
+          "message": "Type 'string | null' is not assignable to type 'string | undefined'."
+        },
+        {
+          "line": 181,
+          "col": 7,
+          "message": "Type '{ ai_role_suggestions: Json; allow_guest_mode: boolean | null; auto_regenerate: boolean | null; auto_upgrade_to_member: boolean | null; color_theme: string | null; contextual_welcome_message: string | null; ... 29 more ...; whatsapp_link: string | null; }' is not assignable to type 'MagicInvite'."
+        },
+        {
+          "line": 346,
+          "col": 7,
+          "message": "Type '{ accessible_locations: string[] | null; achievements_unlocked: string[] | null; actions_performed: Json; can_extend: boolean | null; converted_to_user_id: string | null; created_at: string | null; ... 19 more ...; user_agent: string | null; }' is not assignable to type 'GuestSession'."
+        },
+        {
+          "line": 396,
+          "col": 5,
+          "message": "Type 'string | undefined' is not assignable to type 'string'."
+        },
+        {
+          "line": 465,
+          "col": 7,
+          "message": "Type '{ accessible_locations: string[] | null; achievements_unlocked: string[] | null; actions_performed: Json; can_extend: boolean | null; converted_to_user_id: string | null; created_at: string | null; ... 19 more ...; user_agent: string | null; }[]' is not assignable to type 'GuestSession[]'."
+        },
+        {
+          "line": 505,
+          "col": 7,
+          "message": "Type '{ ai_role_suggestions: Json; allow_guest_mode: boolean | null; auto_regenerate: boolean | null; auto_upgrade_to_member: boolean | null; color_theme: string | null; contextual_welcome_message: string | null; ... 29 more ...; whatsapp_link: string | null; }[]' is not assignable to type 'MagicInvite[]'."
+        }
+      ],
+      "messages": [
+        "Type 'string | null' is not assignable to type 'string | undefined'.",
+        "Type '{ ai_role_suggestions: Json; allow_guest_mode: boolean | null; auto_regenerate: boolean | null; auto_upgrade_to_member: boolean | null; color_theme: string | null; contextual_welcome_message: string | null; ... 29 more ...; whatsapp_link: string | null; }' is not assignable to type 'MagicInvite'.",
+        "Type '{ accessible_locations: string[] | null; achievements_unlocked: string[] | null; actions_performed: Json; can_extend: boolean | null; converted_to_user_id: string | null; created_at: string | null; ... 19 more ...; user_agent: string | null; }' is not assignable to type 'GuestSession'.",
+        "Type 'string | undefined' is not assignable to type 'string'.",
+        "Type '{ accessible_locations: string[] | null; achievements_unlocked: string[] | null; actions_performed: Json; can_extend: boolean | null; converted_to_user_id: string | null; created_at: string | null; ... 19 more ...; user_agent: string | null; }[]' is not assignable to type 'GuestSession[]'.",
+        "Type '{ ai_role_suggestions: Json; allow_guest_mode: boolean | null; auto_regenerate: boolean | null; auto_upgrade_to_member: boolean | null; color_theme: string | null; contextual_welcome_message: string | null; ... 29 more ...; whatsapp_link: string | null; }[]' is not assignable to type 'MagicInvite[]'."
+      ]
+    },
+    {
+      "module": "src/services/notifications.ts",
+      "errorCode": "TS2305",
+      "count": 6,
+      "occurrences": [
+        {
+          "line": 3,
+          "col": 3,
+          "message": "Module '\"@/types/supabase\"' has no exported member 'NotificationSettings'."
+        },
+        {
+          "line": 4,
+          "col": 3,
+          "message": "Module '\"@/types/supabase\"' has no exported member 'NotificationSettingsInsert'."
+        },
+        {
+          "line": 5,
+          "col": 3,
+          "message": "Module '\"@/types/supabase\"' has no exported member 'PushToken'."
+        },
+        {
+          "line": 6,
+          "col": 3,
+          "message": "Module '\"@/types/supabase\"' has no exported member 'PushTokenInsert'."
+        },
+        {
+          "line": 7,
+          "col": 3,
+          "message": "Module '\"@/types/supabase\"' has no exported member 'NotificationChannel'."
+        },
+        {
+          "line": 8,
+          "col": 3,
+          "message": "Module '\"@/types/supabase\"' has no exported member 'NotificationType'."
+        }
+      ],
+      "messages": [
+        "Module '\"@/types/supabase\"' has no exported member 'NotificationSettings'.",
+        "Module '\"@/types/supabase\"' has no exported member 'NotificationSettingsInsert'.",
+        "Module '\"@/types/supabase\"' has no exported member 'PushToken'.",
+        "Module '\"@/types/supabase\"' has no exported member 'PushTokenInsert'.",
+        "Module '\"@/types/supabase\"' has no exported member 'NotificationChannel'.",
+        "Module '\"@/types/supabase\"' has no exported member 'NotificationType'."
+      ]
+    },
+    {
+      "module": "src/stores/products/products-core.ts",
+      "errorCode": "TS2339",
+      "count": 6,
+      "occurrences": [
+        {
+          "line": 118,
+          "col": 33,
+          "message": "Property 'countryOfOrigin' does not exist on type '{ id: string; practiceId: string; sku: string; name: string; category: string | null; brand: string | null; unit: string | null; totalStock: number; availableStock: number; reservedStock: number; ... 9 more ...; raw?: { ...; }; }'."
+        },
+        {
+          "line": 126,
+          "col": 21,
+          "message": "Property 'gpcBrickCode' does not exist on type '{ id: string; practiceId: string; sku: string; name: string; category: string | null; brand: string | null; unit: string | null; totalStock: number; availableStock: number; reservedStock: number; ... 9 more ...; raw?: { ...; }; }'."
+        },
+        {
+          "line": 135,
+          "col": 21,
+          "message": "Property 'lifecycleStatus' does not exist on type '{ id: string; practiceId: string; sku: string; name: string; category: string | null; brand: string | null; unit: string | null; totalStock: number; availableStock: number; reservedStock: number; ... 9 more ...; raw?: { ...; }; }'."
+        },
+        {
+          "line": 339,
+          "col": 21,
+          "message": "Property 'requiresBatchTracking' does not exist on type 'ProductWithStock'."
+        },
+        {
+          "line": 343,
+          "col": 41,
+          "message": "Property 'requiresBatchTracking' does not exist on type '{ id: string; practiceId: string; sku: string; name: string; category: string | null; brand: string | null; unit: string | null; totalStock: number; availableStock: number; reservedStock: number; ... 9 more ...; raw?: { ...; }; }'."
+        },
+        {
+          "line": 347,
+          "col": 46,
+          "message": "Property 'batchStatus' does not exist on type '{ id: string; practiceId: string; sku: string; name: string; category: string | null; brand: string | null; unit: string | null; totalStock: number; availableStock: number; reservedStock: number; ... 9 more ...; raw?: { ...; }; }'."
+        }
+      ],
+      "messages": [
+        "Property 'countryOfOrigin' does not exist on type '{ id: string; practiceId: string; sku: string; name: string; category: string | null; brand: string | null; unit: string | null; totalStock: number; availableStock: number; reservedStock: number; ... 9 more ...; raw?: { ...; }; }'.",
+        "Property 'gpcBrickCode' does not exist on type '{ id: string; practiceId: string; sku: string; name: string; category: string | null; brand: string | null; unit: string | null; totalStock: number; availableStock: number; reservedStock: number; ... 9 more ...; raw?: { ...; }; }'.",
+        "Property 'lifecycleStatus' does not exist on type '{ id: string; practiceId: string; sku: string; name: string; category: string | null; brand: string | null; unit: string | null; totalStock: number; availableStock: number; reservedStock: number; ... 9 more ...; raw?: { ...; }; }'.",
+        "Property 'requiresBatchTracking' does not exist on type 'ProductWithStock'.",
+        "Property 'requiresBatchTracking' does not exist on type '{ id: string; practiceId: string; sku: string; name: string; category: string | null; brand: string | null; unit: string | null; totalStock: number; availableStock: number; reservedStock: number; ... 9 more ...; raw?: { ...; }; }'.",
+        "Property 'batchStatus' does not exist on type '{ id: string; practiceId: string; sku: string; name: string; category: string | null; brand: string | null; unit: string | null; totalStock: number; availableStock: number; reservedStock: number; ... 9 more ...; raw?: { ...; }; }'."
+      ]
+    },
+    {
+      "module": "src/components/BatchOverview.vue",
+      "errorCode": "TS7053",
+      "count": 5,
+      "occurrences": [
+        {
+          "line": 478,
+          "col": 12,
+          "message": "Element implicitly has an 'any' type because expression of type 'string' can't be used to index type '{ storage: string; emergency: string; treatment: string; default: string; }'."
+        },
+        {
+          "line": 498,
+          "col": 12,
+          "message": "Element implicitly has an 'any' type because expression of type 'string' can't be used to index type '{ expired: string; critical: string; warning: string; normal: string; }'."
+        },
+        {
+          "line": 508,
+          "col": 12,
+          "message": "Element implicitly has an 'any' type because expression of type 'string' can't be used to index type '{ expired: string; critical: string; warning: string; normal: string; }'."
+        },
+        {
+          "line": 518,
+          "col": 12,
+          "message": "Element implicitly has an 'any' type because expression of type 'string' can't be used to index type '{ expired: string; critical: string; warning: string; normal: string; }'."
+        },
+        {
+          "line": 541,
+          "col": 12,
+          "message": "Element implicitly has an 'any' type because expression of type 'string' can't be used to index type '{ active: string; expired: string; depleted: string; recalled: string; quarantine: string; }'."
+        }
+      ],
+      "messages": [
+        "Element implicitly has an 'any' type because expression of type 'string' can't be used to index type '{ storage: string; emergency: string; treatment: string; default: string; }'.",
+        "Element implicitly has an 'any' type because expression of type 'string' can't be used to index type '{ expired: string; critical: string; warning: string; normal: string; }'.",
+        "Element implicitly has an 'any' type because expression of type 'string' can't be used to index type '{ active: string; expired: string; depleted: string; recalled: string; quarantine: string; }'."
+      ]
+    },
+    {
+      "module": "src/components/UseBatchDialog.vue",
+      "errorCode": "TS18047",
+      "count": 5,
+      "occurrences": [
+        {
+          "line": 63,
+          "col": 26,
+          "message": "'__VLS_ctx.batch.availableQuantity' is possibly 'null'."
+        },
+        {
+          "line": 123,
+          "col": 35,
+          "message": "'__VLS_ctx.batch.availableQuantity' is possibly 'null'."
+        },
+        {
+          "line": 131,
+          "col": 51,
+          "message": "'__VLS_ctx.batch.unitCost' is possibly 'null'."
+        },
+        {
+          "line": 235,
+          "col": 23,
+          "message": "'props.batch.availableQuantity' is possibly 'null'."
+        },
+        {
+          "line": 241,
+          "col": 23,
+          "message": "'props.batch.availableQuantity' is possibly 'null'."
+        }
+      ],
+      "messages": [
+        "'__VLS_ctx.batch.availableQuantity' is possibly 'null'.",
+        "'__VLS_ctx.batch.unitCost' is possibly 'null'.",
+        "'props.batch.availableQuantity' is possibly 'null'."
+      ]
+    },
+    {
+      "module": "src/pages/BatchManagementPage.vue",
+      "errorCode": "TS7006",
+      "count": 5,
+      "occurrences": [
+        {
+          "line": 503,
+          "col": 37,
+          "message": "Parameter 'batch' implicitly has an 'any' type."
+        },
+        {
+          "line": 524,
+          "col": 8,
+          "message": "Parameter 'sum' implicitly has an 'any' type."
+        },
+        {
+          "line": 524,
+          "col": 13,
+          "message": "Parameter 'batch' implicitly has an 'any' type."
+        },
+        {
+          "line": 612,
+          "col": 44,
+          "message": "Parameter 'batch' implicitly has an 'any' type."
+        },
+        {
+          "line": 684,
+          "col": 7,
+          "message": "Parameter 'batch' implicitly has an 'any' type."
+        }
+      ],
+      "messages": ["Parameter 'batch' implicitly has an 'any' type.", "Parameter 'sum' implicitly has an 'any' type."]
+    },
+    {
+      "module": "src/pages/StyleSandbox.vue",
+      "errorCode": "TS2345",
+      "count": 5,
+      "occurrences": [
+        {
+          "line": 243,
+          "col": 16,
+          "message": "Argument of type '{ dense: true; class: string; outlined: true; label: string; }' is not assignable to parameter of type 'VNodeProps & AllowedComponentProps & ComponentCustomProps & QInputProps & Record<string, unknown>'."
+        },
+        {
+          "line": 244,
+          "col": 16,
+          "message": "Argument of type '{ class: string; outlined: true; label: string; }' is not assignable to parameter of type 'VNodeProps & AllowedComponentProps & ComponentCustomProps & QInputProps & Record<string, unknown>'."
+        },
+        {
+          "line": 245,
+          "col": 16,
+          "message": "Argument of type '{ class: string; outlined: true; label: string; }' is not assignable to parameter of type 'VNodeProps & AllowedComponentProps & ComponentCustomProps & QInputProps & Record<string, unknown>'."
+        },
+        {
+          "line": 246,
+          "col": 16,
+          "message": "Argument of type '{ options: string[]; class: string; outlined: true; label: string; }' is not assignable to parameter of type 'VNodeProps & AllowedComponentProps & ComponentCustomProps & QSelectProps & Record<string, unknown>'."
+        },
+        {
+          "line": 252,
+          "col": 16,
+          "message": "Argument of type '{ rows: string; class: string; outlined: true; type: \"textarea\"; label: string; }' is not assignable to parameter of type 'VNodeProps & AllowedComponentProps & ComponentCustomProps & QInputProps & Record<string, unknown>'."
+        }
+      ],
+      "messages": [
+        "Argument of type '{ dense: true; class: string; outlined: true; label: string; }' is not assignable to parameter of type 'VNodeProps & AllowedComponentProps & ComponentCustomProps & QInputProps & Record<string, unknown>'.",
+        "Argument of type '{ class: string; outlined: true; label: string; }' is not assignable to parameter of type 'VNodeProps & AllowedComponentProps & ComponentCustomProps & QInputProps & Record<string, unknown>'.",
+        "Argument of type '{ options: string[]; class: string; outlined: true; label: string; }' is not assignable to parameter of type 'VNodeProps & AllowedComponentProps & ComponentCustomProps & QSelectProps & Record<string, unknown>'.",
+        "Argument of type '{ rows: string; class: string; outlined: true; type: \"textarea\"; label: string; }' is not assignable to parameter of type 'VNodeProps & AllowedComponentProps & ComponentCustomProps & QInputProps & Record<string, unknown>'."
+      ]
+    },
+    {
+      "module": "src/pages/SuppliersPage.vue",
+      "errorCode": "TS2304",
+      "count": 5,
+      "occurrences": [
+        {
+          "line": 602,
+          "col": 30,
+          "message": "Cannot find name 'Supplier'."
+        },
+        {
+          "line": 807,
+          "col": 35,
+          "message": "Cannot find name 'Supplier'."
+        },
+        {
+          "line": 868,
+          "col": 43,
+          "message": "Cannot find name 'Supplier'."
+        },
+        {
+          "line": 923,
+          "col": 43,
+          "message": "Cannot find name 'Supplier'."
+        },
+        {
+          "line": 960,
+          "col": 49,
+          "message": "Cannot find name 'Supplier'."
+        }
+      ],
+      "messages": ["Cannot find name 'Supplier'."]
+    },
+    {
+      "module": "src/services/admin.ts",
+      "errorCode": "TS2304",
+      "count": 5,
+      "occurrences": [
+        {
+          "line": 474,
+          "col": 23,
+          "message": "Cannot find name '$t'."
+        },
+        {
+          "line": 479,
+          "col": 23,
+          "message": "Cannot find name '$t'."
+        },
+        {
+          "line": 554,
+          "col": 23,
+          "message": "Cannot find name '$t'."
+        },
+        {
+          "line": 745,
+          "col": 14,
+          "message": "Cannot find name 'profile'."
+        },
+        {
+          "line": 833,
+          "col": 23,
+          "message": "Cannot find name '$t'."
+        }
+      ],
+      "messages": ["Cannot find name '$t'.", "Cannot find name 'profile'."]
+    },
+    {
+      "module": "src/services/admin.ts",
+      "errorCode": "TS2305",
+      "count": 5,
+      "occurrences": [
+        {
+          "line": 3,
+          "col": 3,
+          "message": "Module '\"@/types/supabase\"' has no exported member 'Location'."
+        },
+        {
+          "line": 4,
+          "col": 3,
+          "message": "Module '\"@/types/supabase\"' has no exported member 'LocationInsert'."
+        },
+        {
+          "line": 5,
+          "col": 3,
+          "message": "Module '\"@/types/supabase\"' has no exported member 'LocationUpdate'."
+        },
+        {
+          "line": 6,
+          "col": 3,
+          "message": "Module '\"@/types/supabase\"' has no exported member 'UserPermission'."
+        },
+        {
+          "line": 7,
+          "col": 3,
+          "message": "Module '\"@/types/supabase\"' has no exported member 'UserPermissionInsert'."
+        }
+      ],
+      "messages": [
+        "Module '\"@/types/supabase\"' has no exported member 'Location'.",
+        "Module '\"@/types/supabase\"' has no exported member 'LocationInsert'.",
+        "Module '\"@/types/supabase\"' has no exported member 'LocationUpdate'.",
+        "Module '\"@/types/supabase\"' has no exported member 'UserPermission'.",
+        "Module '\"@/types/supabase\"' has no exported member 'UserPermissionInsert'."
+      ]
+    },
+    {
+      "module": "src/services/dashboard/practice-dashboard.ts",
+      "errorCode": "TS18047",
+      "count": 5,
+      "occurrences": [
+        {
+          "line": 216,
+          "col": 20,
+          "message": "'stock.current_quantity' is possibly 'null'."
+        },
+        {
+          "line": 228,
+          "col": 26,
+          "message": "'item.current_quantity' is possibly 'null'."
+        },
+        {
+          "line": 1089,
+          "col": 19,
+          "message": "'session.products_with_variance' is possibly 'null'."
+        },
+        {
+          "line": 1294,
+          "col": 17,
+          "message": "'item.current_quantity' is possibly 'null'."
+        },
+        {
+          "line": 1297,
+          "col": 28,
+          "message": "'item.current_quantity' is possibly 'null'."
+        }
+      ],
+      "messages": [
+        "'stock.current_quantity' is possibly 'null'.",
+        "'item.current_quantity' is possibly 'null'.",
+        "'session.products_with_variance' is possibly 'null'."
+      ]
+    },
+    {
+      "module": "src/services/dashboard/practice-dashboard.ts",
+      "errorCode": "TS2538",
+      "count": 5,
+      "occurrences": [
+        {
+          "line": 724,
+          "col": 23,
+          "message": "Type 'undefined' cannot be used as an index type."
+        },
+        {
+          "line": 724,
+          "col": 41,
+          "message": "Type 'undefined' cannot be used as an index type."
+        },
+        {
+          "line": 725,
+          "col": 23,
+          "message": "Type 'undefined' cannot be used as an index type."
+        },
+        {
+          "line": 726,
+          "col": 20,
+          "message": "Type 'undefined' cannot be used as an index type."
+        },
+        {
+          "line": 727,
+          "col": 18,
+          "message": "Type 'undefined' cannot be used as an index type."
+        }
+      ],
+      "messages": ["Type 'undefined' cannot be used as an index type."]
+    },
+    {
+      "module": "src/services/magento/index.ts",
+      "errorCode": "TS2339",
+      "count": 5,
+      "occurrences": [
+        {
+          "line": 129,
+          "col": 23,
+          "message": "Property 'token' does not exist on type 'MagentoConfig'."
+        },
+        {
+          "line": 140,
+          "col": 25,
+          "message": "Property 'storeCode' does not exist on type 'MagentoConfig'."
+        },
+        {
+          "line": 164,
+          "col": 48,
+          "message": "Property 'token' does not exist on type 'MagentoConfig'."
+        },
+        {
+          "line": 166,
+          "col": 30,
+          "message": "Property 'storeCode' does not exist on type 'MagentoConfig'."
+        },
+        {
+          "line": 473,
+          "col": 52,
+          "message": "Property 'token' does not exist on type 'MagentoConfig'."
+        }
+      ],
+      "messages": [
+        "Property 'token' does not exist on type 'MagentoConfig'.",
+        "Property 'storeCode' does not exist on type 'MagentoConfig'."
+      ]
+    },
+    {
+      "module": "src/services/notifications.ts",
+      "errorCode": "TS2345",
+      "count": 5,
+      "occurrences": [
+        {
+          "line": 34,
+          "col": 11,
+          "message": "Argument of type 'ServiceWorkerRegistration' is not assignable to parameter of type 'LogData'."
+        },
+        {
+          "line": 37,
+          "col": 73,
+          "message": "Argument of type 'unknown' is not assignable to parameter of type 'LogData'."
+        },
+        {
+          "line": 83,
+          "col": 9,
+          "message": "Argument of type 'unknown' is not assignable to parameter of type 'LogData'."
+        },
+        {
+          "line": 445,
+          "col": 59,
+          "message": "Argument of type 'unknown' is not assignable to parameter of type 'LogData'."
+        },
+        {
+          "line": 472,
+          "col": 37,
+          "message": "Argument of type 'number | undefined' is not assignable to parameter of type 'number'."
+        }
+      ],
+      "messages": [
+        "Argument of type 'ServiceWorkerRegistration' is not assignable to parameter of type 'LogData'.",
+        "Argument of type 'unknown' is not assignable to parameter of type 'LogData'.",
+        "Argument of type 'number | undefined' is not assignable to parameter of type 'number'."
+      ]
+    },
+    {
+      "module": "src/services/offline.ts",
+      "errorCode": "TS2304",
+      "count": 5,
+      "occurrences": [
+        {
+          "line": 305,
+          "col": 25,
+          "message": "Cannot find name '$t'."
+        },
+        {
+          "line": 316,
+          "col": 23,
+          "message": "Cannot find name '$t'."
+        },
+        {
+          "line": 332,
+          "col": 23,
+          "message": "Cannot find name '$t'."
+        },
+        {
+          "line": 346,
+          "col": 23,
+          "message": "Cannot find name '$t'."
+        },
+        {
+          "line": 543,
+          "col": 23,
+          "message": "Cannot find name '$t'."
+        }
+      ],
+      "messages": ["Cannot find name '$t'."]
+    },
+    {
+      "module": "src/components/inventory/CountingEntryWithBatch.vue",
+      "errorCode": "TS7006",
+      "count": 4,
+      "occurrences": [
+        {
+          "line": 243,
+          "col": 15,
+          "message": "Parameter 'batch' implicitly has an 'any' type."
+        },
+        {
+          "line": 250,
+          "col": 8,
+          "message": "Parameter 'total' implicitly has an 'any' type."
+        },
+        {
+          "line": 250,
+          "col": 15,
+          "message": "Parameter 'batch' implicitly has an 'any' type."
+        },
+        {
+          "line": 443,
+          "col": 11,
+          "message": "Parameter 'b' implicitly has an 'any' type."
+        }
+      ],
+      "messages": [
+        "Parameter 'batch' implicitly has an 'any' type.",
+        "Parameter 'total' implicitly has an 'any' type.",
+        "Parameter 'b' implicitly has an 'any' type."
+      ]
+    },
+    {
+      "module": "src/components/inventory/QuickAdjustmentDialog.vue",
+      "errorCode": "TS2304",
+      "count": 4,
+      "occurrences": [
+        {
+          "line": 974,
+          "col": 25,
+          "message": "Cannot find name '$t'."
+        },
+        {
+          "line": 979,
+          "col": 25,
+          "message": "Cannot find name '$t'."
+        },
+        {
+          "line": 984,
+          "col": 25,
+          "message": "Cannot find name '$t'."
+        },
+        {
+          "line": 990,
+          "col": 25,
+          "message": "Cannot find name '$t'."
+        }
+      ],
+      "messages": ["Cannot find name '$t'."]
+    },
+    {
+      "module": "src/components/inventory/StockTransferDialog.vue",
+      "errorCode": "TS7006",
+      "count": 4,
+      "occurrences": [
+        {
+          "line": 436,
+          "col": 15,
+          "message": "Parameter 'batch' implicitly has an 'any' type."
+        },
+        {
+          "line": 437,
+          "col": 12,
+          "message": "Parameter 'batch' implicitly has an 'any' type."
+        },
+        {
+          "line": 442,
+          "col": 10,
+          "message": "Parameter 'a' implicitly has an 'any' type."
+        },
+        {
+          "line": 442,
+          "col": 13,
+          "message": "Parameter 'b' implicitly has an 'any' type."
+        }
+      ],
+      "messages": [
+        "Parameter 'batch' implicitly has an 'any' type.",
+        "Parameter 'a' implicitly has an 'any' type.",
+        "Parameter 'b' implicitly has an 'any' type."
+      ]
+    },
+    {
+      "module": "src/components/products/ProductDetailsDialog.vue",
+      "errorCode": "TS7006",
+      "count": 4,
+      "occurrences": [
+        {
+          "line": 456,
+          "col": 15,
+          "message": "Parameter 'sp' implicitly has an 'any' type."
+        },
+        {
+          "line": 457,
+          "col": 12,
+          "message": "Parameter 'sp' implicitly has an 'any' type."
+        },
+        {
+          "line": 461,
+          "col": 14,
+          "message": "Parameter 'a' implicitly has an 'any' type."
+        },
+        {
+          "line": 461,
+          "col": 17,
+          "message": "Parameter 'b' implicitly has an 'any' type."
+        }
+      ],
+      "messages": [
+        "Parameter 'sp' implicitly has an 'any' type.",
+        "Parameter 'a' implicitly has an 'any' type.",
+        "Parameter 'b' implicitly has an 'any' type."
+      ]
+    },
+    {
+      "module": "src/pages/AnalyticsPage.vue",
+      "errorCode": "TS2459",
+      "count": 4,
+      "occurrences": [
+        {
+          "line": 282,
+          "col": 10,
+          "message": "Module '\"src/services/analytics\"' declares 'AnalyticsSummary' locally, but it is not exported."
+        },
+        {
+          "line": 283,
+          "col": 10,
+          "message": "Module '\"src/services/analytics\"' declares 'OrderMetrics' locally, but it is not exported."
+        },
+        {
+          "line": 284,
+          "col": 10,
+          "message": "Module '\"src/services/analytics\"' declares 'ProductMetrics' locally, but it is not exported."
+        },
+        {
+          "line": 285,
+          "col": 10,
+          "message": "Module '\"src/services/analytics\"' declares 'UserActivityMetrics' locally, but it is not exported."
+        }
+      ],
+      "messages": [
+        "Module '\"src/services/analytics\"' declares 'AnalyticsSummary' locally, but it is not exported.",
+        "Module '\"src/services/analytics\"' declares 'OrderMetrics' locally, but it is not exported.",
+        "Module '\"src/services/analytics\"' declares 'ProductMetrics' locally, but it is not exported.",
+        "Module '\"src/services/analytics\"' declares 'UserActivityMetrics' locally, but it is not exported."
+      ]
+    },
+    {
+      "module": "src/pages/inventory/InventoryLevelsPage.vue",
+      "errorCode": "TS2322",
+      "count": 4,
+      "occurrences": [
+        {
+          "line": 731,
+          "col": 11,
+          "message": "Type 'string | null | undefined' is not assignable to type 'string'."
+        },
+        {
+          "line": 736,
+          "col": 11,
+          "message": "Type 'string | null' is not assignable to type 'string'."
+        },
+        {
+          "line": 740,
+          "col": 11,
+          "message": "Type 'string | null' is not assignable to type 'string | undefined'."
+        },
+        {
+          "line": 759,
+          "col": 11,
+          "message": "Type '\"manual_adjustment\"' is not assignable to type 'ReasonCode'."
+        }
+      ],
+      "messages": [
+        "Type 'string | null | undefined' is not assignable to type 'string'.",
+        "Type 'string | null' is not assignable to type 'string'.",
+        "Type 'string | null' is not assignable to type 'string | undefined'.",
+        "Type '\"manual_adjustment\"' is not assignable to type 'ReasonCode'."
+      ]
+    },
+    {
+      "module": "src/pages/inventory/MovementsPage.vue",
+      "errorCode": "TS2345",
+      "count": 4,
+      "occurrences": [
+        {
+          "line": 189,
+          "col": 33,
+          "message": "Argument of type 'string' is not assignable to parameter of type 'MovementType'."
+        },
+        {
+          "line": 190,
+          "col": 35,
+          "message": "Argument of type 'string' is not assignable to parameter of type 'MovementType'."
+        },
+        {
+          "line": 192,
+          "col": 40,
+          "message": "Argument of type 'string' is not assignable to parameter of type 'MovementType'."
+        },
+        {
+          "line": 253,
+          "col": 28,
+          "message": "Argument of type 'string | null' is not assignable to parameter of type 'string'."
+        }
+      ],
+      "messages": [
+        "Argument of type 'string' is not assignable to parameter of type 'MovementType'.",
+        "Argument of type 'string | null' is not assignable to parameter of type 'string'."
+      ]
+    },
+    {
+      "module": "src/pages/OrderListDetailPage.vue",
+      "errorCode": "TS2304",
+      "count": 4,
+      "occurrences": [
+        {
+          "line": 817,
+          "col": 7,
+          "message": "Cannot find name 'processingGlobalOrder'."
+        },
+        {
+          "line": 822,
+          "col": 46,
+          "message": "Cannot find name '$t'."
+        },
+        {
+          "line": 824,
+          "col": 46,
+          "message": "Cannot find name '$t'."
+        },
+        {
+          "line": 826,
+          "col": 7,
+          "message": "Cannot find name 'processingGlobalOrder'."
+        }
+      ],
+      "messages": ["Cannot find name 'processingGlobalOrder'.", "Cannot find name '$t'."]
+    },
+    {
+      "module": "src/pages/ProductsPage.vue",
+      "errorCode": "TS2322",
+      "count": 4,
+      "occurrences": [
+        {
+          "line": 250,
+          "col": 8,
+          "message": "Type '{ product_id: string; product: { id: string; practiceId: string; sku: string; name: string; category: string | null; brand: string | null; unit: string | null; totalStock: number; availableStock: number; ... 10 more ...; raw?: { ...; }; }; quantity: number; unit_price?: number | null; supplier_id?: string | null; no...' is not assignable to type 'CartItem[]'."
+        },
+        {
+          "line": 263,
+          "col": 8,
+          "message": "Type '(request: CreateOrderListRequest) => Promise<OrderListWithItems>' is not assignable to type '(orderList: OrderListWithItems) => any'."
+        },
+        {
+          "line": 264,
+          "col": 8,
+          "message": "Type '(request: AddOrderListItemRequest) => Promise<void>' is not assignable to type '(orderListId: string, product: ProductWithStock) => any'."
+        },
+        {
+          "line": 289,
+          "col": 8,
+          "message": "Type '{ id: string; practiceId: string; sku: string; name: string; category: string | null; brand: string | null; unit: string | null; totalStock: number; availableStock: number; reservedStock: number; ... 9 more ...; raw?: { ...; }; } | null' is not assignable to type '{ active: boolean | null; barcode: string | null; base_unit_indicator: boolean | null; brand: string | null; category: string | null; country_of_origin: string | null; created_at: string | null; ... 24 more ...; updated_at: string | null; } | null'."
+        }
+      ],
+      "messages": [
+        "Type '{ product_id: string; product: { id: string; practiceId: string; sku: string; name: string; category: string | null; brand: string | null; unit: string | null; totalStock: number; availableStock: number; ... 10 more ...; raw?: { ...; }; }; quantity: number; unit_price?: number | null; supplier_id?: string | null; no...' is not assignable to type 'CartItem[]'.",
+        "Type '(request: CreateOrderListRequest) => Promise<OrderListWithItems>' is not assignable to type '(orderList: OrderListWithItems) => any'.",
+        "Type '(request: AddOrderListItemRequest) => Promise<void>' is not assignable to type '(orderListId: string, product: ProductWithStock) => any'.",
+        "Type '{ id: string; practiceId: string; sku: string; name: string; category: string | null; brand: string | null; unit: string | null; totalStock: number; availableStock: number; reservedStock: number; ... 9 more ...; raw?: { ...; }; } | null' is not assignable to type '{ active: boolean | null; barcode: string | null; base_unit_indicator: boolean | null; brand: string | null; category: string | null; country_of_origin: string | null; created_at: string | null; ... 24 more ...; updated_at: string | null; } | null'."
+      ]
+    },
+    {
+      "module": "src/services/dashboard/platform-dashboard.ts",
+      "errorCode": "TS2532",
+      "count": 4,
+      "occurrences": [
+        {
+          "line": 616,
+          "col": 7,
+          "message": "Object is possibly 'undefined'."
+        },
+        {
+          "line": 617,
+          "col": 7,
+          "message": "Object is possibly 'undefined'."
+        },
+        {
+          "line": 621,
+          "col": 49,
+          "message": "Object is possibly 'undefined'."
+        },
+        {
+          "line": 622,
+          "col": 9,
+          "message": "Object is possibly 'undefined'."
+        }
+      ],
+      "messages": ["Object is possibly 'undefined'."]
+    },
+    {
+      "module": "src/services/integration/inventoryOrderIntegration.ts",
+      "errorCode": "TS2339",
+      "count": 4,
+      "occurrences": [
+        {
+          "line": 288,
+          "col": 30,
+          "message": "Property 'practice_id' does not exist on type 'SelectQueryError<\"column 'order_reference' does not exist on 'supplier_orders'.\">'."
+        },
+        {
+          "line": 290,
+          "col": 40,
+          "message": "Property 'order_reference' does not exist on type 'SelectQueryError<\"column 'order_reference' does not exist on 'supplier_orders'.\">'."
+        },
+        {
+          "line": 290,
+          "col": 69,
+          "message": "Property 'suppliers' does not exist on type 'SelectQueryError<\"column 'order_reference' does not exist on 'supplier_orders'.\">'."
+        },
+        {
+          "line": 290,
+          "col": 97,
+          "message": "Property 'estimated_delivery_date' does not exist on type 'SelectQueryError<\"column 'order_reference' does not exist on 'supplier_orders'.\">'."
+        }
+      ],
+      "messages": [
+        "Property 'practice_id' does not exist on type 'SelectQueryError<\"column 'order_reference' does not exist on 'supplier_orders'.\">'.",
+        "Property 'order_reference' does not exist on type 'SelectQueryError<\"column 'order_reference' does not exist on 'supplier_orders'.\">'.",
+        "Property 'suppliers' does not exist on type 'SelectQueryError<\"column 'order_reference' does not exist on 'supplier_orders'.\">'.",
+        "Property 'estimated_delivery_date' does not exist on type 'SelectQueryError<\"column 'order_reference' does not exist on 'supplier_orders'.\">'."
+      ]
+    },
+    {
+      "module": "src/services/magento/index.ts",
+      "errorCode": "TS2440",
+      "count": 4,
+      "occurrences": [
+        {
+          "line": 11,
+          "col": 3,
+          "message": "Import declaration conflicts with local declaration of 'MagentoOrder'."
+        },
+        {
+          "line": 12,
+          "col": 3,
+          "message": "Import declaration conflicts with local declaration of 'MagentoOrderItem'."
+        },
+        {
+          "line": 13,
+          "col": 3,
+          "message": "Import declaration conflicts with local declaration of 'MagentoProduct'."
+        },
+        {
+          "line": 14,
+          "col": 3,
+          "message": "Import declaration conflicts with local declaration of 'MagentoSearchCriteria'."
+        }
+      ],
+      "messages": [
+        "Import declaration conflicts with local declaration of 'MagentoOrder'.",
+        "Import declaration conflicts with local declaration of 'MagentoOrderItem'.",
+        "Import declaration conflicts with local declaration of 'MagentoProduct'.",
+        "Import declaration conflicts with local declaration of 'MagentoSearchCriteria'."
+      ]
+    },
+    {
+      "module": "src/services/magicInvites.ts",
+      "errorCode": "TS2304",
+      "count": 4,
+      "occurrences": [
+        {
+          "line": 184,
+          "col": 23,
+          "message": "Cannot find name '$t'."
+        },
+        {
+          "line": 295,
+          "col": 36,
+          "message": "Cannot find name '$t'."
+        },
+        {
+          "line": 349,
+          "col": 23,
+          "message": "Cannot find name '$t'."
+        },
+        {
+          "line": 491,
+          "col": 23,
+          "message": "Cannot find name '$t'."
+        }
+      ],
+      "messages": ["Cannot find name '$t'."]
+    },
+    {
+      "module": "src/services/monitoring.ts",
+      "errorCode": "TS2322",
+      "count": 4,
+      "occurrences": [
+        {
+          "line": 14,
+          "col": 5,
+          "message": "Type '(message: string, data?: Record<string, unknown>) => void' is not assignable to type '((message: string, data?: LogData) => void) & ((message: string, data?: Record<string, unknown> | undefined) => void)'."
+        },
+        {
+          "line": 16,
+          "col": 5,
+          "message": "Type '(message: string, data?: Record<string, unknown>) => void' is not assignable to type '((message: string, data?: LogData) => void) & ((message: string, data?: Record<string, unknown> | undefined) => void)'."
+        },
+        {
+          "line": 18,
+          "col": 5,
+          "message": "Type '(message: string, data?: Record<string, unknown>) => void' is not assignable to type '((message: string, error?: LogData) => void) & ((message: string, data?: Record<string, unknown> | undefined) => void)'."
+        },
+        {
+          "line": 230,
+          "col": 9,
+          "message": "Type 'unknown[]' is not assignable to type 'Integration[] | ((integrations: Integration[]) => Integration[]) | undefined'."
+        }
+      ],
+      "messages": [
+        "Type '(message: string, data?: Record<string, unknown>) => void' is not assignable to type '((message: string, data?: LogData) => void) & ((message: string, data?: Record<string, unknown> | undefined) => void)'.",
+        "Type '(message: string, data?: Record<string, unknown>) => void' is not assignable to type '((message: string, error?: LogData) => void) & ((message: string, data?: Record<string, unknown> | undefined) => void)'.",
+        "Type 'unknown[]' is not assignable to type 'Integration[] | ((integrations: Integration[]) => Integration[]) | undefined'."
+      ]
+    },
+    {
+      "module": "src/services/offline.ts",
+      "errorCode": "TS2769",
+      "count": 4,
+      "occurrences": [
+        {
+          "line": 313,
+          "col": 43,
+          "message": "No overload matches this call."
+        },
+        {
+          "line": 313,
+          "col": 64,
+          "message": "No overload matches this call."
+        },
+        {
+          "line": 327,
+          "col": 13,
+          "message": "No overload matches this call."
+        },
+        {
+          "line": 341,
+          "col": 13,
+          "message": "No overload matches this call."
+        }
+      ],
+      "messages": ["No overload matches this call."]
+    },
+    {
+      "module": "src/services/offline/index.ts",
+      "errorCode": "TS2304",
+      "count": 4,
+      "occurrences": [
+        {
+          "line": 108,
+          "col": 23,
+          "message": "Cannot find name '$t'."
+        },
+        {
+          "line": 136,
+          "col": 23,
+          "message": "Cannot find name '$t'."
+        },
+        {
+          "line": 140,
+          "col": 23,
+          "message": "Cannot find name '$t'."
+        },
+        {
+          "line": 173,
+          "col": 23,
+          "message": "Cannot find name '$t'."
+        }
+      ],
+      "messages": ["Cannot find name '$t'."]
+    },
+    {
+      "module": "src/stores/orderLists/orderLists-supplier-splitting.ts",
+      "errorCode": "TS2322",
+      "count": 4,
+      "occurrences": [
+        {
+          "line": 258,
+          "col": 9,
+          "message": "Type 'string | undefined' is not assignable to type 'string'."
+        },
+        {
+          "line": 262,
+          "col": 9,
+          "message": "Type 'string | undefined' is not assignable to type 'string'."
+        },
+        {
+          "line": 351,
+          "col": 9,
+          "message": "Type 'string | undefined' is not assignable to type 'string'."
+        },
+        {
+          "line": 352,
+          "col": 9,
+          "message": "Type 'string | undefined' is not assignable to type 'string'."
+        }
+      ],
+      "messages": ["Type 'string | undefined' is not assignable to type 'string'."]
+    },
+    {
+      "module": "src/stores/products/products-cart.ts",
+      "errorCode": "TS2551",
+      "count": 4,
+      "occurrences": [
+        {
+          "line": 48,
+          "col": 27,
+          "message": "Property 'unit_price' does not exist on type 'ProductWithStock'. Did you mean 'unitPrice'?"
+        },
+        {
+          "line": 49,
+          "col": 42,
+          "message": "Property 'supplier_id' does not exist on type 'ProductWithStock'. Did you mean 'supplier'?"
+        },
+        {
+          "line": 94,
+          "col": 27,
+          "message": "Property 'unit_price' does not exist on type 'ProductWithStock'. Did you mean 'unitPrice'?"
+        },
+        {
+          "line": 95,
+          "col": 42,
+          "message": "Property 'supplier_id' does not exist on type 'ProductWithStock'. Did you mean 'supplier'?"
+        }
+      ],
+      "messages": [
+        "Property 'unit_price' does not exist on type 'ProductWithStock'. Did you mean 'unitPrice'?",
+        "Property 'supplier_id' does not exist on type 'ProductWithStock'. Did you mean 'supplier'?"
+      ]
+    },
+    {
+      "module": "src/utils/batch-helpers.ts",
+      "errorCode": "TS2339",
+      "count": 4,
+      "occurrences": [
+        {
+          "line": 326,
+          "col": 34,
+          "message": "Property 'received_date' does not exist on type 'ProductBatchWithDetails'."
+        },
+        {
+          "line": 326,
+          "col": 53,
+          "message": "Property 'created_at' does not exist on type 'ProductBatchWithDetails'."
+        },
+        {
+          "line": 327,
+          "col": 34,
+          "message": "Property 'received_date' does not exist on type 'ProductBatchWithDetails'."
+        },
+        {
+          "line": 327,
+          "col": 53,
+          "message": "Property 'created_at' does not exist on type 'ProductBatchWithDetails'."
+        }
+      ],
+      "messages": [
+        "Property 'received_date' does not exist on type 'ProductBatchWithDetails'.",
+        "Property 'created_at' does not exist on type 'ProductBatchWithDetails'."
+      ]
+    },
+    {
+      "module": "src/components/base/OptimizedImage.vue",
+      "errorCode": "TS2322",
+      "count": 3,
+      "occurrences": [
+        {
+          "line": 20,
+          "col": 9,
+          "message": "Type '\"img\"' is not assignable to type '\"text\" | \"circle\" | \"rect\" | \"QAvatar\" | \"QBadge\" | \"QBtn\" | \"QCheckbox\" | \"QChip\" | \"QInput\" | \"QRadio\" | \"QRange\" | \"QSlider\" | \"QToggle\" | \"QToolbar\" | undefined'."
+        },
+        {
+          "line": 21,
+          "col": 10,
+          "message": "Type 'string | number | undefined' is not assignable to type 'string | undefined'."
+        },
+        {
+          "line": 22,
+          "col": 10,
+          "message": "Type 'string | number | undefined' is not assignable to type 'string | undefined'."
+        }
+      ],
+      "messages": [
+        "Type '\"img\"' is not assignable to type '\"text\" | \"circle\" | \"rect\" | \"QAvatar\" | \"QBadge\" | \"QBtn\" | \"QCheckbox\" | \"QChip\" | \"QInput\" | \"QRadio\" | \"QRange\" | \"QSlider\" | \"QToggle\" | \"QToolbar\" | undefined'.",
+        "Type 'string | number | undefined' is not assignable to type 'string | undefined'."
+      ]
+    },
+    {
+      "module": "src/components/BatchInput.vue",
+      "errorCode": "TS7006",
+      "count": 3,
+      "occurrences": [
+        {
+          "line": 218,
+          "col": 38,
+          "message": "Parameter 'product' implicitly has an 'any' type."
+        },
+        {
+          "line": 281,
+          "col": 17,
+          "message": "Parameter 'batch' implicitly has an 'any' type."
+        },
+        {
+          "line": 361,
+          "col": 13,
+          "message": "Parameter 'p' implicitly has an 'any' type."
+        }
+      ],
+      "messages": [
+        "Parameter 'product' implicitly has an 'any' type.",
+        "Parameter 'batch' implicitly has an 'any' type.",
+        "Parameter 'p' implicitly has an 'any' type."
+      ]
+    },
+    {
+      "module": "src/components/cards/AlertCard.vue",
+      "errorCode": "TS2339",
+      "count": 3,
+      "occurrences": [
+        {
+          "line": 3,
+          "col": 10,
+          "message": "Property 'id' does not exist on type 'CreateComponentPublicInstanceWithMixins<ToResolvedProps<Props, { close: () => any; dismiss: () => any; }>, { hasHeader: ComputedRef<boolean>; hasContent: ComputedRef<boolean>; hasActions: ComputedRef<...>; hasHeaderActions: ComputedRef<...>; statusIcon: ComputedRef<...>; alertClasses: ComputedRef<...>; }, ... 23 mor...'."
+        },
+        {
+          "line": 7,
+          "col": 37,
+          "message": "Property 'paddingClass' does not exist on type 'CreateComponentPublicInstanceWithMixins<ToResolvedProps<Props, { close: () => any; dismiss: () => any; }>, { hasHeader: ComputedRef<boolean>; hasContent: ComputedRef<boolean>; hasActions: ComputedRef<...>; hasHeaderActions: ComputedRef<...>; statusIcon: ComputedRef<...>; alertClasses: ComputedRef<...>; }, ... 23 mor...'."
+        },
+        {
+          "line": 38,
+          "col": 37,
+          "message": "Property 'id' does not exist on type 'CreateComponentPublicInstanceWithMixins<ToResolvedProps<Props, { close: () => any; dismiss: () => any; }>, { hasHeader: ComputedRef<boolean>; hasContent: ComputedRef<boolean>; hasActions: ComputedRef<...>; hasHeaderActions: ComputedRef<...>; statusIcon: ComputedRef<...>; alertClasses: ComputedRef<...>; }, ... 23 mor...'."
+        }
+      ],
+      "messages": [
+        "Property 'id' does not exist on type 'CreateComponentPublicInstanceWithMixins<ToResolvedProps<Props, { close: () => any; dismiss: () => any; }>, { hasHeader: ComputedRef<boolean>; hasContent: ComputedRef<boolean>; hasActions: ComputedRef<...>; hasHeaderActions: ComputedRef<...>; statusIcon: ComputedRef<...>; alertClasses: ComputedRef<...>; }, ... 23 mor...'.",
+        "Property 'paddingClass' does not exist on type 'CreateComponentPublicInstanceWithMixins<ToResolvedProps<Props, { close: () => any; dismiss: () => any; }>, { hasHeader: ComputedRef<boolean>; hasContent: ComputedRef<boolean>; hasActions: ComputedRef<...>; hasHeaderActions: ComputedRef<...>; statusIcon: ComputedRef<...>; alertClasses: ComputedRef<...>; }, ... 23 mor...'."
+      ]
+    },
+    {
+      "module": "src/components/charts/ChartCanvas.vue",
+      "errorCode": "TS2339",
+      "count": 3,
+      "occurrences": [
+        {
+          "line": 63,
+          "col": 19,
+          "message": "Property 'index' does not exist on type 'ActiveElement | undefined'."
+        },
+        {
+          "line": 63,
+          "col": 26,
+          "message": "Property 'datasetIndex' does not exist on type 'ActiveElement | undefined'."
+        },
+        {
+          "line": 88,
+          "col": 20,
+          "message": "Property 'type' does not exist on type 'ChartConfiguration<keyof ChartTypeRegistry, (number | [number, number] | Point | BubbleDataPoint | null)[], unknown> | ChartConfigurationCustomTypesPerDataset<...>'."
+        }
+      ],
+      "messages": [
+        "Property 'index' does not exist on type 'ActiveElement | undefined'.",
+        "Property 'datasetIndex' does not exist on type 'ActiveElement | undefined'.",
+        "Property 'type' does not exist on type 'ChartConfiguration<keyof ChartTypeRegistry, (number | [number, number] | Point | BubbleDataPoint | null)[], unknown> | ChartConfigurationCustomTypesPerDataset<...>'."
+      ]
+    },
+    {
+      "module": "src/components/filters/FilterField.vue",
+      "errorCode": "TS2769",
+      "count": 3,
+      "occurrences": [
+        {
+          "line": 496,
+          "col": 44,
+          "message": "No overload matches this call."
+        },
+        {
+          "line": 507,
+          "col": 57,
+          "message": "No overload matches this call."
+        },
+        {
+          "line": 637,
+          "col": 17,
+          "message": "No overload matches this call."
+        }
+      ],
+      "messages": ["No overload matches this call."]
+    },
+    {
+      "module": "src/components/orderLists/AdvancedOrderListCard.vue",
+      "errorCode": "TS18048",
+      "count": 3,
+      "occurrences": [
+        {
+          "line": 552,
+          "col": 7,
+          "message": "'props.reorderAdvice.items_by_urgency.critical.length' is possibly 'undefined'."
+        },
+        {
+          "line": 553,
+          "col": 7,
+          "message": "'props.reorderAdvice.items_by_urgency.high.length' is possibly 'undefined'."
+        },
+        {
+          "line": 610,
+          "col": 12,
+          "message": "'props.reorderAdvice.total_items_to_order' is possibly 'undefined'."
+        }
+      ],
+      "messages": [
+        "'props.reorderAdvice.items_by_urgency.critical.length' is possibly 'undefined'.",
+        "'props.reorderAdvice.items_by_urgency.high.length' is possibly 'undefined'.",
+        "'props.reorderAdvice.total_items_to_order' is possibly 'undefined'."
+      ]
+    },
+    {
+      "module": "src/components/orderLists/AdvancedOrderListCard.vue",
+      "errorCode": "TS2678",
+      "count": 3,
+      "occurrences": [
+        {
+          "line": 531,
+          "col": 12,
+          "message": "Type '\"ready\"' is not comparable to type '\"draft\" | \"completed\" | \"cancelled\" | \"active\" | \"submitted\" | null'."
+        },
+        {
+          "line": 537,
+          "col": 12,
+          "message": "Type '\"confirmed\"' is not comparable to type '\"draft\" | \"completed\" | \"cancelled\" | \"active\" | \"submitted\" | null'."
+        },
+        {
+          "line": 539,
+          "col": 12,
+          "message": "Type '\"delivered\"' is not comparable to type '\"draft\" | \"completed\" | \"cancelled\" | \"active\" | \"submitted\" | null'."
+        }
+      ],
+      "messages": [
+        "Type '\"ready\"' is not comparable to type '\"draft\" | \"completed\" | \"cancelled\" | \"active\" | \"submitted\" | null'.",
+        "Type '\"confirmed\"' is not comparable to type '\"draft\" | \"completed\" | \"cancelled\" | \"active\" | \"submitted\" | null'.",
+        "Type '\"delivered\"' is not comparable to type '\"draft\" | \"completed\" | \"cancelled\" | \"active\" | \"submitted\" | null'."
+      ]
+    },
+    {
+      "module": "src/components/products/ProductDetailsDialog.vue",
+      "errorCode": "TS2551",
+      "count": 3,
+      "occurrences": [
+        {
+          "line": 331,
+          "col": 32,
+          "message": "Property 'total_stock' does not exist on type 'ProductWithStock'. Did you mean 'totalStock'?"
+        },
+        {
+          "line": 453,
+          "col": 25,
+          "message": "Property 'supplier_products' does not exist on type 'ProductWithStock'. Did you mean 'supplierProducts'?"
+        },
+        {
+          "line": 455,
+          "col": 46,
+          "message": "Property 'supplier_products' does not exist on type 'ProductWithStock'. Did you mean 'supplierProducts'?"
+        }
+      ],
+      "messages": [
+        "Property 'total_stock' does not exist on type 'ProductWithStock'. Did you mean 'totalStock'?",
+        "Property 'supplier_products' does not exist on type 'ProductWithStock'. Did you mean 'supplierProducts'?"
+      ]
+    },
+    {
+      "module": "src/composables/useBulkData.ts",
+      "errorCode": "TS2352",
+      "count": 3,
+      "occurrences": [
+        {
+          "line": 122,
+          "col": 8,
+          "message": "Conversion of type 'SelectQueryError<\"column 'unit_price' does not exist on 'supplier_products'.\">[]' to type 'SupplierProductRecord[]' may be a mistake because neither type sufficiently overlaps with the other. If this was intentional, convert the expression to 'unknown' first."
+        },
+        {
+          "line": 169,
+          "col": 8,
+          "message": "Conversion of type 'SelectQueryError<\"column 'quantity_remaining' does not exist on 'product_batches'.\">[]' to type 'ProductBatchRecord[]' may be a mistake because neither type sufficiently overlaps with the other. If this was intentional, convert the expression to 'unknown' first."
+        },
+        {
+          "line": 210,
+          "col": 8,
+          "message": "Conversion of type 'GenericStringError[]' to type 'T[]' may be a mistake because neither type sufficiently overlaps with the other. If this was intentional, convert the expression to 'unknown' first."
+        }
+      ],
+      "messages": [
+        "Conversion of type 'SelectQueryError<\"column 'unit_price' does not exist on 'supplier_products'.\">[]' to type 'SupplierProductRecord[]' may be a mistake because neither type sufficiently overlaps with the other. If this was intentional, convert the expression to 'unknown' first.",
+        "Conversion of type 'SelectQueryError<\"column 'quantity_remaining' does not exist on 'product_batches'.\">[]' to type 'ProductBatchRecord[]' may be a mistake because neither type sufficiently overlaps with the other. If this was intentional, convert the expression to 'unknown' first.",
+        "Conversion of type 'GenericStringError[]' to type 'T[]' may be a mistake because neither type sufficiently overlaps with the other. If this was intentional, convert the expression to 'unknown' first."
+      ]
+    },
+    {
+      "module": "src/composables/useBulkData.ts",
+      "errorCode": "TS2532",
+      "count": 3,
+      "occurrences": [
+        {
+          "line": 78,
+          "col": 9,
+          "message": "Object is possibly 'undefined'."
+        },
+        {
+          "line": 126,
+          "col": 9,
+          "message": "Object is possibly 'undefined'."
+        },
+        {
+          "line": 173,
+          "col": 9,
+          "message": "Object is possibly 'undefined'."
+        }
+      ],
+      "messages": ["Object is possibly 'undefined'."]
+    },
+    {
+      "module": "src/composables/useFormValidation.ts",
+      "errorCode": "TS2345",
+      "count": 3,
+      "occurrences": [
+        {
+          "line": 226,
+          "col": 39,
+          "message": "Argument of type '(value: string) => boolean | string' is not assignable to parameter of type '(value: unknown) => boolean | string'."
+        },
+        {
+          "line": 227,
+          "col": 39,
+          "message": "Argument of type '(value: string) => boolean | string' is not assignable to parameter of type '(value: unknown) => boolean | string'."
+        },
+        {
+          "line": 250,
+          "col": 36,
+          "message": "Argument of type '(value: string) => boolean | string' is not assignable to parameter of type '(value: unknown) => boolean | string'."
+        }
+      ],
+      "messages": [
+        "Argument of type '(value: string) => boolean | string' is not assignable to parameter of type '(value: unknown) => boolean | string'."
+      ]
+    },
+    {
+      "module": "src/composables/useTableSorting.ts",
+      "errorCode": "TS2769",
+      "count": 3,
+      "occurrences": [
+        {
+          "line": 74,
+          "col": 32,
+          "message": "No overload matches this call."
+        },
+        {
+          "line": 75,
+          "col": 32,
+          "message": "No overload matches this call."
+        },
+        {
+          "line": 129,
+          "col": 27,
+          "message": "No overload matches this call."
+        }
+      ],
+      "messages": ["No overload matches this call."]
+    },
+    {
+      "module": "src/examples/BaseDialogExamples.vue",
+      "errorCode": "TS2345",
+      "count": 3,
+      "occurrences": [
+        {
+          "line": 178,
+          "col": 14,
+          "message": "Argument of type '{ outlined: true; options: string[]; }' is not assignable to parameter of type 'VNodeProps & AllowedComponentProps & ComponentCustomProps & QSelectProps & Record<string, unknown>'."
+        },
+        {
+          "line": 182,
+          "col": 14,
+          "message": "Argument of type '{ outlined: true; options: string[]; }' is not assignable to parameter of type 'VNodeProps & AllowedComponentProps & ComponentCustomProps & QSelectProps & Record<string, unknown>'."
+        },
+        {
+          "line": 186,
+          "col": 14,
+          "message": "Argument of type '{ outlined: true; options: string[]; }' is not assignable to parameter of type 'VNodeProps & AllowedComponentProps & ComponentCustomProps & QSelectProps & Record<string, unknown>'."
+        }
+      ],
+      "messages": [
+        "Argument of type '{ outlined: true; options: string[]; }' is not assignable to parameter of type 'VNodeProps & AllowedComponentProps & ComponentCustomProps & QSelectProps & Record<string, unknown>'."
+      ]
+    },
+    {
+      "module": "src/pages/AdminDashboard.vue",
+      "errorCode": "TS2305",
+      "count": 3,
+      "occurrences": [
+        {
+          "line": 487,
+          "col": 5,
+          "message": "Module '\"@/types/supabase\"' has no exported member 'Location'."
+        },
+        {
+          "line": 488,
+          "col": 5,
+          "message": "Module '\"@/types/supabase\"' has no exported member 'PracticeMember'."
+        },
+        {
+          "line": 489,
+          "col": 5,
+          "message": "Module '\"@/types/supabase\"' has no exported member 'UserPermission'."
+        }
+      ],
+      "messages": [
+        "Module '\"@/types/supabase\"' has no exported member 'Location'.",
+        "Module '\"@/types/supabase\"' has no exported member 'PracticeMember'.",
+        "Module '\"@/types/supabase\"' has no exported member 'UserPermission'."
+      ]
+    },
+    {
+      "module": "src/pages/AdminDashboard.vue",
+      "errorCode": "TS2339",
+      "count": 3,
+      "occurrences": [
+        {
+          "line": 11,
+          "col": 21,
+          "message": "Property 'refreshData' does not exist on type 'CreateComponentPublicInstanceWithMixins<ToResolvedProps<{}, {}>, { PageLayout: __VLS_WithSlots<DefineComponent<Props, {}, {}, {}, {}, ComponentOptionsMixin, ComponentOptionsMixin, ... 12 more ..., any>, __VLS_Slots>; ... 40 more ...; revokePermission: (permission: UserPermission) => Promise<...>; }, ... 23 more ...,...'."
+        },
+        {
+          "line": 12,
+          "col": 23,
+          "message": "Property 'loading' does not exist on type 'CreateComponentPublicInstanceWithMixins<ToResolvedProps<{}, {}>, { PageLayout: __VLS_WithSlots<DefineComponent<Props, {}, {}, {}, {}, ComponentOptionsMixin, ComponentOptionsMixin, ... 12 more ..., any>, __VLS_Slots>; ... 40 more ...; revokePermission: (permission: UserPermission) => Promise<...>; }, ... 23 more ...,...'."
+        },
+        {
+          "line": 727,
+          "col": 46,
+          "message": "Property 'getEventSummary' does not exist on type 'AnalyticsService'."
+        }
+      ],
+      "messages": [
+        "Property 'refreshData' does not exist on type 'CreateComponentPublicInstanceWithMixins<ToResolvedProps<{}, {}>, { PageLayout: __VLS_WithSlots<DefineComponent<Props, {}, {}, {}, {}, ComponentOptionsMixin, ComponentOptionsMixin, ... 12 more ..., any>, __VLS_Slots>; ... 40 more ...; revokePermission: (permission: UserPermission) => Promise<...>; }, ... 23 more ...,...'.",
+        "Property 'loading' does not exist on type 'CreateComponentPublicInstanceWithMixins<ToResolvedProps<{}, {}>, { PageLayout: __VLS_WithSlots<DefineComponent<Props, {}, {}, {}, {}, ComponentOptionsMixin, ComponentOptionsMixin, ... 12 more ..., any>, __VLS_Slots>; ... 40 more ...; revokePermission: (permission: UserPermission) => Promise<...>; }, ... 23 more ...,...'.",
+        "Property 'getEventSummary' does not exist on type 'AnalyticsService'."
+      ]
+    },
+    {
+      "module": "src/pages/inventory/CountingSessionPage.vue",
+      "errorCode": "TS2551",
+      "count": 3,
+      "occurrences": [
+        {
+          "line": 26,
+          "col": 27,
+          "message": "Property 'total_products_to_count' does not exist on type '{ approved_at: string | null; approved_by: string | null; completed_at: string | null; completed_by: string | null; count_all_products: boolean | null; created_at: string | null; ... 17 more ...; total_discrepancy_value?: number | null; }'. Did you mean 'total_products_counted'?"
+        },
+        {
+          "line": 31,
+          "col": 54,
+          "message": "Property 'total_products_to_count' does not exist on type '{ approved_at: string | null; approved_by: string | null; completed_at: string | null; completed_by: string | null; count_all_products: boolean | null; created_at: string | null; ... 17 more ...; total_discrepancy_value?: number | null; }'. Did you mean 'total_products_counted'?"
+        },
+        {
+          "line": 129,
+          "col": 30,
+          "message": "Property 'total_products_to_count' does not exist on type '{ approved_at: string | null; approved_by: string | null; completed_at: string | null; completed_by: string | null; count_all_products: boolean | null; created_at: string | null; ... 17 more ...; total_discrepancy_value?: number | null; }'. Did you mean 'total_products_counted'?"
+        }
+      ],
+      "messages": [
+        "Property 'total_products_to_count' does not exist on type '{ approved_at: string | null; approved_by: string | null; completed_at: string | null; completed_by: string | null; count_all_products: boolean | null; created_at: string | null; ... 17 more ...; total_discrepancy_value?: number | null; }'. Did you mean 'total_products_counted'?"
+      ]
+    },
+    {
+      "module": "src/pages/OrderListsPage.vue",
+      "errorCode": "TS2367",
+      "count": 3,
+      "occurrences": [
+        {
+          "line": 502,
+          "col": 42,
+          "message": "This comparison appears to be unintentional because the types 'UrgencyLevel' and '\"normal\"' have no overlap."
+        },
+        {
+          "line": 628,
+          "col": 36,
+          "message": "This comparison appears to be unintentional because the types 'UrgencyLevel' and '\"normal\"' have no overlap."
+        },
+        {
+          "line": 662,
+          "col": 36,
+          "message": "This comparison appears to be unintentional because the types 'UrgencyLevel' and '\"normal\"' have no overlap."
+        }
+      ],
+      "messages": [
+        "This comparison appears to be unintentional because the types 'UrgencyLevel' and '\"normal\"' have no overlap."
+      ]
+    },
+    {
+      "module": "src/pages/SuppliersPage.vue",
+      "errorCode": "TS2339",
+      "count": 3,
+      "occurrences": [
+        {
+          "line": 980,
+          "col": 17,
+          "message": "Property 'success' does not exist on type 'string | number | boolean | { [key: string]: Json | undefined; } | Json[]'."
+        },
+        {
+          "line": 985,
+          "col": 25,
+          "message": "Property 'products_synced' does not exist on type 'string | number | boolean | { [key: string]: Json | undefined; } | Json[]'."
+        },
+        {
+          "line": 991,
+          "col": 31,
+          "message": "Property 'error' does not exist on type 'string | number | boolean | { [key: string]: Json | undefined; } | Json[]'."
+        }
+      ],
+      "messages": [
+        "Property 'success' does not exist on type 'string | number | boolean | { [key: string]: Json | undefined; } | Json[]'.",
+        "Property 'products_synced' does not exist on type 'string | number | boolean | { [key: string]: Json | undefined; } | Json[]'.",
+        "Property 'error' does not exist on type 'string | number | boolean | { [key: string]: Json | undefined; } | Json[]'."
+      ]
+    },
+    {
+      "module": "src/presets/filters/advancedOrderLists.ts",
+      "errorCode": "TS2353",
+      "count": 3,
+      "occurrences": [
+        {
+          "line": 21,
+          "col": 7,
+          "message": "Object literal may only specify known properties, and 'options' does not exist in type 'FilterField'."
+        },
+        {
+          "line": 36,
+          "col": 7,
+          "message": "Object literal may only specify known properties, and 'options' does not exist in type 'FilterField'."
+        },
+        {
+          "line": 45,
+          "col": 7,
+          "message": "Object literal may only specify known properties, and 'options' does not exist in type 'FilterField'."
+        }
+      ],
+      "messages": [
+        "Object literal may only specify known properties, and 'options' does not exist in type 'FilterField'."
+      ]
+    },
+    {
+      "module": "src/router/routes.ts",
+      "errorCode": "TS2459",
+      "count": 3,
+      "occurrences": [
+        {
+          "line": 3,
+          "col": 3,
+          "message": "Module '\"@/services/permissions\"' declares 'UserRole' locally, but it is not exported."
+        },
+        {
+          "line": 4,
+          "col": 3,
+          "message": "Module '\"@/services/permissions\"' declares 'PermissionType' locally, but it is not exported."
+        },
+        {
+          "line": 5,
+          "col": 3,
+          "message": "Module '\"@/services/permissions\"' declares 'ResourceType' locally, but it is not exported."
+        }
+      ],
+      "messages": [
+        "Module '\"@/services/permissions\"' declares 'UserRole' locally, but it is not exported.",
+        "Module '\"@/services/permissions\"' declares 'PermissionType' locally, but it is not exported.",
+        "Module '\"@/services/permissions\"' declares 'ResourceType' locally, but it is not exported."
+      ]
+    },
+    {
+      "module": "src/services/dashboard/platform-dashboard.ts",
+      "errorCode": "TS2322",
+      "count": 3,
+      "occurrences": [
+        {
+          "line": 186,
+          "col": 11,
+          "message": "Type 'string | undefined' is not assignable to type 'string'."
+        },
+        {
+          "line": 611,
+          "col": 11,
+          "message": "Type 'string | null' is not assignable to type 'string'."
+        },
+        {
+          "line": 622,
+          "col": 9,
+          "message": "Type 'string | null' is not assignable to type 'string'."
+        }
+      ],
+      "messages": [
+        "Type 'string | undefined' is not assignable to type 'string'.",
+        "Type 'string | null' is not assignable to type 'string'."
+      ]
+    },
+    {
+      "module": "src/services/dashboard/platform-dashboard.ts",
+      "errorCode": "TS2538",
+      "count": 3,
+      "occurrences": [
+        {
+          "line": 507,
+          "col": 20,
+          "message": "Type 'undefined' cannot be used as an index type."
+        },
+        {
+          "line": 513,
+          "col": 22,
+          "message": "Type 'undefined' cannot be used as an index type."
+        },
+        {
+          "line": 523,
+          "col": 52,
+          "message": "Type 'undefined' cannot be used as an index type."
+        }
+      ],
+      "messages": ["Type 'undefined' cannot be used as an index type."]
+    },
+    {
+      "module": "src/services/dashboard/platform-dashboard.ts",
+      "errorCode": "TS2769",
+      "count": 3,
+      "occurrences": [
+        {
+          "line": 427,
+          "col": 22,
+          "message": "No overload matches this call."
+        },
+        {
+          "line": 519,
+          "col": 46,
+          "message": "No overload matches this call."
+        },
+        {
+          "line": 621,
+          "col": 20,
+          "message": "No overload matches this call."
+        }
+      ],
+      "messages": ["No overload matches this call."]
+    },
+    {
+      "module": "src/services/dashboard/practice-dashboard.ts",
+      "errorCode": "TS2769",
+      "count": 3,
+      "occurrences": [
+        {
+          "line": 667,
+          "col": 20,
+          "message": "No overload matches this call."
+        },
+        {
+          "line": 723,
+          "col": 29,
+          "message": "No overload matches this call."
+        },
+        {
+          "line": 1034,
+          "col": 19,
+          "message": "No overload matches this call."
+        }
+      ],
+      "messages": ["No overload matches this call."]
+    },
+    {
+      "module": "src/services/dashboard/role-config.ts",
+      "errorCode": "TS7053",
+      "count": 3,
+      "occurrences": [
+        {
+          "line": 506,
+          "col": 16,
+          "message": "Element implicitly has an 'any' type because expression of type 'string' can't be used to index type 'RoleDashboardMap'."
+        },
+        {
+          "line": 508,
+          "col": 13,
+          "message": "Element implicitly has an 'any' type because expression of type 'string' can't be used to index type 'RoleDashboardMap'."
+        },
+        {
+          "line": 509,
+          "col": 14,
+          "message": "Element implicitly has an 'any' type because expression of type 'string' can't be used to index type 'RoleDashboardMap'."
+        }
+      ],
+      "messages": [
+        "Element implicitly has an 'any' type because expression of type 'string' can't be used to index type 'RoleDashboardMap'."
+      ]
+    },
+    {
+      "module": "src/services/magento/index.ts",
+      "errorCode": "TS2322",
+      "count": 3,
+      "occurrences": [
+        {
+          "line": 537,
+          "col": 7,
+          "message": "Type '{ id: number; increment_id: string; status: string; created_at: string | null; updated_at: string | null; grand_total: number; items: { id: number; product_id: number; name: string; sku: string; qty_ordered: number; price: number; product_type: string; }[]; }[]' is not assignable to type 'MagentoOrder[]'."
+        },
+        {
+          "line": 587,
+          "col": 7,
+          "message": "Type '{ id: number; sku: string; name: string; price: number; status: number; type_id: string; }[]' is not assignable to type 'MagentoProduct[]'."
+        },
+        {
+          "line": 631,
+          "col": 7,
+          "message": "Type '{ id: number; order_id: number; increment_id: string; created_at: string | null; grand_total: number; }[]' is not assignable to type 'MagentoInvoice[]'."
+        }
+      ],
+      "messages": [
+        "Type '{ id: number; increment_id: string; status: string; created_at: string | null; updated_at: string | null; grand_total: number; items: { id: number; product_id: number; name: string; sku: string; qty_ordered: number; price: number; product_type: string; }[]; }[]' is not assignable to type 'MagentoOrder[]'.",
+        "Type '{ id: number; sku: string; name: string; price: number; status: number; type_id: string; }[]' is not assignable to type 'MagentoProduct[]'.",
+        "Type '{ id: number; order_id: number; increment_id: string; created_at: string | null; grand_total: number; }[]' is not assignable to type 'MagentoInvoice[]'."
+      ]
+    }
+  ]
+}

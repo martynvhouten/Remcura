@@ -13,36 +13,29 @@
     :persistent="persistent || loading"
     :closable="!loading"
     @close="handleClose"
-    >
+  >
     <!-- Form Content -->
-      <q-form
-        @submit="handleSubmit"
-        @reset="handleReset"
-        class="form-dialog-content"
-        aria-live="polite"
-      >
+    <q-form
+      @submit="handleSubmit"
+      @reset="handleReset"
+      class="form-dialog-content"
+      aria-live="polite"
+    >
       <slot />
 
       <!-- Form validation errors summary -->
-        <div
-          v-if="showErrorSummary && formErrors.length > 0"
-          class="error-summary"
-          role="alert"
-          aria-live="assertive"
-        >
-        <q-banner inline-actions class="text-negative">
-          <template v-slot:avatar>
-            <q-icon name="error" />
-          </template>
-          <div class="error-summary-content">
-            <div class="error-summary-title">
-              {{ $t('validation.formErrors') }}
-            </div>
-            <ul class="error-list">
-              <li v-for="error in formErrors" :key="error">{{ error }}</li>
-            </ul>
-          </div>
-        </q-banner>
+      <div
+        v-if="showErrorSummary && formErrors.length > 0"
+        class="dlg__error-summary"
+        role="alert"
+        aria-live="assertive"
+      >
+        <div class="error-title">
+          {{ $t('validation.formErrors') }}
+        </div>
+        <ul class="error-list">
+          <li v-for="error in formErrors" :key="error">{{ error }}</li>
+        </ul>
       </div>
     </q-form>
 
@@ -79,7 +72,8 @@
           <!-- Submit button -->
           <q-btn
             :label="submitButtonText"
-            :color="submitButtonColor"
+            unelevated
+            color="primary"
             :loading="loading"
             @click="handleSubmit"
             :disable="loading || !canSubmit"
@@ -226,79 +220,54 @@
 
 <style lang="scss" scoped>
   // ===================================================================
-  // Form dialog styles
+  // FORMDIALOG - USES UNIFIED DIALOG SYSTEM
+  // Component-specific styles only, shared styles in _dialogs.scss
   // ===================================================================
 
   .form-dialog-content {
     display: flex;
     flex-direction: column;
-    gap: var(--space-6);
+    gap: var(--dlg-gap);
   }
 
-  /* Form Grid helpers per spec */
+  /* Form Grid helpers with token-driven spacing */
   :global(.form-grid) {
     display: grid;
     grid-template-columns: repeat(12, minmax(0, 1fr));
-    gap: var(--space-4);
+    gap: var(--dlg-gap);
   }
 
-  :global(.col-12) { grid-column: span 12 / span 12; }
-  :global(.col-6) { grid-column: span 12 / span 12; }
-  :global(.col-4) { grid-column: span 12 / span 12; }
-  :global(.col-3) { grid-column: span 12 / span 12; }
+  :global(.col-12) {
+    grid-column: span 12 / span 12;
+  }
+  :global(.col-6) {
+    grid-column: span 12 / span 12;
+  }
+  :global(.col-4) {
+    grid-column: span 12 / span 12;
+  }
+  :global(.col-3) {
+    grid-column: span 12 / span 12;
+  }
 
   @media (min-width: 768px) {
-    :global(.col-6) { grid-column: span 6 / span 6; }
-    :global(.col-4) { grid-column: span 6 / span 6; }
-    :global(.col-3) { grid-column: span 6 / span 6; }
+    :global(.col-6) {
+      grid-column: span 6 / span 6;
+    }
+    :global(.col-4) {
+      grid-column: span 6 / span 6;
+    }
+    :global(.col-3) {
+      grid-column: span 6 / span 6;
+    }
   }
 
   @media (min-width: 1024px) {
-    :global(.col-4) { grid-column: span 4 / span 4; }
-    :global(.col-3) { grid-column: span 3 / span 3; }
-  }
-
-  .error-summary {
-    margin-top: var(--space-6);
-    border-radius: 16px;
-    overflow: hidden;
-    box-shadow: 0 4px 12px rgba(220, 38, 38, 0.15);
-
-    :deep(.q-banner) {
-      background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%);
-      border: none;
-      padding: var(--space-5);
-
-      .q-banner__avatar {
-        .q-icon {
-          font-size: 24px;
-        }
-      }
+    :global(.col-4) {
+      grid-column: span 4 / span 4;
     }
-
-    .error-summary-content {
-      .error-summary-title {
-        font-weight: var(--font-weight-bold);
-        font-size: var(--text-base);
-        margin-bottom: var(--space-3);
-        color: white;
-      }
-
-      .error-list {
-        margin: 0;
-        padding-left: var(--space-5);
-        color: rgba(255, 255, 255, 0.95);
-
-        li {
-          margin-bottom: var(--space-2);
-          font-size: var(--text-sm);
-          line-height: 1.4;
-
-          &:last-child {
-            margin-bottom: 0;
-          }
-        }
-      }
+    :global(.col-3) {
+      grid-column: span 3 / span 3;
     }
   }
 
@@ -334,45 +303,15 @@
       gap: var(--space-4);
       margin-left: auto;
 
-      :deep(.q-btn) {
-        min-width: 140px;
-        height: var(--control-height-md);
-        border-radius: 14px;
-        font-weight: var(--font-weight-semibold);
-        font-size: var(--text-base);
-        letter-spacing: 0.01em;
-        text-transform: none;
-        transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+      // Reset button styling
+      :deep(.q-btn[color='grey-7']) {
+        background: var(--neutral-100);
+        color: var(--neutral-700);
+        border: 2px solid var(--neutral-200);
 
         &:hover {
-          transform: translateY(-2px);
-          box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
-        }
-
-        &:active {
-          transform: translateY(0);
-        }
-
-        // Reset button styling
-        &[color='grey-7'] {
-          background: var(--neutral-100);
-          color: var(--neutral-700);
-          border: 2px solid var(--neutral-200);
-
-          &:hover {
-            background: var(--neutral-200);
-            border-color: var(--neutral-300);
-          }
-        }
-
-        // Primary button enhancements
-        &.q-btn--unelevated.q-btn--rectangle.bg-primary {
-          background: linear-gradient(
-            135deg,
-            var(--brand-primary) 0%,
-            var(--brand-primary-light) 100%
-          );
-          box-shadow: 0 4px 12px rgba(30, 58, 138, 0.3);
+          background: var(--neutral-200);
+          border-color: var(--neutral-300);
         }
       }
 
@@ -449,17 +388,14 @@
       }
 
       .action-buttons {
-        :deep(.q-btn) {
-          // Reset button dark mode
-          &[color='grey-7'] {
-            background: var(--neutral-700);
-            color: var(--neutral-200);
-            border-color: var(--neutral-600);
+        :deep(.q-btn[color='grey-7']) {
+          background: var(--neutral-700);
+          color: var(--neutral-200);
+          border-color: var(--neutral-600);
 
-            &:hover {
-              background: var(--neutral-600);
-              border-color: var(--neutral-500);
-            }
+          &:hover {
+            background: var(--neutral-600);
+            border-color: var(--neutral-500);
           }
         }
       }

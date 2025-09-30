@@ -1,5 +1,7 @@
 import { t } from '@/utils/i18n-service';
 import type { UserRole } from '@/types/permissions';
+import type { PracticeDashboardData } from './practice-dashboard';
+import type { PlatformDashboardData } from './platform-dashboard';
 
 export interface WidgetConfig {
   id: string;
@@ -11,7 +13,7 @@ export interface WidgetConfig {
   permissions?: string[];
 }
 
-export interface RoleDashboardConfig {
+export interface RoleDashboardDefinition {
   role: UserRole;
   titleKey: string;
   subtitleKey: string;
@@ -20,6 +22,8 @@ export interface RoleDashboardConfig {
   widgets: WidgetConfig[];
   quickActions: QuickActionConfig[];
 }
+
+export type RoleDashboardMap = Record<UserRole, RoleDashboardDefinition>;
 
 export interface QuickActionConfig {
   id: string;
@@ -35,9 +39,10 @@ export interface QuickActionConfig {
  * Centrale configuratie voor alle dashboard widgets en quick actions per rol
  */
 class RoleDashboardConfig {
-  private configs: Record<UserRole, Omit<RoleDashboardConfig, 'role'>> = {
+  private configs: RoleDashboardMap = {
     // ASSISTANT - Focus op dagelijkse voorraadtaken
     assistant: {
+      role: 'assistant',
       titleKey: 'dashboard.roles.assistant',
       subtitleKey: 'dashboard.roles.assistantDescription',
       icon: 'medical_services',
@@ -122,6 +127,7 @@ class RoleDashboardConfig {
 
     // MANAGER - Focus op analytics en beheer
     manager: {
+      role: 'manager',
       titleKey: 'dashboard.roles.manager',
       subtitleKey: 'dashboard.roles.managerDescription',
       icon: 'analytics',
@@ -206,6 +212,7 @@ class RoleDashboardConfig {
 
     // OWNER - Focus op financiëen en compliance
     owner: {
+      role: 'owner',
       titleKey: 'dashboard.roles.owner',
       subtitleKey: 'dashboard.roles.ownerDescription',
       icon: 'admin_panel_settings',
@@ -290,6 +297,7 @@ class RoleDashboardConfig {
 
     // LOGISTICS - Focus op bewegingen en leveringen
     logistics: {
+      role: 'logistics',
       titleKey: 'dashboard.roles.logistics',
       subtitleKey: 'dashboard.roles.logisticsDescription',
       icon: 'local_shipping',
@@ -358,6 +366,7 @@ class RoleDashboardConfig {
 
     // MEMBER - Beperkte toegang
     member: {
+      role: 'member',
       titleKey: 'dashboard.roles.member',
       subtitleKey: 'dashboard.roles.memberDescription',
       icon: 'person',
@@ -402,6 +411,7 @@ class RoleDashboardConfig {
 
     // GUEST - Zeer beperkte toegang
     guest: {
+      role: 'guest',
       titleKey: 'dashboard.roles.guest',
       subtitleKey: 'dashboard.roles.guestDescription',
       icon: 'visibility',
@@ -430,6 +440,7 @@ class RoleDashboardConfig {
 
     // PLATFORM_OWNER - Geen widgets in normale dashboard, alleen redirect naar platform
     platform_owner: {
+      role: 'platform_owner',
       titleKey: 'dashboard.roles.platformOwner',
       subtitleKey: 'dashboard.roles.platformOwnerDescription',
       icon: 'settings',
@@ -451,17 +462,13 @@ class RoleDashboardConfig {
   /**
    * Krijg de volledige dashboard configuratie voor een rol
    */
-  getRoleConfig(role: UserRole): RoleDashboardConfig {
+  getRoleConfig(role: UserRole): RoleDashboardDefinition {
     const config = this.configs[role];
     if (!config) {
-      // Fallback naar member voor onbekende rollen
-      return { role: 'member', ...this.configs.member };
+      return this.configs.member;
     }
 
-    return {
-      role,
-      ...config,
-    };
+    return config;
   }
 
   /**

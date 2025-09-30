@@ -2,137 +2,113 @@ import { computed, type Ref } from 'vue';
 import { productLogger } from '@/utils/logger';
 import type { ProductWithStock, ProductFilter } from '@/types/inventory';
 
+const getTotalStock = (product: ProductWithStock): number =>
+  product.stockLevels?.reduce((sum, level) => sum + level.currentQuantity, 0) ??
+  0;
+
 export function useProductsFilters(
   products: Ref<ProductWithStock[]>,
   filters: Ref<ProductFilter>
 ) {
-  // Main filtered products computed
+  const hasSupplierMatch = (
+    product: ProductWithStock,
+    supplierId: string
+  ): boolean => {
+    if (!supplierId || supplierId === 'all') {
+      return true;
+    }
+    return product.supplier?.id === supplierId;
+  };
+
   const filteredProducts = computed(() => {
+    const minimumStock = (product: ProductWithStock): number =>
+      product.minimumStock ?? 0;
+
     let result = [...products.value];
 
-    // Apply search filter
     if (filters.value.search) {
       const searchTerm = filters.value.search.toLowerCase();
-      result = result.filter(
-        product =>
-          product.name.toLowerCase().includes(searchTerm) ||
-          product.sku.toLowerCase().includes(searchTerm) ||
-          (product.description &&
-            product.description.toLowerCase().includes(searchTerm)) ||
-          (product.category &&
-            product.category.toLowerCase().includes(searchTerm)) ||
-          (product.manufacturer &&
-            product.manufacturer.toLowerCase().includes(searchTerm)) ||
-          (product.supplier_name &&
-            product.supplier_name.toLowerCase().includes(searchTerm))
-      );
+      result = result.filter(product => {
+        const matchesText = [
+          product.name,
+          product.sku,
+          product.description ?? '',
+          product.category ?? '',
+          product.supplier?.name ?? '',
+        ]
+          .filter(Boolean)
+          .some(value => value.toLowerCase().includes(searchTerm));
+
+        return matchesText;
+      });
     }
 
-    // Apply category filter
     if (filters.value.category && filters.value.category !== 'all') {
       result = result.filter(
-        product => product.category === filters.value.category
+        product => (product.category ?? '') === filters.value.category
       );
     }
 
-    // Apply supplier filter
     if (filters.value.supplier && filters.value.supplier !== 'all') {
-      result = result.filter(
-        product => product.supplier_id === filters.value.supplier
+      result = result.filter(product =>
+        hasSupplierMatch(product, filters.value.supplier as string)
       );
     }
 
-    // Apply stock status filter
     if (filters.value.stock_status && filters.value.stock_status !== 'all') {
       result = result.filter(product => {
-        const totalStock =
-          product.stock_levels?.reduce(
-            (sum, level) => sum + level.current_quantity,
-            0
-          ) || 0;
+        const totalStock = getTotalStock(product);
         const stockStatus =
           totalStock <= 0
             ? 'out_of_stock'
-            : totalStock <= product.minimum_stock
-            ? 'low_stock'
-            : 'in_stock';
+            : totalStock <= minimumStock(product)
+              ? 'low_stock'
+              : 'in_stock';
         return stockStatus === filters.value.stock_status;
       });
     }
 
-    // Apply sorting
     if (filters.value.sort_by) {
+      const { sort_by: sortBy, sort_order: sortOrder = 'asc' } = filters.value;
+
       result.sort((a, b) => {
-        let aValue: string | number | boolean,
-          bValue: string | number | boolean;
+        const direction = sortOrder === 'desc' ? -1 : 1;
 
-        switch (filters.value.sort_by) {
+        switch (sortBy) {
           case 'name':
-            aValue = a.name;
-            bValue = b.name;
-            break;
+            return direction * a.name.localeCompare(b.name);
           case 'sku':
-            aValue = a.sku;
-            bValue = b.sku;
-            break;
+            return direction * a.sku.localeCompare(b.sku);
           case 'category':
-            aValue = a.category || '';
-            bValue = b.category || '';
-            break;
+            return (
+              direction * (a.category ?? '').localeCompare(b.category ?? '')
+            );
           case 'price':
-            aValue = a.unit_price || 0;
-            bValue = b.unit_price || 0;
-            break;
+            return direction * ((a.unitPrice ?? 0) - (b.unitPrice ?? 0));
           case 'stock':
-            aValue =
-              a.stock_levels?.reduce(
-                (sum, level) => sum + level.current_quantity,
-                0
-              ) || 0;
-            bValue =
-              b.stock_levels?.reduce(
-                (sum, level) => sum + level.current_quantity,
-                0
-              ) || 0;
-            break;
-          case 'last_updated':
-            aValue = new Date(a.updated_at || a.created_at || 0);
-            bValue = new Date(b.updated_at || b.created_at || 0);
-            break;
+            return direction * (getTotalStock(a) - getTotalStock(b));
+          case 'last_updated': {
+            const aDate = new Date(a.updatedAt ?? a.createdAt ?? 0).getTime();
+            const bDate = new Date(b.updatedAt ?? b.createdAt ?? 0).getTime();
+            return direction * (aDate - bDate);
+          }
           default:
-            aValue = a.name;
-            bValue = b.name;
+            return direction * a.name.localeCompare(b.name);
         }
-
-        // Handle string comparison
-        if (typeof aValue === 'string' && typeof bValue === 'string') {
-          const comparison = aValue.localeCompare(bValue);
-          return filters.value.sort_order === 'desc' ? -comparison : comparison;
-        }
-
-        // Handle numeric/date comparison
-        if (aValue < bValue) {
-          return filters.value.sort_order === 'desc' ? 1 : -1;
-        }
-        if (aValue > bValue) {
-          return filters.value.sort_order === 'desc' ? -1 : 1;
-        }
-        return 0;
       });
     }
 
     return result;
   });
 
-  // Supplier-related computed properties
   const availableSuppliers = computed(() => {
-    const supplierMap = new Map();
+    const supplierMap = new Map<string, { id: string; name: string }>();
 
     products.value.forEach(product => {
-      if (product.supplier_id && product.supplier_name) {
-        supplierMap.set(product.supplier_id, {
-          id: product.supplier_id,
-          name: product.supplier_name,
+      if (product.supplier?.id && product.supplier?.name) {
+        supplierMap.set(product.supplier.id, {
+          id: product.supplier.id,
+          name: product.supplier.name ?? '',
         });
       }
     });
@@ -142,7 +118,6 @@ export function useProductsFilters(
     );
   });
 
-  // Filter management actions
   const updateFilters = (newFilters: Partial<ProductFilter>) => {
     Object.assign(filters.value, newFilters);
     productLogger.info('Updated product filters', newFilters);
@@ -210,67 +185,44 @@ export function useProductsFilters(
     updateFilters({ stock_status: stockStatus });
   };
 
-  const sortProducts = (sortBy: string, sortOrder: 'asc' | 'desc' = 'asc') => {
+  const sortProducts = (
+    sortBy: NonNullable<ProductFilter['sort_by']>,
+    sortOrder: 'asc' | 'desc' = 'asc'
+  ) => {
     updateFilters({ sort_by: sortBy, sort_order: sortOrder });
   };
 
-  // Quick filter helpers
-  const getProductsInStock = computed(() => {
-    return products.value.filter(product => {
-      const totalStock =
-        product.stock_levels?.reduce(
-          (sum, level) => sum + level.current_quantity,
-          0
-        ) || 0;
-      return totalStock > product.minimum_stock;
-    });
-  });
+  const getProductsInStock = computed(() =>
+    products.value.filter(
+      product => getTotalStock(product) > (product.minimumStock ?? 0)
+    )
+  );
 
-  const getProductsLowStock = computed(() => {
-    return products.value.filter(product => {
-      const totalStock =
-        product.stock_levels?.reduce(
-          (sum, level) => sum + level.current_quantity,
-          0
-        ) || 0;
-      return totalStock > 0 && totalStock <= product.minimum_stock;
-    });
-  });
+  const getProductsLowStock = computed(() =>
+    products.value.filter(product => {
+      const totalStock = getTotalStock(product);
+      const minStock = product.minimumStock ?? 0;
+      return totalStock > 0 && totalStock <= minStock;
+    })
+  );
 
-  const getProductsOutOfStock = computed(() => {
-    return products.value.filter(product => {
-      const totalStock =
-        product.stock_levels?.reduce(
-          (sum, level) => sum + level.current_quantity,
-          0
-        ) || 0;
-      return totalStock <= 0;
-    });
-  });
+  const getProductsOutOfStock = computed(() =>
+    products.value.filter(product => getTotalStock(product) <= 0)
+  );
 
-  const getProductsByCategory = (category: string) => {
-    return computed(() =>
-      products.value.filter(product => product.category === category)
+  const getProductsByCategory = (category: string) =>
+    computed(() =>
+      products.value.filter(product => (product.category ?? '') === category)
     );
-  };
 
-  const getProductsBySupplier = (supplierId: string) => {
-    return computed(() =>
-      products.value.filter(product => product.supplier_id === supplierId)
+  const getProductsBySupplier = (supplierId: string) =>
+    computed(() =>
+      products.value.filter(product => hasSupplierMatch(product, supplierId))
     );
-  };
 
   return {
-    // Main filtered results
     filteredProducts,
-
-    // Computed filters
     availableSuppliers,
-    getProductsInStock,
-    getProductsLowStock,
-    getProductsOutOfStock,
-
-    // Filter actions
     updateFilters,
     clearFilters,
     applyPresetFilter,
@@ -279,8 +231,9 @@ export function useProductsFilters(
     filterBySupplier,
     filterByStockStatus,
     sortProducts,
-
-    // Category/supplier specific filters
+    getProductsInStock,
+    getProductsLowStock,
+    getProductsOutOfStock,
     getProductsByCategory,
     getProductsBySupplier,
   };

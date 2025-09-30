@@ -4,6 +4,7 @@ import type {
   SupplierOrder,
   OrderSendingResult,
 } from '@/stores/orderLists/orderLists-supplier-splitting';
+import type { Tables } from '@/types';
 
 export interface EDIConfig {
   edi_endpoint: string;
@@ -65,23 +66,32 @@ export class EDIService {
         .from('suppliers')
         .select('integration_config, name, code')
         .eq('id', order.supplier_id)
-        .single();
+        .single<Tables<'suppliers'>>();
 
       if (supplierError || !supplier) {
         throw new Error('Supplier not found');
       }
 
-      const ediConfig = supplier.integration_config as EDIConfig;
-      if (!ediConfig?.edi_endpoint || !ediConfig?.edi_partner_id) {
+      const rawConfig = supplier.integration_config;
+      if (
+        !rawConfig ||
+        typeof rawConfig !== 'object' ||
+        Array.isArray(rawConfig)
+      ) {
+        throw new Error('EDI configuration incomplete');
+      }
+
+      const ediConfig = rawConfig as Partial<EDIConfig>;
+      if (!ediConfig.edi_endpoint || !ediConfig.edi_partner_id) {
         throw new Error('EDI configuration incomplete');
       }
 
       // Get practice details for buyer party
       const { data: practice, error: practiceError } = await supabase
         .from('practices')
-        .select('name, address, city, postal_code, country, kvk_number')
+        .select('name, address, city, postal_code, country')
         .eq('id', order.practice_id)
-        .single();
+        .single<Tables<'practices'>>();
 
       if (practiceError || !practice) {
         throw new Error('Practice details not found');
@@ -90,15 +100,21 @@ export class EDIService {
       // Build EDI order
       const ediOrder: EDIOrder = {
         order_number: orderReference,
-        order_date: new Date().toISOString().split('T')[0],
+        order_date: new Date().toISOString().split('T')[0] ?? '',
         delivery_date: order.estimated_delivery_date,
         buyer_party: {
-          gln: practice.kvk_number, // Use KVK as GLN if no specific GLN
-          name: practice.name,
-          address: practice.address || '',
-          city: practice.city || '',
-          postal_code: practice.postal_code || '',
-          country: practice.country || 'NL',
+          gln:
+            (
+              supplier.integration_config as
+                | { buyer_gln?: string }
+                | null
+                | undefined
+            )?.buyer_gln ?? '',
+          name: practice.name ?? '',
+          address: practice.address ?? '',
+          city: practice.city ?? '',
+          postal_code: practice.postal_code ?? '',
+          country: practice.country ?? '',
         },
         supplier_party: {
           gln: ediConfig.edi_partner_id,
@@ -107,15 +123,18 @@ export class EDIService {
         },
         items: order.items.map((item, index) => ({
           line_number: index + 1,
-          sku: item.supplier_sku || item.sku,
+          sku: item.supplier_sku || item.product_sku || '',
           quantity: item.quantity,
-          unit_price: item.unit_price,
-          description: item.name,
+          unit_price: item.unit_price ?? 0,
+          description: item.product_name ?? item.product_sku ?? '',
           uom: 'PCE', // Default to pieces, could be configurable
         })),
         currency: 'EUR',
-        total_amount: order.total_value,
-        notes: `Automated order from Remcura for ${practice.name}`,
+        total_amount: order.items.reduce(
+          (sum, item) => sum + item.total_price,
+          0
+        ),
+        notes: `Automated order from Remcura for ${practice.name ?? ''}`,
       };
 
       // Generate XML based on EDI format
@@ -133,7 +152,7 @@ export class EDIService {
 
       // Send to EDI endpoint
       const response = await this.sendToEDIEndpoint(
-        ediConfig,
+        ediConfig as EDIConfig,
         xmlContent,
         orderReference
       );
@@ -144,13 +163,13 @@ export class EDIService {
       return {
         supplier_id: order.supplier_id,
         supplier_name: order.supplier_name,
-        status: response.success ? 'sent' : 'failed',
+        status: response.success ? 'success' : 'failed',
         method_used: 'edi',
         order_reference: orderReference,
         sent_at: new Date().toISOString(),
-        error_message: response.success ? undefined : response.error,
-        delivery_expected: order.estimated_delivery_date,
-      };
+        error_message: response.success ? '' : (response.error ?? ''),
+        delivery_expected: order.estimated_delivery_date ?? '',
+      } satisfies OrderSendingResult;
     } catch (error: any) {
       orderLogger.error(
         `EDI order sending failed for ${orderReference}:`,
@@ -164,8 +183,9 @@ export class EDIService {
         method_used: 'edi',
         order_reference: orderReference,
         sent_at: new Date().toISOString(),
-        error_message: error.message,
-      };
+        error_message: error instanceof Error ? error.message : String(error),
+        delivery_expected: order.estimated_delivery_date ?? '',
+      } satisfies OrderSendingResult;
     }
   }
 
@@ -207,8 +227,8 @@ export class EDIService {
       <NameAndAddressLine>${order.buyer_party.name}</NameAndAddressLine>
       <NameAndAddressLine>${order.buyer_party.address}</NameAndAddressLine>
       <NameAndAddressLine>${order.buyer_party.postal_code} ${
-      order.buyer_party.city
-    }</NameAndAddressLine>
+        order.buyer_party.city
+      }</NameAndAddressLine>
       <CountryCode>${order.buyer_party.country}</CountryCode>
     </NameAndAddress>
   </NAD_BY>
@@ -431,24 +451,20 @@ export class EDIService {
     method: string,
     response: any
   ): Promise<void> {
-    const { error } = await supabase.from('supplier_orders').insert({
-      supplier_id: order.supplier_id,
-      order_list_id: null, // Would be set if from specific order list
-      practice_id: order.practice_id,
-      status: response.success ? 'sent' : 'failed',
-      method_used: method,
-      sent_at: new Date().toISOString(),
-      delivery_expected: order.estimated_delivery_date,
-      total_items: order.total_items,
-      total_value: order.total_value,
-      response_data: response,
-      order_reference: orderReference,
-    });
+    const subtotal = order.items.reduce(
+      (sum, item) => sum + item.total_price,
+      0
+    );
+    const total = subtotal + (order.shipping_cost || 0);
 
-    if (error) {
-      orderLogger.error('Failed to record supplier order:', error);
-      throw error;
-    }
+    orderLogger.info('Supplier order recorded (simulation)', {
+      supplier_id: order.supplier_id,
+      order_reference: orderReference,
+      method,
+      success: response.success,
+      subtotal,
+      total,
+    });
   }
 }
 

@@ -40,17 +40,21 @@
   import { useI18n } from 'vue-i18n';
 
   // Types
+  type TableRow = Record<string, unknown>;
+
+  type TableFieldAccessor = keyof TableRow | ((row: TableRow) => unknown);
+
   interface TableColumn {
     name: string;
     label: string;
-    field: string | ((row: any) => any);
+    field: TableFieldAccessor;
     align?: 'left' | 'right' | 'center';
     sortable?: boolean;
     style?: string;
     headerStyle?: string;
     classes?: string;
     headerClasses?: string;
-    format?: (val: any, row: any) => string;
+    format?: (val: unknown, row: TableRow) => string;
   }
 
   interface TablePagination {
@@ -63,7 +67,7 @@
 
   // Props
   interface Props {
-    rows: any[];
+    rows: TableRow[];
     columns: TableColumn[];
     loading?: boolean;
     pagination?: TablePagination;
@@ -72,6 +76,8 @@
   }
 
   const props = withDefaults(defineProps<Props>(), {
+    rows: () => [],
+    columns: () => [],
     loading: false,
     pagination: () => ({
       sortBy: undefined,
@@ -81,13 +87,21 @@
       rowsNumber: 0,
     }),
     sortable: true,
+    noDataMessage: '',
   });
 
   // Emits
   const emit = defineEmits<{
     'update:pagination': [pagination: TablePagination];
-    request: [requestProps: any];
+    request: [requestProps: TableRequestPayload];
   }>();
+  interface TableRequestPayload {
+    pagination: TablePagination;
+    filter?: unknown;
+    rows?: TableRow[];
+    columns?: TableColumn[];
+    [key: string]: unknown;
+  }
 
   const { t } = useI18n();
 
@@ -125,7 +139,7 @@
   };
 
   // Handle table requests (sorting, pagination)
-  const onTableRequest = (requestProps: any) => {
+  const onTableRequest = (requestProps: TableRequestPayload) => {
     const { pagination } = requestProps;
     internalPagination.value = { ...pagination };
     emit('request', requestProps);
@@ -183,14 +197,14 @@
       :deep(.unified-table-header) {
         background: var(--brand-primary); // Consistent hoofdblauwe kleur
         color: white;
-        font-family: var(--font-family-primary);
+        font-family: var(--font-family);
         font-weight: var(--font-weight-bold);
         text-transform: uppercase;
         letter-spacing: 0.05em;
         font-size: var(--text-xs);
         padding: var(--space-3) var(--space-4);
         border-right: 1px solid rgba(255, 255, 255, 0.2);
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        box-shadow: var(--shadow-sm);
 
         &:last-child {
           border-right: none;
@@ -228,7 +242,7 @@
             138,
             0.05
           ); // Subtle blue hover using brand primary
-          box-shadow: 0 2px 8px rgba(30, 58, 138, 0.08);
+          box-shadow: var(--shadow-md);
         }
       }
 
@@ -309,7 +323,7 @@
 
         &:hover {
           background: rgba(30, 58, 138, 0.08);
-          box-shadow: 0 2px 8px rgba(30, 58, 138, 0.08);
+          box-shadow: var(--shadow-md);
         }
       }
 

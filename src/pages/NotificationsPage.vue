@@ -13,178 +13,168 @@
           size="md"
           @click="loadNotifications"
           :loading="loading"
-          class="app-btn-refresh"
+          class="modern-action-btn"
         >
           <q-tooltip>{{ $t('common.refresh') }}</q-tooltip>
         </q-btn>
       </template>
     </PageTitle>
 
-    <div class="row q-gutter-md">
-      <!-- Simple Filters -->
-      <div class="col-12">
-        <div class="notification-filters q-mb-md">
-          <q-btn-group flat>
-            <q-btn
-              flat
-              :color="filter === 'all' ? 'primary' : 'grey-6'"
-              :label="`${$t('notificationsPage.all')} (${
-                notifications.length
-              })`"
-              @click="filter = 'all'"
-              size="sm"
-            />
-            <q-btn
-              flat
-              :color="filter === 'unread' ? 'primary' : 'grey-6'"
-              :label="`${$t('notificationsPage.unread')} (${unreadCount})`"
-              @click="filter = 'unread'"
-              size="sm"
-            />
-          </q-btn-group>
+    <div class="notifications-container">
+      <!-- Modern Filter Section -->
+      <div class="notifications-filters">
+        <div class="filter-tabs">
+          <q-btn
+            :flat="filter !== 'all'"
+            :unelevated="filter === 'all'"
+            :color="filter === 'all' ? 'primary' : undefined"
+            :text-color="filter === 'all' ? 'white' : 'grey-7'"
+            :label="`${$t('notificationsPage.all')} (${notifications.length})`"
+            @click="filter = 'all'"
+            class="filter-tab"
+            no-caps
+          />
+          <q-btn
+            :flat="filter !== 'unread'"
+            :unelevated="filter === 'unread'"
+            :color="filter === 'unread' ? 'primary' : undefined"
+            :text-color="filter === 'unread' ? 'white' : 'grey-7'"
+            :label="`${$t('notificationsPage.unread')} (${unreadCount})`"
+            @click="filter = 'unread'"
+            class="filter-tab"
+            no-caps
+          />
+        </div>
 
-          <div class="q-ml-auto">
-            <q-btn
-              flat
-              icon="mark_email_read"
-              :label="$t('notificationsPage.markAllRead')"
-              @click="markAllAsRead"
-              :disable="unreadCount === 0"
-              size="sm"
-              color="positive"
-            />
-            <q-btn
-              flat
-              icon="clear_all"
-              :label="$t('notificationsPage.clearAllNotifications')"
-              @click="confirmClearAll"
-              size="sm"
-              color="negative"
-              class="q-ml-sm"
-            />
-          </div>
+        <div class="filter-actions">
+          <q-select
+            v-model="categoryFilter"
+            :options="categoryOptions"
+            :label="$t('notificationsPage.filterByCategory')"
+            emit-value
+            map-options
+            clearable
+            outlined
+            dense
+            class="category-filter"
+          />
+          <q-btn
+            flat
+            icon="mark_email_read"
+            :label="$t('notificationsPage.markAllRead')"
+            @click="markAllAsRead"
+            :disable="unreadCount === 0"
+            color="positive"
+            class="action-btn"
+            no-caps
+          />
+          <q-btn
+            flat
+            icon="clear_all"
+            :label="$t('notificationsPage.clearAllNotifications')"
+            @click="confirmClearAll"
+            color="negative"
+            class="action-btn"
+            no-caps
+          />
         </div>
       </div>
 
       <!-- Notifications List -->
-      <div class="col-12">
-        <BaseCard
-          icon="notifications"
-          icon-color="info"
-          :title="`${
-            filter === 'all'
-              ? $t('notificationsPage.all')
-              : $t('notificationsPage.unread')
-          } ${$t('notificationsPage.title')}`"
-        >
-          <template #header-actions>
-            <q-select
-              v-model="categoryFilter"
-              :options="categoryOptions"
-              :label="$t('notificationsPage.filterByCategory')"
-              emit-value
-              map-options
-              clearable
-              style="min-width: 200px"
-              dense
-              outlined
-              dark
-            />
-          </template>
-
-          <div
-            v-if="filteredNotifications.length === 0"
-            class="text-center q-py-xl"
-          >
-            <q-icon name="notifications_none" size="64px" color="grey-4" />
-            <div class="text-h6 text-grey-6 q-mt-md">
-              {{ $t('notificationsPage.noNotifications') }}
-            </div>
-            <div class="text-body2 text-grey-5">
-              {{ $t('notificationsPage.allCaughtUp') }}
-            </div>
+      <div class="notifications-content">
+        <!-- Empty State -->
+        <div v-if="filteredNotifications.length === 0" class="empty-state">
+          <div class="empty-state-icon">
+            <q-icon name="notifications_none" />
           </div>
+          <div class="empty-state-title">
+            {{ $t('notificationsPage.noNotifications') }}
+          </div>
+          <div class="empty-state-subtitle">
+            {{ $t('notificationsPage.allCaughtUp') }}
+          </div>
+        </div>
 
-          <q-list v-else separator>
-            <q-item
-              v-for="notification in filteredNotifications"
-              :key="notification.id"
-              clickable
-              v-ripple
-              :class="{ 'bg-blue-1': !notification.is_read }"
-            >
-              <q-item-section avatar>
-                <q-avatar
-                  :color="getCategoryColor(notification.category)"
-                  text-color="white"
-                >
-                  <q-icon :name="getCategoryIcon(notification.category)" />
-                </q-avatar>
-              </q-item-section>
+        <!-- Notifications List -->
+        <div v-else class="notifications-list">
+          <div
+            v-for="notification in filteredNotifications"
+            :key="notification.id"
+            class="notification-item"
+            :class="{ 'notification-item--unread': !notification.is_read }"
+          >
+            <div class="notification-avatar">
+              <q-avatar
+                :color="getCategoryColor(notification.category)"
+                text-color="white"
+                size="40px"
+              >
+                <q-icon :name="getCategoryIcon(notification.category)" />
+              </q-avatar>
+            </div>
 
-              <q-item-section>
-                <q-item-label class="text-weight-medium">{{
-                  notification.title
-                }}</q-item-label>
-                <q-item-label caption lines="2">{{
-                  notification.message
-                }}</q-item-label>
-                <q-item-label caption>
+            <div class="notification-content">
+              <div class="notification-header">
+                <h4 class="notification-title">{{ notification.title }}</h4>
+                <div class="notification-meta">
                   <q-chip
                     :color="getCategoryColor(notification.category)"
                     text-color="white"
                     size="sm"
+                    class="category-chip"
                   >
                     {{ $t(`notificationsPage.types.${notification.category}`) }}
                   </q-chip>
-                  <span class="q-ml-sm text-grey-6">
+                  <span class="notification-time">
                     {{ formatDate(notification.created_at) }}
                   </span>
-                </q-item-label>
-              </q-item-section>
-
-              <q-item-section side>
-                <div class="row items-center q-gutter-xs">
-                  <q-btn
-                    v-if="!notification.is_read"
-                    flat
-                    round
-                    dense
-                    icon="mark_email_read"
-                    color="positive"
-                    size="sm"
-                    @click.stop="markAsRead(notification.id)"
-                  >
-                    <q-tooltip>Markeer als gelezen</q-tooltip>
-                  </q-btn>
-                  <q-btn
-                    v-else
-                    flat
-                    round
-                    dense
-                    icon="mark_email_unread"
-                    color="primary"
-                    size="sm"
-                    @click.stop="markAsUnread(notification.id)"
-                  >
-                    <q-tooltip>Markeer als ongelezen</q-tooltip>
-                  </q-btn>
-                  <q-btn
-                    flat
-                    round
-                    dense
-                    icon="delete"
-                    color="negative"
-                    size="sm"
-                    @click.stop="deleteNotification(notification.id)"
-                  >
-                    <q-tooltip>Verwijder melding</q-tooltip>
-                  </q-btn>
                 </div>
-              </q-item-section>
-            </q-item>
-          </q-list>
-        </BaseCard>
+              </div>
+              <p class="notification-message">{{ notification.message }}</p>
+            </div>
+
+            <div class="notification-actions">
+              <q-btn
+                v-if="!notification.is_read"
+                flat
+                round
+                dense
+                icon="mark_email_read"
+                color="positive"
+                size="sm"
+                @click.stop="markAsRead(notification.id)"
+                class="notification-action-btn"
+              >
+                <q-tooltip>Markeer als gelezen</q-tooltip>
+              </q-btn>
+              <q-btn
+                v-else
+                flat
+                round
+                dense
+                icon="mark_email_unread"
+                color="primary"
+                size="sm"
+                @click.stop="markAsUnread(notification.id)"
+                class="notification-action-btn"
+              >
+                <q-tooltip>Markeer als ongelezen</q-tooltip>
+              </q-btn>
+              <q-btn
+                flat
+                round
+                dense
+                icon="delete"
+                color="negative"
+                size="sm"
+                @click.stop="deleteNotification(notification.id)"
+                class="notification-action-btn"
+              >
+                <q-tooltip>Verwijder melding</q-tooltip>
+              </q-btn>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </PageLayout>
@@ -415,13 +405,354 @@
   });
 </script>
 
-<style scoped>
-  .notification-filters {
+<style scoped lang="scss">
+  .notifications-container {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-6);
+    max-width: 100%;
+  }
+
+  // Modern Filter Section
+  .notifications-filters {
+    background: var(--surface);
+    border: 1px solid var(--border-primary);
+    border-radius: var(--radius-lg);
+    padding: var(--space-5);
+    box-shadow: var(--shadow-sm);
     display: flex;
     align-items: center;
-    padding: 12px 16px;
-    background: rgba(var(--q-primary), 0.05);
-    border-radius: 8px;
-    border: 1px solid rgba(var(--q-primary), 0.1);
+    justify-content: space-between;
+    gap: var(--space-4);
+    transition: var(--transition-base);
+
+    &:hover {
+      box-shadow: var(--shadow-base);
+    }
+
+    .filter-tabs {
+      display: flex;
+      gap: var(--space-2);
+      background: var(--bg-tertiary);
+      padding: var(--space-1);
+      border-radius: var(--radius-base);
+    }
+
+    .filter-tab {
+      border-radius: var(--radius-sm);
+      font-weight: var(--font-weight-medium);
+      font-size: var(--text-sm);
+      padding: var(--space-2) var(--space-4);
+      transition: var(--transition-fast);
+      min-height: 36px;
+
+      &.q-btn--unelevated {
+        box-shadow: var(--shadow-xs);
+      }
+    }
+
+    .filter-actions {
+      display: flex;
+      align-items: center;
+      gap: var(--space-3);
+      flex-wrap: wrap;
+    }
+
+    .category-filter {
+      min-width: 200px;
+
+      :deep(.q-field__control) {
+        border-radius: var(--radius-base);
+      }
+    }
+
+    .action-btn {
+      font-weight: var(--font-weight-medium);
+      font-size: var(--text-sm);
+      padding: var(--space-2) var(--space-4);
+      border-radius: var(--radius-base);
+      transition: var(--transition-fast);
+
+      &:hover {
+        transform: translateY(-1px);
+        box-shadow: var(--shadow-sm);
+      }
+    }
+  }
+
+  // Notifications Content
+  .notifications-content {
+    background: var(--surface);
+    border: 1px solid var(--border-primary);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-sm);
+    overflow: hidden;
+    transition: var(--transition-base);
+
+    &:hover {
+      box-shadow: var(--shadow-base);
+    }
+  }
+
+  // Empty State
+  .empty-state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: var(--space-12) var(--space-6);
+    text-align: center;
+
+    .empty-state-icon {
+      margin-bottom: var(--space-6);
+
+      .q-icon {
+        font-size: 4rem;
+        color: var(--text-tertiary);
+        opacity: 0.6;
+      }
+    }
+
+    .empty-state-title {
+      font-size: var(--text-xl);
+      font-weight: var(--font-weight-semibold);
+      color: var(--text-primary);
+      margin-bottom: var(--space-2);
+      line-height: var(--leading-tight);
+    }
+
+    .empty-state-subtitle {
+      font-size: var(--text-base);
+      color: var(--text-secondary);
+      line-height: var(--leading-normal);
+    }
+  }
+
+  // Notifications List
+  .notifications-list {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .notification-item {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--space-4);
+    padding: var(--space-5);
+    border-bottom: 1px solid var(--border-primary);
+    transition: var(--transition-fast);
+    position: relative;
+    background: var(--surface);
+
+    &:last-child {
+      border-bottom: none;
+    }
+
+    &:hover {
+      background: var(--bg-tertiary);
+    }
+
+    &--unread {
+      background: rgba(var(--q-primary-rgb, 30, 58, 138), 0.02);
+      border-left: 3px solid var(--q-primary);
+
+      .notification-title {
+        font-weight: var(--font-weight-semibold);
+      }
+
+      &::before {
+        content: '';
+        position: absolute;
+        top: var(--space-5);
+        right: var(--space-5);
+        width: 8px;
+        height: 8px;
+        background: var(--q-primary);
+        border-radius: var(--radius-full);
+      }
+    }
+
+    .notification-avatar {
+      flex-shrink: 0;
+      margin-top: var(--space-1);
+    }
+
+    .notification-content {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .notification-header {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: var(--space-3);
+      margin-bottom: var(--space-2);
+    }
+
+    .notification-title {
+      font-size: var(--text-base);
+      font-weight: var(--font-weight-medium);
+      color: var(--text-primary);
+      margin: 0;
+      line-height: var(--leading-tight);
+    }
+
+    .notification-meta {
+      display: flex;
+      align-items: center;
+      gap: var(--space-2);
+      flex-shrink: 0;
+    }
+
+    .category-chip {
+      font-size: var(--text-xs);
+      font-weight: var(--font-weight-medium);
+      border-radius: var(--radius-sm);
+    }
+
+    .notification-time {
+      font-size: var(--text-xs);
+      color: var(--text-tertiary);
+      font-weight: var(--font-weight-normal);
+      white-space: nowrap;
+    }
+
+    .notification-message {
+      font-size: var(--text-sm);
+      color: var(--text-secondary);
+      line-height: var(--leading-normal);
+      margin: 0;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+
+    .notification-actions {
+      display: flex;
+      align-items: center;
+      gap: var(--space-1);
+      flex-shrink: 0;
+      margin-top: var(--space-1);
+    }
+
+    .notification-action-btn {
+      transition: var(--transition-fast);
+      border-radius: var(--radius-base);
+
+      &:hover {
+        transform: translateY(-1px);
+        box-shadow: var(--shadow-xs);
+      }
+    }
+  }
+
+  // Modern Action Button
+  .modern-action-btn {
+    transition: var(--transition-fast);
+    border-radius: var(--radius-base);
+
+    &:hover {
+      transform: translateY(-1px);
+      box-shadow: var(--shadow-sm);
+    }
+  }
+
+  // Responsive Design
+  @media (max-width: 768px) {
+    .notifications-filters {
+      flex-direction: column;
+      align-items: stretch;
+      gap: var(--space-4);
+
+      .filter-actions {
+        justify-content: space-between;
+        gap: var(--space-2);
+      }
+
+      .category-filter {
+        min-width: auto;
+        flex: 1;
+      }
+    }
+
+    .notification-item {
+      padding: var(--space-4);
+
+      .notification-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: var(--space-2);
+      }
+
+      .notification-meta {
+        align-self: stretch;
+        justify-content: space-between;
+      }
+
+      .notification-actions {
+        margin-top: var(--space-3);
+        justify-content: center;
+      }
+    }
+  }
+
+  @media (max-width: 480px) {
+    .notifications-container {
+      gap: var(--space-4);
+    }
+
+    .notifications-filters {
+      padding: var(--space-4);
+
+      .filter-tabs {
+        width: 100%;
+        justify-content: center;
+      }
+
+      .filter-actions {
+        flex-direction: column;
+        width: 100%;
+        gap: var(--space-3);
+      }
+
+      .action-btn {
+        width: 100%;
+        justify-content: center;
+      }
+    }
+
+    .notification-item {
+      padding: var(--space-3);
+      gap: var(--space-3);
+
+      &--unread::before {
+        top: var(--space-3);
+        right: var(--space-3);
+      }
+    }
+  }
+
+  // Dark Mode Enhancements
+  :deep(.body--dark) {
+    .notifications-filters,
+    .notifications-content {
+      border-color: var(--border-primary);
+    }
+
+    .notification-item {
+      &--unread {
+        background: rgba(var(--q-primary-rgb, 59, 130, 246), 0.08);
+      }
+
+      &:hover {
+        background: var(--bg-tertiary);
+      }
+    }
+
+    .filter-tabs {
+      background: var(--bg-primary);
+    }
   }
 </style>

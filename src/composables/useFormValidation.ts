@@ -1,4 +1,4 @@
-import { ref, computed, Ref } from 'vue';
+import { ref, computed, type Ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 import type { ValidationRule, FieldValidation } from '@/types/validation';
 
@@ -8,7 +8,7 @@ export function useFormValidation() {
   // Enhanced validation rules with common patterns from the codebase
   const rules = {
     // Basic validations
-    required: (value: any): boolean | string => {
+    required: (value: unknown): boolean | string => {
       if (Array.isArray(value)) {
         return value.length > 0 || t('validation.required');
       }
@@ -40,9 +40,9 @@ export function useFormValidation() {
       },
 
     // Number validations
-    numeric: (value: any): boolean | string => {
+    numeric: (value: unknown): boolean | string => {
       if (value === '' || value === null || value === undefined) return true;
-      return !isNaN(Number(value)) || t('validation.numeric');
+      return !Number.isNaN(Number(value)) || t('validation.numeric');
     },
 
     positive: (value: number | string): boolean | string => {
@@ -63,10 +63,12 @@ export function useFormValidation() {
       return (!isNaN(num) && num >= 0) || t('validation.nonNegative');
     },
 
-    integer: (value: any): boolean | string => {
+    integer: (value: unknown): boolean | string => {
       if (value === '' || value === null || value === undefined) return true;
       const num = Number(value);
-      return (!isNaN(num) && Number.isInteger(num)) || t('validation.integer');
+      return (
+        (!Number.isNaN(num) && Number.isInteger(num)) || t('validation.integer')
+      );
     },
 
     minValue:
@@ -127,7 +129,7 @@ export function useFormValidation() {
     },
 
     // Array validations
-    arrayNotEmpty: (value: any[]): boolean | string => {
+    arrayNotEmpty: (value: unknown): boolean | string => {
       return (
         (Array.isArray(value) && value.length > 0) || t('validation.required')
       );
@@ -135,7 +137,7 @@ export function useFormValidation() {
 
     arrayMinLength:
       (min: number) =>
-      (value: any[]): boolean | string => {
+      (value: unknown): boolean | string => {
         if (!Array.isArray(value)) return t('validation.required');
         return value.length >= min || t('validation.arrayMinLength', { min });
       },
@@ -143,14 +145,14 @@ export function useFormValidation() {
     // Custom validation helpers
     requiredIf:
       (condition: () => boolean) =>
-      (value: any): boolean | string => {
+      (value: unknown): boolean | string => {
         if (!condition()) return true;
         return rules.required(value);
       },
 
     oneOf:
-      (options: any[]) =>
-      (value: any): boolean | string => {
+      (options: readonly unknown[]) =>
+      (value: unknown): boolean | string => {
         if (!value) return true;
         return (
           options.includes(value) ||
@@ -189,17 +191,6 @@ export function useFormValidation() {
       error.value = '';
       touched.value = false;
     };
-
-    // Watch for value changes and clear errors if previously touched
-    const unwatch = computed(() => {
-      if (touched.value && error.value) {
-        // Debounce validation on change
-        setTimeout(() => {
-          validate();
-        }, 300);
-      }
-      return value.value;
-    });
 
     return {
       value,

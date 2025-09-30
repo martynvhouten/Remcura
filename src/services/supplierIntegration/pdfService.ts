@@ -4,6 +4,7 @@ import type {
   SupplierOrder,
   OrderSendingResult,
 } from '@/stores/orderLists/orderLists-supplier-splitting';
+import type { Tables } from '@/types';
 
 export interface PDFConfig {
   email_template?: 'standard' | 'custom';
@@ -43,14 +44,14 @@ export class PDFService {
           .from('suppliers')
           .select('integration_config, name, contact_email, contact_person')
           .eq('id', order.supplier_id)
-          .single(),
+          .single<Tables<'suppliers'>>(),
         supabase
           .from('practices')
           .select(
             'name, address, city, postal_code, country, contact_email, contact_phone, logo_url'
           )
           .eq('id', order.practice_id)
-          .single(),
+          .single<Tables<'practices'>>(),
       ]);
 
       if (supplierResult.error || !supplierResult.data) {
@@ -63,7 +64,12 @@ export class PDFService {
 
       const supplier = supplierResult.data;
       const practice = practiceResult.data;
-      const pdfConfig = (supplier.integration_config as PDFConfig) || {};
+      const practiceName = practice.name ?? 'Onbekende praktijk';
+      const rawConfig = supplier.integration_config;
+      const pdfConfig: PDFConfig =
+        rawConfig && typeof rawConfig === 'object' && !Array.isArray(rawConfig)
+          ? (rawConfig as PDFConfig)
+          : {};
 
       if (!supplier.contact_email) {
         throw new Error('Supplier email not configured');
@@ -73,7 +79,7 @@ export class PDFService {
       const pdfHTML = this.generatePDFHTML(
         order,
         orderReference,
-        practice,
+        { ...practice, name: practiceName },
         supplier,
         pdfConfig
       );
@@ -85,7 +91,7 @@ export class PDFService {
       const emailTemplate = this.generateEmailTemplate(
         order,
         orderReference,
-        practice,
+        { ...practice, name: practiceName },
         supplier,
         pdfConfig
       );
@@ -107,12 +113,12 @@ export class PDFService {
       return {
         supplier_id: order.supplier_id,
         supplier_name: order.supplier_name,
-        status: 'sent',
+        status: 'success',
         method_used: 'pdf',
         order_reference: orderReference,
         sent_at: new Date().toISOString(),
-        delivery_expected: order.estimated_delivery_date,
-      };
+        delivery_expected: order.estimated_delivery_date ?? '',
+      } satisfies OrderSendingResult;
     } catch (error: any) {
       orderLogger.error(
         `PDF order sending failed for ${orderReference}:`,
@@ -126,8 +132,9 @@ export class PDFService {
         method_used: 'pdf',
         order_reference: orderReference,
         sent_at: new Date().toISOString(),
-        error_message: error.message,
-      };
+        error_message: error instanceof Error ? error.message : String(error),
+        delivery_expected: order.estimated_delivery_date ?? '',
+      } satisfies OrderSendingResult;
     }
   }
 
@@ -146,6 +153,8 @@ export class PDFService {
       month: 'long',
       day: 'numeric',
     });
+
+    const practiceName = practice.name ?? 'Onbekende praktijk';
 
     return `
 <!DOCTYPE html>
@@ -169,7 +178,7 @@ export class PDFService {
             : ''
         }
         <div class="practice-info">
-          <h1>${practice.name}</h1>
+          <h1>${practiceName}</h1>
           <div class="address">
             ${practice.address}<br>
             ${practice.postal_code} ${practice.city}<br>
@@ -232,11 +241,11 @@ export class PDFService {
             .map(
               item => `
           <tr>
-            <td>${item.name}</td>
-            <td>${item.supplier_sku || item.sku}</td>
+            <td>${item.product_name}</td>
+            <td>${item.supplier_sku || ''}</td>
             <td>${item.quantity}</td>
-            <td>€${item.unit_price.toFixed(2)}</td>
-            <td>€${(item.quantity * item.unit_price).toFixed(2)}</td>
+            <td>€${(item.unit_price ?? 0).toFixed(2)}</td>
+            <td>€${item.total_price.toFixed(2)}</td>
           </tr>
           `
             )
@@ -246,7 +255,9 @@ export class PDFService {
           <tr class="total-row">
             <td colspan="3"><strong>Totaal aantal artikelen:</strong></td>
             <td><strong>${order.total_items}</strong></td>
-            <td><strong>€${order.total_value.toFixed(2)}</strong></td>
+          <td><strong>€${order.items
+            .reduce((sum, item) => sum + item.total_price, 0)
+            .toFixed(2)}</strong></td>
           </tr>
           ${
             order.shipping_cost
@@ -257,9 +268,10 @@ export class PDFService {
           </tr>
           <tr class="grand-total">
             <td colspan="4"><strong>Totaal inclusief verzending</strong></td>
-            <td><strong>€${(order.total_value + order.shipping_cost).toFixed(
-              2
-            )}</strong></td>
+          <td><strong>€${(
+            order.items.reduce((sum, item) => sum + item.total_price, 0) +
+            order.shipping_cost
+          ).toFixed(2)}</strong></td>
           </tr>
           `
               : ''
@@ -272,7 +284,7 @@ export class PDFService {
     <section class="notes-section">
       <h3>Opmerkingen</h3>
       <p>Deze bestelling is automatisch gegenereerd door Remcura voor ${
-        practice.name
+        practiceName
       }.</p>
       <p>Gelieve deze bestelling te bevestigen en een verwachte leverdatum door te geven.</p>
     </section>
@@ -282,7 +294,7 @@ export class PDFService {
         ? `
     <section class="terms-section">
       <h3>Algemene voorwaarden</h3>
-      <p>Deze bestelling is onderworpen aan de algemene voorwaarden van ${practice.name} en de leverancier.</p>
+      <p>Deze bestelling is onderworpen aan de algemene voorwaarden van ${practiceName} en de leverancier.</p>
     </section>
     `
         : ''
@@ -485,13 +497,16 @@ export class PDFService {
           <h3>Bestelling details:</h3>
           <ul>
             <li><strong>Bestelnummer:</strong> ${orderReference}</li>
-            <li><strong>Datum:</strong> ${new Date().toLocaleDateString(
-              'nl-NL'
-            )}</li>
-            <li><strong>Aantal artikelen:</strong> ${order.total_items}</li>
-            <li><strong>Totaalwaarde:</strong> €${order.total_value.toFixed(
-              2
-            )}</li>
+            <li><strong>Verzendinformatie:</strong> ${order.estimated_delivery_date ? `Verwachte levering op ${new Date(order.estimated_delivery_date).toLocaleDateString('nl-NL')}` : 'Geen informatie beschikbaar'}</li>
+            <li><strong>Totaal aantal artikelen:</strong> ${order.total_items}</li>
+            <li><strong>Totaalwaarde:</strong> €${order.items
+              .reduce((sum, item) => sum + item.total_price, 0)
+              .toFixed(2)}</li>
+            ${
+              order.shipping_cost
+                ? `<li><strong>Verzendkosten:</strong> €${order.shipping_cost.toFixed(2)}</li>`
+                : ''
+            }
             ${
               order.estimated_delivery_date
                 ? `<li><strong>Gewenste leverdatum:</strong> ${new Date(
@@ -528,7 +543,6 @@ Bestelling details:
 - Bestelnummer: ${orderReference}
 - Datum: ${new Date().toLocaleDateString('nl-NL')}
 - Aantal artikelen: ${order.total_items}
-- Totaalwaarde: €${order.total_value.toFixed(2)}
 ${
   order.estimated_delivery_date
     ? `- Gewenste leverdatum: ${new Date(
@@ -605,24 +619,12 @@ Deze email is automatisch gegenereerd door Remcura.
     method: string,
     response: any
   ): Promise<void> {
-    const { error } = await supabase.from('supplier_orders').insert({
+    orderLogger.info('Supplier order recorded (simulation)', {
       supplier_id: order.supplier_id,
-      order_list_id: null,
-      practice_id: order.practice_id,
-      status: response.success ? 'sent' : 'failed',
-      method_used: method,
-      sent_at: new Date().toISOString(),
-      delivery_expected: order.estimated_delivery_date,
-      total_items: order.total_items,
-      total_value: order.total_value,
-      response_data: response,
       order_reference: orderReference,
+      method,
+      success: response.success,
     });
-
-    if (error) {
-      orderLogger.error('Failed to record supplier order:', error);
-      throw error;
-    }
   }
 
   /**

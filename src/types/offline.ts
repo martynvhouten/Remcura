@@ -1,17 +1,9 @@
-import type {
-  Bestellijst,
-  BestellijstItem,
-  Product,
-  ShoppingCart,
-  ShoppingCartItem,
-} from '@/types/supabase';
-
 // Offline data synchronization types
 export interface OfflineAction {
   id: string;
   type: 'create' | 'update' | 'delete';
   table: string;
-  data: any;
+  data: Record<string, unknown>;
   timestamp: Date;
   retry_count: number;
   practice_id: string;
@@ -19,11 +11,11 @@ export interface OfflineAction {
 }
 
 export interface OfflineData {
-  bestellijsten: Bestellijst[];
-  bestellijst_items: BestellijstItem[];
-  products: Product[];
-  shopping_carts: ShoppingCart[];
-  shopping_cart_items: ShoppingCartItem[];
+  bestellijsten: Array<Record<string, unknown>>;
+  bestellijst_items: Array<Record<string, unknown>>;
+  products: Array<Record<string, unknown>>;
+  shopping_carts: Array<Record<string, unknown>>;
+  shopping_cart_items: Array<Record<string, unknown>>;
   last_sync: Date | null;
 }
 

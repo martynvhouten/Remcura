@@ -1,4 +1,5 @@
-import { ref, Ref } from 'vue';
+import { ref } from 'vue';
+import type { TableRow } from './useSmartTable';
 
 export interface TablePagination {
   sortBy?: string;
@@ -10,7 +11,7 @@ export interface TablePagination {
 
 export interface SortableColumn {
   name: string;
-  field: string | ((row: any) => any);
+  field: string | ((row: TableRow) => unknown);
   sortable?: boolean;
 }
 
@@ -26,7 +27,7 @@ export function useTableSorting(
     ...initialPagination,
   });
 
-  const onTableRequest = (props: any) => {
+  const onTableRequest = (props: { pagination: TablePagination }) => {
     const { page, rowsPerPage, sortBy, descending } = props.pagination;
 
     // Update pagination state - this triggers reactivity
@@ -49,15 +50,15 @@ export function useTableSorting(
   ): T[] => {
     if (!sortBy || !data.length) return data;
 
-    return [...data].sort((a: any, b: any) => {
+    return [...data].sort((a, b) => {
       // Use custom sorter if provided
       if (customSorter) {
-        return customSorter(a, b, sortBy, descending);
+        return customSorter(a, b, sortBy, Boolean(descending));
       }
 
       // Get values using field accessor (support for nested fields and functions)
-      let aVal = getFieldValue(a, sortBy);
-      let bVal = getFieldValue(b, sortBy);
+      const aVal = getFieldValue(a, sortBy);
+      const bVal = getFieldValue(b, sortBy);
 
       // Handle null/undefined values
       if (
@@ -77,8 +78,8 @@ export function useTableSorting(
 
       // Handle numbers (including numeric strings)
       if (isNumeric(aVal) && isNumeric(bVal)) {
-        const aNum = parseFloat(String(aVal));
-        const bNum = parseFloat(String(bVal));
+        const aNum = Number(aVal);
+        const bNum = Number(bVal);
         return descending ? bNum - aNum : aNum - bNum;
       }
 
@@ -103,23 +104,31 @@ export function useTableSorting(
   };
 
   // Helper function to get field value (supports nested fields and functions)
-  const getFieldValue = (obj: any, field: string): any => {
+  const getFieldValue = <T>(row: T, field: string): unknown => {
     if (typeof field === 'function') {
-      return field(obj);
+      return (field as (row: T) => unknown)(row);
     }
 
     // Support nested field access (e.g., 'product.name')
-    return field.split('.').reduce((current, key) => {
-      return current && current[key] !== undefined ? current[key] : null;
-    }, obj);
+    return field.split('.').reduce<unknown>((current, key) => {
+      if (
+        current &&
+        typeof current === 'object' &&
+        !Array.isArray(current) &&
+        key in current
+      ) {
+        return (current as Record<string, unknown>)[key];
+      }
+      return null;
+    }, row);
   };
 
   // Helper function to check if value is a date
-  const isDate = (value: any): boolean => {
+  const isDate = (value: unknown): boolean => {
     if (!value) return false;
     const date = new Date(value);
     return (
-      (!isNaN(date.getTime()) &&
+      (!Number.isNaN(date.getTime()) &&
         typeof value === 'string' &&
         /^\d{4}-\d{2}-\d{2}/.test(value)) ||
       value instanceof Date
@@ -127,8 +136,16 @@ export function useTableSorting(
   };
 
   // Helper function to check if value is numeric
-  const isNumeric = (value: any): boolean => {
-    return !isNaN(parseFloat(value)) && isFinite(value);
+  const isNumeric = (value: unknown): boolean => {
+    if (typeof value === 'number') {
+      return Number.isFinite(value);
+    }
+
+    if (typeof value === 'string' && value.trim() !== '') {
+      return !Number.isNaN(Number(value));
+    }
+
+    return false;
   };
 
   return {

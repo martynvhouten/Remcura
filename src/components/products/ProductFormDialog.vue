@@ -188,12 +188,12 @@
   import { useAuthStore } from 'src/stores/auth';
   import { productService } from 'src/services/supabase';
   import FormDialog from 'src/components/base/FormDialog.vue';
-  import type { Product } from 'src/types/inventory';
+  import type { ProductRow } from 'src/types/inventory';
 
   // Props
   interface Props {
     modelValue: boolean;
-    product?: Product | null;
+    product?: ProductRow | null;
   }
 
   const props = withDefaults(defineProps<Props>(), {
@@ -203,7 +203,7 @@
   // Emits
   const emit = defineEmits<{
     'update:modelValue': [value: boolean];
-    saved: [product: Product];
+    saved: [product: ProductRow];
     'scan-barcode': [];
   }>();
 

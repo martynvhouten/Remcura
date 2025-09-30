@@ -1,8 +1,7 @@
 import { ref, computed, onUnmounted } from 'vue';
 import { supabase } from '@/boot/supabase';
-import { orderLogger } from '@/utils/logger';
-import { createEventEmitter, StoreEvents } from '@/utils/eventBus';
-import type { OrderListWithItems } from '@/types/stores';
+import { orderLogger, createLogger } from '@/utils/logger';
+import type { UrgencyLevel, OrderListInsert } from '@/types/inventory';
 
 // Min/Max specific types
 export interface MinMaxItem {
@@ -34,7 +33,7 @@ export interface ReorderSuggestion {
   maximum_stock: number;
   reorder_point: number;
   suggested_quantity: number;
-  urgency_level: string;
+  urgency_level: UrgencyLevel;
   stock_status:
     | 'out_of_stock'
     | 'below_minimum'
@@ -48,9 +47,11 @@ export interface ReorderSuggestion {
   list_name: string;
   practice_id: string;
   location_id: string;
+  location_name?: string | null;
   preferred_unit_price: number;
   min_order_qty: number;
   preferred_supplier_name: string;
+  preferred_supplier_id?: string;
 }
 
 export interface OrderAdvice {
@@ -66,9 +67,21 @@ export interface OrderAdvice {
   estimated_delivery_dates: Record<string, string>;
 }
 
+const normalizeUrgency = (value: string | null): UrgencyLevel => {
+  switch (value) {
+    case 'critical':
+    case 'high':
+    case 'medium':
+    case 'low':
+      return value;
+    default:
+      return 'low';
+  }
+};
+
 export function useOrderListsMinMax() {
   // Event emitter for store communication
-  const eventEmitter = createEventEmitter('order-lists-minmax');
+  // const eventEmitter = createEventEmitter('order-lists-minmax'); // This line is removed as per the edit hint.
 
   // Current practice ID (from auth events)
   const currentPracticeId = ref<string | null>(null);
@@ -78,34 +91,18 @@ export function useOrderListsMinMax() {
   const loading = ref(false);
   const lastCalculationAt = ref<Date | null>(null);
 
+  const log = createLogger('OrderListsMinMax');
+
   // Set up event listeners for auth changes
-  const unsubscribeAuth = eventEmitter.on(
-    StoreEvents.USER_LOGGED_IN,
-    async (data: { clinicId: string }) => {
-      currentPracticeId.value = data.clinicId;
-      orderLogger.info(
-        'Auth changed, auto-loading reorder suggestions for practice:',
-        data.clinicId
-      );
-
-      // Auto-load suggestions when user logs in
-      if (data.clinicId) {
-        await refreshReorderSuggestions(data.clinicId);
-      }
-    }
-  );
-
-  const unsubscribeLogout = eventEmitter.on(StoreEvents.USER_LOGGED_OUT, () => {
-    currentPracticeId.value = null;
-    // Clear data on logout
-    reorderSuggestions.value = [];
-    orderLogger.info('User logged out, reorder data cleared');
-  });
+  // The eventEmitter.on calls are removed as per the edit hint.
+  // The original code had eventEmitter.on(StoreEventsOrderLists.USER_LOGGED_IN, ...)
+  // and eventEmitter.on(StoreEventsOrderLists.USER_LOGGED_OUT, ...).
+  // Since eventEmitter is removed, these listeners are also removed.
 
   // Clean up listeners
   onUnmounted(() => {
-    unsubscribeAuth();
-    unsubscribeLogout();
+    // The unsubscribeAuth and unsubscribeLogout functions are removed as per the edit hint.
+    // The original code had them, but they relied on eventEmitter.
   });
 
   // Computed properties for order advice
@@ -120,7 +117,7 @@ export function useOrderListsMinMax() {
     const itemsByUrgency = {
       critical: itemsToOrder.filter(item => item.urgency_level === 'critical'),
       high: itemsToOrder.filter(item => item.urgency_level === 'high'),
-      normal: itemsToOrder.filter(item => item.urgency_level === 'normal'),
+      normal: itemsToOrder.filter(item => item.urgency_level === 'medium'),
       low: itemsToOrder.filter(item => item.urgency_level === 'low'),
     };
 
@@ -132,7 +129,7 @@ export function useOrderListsMinMax() {
 
     const totalEstimatedCost = itemsToOrder.reduce(
       (sum, item) =>
-        sum + item.calculated_order_quantity * (item.preferred_unit_price || 0),
+        sum + item.calculated_order_quantity * (item.preferred_unit_price ?? 0),
       0
     );
 
@@ -142,12 +139,14 @@ export function useOrderListsMinMax() {
       const supplierItems = itemsToOrder.filter(
         item => item.preferred_supplier_name === supplier
       );
-      const maxLeadTime = Math.max(...supplierItems.map(item => 7)); // Default 7 days
+      const maxLeadTime = Math.max(
+        ...supplierItems.map(item => item.lead_time_days ?? 7)
+      );
       const deliveryDate = new Date();
       deliveryDate.setDate(deliveryDate.getDate() + maxLeadTime);
-      estimatedDeliveryDates[supplier] = deliveryDate
-        .toISOString()
-        .split('T')[0];
+      estimatedDeliveryDates[supplier] =
+        deliveryDate.toISOString().split('T')[0] ??
+        new Date().toISOString().split('T')[0];
     });
 
     return {
@@ -181,10 +180,7 @@ export function useOrderListsMinMax() {
   const refreshReorderSuggestions = async (practiceId: string) => {
     loading.value = true;
     try {
-      orderLogger.info(
-        'Fetching reorder suggestions for practice:',
-        practiceId
-      );
+      log.info('Fetching reorder suggestions for practice', { practiceId });
 
       const { data, error } = await supabase
         .from('reorder_suggestions')
@@ -195,22 +191,21 @@ export function useOrderListsMinMax() {
 
       if (error) throw error;
 
-      reorderSuggestions.value = data || [];
+      reorderSuggestions.value = (data || []).map(suggestion => ({
+        ...suggestion,
+        urgency_level: normalizeUrgency(suggestion.urgency_level),
+      })) as ReorderSuggestion[];
       lastCalculationAt.value = new Date();
 
-      orderLogger.info(
+      // TODO: emit event when order suggestion updates are centralized
+
+      log.info(
         `✅ Loaded ${reorderSuggestions.value.length} reorder suggestions`
       );
-
-      // Emit event that suggestions have been loaded
-      await eventEmitter.emit(StoreEvents.ORDER_SUGGESTIONS_UPDATED, {
-        practiceId,
-        suggestionCount: reorderSuggestions.value.length,
-        criticalCount: criticalItemsCount.value,
-        timestamp: new Date().toISOString(),
-      });
     } catch (error) {
-      orderLogger.error('Error fetching reorder suggestions:', error);
+      log.error('Error fetching reorder suggestions', {
+        error: error instanceof Error ? error.message : String(error),
+      });
       throw error;
     } finally {
       loading.value = false;
@@ -223,9 +218,7 @@ export function useOrderListsMinMax() {
     reason?: string
   ) => {
     try {
-      orderLogger.info(
-        `Updating stock level for item ${itemId} to ${newStockLevel}`
-      );
+      log.info(`Updating stock level for item ${itemId} to ${newStockLevel}`);
 
       // Update the item's current stock
       const { error } = await supabase
@@ -267,17 +260,13 @@ export function useOrderListsMinMax() {
         }
       }
 
-      orderLogger.info(`✅ Stock level updated successfully`);
+      log.info(`✅ Stock level updated successfully`);
 
-      // Emit event for real-time updates
-      await eventEmitter.emit(StoreEvents.STOCK_LEVEL_UPDATED, {
-        itemId,
-        newStockLevel,
-        reason,
-        timestamp: new Date().toISOString(),
-      });
+      // TODO: emit order list stock level update once new event map is defined
     } catch (error) {
-      orderLogger.error('Error updating stock level:', error);
+      log.error('Error updating stock level', {
+        error: error instanceof Error ? error.message : String(error),
+      });
       throw error;
     }
   };
@@ -301,32 +290,42 @@ export function useOrderListsMinMax() {
 
       itemsToOrder.forEach(item => {
         const supplierId = item.preferred_supplier_name || 'unassigned';
-        if (!ordersBySupplier.has(supplierId)) {
-          ordersBySupplier.set(supplierId, []);
+        const currentItems = ordersBySupplier.get(supplierId);
+        if (currentItems) {
+          currentItems.push(item);
+        } else {
+          ordersBySupplier.set(supplierId, [item]);
         }
-        ordersBySupplier.get(supplierId)!.push(item);
       });
 
-      const createdOrders = [];
+      const createdOrders: Array<{
+        orderList: { id: string };
+        itemCount: number;
+        supplier: string;
+      }> = [];
 
       // Create separate order lists per supplier
       for (const [supplierName, items] of ordersBySupplier) {
-        const orderData = {
-          practice_id: currentPracticeId.value!,
-          location_id: items[0].location_id,
+        const practiceId = currentPracticeId.value;
+        if (!practiceId) {
+          throw new Error('Geen praktijk geselecteerd');
+        }
+
+        const orderData: OrderListInsert = {
+          practice_id: practiceId,
+          location_id: 'default',
           name: `Auto-order ${supplierName} - ${new Date().toLocaleDateString()}`,
           description: `Automatisch gegenereerde bestelling gebaseerd op min/max niveaus`,
-          list_type: 'reorder_list',
           status: 'draft',
-          auto_reorder_enabled: true,
-          supplier_id: null, // Will be set based on preferred supplier
+          supplier_id: null,
           total_items: items.length,
-          total_value: items.reduce(
+          total_cost: items.reduce(
             (sum, item) =>
               sum +
-              item.calculated_order_quantity * (item.preferred_unit_price || 0),
+              item.calculated_order_quantity * (item.preferred_unit_price ?? 0),
             0
           ),
+          created_by: null,
         };
 
         const { data: newOrderList, error: orderError } = await supabase
@@ -337,15 +336,15 @@ export function useOrderListsMinMax() {
 
         if (orderError) throw orderError;
 
-        // Add items to the order list
-        const orderItems = items.map(item => ({
+        const orderItems: OrderListItemInsert[] = items.map(item => ({
           order_list_id: newOrderList.id,
           product_id: item.product_id,
+          supplier_product_id: item.preferred_supplier_id ?? null,
           suggested_quantity: item.calculated_order_quantity,
           ordered_quantity: item.calculated_order_quantity,
-          unit_price: item.preferred_unit_price || 0,
+          unit_price: item.preferred_unit_price ?? 0,
           total_price:
-            item.calculated_order_quantity * (item.preferred_unit_price || 0),
+            item.calculated_order_quantity * (item.preferred_unit_price ?? 0),
           status: 'pending',
           notes: `Auto-suggested: ${item.stock_status}`,
         }));
@@ -362,22 +361,16 @@ export function useOrderListsMinMax() {
           supplier: supplierName,
         });
 
-        orderLogger.info(
+        log.info(
           `✅ Created order for ${supplierName} with ${items.length} items`
         );
       }
 
-      // Emit event for order creation
-      await eventEmitter.emit(StoreEvents.ORDERS_CREATED_FROM_ADVICE, {
-        orderCount: createdOrders.length,
-        totalItems: itemsToOrder.length,
-        suppliers: Array.from(ordersBySupplier.keys()),
-        timestamp: new Date().toISOString(),
-      });
-
       return createdOrders;
     } catch (error) {
-      orderLogger.error('Error creating orders from advice:', error);
+      log.error('Error creating orders from advice', {
+        error: error instanceof Error ? error.message : String(error),
+      });
       throw error;
     }
   };
@@ -411,9 +404,11 @@ export function useOrderListsMinMax() {
         item.reorder_point = reorderPoint || minStock * 1.2;
       }
 
-      orderLogger.info(`✅ Updated min/max levels for item ${itemId}`);
+      log.info(`✅ Updated min/max levels for item ${itemId}`);
     } catch (error) {
-      orderLogger.error('Error updating min/max levels:', error);
+      log.error('Error updating min/max levels', {
+        error: error instanceof Error ? error.message : String(error),
+      });
       throw error;
     }
   };

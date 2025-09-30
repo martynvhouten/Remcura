@@ -7,8 +7,6 @@ import type {
   ShoppingCart,
   Product,
   OrderWithItems,
-  ExportFormat,
-  MagentoOrder,
 } from '@/types/supabase';
 import { useAuthStore } from '@/stores/auth';
 

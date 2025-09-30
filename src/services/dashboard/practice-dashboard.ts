@@ -2,8 +2,28 @@ import { supabase } from '../supabase';
 import { dashboardLogger } from '@/utils/logger';
 import { t } from '@/utils/i18n-service';
 import { ServiceErrorHandler } from '@/utils/service-error-handler';
-import { roleDashboardConfig, type RoleDashboardConfig } from './role-config';
+import {
+  roleDashboardConfig,
+  type RoleDashboardDefinition,
+} from './role-config';
 import type { UserRole } from '@/types/permissions';
+import type { AnalyticsStockLevelDTO } from '@/types/analytics';
+import type { StockLevelView } from '@/types/inventory';
+
+const mapStockLevelToDashboardDTO = (
+  entry: StockLevelView
+): AnalyticsStockLevelDTO => ({
+  productId: entry.productId,
+  locationId: entry.locationId,
+  currentQuantity: entry.currentQuantity ?? 0,
+  minimumQuantity: entry.minimumQuantity ?? 0,
+  reservedQuantity: entry.reservedQuantity ?? 0,
+  availableQuantity: entry.availableQuantity ?? 0,
+  productName: entry.productName ?? undefined,
+  locationName: entry.locationName ?? undefined,
+  preferredSupplierId: entry.preferredSupplierId ?? undefined,
+  updatedAt: entry.updatedAt ?? undefined,
+});
 
 export interface PracticeWidget {
   id: string;
@@ -44,17 +64,25 @@ export interface PracticeDashboardData {
   }>;
 }
 
+type RoleSummary = {
+  title: string;
+  subtitle: string;
+  widgets: string[];
+  color: string;
+  icon: string;
+};
+
 class PracticeDashboardService {
   /**
    * Krijg role configuratie via de centrale role config service
    */
-  getRoleConfig(role: UserRole) {
+  getRoleConfig(role: UserRole): RoleSummary {
     const config = roleDashboardConfig.getRoleConfig(role);
 
     return {
       title: t(config.titleKey),
       subtitle: t(config.subtitleKey),
-      widgets: config.widgets.map(w => w.id),
+      widgets: config.widgets.map(widget => widget.id),
       color: config.color,
       icon: config.icon,
     };
@@ -97,7 +125,10 @@ class PracticeDashboardService {
         alerts,
       };
     } catch (error) {
-      dashboardLogger.error('Error loading practice dashboard:', error);
+      dashboardLogger.error(
+        'Error loading practice dashboard:',
+        ServiceErrorHandler.normalizeError(error)
+      );
       throw error;
     }
   }
@@ -164,14 +195,26 @@ class PracticeDashboardService {
       const { data: recentActivity, error: activityError } =
         recentActivityResponse;
 
-      if (stockError) console.error('Error fetching stock levels:', stockError);
-      if (ordersError) console.error('Error fetching orders:', ordersError);
+      if (stockError)
+        dashboardLogger.warn('Error fetching stock levels', {
+          error: stockError,
+        });
+      if (ordersError)
+        dashboardLogger.warn('Error fetching orders', {
+          error: ordersError,
+        });
       if (productsError)
-        console.error('Error fetching products:', productsError);
+        dashboardLogger.warn('Error fetching products', {
+          error: productsError,
+        });
       if (inventoryError)
-        console.error('Error fetching inventory value:', inventoryError);
+        dashboardLogger.warn('Error fetching inventory value', {
+          error: inventoryError,
+        });
       if (activityError)
-        console.error('Error fetching recent activity:', activityError);
+        dashboardLogger.warn('Error fetching recent activity', {
+          error: activityError,
+        });
 
       // 🚀 PERFORMANCE: Calculate metrics from parallel data
       const lowStockCount =
@@ -510,20 +553,20 @@ class PracticeDashboardService {
       return { items: [] };
     }
 
+    const dtoItems =
+      (data as StockLevelView[] | null)?.map(mapStockLevelToDashboardDTO) ?? [];
+    const items = dtoItems
+      .filter(item => item.currentQuantity <= item.minimumQuantity)
+      .map(item => ({
+        name: item.productName ?? 'Unknown product',
+        category: 'N/A',
+        current_quantity: item.currentQuantity,
+        minimum_quantity: item.minimumQuantity,
+        location: item.locationName ?? 'Unknown',
+      }));
+
     return {
-      items:
-        data
-          ?.filter(
-            (item: any) => item.current_quantity <= (item.minimum_quantity || 0)
-          )
-          .map((item: any) => ({
-            product_name: item.products?.name || 'Unknown Product',
-            category: item.products?.category || 'Unknown Category',
-            location: item.practice_locations?.name || 'Unknown Location',
-            current: item.current_quantity || 0,
-            minimum: item.minimum_quantity || 0,
-            urgency: (item.current_quantity || 0) === 0 ? 'critical' : 'high',
-          })) || [],
+      items: items || [],
     };
   }
 

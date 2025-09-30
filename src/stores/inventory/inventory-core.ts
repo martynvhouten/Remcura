@@ -1,8 +1,9 @@
-import { ref, computed, onUnmounted } from 'vue';
+import { ref, onUnmounted } from 'vue';
 import { supabase } from '@/boot/supabase';
 import { inventoryLogger } from '@/utils/logger';
 import { createEventEmitter, StoreEvents } from '@/utils/eventBus';
-import type { StockLevel } from '@/types/inventory';
+import type { StockLevelView } from '@/types/inventory';
+import { mapStockLevelRowToView } from '@/types/inventory';
 
 export function useInventoryCore() {
   // Event emitter for store communication
@@ -13,7 +14,7 @@ export function useInventoryCore() {
   const currentUserId = ref<string | null>(null);
 
   // Core state
-  const stockLevels = ref<StockLevel[]>([]);
+  const stockLevels = ref<StockLevelView[]>([]);
   const loading = ref(false);
   const lastSyncAt = ref<Date | null>(null);
 
@@ -51,9 +52,11 @@ export function useInventoryCore() {
 
       if (error) throw error;
 
-      stockLevels.value = data || [];
+      stockLevels.value = (data ?? []).map(row => mapStockLevelRowToView(row));
     } catch (error) {
-      inventoryLogger.error('Error fetching stock levels:', error);
+      inventoryLogger.error('Error fetching stock levels:', {
+        error: error instanceof Error ? error.message : String(error),
+      });
       throw error;
     }
   };
@@ -62,7 +65,9 @@ export function useInventoryCore() {
     try {
       await fetchStockLevels(practiceId);
     } catch (error) {
-      inventoryLogger.error('Error refreshing core inventory data:', error);
+      inventoryLogger.error('Error refreshing core inventory data:', {
+        error: error instanceof Error ? error.message : String(error),
+      });
       throw error;
     }
   };

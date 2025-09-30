@@ -341,7 +341,7 @@
 
       &:hover {
         transform: translateY(-2px);
-        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+        box-shadow: var(--shadow-lg);
       }
 
       &:active {
@@ -367,19 +367,19 @@
           var(--brand-primary) 0%,
           var(--brand-primary-light) 100%
         );
-        box-shadow: 0 4px 12px rgba(30, 58, 138, 0.3);
+        box-shadow: var(--shadow-md);
       }
 
       // Danger button enhancements
       &.q-btn--unelevated.q-btn--rectangle.bg-negative {
         background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%);
-        box-shadow: 0 4px 12px rgba(220, 38, 38, 0.3);
+        box-shadow: var(--shadow-md);
       }
 
       // Warning button enhancements
       &.q-btn--unelevated.q-btn--rectangle.bg-warning {
         background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
-        box-shadow: 0 4px 12px rgba(245, 158, 11, 0.3);
+        box-shadow: var(--shadow-md);
       }
     }
 

@@ -196,23 +196,22 @@
   import BaseCard from 'src/components/base/BaseCard.vue';
   import BatchInput from 'src/components/BatchInput.vue';
   import type {
-    Product,
     ProductBatchWithDetails,
-    CountingEntry,
+    CountingEntryDTO,
   } from 'src/types/inventory';
   import { useFormatting } from 'src/composables/useFormatting';
 
   interface Props {
-    product: Product;
+    entry?: CountingEntryDTO;
     sessionId: string;
-    locationId: string;
+    practiceId: string;
     viewMode?: 'lite' | 'full';
-    existingEntry?: CountingEntry;
+    existingEntry?: CountingEntryDTO;
   }
 
   interface Emits {
-    (e: 'entry-saved', entry: CountingEntry): void;
-    (e: 'entry-updated', entry: CountingEntry): void;
+    (e: 'entry-saved', entry: CountingEntryDTO): void;
+    (e: 'entry-updated', entry: CountingEntryDTO): void;
   }
 
   const props = withDefaults(defineProps<Props>(), {
@@ -414,7 +413,7 @@
       // Save the counting entry (this would need to be implemented in a counting store)
       // await countingStore.saveEntry(entryData);
 
-      emit('entry-saved', entryData as CountingEntry);
+      emit('entry-saved', entryData as CountingEntryDTO);
 
       $q.notify({
         type: 'positive',

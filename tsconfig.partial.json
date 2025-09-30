@@ -1,0 +1,4 @@
+{
+  "extends": "./tsconfig.json",
+  "include": ["src/domain/inventory/**/*.ts", "src/stores/batch.ts", "src/services/analytics.ts"]
+}

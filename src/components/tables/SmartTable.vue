@@ -15,10 +15,10 @@
     <!-- Client-Side Table (< 1000 records) -->
     <div v-if="isClientSide" class="medical-table">
       <q-table
+        v-model:pagination="pagination"
         :rows="visibleData"
         :columns="columns"
         :loading="loading"
-        v-model:pagination="pagination"
         :row-key="rowKey"
         flat
         bordered
@@ -27,7 +27,7 @@
         @request="onTableRequest"
       >
         <!-- Pass through all slots -->
-        <template v-for="(_, slot) in $slots" v-slot:[slot]="scope">
+        <template v-for="(_, slot) in $slots" #[slot]="scope">
           <slot :name="slot" v-bind="scope" />
         </template>
       </q-table>
@@ -36,10 +36,10 @@
     <!-- Server-Side Table (1000-5000 records) -->
     <div v-else-if="isServerSide" class="medical-table">
       <q-table
+        v-model:pagination="pagination"
         :rows="visibleData"
         :columns="columns"
         :loading="loading"
-        v-model:pagination="pagination"
         :row-key="rowKey"
         server-side-pagination
         flat
@@ -49,7 +49,7 @@
         @request="onTableRequest"
       >
         <!-- Pass through all slots -->
-        <template v-for="(_, slot) in $slots" v-slot:[slot]="scope">
+        <template v-for="(_, slot) in $slots" #[slot]="scope">
           <slot :name="slot" v-bind="scope" />
         </template>
       </q-table>
@@ -60,14 +60,14 @@
       <VirtualizedTable
         :rows="visibleData"
         :columns="columns"
-        :loading="loading"
         :row-key="rowKey"
         :item-height="itemHeight"
         :container-height="virtualizedHeight"
+        :loading="loading"
         v-bind="$attrs"
       >
         <!-- Pass through all slots -->
-        <template v-for="(_, slot) in $slots" v-slot:[slot]="scope">
+        <template v-for="(_, slot) in $slots" #[slot]="scope">
           <slot :name="slot" v-bind="scope" />
         </template>
       </VirtualizedTable>
@@ -108,11 +108,14 @@
   } from 'src/composables/useSmartTable';
   import VirtualizedTable from './VirtualizedTable.vue';
 
+  type TableRow = Record<string, unknown>;
+  type RowKeyFn<T> = (row: T) => string;
+
   interface Props {
     // Data
-    data?: any[];
-    columns: any[];
-    rowKey?: string | ((row: any) => string);
+    data?: TableRow[];
+    columns: Array<Record<string, unknown>>;
+    rowKey?: string | RowKeyFn<TableRow>;
 
     // Smart table config
     config?: SmartTableConfig;
@@ -129,10 +132,11 @@
     showPerformanceInfo: false,
     virtualizedHeight: 400,
     config: () => ({}),
+    data: () => [],
   });
 
   const emit = defineEmits<{
-    dataLoaded: [data: any[]];
+    dataLoaded: [data: TableRow[]];
     strategyChanged: [strategy: string];
   }>();
 

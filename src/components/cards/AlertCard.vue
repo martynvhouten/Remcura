@@ -1,82 +1,79 @@
 <template>
-  <div
-    :class="cardClasses"
-    :role="role"
-    :aria-labelledby="titleId"
-    v-bind="$attrs"
-  >
-    <!-- Alert indicator line -->
-    <div class="alert-indicator" />
+  <div :id="id" :class="alertClasses" role="region">
+    <div class="alert-card" :class="paddingClass">
+      <!-- Alert indicator line -->
+      <div class="alert-indicator" />
 
-    <!-- Card Header -->
-    <div v-if="hasHeader" class="card-header" :class="headerClass">
-      <div class="card-header-content">
-        <div class="card-title-section">
-          <!-- Status Icon -->
-          <div
-            v-if="showStatusIcon"
-            class="status-icon"
-            :class="`status-icon--${severity}`"
-          >
-            <q-icon :name="statusIcon" class="icon-size-base" />
+      <!-- Card Header -->
+      <div v-if="hasHeader" class="card-header" :class="headerClass">
+        <div class="card-header-content">
+          <div class="card-title-section">
+            <!-- Status Icon -->
+            <div
+              v-if="showStatusIcon"
+              class="status-icon"
+              :class="`status-icon--${severity}`"
+            >
+              <q-icon :name="statusIcon" class="icon-size-base" />
+            </div>
+
+            <!-- Custom Icon -->
+            <div
+              v-else-if="icon"
+              class="card-icon"
+              :class="[
+                `card-icon--${iconVariant}`,
+                iconColor ? `card-icon--${iconColor}` : '',
+              ]"
+            >
+              <q-icon :name="icon" class="icon-size-base" />
+            </div>
+
+            <!-- Title and Subtitle -->
+            <div v-if="title || subtitle" class="card-text-content">
+              <h3 v-if="title" :id="id" class="card-title">{{ title }}</h3>
+              <p v-if="subtitle" class="card-subtitle">{{ subtitle }}</p>
+            </div>
+
+            <!-- Custom header content -->
+            <slot name="header-content" />
           </div>
 
-          <!-- Custom Icon -->
-          <div
-            v-else-if="icon"
-            class="card-icon"
-            :class="[
-              `card-icon--${iconVariant}`,
-              iconColor ? `card-icon--${iconColor}` : '',
-            ]"
-          >
-            <q-icon :name="icon" class="icon-size-base" />
+          <!-- Header actions -->
+          <div v-if="hasHeaderActions" class="card-header-actions">
+            <slot name="header-actions" />
           </div>
 
-          <!-- Title and Subtitle -->
-          <div v-if="title || subtitle" class="card-text-content">
-            <h3 v-if="title" class="card-title" :id="titleId">{{ title }}</h3>
-            <p v-if="subtitle" class="card-subtitle">{{ subtitle }}</p>
+          <!-- Dismiss button -->
+          <div v-if="dismissible" class="dismiss-button">
+            <q-btn
+              flat
+              round
+              dense
+              icon="close"
+              :aria-label="$t('common.close')"
+              @click="$emit('close')"
+            />
           </div>
-
-          <!-- Custom header content -->
-          <slot name="header-content" />
-        </div>
-
-        <!-- Header actions -->
-        <div v-if="hasHeaderActions" class="card-header-actions">
-          <slot name="header-actions" />
-        </div>
-
-        <!-- Dismiss button -->
-        <div v-if="dismissible" class="dismiss-button">
-          <q-btn
-            flat
-            round
-            dense
-            icon="close"
-            size="sm"
-            @click="handleDismiss"
-            :aria-label="$t ? $t('common.dismiss') : 'Dismiss'"
-          />
         </div>
       </div>
-    </div>
 
-    <!-- Card Content -->
-    <div v-if="hasContent" class="card-content" :class="contentClass">
-      <slot />
-    </div>
+      <!-- Card Content -->
+      <div v-if="hasContent" class="card-content" :class="contentClass">
+        <slot />
+      </div>
 
-    <!-- Card Actions -->
-    <div v-if="hasActions" class="card-actions" :class="actionsClass">
-      <slot name="actions" />
+      <!-- Card Actions -->
+      <div v-if="hasActions" class="card-actions" :class="actionsClass">
+        <slot name="actions" />
+      </div>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
   import { computed, useSlots, useAttrs } from 'vue';
+  import { useI18n } from 'vue-i18n';
 
   interface Props {
     // Content props
@@ -111,16 +108,22 @@
   }
 
   const props = withDefaults(defineProps<Props>(), {
-    iconVariant: 'default',
+    icon: undefined,
+    title: undefined,
+    subtitle: undefined,
+    iconColor: 'primary',
+    variant: 'info',
+    severity: 'default',
     padding: 'md',
-    role: 'alert',
-    severity: 'info',
-    showStatusIcon: true,
+    role: 'region',
+    iconVariant: 'default',
+    cardClass: '',
+    headerClass: '',
+    contentClass: '',
+    actionsClass: '',
   });
 
-  const emit = defineEmits<{
-    dismiss: [];
-  }>();
+  const emit = defineEmits<{ close: []; dismiss: [] }>();
 
   const slots = useSlots();
   const attrs = useAttrs();
@@ -166,7 +169,7 @@
   });
 
   // Card classes
-  const cardClasses = computed(() => {
+  const alertClasses = computed(() => {
     const classes = ['alert-card', `alert-card--${props.severity}`];
 
     // Padding classes
@@ -191,7 +194,7 @@
 <style scoped lang="scss">
   .alert-card {
     border-radius: 12px;
-    background: var(--card-background, #ffffff);
+    background: var(--surface);
     border: 1px solid var(--alert-border);
     box-shadow: var(
       --card-shadow,

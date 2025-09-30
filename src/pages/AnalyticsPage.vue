@@ -49,7 +49,7 @@
             max-width: 240px;
             border: 2px solid #e5e7eb;
             border-radius: 8px;
-            background: #ffffff;
+            background: var(--surface);
             min-height: 48px;
           "
         />

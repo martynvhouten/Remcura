@@ -41,6 +41,16 @@ const routes: RouteRecordRaw[] = [
         },
       },
       {
+        path: 'dialogs-gallery',
+        name: 'dialogs-gallery',
+        component: () => import('pages/NewDialogsGalleryPage.vue'),
+        meta: {
+          requiresAuth: true,
+          requiresRole: ['owner', 'platform_owner'],
+          title: 'Dialogs Gallery',
+        },
+      },
+      {
         path: 'style-sandbox',
         name: 'style-sandbox',
         component: () => import('pages/StyleSandbox.vue'),

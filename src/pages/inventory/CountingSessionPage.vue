@@ -96,7 +96,11 @@
         :message="$t('counting.sessionLoadFailed')"
       >
         <template #actions>
-          <q-btn color="primary" :label="$t('common.retry')" @click="loadSession" />
+          <q-btn
+            color="primary"
+            :label="$t('common.retry')"
+            @click="loadSession"
+          />
         </template>
       </AlertCard>
 
@@ -194,7 +198,11 @@
               :message="$t('counting.entriesLoadFailed')"
             >
               <template #actions>
-                <q-btn color="primary" :label="$t('common.retry')" @click="loadCountingEntries" />
+                <q-btn
+                  color="primary"
+                  :label="$t('common.retry')"
+                  @click="loadCountingEntries"
+                />
               </template>
             </AlertCard>
             <q-table
@@ -269,9 +277,9 @@
   import { useCountingStore } from 'src/stores/counting';
   import type {
     CountingSession,
-    CountingEntry,
+    CountingEntryDTO,
     CountingProduct,
-  } from 'src/types/inventory';
+  } from '@/types/inventory';
   import PageLayout from 'src/components/PageLayout.vue';
   import PageTitle from 'src/components/PageTitle.vue';
   import { BaseCard, InteractiveCard, AlertCard } from 'src/components/cards';
@@ -296,7 +304,7 @@
 
   // Reactive state
   const countingProducts = ref<CountingProduct[]>([]);
-  const countingEntries = ref<CountingEntry[]>([]);
+  const countingEntries = ref<CountingEntryDTO[]>([]);
   const entriesLoading = ref(false);
   const loadError = ref(false);
   const entriesError = ref(false);
@@ -399,7 +407,10 @@
     try {
       loadError.value = false;
       const practiceId = authStore.userProfile?.clinic_id || '';
-      const s = await countingStore.fetchSessionById(practiceId, props.sessionId);
+      const s = await countingStore.fetchSessionById(
+        practiceId,
+        props.sessionId
+      );
       if (s && (s.status === 'completed' || s.status === 'approved')) {
         await loadCountingEntries();
       }
@@ -412,8 +423,8 @@
   const loadCountingEntries = async () => {
     entriesLoading.value = true;
     try {
-      await countingStore.fetchCountingEntries(props.sessionId);
-      countingEntries.value = countingStore.countingEntries;
+      const data = await countingStore.fetchCountingEntries(props.sessionId);
+      countingEntries.value = data.entries as CountingEntryDTO[];
       entriesError.value = false;
     } catch (error) {
       console.error('Error loading counting entries:', error);

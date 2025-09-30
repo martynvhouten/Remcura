@@ -47,19 +47,18 @@ export interface BaseDashboardWidgetProps {
   cardClass?: string;
 }
 
-// Card design guidelines
+// Card design guidelines - using CSS custom properties
 export const CARD_DESIGN_TOKENS = {
   // Border radius
-  borderRadius: '12px',
+  borderRadius: 'var(--radius-lg)',
 
   // Shadows
-  baseShadow: '0 1px 3px rgba(0, 0, 0, 0.08), 0 1px 2px rgba(0, 0, 0, 0.06)',
-  interactiveShadow:
-    '0 2px 4px rgba(0, 0, 0, 0.06), 0 1px 2px rgba(0, 0, 0, 0.04)',
-  hoverShadow: '0 8px 25px rgba(0, 0, 0, 0.12), 0 4px 10px rgba(0, 0, 0, 0.08)',
+  baseShadow: 'var(--shadow-sm)',
+  interactiveShadow: 'var(--shadow-md)',
+  hoverShadow: 'var(--shadow-lg)',
 
   // Transitions
-  transition: 'all 0.2s cubic-bezier(0.4, 0, 0.2, 1)',
+  transition: 'var(--transition-base)',
 
   // Hover transforms
   hoverTransform: 'translateY(-3px)',
@@ -67,21 +66,21 @@ export const CARD_DESIGN_TOKENS = {
 
   // Spacing
   padding: {
-    sm: '12px 16px',
-    md: '16px 20px',
-    lg: '20px 24px',
+    sm: 'var(--space-3) var(--space-4)',
+    md: 'var(--space-4) var(--space-5)',
+    lg: 'var(--space-5) var(--space-6)',
   },
 
   // Typography
-  titleSize: '16px',
-  titleWeight: '600',
-  subtitleSize: '14px',
+  titleSize: 'var(--text-lg)',
+  titleWeight: 'var(--font-weight-semibold)',
+  subtitleSize: 'var(--text-sm)',
 
   // Icon sizes
-  iconSize: '20px',
+  iconSize: 'var(--icon-base)',
   iconContainerSize: '32px',
 
   // Colors
-  border: 'rgba(0, 0, 0, 0.08)',
-  background: '#ffffff',
+  border: 'var(--border-primary)',
+  background: 'var(--surface)',
 } as const;

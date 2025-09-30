@@ -12,7 +12,7 @@
       <!-- Product Image - Optimized -->
       <div class="text-center">
         <OptimizedImage
-          :src="product.image_url || ''"
+          :src="product.raw?.image_url || ''"
           :alt="product.name"
           width="300"
           height="200"
@@ -131,7 +131,8 @@
             </q-item-label>
             <div class="text-body2">
               {{
-                product.description || $t('productsPage.details.noDescription')
+                product.raw?.description ||
+                $t('productsPage.details.noDescription')
               }}
             </div>
           </div>
@@ -150,14 +151,14 @@
             <!-- Left Column: Core Identifiers -->
             <div class="col-12 col-md-6">
               <q-list dense>
-                <q-item v-if="product.gtin">
+                <q-item v-if="product.raw?.gtin">
                   <q-item-section>
                     <q-item-label class="text-caption text-grey-6">
                       {{ $t('productsPage.details.gtin') }}
                     </q-item-label>
                     <q-item-label class="text-weight-medium">
                       <q-chip
-                        :label="product.gtin"
+                        :label="product.raw?.gtin ?? ''"
                         icon="qr_code_2"
                         color="primary"
                         text-color="white"
@@ -167,26 +168,30 @@
                   </q-item-section>
                 </q-item>
 
-                <q-item v-if="product.gpc_brick_code">
+                <q-item v-if="product.raw?.gpc_brick_code">
                   <q-item-section>
                     <q-item-label class="text-caption text-grey-6">
                       {{ $t('productsPage.details.gpcBrickCode') }}
                     </q-item-label>
                     <q-item-label class="text-weight-medium">
-                      {{ product.gpc_brick_code }}
+                      {{ product.raw?.gpc_brick_code }}
                     </q-item-label>
                   </q-item-section>
                 </q-item>
 
-                <q-item v-if="product.country_of_origin">
+                <q-item v-if="product.raw?.country_of_origin">
                   <q-item-section>
                     <q-item-label class="text-caption text-grey-6">
                       {{ $t('productsPage.details.countryOfOrigin') }}
                     </q-item-label>
                     <q-item-label class="text-weight-medium">
                       <q-chip
-                        :label="getCountryName(product.country_of_origin)"
-                        :icon="getCountryFlag(product.country_of_origin)"
+                        :label="
+                          getCountryName(product.raw?.country_of_origin ?? '')
+                        "
+                        :icon="
+                          getCountryFlag(product.raw?.country_of_origin ?? '')
+                        "
                         color="blue-grey-2"
                         text-color="blue-grey-8"
                         size="sm"
@@ -195,24 +200,17 @@
                   </q-item-section>
                 </q-item>
 
-                <q-item v-if="product.product_lifecycle_status">
+                <q-item v-if="product.raw?.product_lifecycle_status">
                   <q-item-section>
                     <q-item-label class="text-caption text-grey-6">
                       {{ $t('productsPage.details.lifecycleStatus') }}
                     </q-item-label>
                     <q-item-label class="text-weight-medium">
-                      <q-badge
-                        :color="
-                          getLifecycleStatusColor(
-                            product.product_lifecycle_status
-                          )
-                        "
-                        :label="
-                          $t(
-                            `productsPage.lifecycleStatus.${product.product_lifecycle_status}`
-                          )
-                        "
-                      />
+                      {{
+                        mapLifecycleStatus(
+                          product.raw?.product_lifecycle_status ?? ''
+                        )
+                      }}
                     </q-item-label>
                   </q-item-section>
                 </q-item>
@@ -467,10 +465,10 @@
   const hasGS1Data = computed(() => {
     if (!props.product) return false;
     return !!(
-      props.product.gtin ||
-      props.product.gpc_brick_code ||
-      props.product.country_of_origin ||
-      props.product.product_lifecycle_status ||
+      props.product.raw?.gtin ||
+      props.product.raw?.gpc_brick_code ||
+      props.product.raw?.country_of_origin ||
+      props.product.raw?.product_lifecycle_status ||
       hasPackagingInfo.value ||
       hasWeightInfo.value ||
       hasValidityInfo.value ||
@@ -544,18 +542,18 @@
     return countryFlags[countryCode] || 'public';
   };
 
-  const getLifecycleStatusColor = (status: string): string => {
+  const mapLifecycleStatus = (status: string): string => {
     switch (status?.toLowerCase()) {
       case 'active':
-        return 'positive';
+        return $t('productsPage.lifecycleStatus.active');
       case 'discontinued':
-        return 'negative';
+        return $t('productsPage.lifecycleStatus.discontinued');
       case 'new':
-        return 'info';
+        return $t('productsPage.lifecycleStatus.new');
       case 'phase_out':
-        return 'warning';
+        return $t('productsPage.lifecycleStatus.phaseOut');
       default:
-        return 'grey';
+        return status;
     }
   };
 </script>

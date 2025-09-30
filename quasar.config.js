@@ -282,7 +282,7 @@ export default configure(function (ctx) {
           accent: '#0d9488', // Medical Teal Accent
 
           dark: '#1c1917',
-          'dark-page': '#0a0a0a',
+          'dark-page': '#1e1e1e', // Use surface token for dark page background
 
           positive: '#065f46', // Deep Emerald
           negative: '#b91c1c', // Deep Red

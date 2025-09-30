@@ -165,7 +165,7 @@
   .simple-order-card {
     background: white;
     border-radius: 12px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+    box-shadow: var(--shadow-md);
     transition: all 0.2s ease;
     overflow: hidden;
     border: 1px solid rgba(0, 0, 0, 0.04);
@@ -177,7 +177,7 @@
 
   .simple-order-card:hover {
     transform: translateY(-2px);
-    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+    box-shadow: var(--shadow-lg);
   }
 
   /* Header */

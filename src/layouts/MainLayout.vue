@@ -13,13 +13,24 @@
           round
           size="xl"
           class="menu-toggle-btn header-btn"
-          :aria-label="isMiniDrawer ? (t('nav.openNavigation') || 'Open navigation') : (t('nav.closeNavigation') || 'Collapse navigation')"
+          :aria-label="
+            isMiniDrawer
+              ? t('nav.openNavigation') || 'Open navigation'
+              : t('nav.closeNavigation') || 'Collapse navigation'
+          "
           :aria-expanded="!isMiniDrawer"
           @click="toggleLeftDrawer"
         >
-          <q-icon :name="isMiniDrawer ? 'menu' : 'menu_open'" class="header-icon header-icon-lg" />
+          <q-icon
+            :name="isMiniDrawer ? 'menu' : 'menu_open'"
+            class="header-icon header-icon-lg"
+          />
           <q-tooltip>
-            {{ isMiniDrawer ? (t('nav.openNavigation') || 'Open navigation') : (t('nav.closeNavigation') || 'Collapse navigation') }}
+            {{
+              isMiniDrawer
+                ? t('nav.openNavigation') || 'Open navigation'
+                : t('nav.closeNavigation') || 'Collapse navigation'
+            }}
           </q-tooltip>
         </q-btn>
 
@@ -180,26 +191,26 @@
               <q-icon name="apartment" class="icon-size-lg" />
             </q-avatar>
           </div>
-        <div class="clinic-details">
-          <div class="clinic-name" :title="clinicName">{{ clinicName }}</div>
+          <div class="clinic-details">
+            <div class="clinic-name" :title="clinicName">{{ clinicName }}</div>
           </div>
         </div>
 
         <!-- Main Navigation -->
         <q-list class="navigation-list flex-1" role="menu">
-        <!-- Iterate through sections -->
-        <template v-for="section in navigationLinks" :key="section.id">
-          <!-- Section Header -->
-          <q-item-label
-            header
-            class="navigation-section-header"
-            :class="`section-${section.id}`"
-          >
-            {{ section.title }}
-          </q-item-label>
+          <!-- Iterate through sections -->
+          <template v-for="section in navigationLinks" :key="section.id">
+            <!-- Section Header -->
+            <q-item-label
+              header
+              class="navigation-section-header"
+              :class="`section-${section.id}`"
+            >
+              {{ section.title }}
+            </q-item-label>
 
-          <!-- Section Items -->
-          <template v-for="item in section.items" :key="item.title">
+            <!-- Section Items -->
+            <template v-for="item in section.items" :key="item.title">
               <!-- Mini: icon-only item with tooltip -->
               <NavIconItem
                 v-if="isMiniDrawer"
@@ -223,7 +234,11 @@
                 class="nav-item"
                 :class="{ 'has-submenu': item.submenu }"
                 role="menuitem"
-                :aria-current="($route.name === item.routeName || isParentActive(item)) ? 'page' : undefined"
+                :aria-current="
+                  $route.name === item.routeName || isParentActive(item)
+                    ? 'page'
+                    : undefined
+                "
                 :aria-label="
                   item.title + (item.badge ? ' (' + item.badge + ' items)' : '')
                 "
@@ -268,10 +283,13 @@
                 </q-item-section>
               </q-item>
 
-            <!-- Submenu Items -->
-            <q-slide-transition v-if="item.submenu">
-              <div v-show="isSubmenuExpanded(item.routeName)">
-                  <template v-for="subItem in item.submenu" :key="subItem.title">
+              <!-- Submenu Items -->
+              <q-slide-transition v-if="item.submenu">
+                <div v-show="isSubmenuExpanded(item.routeName)">
+                  <template
+                    v-for="subItem in item.submenu"
+                    :key="subItem.title"
+                  >
                     <!-- Mini: icon-only sub item -->
                     <NavIconItem
                       v-if="isMiniDrawer"
@@ -293,7 +311,9 @@
                       active-class="nav-item-active"
                       class="nav-item nav-sub-item"
                       role="menuitem"
-                      :aria-current="($route.name === subItem.routeName) ? 'page' : undefined"
+                      :aria-current="
+                        $route.name === subItem.routeName ? 'page' : undefined
+                      "
                       :aria-label="subItem.title"
                     >
                       <q-item-section avatar class="sub-item-avatar">
@@ -309,18 +329,18 @@
                       </q-item-section>
                     </q-item>
                   </template>
-              </div>
-            </q-slide-transition>
-          </template>
+                </div>
+              </q-slide-transition>
+            </template>
 
-          <!-- Section Separator (except for last section) -->
-          <q-separator
-            v-if="
-              section.id !== navigationLinks[navigationLinks.length - 1]?.id
-            "
-            class="navigation-separator"
-          />
-        </template>
+            <!-- Section Separator (except for last section) -->
+            <q-separator
+              v-if="
+                section.id !== navigationLinks[navigationLinks.length - 1]?.id
+              "
+              class="navigation-separator"
+            />
+          </template>
         </q-list>
 
         <!-- Spacer -->
@@ -589,22 +609,10 @@
         title: t('demo.title') || 'Demo',
         items: [
           {
-            title: 'Style Sandbox',
-            icon: 'science',
-            to: '/style-sandbox',
-            routeName: 'style-sandbox',
-          },
-          {
             title: 'Dialogs Gallery',
             icon: 'view_carousel',
             to: '/dialogs-gallery',
             routeName: 'dialogs-gallery',
-          },
-          {
-            title: t('nav.styleGuide'),
-            icon: 'palette',
-            to: '/style-guide',
-            routeName: 'style-guide',
           },
         ],
       });

@@ -1,5 +1,6 @@
 <template>
   <div
+    :id="titleId"
     :class="cardClasses"
     :role="role"
     :aria-labelledby="titleId"
@@ -23,7 +24,7 @@
 
           <!-- Title and Subtitle -->
           <div v-if="title || subtitle" class="card-text-content">
-            <h3 v-if="title" class="card-title" :id="titleId">{{ title }}</h3>
+            <h3 v-if="title" :id="titleId" class="card-title">{{ title }}</h3>
             <p v-if="subtitle" class="card-subtitle">{{ subtitle }}</p>
           </div>
 
@@ -84,6 +85,14 @@
     iconVariant: 'default',
     padding: 'md',
     role: 'article',
+    title: undefined,
+    subtitle: undefined,
+    icon: undefined,
+    iconColor: 'primary',
+    cardClass: '',
+    headerClass: '',
+    contentClass: '',
+    actionsClass: '',
   });
 
   const slots = useSlots();
@@ -91,7 +100,7 @@
 
   // Generate unique ID for title
   const titleId = computed(() => {
-    if (attrs.id) return `${attrs.id}-title`;
+    if (attrs.id) return `${attrs.id as string}-title`;
     if (props.title)
       return `card-title-${props.title.replace(/\s+/g, '-').toLowerCase()}`;
     return `card-title-${Date.now()}`;
@@ -133,15 +142,11 @@
 
 <style scoped lang="scss">
   .base-card {
-    border-radius: 12px;
-    background: var(--card-background, #ffffff);
-    border: 1px solid var(--card-border, rgba(0, 0, 0, 0.08));
-    box-shadow: var(
-      --card-shadow,
-      0 1px 3px rgba(0, 0, 0, 0.08),
-      0 1px 2px rgba(0, 0, 0, 0.06)
-    );
-    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    border-radius: var(--radius-lg);
+    background: var(--surface);
+    border: 1px solid var(--border-primary);
+    box-shadow: var(--shadow-sm);
+    transition: var(--transition-base);
     overflow: hidden;
 
     // Dark mode support

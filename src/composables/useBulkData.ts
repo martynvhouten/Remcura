@@ -1,22 +1,53 @@
-import { ref, Ref } from 'vue';
+import { ref } from 'vue';
 import { supabase } from '@/boot/supabase';
 
-/**
- * Bulk data loading composable to prevent N+1 query patterns
- * Efficiently loads related data in batches instead of individual queries
- */
+interface StockLevelRecord {
+  product_id: string;
+  current_quantity: number;
+  minimum_quantity: number;
+  location_id: string;
+  practice_locations: {
+    name: string;
+  };
+}
+
+interface SupplierProductRecord {
+  product_id: string;
+  supplier_id: string;
+  supplier_sku: string;
+  unit_price: number;
+  minimum_order_quantity: number | null;
+  lead_time_days: number | null;
+  is_preferred: boolean;
+  suppliers: {
+    name: string;
+    contact_email: string | null;
+  };
+}
+
+interface ProductBatchRecord {
+  product_id: string;
+  batch_number: string;
+  expiry_date: string;
+  quantity_remaining: number;
+  location_id: string;
+  practice_locations: {
+    name: string;
+  };
+}
+
+interface RelatedDataFilters {
+  [key: string]: string | number | boolean | null;
+}
+
 export function useBulkData() {
   const loading = ref(false);
   const error = ref<Error | null>(null);
 
-  /**
-   * Bulk load stock levels for multiple products
-   * Prevents N+1 queries when showing product lists with stock info
-   */
   const loadStockLevelsForProducts = async (
     productIds: string[],
     practiceId: string
-  ): Promise<Record<string, any[]>> => {
+  ): Promise<Record<string, StockLevelRecord[]>> => {
     if (!productIds.length) return {};
 
     loading.value = true;
@@ -39,9 +70,8 @@ export function useBulkData() {
 
       if (queryError) throw queryError;
 
-      // Group by product_id for easy lookup
-      const stockByProduct: Record<string, any[]> = {};
-      data?.forEach(stock => {
+      const stockByProduct: Record<string, StockLevelRecord[]> = {};
+      (data as StockLevelRecord[] | null)?.forEach(stock => {
         if (!stockByProduct[stock.product_id]) {
           stockByProduct[stock.product_id] = [];
         }
@@ -58,14 +88,10 @@ export function useBulkData() {
     }
   };
 
-  /**
-   * Bulk load supplier products for multiple products
-   * Prevents N+1 queries when showing product-supplier relationships
-   */
   const loadSupplierProductsForProducts = async (
     productIds: string[],
     practiceId: string
-  ): Promise<Record<string, any[]>> => {
+  ): Promise<Record<string, SupplierProductRecord[]>> => {
     if (!productIds.length) return {};
 
     loading.value = true;
@@ -92,9 +118,8 @@ export function useBulkData() {
 
       if (queryError) throw queryError;
 
-      // Group by product_id for easy lookup
-      const suppliersByProduct: Record<string, any[]> = {};
-      data?.forEach(sp => {
+      const suppliersByProduct: Record<string, SupplierProductRecord[]> = {};
+      (data as SupplierProductRecord[] | null)?.forEach(sp => {
         if (!suppliersByProduct[sp.product_id]) {
           suppliersByProduct[sp.product_id] = [];
         }
@@ -111,14 +136,10 @@ export function useBulkData() {
     }
   };
 
-  /**
-   * Bulk load batch information for multiple products
-   * Prevents N+1 queries when showing expiry dates and batch info
-   */
   const loadBatchesForProducts = async (
     productIds: string[],
     practiceId: string
-  ): Promise<Record<string, any[]>> => {
+  ): Promise<Record<string, ProductBatchRecord[]>> => {
     if (!productIds.length) return {};
 
     loading.value = true;
@@ -144,9 +165,8 @@ export function useBulkData() {
 
       if (queryError) throw queryError;
 
-      // Group by product_id for easy lookup
-      const batchesByProduct: Record<string, any[]> = {};
-      data?.forEach(batch => {
+      const batchesByProduct: Record<string, ProductBatchRecord[]> = {};
+      (data as ProductBatchRecord[] | null)?.forEach(batch => {
         if (!batchesByProduct[batch.product_id]) {
           batchesByProduct[batch.product_id] = [];
         }
@@ -163,16 +183,12 @@ export function useBulkData() {
     }
   };
 
-  /**
-   * Generic bulk loader for any related data
-   * Useful for custom relationships
-   */
-  const loadRelatedData = async <T = any>(
+  const loadRelatedData = async <T extends Record<string, unknown>>(
     table: string,
     foreignKey: string,
     entityIds: string[],
-    selectFields: string = '*',
-    additionalFilters: Record<string, any> = {}
+    selectFields = '*',
+    additionalFilters: RelatedDataFilters = {}
   ): Promise<Record<string, T[]>> => {
     if (!entityIds.length) return {};
 
@@ -185,7 +201,6 @@ export function useBulkData() {
         .select(selectFields)
         .in(foreignKey, entityIds);
 
-      // Apply additional filters
       Object.entries(additionalFilters).forEach(([key, value]) => {
         query = query.eq(key, value);
       });
@@ -194,10 +209,9 @@ export function useBulkData() {
 
       if (queryError) throw queryError;
 
-      // Group by foreign key for easy lookup
       const groupedData: Record<string, T[]> = {};
-      data?.forEach((item: any) => {
-        const key = item[foreignKey];
+      (data as T[] | null)?.forEach(item => {
+        const key = String(item[foreignKey]);
         if (!groupedData[key]) {
           groupedData[key] = [];
         }

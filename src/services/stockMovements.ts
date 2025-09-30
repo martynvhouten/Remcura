@@ -1,6 +1,7 @@
 import { supabase } from 'src/boot/supabase';
 import { useAuthStore } from 'src/stores/auth';
 import type { MovementType, StockMovement } from '@/types/inventory';
+import type { TablesInsert } from '@/types';
 
 export interface CreateStockMovementRequest {
   practice_id: string;
@@ -10,15 +11,82 @@ export interface CreateStockMovementRequest {
   quantity_change: number;
   quantity_before: number;
   quantity_after: number;
-  reference_type?: string;
-  reference_id?: string;
-  reason?: string;
-  notes?: string;
-  batch_number?: string;
-  expiry_date?: string;
+  reference_type?: string | null;
+  reference_id?: string | null;
+  reason?: string | null;
+  notes?: string | null;
+  batch_number?: string | null;
+  expiry_date?: string | null;
 }
 
+const movementLabels: Record<MovementType, string> = {
+  count: 'Voorraadtelling',
+  receipt: 'Ontvangst',
+  usage: 'Gebruik',
+  transfer: 'Overplaatsing',
+  adjustment: 'Aanpassing',
+  waste: 'Afval',
+  order_received: 'Bestelling ontvangen',
+  consumption: 'Consumptie',
+  expired: 'Vervallen',
+  manual_adjustment: 'Handmatige aanpassing',
+  correction: 'Correctie',
+};
+
+const movementIcons: Record<MovementType, string> = {
+  count: 'mdi-counter',
+  receipt: 'mdi-package-variant',
+  usage: 'mdi-play-circle',
+  transfer: 'mdi-swap-horizontal',
+  adjustment: 'mdi-tune',
+  waste: 'mdi-delete',
+  order_received: 'mdi-truck-delivery',
+  consumption: 'mdi-cart-arrow-down',
+  expired: 'mdi-alert-octagon',
+  manual_adjustment: 'mdi-hammer-wrench',
+  correction: 'mdi-pencil-circle',
+};
+
+const movementColors: Record<MovementType, string> = {
+  count: 'info',
+  receipt: 'info',
+  usage: 'primary',
+  transfer: 'warning',
+  adjustment: 'warning',
+  waste: 'error',
+  order_received: 'success',
+  consumption: 'primary',
+  expired: 'error',
+  manual_adjustment: 'warning',
+  correction: 'info',
+};
+
+const toInsertPayload = (
+  request: CreateStockMovementRequest,
+  createdBy: string | null
+): TablesInsert<'stock_movements'> => ({
+  practice_id: request.practice_id,
+  location_id: request.location_id,
+  product_id: request.product_id,
+  movement_type: request.movement_type,
+  quantity_change: request.quantity_change,
+  quantity_before: request.quantity_before,
+  quantity_after: request.quantity_after,
+  reference_type: request.reference_type ?? null,
+  reference_id: request.reference_id ?? undefined,
+  reason: request.reason ?? undefined,
+  notes: request.notes ?? undefined,
+  batch_number: request.batch_number ?? undefined,
+  expiry_date: request.expiry_date ?? undefined,
+  created_by: createdBy,
+  created_at: new Date().toISOString(),
+});
+
 export class StockMovementService {
+  static labels = movementLabels;
+  static icons = movementIcons;
+  static colors = movementColors;
+
   /**
    * Log a stock movement
    */
@@ -26,17 +94,12 @@ export class StockMovementService {
     request: CreateStockMovementRequest
   ): Promise<StockMovement | null> {
     const authStore = useAuthStore();
+    const payload = toInsertPayload(request, authStore.user?.id ?? null);
 
     try {
-      const movementData = {
-        ...request,
-        created_by: authStore.user?.id,
-        created_at: new Date().toISOString(),
-      };
-
       const { data, error } = await supabase
         .from('stock_movements')
-        .insert([movementData])
+        .insert(payload)
         .select()
         .single();
 
@@ -74,9 +137,9 @@ export class StockMovementService {
       quantity_before: oldQuantity,
       quantity_after: newQuantity,
       reference_type: sessionId ? 'counting_session' : 'manual_count',
-      reference_id: sessionId,
+      reference_id: sessionId ?? null,
       reason,
-      batch_number,
+      batch_number: batchNumber ?? null,
     });
   }
 
@@ -103,8 +166,8 @@ export class StockMovementService {
       quantity_after: newQuantity,
       reference_type: 'manual_adjustment',
       reason,
-      notes,
-      batch_number,
+      notes: notes ?? null,
+      batch_number: batchNumber ?? null,
     });
   }
 
@@ -130,9 +193,9 @@ export class StockMovementService {
       quantity_before: currentQuantity,
       quantity_after: currentQuantity - consumedQuantity,
       reference_type: orderId ? 'order' : 'manual_consumption',
-      reference_id: orderId,
+      reference_id: orderId ?? null,
       reason,
-      batch_number,
+      batch_number: batchNumber ?? null,
     });
   }
 
@@ -153,15 +216,15 @@ export class StockMovementService {
       practice_id: practiceId,
       location_id: locationId,
       product_id: productId,
-      movement_type: 'order_received',
+      movement_type: 'receipt',
       quantity_change: receivedQuantity,
       quantity_before: currentQuantity,
       quantity_after: currentQuantity + receivedQuantity,
       reference_type: 'order',
       reference_id: orderId,
       reason: 'Stock received from supplier',
-      batch_number: batchNumber,
-      expiry_date: expiryDate,
+      batch_number: batchNumber ?? null,
+      expiry_date: expiryDate ?? null,
     });
   }
 
@@ -180,6 +243,9 @@ export class StockMovementService {
     transferId?: string,
     batchNumber?: string
   ): Promise<{ from: StockMovement | null; to: StockMovement | null }> {
+    const referenceId = transferId ?? null;
+    const batch = batchNumber ?? null;
+
     try {
       // Log outgoing movement from source location
       const fromMovement = await this.logMovement({
@@ -191,9 +257,9 @@ export class StockMovementService {
         quantity_before: fromQuantity,
         quantity_after: fromQuantity - transferQuantity,
         reference_type: 'transfer',
-        reference_id: transferId,
+        reference_id: referenceId,
         reason: `Transfer to location ${toLocationId}: ${reason}`,
-        batch_number: batchNumber,
+        batch_number: batch,
       });
 
       // Log incoming movement to destination location
@@ -206,9 +272,9 @@ export class StockMovementService {
         quantity_before: toQuantity,
         quantity_after: toQuantity + transferQuantity,
         reference_type: 'transfer',
-        reference_id: transferId,
+        reference_id: referenceId,
         reason: `Transfer from location ${fromLocationId}: ${reason}`,
-        batch_number: batchNumber,
+        batch_number: batch,
       });
 
       return { from: fromMovement, to: toMovement };
@@ -235,13 +301,13 @@ export class StockMovementService {
       practice_id: practiceId,
       location_id: locationId,
       product_id: productId,
-      movement_type: 'expired',
+      movement_type: 'waste',
       quantity_change: -expiredQuantity,
       quantity_before: currentQuantity,
       quantity_after: currentQuantity - expiredQuantity,
       reason,
-      batch_number: batchNumber,
-      expiry_date: expiryDate,
+      batch_number: batchNumber ?? null,
+      expiry_date: expiryDate ?? null,
     });
   }
 
@@ -360,10 +426,13 @@ export class StockMovementService {
 export function getMovementTypeLabel(type: MovementType): string {
   const labels: Record<MovementType, string> = {
     count: 'Telling',
+    receipt: 'Ontvangst',
+    usage: 'Gebruik',
+    transfer: 'Overplaatsing',
     adjustment: 'Correctie',
+    waste: 'Afval',
     order_received: 'Ontvangst',
     consumption: 'Verbruik',
-    transfer: 'Overplaatsing',
     expired: 'Vervallen',
     manual_adjustment: 'Handmatige correctie',
     correction: 'Correctie',
@@ -374,10 +443,13 @@ export function getMovementTypeLabel(type: MovementType): string {
 export function getMovementTypeIcon(type: MovementType): string {
   const icons: Record<MovementType, string> = {
     count: 'fact_check',
+    receipt: 'inventory',
+    usage: 'play_circle',
+    transfer: 'swap_horiz',
     adjustment: 'tune',
+    waste: 'delete',
     order_received: 'inventory',
     consumption: 'remove_circle_outline',
-    transfer: 'swap_horiz',
     expired: 'warning',
     manual_adjustment: 'edit',
     correction: 'build',
@@ -388,10 +460,13 @@ export function getMovementTypeIcon(type: MovementType): string {
 export function getMovementTypeColor(type: MovementType): string {
   const colors: Record<MovementType, string> = {
     count: 'blue',
+    receipt: 'green',
+    usage: 'primary',
+    transfer: 'purple',
     adjustment: 'orange',
+    waste: 'red-5',
     order_received: 'green',
     consumption: 'red',
-    transfer: 'purple',
     expired: 'red-6',
     manual_adjustment: 'yellow-8',
     correction: 'grey',

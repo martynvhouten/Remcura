@@ -79,7 +79,7 @@
                 <span class="label">Datum:</span>
                 <span class="value">{{ formatDate(order.order_date) }}</span>
               </div>
-              <div class="order-amount" v-if="order.total_amount">
+              <div v-if="order.total_amount" class="order-amount">
                 <span class="label">Bedrag:</span>
                 <span class="value">{{
                   formatCurrency(order.total_amount)
@@ -104,8 +104,15 @@
     <div v-else class="generic-list">
       <div class="list-items">
         <div
-          v-for="(item, index) in genericItems"
-          :key="index"
+          v-for="item in genericItems"
+          :key="
+            item.id ??
+            item.title ??
+            item.name ??
+            item.subtitle ??
+            item.description ??
+            item.icon
+          "
           class="list-item"
         >
           <q-icon :name="item.icon || 'info'" color="primary" />
@@ -130,32 +137,38 @@
 
   const { t } = useI18n();
 
+  interface SuggestionItem {
+    id: string;
+    current_stock: number;
+    suggested_quantity: number;
+    urgency_level: string;
+    products?: {
+      name: string;
+      sku: string;
+    };
+  }
+
+  interface OrderItem {
+    id: string;
+    order_number: string;
+    status: string;
+    order_date: string;
+    total_amount?: number;
+  }
+
+  interface GenericItem {
+    id?: string;
+    title?: string;
+    name?: string;
+    subtitle?: string;
+    description?: string;
+    icon?: string;
+  }
+
   interface ListData {
-    suggestions?: Array<{
-      id: string;
-      current_stock: number;
-      suggested_quantity: number;
-      urgency_level: string;
-      products?: {
-        name: string;
-        sku: string;
-      };
-    }>;
-    orders?: Array<{
-      id: string;
-      order_number: string;
-      status: string;
-      order_date: string;
-      total_amount?: number;
-    }>;
-    items?: Array<{
-      id?: string;
-      title?: string;
-      name?: string;
-      subtitle?: string;
-      description?: string;
-      icon?: string;
-    }>;
+    suggestions?: SuggestionItem[];
+    orders?: OrderItem[];
+    items?: GenericItem[];
   }
 
   interface Props {
@@ -167,7 +180,7 @@
   const router = useRouter();
   const { formatDate, formatCurrency } = useFormatting();
 
-  const genericItems = computed(() => props.data.items || []);
+  const genericItems = computed(() => props.data.items ?? []);
 
   function getUrgencyColor(urgency: string): string {
     switch (urgency.toLowerCase()) {
@@ -237,7 +250,7 @@
     }
   }
 
-  function createOrder(suggestion: any) {
+  function createOrder(suggestion: SuggestionItem) {
     router.push({
       path: '/orders/new',
       query: {
@@ -247,14 +260,14 @@
     });
   }
 
-  function viewProduct(suggestion: any) {
+  function viewProduct(suggestion: SuggestionItem) {
     router.push({
       path: '/inventory/levels',
       query: { search: suggestion.products?.sku },
     });
   }
 
-  function viewOrder(order: any) {
+  function viewOrder(order: OrderItem) {
     router.push(`/orders/${order.id}`);
   }
 </script>

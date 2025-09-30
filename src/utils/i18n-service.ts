@@ -1,4 +1,4 @@
-import { i18n } from 'src/i18n';
+import { i18n } from '@/i18n';
 
 /**
  * Translation utility for services that don't have access to useI18n composable
@@ -7,27 +7,26 @@ import { i18n } from 'src/i18n';
  * the global i18n instance.
  */
 
-// Get the global translator function
-const getTranslator = () => {
-  if (i18n.mode === 'legacy') {
-    return i18n.global.t;
+export const translate = <Values extends Record<string, unknown> | undefined>(
+  key: string,
+  values?: Values
+): string => {
+  const translator = i18n.global.t.bind(i18n.global);
+  if (values && Array.isArray(values)) {
+    return translator(key, values);
   }
-  return i18n.global.t;
+  return translator(key, (values ?? {}) as Record<string, unknown>);
 };
 
-/**
- * Translate a key in services
- * @param key - Translation key
- * @param values - Optional interpolation values
- * @returns Translated string
- */
-export const t = (key: string, values?: Record<string, any>): string => {
+export const t = <Values extends Record<string, unknown> | undefined>(
+  key: string,
+  values?: Values
+): string => {
   try {
-    const translator = getTranslator();
-    return translator(key, values);
+    return translate(key, values);
   } catch (error) {
     console.warn(`[i18n-service] Translation failed for key "${key}":`, error);
-    return key; // Return key as fallback
+    return key;
   }
 };
 
@@ -43,7 +42,7 @@ export const getCurrentLocale = (): string => {
  */
 export const hasTranslation = (key: string): boolean => {
   try {
-    const translator = getTranslator();
+    const translator = i18n.global.t.bind(i18n.global);
     const result = translator(key);
     return result !== key && !result.startsWith('[MISSING:');
   } catch {

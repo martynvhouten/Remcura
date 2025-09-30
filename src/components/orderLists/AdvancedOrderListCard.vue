@@ -926,7 +926,7 @@
   .modern-order-card {
     background: white;
     border-radius: 16px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    box-shadow: var(--shadow-md);
     transition: all 0.3s ease;
     overflow: hidden;
     height: 100%;
@@ -937,7 +937,7 @@
 
   .modern-order-card:hover {
     transform: translateY(-4px);
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+    box-shadow: var(--shadow-lg);
   }
 
   /* Card Header */

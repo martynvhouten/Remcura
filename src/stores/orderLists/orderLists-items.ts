@@ -1,10 +1,21 @@
+import type { Ref } from 'vue';
 import { supabase } from '@/boot/supabase';
 import { useProductsStore } from '../products';
-import { orderLogger } from '@/utils/logger';
-import type { OrderListItem } from '@/types/inventory';
+import { createLogger } from '@/utils/logger';
+import type {
+  OrderListItemDTO,
+  OrderListItemInsert,
+  OrderListItemRow,
+} from '@/types/inventory';
+import { mapOrderListItemRowToDTO } from '@/types/inventory';
+import type { Tables } from '@/types';
 import { ServiceErrorHandler } from '@/utils/service-error-handler';
-import type { OrderListWithItems } from './orderLists-core';
-import type { AddOrderListItemRequest } from '@/types/stores';
+import type {
+  OrderListWithItems,
+  AddOrderListItemRequest,
+} from '@/types/stores';
+
+const log = createLogger('OrderListsItems');
 
 export function useOrderListsItems(orderLists: Ref<OrderListWithItems[]>) {
   // Dependencies
@@ -15,23 +26,30 @@ export function useOrderListsItems(orderLists: Ref<OrderListWithItems[]>) {
   ): Promise<void> => {
     try {
       const product = productsStore.getProductById(request.product_id);
-      if (!product) throw new Error($t('orderlists.productnotfound'));
+      if (!product) {
+        throw new Error('Product not found');
+      }
 
       const supplierProduct = product.supplier_products?.find(
         sp => sp.id === request.supplier_product_id
       );
+
       if (!supplierProduct) {
-        throw new Error($t('orderlists.supplierproductnotfound'));
+        throw new Error('Supplier product not found');
       }
 
-      const itemData = {
+      const itemData: OrderListItemInsert = {
         order_list_id: request.order_list_id,
         product_id: request.product_id,
-        supplier_product_id: request.supplier_product_id,
+        supplier_product_id: request.supplier_product_id ?? null,
         suggested_quantity: request.requested_quantity,
         ordered_quantity: request.requested_quantity,
-        unit_price: supplierProduct.unit_price,
-        notes: request.notes,
+        unit_price:
+          supplierProduct.list_price ?? supplierProduct.cost_price ?? 0,
+        total_price:
+          request.requested_quantity *
+          (supplierProduct.list_price ?? supplierProduct.cost_price ?? 0),
+        notes: request.notes ?? null,
       };
 
       const { data, error } = await supabase
@@ -52,16 +70,32 @@ export function useOrderListsItems(orderLists: Ref<OrderListWithItems[]>) {
       const orderListIndex = orderLists.value.findIndex(
         (list: OrderListWithItems) => list.id === request.order_list_id
       );
-      if (orderListIndex !== -1) {
-        orderLists.value[orderListIndex].items.push(data);
-        updateOrderListTotals(request.order_list_id);
+      if (orderListIndex === -1) {
+        return;
       }
+
+      const targetList = orderLists.value[orderListIndex];
+      if (!targetList) return;
+      const newItemRow = data as OrderListItemRow & {
+        product: Tables<'products'> | null;
+        supplier_product: Tables<'supplier_products'> | null;
+      };
+      const newItem = mapOrderListItemRowToDTO(newItemRow);
+      newItem.product = newItemRow.product ?? null;
+      newItem.supplier_product = newItemRow.supplier_product ?? null;
+
+      targetList.items.push(newItem);
+      updateOrderListTotals(targetList.id);
     } catch (err) {
-      const handledError = ServiceErrorHandler.handle(err, {
+      const handledError = ServiceErrorHandler.handle(err as Error, {
         service: 'OrderListsStore',
         operation: 'addOrderListItem',
+        metadata: { request },
       });
-      orderLogger.error('Error adding order list item:', handledError);
+      log.error('Error adding order list item', {
+        error: handledError.message,
+        orderListId: request.order_list_id,
+      });
       throw handledError;
     }
   };
@@ -78,7 +112,7 @@ export function useOrderListsItems(orderLists: Ref<OrderListWithItems[]>) {
       // Update local state
       for (const orderList of orderLists.value) {
         const itemIndex = orderList.items.findIndex(
-          (item: OrderListItem) => item.id === itemId
+          (item: OrderListItemDTO) => item.id === itemId
         );
         if (itemIndex !== -1) {
           orderList.items.splice(itemIndex, 1);
@@ -87,11 +121,15 @@ export function useOrderListsItems(orderLists: Ref<OrderListWithItems[]>) {
         }
       }
     } catch (err) {
-      const handledError = ServiceErrorHandler.handle(err, {
+      const handledError = ServiceErrorHandler.handle(err as Error, {
         service: 'OrderListsStore',
         operation: 'removeOrderListItem',
+        metadata: { itemId },
       });
-      orderLogger.error('Error removing order list item:', handledError);
+      log.error('Error removing order list item', {
+        error: handledError.message,
+        itemId,
+      });
       throw handledError;
     }
   };
@@ -101,8 +139,9 @@ export function useOrderListsItems(orderLists: Ref<OrderListWithItems[]>) {
     updates: { requested_quantity?: number; notes?: string }
   ): Promise<void> => {
     try {
-      const updateData: Partial<OrderListItem> = {};
+      const updateData: Partial<OrderListItemRow> = {};
       if (updates.requested_quantity !== undefined) {
+        updateData.suggested_quantity = updates.requested_quantity;
         updateData.ordered_quantity = updates.requested_quantity;
       }
       if (updates.notes !== undefined) {
@@ -119,12 +158,14 @@ export function useOrderListsItems(orderLists: Ref<OrderListWithItems[]>) {
       // Update local state
       for (const orderList of orderLists.value) {
         const item = orderList.items.find(
-          (item: OrderListItem) => item.id === itemId
+          (item: OrderListItemDTO) => item.id === itemId
         );
         if (item) {
           if (updates.requested_quantity !== undefined) {
-            item.requested_quantity = updates.requested_quantity;
-            item.total_price = item.unit_price * updates.requested_quantity;
+            item.suggested_quantity = updates.requested_quantity;
+            item.ordered_quantity = updates.requested_quantity;
+            const unit = item.unit_price ?? 0;
+            item.total_price = unit * updates.requested_quantity;
           }
           if (updates.notes !== undefined) item.notes = updates.notes;
           updateOrderListTotals(orderList.id);
@@ -132,11 +173,15 @@ export function useOrderListsItems(orderLists: Ref<OrderListWithItems[]>) {
         }
       }
     } catch (err) {
-      const handledError = ServiceErrorHandler.handle(err, {
+      const handledError = ServiceErrorHandler.handle(err as Error, {
         service: 'OrderListsStore',
         operation: 'updateOrderListItem',
+        metadata: { itemId, updates },
       });
-      orderLogger.error('Error updating order list item:', handledError);
+      log.error('Error updating order list item', {
+        error: handledError.message,
+        itemId,
+      });
       throw handledError;
     }
   };
@@ -150,11 +195,11 @@ export function useOrderListsItems(orderLists: Ref<OrderListWithItems[]>) {
     }
 
     const totalItems = orderList.items.reduce(
-      (sum: number, item: OrderListItem) => sum + item.requested_quantity,
+      (sum: number, item: OrderListItemDTO) => sum + item.suggested_quantity,
       0
     );
     const totalValue = orderList.items.reduce(
-      (sum: number, item: OrderListItem) => sum + item.total_price,
+      (sum: number, item: OrderListItemDTO) => sum + (item.total_price ?? 0),
       0
     );
 
@@ -163,19 +208,21 @@ export function useOrderListsItems(orderLists: Ref<OrderListWithItems[]>) {
         .from('order_lists')
         .update({
           total_items: totalItems,
-          total_value: totalValue,
+          total_cost: totalValue,
           updated_at: new Date().toISOString(),
         })
         .eq('id', orderListId);
 
       if (error) throw error;
 
-      // Update local state
       orderList.total_items = totalItems;
-      orderList.total_amount = totalValue;
+      orderList.total_cost = totalValue;
       orderList.updated_at = new Date().toISOString();
     } catch (err) {
-      orderLogger.error('Error updating order list totals:', err);
+      log.error('Error updating order list totals', {
+        error: err instanceof Error ? err.message : String(err),
+        orderListId,
+      });
     }
   };
 

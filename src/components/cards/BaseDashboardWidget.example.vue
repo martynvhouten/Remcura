@@ -32,12 +32,12 @@
       <BaseDashboardWidget title="Stock Alerts">
         <template #actions>
           <q-btn
+            :loading="refreshing"
             flat
             round
             dense
             icon="refresh"
             @click="refreshData"
-            :loading="refreshing"
           />
           <q-btn
             flat
@@ -82,9 +82,10 @@
             This widget shows the loading overlay when the loading prop is true.
           </p>
           <q-btn
-            @click="toggleLoading"
-            :label="isLoading ? 'Stop Loading' : 'Start Loading'"
+            flat
             class="mt-4"
+            :label="isLoading ? 'Stop Loading' : 'Start Loading'"
+            @click="toggleLoading"
           />
         </div>
       </BaseDashboardWidget>
@@ -157,10 +158,9 @@
         <q-card-actions align="right">
           <q-btn flat label="Cancel" @click="showSettings = false" />
           <q-btn
-            flat
-            label="Save"
             color="primary"
-            @click="showSettings = false"
+            :label="$t('common.save')"
+            @click="saveSettings"
           />
         </q-card-actions>
       </q-card>

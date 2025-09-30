@@ -249,13 +249,13 @@
             : $t('orderLists.createFirstList')
         }}
       </div>
-        <q-btn
-          v-if="!hasActiveFilters"
-          @click="showCreateDialog = true"
-          color="primary"
-          :label="$t('orderLists.newList')"
-          class="q-mt-md"
-        />
+      <q-btn
+        v-if="!hasActiveFilters"
+        @click="showCreateDialog = true"
+        color="primary"
+        :label="$t('orderLists.newList')"
+        class="q-mt-md"
+      />
     </div>
 
     <!-- Global Advice Dialog -->
@@ -320,8 +320,17 @@
       </div>
 
       <template #actions>
-        <q-btn flat :label="$t('common.close')" @click="showGlobalAdviceDialog = false" />
-        <q-btn @click="orderAllUrgentItems" :loading="processingGlobalOrder" color="primary" :label="$t('orderLists.orderAll')" />
+        <q-btn
+          flat
+          :label="$t('common.close')"
+          @click="showGlobalAdviceDialog = false"
+        />
+        <q-btn
+          @click="orderAllUrgentItems"
+          :loading="processingGlobalOrder"
+          color="primary"
+          :label="$t('orderLists.orderAll')"
+        />
       </template>
     </BaseDialog>
 
@@ -910,7 +919,7 @@
         padding: var(--space-4, 16px);
 
         .kpi-value {
-          font-family: var(--font-family-primary);
+          font-family: var(--font-family);
           font-size: var(--text-4xl, 2.25rem);
           font-weight: var(--font-weight-bold, 700);
           line-height: var(--leading-tight, 1.25);
@@ -919,7 +928,7 @@
         }
 
         .kpi-subtitle {
-          font-family: var(--font-family-primary);
+          font-family: var(--font-family);
           font-size: var(--text-xs, 0.75rem);
           font-weight: var(--font-weight-semibold, 600);
           color: var(--text-secondary);

@@ -1,0 +1,1134 @@
+# $t( Usage Inventory
+
+## Summary
+
+- Total occurrences: 1036
+- Services: 40
+- Components/Views: 996
+- Other (stores/utilities/pages): 0
+
+### Services
+
+- `src/services/admin.ts`
+  - L474: throw new Error($t('admin.nopracticeselected'));
+  - L479: throw new Error($t('admin.insufficientpermissionstoview'));
+  - L554: throw new Error($t('admin.insufficientpermissionstoview'));
+  - L833: throw new Error($t('admin.insufficientpermissionstobulk'));
+- `src/services/magento/index.ts`
+  - L149: throw new Error($t('index.magentoapiconfigurationis'));
+  - L177: new Error($t('index.httpresponsestatusresponsestatuste')),
+  - L193: handleApiError(new Error($t('index.requesttimeout')), {
+  - L517: throw new Error($t('index.nopracticeidavailable'));
+  - L575: throw new Error($t('index.nopracticeidavailable'));
+  - L611: throw new Error($t('index.nopracticeidavailable'));
+- `src/services/magicInvites.ts`
+  - L184: throw new Error($t('magicinvit.failedtocreatemagic'));
+  - L295: if (!invite) throw new Error($t('magicinvit.invalidinvite'));
+  - L349: throw new Error($t('magicinvit.failedtocreateguest'));
+  - L491: throw new Error($t('magicinvit.failedtoextendsession'));
+- `src/services/notifications.ts`
+  - L47: throw new Error($t('notificati.thisbrowserdoesnot'));
+  - L64: throw new Error($t('notificati.serviceworkernotregistered'));
+- `src/services/offline.ts`
+  - L305: throw new Error($t('offline.unknownactiontypeactiontype'));
+  - L316: throw new Error($t('offline.failedtosynccreate'));
+  - L332: throw new Error($t('offline.failedtosyncupdate'));
+  - L346: throw new Error($t('offline.failedtosyncdelete'));
+  - L543: throw new Error($t('offline.cannotsyncwhileoffline'));
+- `src/services/offline/action-queue.ts`
+  - L138: const error = new Error($t('actionqueu.noexecutorregisteredfor'));
+  - L216: new Error($t('actionqueu.actionfailedafterthismaxretri')),
+- `src/services/offline/data-sync.ts`
+  - L83: throw new Error($t('datasync.syncalreadyinprogress'));
+- `src/services/offline/index.ts`
+  - L108: throw new Error($t('index.cannotaddofflineaction'));
+  - L136: throw new Error($t('index.nopracticeselectedfor'));
+  - L140: throw new Error($t('index.cannotdownloaddatadevice'));
+  - L173: throw new Error($t('index.cannotsyncdeviceis'));
+- `src/services/orderProcessing.ts`
+  - L23: throw new Error($t('orderproce.usernotauthenticatedor'));
+  - L42: throw new Error($t('orderproce.shoppingcartnotfound'));
+  - L52: throw new Error($t('orderproce.failedtogenerateorder'));
+  - L72: throw new Error($t('orderproce.failedtocreateorder'));
+  - L93: throw new Error($t('orderproce.failedtocreateorder'));
+  - L119: throw new Error($t('orderproce.nopracticeselected'));
+  - L153: throw new Error($t('orderproce.failedtogetorders'));
+  - L181: throw new Error($t('orderproce.failedtoupdateorder'));
+  - L193: throw new Error($t('orderproce.ordernotfound'));
+  - L300: throw new Error($t('orderproce.ordernotfound'));
+  - L405: throw new Error($t('orderproce.ordernotfound'));
+  - L430: throw new Error($t('orderproce.ordernotfound'));
+
+### Components & Pages
+
+- `src/components/BarcodeScanner.vue`
+  - L24: {{ $t('barcodeScanner.title') }}
+  - L27: {{ $t('barcodeScanner.subtitle') }}
+  - L38: :title="$t('common.close')"
+  - L55: {{ $t('barcodeScanner.cameraPermission') }}
+  - L58: {{ $t('barcodeScanner.permissionDescription') }}
+  - L63: ::label="$t('barcodeScanner.scanLabel')"
+  - L72: {{ $t('barcodeScanner.error') }}
+  - L80: :label="$t('common.retry')"
+  - L115: ? $t('barcodeScanner.scanning')
+  - L116: : $t('barcodeScanner.instructions')
+  - L128: ::label="$t('barcodeScanner.scanLabel')"
+  - L140: ::label="$t('barcodeScanner.scanLabel')"
+  - L146: :placeholder="$t('barcodeScanner.enterBarcode')"
+  - L166: {{ $t('barcodeScanner.manualInputHelp') }}
+  - L177: :label="$t('common.cancel')"
+  - L186: ::label="$t('barcodeScanner.scanLabel')"
+  - L196: ::label="$t('barcodeScanner.scanLabel')"
+- `src/components/BatchInput.vue`
+  - L10: :label="$t('product.product')"
+  - L11: :placeholder="$t('product.selectProduct')"
+  - L33: :label="$t('batch.batchNumber')"
+  - L34: :placeholder="$t('batch.enterBatchNumber')"
+  - L47: :title="$t('batch.scanBatch')"
+  - L55: :label="$t('batch.expiryDate')"
+  - L65: :label="$t('product.quantity')"
+  - L81: {{ $t('batch.existingBatches') }}
+  - L95: {{ $t('batch.expires') }}:
+  - L97: {{ $t('product.quantity') }}: {{ batch.current_quantity }}
+  - L104: :label="$t('batch.useBatch')"
+  - L117: {{ $t('batch.batchSummary') }}
+  - L120: <span>{{ $t('product.product') }}:</span>
+  - L124: <span>{{ $t('batch.batchNumber') }}:</span>
+  - L128: <span>{{ $t('batch.expiryDate') }}:</span>
+  - L132: <span>{{ $t('product.quantity') }}:</span>
+- `src/components/BatchOverview.vue`
+  - L5: <div class="text-h6">{{ $t('batch.batchOverview') }}</div>
+  - L13: :label="$t('location.location')"
+  - L24: :label="$t('batch.urgencyLevel')"
+  - L35: :label="$t('batch.addBatch')"
+  - L50: <div class="text-weight-medium">{{ $t('batch.expiryAlert') }}</div>
+  - L52: {{ $t('batch.batchesExpiringSoon', { count: expiryAlerts.length }) }}
+  - L58: :label="$t('batch.viewExpiring')"
+  - L73: :no-data-label="$t('batch.noBatchesFound')"
+  - L110: {{ $t('batch.supplierBatch') }}:
+  - L149: {{ $t('batch.available') }}:
+  - L193: {{ $t(`batch.status.${props.row.status}`) }}
+  - L210: <q-tooltip>{{ $t('common.edit') }}</q-tooltip>
+  - L222: <q-tooltip>{{ $t('batch.useBatch') }}</q-tooltip>
+  - L234: <q-tooltip>{{ $t('batch.quarantine') }}</q-tooltip>
+  - L244: <q-tooltip>{{ $t('common.moreActions') }}</q-tooltip>
+  - L273: <div class="detail-label">{{ $t('batch.quantity') }}</div>
+  - L281: <div class="detail-label">{{ $t('batch.expiryDate') }}</div>
+  - L293: :label="$t('common.close')"
+  - L562: throw new Error($t('batchoverv.noclinicidavailable'));
+  - L606: throw new Error($t('batchoverv.noclinicidavailable'));
+- `src/components/BatchRegistrationForm.vue`
+  - L4: <div class="text-h6">{{ $t('batch.registerNewBatch') }}</div>
+  - L26: :label="$t('product.product')"
+  - L55: :label="$t('location.location')"
+  - L68: :label="$t('batch.batchNumber')"
+  - L70: val => !!val || $t('validation.required'),
+  - L72: val.length >= 3 || $t('validation.minLength', { min: 3 }),
+  - L86: :label="$t('batch.supplierBatchNumber')"
+  - L102: :label="$t('batch.expiryDate')"
+  - L105: val => !!val || $t('validation.required'),
+  - L118: :label="$t('batch.receivedDate')"
+  - L134: :label="$t('batch.initialQuantity')"
+  - L141: $t('validation.required'),
+  - L154: :label="$t('batch.unitCost')"
+  - L170: :label="$t('batch.currency')"
+  - L180: :label="$t('common.cancel')"
+  - L188: :label="$t('batch.registerBatch')"
+- `src/components/BatchReports.vue`
+  - L8: <div class="text-h6 q-mb-md">{{ $t('batch.selectReport') }}</div>
+  - L43: :label="$t('common.fromDate')"
+  - L50: :label="$t('common.toDate')"
+  - L62: :label="$t('location.location')"
+  - L72: :label="$t('common.status')"
+  - L85: :label="$t('batch.generateReport')"
+  - L94: :label="$t('batch.exportReport')"
+  - L107: <div class="text-h6 q-mb-md">{{ $t('batch.reportResults') }}</div>
+  - L117: <div class="text-caption">{{ $t('batch.totalBatches') }}</div>
+  - L129: {{ $t('batch.expiredBatches') }}
+  - L141: <div class="text-caption">{{ $t('batch.expiringSoon') }}</div>
+  - L152: <div class="text-caption">{{ $t('batch.totalValue') }}</div>
+- `src/components/ExpiringBatchesList.vue`
+  - L8: :no-data-label="$t('batch.noExpiringBatches')"
+  - L20: {{ $t(`batch.urgency.${props.row.urgencyLevel}`) }}
+  - L35: <q-tooltip>{{ $t('common.view') }}</q-tooltip>
+- `src/components/FifoBatchManager.vue`
+  - L8: <div class="text-h6 q-mb-md">{{ $t('batch.fifoSuggestion') }}</div>
+  - L16: :label="$t('product.product')"
+  - L17: :rules="[val => !!val || $t('validation.required')]"
+  - L27: :label="$t('location.location')"
+  - L28: :rules="[val => !!val || $t('validation.required')]"
+  - L35: :label="$t('batch.requestedQuantity')"
+  - L39: :rules="[val => val > 0 || $t('validation.mustBePositive')]"
+  - L45: :label="$t('batch.generateFifoSuggestion')"
+  - L58: <div class="text-h6 q-mb-md">{{ $t('batch.fifoResults') }}</div>
+  - L65: <div>{{ $t('batch.noFifoResults') }}</div>
+  - L83: {{ $t('batch.useQuantity') }}: {{ result.useQuantity }}
+  - L86: {{ $t('batch.expiryDate') }}:
+  - L106: :label="$t('batch.applyFifoSuggestion')"
+- `src/components/PageTitle.vue`
+  - L38: :aria-label="$t('common.accessibility.pageMetadata')"
+  - L56: :aria-label="$t('common.accessibility.pageActions')"
+- `src/components/UseBatchDialog.vue`
+  - L4: <div class="text-h6">{{ $t('batch.useBatch') }}</div>
+  - L14: {{ $t('batch.batchInformation') }}
+  - L19: {{ $t('batch.batchNumber') }}
+  - L25: {{ $t('product.product') }}
+  - L31: {{ $t('batch.availableQuantity') }}
+  - L39: {{ $t('batch.expiryDate') }}
+  - L55: :label="$t('batch.quantityToUse')"
+  - L61: val => val > 0 || $t('validation.mustBePositive'),
+  - L64: $t('batch.validation.exceededAvailable'),
+  - L78: <q-tooltip>{{ $t('batch.useAll') }}</q-tooltip>
+  - L88: :label="$t('batch.usageReason')"
+  - L89: :rules="[val => !!val || $t('validation.required')]"
+  - L98: :label="$t('batch.usageNotes')"
+  - L101: :hint="$t('batch.usageNotesHint')"
+  - L107: {{ $t('batch.usageSummary') }}
+  - L112: {{ $t('batch.quantityUsed') }}
+  - L120: {{ $t('batch.remainingQuantity') }}
+  - L128: {{ $t('batch.costImpact') }}
+  - L136: {{ $t('batch.newStatus') }}
+  - L154: :label="$t('common.cancel')"
+  - L162: :label="$t('batch.confirmUsage')"
+- `src/components/admin/DemoResetCard.vue`
+  - L8: <h3 class="card-title">{{ $t('demo.resetData') }}</h3>
+  - L9: <p class="card-subtitle">{{ $t('demo.limitations') }}</p>
+  - L25: <div class="banner-title">{{ $t('demo.practice') }}</div>
+  - L27: {{ $t('demo.practiceDescription') }}
+  - L34: <span>{{ $t('demo.limitationsText') }}</span>
+  - L44: :label="$t('demo.resetData')"
+  - L52: {{ $t('demo.resetInfo') }}
+  - L127: throw new Error($t('demoresetc.resetfailed'));
+- `src/components/admin/MagicInviteManager.vue`
+  - L7: {{ $t('magicInvite.simpleTitle') }}
+  - L10: {{ $t('magicInvite.simpleDescription') }}
+  - L17: <div class="text-h6 q-mb-md">{{ $t('magicInvite.howItWorks') }}</div>
+  - L22: <div class="step-title">{{ $t('magicInvite.stepCreate') }}</div>
+  - L24: {{ $t('magicInvite.stepCreateDetail') }}
+  - L31: <div class="step-title">{{ $t('magicInvite.stepShare') }}</div>
+  - L33: {{ $t('magicInvite.stepShareDetail') }}
+  - L40: <div class="step-title">{{ $t('magicInvite.stepJoin') }}</div>
+  - L42: {{ $t('magicInvite.stepJoinDetail') }}
+  - L53: <div class="text-h6 q-mb-md">{{ $t('magicInvite.createInvite') }}</div>
+  - L61: :label="$t('magicInvite.whoAreYouInviting')"
+  - L70: :label="$t('magicInvite.department')"
+  - L71: :placeholder="$t('magicInvite.departmentPlaceholder')"
+  - L79: :label="$t('magicInvite.generateInviteCode')"
+  - L102: {{ $t('magicInvite.inviteReady') }}
+  - L108: <div class="code-label">{{ $t('magicInvite.shareThisCode') }}</div>
+  - L115: :tooltip="$t('common.copy')"
+  - L122: {{ $t('magicInvite.tellThem') }}
+  - L126: $t('magicInvite.shareMessage', {
+  - L136: :label="$t('magicInvite.shareWhatsApp')"
+  - L143: :label="$t('magicInvite.showQR')"
+  - L150: :label="$t('magicInvite.shareEmail')"
+  - L170: {{ $t('magicInvite.activeInvites') }}
+  - L184: {{ $t('magicInvite.created') }}
+  - L194: :tooltip="$t('common.share')"
+  - L202: :tooltip="$t('common.delete')"
+  - L214: <div class="text-h6 q-mb-md">{{ $t('magicInvite.qrCode') }}</div>
+  - L224: {{ $t('magicInvite.qrInstructions') }}
+  - L230: :label="$t('common.close')"
+- `src/components/admin/TeamOverview.vue`
+  - L8: <h3 class="section-title">{{ $t('admin.teamOverview') }}</h3>
+  - L10: {{ $t('admin.teamOverviewSubtitle') }}
+  - L17: <div class="stat-label">{{ $t('admin.totalMembers') }}</div>
+  - L21: <div class="stat-label">{{ $t('admin.onlineNow') }}</div>
+  - L31: <p>{{ $t('admin.loadingTeam') }}</p>
+  - L36: <h4>{{ $t('admin.noTeamMembers') }}</h4>
+  - L37: <p>{{ $t('admin.noTeamMembersDescription') }}</p>
+  - L74: {{ $t(`roles.${member.role}`) }}
+  - L96: $t('admin.viewProfile')
+  - L104: $t('admin.editMember')
+  - L124: ? $t('admin.deactivate')
+  - L125: : $t('admin.activate')
+  - L138: <span>{{ $t('admin.loginMethods') }}</span>
+  - L151: <div class="method-name">{{ $t('admin.magicCode') }}</div>
+  - L175: <div class="method-name">{{ $t('admin.emailPassword') }}</div>
+  - L197: {{ $t('admin.deviceRemember') }}
+  - L201: $t('admin.trustedDevices', {
+  - L224: <div class="stat-label">{{ $t('admin.lastLogin') }}</div>
+  - L233: <div class="stat-label">{{ $t('admin.loginCount') }}</div>
+  - L241: {{ $t('admin.preferredMethod') }}
+  - L244: {{ $t(`admin.${member.preferred_login_method}`) }}
+  - L255: :label="$t('admin.sendMessage')"
+  - L262: :label="$t('admin.viewSessions')"
+  - L276: <div class="text-h6">{{ $t('admin.personalMagicCode') }}</div>
+  - L288: :label="$t('common.copy')"
+  - L293: {{ $t('admin.magicCodeExplanation') }}
+  - L298: <q-btn flat :label="$t('common.close')" v-close-popup />
+- `src/components/auth/UpgradeToMemberDialog.vue`
+  - L16: <h2 class="upgrade-title">{{ $t('upgrade.welcomeToTeam') }}</h2>
+  - L19: $t('upgrade.subtitle', {
+  - L28: <span>{{ $t('upgrade.benefit1') }}</span>
+  - L32: <span>{{ $t('upgrade.benefit2') }}</span>
+  - L36: <span>{{ $t('upgrade.benefit3') }}</span>
+  - L55: <h3 class="option-title">{{ $t('upgrade.magicCodeTitle') }}</h3>
+  - L57: {{ $t('upgrade.magicCodeDescription') }}
+  - L63: {{ $t('upgrade.yourPersonalCode') }}
+  - L72: <span>{{ $t('upgrade.magicBenefit1') }}</span>
+  - L76: <span>{{ $t('upgrade.magicBenefit2') }}</span>
+  - L80: <span>{{ $t('upgrade.magicBenefit3') }}</span>
+  - L86: :label="$t('upgrade.chooseThis')"
+  - L106: <h3 class="option-title">{{ $t('upgrade.emailTitle') }}</h3>
+  - L108: {{ $t('upgrade.emailDescription') }}
+  - L118: :label="$t('upgrade.yourEmail')"
+  - L125: :label="$t('upgrade.choosePassword')"
+  - L136: <span>{{ $t('upgrade.emailBenefit1') }}</span>
+  - L140: <span>{{ $t('upgrade.emailBenefit2') }}</span>
+  - L144: <span>{{ $t('upgrade.emailBenefit3') }}</span>
+  - L150: :label="$t('upgrade.chooseThis')"
+  - L170: <h3 class="option-title">{{ $t('upgrade.deviceTitle') }}</h3>
+  - L172: {{ $t('upgrade.deviceDescription') }}
+  - L185: <span>{{ $t('upgrade.deviceBenefit1') }}</span>
+  - L189: <span>{{ $t('upgrade.deviceBenefit2') }}</span>
+  - L193: <span>{{ $t('upgrade.deviceBenefit3') }}</span>
+  - L199: :label="$t('upgrade.chooseThis')"
+  - L217: :label="$t('upgrade.yourFullName')"
+  - L221: :rules="[val => !!val || $t('upgrade.nameRequired')]"
+  - L234: :label="$t('upgrade.createAccount')"
+  - L244: :label="$t('upgrade.stayGuest')"
+- `src/components/base/BaseDialog.vue`
+  - L24: <p class="loading-text">{{ loadingText || $t('common.loading') }}</p>
+  - L83: :aria-label="$t('common.closeDialog') || 'Close dialog'"
+- `src/components/base/FormDialog.vue`
+  - L34: {{ $t('validation.formErrors') }}
+- `src/components/base/OptimizedImage.vue`
+  - L31: {{ $t('common.imageLoadError') }}
+- `src/components/cards/AlertCard.vue`
+  - L58: :aria-label="$t('common.close')"
+- `src/components/cards/BaseDashboardWidget.example.vue`
+  - L166: :label="$t('common.save')"
+- `src/components/cards/BaseDashboardWidget.vue`
+  - L40: {{ $t('dashboard.loading') }}
+- `src/components/cards/CardStyleGuide.vue`
+  - L27: :title="$t('cards.examples.userProfile.title')"
+  - L28: :subtitle="$t('cards.examples.userProfile.subtitle')"
+  - L43: :title="$t('cards.examples.systemStatus.title')"
+  - L44: :subtitle="$t('cards.examples.systemStatus.subtitle')"
+  - L97: :title="$t('cards.examples.inventoryManagement.title')"
+  - L98: :subtitle="$t('cards.examples.inventoryManagement.subtitle')"
+  - L113: :title="$t('cards.examples.quickScan.title')"
+  - L114: :subtitle="$t('cards.examples.quickScan.subtitle')"
+  - L133: :title="$t('cards.examples.premiumFeature.title')"
+  - L134: :subtitle="$t('cards.examples.premiumFeature.subtitle')"
+  - L176: :title="$t('cards.examples.newFeatureAvailable.title')"
+  - L177: :subtitle="$t('cards.examples.newFeatureAvailable.subtitle')"
+  - L196: :title="$t('cards.examples.dataSyncComplete.title')"
+  - L197: :subtitle="$t('cards.examples.dataSyncComplete.subtitle')"
+  - L213: :title="$t('cards.examples.lowStockWarning.title')"
+  - L236: :title="$t('cards.examples.syncFailed.title')"
+  - L237: :subtitle="$t('cards.examples.syncFailed.subtitle')"
+  - L283: :label="$t('cards.inputs.standardInput')"
+  - L285: :placeholder="$t('cards.inputs.placeholder')"
+- `src/components/dashboard/DynamicWidget.vue`
+  - L17: <q-tooltip>{{ $t('dashboard.actions.refresh') }}</q-tooltip>
+- `src/components/dashboard/widgets/AlertWidget.vue`
+  - L6: <p class="empty-message">{{ $t('dashboard.alerts.noWarnings') }}</p>
+  - L8: {{ $t('dashboard.alerts.allStockLevelsOk') }}
+- `src/components/dashboard/widgets/ChartWidget.vue`
+  - L13: :label="$t('analyticsPage.period')"
+  - L26: :label="$t('locations.title')"
+  - L39: :label="$t('suppliers.title')"
+- `src/components/filters/FilterField.vue`
+  - L6: {{ $t(field.label as string) }}
+  - L12: :placeholder="field.placeholder ? $t(field.placeholder as string) : ''"
+  - L44: {{ $t(field.label as string) }}
+  - L51: :placeholder="field.placeholder ? $t(field.placeholder as string) : ''"
+  - L96: {{ $t(field.label as string) }}
+  - L103: :placeholder="field.placeholder ? $t(field.placeholder as string) : ''"
+  - L167: {{ $t(field.label as string) }}
+  - L175: {{ $t(field.label as string) }}
+  - L181: :placeholder="field.placeholder ? $t(field.placeholder as string) : ''"
+  - L208: {{ $t(field.label as string) }}
+  - L250: {{ $t(field.label as string) }}
+  - L256: :placeholder="field.placeholder ? $t(field.placeholder as string) : ''"
+  - L296: {{ $t(field.label as string) }}
+  - L382: {{ $t(field.label as string) }}
+  - L388: :placeholder="field.placeholder ? $t(field.placeholder as string) : ''"
+- `src/components/inventory/CountingEntryWithBatch.vue`
+  - L25: {{ $t('inventory.currentStock') }}
+  - L40: {{ $t('batch.batchInformation') }}
+  - L49: {{ $t('batch.existingBatches') }}:
+  - L68: {{ $t('batch.expires') }}:
+  - L97: {{ $t('batch.addNewBatch') }}:
+  - L114: :label="$t('batch.addNewBatch')"
+  - L123: {{ $t('counting.countedQuantity') }}
+  - L132: :label="$t('counting.enterCount')"
+  - L133: :placeholder="$t('counting.enterQuantity')"
+  - L149: {{ $t('counting.difference') }}: {{ discrepancyAmount }}
+  - L160: :label="$t('common.notes')"
+  - L161: :placeholder="$t('counting.addNotes')"
+  - L174: :label="$t('common.cancel')"
+  - L179: :label="$t('counting.saveCount')"
+- `src/components/inventory/CountingSessionDialog.vue`
+  - L4: :title="$t('inventory.startCountingSession')"
+  - L13: :label="$t('inventory.sessionName')"
+  - L14: :placeholder="$t('inventory.sessionNamePlaceholder')"
+  - L17: :rules="[val => !!val || $t('validation.required')]"
+  - L29: :label="$t('inventory.sessionType')"
+  - L45: :label="$t('inventory.selectLocations')"
+  - L51: :rules="[val => (val && val.length > 0) || $t('validation.required')]"
+  - L74: :label="$t('inventory.allowNegativeCounts')"
+  - L79: :label="$t('inventory.requireApproval')"
+  - L84: :label="$t('inventory.autoAdjustStock')"
+  - L92: :label="$t('common.notes')"
+  - L93: :placeholder="$t('inventory.sessionNotesPlaceholder')"
+  - L106: <q-btn flat :label="$t('common.cancel')" @click="onCancel" />
+  - L109: :label="$t('inventory.startCounting')"
+- `src/components/inventory/MobileCountingInterface.vue`
+  - L20: <h1 class="main-title">{{ $t('counting.title') }}</h1>
+  - L23: {{ $t('counting.totalProducts').toLowerCase() }}
+  - L40: <h2>{{ $t('counting.method.title') }}</h2>
+  - L41: <p>{{ $t('counting.method.subtitle') }}</p>
+  - L54: <h3>{{ $t('counting.method.scan') }}</h3>
+  - L55: <p>{{ $t('counting.method.scanDescription') }}</p>
+  - L75: <h3>{{ $t('counting.method.manual') }}</h3>
+  - L76: <p>{{ $t('counting.method.manualDescription') }}</p>
+  - L98: {{ $t('counting.method.continue') }}
+  - L125: $t('counting.productFlow.progressOf', {
+  - L149: <h3>{{ $t('counting.scanner.scanning') }}</h3>
+  - L150: <p>{{ $t('counting.scanner.placeBarcode') }}</p>
+  - L196: <span>{{ $t('counting.scanner.switchToManual') }}</span>
+  - L238: <h2>{{ $t('counting.productFlow.allComplete') }}</h2>
+  - L243: $t('counting.countedProducts')
+  - L248: <span class="stat-label">{{ $t('counting.discrepancies') }}</span>
+  - L255: <span>{{ $t('counting.completeSession') }}</span>
+  - L259: <span>{{ $t('common.restart') }}</span>
+- `src/components/inventory/ProductCountingCard.vue`
+  - L26: $t('counting.productFlow.currentStock', { amount: currentStock })
+  - L36: <h3>{{ $t('counting.enterAmount') }}</h3>
+  - L46: :placeholder="$t('counting.productFlow.countPlaceholder')"
+  - L132: {{ $t('common.back') }}
+  - L143: {{ $t('counting.productFlow.skip') }}
+  - L155: {{ $t('counting.productFlow.confirm') }}
+- `src/components/inventory/QuickAdjustmentDialog.vue`
+  - L5: :title="$t('inventory.quickAdjustment')"
+  - L6: :subtitle="$t('inventory.adjustStockLevels')"
+  - L15: <div class="text-h6">{{ $t('inventory.quickAdjustment') }}</div>
+  - L16: <div class="text-subtitle2">{{ $t('inventory.adjustStockLevels') }}</div>
+  - L28: {{ $t('common.live') }}
+  - L39: $t('inventory.selectProduct')
+  - L50: :label="$t('inventory.searchProduct')"
+  - L103: {{ $t('inventory.noProductsFound') }}
+  - L106: {{ $t('inventory.tryDifferentSearchTerm') }}
+  - L119: :label="$q.screen.xs ? '' : $t('inventory.scanBarcode')"
+  - L122: :title="$t('inventory.scanBarcode')"
+  - L164: {{ selectedProduct.brand || $t('quickAdjustment.noProduct') }}
+  - L196: {{ $t('inventory.noLocationSelected') }}
+  - L216: :title="$t('inventory.changeProduct')"
+  - L253: $t('inventory.selectLocation')
+  - L260: >{{ $t('common.required') }}</q-chip
+  - L269: :label="$t('inventory.selectLocation')"
+  - L288: $t('inventory.adjustmentType')
+  - L336: {{ $t('inventory.quickAmounts') }}
+  - L358: <span class="text-h6 q-ml-sm">{{ $t('inventory.reason') }}</span>
+  - L364: >{{ $t('common.required') }}</q-chip
+  - L370: :label="$t('inventory.selectReason')"
+  - L389: $t('inventory.notes')
+  - L396: >{{ $t('common.optional') }}</q-chip
+  - L401: :label="$t('inventory.notes')"
+  - L405: :placeholder="$t('inventory.notesPlaceholder')"
+  - L425: $t('inventory.preview')
+  - L442: {{ $t('inventory.current') }}
+  - L468: {{ $t('inventory.newQuantity') }}
+  - L488: :label="$t('common.cancel')"
+  - L496: :label="$t('inventory.adjustStock')"
+  - L508: {{ $t('inventory.adjusting') }}
+  - L524: {{ $t('inventory.completeRequiredFields') }}
+  - L530: {{ $t('inventory.selectProductFirst') }}
+  - L533: {{ $t('inventory.selectLocationFirst') }}
+  - L974: throw new Error($t('quickadjus.noreasonselected'));
+  - L979: throw new Error($t('quickadjus.usernotauthenticatedor'));
+  - L984: throw new Error($t('quickadjus.nolocationselected'));
+  - L990: throw new Error($t('quickadjus.noproductselected'));
+- `src/components/inventory/StockTransferDialog.vue`
+  - L4: :title="$t('inventory.stockTransfer')"
+  - L14: {{ $t('inventory.selectProduct') }}
+  - L23: :label="$t('inventory.searchProduct')"
+  - L36: {{ $t('inventory.noProductsFound') }}
+  - L47: :label="$t('inventory.scanBarcode')"
+  - L84: :label="$t('inventory.changeProduct')"
+  - L99: {{ $t('inventory.fromLocation') }}
+  - L116: {{ $t('inventory.availableStock') }}:
+  - L128: {{ $t('inventory.toLocation') }}
+  - L149: {{ $t('inventory.selectBatch') }}
+  - L165: {{ $t('inventory.expiryDate') }}:
+  - L167: {{ $t('inventory.available') }}:
+  - L188: {{ $t('inventory.quantityToTransfer') }}
+  - L217: :label="$t('inventory.transferFullStock')"
+  - L229: {{ $t('inventory.maxAvailable') }}: {{ maxTransferQuantity }}
+  - L237: {{ $t('inventory.transferReason') }}
+  - L251: {{ $t('inventory.notes') }} ({{ $t('common.optional') }})
+  - L259: :placeholder="$t('inventory.transferNotesPlaceholder')"
+  - L267: {{ $t('inventory.transferPreview') }}
+  - L282: {{ $t('inventory.remaining') }}
+  - L297: {{ $t('inventory.newTotal') }}
+  - L314: :label="$t('common.cancel')"
+  - L320: :label="$t('inventory.executeTransfer')"
+- `src/components/layout/DemoBanner.vue`
+  - L13: {{ $t('demo.title') }}
+  - L15: <div class="demo-subtitle">{{ $t('demo.subtitle') }}</div>
+  - L20: <q-tooltip>{{ $t('demo.limitations') }}</q-tooltip>
+  - L54: <p><em>{{ $t('demo.changesCanBeReset') }}</em></p>
+- `src/components/platform/DynamicPlatformWidget.vue`
+  - L16: <q-tooltip>{{ $t('common.refresh') }}</q-tooltip>
+  - L26: <q-tooltip>{{ $t('common.configure') }}</q-tooltip>
+- `src/components/platform/widgets/ChartWidget.vue`
+  - L10: {{ $t('platform.chart.loading') }}
+- `src/components/platform/widgets/ListWidget.vue`
+  - L36: <div>{{ $t('common.noData') }}</div>
+- `src/components/platform/widgets/SystemWidget.vue`
+  - L8: <span class="text-h6">{{ $t('platform.system.versionInfo') }}</span>
+  - L14: $t('platform.system.appVersion')
+  - L23: $t('platform.system.buildNumber')
+  - L30: $t('platform.system.environment')
+  - L43: $t('platform.system.lastDeployment')
+  - L57: {{ $t('platform.system.dependencies') }}
+  - L79: <span class="text-h6">{{ $t('platform.system.healthStatus') }}</span>
+  - L85: {{ $t('platform.system.overallStatus') }}
+  - L93: {{ $t(`platform.system.status.${data.overall_status}`) }}
+  - L99: {{ $t('platform.system.errors24h') }}
+  - L108: {{ $t('platform.system.activePractices') }}
+  - L117: {{ $t('platform.system.databaseStatus') }}
+  - L129: {{ $t(`platform.system.database.${data.database_status}`) }}
+  - L136: {{ $t('platform.system.lastCheck') }}:
+  - L149: $t('platform.system.databaseStatus')
+  - L161: <span>{{ $t(`platform.system.database.${data.status}`) }}</span>
+  - L168: >{{ $t('platform.system.responseTime') }}:
+  - L178: >{{ $t('platform.system.totalTables') }}:
+  - L188: >{{ $t('platform.system.largestTable') }}:
+  - L210: <span class="text-h6">{{ $t('platform.system.information') }}</span>
+- `src/components/platform/widgets/TableWidget.vue`
+  - L15: <span>{{ error || $t('common.noData') }}</span>
+- `src/components/products/AdvancedSearchDialog.vue`
+  - L4: :title="$t('productsPage.advancedSearch.title')"
+  - L14: {{ $t('productsPage.advancedSearch.basicSearch') }}
+  - L19: :placeholder="$t('productsPage.advancedSearch.searchPlaceholder')"
+  - L35: {{ $t('productsPage.advancedSearch.gs1Search') }}
+  - L40: :placeholder="$t('productsPage.filters.gtinPlaceholder')"
+  - L67: :placeholder="$t('productsPage.filters.selectCountry')"
+  - L82: :placeholder="$t('productsPage.filters.selectGpc')"
+  - L97: :placeholder="$t('productsPage.filters.selectLifecycle')"
+  - L110: {{ $t('productsPage.advancedSearch.categorySupplier') }}
+  - L120: :placeholder="$t('productsPage.filters.selectCategory')"
+  - L135: :placeholder="$t('productsPage.filters.selectSupplier')"
+  - L150: :placeholder="$t('productsPage.filters.selectStockStatus')"
+  - L163: {{ $t('productsPage.advancedSearch.priceRange') }}
+  - L170: :placeholder="$t('productsPage.filters.minPrice')"
+  - L182: :placeholder="$t('productsPage.filters.maxPrice')"
+  - L195: {{ $t('productsPage.advancedSearch.specialOptions') }}
+  - L200: :label="$t('productsPage.filters.orderableOnly')"
+  - L206: :label="$t('productsPage.advancedSearch.hasGtin')"
+  - L212: :label="$t('productsPage.advancedSearch.batchTracked')"
+  - L218: :label="$t('productsPage.advancedSearch.inStockOnly')"
+  - L228: {{ $t('productsPage.advancedSearch.sorting') }}
+  - L237: :placeholder="$t('productsPage.advancedSearch.sortBy')"
+  - L259: {{ $t('productsPage.advancedSearch.livePreview') }}
+  - L278: $t('productsPage.advancedSearch.resultsFound', {
+  - L292: {{ $t('productsPage.advancedSearch.avgPrice') }}:
+  - L303: {{ $t('productsPage.advancedSearch.inStock') }}:
+  - L314: {{ $t('productsPage.advancedSearch.withGtin') }}:
+  - L326: {{ $t('productsPage.advancedSearch.sampleResults') }}:
+  - L361: <q-btn flat :label="$t('common.cancel')" @click="isOpen = false" />
+  - L365: :label="$t('productsPage.advancedSearch.reset')"
+  - L370: :label="$t('productsPage.advancedSearch.search')"
+  - L380: :label="$t('productsPage.advancedSearch.previewTable')"
+- `src/components/products/OrderListDialog.vue`
+  - L5: isEditing ? $t('orderLists.editDialog') : $t('orderLists.createDialog')
+  - L17: <h3 class="panel-title">{{ $t('orderLists.details') }}</h3>
+  - L23: :label="$t('orderLists.name')"
+  - L25: val => !!val || $t('validation.required'),
+  - L28: $t('validation.minLength', { min: 3 }),
+  - L36: :label="$t('orderLists.description')"
+  - L45: :label="$t('orderLists.supplier')"
+  - L46: :rules="[val => !!val || $t('orderLists.supplierRequired')]"
+  - L54: :label="$t('orderLists.notes')"
+  - L63: :label="$t('orderLists.autoFill')"
+  - L67: :label="$t('orderLists.urgent')"
+  - L74: <h4 class="summary-title">{{ $t('orderLists.summary') }}</h4>
+  - L78: $t('orderLists.totalItems')
+  - L84: $t('orderLists.totalAmount')
+  - L96: <h3 class="panel-title">{{ $t('orderLists.products') }}</h3>
+  - L98: :label="$t('orderLists.addProduct')"
+  - L134: :label="$t('orderLists.quantity')"
+  - L144: {{ $t('orderLists.unitPrice') }}
+  - L153: {{ $t('orderLists.totalPrice') }}
+  - L183: {{ $t('orderLists.noProducts') }}
+  - L187: :label="$t('orderLists.addProduct')"
+  - L198: <q-btn flat :label="$t('common.cancel')" @click="closeDialog" />
+  - L200: :label="$t('common.save')"
+  - L214: <div class="text-h6">{{ $t('orderLists.addProduct') }}</div>
+  - L221: :label="$t('orderLists.selectProduct')"
+  - L250: :label="$t('orderLists.quantity')"
+  - L259: :label="$t('orderLists.notes')"
+  - L268: <q-btn flat :label="$t('common.cancel')" @click="cancelAddProduct" />
+  - L270: :label="$t('common.add')"
+  - L498: throw new Error($t('orderlistd.nopracticeselected'));
+- `src/components/products/ProductDetailsDialog.vue`
+  - L4: :title="$t('productsPage.details.title')"
+  - L35: {{ $t('productsPage.details.basicInfo') }}
+  - L44: {{ $t('productsPage.details.name') }}
+  - L55: {{ $t('productsPage.details.sku') }}
+  - L58: {{ product.sku || $t('common.noSku') }}
+  - L66: {{ $t('productsPage.details.category') }}
+  - L89: {{ $t('productsPage.details.brand') }}
+  - L100: {{ $t('productsPage.details.unit') }}
+  - L111: {{ $t('productsPage.details.price') }}
+  - L118: {{ $t('productsPage.details.priceNotAvailable') }}
+  - L130: {{ $t('productsPage.details.description') }}
+  - L134: product.description || $t('productsPage.details.noDescription')
+  - L146: {{ $t('productsPage.details.gs1Info') }}
+  - L156: {{ $t('productsPage.details.gtin') }}
+  - L173: {{ $t('productsPage.details.gpcBrickCode') }}
+  - L184: {{ $t('productsPage.details.countryOfOrigin') }}
+  - L201: {{ $t('productsPage.details.lifecycleStatus') }}
+  - L211: $t(
+  - L228: {{ $t('productsPage.details.netContent') }}
+  - L240: {{ $t('productsPage.details.weight') }}
+  - L245: {{ $t('productsPage.details.netWeight') }}:
+  - L249: {{ $t('productsPage.details.grossWeight') }}:
+  - L260: {{ $t('productsPage.details.validityPeriod') }}
+  - L265: {{ $t('productsPage.details.from') }}:
+  - L269: {{ $t('productsPage.details.to') }}:
+  - L283: {{ $t('productsPage.details.unitIndicators') }}
+  - L288: :label="$t('productsPage.details.baseUnit')"
+  - L296: :label="$t('productsPage.details.orderable')"
+  - L304: :label="$t('productsPage.details.despatchable')"
+  - L320: {{ $t('productsPage.details.stockInfo') }}
+  - L328: {{ $t('productsPage.details.currentStock') }}
+  - L348: {{ $t('productsPage.table.stockStatus') }}
+  - L354: $t(`productsPage.stockStatus.${product.stock_status}`)
+  - L368: :label="$t('productsPage.addToCart')"
+  - L376: :label="$t('productsPage.addToOrderList')"
+  - L383: :label="$t('common.close')"
+- `src/components/products/ProductFormDialog.vue`
+  - L4: :title="isEdit ? $t('products.editProduct') : $t('products.createProduct')"
+  - L14: <h3 class="section-title">{{ $t('products.basicInfo') }}</h3>
+  - L19: :label="$t('products.name') + ' \*'"
+  - L28: :label="$t('products.sku')"
+  - L30: :hint="$t('products.skuHint')"
+  - L36: :label="$t('products.description')"
+  - L45: <h3 class="section-title">{{ $t('products.details') }}</h3>
+  - L52: :label="$t('products.category')"
+  - L59: :label="$t('products.brand')"
+  - L71: :label="$t('products.unit')"
+  - L80: :label="$t('products.price')"
+  - L93: <h3 class="section-title">{{ $t('products.additionalInfo') }}</h3>
+  - L98: :label="$t('products.barcode')"
+  - L100: :hint="$t('products.barcodeHint')"
+  - L109: <q-tooltip>{{ $t('products.scanBarcode') }}</q-tooltip>
+  - L119: :label="$t('products.requiresBatchTracking')"
+  - L123: <q-checkbox v-model="form.active" :label="$t('products.active')" />
+  - L132: :label="$t('products.gs1Information')"
+  - L144: :hint="$t('products.gtinHint')"
+  - L152: :hint="$t('products.gpcHint')"
+  - L162: :label="$t('products.countryOfOrigin')"
+  - L170: :label="$t('products.lifecycleStatus')"
+- `src/components/products/ShoppingCartDialog.vue`
+  - L11: <div class="text-h6">{{ $t('productsPage.cart.title') }}</div>
+  - L21: {{ $t('productsPage.cart.empty') }}
+  - L34: {{ $t('productsPage.cart.totalItems') }}: {{ totalItems }}
+  - L42: :label="$t('productsPage.cart.clear')"
+  - L78: {{ $t('productsPage.details.supplier') }}:
+  - L82: {{ $t('productsPage.cart.unitPrice') }}:
+  - L141: <q-btn :label="$t('common.cancel')" flat color="grey" v-close-popup />
+  - L143: :label="$t('productsPage.cart.checkout')"
+- `src/components/tables/UnifiedTable.vue`
+  - L31: <span>{{ noDataMessage || $t('common.noData') }}</span>
+- `src/pages/AdminDashboard.vue`
+  - L4: <PageTitle :title="$t('admin.title')" icon="supervisor_account">
+  - L15: <q-tooltip>{{ $t('common.refresh') }}</q-tooltip>
+  - L19: :label="$t('admin.settings')"
+  - L27: :label="$t('admin.audit')"
+  - L41: :title="$t('admin.stats.totalUsers')"
+  - L48: {{ stats.activeUsers }} {{ $t('admin.stats.activeToday') }}
+  - L56: :title="$t('admin.stats.totalLocations')"
+  - L63: {{ stats.activeLocations }} {{ $t('admin.stats.active') }}
+  - L71: :title="$t('admin.stats.pendingSync')"
+  - L78: {{ $t('admin.stats.lastSync') }}: {{ formatDate(stats.lastSync) }}
+  - L86: :title="$t('admin.stats.todayEvents')"
+  - L93: +{{ stats.eventsGrowth }}% {{ $t('admin.stats.fromYesterday') }}
+  - L102: :title="$t('admin.quickActions')"
+  - L109: :label="$t('admin.userManagement.invite')"
+  - L117: :label="$t('locations.add')"
+  - L125: :label="$t('offline.data.download')"
+  - L133: :label="$t('offline.sync.forceSync')"
+  - L142: :label="$t('exports.title')"
+  - L154: :title="$t('magicInvite.revolutionaryUserSystem')"
+  - L164: :title="$t('admin.teamOverview')"
+  - L181: <q-tab name="users" :label="$t('admin.users')" icon="people" />
+  - L184: :label="$t('admin.locations')"
+  - L189: :label="$t('admin.permissions')"
+  - L192: <q-tab name="analytics" :label="$t('admin.analytics')" icon="analytics" />
+  - L201: {{ $t('admin.userManagement.title') }}
+  - L219: {{ $t(`permissions.templates.${props.value}`) }}
+  - L276: <div class="text-h6 q-mb-md">{{ $t('locations.title') }}</div>
+  - L295: {{ $t('locations.isMain') }}
+  - L308: props.value ? $t('common.active') : $t('common.inactive')
+  - L345: <div class="text-h6 q-mb-md">{{ $t('permissions.title') }}</div>
+  - L347: <BaseCard :title="$t('permissions.templates.title')">
+  - L352: :label="$t(`permissions.templates.${template.key}`)"
+  - L376: {{ $t(`permissions.types.${props.value}`) }}
+  - L416: <div class="text-h6 q-mb-md">{{ $t('analytics.dashboard') }}</div>
+  - L420: <BaseCard :title="$t('analytics.usage')">
+  - L428: {{ $t(`analytics.events.${event.type}`) }}
+  - L445: <BaseCard :title="$t('analytics.patterns')">
+  - L451: {{ $t('analytics.metrics.averageSession') }}
+  - L457: {{ $t('analytics.metrics.peakHours') }}
+  - L822: message: $t('admin.userManagement.editingUser', { userId: user.user_id }),
+  - L829: message: $t('admin.userManagement.managingPermissions', {
+  - L840: message: $t('admin.userManagement.resetPasswordConfirm', {
+  - L869: message: $t('admin.userManagement.actionConfirm', {
+  - L899: message: $t('admin.locationManagement.managingAccess', {
+  - L913: message: $t('admin.permissionTemplates.showing', {
+  - L923: message: $t('admin.locationManagement.editing', {
+- `src/pages/AnalyticsPage.vue`
+  - L5: :title="$t('analyticsPage.title')"
+  - L6: :subtitle="$t('analyticsPage.subtitle')"
+  - L19: <q-tooltip>{{ $t('common.refresh') }}</q-tooltip>
+  - L23: :label="$t('common.export')"
+  - L40: :label="$t('analyticsPage.period')"
+  - L63: :title="$t('analyticsPage.totalEvents')"
+  - L75: :title="$t('analyticsPage.activeUsers')"
+  - L87: :title="$t('analyticsPage.totalOrders')"
+  - L99: :title="$t('analyticsPage.productUpdates')"
+  - L114: <BaseCard :title="$t('analyticsPage.dailyActivity')">
+  - L155: <BaseCard :title="$t('analyticsPage.topEvents')">
+  - L192: :title="$t('analyticsPage.frequentlyOrderedItems')"
+  - L220: :title="$t('analyticsPage.mostUpdatedProducts')"
+  - L245: <BaseCard :title="$t('analyticsPage.userActivity')" padding="none">
+- `src/pages/BatchManagementPage.vue`
+  - L5: :title="$t('batch.batchManagement')"
+  - L6: :subtitle="$t('batch.manageBatchesSubtitle')"
+  - L30: <q-tooltip>{{ $t('common.refresh') }}</q-tooltip>
+  - L35: :label="$t('batch.addBatch')"
+  - L51: :title="$t('batch.totalBatches')"
+  - L67: :title="$t('batch.expiringSoon')"
+  - L83: :title="$t('batch.activeBatches')"
+  - L99: :title="$t('batch.totalValue')"
+  - L118: :title="$t('batch.totalBatches')"
+  - L134: :title="$t('batch.expiringSoon')"
+  - L152: {{ $t('batch.quickActions') }}
+  - L159: :title="$t('batch.scanBatch')"
+  - L160: :subtitle="$t('batch.scanBatchSubtitle')"
+  - L170: :title="$t('batch.viewExpiring')"
+  - L171: :subtitle="`${expiringBatches} ${$t(
+  - L184: :title="$t('batch.exportBatches')"
+  - L185: :subtitle="$t('batch.exportBatchesSubtitle')"
+  - L199: :label="$t('batch.scanBatch')"
+  - L207: :label="$t('batch.viewExpiring')"
+  - L222: <div class="text-subtitle2">{{ $t('errors.failedToLoadData') }}</div>
+  - L224: <q-btn flat color="white" :label="$t('common.retry')" size="sm" @click="refreshData" />
+  - L235: <div class="text-subtitle2">{{ $t('batch.criticalAlert') }}</div>
+  - L238: $t('batch.criticalBatchesFound', {
+  - L247: :label="$t('batch.viewCritical')"
+  - L266: <q-tab name="overview" :label="$t('batch.overview')" icon="list" />
+  - L269: :label="$t('batch.expiring')"
+  - L274: :label="$t('batch.fifoManagement')"
+  - L277: <q-tab name="reports" :label="$t('batch.reports')" icon="analytics" />
+  - L295: <div class="text-h6 q-mb-md">{{ $t('batch.expiringBatches') }}</div>
+  - L304: <div class="text-h6 q-mb-md">{{ $t('batch.fifoManagement') }}</div>
+  - L310: <div class="text-h6 q-mb-md">{{ $t('batch.batchReports') }}</div>
+  - L327: <q-tab name="overview" :label="$t('batch.overview')" icon="list" />
+  - L330: :label="$t('batch.expiring')"
+  - L351: {{ $t('batch.expiringBatches') }}
+  - L364:
+    <BaseDialog v-model="showAddBatchDialog" :title="$t('batch.addBatch')" icon="inventory" size="lg">
+  - L367: <q-btn flat :label="$t('common.close')" @click="showAddBatchDialog = false" />
+  - L374: :title="$t('batch.batchTitle', { batchNumber: selectedBatch?.batch_number || '' })"
+  - L382: <span class="label">{{ $t('batch.expiryDate') }}:</span>
+  - L386: <span class="label">{{ $t('batch.currentQuantity') }}:</span>
+  - L390: <span class="label">{{ $t('batch.status') }}:</span>
+  - L396: {{ $t(`batch.status.${selectedBatch.status}`) }}
+  - L404: :label="$t('common.close')"
+  - L412:
+    <BaseDialog v-model="showScannerDialog" :title="$t('barcodeScanner.title')" icon="qr_code_scanner" size="md">
+  - L415: <q-btn flat :label="$t('common.close')" @click="showScannerDialog = false" />
+- `src/pages/DashboardPage.vue`
+  - L22: :label="$t('dashboard.selectPractice')"
+  - L42: :label="$t('dashboard.demoRoleSwitch.label')"
+  - L75: <q-tooltip>{{ $t('dashboard.actions.refresh') }}</q-tooltip>
+  - L85: <q-tooltip>{{ $t('dashboard.actions.customize') }}</q-tooltip>
+  - L163: {{ $t('dashboard.platformOwner.title') }}
+  - L166: {{ $t('dashboard.platformOwner.description') }}
+  - L171: :label="$t('dashboard.platformOwner.goToPlatform')"
+  - L184: <h5>{{ $t('dashboard.empty.title') }}</h5>
+  - L185: <p>{{ $t('dashboard.empty.subtitle') }}</p>
+  - L187: :label="$t('dashboard.empty.addWidgets')"
+  - L199: :title="$t('dashboard.customize.title')"
+  - L205: <p>{{ $t('dashboard.customize.comingSoon') }}</p>
+  - L211: :label="$t('common.close')"
+- `src/pages/ErrorNotFound.vue`
+  - L38: {{ $t('error.pageNotFound') }}
+  - L41: {{ $t('error.pageNotFoundDescription') }}
+  - L49: :aria-label="$t('common.accessibility.navigationActions')"
+  - L54: :label="$t('error.goHome')"
+  - L59: :aria-label="$t('error.goHome') + ' - Navigeer naar het dashboard'"
+  - L64: :label="$t('error.goBack')"
+  - L69: :aria-label="$t('error.goBack') + ' - Ga naar de vorige pagina'"
+  - L78: :aria-label="$t('common.accessibility.quickNavigation')"
+  - L85: :aria-label="`Navigate to ${$t('nav.dashboard')}`"
+  - L94: <span>{{ $t('nav.dashboard') }}</span>
+  - L101: :aria-label="`Navigate to ${$t('nav.products')}`"
+  - L110: <span>{{ $t('nav.products') }}</span>
+  - L117: :aria-label="`Navigate to ${$t('nav.orders')}`"
+  - L126: <span>{{ $t('nav.orders') }}</span>
+  - L133: :aria-label="`Navigate to ${$t('nav.settings')}`"
+  - L138: <span>{{ $t('nav.settings') }}</span>
+  - L141: <p class="help-text">{{ $t('error.tryThesePages') }}</p>
+- `src/pages/NotificationsPage.vue`
+  - L4: :title="$t('notificationsPage.title')"
+  - L5: :subtitle="$t('notificationsPage.subtitle')"
+  - L18: <q-tooltip>{{ $t('common.refresh') }}</q-tooltip>
+  - L32: :label="`${$t('notificationsPage.all')} (${notifications.length})`"
+  - L42: :label="`${$t('notificationsPage.unread')} (${unreadCount})`"
+  - L53: :label="$t('notificationsPage.filterByCategory')"
+  - L64: :label="$t('notificationsPage.markAllRead')"
+  - L74: :label="$t('notificationsPage.clearAllNotifications')"
+  - L91: {{ $t('notificationsPage.noNotifications') }}
+  - L94: {{ $t('notificationsPage.allCaughtUp') }}
+  - L126: {{ $t(`notificationsPage.types.${notification.category}`) }}
+- `src/pages/OrderListDetailPage.vue`
+  - L63: :label="$t('orderLists.addProduct')"
+  - L83: :label="$t('orderLists.orderAll')"
+  - L92: <q-item-section>{{ $t('common.duplicate') }}</q-item-section>
+  - L98: <q-item-section>{{ $t('common.export') }}</q-item-section>
+  - L110: <q-item-section>{{ $t('common.delete') }}</q-item-section>
+  - L345: :title="$t('orderLists.addProduct')"
+  - L346: :subtitle="$t('orderLists.addProductSubtitle')"
+  - L351: :submit-button-text="$t('common.add')"
+  - L361: :label="$t('products.search')"
+  - L385: :label="$t('orderLists.recommendedQty')"
+  - L397: {{ $t('orderLists.confirmPlaceAllTitle') }}
+  - L400: {{ $t('orderLists.confirmPlaceAllBody') }}
+  - L403: <q-btn flat :label="$t('common.cancel')" v-close-popup />
+  - L404: <q-btn color="primary" :label="$t('orderLists.orderAll')" @click="orderAll()" />
+  - L822: $q.notify({ type: 'positive', message: $t('orderLists.ordersCreated') as string });
+  - L824: $q.notify({ type: 'negative', message: $t('orderLists.processingError') as string });
+- `src/pages/OrderListsPage.vue`
+  - L241: ? $t('orderLists.emptyFiltered')
+  - L242: : $t('orderLists.empty')
+  - L248: ? $t('orderLists.tryOtherFilters')
+  - L249: : $t('orderLists.createFirstList')
+  - L256: :label="$t('orderLists.newList')"
+  - L264: :title="$t('orderLists.globalAdvice')"
+  - L323: <q-btn flat :label="$t('common.close')" @click="showGlobalAdviceDialog = false" />
+  - L324: <q-btn @click="orderAllUrgentItems" :loading="processingGlobalOrder" color="primary"
+    :label="$t('orderLists.orderAll')" />
+  - L682: message: $t('orderLists.noUrgentItems'),
+  - L694: message: $t('orderlists.positive'),
+  - L705: message: $t('orderLists.sendConfirm', {
+  - L732: message: $t('orderLists.ordersSent', {
+  - L741: message: $t('orderLists.sendError'),
+  - L751: message: $t('orderLists.processingError'),
+  - L767: message: $t('orderLists.editComing'),
+  - L778: message: $t('orderLists.duplicated'),
+  - L785: message: $t('orderLists.duplicateError'),
+  - L794: message: $t('orderLists.deleteConfirmText', { name: orderList.name }),
+  - L810: message: $t('orderLists.deleted'),
+  - L816: message: $t('orderLists.deleteError'),
+  - L826: message: $t('orderLists.orderCreated'),
+  - L835: message: $t('orderLists.updated'),
+  - L849: message: $t('orderLists.created'),
+  - L869: message: $t('orderLists.loadDataError'),
+  - L891: message: $t('orderLists.loadDataError'),
+- `src/pages/OrdersPage.vue`
+  - L4: <PageTitle :title="$t('orders.title')" icon="assignment">
+  - L15: <q-tooltip>{{ $t('common.refresh') }}</q-tooltip>
+  - L19: :label="$t('common.export')"
+  - L28: :label="$t('orders.analytics')"
+  - L36: :label="$t('orders.createOrder')"
+  - L79: :label="$t(`orders.status.${props.value}`)"
+  - L114: <q-tooltip>{{ $t('orders.viewOrder') }}</q-tooltip>
+  - L124: <q-tooltip>{{ $t('orders.editOrder') }}</q-tooltip>
+  - L134: <q-tooltip>{{ $t('orders.downloadOrder') }}</q-tooltip>
+  - L144: :title="$t('orders.export.title')"
+  - L148: :submit-button-text="$t('orders.export.export')"
+  - L156: :label="$t('orders.export.format')"
+  - L164: :label="$t('orders.export.dateFrom')"
+  - L171: :label="$t('orders.export.dateTo')"
+  - L182: <div class="text-h6">{{ $t('orders.analytics.title') }}</div>
+  - L189: {{ $t('orders.analytics.comingSoon') }}
+  - L197: :label="$t('common.close')"
+- `src/pages/ProductsPage.vue`
+  - L5: :title="$t('productsPage.title')"
+  - L6: :subtitle="$t('productsPage.subtitle')"
+  - L19: <q-tooltip>{{ $t('common.refresh') }}</q-tooltip>
+  - L24: :label="$t('products.createProduct')"
+  - L32: :label="$t('productsPage.viewCart')"
+  - L86: <span>{{ $t('productsPage.noProductsFound') }}</span>
+  - L106: {{ $t(`productsPage.stockStatus.${props.row.stock_status}`) }}
+  - L122: {{ $t(`productsPage.gs1Status.${props.row.gs1_status}`) }}
+  - L150: {{ $t(`productsPage.batchStatus.${props.row.batch_status}`) }}
+  - L168: <q-tooltip>{{ $t('productsPage.viewDetails') }}</q-tooltip>
+  - L180: <q-tooltip>{{ $t('products.editProduct') }}</q-tooltip>
+  - L192: <q-tooltip>{{ $t('products.deleteProduct') }}</q-tooltip>
+  - L203: <q-tooltip>{{ $t('productsPage.addToCart') }}</q-tooltip>
+  - L214: <q-tooltip>{{ $t('productsPage.addToOrderList') }}</q-tooltip>
+  - L298: :title="$t('products.deleteConfirm')"
+  - L299: :message="$t('products.deleteMessage', { name: productToDelete?.name })"
+- `src/pages/SettingsPage.vue`
+  - L5: :title="$t('settings.title')"
+  - L6: :subtitle="$t('settings.manageSettingsSubtitle')"
+  - L23: <q-tooltip>{{ $t('common.refresh') }}</q-tooltip>
+  - L27: :label="$t('settings.saveSettings')"
+  - L43: :title="$t('settings.profile')"
+  - L44: :subtitle="$t('settings.profileSubtitle')"
+  - L51: :label="$t('auth.fullName')"
+  - L54: :aria-label="`${$t('auth.fullName')}: ${userSettings.fullName}`"
+  - L63: :label="$t('auth.email')"
+  - L66: :aria-label="`${$t('auth.email')}: ${userSettings.email}`"
+  - L75: :label="$t('settings.role')"
+  - L78: :aria-label="`${$t('settings.role')}: ${userSettings.role}`"
+  - L91: :title="$t('settings.appearanceTitle')"
+  - L92: :subtitle="$t('settings.appearanceSubtitle')"
+  - L106: {{ $t('settings.darkMode') }}
+  - L109: {{ $t('settings.darkModeDescription') }}
+  - L124: ? $t('settings.darkModeEnabled')
+  - L125: : $t('settings.lightModeEnabled')
+  - L140: {{ $t('settings.colorSchemeTitle') }}
+  - L143: {{ $t('settings.colorSchemeDescription') }}
+  - L170: :title="$t('settings.clinic')"
+  - L171: :subtitle="$t('settings.clinicInfoSubtitle')"
+  - L182: :label="$t('settings.clinicName')"
+  - L186: :aria-label="`${$t('settings.clinicName')}: ${
+  - L197: :label="$t('settings.contactEmail')"
+  - L201: :aria-label="`${$t('settings.contactEmail')}: ${
+  - L212: :label="$t('settings.phoneNumber')"
+  - L216: :aria-label="`${$t('settings.phoneNumber')}: ${
+  - L227: :label="$t('settings.address')"
+  - L231: :aria-label="`${$t('settings.address')}: ${
+  - L244: :title="$t('settings.contactSettingsNotice')"
+  - L254: :title="$t('settings.notifications')"
+  - L255: :subtitle="$t('settings.notificationSettingsSubtitle')"
+  - L265: {{ $t('settings.stockAlertsLabel') }}
+  - L268: {{ $t('settings.stockAlertsDescription') }}
+  - L285: {{ $t('settings.emailNotificationsLabel') }}
+  - L288: {{ $t('settings.emailNotificationsDescription') }}
+  - L305: {{ $t('settings.browserNotificationsLabel') }}
+  - L308: {{ $t('settings.browserNotificationsDescription') }}
+  - L326: :title="$t('settings.systemInfoTitle')"
+  - L327: :subtitle="$t('settings.systemInfoSubtitle')"
+  - L333: <div class="info-label">{{ $t('settings.versionLabel') }}</div>
+  - L339: {{ $t('settings.lastUpdateLabel') }}
+  - L347: <div class="info-label">{{ $t('settings.supportLabel') }}</div>
+- `src/pages/StyleGuidePage.vue`
+  - L530: <h2 class="section-title">🎯 {{ $t('settings.iconsSection') }}</h2>
+- `src/pages/SuppliersPage.vue`
+  - L5: :title="$t('suppliersPage.title')"
+  - L6: :subtitle="$t('suppliersPage.subtitle')"
+  - L19: <q-tooltip>{{ $t('common.refresh') }}</q-tooltip>
+  - L23: :label="$t('suppliersPage.importSuppliers')"
+  - L31: :label="$t('suppliersPage.addSupplier')"
+  - L73: ? $t('suppliersPage.active')
+  - L74: : $t('suppliersPage.inactive')
+  - L94: :label="$t('suppliersPage.notLinked')"
+  - L115: ? $t('suppliersPage.autoSyncOn')
+  - L116: : $t('suppliersPage.autoSyncOff')
+  - L143: {{ $t('suppliersPage.neverSynced') }}
+  - L161: $t('suppliersPage.configureIntegration')
+  - L175: <q-tooltip>{{ $t('suppliersPage.syncProducts') }}</q-tooltip>
+  - L185: <q-tooltip>{{ $t('suppliersPage.editSupplier') }}</q-tooltip>
+  - L196: <q-tooltip>{{ $t('suppliersPage.deleteSupplier') }}</q-tooltip>
+  - L209: ? $t('suppliersPage.editSupplier')
+  - L210: : $t('suppliersPage.addSupplier')
+  - L221: :label="$t('suppliersPage.supplierName')"
+  - L223: :rules="[val => !!val || $t('validation.required')]"
+  - L228: :label="$t('suppliersPage.contactEmail')"
+  - L235: :label="$t('suppliersPage.contactPhone')"
+  - L241: :label="$t('suppliersPage.website')"
+  - L247: :label="$t('suppliersPage.address')"
+  - L255: :label="$t('suppliersPage.city')"
+  - L262: :label="$t('suppliersPage.postalCode')"
+  - L270: :label="$t('suppliersPage.country')"
+  - L276: :label="$t('suppliersPage.magentoVendorId')"
+  - L283: :label="$t('suppliersPage.notes')"
+  - L292: {{ $t('suppliersPage.integrationSettings') }}
+  - L299: :label="$t('suppliersPage.integrationType')"
+  - L309: :label="$t('suppliersPage.orderMethod')"
+  - L319: :label="$t('suppliersPage.autoSyncEnabled')"
+  - L331: :label="$t('suppliersPage.orderEmail')"
+  - L340: :label="$t('suppliersPage.apiEndpoint')"
+  - L345: :label="$t('suppliersPage.apiKey')"
+  - L354: :label="$t('suppliersPage.ediEndpoint')"
+  - L359: :label="$t('suppliersPage.ediPartnerId')"
+  - L366: :label="$t('suppliersPage.activeSupplier')"
+  - L377: {{ $t('suppliersPage.configureIntegration') }} -
+  - L391: {{ $t('suppliersPage.manualIntegrationInfo') }}
+  - L400: {{ $t('suppliersPage.currentConfig') }}
+  - L405: >{{ $t('suppliersPage.integrationType') }}:</strong
+  - L415: >{{ $t('suppliersPage.orderMethod') }}:</strong
+  - L422: <strong>{{ $t('suppliersPage.autoSync') }}:</strong>
+  - L431: ? $t('common.yes')
+  - L432: : $t('common.no')
+  - L439: <strong>{{ $t('suppliersPage.lastSync') }}:</strong>
+  - L453: :label="$t('suppliersPage.syncNow')"
+  - L461: :label="$t('suppliersPage.editSettings')"
+  - L468: :label="$t('suppliersPage.testConnection')"
+  - L480: :label="$t('common.close')"
+- `src/pages/auth/LoginPage.vue`
+  - L12: :label="$t('auth.email')"
+  - L35: :label="$t('auth.password')"
+  - L60: ? $t('auth.hidePassword')
+  - L61: : $t('auth.showPassword')
+  - L74: {{ $t('auth.passwordHelp') }}
+  - L84: :label="$t('auth.login')"
+  - L90: {{ $t('auth.signingIn') }}
+  - L97: <span class="separator-text">{{ $t('auth.or') }}</span>
+  - L106: <h3>{{ $t('auth.quickLogin.title') }}</h3>
+  - L107: <p>{{ $t('auth.quickLogin.subtitle') }}</p>
+  - L112: :label="$t('auth.quickLogin.demo')"
+  - L121: <q-tooltip>{{ $t('auth.quickLogin.demoTooltip') }}</q-tooltip>
+  - L125: :label="$t('auth.quickLogin.owner')"
+  - L134: <q-tooltip>{{ $t('auth.quickLogin.ownerTooltip') }}</q-tooltip>
+  - L143: :label="$t('auth.manualLogin')"
+  - L155: :label="$t('auth.forgotPassword')"
+  - L166: <span>{{ $t('auth.secureConnection') }}</span>
+- `src/pages/auth/MagicJoinPage.vue`
+  - L11: <h2>{{ $t('magicJoin.enterCode') }}</h2>
+  - L12: <p class="step-description">{{ $t('magicJoin.codeExplanation') }}</p>
+  - L19: :placeholder="$t('magicJoin.placeholder')"
+  - L54: :label="$t('magicJoin.joinNow')"
+  - L67: <span>{{ $t('common.or') }}</span>
+  - L72: :label="$t('magicJoin.scanQR')"
+  - L79: :label="$t('magicJoin.tryDemo')"
+  - L95: <span>{{ $t('magicJoin.howItWorks') }}</span>
+  - L102: <h4>{{ $t('magicJoin.step1') }}</h4>
+  - L103: <p>{{ $t('magicJoin.step1Detail') }}</p>
+  - L109: <h4>{{ $t('magicJoin.step2') }}</h4>
+  - L110: <p>{{ $t('magicJoin.step2Detail') }}</p>
+  - L116: <h4>{{ $t('magicJoin.step3') }}</h4>
+  - L117: <p>{{ $t('magicJoin.step3Detail') }}</p>
+  - L128: <div class="text-h6 text-center">{{ $t('magicJoin.scanTitle') }}</div>
+  - L131: <p>{{ $t('magicJoin.scanInstructions') }}</p>
+  - L138: :label="$t('common.cancel')"
+  - L152: <h3>{{ $t('magicJoin.welcomeTitle') }}</h3>
+  - L155: :label="$t('magicJoin.getStarted')"
+- `src/pages/inventory/CountingPage.vue`
+  - L5: :title="$t('counting.title')"
+  - L6: :subtitle="$t('counting.overview')"
+  - L19: <q-tooltip>{{ $t('common.refresh') }}</q-tooltip>
+  - L25: :label="$t('counting.sessionStatus')"
+  - L40: :label="$t('counting.startSession')"
+  - L63: <div class="text-h6">{{ $t('counting.activeSession') }}</div>
+  - L73: <div class="stat-label">{{ $t('counting.progress') }}</div>
+  - L91: <div class="stat-label">{{ $t('counting.sessionType') }}</div>
+  - L98: <div class="stat-label">{{ $t('common.startedAt') }}</div>
+  - L105: <div class="stat-label">{{ $t('counting.discrepancies') }}</div>
+  - L117: :label="$t('counting.continueSession')"
+  - L123: :label="$t('counting.completeSession')"
+  - L133: <p class="loading-text">{{ $t('counting.loadingSessions') }}</p>
+  - L143: :no-data-label="$t('counting.noSessionsFound')"
+  - L219: :title="$t('counting.continueSession')"
+  - L228: :title="$t('common.view')"
+  - L238: :title="$t('counting.completeSession')"
+- `src/pages/inventory/CountingSessionPage.vue`
+  - L44: :label="$t('counting.completeSession')"
+  - L54: :label="$t('counting.approveSession')"
+  - L68: <p class="loading-text">{{ $t('counting.loadingSession') }}</p>
+  - L76: {{ $t('counting.sessionNotFound') }}
+  - L79: {{ $t('counting.sessionNotFoundDescription') }}
+  - L85: :label="$t('common.goBack')"
+  - L95: :title="$t('common.error')"
+  - L96: :message="$t('counting.sessionLoadFailed')"
+  - L99: <q-btn color="primary" :label="$t('common.retry')" @click="loadSession" />
+  - L109: <div class="text-h6">{{ $t('counting.sessionSummary') }}</div>
+  - L117: {{ $t('counting.sessionType') }}
+  - L126: {{ $t('counting.totalProducts') }}
+  - L135: {{ $t('counting.countedProducts') }}
+  - L142: {{ $t('counting.discrepancies') }}
+  - L155: <div class="summary-label">{{ $t('common.startedAt') }}</div>
+  - L162: <div class="summary-label">{{ $t('common.completedAt') }}</div>
+  - L184: <div class="text-h6">{{ $t('counting.countingResults') }}</div>
+  - L185: <div class="text-subtitle2">{{ $t('counting.viewResults') }}</div>
+  - L193: :title="$t('common.error')"
+  - L194: :message="$t('counting.entriesLoadFailed')"
+  - L197: <q-btn color="primary" :label="$t('common.retry')" @click="loadCountingEntries" />
+  - L206: :no-data-label="$t('counting.noResultsFound')"
+- `src/pages/inventory/InventoryLevelsPage.vue`
+  - L5: :title="$t('inventory.stockLevels')"
+  - L6: :subtitle="$t('inventory.overview')"
+  - L19: <q-tooltip>{{ $t('common.refresh') }}</q-tooltip>
+  - L29: :title="$t('inventory.totalProducts')"
+  - L39: <div class="kpi-subtitle">{{ $t('inventory.products') }}</div>
+  - L46: :title="$t('inventory.stockLocations')"
+  - L47: :subtitle="$t('inventory.activeLocations')"
+  - L56: <div class="kpi-subtitle">{{ $t('inventory.locations') }}</div>
+  - L63: :title="$t('inventory.dataLoaded')"
+  - L64: :subtitle="$t('inventory.upToDate')"
+  - L78: ? $t('inventory.realTimeConnected')
+  - L79: : $t('inventory.status')
+  - L88: :title="$t('inventory.lastUpdated')"
+  - L89: :subtitle="$t('inventory.refreshData')"
+  - L98: <div class="kpi-subtitle">{{ $t('inventory.lastSync') }}</div>
+  - L115: <q-btn flat dense color="white" :label="$t('common.retry')" @click="onRetry" />
+  - L153: <span>{{ $t('inventory.noStockLevels') }}</span>
+  - L190: {{ $t(`inventory.stockStatus.${props.row.stock_status}`) }}
+  - L229: <q-tooltip>{{ $t('inventory.adjustStock') }}</q-tooltip>
+  - L239: <q-tooltip>{{ $t('inventory.viewHistory') }}</q-tooltip>
+  - L249: <q-tooltip>{{ $t('inventory.countStock') }}</q-tooltip>
+  - L259: :title="$t('inventory.adjustStock')"
+  - L263: :submit-button-text="$t('inventory.adjust')"
+  - L270: {{ $t('inventory.currentStock') }}:
+  - L280: :label="$t('inventory.adjustmentType')"
+  - L288: :label="$t('inventory.quantity')"
+  - L292: val => (val !== null && val > 0) || $t('validation.required'),
+  - L298: :label="$t('inventory.reason')"
+- `src/pages/inventory/LocationsPage.vue`
+  - L4: :title="$t('locations.title')"
+  - L5: :subtitle="$t('locations.manage')"
+  - L18: {{ $t('locations.allLocations') }}
+  - L36: {{ $t('locations.mainLocations') }}
+  - L53: <div class="text-subtitle1">{{ $t('locations.title') }}</div>
+  - L55: {{ $t('locations.comingSoonDescription') }}
+  - L77: :label="$t('locations.add')"
+  - L99: :no-data-label="$t('locations.noLocations')"
+- `src/pages/inventory/MovementsPage.vue`
+  - L5: :title="$t('inventory.movements.title')"
+  - L6: :subtitle="$t('inventory.movements.subtitle')"
+  - L19: <q-tooltip>{{ $t('common.refresh') }}</q-tooltip>
+  - L24: :label="$t('common.export')"
+  - L59: <q-btn flat dense color="white" :label="$t('common.retry')" @click="errorState.retry?.()"
+    />
+  - L69: <p class="loading-text">{{ $t('inventory.movements.loading') }}</p>
+  - L81: :no-data-label="$t('inventory.movements.noData')"
+  - L108: {{ props.row.product?.name || $t('common.unknownProduct') }}
+  - L136: {{ props.row.location?.name || $t('common.unknownLocation') }}
+  - L169: :title="$t('common.view')"
+  - L180: :title="$t('inventory.movementDetails')"
+  - L187: <span class="label">{{ $t('inventory.movementType') }}:</span>
+  - L198: <span class="label">{{ $t('inventory.product') }}:</span>
+  - L200: {{ selectedMovement.product?.name || $t('common.unknownProduct') }}
+  - L202: >({{ selectedMovement.product?.sku || $t('common.noSku') }})</span
+  - L208: <span class="label">{{ $t('inventory.location') }}:</span>
+  - L210: selectedMovement.location?.name || $t('common.unknownLocation')
+  - L215: <span class="label">{{ $t('inventory.quantityChange') }}:</span>
+  - L229: <span class="label">{{ $t('inventory.quantityBefore') }}:</span>
+  - L234: <span class="label">{{ $t('inventory.quantityAfter') }}:</span>
+  - L239: <span class="label">{{ $t('inventory.reasonCode') }}:</span>
+  - L246: <span class="label">{{ $t('common.notes') }}:</span>
+  - L251: <span class="label">{{ $t('common.date') }}:</span>
+  - L261: :label="$t('common.close')"
+- `src/pages/platform/PlatformDashboard.vue`
+  - L4: :title="$t('platform.title')"
+  - L5: :subtitle="$t('platform.subtitle')"
+  - L16: $t(
+  - L30: >{{ $t('platform.version') }}:</span
+  - L38: >{{ $t('platform.environment') }}:</span
+  - L46: >{{ $t('platform.uptime') }}:</span
+  - L54: >{{ $t('platform.lastDeployment') }}:</span
+  - L69: :title="$t('platform.metrics.totalPractices')"
+  - L85: :title="$t('platform.metrics.totalUsers')"
+  - L101: :title="$t('platform.metrics.activeToday')"
+  - L117: :title="$t('platform.metrics.totalEvents')"
+  - L135: <div class="text-h6 q-mb-md">{{ $t('platform.quickActions.title') }}</div>
+  - L182: <q-tooltip>{{ $t('platform.actions.refresh') }}</q-tooltip>
+
+### Other Locations
+
+_None_
+
+## Notes
+
+- Distinguish backend error messages from UI copy before key refactors.

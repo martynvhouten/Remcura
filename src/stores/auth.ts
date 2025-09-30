@@ -2,11 +2,32 @@ import { defineStore } from 'pinia';
 import { ref, computed, readonly } from 'vue';
 import { supabase } from '@/boot/supabase';
 import type { User, Session } from '@supabase/supabase-js';
-import type { UserProfile } from '@/types/supabase';
+import type { Tables } from '@/types';
+import type { ServiceErrorContext } from '@/types/logging';
 import { ServiceErrorHandler } from '@/utils/service-error-handler';
 import { authLogger } from '@/utils/logger';
 import { monitoringService } from '@/services/monitoring';
 import { createEventEmitter, StoreEvents } from '@/utils/eventBus';
+
+type PracticeMember = Tables<'practice_members'>;
+
+type AuthProfileRole = PracticeMember['role'] | 'platform_owner' | 'member';
+
+interface AuthProfile {
+  id: string;
+  clinic_id: string | null;
+  email: string;
+  full_name: string;
+  role: AuthProfileRole;
+  avatar_url: string | null;
+  created_at: string;
+  updated_at: string;
+}
+
+type ImportMetaEnvWithPlatform = ImportMetaEnv & {
+  readonly VITE_PLATFORM_OWNER_EMAIL?: string;
+  readonly VITE_PLATFORM_OWNER_PASSWORD?: string;
+};
 
 export const useAuthStore = defineStore('auth', () => {
   // Event emitter for store communication
@@ -15,7 +36,7 @@ export const useAuthStore = defineStore('auth', () => {
   // State
   const user = ref<User | null>(null);
   const session = ref<Session | null>(null);
-  const userProfile = ref<UserProfile | null>(null);
+  const userProfile = ref<AuthProfile | null>(null);
   const loading = ref(false);
   const initialized = ref(false);
 
@@ -99,7 +120,7 @@ export const useAuthStore = defineStore('auth', () => {
             session.value = parsedSession;
             user.value = JSON.parse(savedUser);
             if (savedProfile) {
-              userProfile.value = JSON.parse(savedProfile);
+              userProfile.value = JSON.parse(savedProfile) as AuthProfile;
             }
             authLogger.info(
               'Restored session from localStorage and updated Supabase client'
@@ -166,7 +187,9 @@ export const useAuthStore = defineStore('auth', () => {
       initialized.value = true;
       authLogger.info('Authentication store initialized successfully');
     } catch (error) {
-      authLogger.error('Failed to initialize auth store', error as Error);
+      authLogger.error('Failed to initialize auth store', {
+        error: error instanceof Error ? error.message : String(error),
+      });
       monitoringService.captureError(error as Error, {
         url: window.location.href,
         userAgent: navigator.userAgent,
@@ -214,7 +237,7 @@ export const useAuthStore = defineStore('auth', () => {
 
       return { success: true };
     } catch (error: unknown) {
-      const result = await ServiceErrorHandler.handle(
+      const serviceError = ServiceErrorHandler.handle(
         error as Error,
         {
           service: 'auth',
@@ -222,14 +245,14 @@ export const useAuthStore = defineStore('auth', () => {
           metadata: { email },
         },
         {
-          showToUser: false, // Let the UI handle showing login errors
+          rethrow: false,
           logLevel: 'error',
         }
       );
 
       return {
         success: false,
-        error: result.userMessage,
+        error: serviceError.message,
       };
     } finally {
       loading.value = false;
@@ -267,22 +290,21 @@ export const useAuthStore = defineStore('auth', () => {
 
       return { success: true };
     } catch (error: unknown) {
-      const result = await ServiceErrorHandler.handle(
+      const serviceError = ServiceErrorHandler.handle(
         error as Error,
         {
           service: 'auth',
           operation: 'loginAsDemo',
-          metadata: {},
         },
         {
-          showToUser: false,
+          rethrow: false,
           logLevel: 'error',
         }
       );
 
       return {
         success: false,
-        error: result.userMessage,
+        error: serviceError.message,
       };
     } finally {
       loading.value = false;
@@ -295,11 +317,9 @@ export const useAuthStore = defineStore('auth', () => {
       authLogger.info('Starting platform owner login process');
 
       // Use dedicated platform owner credentials from environment
-      const ownerEmail =
-        (import.meta as any).env.VITE_PLATFORM_OWNER_EMAIL ||
-        'owner@remcura.com';
-      const ownerPassword = (import.meta as any).env
-        .VITE_PLATFORM_OWNER_PASSWORD;
+      const env = import.meta.env as ImportMetaEnvWithPlatform;
+      const ownerEmail = env.VITE_PLATFORM_OWNER_EMAIL || 'owner@remcura.com';
+      const ownerPassword = env.VITE_PLATFORM_OWNER_PASSWORD;
 
       if (!ownerPassword) {
         authLogger.warn(
@@ -339,22 +359,21 @@ export const useAuthStore = defineStore('auth', () => {
 
       return { success: true };
     } catch (error: unknown) {
-      const result = await ServiceErrorHandler.handle(
+      const serviceError = ServiceErrorHandler.handle(
         error as Error,
         {
           service: 'auth',
           operation: 'loginAsOwner',
-          metadata: {},
         },
         {
-          showToUser: false,
+          rethrow: false,
           logLevel: 'error',
         }
       );
 
       return {
         success: false,
-        error: result.userMessage,
+        error: serviceError.message,
       };
     } finally {
       loading.value = false;
@@ -376,23 +395,24 @@ export const useAuthStore = defineStore('auth', () => {
       monitoringService.trackEvent('logout_success');
       return { success: true };
     } catch (error: unknown) {
-      const result = await ErrorHandler.handleError(
-        error,
-        {
-          service: 'auth',
-          operation: 'logout',
-          userId: user.value?.id,
-          metadata: {},
-        },
-        {
-          showToUser: false, // Let the UI handle logout errors
-          logLevel: 'warn', // Logout errors are less critical
-        }
-      );
+      const context: ServiceErrorContext = {
+        service: 'auth',
+        operation: 'logout',
+        metadata: {},
+      };
+
+      if (user.value?.id) {
+        context.userId = user.value.id;
+      }
+
+      const serviceError = ServiceErrorHandler.handle(error as Error, context, {
+        rethrow: false,
+        logLevel: 'warn',
+      });
 
       return {
         success: false,
-        error: result.userMessage,
+        error: serviceError.message,
       };
     } finally {
       loading.value = false;
@@ -448,70 +468,6 @@ export const useAuthStore = defineStore('auth', () => {
     }
   };
 
-  const setDemoAuthData = async () => {
-    // Use the actual practice UUID from the database
-    const demoPracticeId = '550e8400-e29b-41d4-a716-446655440000';
-    const demoUserId = '550e8400-e29b-41d4-a716-446655440001';
-
-    // Create mock session for demo
-    const mockUser = {
-      id: demoUserId,
-      email: 'demo@remcura.com',
-      created_at: new Date().toISOString(),
-      updated_at: new Date().toISOString(),
-      app_metadata: {},
-      user_metadata: { full_name: 'Demo User' },
-      aud: 'authenticated',
-      confirmation_sent_at: new Date().toISOString(),
-      confirmed_at: new Date().toISOString(),
-      email_confirmed_at: new Date().toISOString(),
-      last_sign_in_at: new Date().toISOString(),
-      role: 'authenticated',
-      phone: '',
-      phone_confirmed_at: undefined,
-      recovery_sent_at: undefined,
-      email_change_sent_at: undefined,
-      new_email: undefined,
-      invited_at: undefined,
-      action_link: undefined,
-      email_change: undefined,
-      phone_change: undefined,
-      is_anonymous: false,
-    };
-
-    const mockSession = {
-      access_token: 'demo-access-token',
-      refresh_token: 'demo-refresh-token',
-      expires_in: 3600,
-      expires_at: Math.floor(Date.now() / 1000) + 3600,
-      token_type: 'bearer',
-      user: mockUser,
-    };
-
-    user.value = mockUser as any;
-    session.value = mockSession as any;
-
-    // Set demo user profile with actual database practice ID
-    userProfile.value = {
-      id: demoUserId,
-      clinic_id: demoPracticeId,
-      email: 'demo@remcura.com',
-      full_name: 'Demo User',
-      role: 'platform_owner',
-      avatar_url: null,
-      created_at: new Date().toISOString(),
-      updated_at: new Date().toISOString(),
-    };
-
-    // Persist demo data to localStorage
-    localStorage.setItem('remcura_auth_session', JSON.stringify(mockSession));
-    localStorage.setItem('remcura_auth_user', JSON.stringify(mockUser));
-    localStorage.setItem(
-      'remcura_auth_profile',
-      JSON.stringify(userProfile.value)
-    );
-  };
-
   const fetchUserProfile = async (userId: string) => {
     try {
       const currentUser = user.value;
@@ -526,10 +482,13 @@ export const useAuthStore = defineStore('auth', () => {
       } catch (e) {
         // ignore and fallback to app_metadata
       }
-      if (!isPlatformOwner) {
-        isPlatformOwner =
-          !!(currentUser as any)?.app_metadata?.role &&
-          (currentUser as any).app_metadata.role === 'platform_owner';
+      if (!isPlatformOwner && currentUser) {
+        const appMetadata = currentUser.app_metadata as Record<string, unknown>;
+        const role =
+          typeof appMetadata?.role === 'string' ? appMetadata.role : null;
+        if (role === 'platform_owner') {
+          isPlatformOwner = true;
+        }
       }
 
       if (isPlatformOwner) {
@@ -537,9 +496,15 @@ export const useAuthStore = defineStore('auth', () => {
           id: userId,
           clinic_id: null,
           email: currentUser?.email || '',
-          full_name: currentUser?.user_metadata?.full_name || 'Platform Owner',
+          full_name:
+            typeof currentUser?.user_metadata?.full_name === 'string'
+              ? currentUser.user_metadata.full_name
+              : 'Platform Owner',
           role: 'platform_owner',
-          avatar_url: currentUser?.user_metadata?.avatar_url || null,
+          avatar_url:
+            typeof currentUser?.user_metadata?.avatar_url === 'string'
+              ? currentUser.user_metadata.avatar_url
+              : null,
           created_at: new Date().toISOString(),
           updated_at: new Date().toISOString(),
         };
@@ -569,9 +534,15 @@ export const useAuthStore = defineStore('auth', () => {
           id: userId,
           clinic_id: null,
           email: user.value?.email || '',
-          full_name: user.value?.user_metadata?.full_name || 'User',
+          full_name:
+            typeof user.value?.user_metadata?.full_name === 'string'
+              ? user.value.user_metadata.full_name
+              : 'User',
           role: 'member',
-          avatar_url: user.value?.user_metadata?.avatar_url || null,
+          avatar_url:
+            typeof user.value?.user_metadata?.avatar_url === 'string'
+              ? user.value.user_metadata.avatar_url
+              : null,
           created_at: new Date().toISOString(),
           updated_at: new Date().toISOString(),
         };
@@ -587,11 +558,17 @@ export const useAuthStore = defineStore('auth', () => {
         id: userId,
         clinic_id: data?.practice_id || null,
         email: user.value?.email || '',
-        full_name: user.value?.user_metadata?.full_name || 'User',
-        role: (data?.role as any) || 'member',
-        avatar_url: user.value?.user_metadata?.avatar_url || null,
-        created_at: (data as any)?.created_at || new Date().toISOString(),
-        updated_at: (data as any)?.updated_at || new Date().toISOString(),
+        full_name:
+          typeof user.value?.user_metadata?.full_name === 'string'
+            ? user.value.user_metadata.full_name
+            : 'User',
+        role: data?.role ?? 'member',
+        avatar_url:
+          typeof user.value?.user_metadata?.avatar_url === 'string'
+            ? user.value.user_metadata.avatar_url
+            : null,
+        created_at: data?.created_at || new Date().toISOString(),
+        updated_at: data?.updated_at || new Date().toISOString(),
       };
 
       // Persist user profile to localStorage
@@ -600,17 +577,23 @@ export const useAuthStore = defineStore('auth', () => {
         JSON.stringify(userProfile.value)
       );
     } catch (error) {
-      authLogger.error('Error fetching user profile', error as Error);
-      ServiceErrorHandler.handle(
-        error as Error,
-        {
-          service: 'AuthStore',
-          operation: 'fetchUserProfile',
-          userId: this.user?.id,
-          metadata: { context: 'Fetch User Profile' },
-        },
-        { rethrow: false, logLevel: 'error' }
-      );
+      authLogger.error('Error fetching user profile', {
+        error: error instanceof Error ? error.message : String(error),
+      });
+      const context: ServiceErrorContext = {
+        service: 'AuthStore',
+        operation: 'fetchUserProfile',
+        metadata: { context: 'Fetch User Profile' },
+      };
+
+      if (user.value?.id) {
+        context.userId = user.value.id;
+      }
+
+      ServiceErrorHandler.handle(error as Error, context, {
+        rethrow: false,
+        logLevel: 'error',
+      });
     }
   };
 

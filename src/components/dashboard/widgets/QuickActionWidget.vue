@@ -1,8 +1,8 @@
 <template>
   <BaseDashboardWidget
     :hide-header="true"
-    @click="handleAction"
     class="cursor-pointer"
+    @click="handleAction"
   >
     <div class="action-content">
       <q-icon
@@ -20,6 +20,7 @@
         unelevated
         no-caps
         class="action-button"
+        type="button"
         @click.stop="handleAction"
       />
     </div>
@@ -35,6 +36,7 @@
   import { computed, ref } from 'vue';
   import { useRouter } from 'vue-router';
   import { useQuasar } from 'quasar';
+  import { useI18n } from 'vue-i18n';
   import { BaseDashboardWidget } from '@/components/cards';
 
   interface QuickActionData {
@@ -53,6 +55,7 @@
   const props = defineProps<Props>();
   const router = useRouter();
   const $q = useQuasar();
+  const { t } = useI18n();
   const isScanning = ref(false);
 
   const actionIcon = computed(() => {
@@ -92,15 +95,15 @@
 
     switch (props.data.action) {
       case 'scan':
-        return this.$t('dashboard.quickActionLabels.scan');
+        return t('dashboard.quickActionLabels.scan');
       case 'order':
-        return this.$t('dashboard.quickActionLabels.order');
+        return t('dashboard.quickActionLabels.order');
       case 'update':
-        return this.$t('dashboard.quickActionLabels.update');
+        return t('dashboard.quickActionLabels.update');
       case 'export':
-        return this.$t('dashboard.quickActionLabels.export');
+        return t('dashboard.quickActionLabels.export');
       default:
-        return this.$t('dashboard.quickActionLabels.default');
+        return t('dashboard.quickActionLabels.default');
     }
   });
 
@@ -156,7 +159,7 @@
     } else {
       $q.notify({
         type: 'warning',
-        message: $t('quickactio.warning'),
+        message: t('quickaction.warning'),
         caption: 'Probeer handmatig een product toe te voegen',
       });
     }

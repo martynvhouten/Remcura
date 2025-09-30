@@ -1,5 +1,4 @@
 import { defineStore } from 'pinia';
-import { useAuthStore } from '@/stores/auth';
 import { useSuppliersStore } from '@/stores/suppliers';
 import { useProductsCore } from './products-core';
 import { useProductsCart } from './products-cart';

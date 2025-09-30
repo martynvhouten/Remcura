@@ -3,64 +3,48 @@
  * Replaces console.log statements with environment-aware logging
  */
 
-import type { LogLevel, LogData, LogEntry } from '@/types/logging';
+import type { LogLevel, LogData } from '@/types/logging';
 
 class Logger {
   private isDevelopment = import.meta.env.DEV;
   private isProduction = import.meta.env.PROD;
 
-  /**
-   * Log debug information (only in development)
-   */
   debug(message: string, context?: string, data?: LogData): void {
     if (this.isDevelopment) {
       console.debug(
         `[DEBUG${context ? ` ${context}` : ''}]`,
         message,
-        data || ''
+        data ?? ''
       );
     }
   }
 
-  /**
-   * Log general information
-   */
   info(message: string, context?: string, data?: LogData): void {
     if (this.isDevelopment) {
       console.info(
         `[INFO${context ? ` ${context}` : ''}]`,
         message,
-        data || ''
+        data ?? ''
       );
     }
 
-    // In production, could send to monitoring service
     this.sendToMonitoring('info', message, context, data);
   }
 
-  /**
-   * Log warnings (always logged)
-   */
   warn(message: string, context?: string, data?: LogData): void {
-    console.warn(`[WARN${context ? ` ${context}` : ''}]`, message, data || '');
+    console.warn(`[WARN${context ? ` ${context}` : ''}]`, message, data ?? '');
     this.sendToMonitoring('warn', message, context, data);
   }
 
-  /**
-   * Log errors (always logged)
-   */
-  error(message: string, context?: string, error?: Error | any): void {
+  error(message: string, context?: string, error?: Error | LogData): void {
     console.error(
       `[ERROR${context ? ` ${context}` : ''}]`,
       message,
-      error || ''
+      error ?? ''
     );
-    this.sendToMonitoring('error', message, context, error);
+    this.sendToMonitoring('error', message, context, error ?? undefined);
   }
 
-  /**
-   * Send logs to external monitoring service (placeholder)
-   */
   private sendToMonitoring(
     _level: LogLevel,
     _message: string,
@@ -70,33 +54,22 @@ class Logger {
     if (!this.isProduction) {
       return;
     }
-
-    // TODO: Integrate with monitoring service (Sentry, LogRocket, etc.)
-    // Example:
-    // if (window.Sentry) {
-    //   window.Sentry.addBreadcrumb({
-    //     message,
-    //     category: context || 'app',
-    //     level,
-    //     data
-    //   })
-    // }
   }
 
-  /**
-   * Create a contextual logger for specific modules
-   */
   createContext(context: string) {
-    return {
-      debug: (message: string, data?: LogData) =>
-        this.debug(message, context, data),
-      info: (message: string, data?: LogData) =>
-        this.info(message, context, data),
-      warn: (message: string, data?: LogData) =>
-        this.warn(message, context, data),
-      error: (message: string, error?: Error | LogData) =>
-        this.error(message, context, error),
-    };
+    const warn = (message: string, data?: LogData) =>
+      this.warn(message, context, data);
+    const info = (message: string, data?: LogData) =>
+      this.info(message, context, data);
+    const debug = (message: string, data?: LogData) =>
+      this.debug(message, context, data);
+    const error = (message: string, error?: Error | LogData) =>
+      this.error(message, context, error);
+
+    const structured = (message: string, data?: Record<string, unknown>) =>
+      this.info(message, context, data);
+
+    return { debug, info, warn, error, structured };
   }
 }
 
@@ -124,3 +97,6 @@ export const dashboardLogger = logger.createContext('DASHBOARD');
 export const magentoLogger = logger.createContext('MAGENTO');
 export const offlineLogger = logger.createContext('OFFLINE');
 export const notificationLogger = logger.createContext('NOTIFICATIONS');
+
+// Export helper for creating contextual loggers on demand
+export const createLogger = (context: string) => logger.createContext(context);

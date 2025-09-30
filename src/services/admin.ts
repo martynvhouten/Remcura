@@ -5,11 +5,10 @@ import type {
   LocationUpdate,
   UserPermission,
   UserPermissionInsert,
-  Practice,
-  PracticeMember,
-  PermissionType,
-  ResourceType,
 } from '@/types/supabase';
+import type { PermissionType, ResourceType } from '@/types/permissions';
+import type { PracticeMemberRow } from '@/types/inventory';
+import type { UsageAnalytics } from '@/types/analytics';
 import { useAuthStore } from '@/stores/auth';
 import { analyticsService } from './analytics';
 
@@ -52,9 +51,9 @@ export interface AuditLogEntry {
   action: string;
   resource_type: string;
   resource_id: string | null;
-  old_values: Record<string, any>;
-  new_values: Record<string, any>;
-  metadata: Record<string, any>;
+  old_values: Record<string, unknown>;
+  new_values: Record<string, unknown>;
+  metadata: Record<string, unknown>;
   timestamp: Date;
   ip_address?: string;
   user_agent?: string;
@@ -466,7 +465,7 @@ export class AdminService {
    * Get practice members with their permissions
    */
   async getPracticeMembers(): Promise<
-    (PracticeMember & { permissions?: UserPermission[] })[]
+    (PracticeMemberRow & { permissions?: UserPermission[] })[]
   > {
     const authStore = useAuthStore();
     const practiceId = authStore.selectedPractice?.id;
@@ -491,10 +490,10 @@ export class AdminService {
 
     // Get permissions for each member
     const membersWithPermissions = await Promise.all(
-      (members || []).map(async member => {
+      (members as PracticeMemberRow[] | null | undefined)?.map(async member => {
         const permissions = await this.getUserPermissions(member.user_id);
         return { ...member, permissions };
-      })
+      }) ?? []
     );
 
     return membersWithPermissions;
@@ -507,13 +506,12 @@ export class AdminService {
     action: string,
     resourceType: string,
     resourceId: string | null,
-    oldValues: Record<string, any> | null = null,
-    newValues: Record<string, any> | null = null,
-    metadata: Record<string, any> = {}
+    oldValues: Record<string, unknown> | null = null,
+    newValues: Record<string, unknown> | null = null,
+    metadata: Record<string, unknown> = {}
   ): Promise<void> {
     const authStore = useAuthStore();
     const practiceId = authStore.selectedPractice?.id;
-    const userId = authStore.user?.id;
 
     if (!practiceId) {
       return;

@@ -1,12 +1,14 @@
-import { ref, Ref } from 'vue';
+import { ref, type Ref, watch } from 'vue';
 
 /**
  * Debounce composable for better performance
  * Delays execution of expensive operations like filtering and API calls
  */
-export function useDebounce<T extends (...args: any[]) => any>(
+type GenericFunction = (...args: unknown[]) => unknown;
+
+export function useDebounce<T extends GenericFunction>(
   fn: T,
-  delay: number = 300
+  delay = 300
 ): {
   debouncedFn: (...args: Parameters<T>) => void;
   cancel: () => void;
@@ -60,7 +62,7 @@ export function useDebounce<T extends (...args: any[]) => any>(
  */
 export function useDebouncedRef<T>(
   initialValue: T,
-  delay: number = 300
+  delay = 300
 ): {
   value: Ref<T>;
   debouncedValue: Ref<T>;
@@ -72,43 +74,17 @@ export function useDebouncedRef<T>(
 
   const { debouncedFn } = useDebounce((newValue: T) => {
     debouncedValue.value = newValue;
+    pending.value = false;
   }, delay);
 
-  // Watch for changes and debounce them
-  const unwatchValue = (() => {
-    let timeoutId: NodeJS.Timeout | null = null;
-
-    return (newValue: T) => {
+  watch(
+    value,
+    newValue => {
       pending.value = true;
-
-      if (timeoutId) {
-        clearTimeout(timeoutId);
-      }
-
-      timeoutId = setTimeout(() => {
-        debouncedValue.value = newValue;
-        pending.value = false;
-      }, delay);
-    };
-  })();
-
-  // Set up watcher manually to avoid circular dependency
-  let isWatching = false;
-  const startWatching = () => {
-    if (isWatching) return;
-    isWatching = true;
-
-    // Simple reactive watching
-    const check = () => {
-      if (value.value !== debouncedValue.value && !pending.value) {
-        unwatchValue(value.value);
-      }
-      requestAnimationFrame(check);
-    };
-    check();
-  };
-
-  startWatching();
+      debouncedFn(newValue);
+    },
+    { immediate: true }
+  );
 
   return {
     value,

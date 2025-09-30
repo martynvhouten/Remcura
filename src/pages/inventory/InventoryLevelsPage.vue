@@ -93,7 +93,9 @@
           <div class="kpi-content">
             <div class="kpi-value">
               <q-skeleton v-if="loading" type="text" width="48px" />
-              <template v-else>{{ lastUpdated ? formatTime(lastUpdated) : '-' }}</template>
+              <template v-else>{{
+                lastUpdated ? formatTime(lastUpdated) : '-'
+              }}</template>
             </div>
             <div class="kpi-subtitle">{{ $t('inventory.lastSync') }}</div>
           </div>
@@ -112,7 +114,13 @@
         <q-icon name="error_outline" class="q-mr-sm" />
         <div class="col">{{ errorState.message }}</div>
         <div class="col-auto">
-          <q-btn flat dense color="white" :label="$t('common.retry')" @click="onRetry" />
+          <q-btn
+            flat
+            dense
+            color="white"
+            :label="$t('common.retry')"
+            @click="onRetry"
+          />
         </div>
       </div>
     </q-banner>
@@ -354,9 +362,11 @@
 
   const selectedStockLevel = ref<StockLevelRow | null>(null);
   const lastUpdated = ref<Date | null>(null);
-  const errorState = ref<{ visible: boolean; message: string; retry?: () => void }>(
-    { visible: false, message: '' }
-  );
+  const errorState = ref<{
+    visible: boolean;
+    message: string;
+    retry?: () => void;
+  }>({ visible: false, message: '' });
 
   // New filter state for FilterPanel
   const filterValues = ref<FilterValues>({});
@@ -601,11 +611,15 @@
       await updateLastSync();
       errorState.value = { visible: false, message: '' };
     } catch (error: any) {
-      ServiceErrorHandler.handle(error, {
-        service: 'InventoryLevels',
-        operation: 'loadStockLevels',
-        metadata: { practiceId: authStore.clinicId },
-      }, { rethrow: false });
+      ServiceErrorHandler.handle(
+        error,
+        {
+          service: 'InventoryLevels',
+          operation: 'loadStockLevels',
+          metadata: { practiceId: authStore.clinicId },
+        },
+        { rethrow: false }
+      );
       errorState.value = {
         visible: true,
         message: t('inventory.loadError'),
@@ -766,15 +780,19 @@
       closeAdjustDialog();
       await loadStockLevels();
     } catch (error: any) {
-      ServiceErrorHandler.handle(error, {
-        service: 'InventoryLevels',
-        operation: 'performAdjustment',
-        metadata: {
-          practiceId: authStore.clinicId,
-          productId: selectedStockLevel.value?.product_id,
-          locationId: selectedStockLevel.value?.location_id,
+      ServiceErrorHandler.handle(
+        error,
+        {
+          service: 'InventoryLevels',
+          operation: 'performAdjustment',
+          metadata: {
+            practiceId: authStore.clinicId,
+            productId: selectedStockLevel.value?.product_id,
+            locationId: selectedStockLevel.value?.location_id,
+          },
         },
-      }, { rethrow: false });
+        { rethrow: false }
+      );
       errorState.value = {
         visible: true,
         message: t('inventory.adjustError'),
@@ -790,7 +808,8 @@
   const onRetry = async () => {
     const retry = errorState.value.retry;
     errorState.value = { visible: false, message: '' };
-    if (retry) await retry(); else await loadStockLevels();
+    if (retry) await retry();
+    else await loadStockLevels();
   };
 
   // Demo data generator
@@ -867,7 +886,7 @@
         padding: var(--space-4);
 
         .kpi-value {
-          font-family: var(--font-family-primary);
+          font-family: var(--font-family);
           font-size: var(--text-4xl);
           font-weight: var(--font-weight-bold);
           line-height: var(--leading-tight);
@@ -877,7 +896,7 @@
         }
 
         .kpi-subtitle {
-          font-family: var(--font-family-primary);
+          font-family: var(--font-family);
           font-size: var(--text-xs);
           font-weight: var(--font-weight-semibold);
           color: var(--text-secondary);
@@ -900,7 +919,7 @@
 
   .product-info {
     .product-name {
-      font-family: var(--font-family-primary);
+      font-family: var(--font-family);
       font-weight: var(--font-weight-semibold);
       font-size: var(--text-base);
       color: var(--text-primary);
@@ -926,7 +945,7 @@
     gap: var(--space-2);
 
     .location-name {
-      font-family: var(--font-family-primary);
+      font-family: var(--font-family);
       font-weight: var(--font-weight-medium);
       color: var(--text-primary);
     }

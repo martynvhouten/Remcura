@@ -18,8 +18,8 @@
           dense
           :label="column.label"
           :icon-right="getSortIcon(column.name)"
-          @click="toggleSort(column.name)"
           class="sort-btn"
+          @click="toggleSort(column.name)"
         />
         <span v-else>{{ column.label }}</span>
       </div>
@@ -52,7 +52,7 @@
           <!-- Custom cell content via slots -->
           <slot
             :name="`body-cell-${column.name}`"
-            :props="{ row, column, value: row[column.field] }"
+            :props="{ row, column, value: row[column.field as keyof TableRow] }"
           >
             <!-- Default cell content -->
             <span>{{ formatCellValue(row, column) }}</span>
@@ -81,11 +81,13 @@
     sortable?: boolean;
     align?: 'left' | 'center' | 'right';
     width?: string;
-    format?: (val: any) => string;
+    format?: (val: unknown) => string;
   }
 
+  type TableRow = Record<string, unknown>;
+
   interface Props {
-    rows: any[];
+    rows: TableRow[];
     columns: Column[];
     rowKey: string;
     loading?: boolean;
@@ -171,11 +173,11 @@
     return column.width || 'auto';
   };
 
-  const getRowKey = (row: any) => {
+  const getRowKey = (row: TableRow) => {
     return row[props.rowKey];
   };
 
-  const formatCellValue = (row: any, column: Column) => {
+  const formatCellValue = (row: TableRow, column: Column) => {
     const value = row[column.field];
     if (column.format) {
       return column.format(value);
@@ -204,7 +206,7 @@
   };
 
   // Performance optimization: Throttled scroll handling
-  let scrollTimeout: NodeJS.Timeout | null = null;
+  let scrollTimeout: ReturnType<typeof setTimeout> | null = null;
   const throttledHandleScroll = () => {
     if (scrollTimeout) clearTimeout(scrollTimeout);
     scrollTimeout = setTimeout(handleScroll, 16); // ~60fps

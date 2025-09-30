@@ -1,43 +1,36 @@
 import { computed, type Ref } from 'vue';
 import type { ProductWithStock, StockAlert } from '@/types/inventory';
 
+const calculateTotalStock = (product: ProductWithStock): number =>
+  product.stockLevels?.reduce((sum, level) => sum + level.currentQuantity, 0) ??
+  0;
+
+const resolveMinimumStock = (product: ProductWithStock): number =>
+  product.minimumStock ?? 0;
+
 export function useProductsInventory(products: Ref<ProductWithStock[]>) {
-  // Total stock value across all products
-  const totalStockValue = computed(() => {
-    return products.value.reduce((total, product) => {
+  const totalStockValue = computed(() =>
+    products.value.reduce((total, product) => {
       const productValue =
-        product.stock_levels?.reduce((sum, level) => {
-          return sum + level.current_quantity * (product.unit_price || 0);
-        }, 0) || 0;
+        product.stockLevels?.reduce((sum, level) => {
+          return sum + level.currentQuantity * (product.unitPrice ?? 0);
+        }, 0) ?? 0;
       return total + productValue;
-    }, 0);
-  });
+    }, 0)
+  );
 
-  // Products with low stock levels
-  const lowStockProducts = computed(() => {
-    return products.value.filter(product => {
-      const totalStock =
-        product.stock_levels?.reduce(
-          (sum, level) => sum + level.current_quantity,
-          0
-        ) || 0;
-      return totalStock > 0 && totalStock <= product.minimum_stock;
-    });
-  });
+  const lowStockProducts = computed(() =>
+    products.value.filter(product => {
+      const totalStock = calculateTotalStock(product);
+      const minStock = resolveMinimumStock(product);
+      return totalStock > 0 && totalStock <= minStock;
+    })
+  );
 
-  // Products that are completely out of stock
-  const outOfStockProducts = computed(() => {
-    return products.value.filter(product => {
-      const totalStock =
-        product.stock_levels?.reduce(
-          (sum, level) => sum + level.current_quantity,
-          0
-        ) || 0;
-      return totalStock <= 0;
-    });
-  });
+  const outOfStockProducts = computed(() =>
+    products.value.filter(product => calculateTotalStock(product) <= 0)
+  );
 
-  // Stock status summary
   const stockStatusSummary = computed(() => {
     const summary = {
       in_stock: 0,
@@ -48,61 +41,57 @@ export function useProductsInventory(products: Ref<ProductWithStock[]>) {
     };
 
     products.value.forEach(product => {
-      const totalStock =
-        product.stock_levels?.reduce(
-          (sum, level) => sum + level.current_quantity,
-          0
-        ) || 0;
+      const totalStock = calculateTotalStock(product);
+      const minStock = resolveMinimumStock(product);
 
       if (totalStock <= 0) {
-        summary.out_of_stock++;
-      } else if (totalStock <= product.minimum_stock) {
-        summary.low_stock++;
+        summary.out_of_stock += 1;
+      } else if (totalStock <= minStock) {
+        summary.low_stock += 1;
       } else {
-        summary.in_stock++;
+        summary.in_stock += 1;
       }
     });
 
     return summary;
   });
 
-  // Critical stock alerts for dashboard
   const criticalStockAlerts = computed((): StockAlert[] => {
     const alerts: StockAlert[] = [];
 
     products.value.forEach(product => {
-      product.stock_levels?.forEach(stockLevel => {
-        const currentStock = stockLevel.current_quantity || 0;
+      product.stockLevels?.forEach(stockLevel => {
+        const currentStock = stockLevel.currentQuantity ?? 0;
         const minimumStock =
-          stockLevel.minimum_stock || product.minimum_stock || 0;
+          stockLevel.minimumQuantity ?? product.minimumStock ?? 0;
 
         if (currentStock <= 0) {
           alerts.push({
-            id: `${product.id}-${stockLevel.location_id}`,
+            id: `${product.id}-${stockLevel.locationId}`,
+            type: 'out_of_stock',
+            severity: 'critical',
             product_id: product.id,
             product_name: product.name,
             product_sku: product.sku,
-            location_id: stockLevel.location_id,
-            location_name: stockLevel.location_name || 'Unknown Location',
+            location_id: stockLevel.locationId,
+            location_name: stockLevel.locationName ?? 'Unknown Location',
             current_stock: currentStock,
             minimum_stock: minimumStock,
-            alert_type: 'out_of_stock',
-            severity: 'critical',
             message: `${product.name} is out of stock`,
             created_at: new Date().toISOString(),
           });
         } else if (currentStock <= minimumStock) {
           alerts.push({
-            id: `${product.id}-${stockLevel.location_id}`,
+            id: `${product.id}-${stockLevel.locationId}`,
+            type: 'low_stock',
+            severity: 'warning',
             product_id: product.id,
             product_name: product.name,
             product_sku: product.sku,
-            location_id: stockLevel.location_id,
-            location_name: stockLevel.location_name || 'Unknown Location',
+            location_id: stockLevel.locationId,
+            location_name: stockLevel.locationName ?? 'Unknown Location',
             current_stock: currentStock,
             minimum_stock: minimumStock,
-            alert_type: 'low_stock',
-            severity: 'warning',
             message: `${product.name} is running low (${currentStock} remaining)`,
             created_at: new Date().toISOString(),
           });
@@ -110,7 +99,6 @@ export function useProductsInventory(products: Ref<ProductWithStock[]>) {
       });
     });
 
-    // Sort by severity (critical first) and then by current stock (lowest first)
     return alerts.sort((a, b) => {
       if (a.severity !== b.severity) {
         return a.severity === 'critical' ? -1 : 1;
@@ -119,20 +107,14 @@ export function useProductsInventory(products: Ref<ProductWithStock[]>) {
     });
   });
 
-  // Products that need reordering
-  const productsNeedingReorder = computed(() => {
-    return products.value.filter(product => {
-      const totalStock =
-        product.stock_levels?.reduce(
-          (sum, level) => sum + level.current_quantity,
-          0
-        ) || 0;
-      const reorderLevel = product.reorder_level || product.minimum_stock || 0;
+  const productsNeedingReorder = computed(() =>
+    products.value.filter(product => {
+      const totalStock = calculateTotalStock(product);
+      const reorderLevel = product.reorderLevel ?? product.minimumStock ?? 0;
       return totalStock <= reorderLevel;
-    });
-  });
+    })
+  );
 
-  // Inventory turnover metrics
   const inventoryMetrics = computed(() => {
     const metrics = {
       totalProducts: products.value.length,
@@ -153,38 +135,32 @@ export function useProductsInventory(products: Ref<ProductWithStock[]>) {
         : 0;
 
     products.value.forEach(product => {
-      const totalStock =
-        product.stock_levels?.reduce(
-          (sum, level) => sum + level.current_quantity,
-          0
-        ) || 0;
-      const productValue = totalStock * (product.unit_price || 0);
+      const totalStock = calculateTotalStock(product);
+      const productValue = totalStock * (product.unitPrice ?? 0);
+      const minStock = resolveMinimumStock(product);
 
-      // Stock status distribution
       if (totalStock <= 0) {
-        metrics.stockDistribution.out_of_stock++;
-      } else if (totalStock <= product.minimum_stock) {
-        metrics.stockDistribution.low_stock++;
+        metrics.stockDistribution.out_of_stock += 1;
+      } else if (totalStock <= minStock) {
+        metrics.stockDistribution.low_stock += 1;
       } else {
-        metrics.stockDistribution.in_stock++;
+        metrics.stockDistribution.in_stock += 1;
       }
 
-      // Category breakdown
       if (product.category) {
         const currentCategoryValue =
-          metrics.categoryBreakdown.get(product.category) || 0;
+          metrics.categoryBreakdown.get(product.category) ?? 0;
         metrics.categoryBreakdown.set(
           product.category,
           currentCategoryValue + productValue
         );
       }
 
-      // Supplier breakdown
-      if (product.supplier_name) {
+      if (product.supplier?.name) {
         const currentSupplierValue =
-          metrics.supplierBreakdown.get(product.supplier_name) || 0;
+          metrics.supplierBreakdown.get(product.supplier.name) ?? 0;
         metrics.supplierBreakdown.set(
-          product.supplier_name,
+          product.supplier.name,
           currentSupplierValue + productValue
         );
       }
@@ -193,7 +169,6 @@ export function useProductsInventory(products: Ref<ProductWithStock[]>) {
     return metrics;
   });
 
-  // Top categories by value
   const topCategoriesByValue = computed(() => {
     const categoryMap = new Map<
       string,
@@ -202,14 +177,10 @@ export function useProductsInventory(products: Ref<ProductWithStock[]>) {
 
     products.value.forEach(product => {
       if (product.category) {
-        const totalStock =
-          product.stock_levels?.reduce(
-            (sum, level) => sum + level.current_quantity,
-            0
-          ) || 0;
-        const productValue = totalStock * (product.unit_price || 0);
+        const totalStock = calculateTotalStock(product);
+        const productValue = totalStock * (product.unitPrice ?? 0);
 
-        const existing = categoryMap.get(product.category) || {
+        const existing = categoryMap.get(product.category) ?? {
           name: product.category,
           value: 0,
           count: 0,
@@ -225,26 +196,24 @@ export function useProductsInventory(products: Ref<ProductWithStock[]>) {
       .slice(0, 10);
   });
 
-  // Top products by value
-  const topProductsByValue = computed(() => {
-    return products.value
+  const topProductsByValue = computed(() =>
+    products.value
       .map(product => {
-        const totalStock =
-          product.stock_levels?.reduce(
-            (sum, level) => sum + level.current_quantity,
-            0
-          ) || 0;
+        const totalStock = calculateTotalStock(product);
+        const productValue = totalStock * (product.unitPrice ?? 0);
+
         return {
-          ...product,
-          total_stock: totalStock,
-          total_value: totalStock * (product.unit_price || 0),
+          id: product.id,
+          name: product.name,
+          value: productValue,
+          sku: product.sku,
+          category: product.category,
         };
       })
-      .sort((a, b) => b.total_value - a.total_value)
-      .slice(0, 20);
-  });
+      .sort((a, b) => (b.value ?? 0) - (a.value ?? 0))
+      .slice(0, 20)
+  );
 
-  // Products approaching expiry (for products with batch tracking)
   const productsApproachingExpiry = computed(() => {
     const expiringProducts: Array<{
       product: ProductWithStock;
@@ -259,21 +228,36 @@ export function useProductsInventory(products: Ref<ProductWithStock[]>) {
     );
 
     products.value.forEach(product => {
-      if (product.requires_batch_tracking) {
-        // This would need to be connected to batch data
-        // For now, we'll check if the product has an expiry date field
-        if (product.expiry_date) {
-          const expiryDate = new Date(product.expiry_date);
-          if (expiryDate <= thirtyDaysFromNow && expiryDate >= today) {
-            const daysUntilExpiry = Math.ceil(
-              (expiryDate.getTime() - today.getTime()) / (24 * 60 * 60 * 1000)
-            );
-            expiringProducts.push({
-              product,
-              expiry_date: product.expiry_date,
-              days_until_expiry: daysUntilExpiry,
-            });
-          }
+      if (!product.batches?.length && !product.expiry_date) {
+        return;
+      }
+
+      product.batches?.forEach(batch => {
+        const expiryDate = new Date(batch.expiry_date);
+        if (expiryDate <= thirtyDaysFromNow && expiryDate >= today) {
+          const daysUntilExpiry = Math.ceil(
+            (expiryDate.getTime() - today.getTime()) / (1000 * 60 * 60 * 24)
+          );
+          expiringProducts.push({
+            product,
+            batch_number: batch.batch_number,
+            expiry_date: batch.expiry_date,
+            days_until_expiry: daysUntilExpiry,
+          });
+        }
+      });
+
+      if (product.expiry_date) {
+        const directExpiry = new Date(product.expiry_date);
+        if (directExpiry <= thirtyDaysFromNow && directExpiry >= today) {
+          const daysUntilExpiry = Math.ceil(
+            (directExpiry.getTime() - today.getTime()) / (1000 * 60 * 60 * 24)
+          );
+          expiringProducts.push({
+            product,
+            expiry_date: product.expiry_date,
+            days_until_expiry: daysUntilExpiry,
+          });
         }
       }
     });
@@ -284,15 +268,12 @@ export function useProductsInventory(products: Ref<ProductWithStock[]>) {
   });
 
   return {
-    // Core inventory metrics
     totalStockValue,
     lowStockProducts,
     outOfStockProducts,
     stockStatusSummary,
     criticalStockAlerts,
     productsNeedingReorder,
-
-    // Advanced metrics
     inventoryMetrics,
     topCategoriesByValue,
     topProductsByValue,

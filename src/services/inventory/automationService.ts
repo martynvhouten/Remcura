@@ -4,21 +4,8 @@ import {
   centralOrderService,
   type AutoReorderConfig,
 } from '@/services/orderOrchestration/centralOrderService';
-
-export interface LowStockItem {
-  id: string;
-  productId: string;
-  productName: string;
-  sku: string;
-  locationId: string;
-  locationName: string;
-  currentQuantity: number;
-  minimumQuantity: number;
-  reorderPoint: number;
-  preferredSupplierId?: string;
-  urgencyLevel: 'low' | 'medium' | 'high' | 'critical';
-  daysOutOfStock?: number;
-}
+import { AnalyticsService } from '@/services/analytics';
+import type { LowStockItemDTO } from '@/types/analytics';
 
 export interface AutomationSchedule {
   practiceId: string;
@@ -55,76 +42,35 @@ export class InventoryAutomationService {
   async checkLowStockItems(
     practiceId: string,
     locationId?: string
-  ): Promise<LowStockItem[]> {
-    try {
-      inventoryLogger.info(
-        `Checking low stock items for practice ${practiceId}`
+  ): Promise<
+    (LowStockItemDTO & {
+      urgencyLevel: 'low' | 'medium' | 'high' | 'critical';
+      daysOutOfStock?: number;
+    })[]
+  > {
+    const items = await AnalyticsService.getLowStockItems(practiceId);
+    const filteredItems = locationId
+      ? items.filter(item => item.locationId === locationId)
+      : items;
+
+    return filteredItems.map(item => {
+      const urgencyLevel = this.calculateUrgencyLevel(
+        item.currentQuantity,
+        item.minimumQuantity,
+        item.minimumQuantity
       );
 
-      let query = supabase
-        .from('stock_levels')
-        .select(
-          `
-          id,
-          product_id,
-          location_id,
-          current_quantity,
-          minimum_quantity,
-          reorder_point,
-          preferred_supplier_id,
-          last_movement_at,
-          products!inner(name, sku),
-          practice_locations!inner(name)
-        `
-        )
-        .eq('practice_id', practiceId);
+      const daysOutOfStock =
+        item.currentQuantity <= 0
+          ? this.calculateDaysOutOfStock(undefined)
+          : undefined;
 
-      if (locationId) {
-        query = query.eq('location_id', locationId);
-      }
-
-      // Get items where current quantity is below minimum or reorder point
-      query = query.or(
-        'current_quantity.lt.minimum_quantity,current_quantity.lt.reorder_point'
-      );
-
-      const { data, error } = await query.order('current_quantity', {
-        ascending: true,
-      });
-
-      if (error) throw error;
-
-      return (data || []).map(item => {
-        const urgencyLevel = this.calculateUrgencyLevel(
-          item.current_quantity,
-          item.minimum_quantity,
-          item.reorder_point
-        );
-
-        const daysOutOfStock =
-          item.current_quantity <= 0
-            ? this.calculateDaysOutOfStock(item.last_movement_at)
-            : undefined;
-
-        return {
-          id: item.id,
-          productId: item.product_id,
-          productName: item.products.name,
-          sku: item.products.sku,
-          locationId: item.location_id,
-          locationName: item.practice_locations.name,
-          currentQuantity: item.current_quantity,
-          minimumQuantity: item.minimum_quantity,
-          reorderPoint: item.reorder_point,
-          preferredSupplierId: item.preferred_supplier_id,
-          urgencyLevel,
-          daysOutOfStock,
-        };
-      });
-    } catch (error) {
-      inventoryLogger.error('Error checking low stock items:', error);
-      throw error;
-    }
+      return {
+        ...item,
+        urgencyLevel,
+        daysOutOfStock,
+      };
+    });
   }
 
   /**
@@ -164,7 +110,7 @@ export class InventoryAutomationService {
         const suggestedQuantity = this.calculateOrderQuantity(
           item.currentQuantity,
           item.minimumQuantity,
-          item.reorderPoint
+          item.minimumQuantity
         );
 
         return {
@@ -222,9 +168,8 @@ export class InventoryAutomationService {
             maxOrderValue: 1000, // Default limit for automatic orders
           };
 
-          const result = await centralOrderService.processAutomaticReorder(
-            config
-          );
+          const result =
+            await centralOrderService.processAutomaticReorder(config);
 
           if (result.status === 'success' && result.totalItems > 0) {
             inventoryLogger.info(

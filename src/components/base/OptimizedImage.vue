@@ -267,7 +267,7 @@
     position: relative;
     display: inline-block;
     overflow: hidden;
-    background: #f5f5f5;
+    background: var(--color-surface-secondary);
     transition: all 0.3s ease;
 
     &.loading {
@@ -283,7 +283,7 @@
     }
 
     &.error {
-      background: #fafafa;
+      background: var(--color-surface-secondary);
     }
   }
 
@@ -292,7 +292,11 @@
     align-items: center;
     justify-content: center;
     flex-direction: column;
-    background: linear-gradient(135deg, #f5f5f5 0%, #eeeeee 100%);
+    background: linear-gradient(
+      135deg,
+      var(--color-surface-secondary) 0%,
+      var(--bg-tertiary) 100%
+    );
     position: relative;
     width: 100%;
     height: 100%;

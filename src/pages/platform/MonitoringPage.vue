@@ -168,7 +168,7 @@
         padding: var(--space-4, 16px);
 
         .kpi-value {
-          font-family: var(--font-family-primary);
+          font-family: var(--font-family);
           font-size: var(--text-4xl, 2.25rem);
           font-weight: var(--font-weight-bold, 700);
           line-height: var(--leading-tight, 1.25);
@@ -177,7 +177,7 @@
         }
 
         .kpi-subtitle {
-          font-family: var(--font-family-primary);
+          font-family: var(--font-family);
           font-size: var(--text-xs, 0.75rem);
           font-weight: var(--font-weight-semibold, 600);
           color: var(--text-secondary);

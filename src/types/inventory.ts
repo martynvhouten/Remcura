@@ -1,150 +1,342 @@
-// Core inventory types for the enhanced multi-supplier, multi-location system
+import type {
+  Tables,
+  TablesInsert,
+  TablesUpdate,
+  Json,
+} from './supabase.generated';
+import type { Database } from './supabase.generated';
 
-export interface Supplier {
+type PracticeLocationRow = Tables<'practice_locations'>;
+type ProductRowRaw = Tables<'products'>;
+type SupplierRowRaw = Tables<'suppliers'>;
+
+const resolveNullableNumber = (
+  value: number | null | undefined
+): number | null => (typeof value === 'number' ? value : null);
+
+const resolveRelation = <T>(maybeRelation: T | undefined | null): T | null =>
+  maybeRelation ?? null;
+
+type ProductBatchRowWithRelations = ProductBatch & {
+  product?: ProductRowRaw | null;
+  supplier?: SupplierRowRaw | null;
+  location?: PracticeLocationRow | null;
+  total_cost?: number | null;
+};
+export type ProductBatchRow = ProductBatchRowWithRelations;
+
+type StockLevelRowWithRelations = StockLevelRow & {
+  products?: ProductRowRaw | null;
+  practice_locations?: PracticeLocationRow | null;
+};
+export type StockLevelRowWithRelationsAlias = StockLevelRowWithRelations;
+
+interface SimpleProductView {
   id: string;
-  name: string;
-  code: string;
-  contact_email?: string;
-  contact_phone?: string;
-  contact_person?: string;
-  address?: string;
-  city?: string;
-  postal_code?: string;
-  country?: string;
-  website?: string;
-  vat_number?: string;
-  business_registration?: string;
-  payment_terms: number;
-  minimum_order_amount: number;
-  shipping_cost: number;
-  free_shipping_threshold?: number;
-  api_endpoint?: string;
-  api_key_encrypted?: string;
-  api_type?: string;
-  sync_enabled: boolean;
-  last_sync_at?: string;
-  notes?: string;
-  is_active: boolean;
-  preferred_order_day?: number;
-  order_cutoff_time?: string;
-  integration_type: 'manual' | 'email' | 'api' | 'edi' | 'magento';
-  order_method: 'manual' | 'email' | 'api' | 'pdf';
-  auto_sync_enabled: boolean;
-  integration_config: Record<string, any>;
-  created_at: string;
-  updated_at: string;
-  created_by?: string;
-  updated_by?: string;
+  sku: string | null;
+  name: string | null;
 }
 
-export interface SupplierProduct {
+interface SimpleSupplierView {
   id: string;
-  supplier_id: string;
-  product_id: string;
-  supplier_sku: string;
-  supplier_name?: string;
-  supplier_description?: string;
-  unit_price: number;
-  currency: string;
-  price_tier?: string;
-  minimum_order_quantity: number;
-  maximum_order_quantity?: number;
-  order_multiple: number;
-  pack_size: number;
-  is_available: boolean;
-  is_backorder_allowed: boolean;
-  lead_time_days: number;
-  expected_restock_date?: string;
-  catalog_page?: string;
-  category_path?: string;
-  created_at: string;
-  updated_at: string;
-  last_price_update: string;
+  name: string | null;
 }
 
-export interface PracticeLocation {
+interface SimpleLocationView {
   id: string;
+  code: string | null;
+  name: string | null;
+}
+
+interface StockMetricsView {
+  onHand: number;
+  available: number | null;
+  reserved: number | null;
+  minimum: number | null;
+  maximum: number | null;
+  reorderPoint: number | null;
+}
+
+interface SupplierProductView {
+  id: string;
+  supplier: SimpleSupplierView;
+  supplierSku: string | null;
+  costPrice: number | null;
+  currency: string | null;
+  leadTimeDays: number | null;
+  isPreferred: boolean | null;
+  raw: SupplierProductRow;
+}
+
+export const mapProductBatchRowToDetails = (
+  row: ProductBatch | ProductBatchRowWithRelations
+): ProductBatchWithDetails => {
+  const withRelations: ProductBatchRowWithRelations = row;
+  const resolvedProduct = resolveRelation(withRelations.product);
+  const resolvedSupplier = resolveRelation(withRelations.supplier);
+  const resolvedLocation = resolveRelation(withRelations.location);
+
+  const legacy: ProductBatchLegacyView = {
+    id: row.id,
+    practice_id: row.practice_id,
+    product_id: row.product_id,
+    location_id: row.location_id,
+    supplier_id: row.supplier_id ?? null,
+    batch_number: row.batch_number,
+    expiry_date: row.expiry_date,
+    current_quantity: row.current_quantity,
+    available_quantity: row.available_quantity ?? null,
+    reserved_quantity: row.reserved_quantity ?? null,
+    unit_cost: row.unit_cost ?? null,
+    total_cost: resolveNullableNumber(withRelations.total_cost),
+    product_name: resolvedProduct?.name ?? null,
+    product_sku: resolvedProduct?.sku ?? null,
+    product_category: resolvedProduct?.category ?? null,
+    location_name: resolvedLocation?.name ?? null,
+    location_code: resolvedLocation?.code ?? null,
+    location_type: resolvedLocation?.location_type ?? null,
+    supplier_name: resolvedSupplier?.name ?? null,
+  };
+
+  return {
+    id: row.id,
+    practiceId: row.practice_id,
+    productId: row.product_id,
+    locationId: row.location_id,
+    supplierId: row.supplier_id ?? resolvedSupplier?.id ?? null,
+    batchNumber: row.batch_number,
+    expiryDate: row.expiry_date,
+    currentQuantity: row.current_quantity,
+    availableQuantity: row.available_quantity ?? null,
+    reservedQuantity: row.reserved_quantity ?? null,
+    unitCost: row.unit_cost ?? null,
+    totalCost: resolveNullableNumber(withRelations.total_cost),
+    productName: legacy.product_name,
+    productSku: legacy.product_sku,
+    productCategory: legacy.product_category,
+    locationName: legacy.location_name,
+    locationCode: legacy.location_code,
+    locationType: legacy.location_type,
+    supplierName: legacy.supplier_name,
+    product: resolvedProduct
+      ? {
+          id: resolvedProduct.id,
+          sku: resolvedProduct.sku ?? null,
+          name: resolvedProduct.name ?? legacy.product_name,
+        }
+      : null,
+    supplier: resolvedSupplier
+      ? {
+          id: resolvedSupplier.id,
+          name: resolvedSupplier.name ?? legacy.supplier_name,
+        }
+      : null,
+    location: resolvedLocation
+      ? {
+          id: resolvedLocation.id,
+          code: resolvedLocation.code ?? legacy.location_code,
+          name: resolvedLocation.name ?? legacy.location_name,
+        }
+      : null,
+    stock: {
+      onHand: row.current_quantity,
+      reserved: row.reserved_quantity ?? null,
+      available: row.available_quantity ?? null,
+      minimum: row.minimum_quantity ?? null,
+      maximum: row.maximum_quantity ?? null,
+      reorderPoint: row.reorder_point ?? null,
+    },
+    legacy,
+    raw: withRelations,
+  };
+};
+
+export const mapProductBatchRowToView = (
+  row: ProductBatch | ProductBatchRowWithRelations
+): ProductBatchWithDetails => mapProductBatchRowToDetails(row);
+export type PracticeRow = Tables<'practices'>;
+export type PracticeInsert = TablesInsert<'practices'>;
+export type PracticeUpdate = TablesUpdate<'practices'>;
+
+export type Supplier = Tables<'suppliers'>;
+export type SupplierRow = Tables<'suppliers'>;
+export type SupplierView = SupplierRow & {
+  contact_email: string | null;
+  contact_phone: string | null;
+  contact_person: string | null;
+  address: string | null;
+  city: string | null;
+  postal_code: string | null;
+  country: string | null;
+  website: string | null;
+  payment_terms: number | null;
+  minimum_order_amount: number | null;
+  shipping_cost: number | null;
+  free_shipping_threshold: number | null;
+  api_endpoint: string | null;
+  api_type: string | null;
+  sync_enabled: boolean | null;
+  is_active: boolean | null;
+  preferred_order_day: number | null;
+  order_cutoff_time: string | null;
+};
+
+export type SupplierInsert = TablesInsert<'suppliers'>;
+export type SupplierUpdate = TablesUpdate<'suppliers'>;
+
+export type SupplierProduct = Tables<'supplier_products'>;
+export type SupplierProductRow = Tables<'supplier_products'>;
+export type SupplierProductInsert = TablesInsert<'supplier_products'>;
+export type SupplierProductUpdate = TablesUpdate<'supplier_products'>;
+
+export type PracticeLocation = Tables<'practice_locations'>;
+export type PracticeLocationInsert = TablesInsert<'practice_locations'>;
+export type PracticeLocationUpdate = TablesUpdate<'practice_locations'>;
+
+export type OrderAdviceResult =
+  Database['public']['Functions']['get_order_advice']['Returns'];
+
+export type PracticeMemberRow = Tables<'practice_members'>;
+export type PracticeMemberInsert = TablesInsert<'practice_members'>;
+export type PracticeMemberUpdate = TablesUpdate<'practice_members'>;
+
+export type OrderListRow = Tables<'order_lists'>;
+export type OrderListInsert = TablesInsert<'order_lists'>;
+export type OrderListUpdate = TablesUpdate<'order_lists'>;
+
+export type ProductRow = Tables<'products'>;
+
+export type ProductBatch = Tables<'product_batches'>;
+
+export interface ProductBatchWithDetails {
+  id: string;
+  practiceId: string;
+  productId: string;
+  locationId: string;
+  supplierId: string | null;
+  batchNumber: string;
+  expiryDate: string;
+  currentQuantity: number;
+  availableQuantity: number | null;
+  reservedQuantity: number | null;
+  unitCost: number | null;
+  totalCost: number | null;
+  productName: string | null;
+  productSku: string | null;
+  productCategory: string | null;
+  locationName: string | null;
+  locationCode: string | null;
+  locationType: string | null;
+  supplierName: string | null;
+  product: SimpleProductView | null;
+  supplier: SimpleSupplierView | null;
+  location: SimpleLocationView | null;
+  stock: StockMetricsView;
+  legacy: ProductBatchLegacyView;
+  raw?: ProductBatchRowWithRelations;
+  /** @deprecated use practiceId */
   practice_id: string;
-  name: string;
-  code: string;
-  description?: string;
-  location_type:
-    | 'storage'
-    | 'treatment'
-    | 'emergency'
-    | 'mobile'
-    | 'warehouse'
-    | 'clinic'
-    | 'drop_point';
-  address?: string;
-  floor_level?: string;
-  room_number?: string;
-  contact_email?: string;
-  contact_phone?: string;
-  is_active: boolean;
-  is_main_location: boolean;
-  requires_counting: boolean;
-  allows_negative_stock: boolean;
-  restricted_access: boolean;
-  access_code?: string;
-  responsible_user_id?: string;
-  created_at: string;
-  updated_at: string;
-  created_by?: string;
-  updated_by?: string;
+  /** @deprecated use productId */
+  product_id: string;
+  /** @deprecated use locationId */
+  location_id: string;
+  /** @deprecated use supplierId */
+  supplier_id: string | null;
+  /** @deprecated use batchNumber */
+  batch_number: string;
+  /** @deprecated use expiryDate */
+  expiry_date: string;
+  /** @deprecated use currentQuantity */
+  current_quantity: number;
+  /** @deprecated use availableQuantity */
+  available_quantity: number | null;
+  /** @deprecated use reservedQuantity */
+  reserved_quantity: number | null;
+  /** @deprecated use unitCost */
+  unit_cost: number | null;
+  /** @deprecated use totalCost */
+  total_cost: number | null;
+  /** @deprecated use productName */
+  product_name: string | null;
+  /** @deprecated use productSku */
+  product_sku: string | null;
+  /** @deprecated use productCategory */
+  product_category: string | null;
+  /** @deprecated use locationName */
+  location_name: string | null;
+  /** @deprecated use locationCode */
+  location_code: string | null;
+  /** @deprecated use locationType */
+  location_type: string | null;
+  /** @deprecated use supplierName */
+  supplier_name: string | null;
 }
 
-export interface ProductBatch {
+export interface ProductBatchLegacyView {
+  /** @deprecated use camelCase fields */
   id: string;
   practice_id: string;
   product_id: string;
   location_id: string;
+  supplier_id: string | null;
   batch_number: string;
-  supplier_batch_number?: string;
   expiry_date: string;
-  received_date: string;
-  initial_quantity: number;
   current_quantity: number;
-  reserved_quantity: number;
-  available_quantity: number;
-  unit_cost?: number;
-  total_cost?: number;
-  currency: string;
-  supplier_id?: string;
-  purchase_order_number?: string;
-  invoice_number?: string;
-  status: BatchStatus;
-  quality_check_passed: boolean;
-  quality_notes?: string;
-  quarantine_until?: string;
-  created_at: string;
-  updated_at: string;
-  created_by?: string;
+  available_quantity: number | null;
+  reserved_quantity: number | null;
+  unit_cost: number | null;
+  total_cost: number | null;
+  product_name: string | null;
+  product_sku: string | null;
+  product_category: string | null;
+  location_name: string | null;
+  location_code: string | null;
+  location_type: string | null;
+  supplier_name: string | null;
+  /** @deprecated use camelCase fields */
+  practiceId?: string;
+  /** @deprecated use camelCase fields */
+  productId?: string;
+  /** @deprecated use camelCase fields */
+  locationId?: string;
+  /** @deprecated use camelCase fields */
+  supplierId?: string | null;
+  /** @deprecated use camelCase fields */
+  batchNumber?: string;
+  /** @deprecated use camelCase fields */
+  expiryDate?: string;
+  /** @deprecated use camelCase fields */
+  currentQuantity?: number;
+  /** @deprecated use camelCase fields */
+  availableQuantity?: number | null;
+  /** @deprecated use camelCase fields */
+  reservedQuantity?: number | null;
+  /** @deprecated use camelCase fields */
+  unitCost?: number | null;
+  /** @deprecated use camelCase fields */
+  totalCost?: number | null;
+  /** @deprecated use camelCase fields */
+  productName?: string | null;
+  /** @deprecated use camelCase fields */
+  productSku?: string | null;
+  /** @deprecated use camelCase fields */
+  productCategory?: string | null;
+  /** @deprecated use camelCase fields */
+  locationName?: string | null;
+  /** @deprecated use camelCase fields */
+  locationCode?: string | null;
+  /** @deprecated use camelCase fields */
+  locationType?: string | null;
+  /** @deprecated use camelCase fields */
+  supplierName?: string | null;
 }
 
-export interface ProductBatchWithDetails extends ProductBatch {
-  product: {
-    id: string;
-    name: string;
-    sku: string;
-    category?: string;
-    brand?: string;
-    unit?: string;
-  };
-  location: {
-    id: string;
-    name: string;
-    code: string;
-    location_type: string;
-  };
-  supplier?: {
-    id: string;
-    name: string;
-    code: string;
-  };
-  days_until_expiry: number;
-  urgency_level: 'normal' | 'warning' | 'critical' | 'expired';
-}
+export type ProductBatchWithDetailsView = ProductBatchWithDetails & {
+  days_until_expiry: number | null;
+  daysUntilExpiry: number | null;
+  urgency_level?: ExpiryUrgencyLevel;
+  urgencyLevel?: ExpiryUrgencyLevel;
+};
 
 export interface BatchMovement {
   batch_id: string;
@@ -175,148 +367,205 @@ export interface ExpiringBatch {
   urgency_level: 'normal' | 'warning' | 'critical' | 'expired';
 }
 
-export interface StockLevel {
+export type StockLevelRow = Tables<'stock_levels'>;
+
+export interface StockLevelView {
+  id: string;
+  practiceId: string;
+  productId: string;
+  locationId: string;
+  currentQuantity: number;
+  availableQuantity: number;
+  reservedQuantity: number;
+  minimumQuantity: number;
+  maximumQuantity: number | null;
+  reorderPoint: number | null;
+  preferredSupplierId: string | null;
+  preferredSupplierName: string | null;
+  lastCountedAt: string | null;
+  lastMovementAt: string | null;
+  lastOrderedAt: string | null;
+  locationName: string | null;
+  productName: string | null;
+  stockStatus: string | null;
+  averageConsumption: number | null;
+  reorderRecommendation: number | null;
+  priority: string | null;
+  createdAt: string | null;
+  updatedAt: string | null;
+  legacy: StockLevelLegacyView;
+  raw?: StockLevelRowWithRelations;
+}
+
+export interface StockLevelLegacyView {
+  /** @deprecated use camelCase fields */
   id: string;
   practice_id: string;
-  location_id: string;
   product_id: string;
+  location_id: string;
   current_quantity: number;
-  reserved_quantity: number;
   available_quantity: number;
-  minimum_stock: number;
-  maximum_stock: number;
-  reorder_point: number;
-  preferred_supplier_id?: string;
-  preferred_order_quantity?: number;
-  last_counted_at?: string;
-  last_counted_by?: string;
-  last_movement_at: string;
-  created_at: string;
-  updated_at: string;
+  reserved_quantity: number;
+  minimum_quantity: number;
+  maximum_quantity: number | null;
+  reorder_point: number | null;
+  preferred_supplier_id: string | null;
+  preferred_supplier_name: string | null;
+  last_counted_at: string | null;
+  last_movement_at: string | null;
+  last_ordered_at: string | null;
+  location_name: string | null;
+  product_name: string | null;
+  stock_status: string | null;
+  average_consumption: number | null;
+  reorder_recommendation: number | null;
+  priority: string | null;
+  created_at: string | null;
+  updated_at: string | null;
 }
 
-export interface StockMovement {
-  id: string;
-  practice_id: string;
-  location_id: string;
-  product_id: string;
-  movement_type: MovementType;
-  quantity_change: number;
-  quantity_before: number;
-  quantity_after: number;
-  reference_type?: string;
-  reference_id?: string;
-  reason?: string;
-  notes?: string;
-  batch_number?: string;
-  expiry_date?: string;
-  created_by?: string;
-  performed_by?: string;
-  reason_code?: ReasonCode;
-  from_location_id?: string;
-  to_location_id?: string;
-  created_at: string;
-}
+export const mapStockLevelRowToView = (
+  row: StockLevelRow | StockLevelRowWithRelations
+): StockLevelView => {
+  const extended = row as StockLevelRowWithRelations;
+  const locationName =
+    extended.location_name ?? extended.practice_locations?.name ?? null;
+  const productName = extended.product_name ?? extended.products?.name ?? null;
+  const stockStatus = extended.stock_status ?? null;
+  const averageConsumption = extended.average_consumption ?? null;
+  const reorderRecommendation = extended.reorder_recommendation ?? null;
+  const priority = extended.priority ?? null;
+  const preferredSupplierName = extended.preferred_supplier_name ?? null;
 
-export interface CountingSession {
-  id: string;
-  practice_id: string;
-  name: string;
-  session_type: 'full' | 'partial' | 'spot_check' | 'cycle';
-  status: 'active' | 'completed' | 'cancelled' | 'approved';
-  location_ids: string[];
+  return {
+    id: row.id,
+    practiceId: row.practice_id,
+    productId: row.product_id,
+    locationId: row.location_id,
+    currentQuantity: row.current_quantity ?? 0,
+    availableQuantity: row.available_quantity ?? 0,
+    reservedQuantity: row.reserved_quantity ?? 0,
+    minimumQuantity: row.minimum_quantity ?? 0,
+    maximumQuantity: row.maximum_quantity ?? null,
+    reorderPoint: row.reorder_point ?? null,
+    preferredSupplierId: row.preferred_supplier_id ?? null,
+    preferredSupplierName,
+    lastCountedAt: row.last_counted_at ?? null,
+    lastMovementAt: row.last_movement_at ?? null,
+    lastOrderedAt: row.last_ordered_at ?? null,
+    locationName,
+    productName,
+    stockStatus,
+    averageConsumption,
+    reorderRecommendation,
+    priority,
+    createdAt: row.created_at ?? null,
+    updatedAt: row.updated_at ?? null,
+    legacy: {
+      id: row.id,
+      practice_id: row.practice_id,
+      product_id: row.product_id,
+      location_id: row.location_id,
+      current_quantity: row.current_quantity ?? 0,
+      available_quantity: row.available_quantity ?? 0,
+      reserved_quantity: row.reserved_quantity ?? 0,
+      minimum_quantity: row.minimum_quantity ?? 0,
+      maximum_quantity: row.maximum_quantity ?? null,
+      reorder_point: row.reorder_point ?? null,
+      preferred_supplier_id: row.preferred_supplier_id ?? null,
+      preferred_supplier_name,
+      last_counted_at: row.last_counted_at ?? null,
+      last_movement_at: row.last_movement_at ?? null,
+      last_ordered_at: row.last_ordered_at ?? null,
+      location_name: locationName,
+      product_name: productName,
+      stock_status: stockStatus,
+      average_consumption: averageConsumption,
+      reorder_recommendation: reorderRecommendation,
+      priority,
+      created_at: row.created_at ?? null,
+      updated_at: row.updated_at ?? null,
+    },
+    raw: extended,
+  };
+};
+
+export type StockMovement = Tables<'stock_movements'>;
+
+export type StockMovementInsert = TablesInsert<'stock_movements'>;
+
+export type StockMovementUpdate = TablesUpdate<'stock_movements'>;
+
+export type StockMovementRow = Tables<'stock_movements'>;
+
+export type MovementWithRelations = StockMovementRow & {
+  product?: Pick<
+    Tables<'products'>,
+    'id' | 'name' | 'sku' | 'category' | 'brand' | 'unit'
+  > | null;
+  location?: Pick<
+    Tables<'practice_locations'>,
+    'id' | 'name' | 'location_type'
+  > | null;
+  from_location?: Pick<Tables<'practice_locations'>, 'id' | 'name'> | null;
+  to_location?: Pick<Tables<'practice_locations'>, 'id' | 'name'> | null;
+};
+
+export type MovementQueryRow = Tables<'stock_movements'> & {
+  product: Pick<Tables<'products'>, 'id' | 'name' | 'sku'> | null;
+  location: Pick<Tables<'practice_locations'>, 'id' | 'name'> | null;
+};
+
+export type CountingSession = Tables<'counting_sessions'> & {
+  location_ids?: string[];
   product_ids?: string[];
-  category_filter?: string;
-  total_products_to_count: number;
-  products_counted: number;
-  discrepancies_found: number;
-  started_at: string;
-  completed_at?: string;
-  approved_at?: string;
-  started_by: string;
-  completed_by?: string;
-  approved_by?: string;
-  allow_negative_counts: boolean;
-  require_approval: boolean;
-  auto_adjust_stock: boolean;
-  notes?: string;
-  created_at: string;
-  updated_at: string;
-}
+  total_discrepancy_value?: number | null;
+};
 
-export interface CountingEntry {
+export type CountingEntry = Tables<'counting_entries'>;
+
+export type OrderListItemRow = Tables<'order_list_items'>;
+export type OrderListItemInsert = TablesInsert<'order_list_items'>;
+export type OrderListItemUpdate = TablesUpdate<'order_list_items'>;
+
+export type OrderListStatus = Database['public']['Enums']['order_list_status'];
+
+export type OrderListItemStatus = OrderListItemRow['status'];
+
+export interface OrderListDTO {
   id: string;
-  session_id: string;
   practice_id: string;
   location_id: string;
-  product_id: string;
-  system_quantity: number;
-  counted_quantity: number;
-  variance: number;
-  count_method: 'manual' | 'barcode' | 'rfid';
-  confidence_level: 'low' | 'medium' | 'high';
-  recount_required: boolean;
-  recount_reason?: string;
-  batch_number?: string;
-  expiry_date?: string;
-  counted_by: string;
-  counted_at: string;
-  verified_by?: string;
-  verified_at?: string;
-  notes?: string;
-  photos?: string[];
-  status: 'pending' | 'verified' | 'discrepancy' | 'approved';
-  created_at: string;
-  updated_at: string;
-}
-
-export interface OrderList {
-  id: string;
-  practice_id: string;
-  supplier_id: string;
+  supplier_id: string | null;
   name: string;
-  description?: string;
-  status: OrderListStatus;
-  order_number?: string;
+  description: string | null;
+  status: OrderListStatus | null;
   total_items: number;
-  total_amount: number;
-  currency: string;
-  created_at: string;
-  updated_at: string;
-  submitted_at?: string;
-  confirmed_at?: string;
-  expected_delivery_date?: string;
-  actual_delivery_date?: string;
-  created_by: string;
-  updated_by?: string;
-  submitted_by?: string;
-  auto_suggest_quantities: boolean;
-  urgent_order: boolean;
-  supplier_order_reference?: string;
-  tracking_number?: string;
-  notes?: string;
-  internal_notes?: string;
+  total_cost: number;
+  min_order_value: number | null;
+  created_at: string | null;
+  updated_at: string | null;
+  created_by: string | null;
+  submitted_at: string | null;
+  submitted_by: string | null;
+  supplier: Tables<'suppliers'> | null;
 }
 
-export interface OrderListItem {
+export interface OrderListItemDTO {
   id: string;
   order_list_id: string;
-  practice_id: string;
   product_id: string;
-  supplier_product_id: string;
-  location_id?: string;
-  requested_quantity: number;
-  confirmed_quantity?: number;
-  delivered_quantity?: number;
-  unit_price: number;
-  total_price: number;
-  currency: string;
-  suggestion_source: 'manual' | 'auto_reorder' | 'low_stock' | 'usage_pattern';
-  source_location_id?: string;
-  status: 'pending' | 'confirmed' | 'backordered' | 'delivered';
-  notes?: string;
-  created_at: string;
-  updated_at: string;
+  supplier_product_id: string | null;
+  suggested_quantity: number;
+  ordered_quantity: number;
+  unit_price: number | null;
+  total_price: number | null;
+  status: string | null;
+  notes: string | null;
+  created_at: string | null;
+  updated_at: string | null;
+  product: Tables<'products'> | null;
+  supplier_product: Tables<'supplier_products'> | null;
 }
 
 // Type unions
@@ -344,7 +593,7 @@ export type ReasonCode =
   | 'adjustment'
   | 'count_correction';
 
-export type OrderListStatus =
+export type OrderListWorkflowStatus =
   | 'draft'
   | 'ready'
   | 'submitted'
@@ -359,20 +608,8 @@ export type BatchStatus = 'active' | 'depleted' | 'expired' | 'recalled';
 export type ExpiryUrgencyLevel = 'normal' | 'warning' | 'critical' | 'expired';
 
 // Enhanced types with relationships
-export interface StockLevelWithDetails extends StockLevel {
-  location: PracticeLocation;
-  product: {
-    id: string;
-    name: string;
-    sku: string;
-    category?: string;
-    brand?: string;
-    unit?: string;
-  };
-  preferred_supplier?: Supplier;
-}
-
-export interface MovementWithRelations extends StockMovement {
+export interface StockLevelWithDetails extends StockLevelView {
+  location?: PracticeLocation;
   product?: {
     id: string;
     name: string;
@@ -381,22 +618,7 @@ export interface MovementWithRelations extends StockMovement {
     brand?: string;
     unit?: string;
   };
-  location?: {
-    id: string;
-    name: string;
-    code: string;
-    location_type: string;
-  };
-  from_location?: {
-    id: string;
-    name: string;
-    code: string;
-  };
-  to_location?: {
-    id: string;
-    name: string;
-    code: string;
-  };
+  preferred_supplier?: Supplier | null;
 }
 
 export interface OrderSuggestion {
@@ -409,31 +631,43 @@ export interface OrderSuggestion {
   minimum_stock: number;
   suggested_quantity: number;
   preferred_supplier_id: string | null;
-  supplier_name?: string;
-  urgency_level: UrgencyLevel;
-  days_until_stockout: number;
+  supplier_name: string | null;
+  urgency_level: UrgencyLevel | null;
+  days_until_stockout: number | null;
+  productName?: string;
+  productSku?: string;
+  locationName?: string;
+  currentStock?: number;
+  minimumStock?: number;
+  suggestedQuantity?: number;
+  preferredSupplierId?: string | null;
+  supplierName?: string | null;
+  urgencyLevel?: UrgencyLevel | null;
+  daysUntilStockout?: number | null;
 }
 
 export interface StockAlert {
+  id: string;
   type:
     | 'out_of_stock'
     | 'low_stock'
     | 'overstock'
     | 'expired'
     | 'expiring_soon';
-  urgency?: UrgencyLevel;
+  severity?: 'critical' | 'warning' | 'info';
   product_id: string;
   product_name?: string;
   product_sku?: string;
   location_id: string;
   location_name?: string;
-  current_quantity: number;
+  current_stock: number;
+  minimum_stock?: number;
   threshold_quantity?: number;
   batch_number?: string;
   expiry_date?: string;
   days_until_expiry?: number;
   message: string;
-  title?: string; // Add missing title property
+  title?: string;
   suggested_action?: string;
   created_at: string;
 }
@@ -583,100 +817,241 @@ export interface CountingProduct {
   category?: string;
   brand?: string;
   unit?: string;
-  current_system_quantity: number;
-  last_counted_at?: string;
-  location_name: string;
+  currentSystemQuantity: number;
+  lastCountedAt?: string;
+  locationName: string;
   barcode?: string;
-  image_url?: string;
+  imageUrl?: string;
 }
 
 export interface CountingStats {
-  total_products: number;
-  counted_products: number;
-  remaining_products: number;
+  totalProducts: number;
+  countedProducts: number;
+  remainingProducts: number;
   discrepancies: number;
-  progress_percentage: number;
+  progressPercentage: number;
 }
 
 // Analytics types
 export interface InventoryKPI {
-  total_sku_count: number;
-  total_stock_value: number;
-  low_stock_items: number;
-  out_of_stock_items: number;
-  stock_turnover_rate: number;
-  average_days_to_stockout: number;
-  top_moving_products: Array<{
-    product_id: string;
-    product_name: string;
-    movement_count: number;
-    total_quantity_moved: number;
+  totalSkuCount: number;
+  totalStockValue: number;
+  lowStockItems: number;
+  outOfStockItems: number;
+  stockTurnoverRate: number;
+  averageDaysToStockout: number;
+  topMovingProducts: Array<{
+    productId: string;
+    productName: string;
+    movementCount: number;
+    totalQuantityMoved: number;
   }>;
-  stock_accuracy_percentage: number;
-  last_full_count_date: string | null;
+  stockAccuracyPercentage: number;
+  lastFullCountDate: string | null;
 }
 
 export interface LocationPerformance {
-  location_id: string;
-  location_name: string;
-  total_products: number;
-  stock_accuracy: number;
-  avg_count_frequency_days: number;
-  last_counted_at?: string;
-  critical_items_count: number;
+  locationId: string;
+  locationName: string;
+  totalProducts: number;
+  stockAccuracy: number;
+  avgCountFrequencyDays: number;
+  lastCountedAt?: string;
+  criticalItemsCount: number;
 }
 
 // Product-related types for ProductsPage
-export interface Product {
+export type ProductWithRelations = ProductRow & {
+  stock_levels?: StockLevelRow[] | null;
+  supplier_products?: SupplierProductRow[] | null;
+};
+
+export interface ProductWithStock {
   id: string;
+  practiceId: string;
   sku: string;
   name: string;
-  description?: string;
-  category?: string;
-  brand?: string;
-  unit?: string;
-  image_url?: string;
-  barcode?: string;
-  price?: number;
-  currency?: string;
-  active: boolean;
-  requires_batch_tracking: boolean;
-
-  // GS1 Fields
-  gtin?: string;
-  gpc_brick_code?: string;
-  gln_manufacturer?: string;
-  net_content_value?: number;
-  net_content_uom?: string;
-  gross_weight?: number;
-  net_weight?: number;
-  base_unit_indicator?: boolean;
-  orderable_unit_indicator?: boolean;
-  despatch_unit_indicator?: boolean;
-  country_of_origin?: string;
-  effective_from_date?: string;
-  effective_to_date?: string;
-  product_lifecycle_status?: string;
-
-  supplier_products?: SupplierProduct[];
-  stock_levels?: StockLevel[];
-  created_at: string;
-  updated_at: string;
+  category: string | null;
+  brand: string | null;
+  unit: string | null;
+  totalStock: number;
+  availableStock: number;
+  reservedStock: number;
+  status: 'in_stock' | 'low_stock' | 'out_of_stock';
+  reorderLevel: number | null;
+  unitPrice: number | null;
+  lowestPrice: number | null;
+  supplier: SimpleSupplierView | null;
+  stockLevels: StockLevelView[];
+  supplierProducts: SupplierProductView[];
+  batches: ProductBatchSummary[];
+  legacy: ProductLegacyView;
+  raw?: ProductWithRelations;
 }
 
-export interface ProductWithStock extends Product {
-  total_stock: number;
-  available_stock: number;
-  reserved_stock: number;
-  stock_status: 'in_stock' | 'low_stock' | 'out_of_stock';
-  lowest_price?: number;
-  unit_price?: number;
-  minimum_stock?: number;
+export interface ProductLegacyView {
+  totalStock: number;
+  availableStock: number;
+  reservedStock: number;
+  status: 'in_stock' | 'low_stock' | 'out_of_stock';
+  reorderLevel?: number | null;
+  supplierId?: string | null;
+  supplierName?: string | null;
+  supplierCode?: string | null;
+  supplierPhone?: string | null;
+  supplierEmail?: string | null;
+  expiryDate?: string | null;
+  gs1Status?: 'complete' | 'incomplete';
+  batchStatus?: 'batch_tracked' | 'manual_stock';
+  /** @deprecated use camelCase fields */
+  total_stock?: number;
+  /** @deprecated use camelCase fields */
+  available_stock?: number;
+  /** @deprecated use camelCase fields */
+  reserved_stock?: number;
+  /** @deprecated use camelCase fields */
+  stock_status?: 'in_stock' | 'low_stock' | 'out_of_stock';
+  /** @deprecated use camelCase fields */
+  reorder_level?: number | null;
+  /** @deprecated use camelCase fields */
+  supplier_id?: string | null;
+  /** @deprecated use camelCase fields */
+  supplier_name?: string | null;
+  /** @deprecated use camelCase fields */
+  supplier_code?: string | null;
+  /** @deprecated use camelCase fields */
+  supplier_phone?: string | null;
+  /** @deprecated use camelCase fields */
+  supplier_email?: string | null;
+  /** @deprecated use camelCase fields */
+  expiry_date?: string | null;
+  /** @deprecated use camelCase fields */
   gs1_status?: 'complete' | 'incomplete';
+  /** @deprecated use camelCase fields */
   batch_status?: 'batch_tracked' | 'manual_stock';
-  cheapest_supplier?: Supplier;
-  stock_levels?: StockLevel[];
-  batches?: ProductBatchSummary[];
+}
+
+export const determineStockStatus = (
+  current: number,
+  minimum: number
+): 'in_stock' | 'low_stock' | 'out_of_stock' => {
+  if (current <= 0) return 'out_of_stock';
+  if (current < minimum) return 'low_stock';
+  return 'in_stock';
+};
+
+export const mapProductRowToView = (
+  row: ProductWithRelations
+): ProductWithStock => {
+  const supplierProducts: SupplierProductView[] = (
+    row.supplier_products ?? []
+  ).map(product => ({
+    id: product.id,
+    supplier: {
+      id: product.supplier_id,
+      name: product.supplier_name ?? null,
+    },
+    supplierSku: product.supplier_sku ?? null,
+    costPrice: product.cost_price ?? null,
+    currency: product.currency ?? null,
+    leadTimeDays: product.lead_time_days ?? null,
+    isPreferred: product.is_preferred ?? null,
+    raw: product,
+  }));
+
+  const stockLevels = (row.stock_levels ?? []).map(level =>
+    mapStockLevelRowToView(level)
+  );
+
+  const totalStock = stockLevels.reduce(
+    (sum, level) => sum + level.currentQuantity,
+    0
+  );
+
+  const availableStock = stockLevels.reduce(
+    (sum, level) => sum + level.availableQuantity,
+    0
+  );
+
+  const reservedStock = stockLevels.reduce(
+    (sum, level) => sum + level.reservedQuantity,
+    0
+  );
+
+  const minimumStock = row.minimum_stock ?? null;
+
+  const legacy: ProductLegacyView = {
+    totalStock,
+    availableStock,
+    reservedStock,
+    status: determineStockStatus(totalStock, minimumStock ?? 0),
+    reorderLevel: minimumStock,
+    supplierId: row.supplier_id ?? null,
+    supplierName: row.supplier_name ?? null,
+    supplierCode: row.supplier_code ?? null,
+    supplierPhone: row.supplier_phone ?? null,
+    supplierEmail: row.supplier_email ?? null,
+    expiryDate: row.expiry_date ?? null,
+    gs1Status: row.gs1_status ?? null,
+    batchStatus: row.batch_status ?? null,
+    /** @deprecated */ total_stock: totalStock,
+    /** @deprecated */ available_stock: availableStock,
+    /** @deprecated */ reserved_stock: reservedStock,
+    /** @deprecated */ stock_status: determineStockStatus(
+      totalStock,
+      minimumStock ?? 0
+    ),
+    /** @deprecated */ reorder_level: minimumStock,
+    /** @deprecated */ supplier_id: row.supplier_id ?? null,
+    /** @deprecated */ supplier_name: row.supplier_name ?? null,
+    /** @deprecated */ supplier_code: row.supplier_code ?? null,
+    /** @deprecated */ supplier_phone: row.supplier_phone ?? null,
+    /** @deprecated */ supplier_email: row.supplier_email ?? null,
+    /** @deprecated */ expiry_date: row.expiry_date ?? null,
+    /** @deprecated */ gs1_status: row.gs1_status ?? null,
+    /** @deprecated */ batch_status: row.batch_status ?? null,
+  };
+
+  return {
+    id: row.id,
+    practiceId: row.practice_id,
+    sku: row.sku,
+    name: row.name,
+    category: row.category ?? null,
+    brand: row.brand ?? null,
+    unit: row.unit ?? null,
+    totalStock,
+    availableStock,
+    reservedStock,
+    status: legacy.status,
+    reorderLevel: minimumStock,
+    unitPrice: row.unit_price ?? null,
+    lowestPrice: row.lowest_price ?? null,
+    supplier: row.supplier_id
+      ? { id: row.supplier_id, name: row.supplier_name ?? null }
+      : null,
+    stockLevels,
+    supplierProducts,
+    batches: [],
+    legacy,
+    raw: row,
+  };
+};
+
+export interface LocationSummary {
+  id: string;
+  name: string;
+}
+
+export interface StockTransferRequest {
+  practice_id: string;
+  product_id: string;
+  from_location_id: string;
+  to_location_id: string;
+  quantity: number;
+  reason: string;
+  notes?: string;
+  batch_id?: string | null;
 }
 
 export interface ProductBatchSummary {
@@ -701,7 +1076,7 @@ export interface ProductFilter {
   category?: string;
   supplier?: string;
   stock_status?: string;
-  sort_by?: 'name' | 'price' | 'stock' | 'category';
+  sort_by?: 'name' | 'price' | 'stock' | 'category' | 'sku' | 'last_updated';
   sort_order?: 'asc' | 'desc';
 
   // GS1 Filters
@@ -714,7 +1089,7 @@ export interface ProductFilter {
 
 export interface CartItem {
   product_id: string;
-  product: Product;
+  product: ProductRow;
   quantity: number;
   unit_price?: number;
   supplier_id?: string;
@@ -769,3 +1144,66 @@ export interface UnifiedStockView {
   stock_source: 'batch' | 'manual';
   calculated_at: string;
 }
+
+export interface CountingEntryDTO {
+  id: string;
+  session_id: string;
+  practice_id: string;
+  location_id: string;
+  product_id: string;
+  system_quantity: number;
+  counted_quantity: number;
+  variance: number;
+  confidence_level?: 'low' | 'medium' | 'high' | null;
+  counted_by: string | null;
+  counted_at: string | null;
+  verified_by: string | null;
+  verified_at: string | null;
+  notes: string | null;
+  batch_number: string | null;
+  expiry_date: string | null;
+  created_at: string | null;
+  updated_at: string | null;
+  status: 'discrepancy' | 'verified' | 'pending';
+  location_name?: string | null;
+  product_name?: string | null;
+  product_sku?: string | null;
+}
+
+export const mapOrderListRowToDTO = (row: OrderListRow): OrderListDTO => ({
+  id: row.id,
+  practice_id: row.practice_id,
+  location_id: row.location_id,
+  supplier_id: row.supplier_id ?? null,
+  name: row.name,
+  description: row.description ?? null,
+  status: row.status ?? null,
+  total_items: row.total_items ?? 0,
+  total_cost: row.total_value ?? 0,
+  min_order_value: row.min_order_value ?? null,
+  created_at: row.created_at ?? null,
+  updated_at: row.updated_at ?? null,
+  created_by: row.created_by ?? null,
+  submitted_at: (row as { submitted_at?: string | null }).submitted_at ?? null,
+  submitted_by: (row as { submitted_by?: string | null }).submitted_by ?? null,
+  supplier: null,
+});
+
+export const mapOrderListItemRowToDTO = (
+  row: OrderListItemRow
+): OrderListItemDTO => ({
+  id: row.id,
+  order_list_id: row.order_list_id,
+  product_id: row.product_id,
+  supplier_product_id: row.supplier_product_id ?? null,
+  suggested_quantity: row.suggested_quantity ?? 0,
+  ordered_quantity: row.ordered_quantity ?? 0,
+  unit_price: row.unit_price ?? null,
+  total_price: row.total_price ?? null,
+  status: row.status ?? null,
+  notes: row.notes ?? null,
+  created_at: row.created_at ?? null,
+  updated_at: row.updated_at ?? null,
+  product: null,
+  supplier_product: null,
+});

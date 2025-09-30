@@ -1,20 +1,13 @@
 import { ref, computed, watch } from 'vue';
 import { useQuasar } from 'quasar';
 
-export interface SmartTableConfig {
-  // Thresholds for switching strategies
-  clientSideThreshold?: number; // Default: 1000 - Switch to server-side
-  virtualizationThreshold?: number; // Default: 5000 - Switch to virtualization
+export interface TableRow {
+  [key: string]: unknown;
+}
 
-  // Server-side config
-  serverSideLoader?: (
-    pagination: any,
-    filters: any
-  ) => Promise<{ data: any[]; totalCount: number }>;
-
-  // Performance config
-  debounceMs?: number; // Default: 300ms for search
-  itemHeight?: number; // Default: 50px for virtualization
+export interface TableFilters {
+  search?: string;
+  [key: string]: unknown;
 }
 
 export interface TablePagination {
@@ -25,12 +18,29 @@ export interface TablePagination {
   rowsNumber: number;
 }
 
+export interface SmartTableLoadResult<Row extends TableRow = TableRow> {
+  data: Row[];
+  totalCount: number;
+}
+
+export interface SmartTableConfig<Row extends TableRow = TableRow> {
+  clientSideThreshold?: number;
+  virtualizationThreshold?: number;
+  serverSideLoader?: (
+    pagination: TablePagination,
+    filters: TableFilters
+  ) => Promise<SmartTableLoadResult<Row>>;
+  debounceMs?: number;
+  itemHeight?: number;
+}
+
 export type TableStrategy = 'client-side' | 'server-side' | 'virtualized';
 
-export function useSmartTable(config: SmartTableConfig = {}) {
+export function useSmartTable<Row extends TableRow = TableRow>(
+  config: SmartTableConfig<Row> = {}
+) {
   const $q = useQuasar();
 
-  // Configuration with defaults
   const {
     clientSideThreshold = 1000,
     virtualizationThreshold = 5000,
@@ -39,14 +49,12 @@ export function useSmartTable(config: SmartTableConfig = {}) {
     itemHeight = 50,
   } = config;
 
-  // State
   const loading = ref(false);
   const totalCount = ref(0);
-  const rawData = ref<any[]>([]);
-  const filteredData = ref<any[]>([]);
-  const visibleData = ref<any[]>([]);
+  const rawData = ref<Row[]>([]);
+  const filteredData = ref<Row[]>([]);
+  const visibleData = ref<Row[]>([]);
 
-  // Pagination state
   const pagination = ref<TablePagination>({
     sortBy: undefined,
     descending: false,
@@ -55,49 +63,47 @@ export function useSmartTable(config: SmartTableConfig = {}) {
     rowsNumber: 0,
   });
 
-  // Filters
-  const filters = ref<Record<string, any>>({});
+  const filters = ref<TableFilters>({});
 
-  // Determine the best strategy based on data size
   const strategy = computed<TableStrategy>(() => {
     const count = totalCount.value || rawData.value.length;
 
     if (count >= virtualizationThreshold) {
       return 'virtualized';
-    } else if (count >= clientSideThreshold) {
-      return 'server-side';
-    } else {
-      return 'client-side';
     }
+
+    if (count >= clientSideThreshold) {
+      return 'server-side';
+    }
+
+    return 'client-side';
   });
 
-  // Client-side filtering and sorting
   const applyClientSideOperations = (
-    data: any[],
+    data: Row[],
     sortBy?: string,
     descending = false,
-    filterObj = {}
+    filterObj: TableFilters = {}
   ) => {
     let result = [...data];
 
-    // Apply filters
     Object.entries(filterObj).forEach(([key, value]) => {
       if (value !== null && value !== undefined && value !== '') {
         if (key === 'search' && typeof value === 'string') {
-          // Global search across all string fields
+          const searchValue = value.toLowerCase();
           result = result.filter(item =>
             Object.values(item).some(val =>
-              String(val).toLowerCase().includes(value.toLowerCase())
+              typeof val === 'string'
+                ? val.toLowerCase().includes(searchValue)
+                : String(val).toLowerCase().includes(searchValue)
             )
           );
         } else {
-          // Exact match filter
           result = result.filter(item => item[key] === value);
         }
       }
     });
 
-    // Apply sorting
     if (sortBy) {
       result.sort((a, b) => {
         const aVal = getNestedValue(a, sortBy);
@@ -107,7 +113,6 @@ export function useSmartTable(config: SmartTableConfig = {}) {
         if (aVal === null || aVal === undefined) return descending ? 1 : -1;
         if (bVal === null || bVal === undefined) return descending ? -1 : 1;
 
-        // Smart type detection
         if (typeof aVal === 'number' && typeof bVal === 'number') {
           return descending ? bVal - aVal : aVal - bVal;
         }
@@ -118,45 +123,51 @@ export function useSmartTable(config: SmartTableConfig = {}) {
           return descending ? bTime - aTime : aTime - bTime;
         }
 
-        // String comparison
-        const result = String(aVal).localeCompare(String(bVal));
-        return descending ? -result : result;
+        const comparison = String(aVal).localeCompare(String(bVal));
+        return descending ? -comparison : comparison;
       });
     }
 
     return result;
   };
 
-  // Helper functions
-  const getNestedValue = (obj: any, path: string) => {
-    return path.split('.').reduce((current, key) => current?.[key], obj);
+  const getNestedValue = (obj: Row, path: string): unknown => {
+    return path.split('.').reduce<unknown>((current, key) => {
+      if (
+        current &&
+        typeof current === 'object' &&
+        !Array.isArray(current) &&
+        key in current
+      ) {
+        return (current as Record<string, unknown>)[key];
+      }
+      return undefined;
+    }, obj);
   };
 
-  const isDate = (value: any): boolean => {
-    if (!value) return false;
+  const isDate = (value: unknown): value is string => {
+    if (typeof value !== 'string') return false;
     const date = new Date(value);
-    return (
-      !isNaN(date.getTime()) &&
-      typeof value === 'string' &&
-      /^\d{4}-\d{2}-\d{2}/.test(value)
-    );
+    return !Number.isNaN(date.getTime()) && /^\d{4}-\d{2}-\d{2}/.test(value);
   };
 
-  // Debounced filter function
-  let filterTimeout: NodeJS.Timeout;
-  const debouncedFilter = (newFilters: Record<string, any>) => {
-    clearTimeout(filterTimeout);
+  let filterTimeout: ReturnType<typeof setTimeout> | undefined;
+  const debouncedFilter = (newFilters: TableFilters) => {
+    if (filterTimeout) {
+      clearTimeout(filterTimeout);
+    }
+
     filterTimeout = setTimeout(() => {
       filters.value = { ...newFilters };
+
       if (strategy.value === 'server-side') {
-        loadServerSideData();
+        void loadServerSideData();
       } else {
         applyClientSideFilters();
       }
     }, debounceMs);
   };
 
-  // Client-side operations
   const applyClientSideFilters = () => {
     filteredData.value = applyClientSideOperations(
       rawData.value,
@@ -168,17 +179,14 @@ export function useSmartTable(config: SmartTableConfig = {}) {
     pagination.value.rowsNumber = filteredData.value.length;
 
     if (strategy.value === 'client-side') {
-      // For client-side, show paginated results
       const start = (pagination.value.page - 1) * pagination.value.rowsPerPage;
       const end = start + pagination.value.rowsPerPage;
       visibleData.value = filteredData.value.slice(start, end);
     } else {
-      // For virtualized, show all filtered data
       visibleData.value = filteredData.value;
     }
   };
 
-  // Server-side loading
   const loadServerSideData = async () => {
     if (!serverSideLoader) {
       console.warn(
@@ -188,6 +196,7 @@ export function useSmartTable(config: SmartTableConfig = {}) {
     }
 
     loading.value = true;
+
     try {
       const result = await serverSideLoader(pagination.value, filters.value);
       visibleData.value = result.data;
@@ -204,11 +213,9 @@ export function useSmartTable(config: SmartTableConfig = {}) {
     }
   };
 
-  // Table request handler (for q-table)
-  const onTableRequest = async (props: any) => {
+  const onTableRequest = async (props: { pagination: TablePagination }) => {
     const { page, rowsPerPage, sortBy, descending } = props.pagination;
 
-    // Update pagination
     pagination.value.page = page;
     pagination.value.rowsPerPage = rowsPerPage;
     pagination.value.sortBy = sortBy;
@@ -221,67 +228,57 @@ export function useSmartTable(config: SmartTableConfig = {}) {
     }
   };
 
-  // Initialize data
-  const setData = (data: any[]) => {
+  const setData = (data: Row[]) => {
     rawData.value = data;
     totalCount.value = data.length;
     applyClientSideFilters();
   };
 
-  // Load initial data
-  const loadData = async (loader?: () => Promise<any[]>) => {
-    if (loader) {
-      loading.value = true;
-      try {
-        const data = await loader();
-        setData(data);
-      } catch (error) {
-        console.error('Failed to load initial data:', error);
-        $q.notify({
-          type: 'negative',
-          message: 'Failed to load data',
-        });
-      } finally {
-        loading.value = false;
-      }
+  const loadData = async (loader?: () => Promise<Row[]>) => {
+    if (!loader) return;
+
+    loading.value = true;
+
+    try {
+      const data = await loader();
+      setData(data);
+    } catch (error) {
+      console.error('Failed to load initial data:', error);
+      $q.notify({
+        type: 'negative',
+        message: 'Failed to load data',
+      });
+    } finally {
+      loading.value = false;
     }
   };
 
-  // Watch strategy changes
   watch(strategy, (newStrategy, oldStrategy) => {
-    if (newStrategy !== oldStrategy) {
-      console.log(
-        `Table strategy changed from ${oldStrategy} to ${newStrategy}`
-      );
+    if (newStrategy === oldStrategy) return;
 
-      // Reload data with new strategy
-      if (newStrategy === 'server-side') {
-        loadServerSideData();
-      } else {
-        applyClientSideFilters();
-      }
+    console.log(`Table strategy changed from ${oldStrategy} to ${newStrategy}`);
+
+    if (newStrategy === 'server-side') {
+      void loadServerSideData();
+    } else {
+      applyClientSideFilters();
     }
   });
 
   return {
-    // State
     loading,
     strategy,
     pagination,
     filters,
     visibleData,
     totalCount,
-
-    // Methods
     setData,
     loadData,
     onTableRequest,
     setFilters: debouncedFilter,
-
-    // Config for components
     itemHeight,
     isServerSide: computed(() => strategy.value === 'server-side'),
     isVirtualized: computed(() => strategy.value === 'virtualized'),
     isClientSide: computed(() => strategy.value === 'client-side'),
-  };
+  } as const;
 }

@@ -1,6 +1,6 @@
 <template>
   <BaseDashboardWidget :hide-header="true">
-    <div class="chart-filters" v-if="showFilters">
+    <div v-if="showFilters" class="chart-filters">
       <div class="row q-col-gutter-sm items-center">
         <div class="col-auto">
           <q-select
@@ -13,7 +13,7 @@
             :label="$t('analyticsPage.period')"
           />
         </div>
-        <div class="col-auto" v-if="locations?.length">
+        <div v-if="locations?.length" class="col-auto">
           <q-select
             v-model="localLocation"
             :options="locations"
@@ -26,7 +26,7 @@
             :label="$t('locations.title')"
           />
         </div>
-        <div class="col-auto" v-if="suppliers?.length">
+        <div v-if="suppliers?.length" class="col-auto">
           <q-select
             v-model="localSupplier"
             :options="suppliers"
@@ -78,7 +78,11 @@
     suppliers?: Array<{ id: string; name: string }>;
   }
 
-  const props = withDefaults(defineProps<Props>(), { showFilters: false });
+  const props = withDefaults(defineProps<Props>(), {
+    showFilters: false,
+    locations: () => [],
+    suppliers: () => [],
+  });
 
   // Local filters
   const localPeriod = ref<'7d' | '30d' | '90d' | '1y'>('7d');
@@ -95,9 +99,12 @@
   const analyticsData = computed(() => props.data.analytics || []);
 
   // Chart.js compatible computed values
-  const resolvedType = computed(
-    () => (props.data.chart_type as any) || props.chartType || 'bar'
-  );
+  const resolvedType = computed<'bar' | 'line' | 'pie'>(() => {
+    if (props.data.chart_type === 'line') return 'line';
+    if (props.data.chart_type === 'pie') return 'pie';
+    if (props.data.chart_type === 'bar') return 'bar';
+    return props.chartType;
+  });
 
   const chartJsLabels = computed<string[]>(() => {
     if (props.data.labels && props.data.datasets) return props.data.labels;

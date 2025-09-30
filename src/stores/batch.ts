@@ -1,15 +1,17 @@
 import { defineStore } from 'pinia';
 import { ref, computed } from 'vue';
 import { supabase } from '@/boot/supabase';
-import {
-  type ProductBatch,
-  type ProductBatchWithDetails,
-  type CreateBatchRequest,
-  type UpdateBatchRequest,
-  type ExpiringBatch,
-  type FifoBatch,
-  type BatchMovement,
+import type {
+  ProductBatch,
+  ProductBatchWithDetails,
+  ProductBatchWithDetailsView,
+  CreateBatchRequest,
+  UpdateBatchRequest,
+  ExpiringBatch,
+  BatchMovement,
 } from '@/types/inventory';
+import { mapProductBatchRowToDetails } from '@/types/inventory';
+import type { Tables } from '@/types';
 import { ServiceErrorHandler } from '@/utils/service-error-handler';
 import {
   calculateBatchUrgency,
@@ -18,90 +20,122 @@ import {
   validateBatchData,
   areBatchNumbersSimilar,
 } from '@/utils/batch-helpers';
+import { toArray } from '@/utils/array';
+import { t } from '@/utils/i18n-service';
+import {
+  mapProductBatchRow,
+  ProductBatchDTO,
+  mapStockLevelRow,
+} from '@/domain/inventory/bridge';
+import {
+  toProductBatchInsert,
+  toProductBatchUpdate,
+} from '@/domain/inventory/payload';
+
+interface ProductBatchFetchRow extends Tables<'product_batches'> {
+  product: { id: string; name: string | null; sku: string | null } | null;
+  location: { id: string; name: string | null } | null;
+  supplier: { id: string; name: string | null } | null;
+}
 
 export const useBatchStore = defineStore('batch', () => {
-  // State
-  const batches = ref<ProductBatchWithDetails[]>([]);
+  const batches = ref<ProductBatchDTO[]>([]);
   const expiringBatches = ref<ExpiringBatch[]>([]);
-  const fifoBatches = ref<FifoBatch[]>([]);
+  const fifoBatches = ref<ProductBatchDTO[]>([]);
   const loading = ref(false);
   const error = ref<string | null>(null);
 
-  // Getters
-  const batchesByProduct = computed(() => (productId: string) => {
-    return batches.value.filter(batch => batch.product_id === productId);
-  });
+  const batchesByProduct = computed(
+    () => (productId: string) =>
+      batches.value.filter(batch => batch.productId === productId)
+  );
+  const batchesByLocation = computed(
+    () => (locationId: string) =>
+      batches.value.filter(batch => batch.locationId === locationId)
+  );
 
-  const batchesByLocation = computed(() => (locationId: string) => {
-    return batches.value.filter(batch => batch.location_id === locationId);
-  });
-
-  const expiredBatches = computed(() => {
-    return batches.value.filter(
-      batch => new Date(batch.expiry_date) < new Date()
-    );
-  });
+  const expiredBatches = computed(() =>
+    batches.value.filter(batch => new Date(batch.expiryDate) < new Date())
+  );
 
   const expiringBatchesCount = computed(() => {
     const thirtyDaysFromNow = new Date();
     thirtyDaysFromNow.setDate(thirtyDaysFromNow.getDate() + 30);
-
     return batches.value.filter(batch => {
-      const expiryDate = new Date(batch.expiry_date);
+      const expiryDate = new Date(batch.expiryDate);
       return expiryDate <= thirtyDaysFromNow && expiryDate > new Date();
     }).length;
   });
 
-  const lowStockBatches = computed(() => {
-    return batches.value.filter(batch => batch.current_quantity <= 10);
-  });
+  const lowStockBatches = computed(() =>
+    batches.value.filter(batch => batch.currentQuantity <= 10)
+  );
 
-  const totalValue = computed(() => {
-    return batches.value.reduce((total, batch) => {
-      const unitCost = batch.unit_cost || 0;
-      return total + batch.current_quantity * unitCost;
-    }, 0);
-  });
+  const totalValue = computed(() =>
+    batches.value.reduce((total, batch) => {
+      const unitCost = batch.unitCost || 0;
+      return total + batch.currentQuantity * unitCost;
+    }, 0)
+  );
 
-  // Enhanced getters using batch helpers
-  const batchesSortedByFIFO = computed(() => {
-    return sortBatchesFIFO(batches.value);
-  });
+  const batchesSortedByFIFO = computed(() =>
+    sortBatchesFIFO(
+      batches.value.map(batch => ({
+        id: batch.id,
+        expiry_date: batch.expiryDate,
+        current_quantity: batch.currentQuantity,
+        created_at: batch.createdAt,
+      }))
+    )
+  );
 
-  const criticalBatches = computed(() => {
-    return filterBatchesByUrgency(batches.value, ['critical', 'expired']);
-  });
+  const criticalBatches = computed(() =>
+    filterBatchesByUrgency(
+      batches.value.map(batch => ({
+        id: batch.id,
+        expiry_date: batch.expiryDate,
+        current_quantity: batch.currentQuantity,
+      })),
+      ['critical', 'expired']
+    )
+  );
 
-  const warningBatches = computed(() => {
-    return filterBatchesByUrgency(batches.value, ['warning', 'high']);
-  });
+  const warningBatches = computed(() =>
+    filterBatchesByUrgency(
+      batches.value.map(batch => ({
+        id: batch.id,
+        expiry_date: batch.expiryDate,
+        current_quantity: batch.currentQuantity,
+      })),
+      ['warning', 'high']
+    )
+  );
 
-  const batchesWithUrgency = computed(() => {
-    return batches.value.map(batch => ({
+  const batchesWithUrgency = computed(() =>
+    batches.value.map(batch => ({
       ...batch,
-      urgencyInfo: calculateBatchUrgency(batch.expiry_date),
-    }));
-  });
+      urgencyInfo: calculateBatchUrgency(batch.expiryDate),
+    }))
+  );
 
   const batchesByUrgencyLevel = computed(() => {
-    const grouped = {
-      expired: [] as ProductBatchWithDetails[],
-      critical: [] as ProductBatchWithDetails[],
-      high: [] as ProductBatchWithDetails[],
-      warning: [] as ProductBatchWithDetails[],
-      low: [] as ProductBatchWithDetails[],
-      normal: [] as ProductBatchWithDetails[],
+    const grouped: Record<string, ProductBatchDTO[]> = {
+      expired: [],
+      critical: [],
+      high: [],
+      warning: [],
+      low: [],
+      normal: [],
     };
 
     batches.value.forEach(batch => {
-      const urgency = calculateBatchUrgency(batch.expiry_date);
+      const urgency = calculateBatchUrgency(batch.expiryDate);
       grouped[urgency.level].push(batch);
     });
 
     return grouped;
   });
 
-  // Actions
   const fetchBatches = async (filters?: {
     practiceId?: string;
     productId?: string;
@@ -112,17 +146,18 @@ export const useBatchStore = defineStore('batch', () => {
       loading.value = true;
       error.value = null;
 
-      let query = supabase.from('product_batches').select(`
+      let query = supabase.from('product_batches').select(
+        `
           *,
-          product:products!inner(id, name, sku, category, brand, unit),
-          location:practice_locations!inner(id, name, code, location_type),
-          supplier:suppliers(id, name, code)
-        `);
+          product:products!inner(id, name, sku),
+          location:practice_locations!inner(id, name),
+          supplier:suppliers(id, name)
+        `
+      );
 
       if (filters?.practiceId) {
         query = query.eq('practice_id', filters.practiceId);
       } else {
-        // Safety: prevent cross-practice data when practice is not provided
         query = query.is('practice_id', null);
       }
 
@@ -143,30 +178,17 @@ export const useBatchStore = defineStore('batch', () => {
         .order('expiry_date', { ascending: true });
 
       const { data, error: fetchError } = await query;
-
       if (fetchError) throw fetchError;
 
-      // Transform data to match expected interface
-      batches.value = (data || []).map(batch => ({
-        ...batch,
-        days_until_expiry: Math.ceil(
-          (new Date(batch.expiry_date).getTime() - new Date().getTime()) /
-            (1000 * 60 * 60 * 24)
-        ),
-        urgency_level: (() => {
-          const daysUntilExpiry = Math.ceil(
-            (new Date(batch.expiry_date).getTime() - new Date().getTime()) /
-              (1000 * 60 * 60 * 24)
-          );
-          if (daysUntilExpiry < 0) return 'expired';
-          if (daysUntilExpiry <= 7) return 'critical';
-          if (daysUntilExpiry <= 14) return 'high';
-          if (daysUntilExpiry <= 30) return 'warning';
-          return 'normal';
-        })(),
-      }));
+      batches.value = toArray(data).map(batchRow =>
+        mapProductBatchRow(batchRow as ProductBatchFetchRow, {
+          product: (batchRow as ProductBatchFetchRow).product,
+          location: (batchRow as ProductBatchFetchRow).location,
+          supplier: (batchRow as ProductBatchFetchRow).supplier,
+        })
+      );
     } catch (err) {
-      const handledError = ServiceErrorHandler.handle(err, {
+      const handledError = ServiceErrorHandler.handle(err as Error, {
         service: 'BatchStore',
         operation: 'fetchBatches',
       });
@@ -177,15 +199,11 @@ export const useBatchStore = defineStore('batch', () => {
     }
   };
 
-  const fetchExpiringBatches = async (
-    practiceId: string,
-    daysAhead: number = 30
-  ) => {
+  const fetchExpiringBatches = async (practiceId: string, daysAhead = 30) => {
     try {
       loading.value = true;
       error.value = null;
 
-      // Try RPC first
       const { data, error: fetchError } = await supabase.rpc(
         'get_expiring_batches',
         {
@@ -195,7 +213,6 @@ export const useBatchStore = defineStore('batch', () => {
       );
 
       if (fetchError) {
-        // Fallback to server-side filter
         const today = new Date();
         const until = new Date();
         until.setDate(today.getDate() + daysAhead);
@@ -203,9 +220,10 @@ export const useBatchStore = defineStore('batch', () => {
           .from('product_batches')
           .select(
             `
-            id, product_id, location_id, batch_number, expiry_date, current_quantity,
+            *,
             product:products!inner(id, name, sku),
-            location:practice_locations!inner(id, name)
+            location:practice_locations!inner(id, name),
+            supplier:suppliers(id, name)
           `
           )
           .eq('practice_id', practiceId)
@@ -215,39 +233,54 @@ export const useBatchStore = defineStore('batch', () => {
 
         if (fbError) throw fbError;
 
-        expiringBatches.value = (fallbackData || []).map((row: any) => ({
-          batch_id: row.id,
-          product_id: row.product_id,
-          product_name: row.product?.name,
-          product_sku: row.product?.sku,
-          location_id: row.location_id,
-          location_name: row.location?.name,
-          batch_number: row.batch_number,
-          expiry_date: row.expiry_date,
-          current_quantity: row.current_quantity,
-          days_until_expiry: Math.ceil(
-            (new Date(row.expiry_date).getTime() - new Date().getTime()) /
+        expiringBatches.value = toArray(fallbackData).map(row => {
+          const mapped = mapProductBatchRow(row as ProductBatchFetchRow, {
+            product: (row as ProductBatchFetchRow).product,
+            location: (row as ProductBatchFetchRow).location,
+            supplier: (row as ProductBatchFetchRow).supplier,
+          });
+          const diffDays = Math.ceil(
+            (new Date(mapped.expiryDate).getTime() - Date.now()) /
               (1000 * 60 * 60 * 24)
-          ),
-          urgency_level: (() => {
-            const d = Math.ceil(
-              (new Date(row.expiry_date).getTime() - new Date().getTime()) /
-                (1000 * 60 * 60 * 24)
-            );
-            if (d < 0) return 'expired';
-            if (d <= 7) return 'critical';
-            if (d <= 14) return 'high';
-            if (d <= 30) return 'warning';
-            return 'normal';
-          })(),
-        }));
+          );
+          let urgency: ExpiringBatch['urgency_level'] = 'normal';
+          if (diffDays < 0) urgency = 'expired';
+          else if (diffDays <= 7) urgency = 'critical';
+          else if (diffDays <= 14) urgency = 'warning';
+
+          return {
+            batch_id: mapped.id,
+            product_id: mapped.productId,
+            product_name: mapped.productName ?? '',
+            product_sku: mapped.productSku ?? '',
+            location_id: mapped.locationId,
+            location_name: mapped.locationName ?? '',
+            batch_number: mapped.batchNumber,
+            expiry_date: mapped.expiryDate,
+            current_quantity: mapped.currentQuantity,
+            days_until_expiry: diffDays,
+            urgency_level: urgency,
+          } satisfies ExpiringBatch;
+        });
         return expiringBatches.value;
       }
 
-      expiringBatches.value = data || [];
+      expiringBatches.value = (data ?? []).map(item => ({
+        batch_id: item.batch_id,
+        product_id: item.product_id,
+        product_name: item.product_name,
+        product_sku: item.product_sku,
+        location_id: item.location_id,
+        location_name: item.location_name,
+        batch_number: item.batch_number,
+        expiry_date: item.expiry_date,
+        current_quantity: item.current_quantity,
+        days_until_expiry: item.days_until_expiry,
+        urgency_level: item.urgency_level,
+      }));
       return expiringBatches.value;
     } catch (err) {
-      const handledError = ServiceErrorHandler.handle(err, {
+      const handledError = ServiceErrorHandler.handle(err as Error, {
         service: 'BatchStore',
         operation: 'fetchExpiringBatches',
       });
@@ -277,10 +310,11 @@ export const useBatchStore = defineStore('batch', () => {
       );
 
       if (fetchError) {
-        // Fallback: query batches and compute FIFO
         const { data: rows, error: fbError } = await supabase
           .from('product_batches')
-          .select('id, batch_number, current_quantity, expiry_date')
+          .select(
+            '*, product:products(id, name, sku), location:practice_locations(id, name), supplier:suppliers(id, name)'
+          )
           .eq('product_id', productId)
           .eq('location_id', locationId)
           .eq('status', 'active')
@@ -289,28 +323,36 @@ export const useBatchStore = defineStore('batch', () => {
 
         if (fbError) throw fbError;
 
-        const result: FifoBatch[] = [] as any;
-        let remaining = quantity;
-        for (const row of rows || []) {
-          if (remaining <= 0) break;
-          const useQty = Math.min(row.current_quantity, remaining);
-          result.push({
-            batch_id: row.id,
-            batch_number: row.batch_number,
-            available_quantity: row.current_quantity,
-            expiry_date: row.expiry_date,
-            use_quantity: useQty,
-          });
-          remaining -= useQty;
-        }
-        fifoBatches.value = result;
+        fifoBatches.value = toArray(rows).map(row =>
+          mapProductBatchRow(row as ProductBatchFetchRow, {
+            product: (row as ProductBatchFetchRow).product,
+            location: (row as ProductBatchFetchRow).location,
+            supplier: (row as ProductBatchFetchRow).supplier,
+          })
+        );
         return fifoBatches.value;
       }
 
-      fifoBatches.value = data || [];
+      fifoBatches.value = (data || []).map(entry => ({
+        id: entry.batch_id,
+        practiceId: entry.practice_id,
+        productId: entry.product_id,
+        locationId: entry.location_id,
+        supplierId: entry.supplier_id ?? null,
+        batchNumber: entry.batch_number,
+        expiryDate: entry.expiry_date,
+        receivedDate: entry.received_date ?? entry.expiry_date,
+        currentQuantity: entry.available_quantity ?? entry.current_quantity,
+        reservedQuantity: entry.reserved_quantity ?? 0,
+        availableQuantity: entry.available_quantity ?? entry.current_quantity,
+        unitCost: entry.unit_cost ?? null,
+        totalCost: entry.total_cost ?? null,
+        currency: entry.currency ?? null,
+        status: entry.status ?? null,
+      }));
       return fifoBatches.value;
     } catch (err) {
-      const handledError = ServiceErrorHandler.handle(err, {
+      const handledError = ServiceErrorHandler.handle(err as Error, {
         service: 'BatchStore',
         operation: 'fetchFifoBatches',
       });
@@ -321,50 +363,23 @@ export const useBatchStore = defineStore('batch', () => {
     }
   };
 
-  const createBatch = async (request: CreateBatchRequest) => {
+  const createBatch = async (request: Tables<'product_batches'>) => {
     try {
       loading.value = true;
       error.value = null;
 
-      const batchData = {
-        practice_id: request.practice_id,
-        product_id: request.product_id,
-        location_id: request.location_id,
-        batch_number: request.batch_number,
-        expiry_date: request.expiry_date,
-        received_date:
-          request.received_date || new Date().toISOString().substring(0, 10),
-        initial_quantity: request.initial_quantity,
-        current_quantity: request.initial_quantity,
-        reserved_quantity: 0,
-        unit_cost: request.unit_cost,
-        currency: request.currency || 'EUR',
-        status: 'active',
-        quality_check_passed: request.quality_check_passed || true,
-        ...(request.supplier_batch_number && {
-          supplier_batch_number: request.supplier_batch_number,
-        }),
-        ...(request.supplier_id && { supplier_id: request.supplier_id }),
-        ...(request.purchase_order_number && {
-          purchase_order_number: request.purchase_order_number,
-        }),
-        ...(request.invoice_number && {
-          invoice_number: request.invoice_number,
-        }),
-        ...(request.quality_notes && { quality_notes: request.quality_notes }),
-      };
-
+      const payload = toProductBatchInsert(mapProductBatchRow(request));
       const { data, error: insertError } = await supabase
         .from('product_batches')
-        .insert(batchData)
-        .select()
+        .insert(payload)
+        .select('*')
         .single();
 
       if (insertError) throw insertError;
 
       return data;
     } catch (err) {
-      const handledError = ServiceErrorHandler.handle(err, {
+      const handledError = ServiceErrorHandler.handle(err as Error, {
         service: 'BatchStore',
         operation: 'createBatch',
       });
@@ -380,31 +395,91 @@ export const useBatchStore = defineStore('batch', () => {
       loading.value = true;
       error.value = null;
 
-      const practiceId = updates.practice_id as string | undefined;
+      const practiceId = updates.practice_id ?? undefined;
+      const mappedUpdate = toProductBatchUpdate(
+        mapProductBatchRow({
+          ...updates,
+          id,
+          practice_id: updates.practice_id ?? '',
+          product_id: updates.product_id ?? '',
+          location_id: updates.location_id ?? '',
+          supplier_id: updates.supplier_id ?? null,
+          batch_number: updates.batch_number ?? '',
+          supplier_batch_number: updates.supplier_batch_number ?? null,
+          expiry_date: updates.expiry_date ?? '',
+          received_date: updates.received_date ?? '',
+          initial_quantity: updates.current_quantity ?? 0,
+          current_quantity: updates.current_quantity ?? 0,
+          reserved_quantity: updates.reserved_quantity ?? null,
+          available_quantity: updates.available_quantity ?? null,
+          unit_cost: updates.unit_cost ?? null,
+          total_cost: updates.total_cost ?? null,
+          currency: updates.currency ?? null,
+          status: updates.status ?? null,
+          purchase_order_number: updates.purchase_order_number ?? null,
+          invoice_number: updates.invoice_number ?? null,
+          quality_check_passed: updates.quality_check_passed ?? null,
+          quality_notes: updates.quality_notes ?? null,
+          quarantine_until: updates.quarantine_until ?? null,
+          created_at: null,
+          updated_at: null,
+          supplier_id: updates.supplier_id ?? null,
+          supplier_batch_number: updates.supplier_batch_number ?? null,
+        } as ProductBatch)
+      );
+
       const { data, error: updateError } = await supabase
         .from('product_batches')
-        .update({
-          ...updates,
-          updated_at: new Date().toISOString(),
-        })
+        .update(mappedUpdate)
         .eq('id', id)
         .eq(practiceId ? 'practice_id' : 'id', practiceId ? practiceId : id)
-        .select()
+        .select('*')
         .single();
 
       if (updateError) throw updateError;
 
-      // Update local state
-      const index = batches.value.findIndex(b => b.id === id);
+      const index = batches.value.findIndex(batch => batch.id === id);
       if (index !== -1) {
-        batches.value[index] = { ...batches.value[index], ...data };
+        batches.value[index] = mapProductBatchRow(
+          data as ProductBatchFetchRow,
+          {
+            product: (data as ProductBatchFetchRow).product,
+            location: (data as ProductBatchFetchRow).location,
+            supplier: (data as ProductBatchFetchRow).supplier,
+          }
+        );
       }
 
       return data;
     } catch (err) {
-      const handledError = ServiceErrorHandler.handle(err, {
+      const handledError = ServiceErrorHandler.handle(err as Error, {
         service: 'BatchStore',
         operation: 'updateBatch',
+      });
+      error.value = handledError.message;
+      throw handledError;
+    } finally {
+      loading.value = false;
+    }
+  };
+
+  const deleteBatch = async (batchId: string) => {
+    try {
+      loading.value = true;
+      error.value = null;
+
+      const { error: deleteError } = await supabase
+        .from('product_batches')
+        .delete()
+        .eq('id', batchId);
+
+      if (deleteError) throw deleteError;
+
+      batches.value = batches.value.filter(batch => batch.id !== batchId);
+    } catch (err) {
+      const handledError = ServiceErrorHandler.handle(err as Error, {
+        service: 'BatchStore',
+        operation: 'deleteBatch',
       });
       error.value = handledError.message;
       throw handledError;
@@ -429,42 +504,9 @@ export const useBatchStore = defineStore('batch', () => {
 
       return data;
     } catch (err) {
-      const handledError = ServiceErrorHandler.handle(err, {
+      const handledError = ServiceErrorHandler.handle(err as Error, {
         service: 'BatchStore',
         operation: 'useBatch',
-      });
-      error.value = handledError.message;
-      throw handledError;
-    } finally {
-      loading.value = false;
-    }
-  };
-
-  const deleteBatch = async (id: string) => {
-    try {
-      loading.value = true;
-      error.value = null;
-
-      const practiceId = batches.value.find(b => b.id === id)?.practice_id;
-      const { error: deleteError } = await supabase
-        .from('product_batches')
-        .delete()
-        .eq('id', id)
-        .eq(practiceId ? 'practice_id' : 'id', practiceId ? practiceId : id);
-
-      if (deleteError) throw deleteError;
-
-      // Update local state
-      const index = batches.value.findIndex(b => b.id === id);
-      if (index !== -1) {
-        batches.value.splice(index, 1);
-      }
-
-      return { success: true };
-    } catch (err) {
-      const handledError = ServiceErrorHandler.handle(err, {
-        service: 'BatchStore',
-        operation: 'deleteBatch',
       });
       error.value = handledError.message;
       throw handledError;
@@ -495,7 +537,7 @@ export const useBatchStore = defineStore('batch', () => {
 
       return data;
     } catch (err) {
-      const handledError = ServiceErrorHandler.handle(err, {
+      const handledError = ServiceErrorHandler.handle(err as Error, {
         service: 'BatchStore',
         operation: 'getBatch',
       });
@@ -538,7 +580,7 @@ export const useBatchStore = defineStore('batch', () => {
 
       return data || [];
     } catch (err) {
-      const handledError = ServiceErrorHandler.handle(err, {
+      const handledError = ServiceErrorHandler.handle(err as Error, {
         service: 'BatchStore',
         operation: 'searchBatches',
       });
@@ -560,7 +602,7 @@ export const useBatchStore = defineStore('batch', () => {
     );
   };
 
-  const validateNewBatch = (batchData: CreateBatchRequest) => {
+  const validateNewBatch = (batchData: Tables<'product_batches'>) => {
     const validationResult = validateBatchData({
       batchNumber: batchData.batch_number,
       expiryDate: batchData.expiry_date,
@@ -641,18 +683,27 @@ export const useBatchStore = defineStore('batch', () => {
       loading.value = true;
       error.value = null;
 
-      // This would require a batch_movements or audit_log table
-      const { data, error: historyError } = await supabase
-        .from('batch_movements')
-        .select('*')
+      const { data, error } = await supabase
+        .from('stock_movements')
+        .select(
+          `
+          id,
+          movement_type,
+          quantity_change,
+          reason,
+          created_at,
+          location:practice_locations(id, name),
+          product:products(id, name, sku)
+        `
+        )
         .eq('batch_id', batchId)
         .order('created_at', { ascending: false });
 
-      if (historyError) throw historyError;
+      if (error) throw error;
 
       return data || [];
     } catch (err) {
-      const handledError = ServiceErrorHandler.handle(err, {
+      const handledError = ServiceErrorHandler.handle(err as Error, {
         service: 'BatchStore',
         operation: 'getBatchHistory',
       });
@@ -664,14 +715,11 @@ export const useBatchStore = defineStore('batch', () => {
   };
 
   return {
-    // State
     batches,
     expiringBatches,
     fifoBatches,
     loading,
     error,
-
-    // Getters
     batchesByProduct,
     batchesByLocation,
     expiredBatches,
@@ -683,15 +731,13 @@ export const useBatchStore = defineStore('batch', () => {
     warningBatches,
     batchesWithUrgency,
     batchesByUrgencyLevel,
-
-    // Actions
     fetchBatches,
     fetchExpiringBatches,
     fetchFifoBatches,
     createBatch,
     updateBatch,
-    useBatch,
     deleteBatch,
+    useBatch,
     getBatch,
     searchBatches,
     findSimilarBatches,

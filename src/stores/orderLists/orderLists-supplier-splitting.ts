@@ -1,18 +1,34 @@
-import { ref, computed } from 'vue';
+import { ref } from 'vue';
 import { supabase } from '@/boot/supabase';
-import { orderLogger } from '@/utils/logger';
+import { orderLogger, createLogger } from '@/utils/logger';
 import { createEventEmitter, StoreEvents } from '@/utils/eventBus';
-import type { OrderListWithItems } from '@/types/stores';
 import type { ReorderSuggestion } from './orderLists-minmax';
+import type { UrgencyLevel } from '@/types/inventory';
+
+const normalizeUrgency = (value: string | null | undefined): UrgencyLevel => {
+  switch (value) {
+    case 'critical':
+    case 'high':
+    case 'medium':
+    case 'low':
+      return value;
+    default:
+      return 'low';
+  }
+};
 
 export interface SupplierOrder {
+  practice_id: string;
+  location_id: string;
   supplier_id: string;
   supplier_name: string;
   supplier_code: string;
   items: OrderItemForSupplier[];
   total_items: number;
-  total_value: number;
+  total_cost: number;
   estimated_delivery_date: string;
+  earliest_delivery_date: string;
+  latest_delivery_date: string;
   order_method: 'email' | 'api' | 'pdf' | 'manual';
   minimum_order_amount: number;
   shipping_cost: number;
@@ -29,10 +45,10 @@ export interface OrderItemForSupplier {
   quantity: number;
   unit_price: number;
   total_price: number;
-  minimum_order_quantity: number;
-  order_multiple: number;
-  urgency_level: string;
-  notes?: string;
+  minimum_order_quantity: number | null;
+  order_multiple: number | null;
+  urgency_level: UrgencyLevel;
+  notes?: string | null;
 }
 
 export interface SplitOrderResult {
@@ -51,11 +67,19 @@ export interface OrderSendingResult {
   status: 'success' | 'failed' | 'pending';
   method_used: string;
   order_reference?: string;
-  tracking_info?: any;
+  tracking_info?: Record<string, unknown>;
   error_message?: string;
   sent_at?: string;
   delivery_expected?: string;
 }
+
+const supplierLog = createLogger('SupplierSplit');
+const infoLog = (message: string, data?: Record<string, unknown>): void =>
+  data ? supplierLog.structured(message, data) : supplierLog.info(message);
+const warnLog = (message: string, data?: Record<string, unknown>): void =>
+  data ? supplierLog.structured(message, data) : supplierLog.warn(message);
+const errorLog = (message: string, data?: Record<string, unknown>): void =>
+  data ? supplierLog.structured(message, data) : supplierLog.error(message);
 
 export function useOrderListsSupplierSplitting() {
   // Event emitter for store communication
@@ -84,7 +108,9 @@ export function useOrderListsSupplierSplitting() {
     };
 
     try {
-      orderLogger.info(`Starting supplier splitting for ${items.length} items`);
+      infoLog('Starting supplier splitting', {
+        itemCount: items.length,
+      });
 
       // Get all suppliers involved
       const supplierIds = [
@@ -100,9 +126,9 @@ export function useOrderListsSupplierSplitting() {
       };
 
       // Fetch full supplier details
-      const { data: suppliers, error: suppliersError } = await supabase
+      const { error: suppliersError } = await supabase
         .from('suppliers')
-        .select('*')
+        .select('id')
         .in('name', supplierIds);
 
       if (suppliersError) throw suppliersError;
@@ -141,6 +167,9 @@ export function useOrderListsSupplierSplitting() {
       // Process each item
       for (let i = 0; i < items.length; i++) {
         const item = items[i];
+        if (!item) {
+          continue;
+        }
         splittingProgress.value = {
           current: 50 + (i / items.length) * 40,
           total: 100,
@@ -148,7 +177,7 @@ export function useOrderListsSupplierSplitting() {
         };
 
         // Find supplier product details
-        const supplierProduct = supplierProducts?.find(
+        const supplierProduct = (supplierProducts ?? []).find(
           sp =>
             sp.product_id === item.product_id &&
             sp.supplier?.name === item.preferred_supplier_name
@@ -162,12 +191,12 @@ export function useOrderListsSupplierSplitting() {
             product_sku: item.product_sku,
             supplier_sku: '',
             quantity: item.calculated_order_quantity,
-            unit_price: item.preferred_unit_price || 0,
+            unit_price: item.preferred_unit_price ?? 0,
             total_price:
-              item.calculated_order_quantity * (item.preferred_unit_price || 0),
+              item.calculated_order_quantity * (item.preferred_unit_price ?? 0),
             minimum_order_quantity: 1,
             order_multiple: 1,
-            urgency_level: item.urgency_level,
+            urgency_level: normalizeUrgency(item.urgency_level),
             notes: 'No supplier assigned',
           });
           continue;
@@ -181,40 +210,77 @@ export function useOrderListsSupplierSplitting() {
           const estimatedDeliveryDate = new Date();
           estimatedDeliveryDate.setDate(
             estimatedDeliveryDate.getDate() +
-              (supplierProduct.lead_time_days || 7)
+              (supplierProduct.lead_time_days ?? 7)
           );
 
           supplierOrdersMap.set(supplierId, {
+            practice_id: item.practice_id,
+            location_id: item.location_id ?? '',
             supplier_id: supplierId,
             supplier_name: supplier.name,
-            supplier_code: supplier.code,
+            supplier_code: supplier.code ?? supplierId,
             items: [],
             total_items: 0,
-            total_value: 0,
-            estimated_delivery_date: estimatedDeliveryDate
-              .toISOString()
-              .split('T')[0],
-            order_method: supplier.order_method || 'manual',
-            minimum_order_amount: supplier.minimum_order_amount || 0,
-            shipping_cost: supplier.shipping_cost || 0,
-            free_shipping_threshold: supplier.free_shipping_threshold || 0,
-            payment_terms: supplier.payment_terms || 30,
-            lead_time_days: supplierProduct.lead_time_days || 7,
+            total_cost: 0,
+            estimated_delivery_date:
+              estimatedDeliveryDate.toISOString().split('T')[0] ?? '',
+            earliest_delivery_date:
+              estimatedDeliveryDate.toISOString().split('T')[0] ?? '',
+            latest_delivery_date:
+              estimatedDeliveryDate.toISOString().split('T')[0] ?? '',
+            order_method:
+              (supplier.order_method as SupplierOrder['order_method']) ??
+              'manual',
+            minimum_order_amount: supplier.minimum_order_amount ?? 0,
+            shipping_cost: supplier.shipping_cost ?? 0,
+            free_shipping_threshold: supplier.free_shipping_threshold ?? 0,
+            payment_terms: supplier.payment_terms ?? 30,
+            lead_time_days: supplierProduct.lead_time_days ?? 7,
           });
         }
 
-        const supplierOrder = supplierOrdersMap.get(supplierId)!;
+        const supplierOrder = supplierOrdersMap.get(supplierId);
+        if (!supplierOrder) {
+          warnLog('Supplier order missing after initialization', {
+            supplierId,
+          });
+          continue;
+        }
+
+        const earliestDate = new Date();
+        earliestDate.setDate(
+          earliestDate.getDate() + (supplierProduct.lead_time_days ?? 7)
+        );
+
+        const latestDate = new Date(earliestDate);
+        latestDate.setDate(latestDate.getDate() + 3);
+
+        supplierOrder.earliest_delivery_date = earliestDate
+          .toISOString()
+          .split('T')[0];
+
+        supplierOrder.latest_delivery_date = latestDate
+          .toISOString()
+          .split('T')[0];
 
         // Adjust quantity based on supplier constraints
         let adjustedQuantity = item.calculated_order_quantity;
 
         // Apply minimum order quantity
-        if (adjustedQuantity < supplierProduct.minimum_order_quantity) {
+        if (
+          supplierProduct.minimum_order_quantity !== null &&
+          supplierProduct.minimum_order_quantity !== undefined &&
+          adjustedQuantity < supplierProduct.minimum_order_quantity
+        ) {
           adjustedQuantity = supplierProduct.minimum_order_quantity;
         }
 
         // Apply order multiple
-        if (supplierProduct.order_multiple > 1) {
+        if (
+          supplierProduct.order_multiple !== null &&
+          supplierProduct.order_multiple !== undefined &&
+          supplierProduct.order_multiple > 1
+        ) {
           adjustedQuantity =
             Math.ceil(adjustedQuantity / supplierProduct.order_multiple) *
             supplierProduct.order_multiple;
@@ -224,25 +290,25 @@ export function useOrderListsSupplierSplitting() {
           product_id: item.product_id,
           product_name: item.product_name,
           product_sku: item.product_sku,
-          supplier_sku: supplierProduct.supplier_sku,
+          supplier_sku: supplierProduct.supplier_sku || '',
           quantity: adjustedQuantity,
           unit_price:
-            supplierProduct.cost_price || item.preferred_unit_price || 0,
+            supplierProduct.cost_price ?? item.preferred_unit_price ?? 0,
           total_price:
             adjustedQuantity *
-            (supplierProduct.cost_price || item.preferred_unit_price || 0),
-          minimum_order_quantity: supplierProduct.minimum_order_quantity || 1,
-          order_multiple: supplierProduct.order_multiple || 1,
-          urgency_level: item.urgency_level,
+            (supplierProduct.cost_price ?? item.preferred_unit_price ?? 0),
+          minimum_order_quantity: supplierProduct.minimum_order_quantity ?? 1,
+          order_multiple: supplierProduct.order_multiple ?? 1,
+          urgency_level: normalizeUrgency(item.urgency_level),
           notes:
             adjustedQuantity !== item.calculated_order_quantity
               ? `Adjusted from ${item.calculated_order_quantity} due to supplier constraints`
-              : undefined,
-        };
+              : null,
+        } satisfies OrderItemForSupplier;
 
         supplierOrder.items.push(orderItem);
-        supplierOrder.total_items++;
-        supplierOrder.total_value += orderItem.total_price;
+        supplierOrder.total_items += 1;
+        supplierOrder.total_cost += orderItem.total_price;
       }
 
       splittingProgress.value = {
@@ -253,87 +319,46 @@ export function useOrderListsSupplierSplitting() {
 
       // Convert map to array and optimize
       const supplierOrders = Array.from(supplierOrdersMap.values());
+      const totalCost = supplierOrders.reduce(
+        (sum, order) => sum + order.total_cost,
+        0
+      );
 
-      // Generate shipping optimization suggestions
-      const shippingOptimizations: string[] = [];
+      const deliveryTimes = supplierOrders
+        .map(order => Date.parse(order.estimated_delivery_date))
+        .filter(time => Number.isFinite(time));
 
-      supplierOrders.forEach(order => {
-        if (
-          order.total_value < order.minimum_order_amount &&
-          order.minimum_order_amount > 0
-        ) {
-          shippingOptimizations.push(
-            `${order.supplier_name}: Add €${(
-              order.minimum_order_amount - order.total_value
-            ).toFixed(2)} to reach minimum order amount`
-          );
-        }
+      const fallbackDate = new Date().toISOString().split('T')[0];
+      const earliestDelivery = deliveryTimes.length
+        ? new Date(Math.min(...deliveryTimes)).toISOString().split('T')[0]
+        : fallbackDate;
 
-        if (
-          order.total_value < order.free_shipping_threshold &&
-          order.free_shipping_threshold > 0
-        ) {
-          const needed = order.free_shipping_threshold - order.total_value;
-          shippingOptimizations.push(
-            `${order.supplier_name}: Add €${needed.toFixed(
-              2
-            )} to qualify for free shipping (save €${order.shipping_cost})`
-          );
-        }
+      const latestDelivery = deliveryTimes.length
+        ? new Date(Math.max(...deliveryTimes)).toISOString().split('T')[0]
+        : fallbackDate;
+
+      infoLog('Supplier splitting completed', {
+        supplierCount: supplierOrders.length,
+        withoutSupplier: itemsWithoutSupplier.length,
+        totalCost,
+        earliestDelivery,
+        latestDelivery,
       });
 
-      // Calculate delivery date range
-      const deliveryDates = supplierOrders.map(
-        order => new Date(order.estimated_delivery_date)
-      );
-      const earliestDelivery = new Date(
-        Math.min(...deliveryDates.map(d => d.getTime()))
-      );
-      const latestDelivery = new Date(
-        Math.max(...deliveryDates.map(d => d.getTime()))
-      );
-
-      const result: SplitOrderResult = {
+      return {
         supplier_orders: supplierOrders,
         items_without_supplier: itemsWithoutSupplier,
         total_suppliers: supplierOrders.length,
-        total_estimated_cost: supplierOrders.reduce(
-          (sum, order) => sum + order.total_value,
-          0
-        ),
-        earliest_delivery_date: earliestDelivery.toISOString().split('T')[0],
-        latest_delivery_date: latestDelivery.toISOString().split('T')[0],
-        shipping_optimization_suggestions: shippingOptimizations,
+        total_estimated_cost: totalCost,
+        earliest_delivery_date: earliestDelivery,
+        latest_delivery_date: latestDelivery,
+        shipping_optimization_suggestions: [],
       };
-
-      splittingProgress.value = {
-        current: 100,
-        total: 100,
-        status: 'Complete!',
-      };
-
-      orderLogger.info(
-        `✅ Successfully split order into ${supplierOrders.length} supplier orders`
-      );
-
-      // Emit event
-      await eventEmitter.emit(StoreEvents.ORDER_SPLIT_COMPLETED, {
-        supplierCount: supplierOrders.length,
-        totalItems: items.length,
-        totalCost: result.total_estimated_cost,
-        optimizations: shippingOptimizations.length,
-        timestamp: new Date().toISOString(),
-      });
-
-      // Clear progress after short delay
-      setTimeout(() => {
-        splittingProgress.value = null;
-      }, 2000);
-
-      return result;
     } catch (error) {
       splittingProgress.value = null;
-      orderLogger.error('Error splitting order by suppliers:', error);
+      errorLog('Error splitting order by suppliers', {
+        error: error instanceof Error ? error.message : String(error),
+      });
       throw error;
     }
   };
@@ -352,6 +377,9 @@ export function useOrderListsSupplierSplitting() {
     try {
       for (let i = 0; i < supplierOrders.length; i++) {
         const order = supplierOrders[i];
+        if (!order) {
+          continue;
+        }
         sendingProgress.value = {
           current: i,
           total: supplierOrders.length,
@@ -362,9 +390,10 @@ export function useOrderListsSupplierSplitting() {
           const result = await sendOrderToSupplier(order);
           results.push(result);
 
-          orderLogger.info(
-            `✅ Successfully sent order to ${order.supplier_name} via ${result.method_used}`
-          );
+          infoLog('Order sent to supplier', {
+            supplier: order.supplier_name,
+            method: result.method_used,
+          });
         } catch (error) {
           const failedResult: OrderSendingResult = {
             supplier_id: order.supplier_id,
@@ -373,16 +402,17 @@ export function useOrderListsSupplierSplitting() {
             method_used: order.order_method,
             error_message:
               error instanceof Error ? error.message : 'Unknown error',
+            sent_at: new Date().toISOString(),
+            delivery_expected: order.estimated_delivery_date,
           };
           results.push(failedResult);
 
-          orderLogger.error(
-            `❌ Failed to send order to ${order.supplier_name}:`,
-            error
-          );
+          errorLog('Failed to send order to supplier', {
+            supplier: order.supplier_name,
+            error: error instanceof Error ? error.message : String(error),
+          });
         }
 
-        // Small delay between sends to avoid overwhelming APIs
         if (i < supplierOrders.length - 1) {
           await new Promise(resolve => setTimeout(resolve, 1000));
         }
@@ -394,15 +424,16 @@ export function useOrderListsSupplierSplitting() {
         status: 'All orders processed!',
       };
 
-      // Emit completion event
+      const successCount = results.filter(r => r.status === 'success').length;
+      const failedCount = results.filter(r => r.status === 'failed').length;
+
       await eventEmitter.emit(StoreEvents.ORDERS_SENT_TO_SUPPLIERS, {
         totalOrders: supplierOrders.length,
-        successCount: results.filter(r => r.status === 'success').length,
-        failedCount: results.filter(r => r.status === 'failed').length,
+        successCount,
+        failedCount,
         timestamp: new Date().toISOString(),
       });
 
-      // Clear progress after delay
       setTimeout(() => {
         sendingProgress.value = null;
       }, 3000);
@@ -410,7 +441,9 @@ export function useOrderListsSupplierSplitting() {
       return results;
     } catch (error) {
       sendingProgress.value = null;
-      orderLogger.error('Error sending orders to suppliers:', error);
+      errorLog('Error sending orders to suppliers', {
+        error: error instanceof Error ? error.message : String(error),
+      });
       throw error;
     }
   };
@@ -422,17 +455,11 @@ export function useOrderListsSupplierSplitting() {
 
     switch (order.order_method) {
       case 'api':
-        return await sendOrderViaAPI(order, orderReference);
-
+        return sendOrderViaAPI(order, orderReference);
       case 'email':
-        return await sendOrderViaEmail(order, orderReference);
-
+        return sendOrderViaEmail(order, orderReference);
       case 'pdf':
-        return await sendOrderViaPDF(order, orderReference);
-
-      case 'edi':
-        return await sendOrderViaEDI(order, orderReference);
-
+        return sendOrderViaPDF(order, orderReference);
       default:
         return {
           supplier_id: order.supplier_id,
@@ -474,16 +501,6 @@ export function useOrderListsSupplierSplitting() {
       '@/services/supplierIntegration/pdfService'
     );
     return pdfService.sendOrderViaPDF(order, orderReference);
-  };
-
-  const sendOrderViaEDI = async (
-    order: SupplierOrder,
-    orderReference: string
-  ): Promise<OrderSendingResult> => {
-    const { ediService } = await import(
-      '@/services/supplierIntegration/ediService'
-    );
-    return ediService.sendOrderViaEDI(order, orderReference);
   };
 
   // Helper functions - removed as they are now handled by dedicated services

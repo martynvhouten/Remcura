@@ -1,12 +1,10 @@
-import type { NotificationType } from '@/types/supabase';
-
 // Notification system types
 export interface NotificationMessage {
   id?: string;
   title: string;
   body: string;
-  type: NotificationType;
-  data?: any;
+  type: string;
+  data?: Record<string, unknown>;
   icon?: string;
   badge?: string;
   tag?: string;

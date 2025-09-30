@@ -1,26 +1,31 @@
 import { createClient } from '@supabase/supabase-js';
+import type { Database, Tables, TablesInsert, TablesUpdate } from '@/types';
 import type {
-  Database,
-  Practice,
-  UserProfile,
-  Product,
-  ProductListItem,
+  StockLevelView,
+  PracticeRow,
+  ProductRow,
+  OrderAdviceResult,
   PracticeInsert,
-  UserProfileInsert,
-  ProductInsert,
   PracticeUpdate,
-  UserProfileUpdate,
-  ProductUpdate,
-  ProductWithItems,
-} from 'src/types/supabase';
-import { handleSupabaseError } from 'src/utils/service-error-handler';
+  PracticeMemberRow,
+  PracticeMemberInsert,
+  PracticeMemberUpdate,
+  OrderListRow,
+  ProductBatchWithDetails,
+  OrderListItemInsert,
+} from '@/types/inventory';
+import { handleSupabaseError } from '@/utils/service-error-handler';
+import type {
+  RealtimeChannel,
+  RealtimePostgresChangesPayload,
+} from '@supabase/supabase-js';
 
 // Create and configure Supabase client centrally
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
 const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
 
 if (!supabaseUrl || !supabaseAnonKey) {
-  throw new Error($t('supabase.missingsupabaseenvironmentvaria'));
+  throw new Error('Supabase environment variables are missing');
 }
 
 export const supabase = createClient<Database>(supabaseUrl, supabaseAnonKey, {
@@ -33,7 +38,7 @@ export const supabase = createClient<Database>(supabaseUrl, supabaseAnonKey, {
 
 // Practice operations
 export const practiceService = {
-  async getById(id: string): Promise<Practice | null> {
+  async getById(id: string): Promise<PracticeRow | null> {
     const { data, error } = await supabase
       .from('practices')
       .select('*')
@@ -51,12 +56,12 @@ export const practiceService = {
     return data;
   },
 
-  async create(practice: PracticeInsert): Promise<Practice | null> {
+  async create(practice: PracticeInsert): Promise<PracticeRow | null> {
     const { data, error } = await supabase
       .from('practices')
-      .insert([practice])
+      .insert(practice)
       .select()
-      .single();
+      .single<PracticeRow>();
 
     if (error) {
       handleSupabaseError(
@@ -72,13 +77,16 @@ export const practiceService = {
     return data;
   },
 
-  async update(id: string, updates: PracticeUpdate): Promise<Practice | null> {
+  async update(
+    id: string,
+    updates: PracticeUpdate
+  ): Promise<PracticeRow | null> {
     const { data, error } = await supabase
       .from('practices')
       .update(updates)
       .eq('id', id)
       .select()
-      .single();
+      .single<PracticeRow>();
 
     if (error) {
       handleSupabaseError(
@@ -98,19 +106,10 @@ export const practiceService = {
 
 // User profile operations - now using auth.users and practice_members
 export const userProfileService = {
-  async getById(id: string): Promise<UserProfile | null> {
+  async getById(id: string): Promise<PracticeMemberRow | null> {
     const { data, error } = await supabase
       .from('practice_members')
-      .select(
-        `
-        *,
-        practices:practice_id (
-          id,
-          name,
-          settings
-        )
-      `
-      )
+      .select('*')
       .eq('user_id', id)
       .single();
 
@@ -129,20 +128,17 @@ export const userProfileService = {
     return data;
   },
 
-  async getByIdWithUserData(id: string): Promise<UserProfile | null> {
-    // Get practice member data with user auth data
+  async getByIdWithUserData(
+    id: string
+  ): Promise<
+    PracticeMemberRow & {
+      email?: string | null;
+      user_metadata?: Record<string, unknown> | null;
+    }
+  > {
     const { data: memberData, error: memberError } = await supabase
       .from('practice_members')
-      .select(
-        `
-        *,
-        practices:practice_id (
-          id,
-          name,
-          settings
-        )
-      `
-      )
+      .select('*')
       .eq('user_id', id)
       .single();
 
@@ -156,10 +152,9 @@ export const userProfileService = {
         },
         'Failed to fetch user profile'
       );
-      return null;
+      throw memberError;
     }
 
-    // Get user auth data
     const { data: userData, error: userError } =
       await supabase.auth.admin.getUserById(id);
 
@@ -173,30 +168,29 @@ export const userProfileService = {
         },
         'Failed to fetch user auth data'
       );
-      return null;
+      throw userError;
     }
 
-    // Combine the data
     return {
       ...memberData,
-      email: userData.user?.email,
-      user_metadata: userData.user?.user_metadata,
-    } as UserProfile;
+      email: userData.user?.email ?? null,
+      user_metadata: userData.user?.user_metadata ?? null,
+    };
   },
 
-  async create(profile: UserProfileInsert): Promise<UserProfile | null> {
+  async create(
+    profile: PracticeMemberInsert & { id: string }
+  ): Promise<PracticeMemberRow | null> {
     const { data, error } = await supabase
       .from('practice_members')
-      .insert([
-        {
-          user_id: profile.id,
-          practice_id: profile.practice_id,
-          role: profile.role || 'guest',
-          joined_at: new Date().toISOString(),
-        },
-      ])
+      .insert({
+        user_id: profile.id,
+        practice_id: profile.practice_id,
+        role: profile.role ?? 'guest',
+        joined_at: new Date().toISOString(),
+      } satisfies TablesInsert<'practice_members'>)
       .select()
-      .single();
+      .single<PracticeMemberRow>();
 
     if (error) {
       handleSupabaseError(
@@ -214,17 +208,19 @@ export const userProfileService = {
 
   async update(
     id: string,
-    updates: UserProfileUpdate
-  ): Promise<UserProfile | null> {
+    updates: PracticeMemberUpdate
+  ): Promise<PracticeMemberRow | null> {
+    const payload: TablesUpdate<'practice_members'> = {
+      role: updates.role ?? null,
+      updated_at: new Date().toISOString(),
+    };
+
     const { data, error } = await supabase
       .from('practice_members')
-      .update({
-        role: updates.role,
-        updated_at: new Date().toISOString(),
-      })
+      .update(payload)
       .eq('user_id', id)
       .select()
-      .single();
+      .single<PracticeMemberRow>();
 
     if (error) {
       handleSupabaseError(
@@ -244,7 +240,23 @@ export const userProfileService = {
 
 // Products operations
 export const productService = {
-  async getAll(practiceId: string): Promise<ProductListItem[]> {
+  async getAll(
+    practiceId: string
+  ): Promise<
+    Array<
+      Pick<
+        ProductRow,
+        | 'id'
+        | 'name'
+        | 'sku'
+        | 'category'
+        | 'brand'
+        | 'unit'
+        | 'price'
+        | 'image_url'
+      >
+    >
+  > {
     const { data, error } = await supabase
       .from('products')
       .select(
@@ -269,15 +281,27 @@ export const productService = {
       );
     }
 
-    return data || [];
+    return (data ?? []) as Array<
+      Pick<
+        ProductRow,
+        | 'id'
+        | 'name'
+        | 'sku'
+        | 'category'
+        | 'brand'
+        | 'unit'
+        | 'price'
+        | 'image_url'
+      >
+    >;
   },
 
-  async getById(id: string): Promise<Product | null> {
+  async getById(id: string): Promise<ProductRow | null> {
     const { data, error } = await supabase
       .from('products')
       .select('*')
       .eq('id', id)
-      .single();
+      .single<ProductRow>();
 
     if (error) {
       handleSupabaseError(
@@ -294,12 +318,12 @@ export const productService = {
     return data;
   },
 
-  async create(product: ProductInsert): Promise<Product | null> {
+  async create(product: TablesInsert<'products'>): Promise<ProductRow | null> {
     const { data, error } = await supabase
       .from('products')
-      .insert([product])
+      .insert(product)
       .select()
-      .single();
+      .single<ProductRow>();
 
     if (error) {
       handleSupabaseError(
@@ -307,7 +331,7 @@ export const productService = {
         {
           service: 'productService',
           operation: 'create',
-          metadata: { productSku: product.sku },
+          metadata: { productSku: product.sku ?? 'unknown' },
         },
         'Failed to create product'
       );
@@ -316,13 +340,16 @@ export const productService = {
     return data;
   },
 
-  async update(id: string, updates: ProductUpdate): Promise<Product | null> {
+  async update(
+    id: string,
+    updates: TablesUpdate<'products'>
+  ): Promise<ProductRow | null> {
     const { data, error } = await supabase
       .from('products')
       .update(updates)
       .eq('id', id)
       .select()
-      .single();
+      .single<ProductRow>();
 
     if (error) {
       handleSupabaseError(
@@ -343,27 +370,35 @@ export const productService = {
     const { error } = await supabase.from('products').delete().eq('id', id);
 
     if (error) {
-      throw new Error($t('supabase.failedtodeleteproduct'));
+      handleSupabaseError(error, {
+        service: 'productService',
+        operation: 'delete',
+        metadata: { productId: id },
+      });
+      return false;
     }
 
     return true;
   },
 
-  async getLowStock(practiceId: string): Promise<any[]> {
-    // Get products with low stock using the get_order_advice function
+  async getLowStock(practiceId: string): Promise<OrderAdviceResult> {
     const { data, error } = await supabase.rpc('get_order_advice', {
       practice_uuid: practiceId,
     });
 
     if (error) {
-      throw new Error($t('supabase.failedtofetchlow'));
+      handleSupabaseError(error, {
+        service: 'productService',
+        operation: 'getLowStock',
+        metadata: { practiceId },
+      });
+      return [];
     }
 
-    return data || [];
+    return (data as OrderAdviceResult) ?? [];
   },
 
-  async getOutOfStock(practiceId: string): Promise<any[]> {
-    // Get out of stock products from the order advice
+  async getOutOfStock(practiceId: string): Promise<OrderAdviceResult> {
     const { data, error } = await supabase.rpc('get_order_advice', {
       practice_uuid: practiceId,
     });
@@ -374,71 +409,71 @@ export const productService = {
         {
           service: 'productService',
           operation: 'getOutOfStock',
-          practiceId,
+          metadata: { practiceId },
         },
         'Failed to fetch out of stock products'
       );
+      return [];
     }
 
-    return (data || []).filter((item: StockLevel) => item.current_stock === 0);
+    const rows = (data as OrderAdviceResult) ?? [];
+    return rows.filter(item => (item.current_stock ?? 0) === 0);
   },
 };
 
 // Real-time subscriptions
+type OrderListPayload = RealtimePostgresChangesPayload<Tables<'order_lists'>>;
+type OrderListItemPayload = RealtimePostgresChangesPayload<
+  Tables<'order_list_items'>
+>;
+type StockLevelPayload = RealtimePostgresChangesPayload<Tables<'stock_levels'>>;
+type SupplierOrderPayload = RealtimePostgresChangesPayload<
+  Tables<'supplier_orders'>
+>;
+
 export const realtimeService = {
-  subscribeToProducts(
+  subscribeToOrderLists(
     practiceId: string,
-    callback: (payload: RealtimePayload) => void
-  ) {
+    callback: (payload: OrderListPayload) => void
+  ): RealtimeChannel {
     return supabase
-      .channel(`products:${practiceId}`)
+      .channel(`order_lists:${practiceId}`)
       .on(
         'postgres_changes',
         {
           event: '*',
           schema: 'public',
-          table: 'products',
-        },
-        callback
-      )
-      .on(
-        'postgres_changes',
-        {
-          event: '*',
-          schema: 'public',
-          table: 'product_list_items',
+          table: 'order_lists',
+          filter: `practice_id=eq.${practiceId}`,
         },
         callback
       )
       .subscribe();
   },
 
-  subscribeToUserProfile(
-    userId: string,
-    callback: (payload: RealtimePayload) => void
-  ) {
+  subscribeToOrderListItems(
+    callback: (payload: OrderListItemPayload) => void
+  ): RealtimeChannel {
     return supabase
-      .channel(`user_profile:${userId}`)
+      .channel('order_list_items')
       .on(
         'postgres_changes',
         {
           event: '*',
           schema: 'public',
-          table: 'practice_members',
-          filter: `user_id=eq.${userId}`,
+          table: 'order_list_items',
         },
         callback
       )
       .subscribe();
   },
 
-  // 🔄 NEW: Real-time inventory subscriptions
-  subscribeToInventory(
+  subscribeToStockLevels(
     practiceId: string,
-    callback: (payload: RealtimePayload) => void
-  ) {
+    callback: (payload: StockLevelPayload) => void
+  ): RealtimeChannel {
     return supabase
-      .channel(`inventory:${practiceId}`)
+      .channel(`stock_levels:${practiceId}`)
       .on(
         'postgres_changes',
         {
@@ -449,74 +484,31 @@ export const realtimeService = {
         },
         callback
       )
-      .on(
-        'postgres_changes',
-        {
-          event: '*',
-          schema: 'public',
-          table: 'stock_entries',
-          filter: `practice_id=eq.${practiceId}`,
-        },
-        callback
-      )
       .subscribe();
   },
 
-  // 🔄 NEW: Real-time stock movements subscription
-  subscribeToStockMovements(
-    practiceId: string,
-    callback: (payload: RealtimePayload) => void
-  ) {
+  subscribeToSupplierOrders(
+    callback: (payload: SupplierOrderPayload) => void
+  ): RealtimeChannel {
     return supabase
-      .channel(`stock_movements:${practiceId}`)
+      .channel('supplier_orders')
       .on(
         'postgres_changes',
         {
           event: '*',
           schema: 'public',
-          table: 'stock_entries',
-          filter: `practice_id=eq.${practiceId}`,
+          table: 'supplier_orders',
         },
         callback
       )
       .subscribe();
   },
 
-  // 🔄 NEW: Real-time counting sessions subscription
-  subscribeToCountingSessions(
-    practiceId: string,
-    callback: (payload: RealtimePayload) => void
-  ) {
-    return supabase
-      .channel(`counting:${practiceId}`)
-      .on(
-        'postgres_changes',
-        {
-          event: '*',
-          schema: 'public',
-          table: 'counting_sessions',
-          filter: `practice_id=eq.${practiceId}`,
-        },
-        callback
-      )
-      .on(
-        'postgres_changes',
-        {
-          event: '*',
-          schema: 'public',
-          table: 'counting_entries',
-          filter: `practice_id=eq.${practiceId}`,
-        },
-        callback
-      )
-      .subscribe();
-  },
-
-  // 🔄 NEW: Utility method to unsubscribe from channels
-  unsubscribeFromChannel(channel: RealtimeChannel) {
-    if (channel) {
-      return supabase.removeChannel(channel);
+  unsubscribe(channel: RealtimeChannel | null) {
+    if (!channel) {
+      return Promise.resolve();
     }
+    return supabase.removeChannel(channel);
   },
 };
 
