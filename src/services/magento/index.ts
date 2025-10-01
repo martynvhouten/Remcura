@@ -6,13 +6,7 @@ import {
 } from 'src/utils/service-error-handler';
 import { supabase } from 'src/services/supabase';
 import { useAuthStore } from 'src/stores/auth';
-import type {
-  MagentoConfig,
-  MagentoOrder,
-  MagentoOrderItem,
-  MagentoProduct,
-  MagentoSearchCriteria,
-} from '@/types/magento';
+import type { MagentoConfig } from '@/types/magento';
 
 export interface MagentoOrder {
   id: number;
@@ -155,7 +149,7 @@ class MagentoApiService {
       const controller = new AbortController();
       const timeoutId = setTimeout(
         () => controller.abort(),
-        this.config.timeout
+        this.config?.timeout ?? this.DEFAULT_TIMEOUT
       );
 
       const response = await fetch(url, {

@@ -2,7 +2,9 @@
 export interface MagentoConfig {
   baseUrl: string;
   adminToken: string;
+  token?: string; // Alias for adminToken, used by API service
   storeId?: number;
+  storeCode?: string; // Store view code
   timeout?: number;
 }
 
