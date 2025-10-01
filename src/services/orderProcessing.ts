@@ -8,6 +8,7 @@ import type {
   Product,
   OrderWithItems,
 } from '@/types/supabase';
+import type { MagentoOrder } from '@/types/magento';
 import { useAuthStore } from '@/stores/auth';
 
 export class OrderProcessingService {
@@ -20,7 +21,7 @@ export class OrderProcessingService {
     const practiceId = authStore.clinicId;
 
     if (!user || !practiceId) {
-      throw new Error($t('orderproce.usernotauthenticatedor'));
+      throw new Error('User not authenticated or no practice selected');
     }
 
     // Get cart details
@@ -39,17 +40,17 @@ export class OrderProcessingService {
       .single();
 
     if (cartError || !cart) {
-      throw new Error($t('orderproce.shoppingcartnotfound'));
+      throw new Error('Shopping cart not found');
     }
 
     // Generate order number
     const { data: orderNumber, error: numberError } = await supabase.rpc(
       'generate_order_number',
-      { practice_uuid: practiceId }
+      { practice_uuid: practiceId } as any
     );
 
     if (numberError || !orderNumber) {
-      throw new Error($t('orderproce.failedtogenerateorder'));
+      throw new Error('Failed to generate order number');
     }
 
     // Create order
@@ -69,7 +70,7 @@ export class OrderProcessingService {
       .single();
 
     if (orderError || !order) {
-      throw new Error($t('orderproce.failedtocreateorder'));
+      throw new Error('Failed to create order');
     }
 
     // Create order items from cart items
@@ -90,7 +91,7 @@ export class OrderProcessingService {
         .insert(orderItems);
 
       if (itemsError) {
-        throw new Error($t('orderproce.failedtocreateorder'));
+        throw new Error('Failed to create order items');
       }
     }
 
@@ -116,7 +117,7 @@ export class OrderProcessingService {
     const practiceId = authStore.clinicId;
 
     if (!practiceId) {
-      throw new Error($t('orderproce.nopracticeselected'));
+      throw new Error('No practice selected');
     }
 
     let query = supabase
@@ -150,7 +151,7 @@ export class OrderProcessingService {
     const { data, error } = await query;
 
     if (error) {
-      throw new Error($t('orderproce.failedtogetorders'));
+      throw new Error('Failed to get orders');
     }
 
     return data || [];
@@ -178,7 +179,7 @@ export class OrderProcessingService {
       .eq('id', orderId);
 
     if (error) {
-      throw new Error($t('orderproce.failedtoupdateorder'));
+      throw new Error('Failed to update order status');
     }
   }
 
@@ -190,7 +191,7 @@ export class OrderProcessingService {
     const order = orders.find(o => o.id === orderId);
 
     if (!order) {
-      throw new Error($t('orderproce.ordernotfound'));
+      throw new Error('Order not found');
     }
 
     const csvHeaders = [
@@ -250,8 +251,10 @@ export class OrderProcessingService {
         order.order_items.forEach(item => {
           csvRows.push([
             order.order_number,
-            new Date(order.order_date).toLocaleDateString(),
-            order.status,
+            order.order_date
+              ? new Date(order.order_date).toLocaleDateString()
+              : '',
+            order.status ?? '',
             order.suppliers?.name || '',
             item.products?.sku || '',
             item.products?.name || '',
@@ -265,8 +268,10 @@ export class OrderProcessingService {
       } else {
         csvRows.push([
           order.order_number,
-          new Date(order.order_date).toLocaleDateString(),
-          order.status,
+          order.order_date
+            ? new Date(order.order_date).toLocaleDateString()
+            : '',
+          order.status ?? '',
           order.suppliers?.name || '',
           '',
           '',
@@ -297,7 +302,7 @@ export class OrderProcessingService {
     const order = orders.find(o => o.id === orderId);
 
     if (!order) {
-      throw new Error($t('orderproce.ordernotfound'));
+      throw new Error('Order not found');
     }
 
     const htmlContent = this.generateOrderHTML(order);
@@ -343,9 +348,11 @@ export class OrderProcessingService {
         <div class="header">
           <h1>Remcura - Bestelling</h1>
           <p><strong>Order Number:</strong> ${order.order_number}</p>
-          <p><strong>Order Date:</strong> ${new Date(
+          <p><strong>Order Date:</strong> ${
             order.order_date
-          ).toLocaleDateString()}</p>
+              ? new Date(order.order_date).toLocaleDateString()
+              : 'N/A'
+          }</p>
           <p><strong>Status:</strong> ${order.status}</p>
           ${
             order.suppliers
@@ -402,7 +409,7 @@ export class OrderProcessingService {
     const order = orders.find(o => o.id === orderId);
 
     if (!order) {
-      throw new Error($t('orderproce.ordernotfound'));
+      throw new Error('Order not found');
     }
 
     const emailSubject = subject || `Order ${order.order_number} - Remcura`;
@@ -427,11 +434,11 @@ export class OrderProcessingService {
     const order = orders.find(o => o.id === orderId);
 
     if (!order) {
-      throw new Error($t('orderproce.ordernotfound'));
+      throw new Error('Order not found');
     }
 
     // Convert to Magento format
-    const magentoOrder: MagentoOrder = {
+    const magentoOrder: any = {
       status: 'pending',
       items:
         order.order_items?.map(item => ({
@@ -444,7 +451,7 @@ export class OrderProcessingService {
 
     // In a real implementation, you would call the Magento API here
     // For now, we'll simulate it
-    const simulatedResponse: MagentoOrder = {
+    const simulatedResponse: any = {
       ...magentoOrder,
       id: Math.floor(Math.random() * 10000),
       increment_id: `MAG-${Date.now()}`,
