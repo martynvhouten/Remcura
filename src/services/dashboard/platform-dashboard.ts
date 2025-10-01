@@ -80,7 +80,10 @@ class PlatformDashboardService {
         quickActions,
       };
     } catch (error) {
-      dashboardLogger.error('Error loading platform dashboard:', error);
+      dashboardLogger.error(
+        'Error loading platform dashboard:',
+        error as Record<string, unknown>
+      );
       throw error;
     }
   }
@@ -149,7 +152,10 @@ class PlatformDashboardService {
         systemHealth,
       };
     } catch (error) {
-      dashboardLogger.error('Error loading platform metrics:', error);
+      dashboardLogger.error(
+        'Error loading platform metrics:',
+        error as Record<string, unknown>
+      );
       return {
         totalPractices: 0,
         totalUsers: 0,
@@ -172,7 +178,7 @@ class PlatformDashboardService {
         }
       } catch (error) {
         ServiceErrorHandler.handle(
-          error,
+          error as Error,
           {
             service: 'PlatformDashboardService',
             operation: 'loadWidget',
@@ -497,20 +503,24 @@ class PlatformDashboardService {
 
     // Group by day
     const dailyMetrics: Record<string, number> = {};
-    const last7Days = [];
+    const last7Days: string[] = [];
 
     for (let i = 6; i >= 0; i--) {
       const date = new Date(Date.now() - i * 24 * 60 * 60 * 1000)
         .toISOString()
         .split('T')[0];
-      last7Days.push(date);
-      dailyMetrics[date] = 0;
+      if (date) {
+        last7Days.push(date);
+        dailyMetrics[date] = 0;
+      }
     }
 
     data?.forEach(event => {
-      const day = event.created_at.split('T')[0];
-      if (Object.prototype.hasOwnProperty.call(dailyMetrics, day)) {
-        dailyMetrics[day]++;
+      if (event.created_at) {
+        const day = event.created_at.split('T')[0];
+        if (day && Object.prototype.hasOwnProperty.call(dailyMetrics, day)) {
+          dailyMetrics[day]++;
+        }
       }
     });
 
