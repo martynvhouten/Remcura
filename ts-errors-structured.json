@@ -1,0 +1,3572 @@
+﻿[
+  {
+    "File": "src/composables/useBulkData.ts",
+    "Line": 78,
+    "Col": 9,
+    "Code": "TS2532",
+    "Message": "Object is possibly \u0027undefined\u0027."
+  },
+  {
+    "File": "src/composables/useBulkData.ts",
+    "Line": 122,
+    "Col": 8,
+    "Code": "TS2352",
+    "Message": "Conversion of type \u0027SelectQueryError\u003c\"column \u0027unit_price\u0027 does not exist on \u0027supplier_products\u0027.\"\u003e[]\u0027 to type \u0027SupplierProductRecord[]\u0027 may be a mistake because neither type sufficiently overlaps with the other. If this was intentional, convert the expression to \u0027unknown\u0027 first."
+  },
+  {
+    "File": "src/composables/useBulkData.ts",
+    "Line": 126,
+    "Col": 9,
+    "Code": "TS2532",
+    "Message": "Object is possibly \u0027undefined\u0027."
+  },
+  {
+    "File": "src/composables/useBulkData.ts",
+    "Line": 169,
+    "Col": 8,
+    "Code": "TS2352",
+    "Message": "Conversion of type \u0027SelectQueryError\u003c\"column \u0027quantity_remaining\u0027 does not exist on \u0027product_batches\u0027.\"\u003e[]\u0027 to type \u0027ProductBatchRecord[]\u0027 may be a mistake because neither type sufficiently overlaps with the other. If this was intentional, convert the expression to \u0027unknown\u0027 first."
+  },
+  {
+    "File": "src/composables/useBulkData.ts",
+    "Line": 173,
+    "Col": 9,
+    "Code": "TS2532",
+    "Message": "Object is possibly \u0027undefined\u0027."
+  },
+  {
+    "File": "src/composables/useBulkData.ts",
+    "Line": 200,
+    "Col": 15,
+    "Code": "TS2769",
+    "Message": "No overload matches this call."
+  },
+  {
+    "File": "src/composables/useBulkData.ts",
+    "Line": 205,
+    "Col": 31,
+    "Code": "TS2345",
+    "Message": "Argument of type \u0027string | number | boolean | null\u0027 is not assignable to parameter of type \u0027{}\u0027."
+  },
+  {
+    "File": "src/composables/useBulkData.ts",
+    "Line": 213,
+    "Col": 8,
+    "Code": "TS2352",
+    "Message": "Conversion of type \u0027GenericStringError[]\u0027 to type \u0027T[]\u0027 may be a mistake because neither type sufficiently overlaps with the other. If this was intentional, convert the expression to \u0027unknown\u0027 first."
+  },
+  {
+    "File": "src/composables/useButtons.ts",
+    "Line": 86,
+    "Col": 7,
+    "Code": "TS2353",
+    "Message": "Object literal may only specify known properties, and \u0027class\u0027 does not exist in type \u0027ButtonConfig\u0027."
+  },
+  {
+    "File": "src/composables/useButtons.ts",
+    "Line": 86,
+    "Col": 22,
+    "Code": "TS2339",
+    "Message": "Property \u0027class\u0027 does not exist on type \u0027Partial\u003cButtonConfig\u003e\u0027."
+  },
+  {
+    "File": "src/composables/useButtons.ts",
+    "Line": 86,
+    "Col": 46,
+    "Code": "TS2339",
+    "Message": "Property \u0027class\u0027 does not exist on type \u0027Partial\u003cButtonConfig\u003e\u0027."
+  },
+  {
+    "File": "src/composables/useButtons.ts",
+    "Line": 96,
+    "Col": 37,
+    "Code": "TS2345",
+    "Message": "Argument of type \u0027{ readonly color: \"primary\"; readonly class: \"btn-modern\"; readonly noCaps: true; } | { readonly color: \"secondary\"; readonly class: \"btn-modern\"; readonly noCaps: true; } | { readonly color: \"positive\"; readonly class: \"btn-modern\"; readonly noCaps: true; } | ... 8 more ... | { ...; }\u0027 is not assignable to parameter of type \u0027Partial\u003cButtonConfig\u003e\u0027."
+  },
+  {
+    "File": "src/composables/useDebounce.ts",
+    "Line": 75,
+    "Col": 39,
+    "Code": "TS2345",
+    "Message": "Argument of type \u0027(newValue: T) =\u003e void\u0027 is not assignable to parameter of type \u0027GenericFunction\u0027."
+  },
+  {
+    "File": "src/composables/useFormValidation.ts",
+    "Line": 196,
+    "Col": 7,
+    "Code": "TS2353",
+    "Message": "Object literal may only specify known properties, and \u0027value\u0027 does not exist in type \u0027FieldValidation\u0027."
+  },
+  {
+    "File": "src/composables/useFormValidation.ts",
+    "Line": 211,
+    "Col": 32,
+    "Code": "TS2339",
+    "Message": "Property \u0027validate\u0027 does not exist on type \u0027FieldValidation\u0027."
+  },
+  {
+    "File": "src/composables/useFormValidation.ts",
+    "Line": 214,
+    "Col": 50,
+    "Code": "TS2339",
+    "Message": "Property \u0027error\u0027 does not exist on type \u0027FieldValidation\u0027."
+  },
+  {
+    "File": "src/composables/useFormValidation.ts",
+    "Line": 226,
+    "Col": 39,
+    "Code": "TS2345",
+    "Message": "Argument of type \u0027(value: string) =\u003e boolean | string\u0027 is not assignable to parameter of type \u0027(value: unknown) =\u003e boolean | string\u0027."
+  },
+  {
+    "File": "src/composables/useFormValidation.ts",
+    "Line": 227,
+    "Col": 39,
+    "Code": "TS2345",
+    "Message": "Argument of type \u0027(value: string) =\u003e boolean | string\u0027 is not assignable to parameter of type \u0027(value: unknown) =\u003e boolean | string\u0027."
+  },
+  {
+    "File": "src/composables/useFormValidation.ts",
+    "Line": 250,
+    "Col": 36,
+    "Code": "TS2345",
+    "Message": "Argument of type \u0027(value: string) =\u003e boolean | string\u0027 is not assignable to parameter of type \u0027(value: unknown) =\u003e boolean | string\u0027."
+  },
+  {
+    "File": "src/composables/useOffline.ts",
+    "Line": 89,
+    "Col": 29,
+    "Code": "TS2304",
+    "Message": "Cannot find name \u0027translations\u0027."
+  },
+  {
+    "File": "src/composables/useSmartTable.ts",
+    "Line": 58,
+    "Col": 43,
+    "Code": "TS2379",
+    "Message": "Argument of type \u0027{ sortBy: undefined; descending: false; page: number; rowsPerPage: number; rowsNumber: number; }\u0027 is not assignable to parameter of type \u0027TablePagination\u0027 with \u0027exactOptionalPropertyTypes: true\u0027. Consider adding \u0027undefined\u0027 to the types of the target\u0027s properties."
+  },
+  {
+    "File": "src/composables/useSmartTable.ts",
+    "Line": 173,
+    "Col": 7,
+    "Code": "TS2345",
+    "Message": "Argument of type \u0027UnwrapRefSimple\u003cRow\u003e[]\u0027 is not assignable to parameter of type \u0027Row[]\u0027."
+  },
+  {
+    "File": "src/composables/useSmartTable.ts",
+    "Line": 221,
+    "Col": 5,
+    "Code": "TS2412",
+    "Message": "Type \u0027string | undefined\u0027 is not assignable to type \u0027string\u0027 with \u0027exactOptionalPropertyTypes: true\u0027. Consider adding \u0027undefined\u0027 to the type of the target."
+  },
+  {
+    "File": "src/composables/useTableSorting.ts",
+    "Line": 21,
+    "Col": 43,
+    "Code": "TS2379",
+    "Message": "Argument of type \u0027{ sortBy: string; descending: boolean; page: number; rowsPerPage: number; rowsNumber: number; }\u0027 is not assignable to parameter of type \u0027TablePagination\u0027 with \u0027exactOptionalPropertyTypes: true\u0027. Consider adding \u0027undefined\u0027 to the types of the target\u0027s properties."
+  },
+  {
+    "File": "src/composables/useTableSorting.ts",
+    "Line": 36,
+    "Col": 5,
+    "Code": "TS2412",
+    "Message": "Type \u0027string | undefined\u0027 is not assignable to type \u0027string\u0027 with \u0027exactOptionalPropertyTypes: true\u0027. Consider adding \u0027undefined\u0027 to the type of the target."
+  },
+  {
+    "File": "src/composables/useTableSorting.ts",
+    "Line": 37,
+    "Col": 5,
+    "Code": "TS2412",
+    "Message": "Type \u0027boolean | undefined\u0027 is not assignable to type \u0027boolean\u0027 with \u0027exactOptionalPropertyTypes: true\u0027. Consider adding \u0027undefined\u0027 to the type of the target."
+  },
+  {
+    "File": "src/composables/useTableSorting.ts",
+    "Line": 74,
+    "Col": 32,
+    "Code": "TS2769",
+    "Message": "No overload matches this call."
+  },
+  {
+    "File": "src/composables/useTableSorting.ts",
+    "Line": 75,
+    "Col": 32,
+    "Code": "TS2769",
+    "Message": "No overload matches this call."
+  },
+  {
+    "File": "src/composables/useTableSorting.ts",
+    "Line": 129,
+    "Col": 27,
+    "Code": "TS2769",
+    "Message": "No overload matches this call."
+  },
+  {
+    "File": "src/domain/inventory/bridge.ts",
+    "Line": 103,
+    "Col": 8,
+    "Code": "TS2552",
+    "Message": "Cannot find name \u0027ProductRow\u0027. Did you mean \u0027ProductDTO\u0027?"
+  },
+  {
+    "File": "src/domain/inventory/bridge.ts",
+    "Line": 328,
+    "Col": 35,
+    "Code": "TS2339",
+    "Message": "Property \u0027lifecycleStatus\u0027 does not exist on type \u0027ProductWithStock\u0027."
+  },
+  {
+    "File": "src/domain/inventory/bridge.ts",
+    "Line": 338,
+    "Col": 32,
+    "Code": "TS2339",
+    "Message": "Property \u0027preferredSupplierId\u0027 does not exist on type \u0027ProductWithStock\u0027."
+  },
+  {
+    "File": "src/domain/inventory/bridge.ts",
+    "Line": 339,
+    "Col": 25,
+    "Code": "TS2339",
+    "Message": "Property \u0027minimumStock\u0027 does not exist on type \u0027ProductWithStock\u0027."
+  },
+  {
+    "File": "src/domain/inventory/dto.ts",
+    "Line": 56,
+    "Col": 13,
+    "Code": "TS2304",
+    "Message": "Cannot find name \u0027ProductBatchSummary\u0027."
+  },
+  {
+    "File": "src/i18n/index.ts",
+    "Line": 46,
+    "Col": 3,
+    "Code": "TS2769",
+    "Message": "No overload matches this call."
+  },
+  {
+    "File": "src/i18n/nl/index.ts",
+    "Line": 8911,
+    "Col": 3,
+    "Code": "TS1117",
+    "Message": "An object literal cannot have multiple properties with the same name."
+  },
+  {
+    "File": "src/i18n/nl/index.ts",
+    "Line": 8912,
+    "Col": 3,
+    "Code": "TS1117",
+    "Message": "An object literal cannot have multiple properties with the same name."
+  },
+  {
+    "File": "src/main.ts",
+    "Line": 14,
+    "Col": 10,
+    "Code": "TS2305",
+    "Message": "Module \u0027\"@/utils/service-error-handler\"\u0027 has no exported member \u0027ErrorHandler\u0027."
+  },
+  {
+    "File": "src/main.ts",
+    "Line": 50,
+    "Col": 32,
+    "Code": "TS2345",
+    "Message": "Argument of type \u0027RouteCallback\u0027 is not assignable to parameter of type \u0027Router\u0027."
+  },
+  {
+    "File": "src/presets/filters/advancedOrderLists.ts",
+    "Line": 21,
+    "Col": 7,
+    "Code": "TS2353",
+    "Message": "Object literal may only specify known properties, and \u0027options\u0027 does not exist in type \u0027FilterField\u0027."
+  },
+  {
+    "File": "src/presets/filters/advancedOrderLists.ts",
+    "Line": 36,
+    "Col": 7,
+    "Code": "TS2353",
+    "Message": "Object literal may only specify known properties, and \u0027options\u0027 does not exist in type \u0027FilterField\u0027."
+  },
+  {
+    "File": "src/presets/filters/advancedOrderLists.ts",
+    "Line": 45,
+    "Col": 7,
+    "Code": "TS2353",
+    "Message": "Object literal may only specify known properties, and \u0027options\u0027 does not exist in type \u0027FilterField\u0027."
+  },
+  {
+    "File": "src/presets/filters/advancedOrderLists.ts",
+    "Line": 58,
+    "Col": 7,
+    "Code": "TS2322",
+    "Message": "Type \u0027\"toggle\"\u0027 is not assignable to type \u0027FilterFieldType\u0027."
+  },
+  {
+    "File": "src/presets/filters/inventory.ts",
+    "Line": 124,
+    "Col": 7,
+    "Code": "TS2353",
+    "Message": "Object literal may only specify known properties, and \u0027tooltip\u0027 does not exist in type \u0027FilterField\u0027."
+  },
+  {
+    "File": "src/presets/filters/orderLists.ts",
+    "Line": 109,
+    "Col": 9,
+    "Code": "TS2353",
+    "Message": "Object literal may only specify known properties, and \u0027start\u0027 does not exist in type \u0027{ min?: string; max?: string; }\u0027."
+  },
+  {
+    "File": "src/presets/filters/orderLists.ts",
+    "Line": 142,
+    "Col": 7,
+    "Code": "TS2322",
+    "Message": "Type \u0027\"checkbox\"\u0027 is not assignable to type \u0027\"outlined\" | \"filled\" | \"standard\" | \"toggle\" | \"switch\" | \"chip\"\u0027."
+  },
+  {
+    "File": "src/presets/filters/products.ts",
+    "Line": 29,
+    "Col": 7,
+    "Code": "TS2322",
+    "Message": "Type \u0027\"large\"\u0027 is not assignable to type \u0027\"xs\" | \"sm\" | \"md\" | \"lg\"\u0027."
+  },
+  {
+    "File": "src/presets/filters/products.ts",
+    "Line": 51,
+    "Col": 7,
+    "Code": "TS2322",
+    "Message": "Type \u0027\"medium\"\u0027 is not assignable to type \u0027\"xs\" | \"sm\" | \"md\" | \"lg\"\u0027."
+  },
+  {
+    "File": "src/presets/filters/products.ts",
+    "Line": 71,
+    "Col": 7,
+    "Code": "TS2322",
+    "Message": "Type \u0027\"medium\"\u0027 is not assignable to type \u0027\"xs\" | \"sm\" | \"md\" | \"lg\"\u0027."
+  },
+  {
+    "File": "src/presets/filters/products.ts",
+    "Line": 107,
+    "Col": 7,
+    "Code": "TS2322",
+    "Message": "Type \u0027\"medium\"\u0027 is not assignable to type \u0027\"xs\" | \"sm\" | \"md\" | \"lg\"\u0027."
+  },
+  {
+    "File": "src/presets/filters/products.ts",
+    "Line": 123,
+    "Col": 7,
+    "Code": "TS2322",
+    "Message": "Type \u0027\"medium\"\u0027 is not assignable to type \u0027\"xs\" | \"sm\" | \"md\" | \"lg\"\u0027."
+  },
+  {
+    "File": "src/presets/filters/products.ts",
+    "Line": 136,
+    "Col": 7,
+    "Code": "TS2322",
+    "Message": "Type \u0027\"small\"\u0027 is not assignable to type \u0027\"xs\" | \"sm\" | \"md\" | \"lg\"\u0027."
+  },
+  {
+    "File": "src/presets/filters/products.ts",
+    "Line": 151,
+    "Col": 7,
+    "Code": "TS2322",
+    "Message": "Type \u0027\"medium\"\u0027 is not assignable to type \u0027\"xs\" | \"sm\" | \"md\" | \"lg\"\u0027."
+  },
+  {
+    "File": "src/presets/filters/products.ts",
+    "Line": 176,
+    "Col": 7,
+    "Code": "TS2322",
+    "Message": "Type \u0027\"medium\"\u0027 is not assignable to type \u0027\"xs\" | \"sm\" | \"md\" | \"lg\"\u0027."
+  },
+  {
+    "File": "src/presets/filters/products.ts",
+    "Line": 200,
+    "Col": 7,
+    "Code": "TS2322",
+    "Message": "Type \u0027\"medium\"\u0027 is not assignable to type \u0027\"xs\" | \"sm\" | \"md\" | \"lg\"\u0027."
+  },
+  {
+    "File": "src/presets/filters/products.ts",
+    "Line": 238,
+    "Col": 7,
+    "Code": "TS2322",
+    "Message": "Type \u0027\"medium\"\u0027 is not assignable to type \u0027\"xs\" | \"sm\" | \"md\" | \"lg\"\u0027."
+  },
+  {
+    "File": "src/router/routes.ts",
+    "Line": 3,
+    "Col": 3,
+    "Code": "TS2459",
+    "Message": "Module \u0027\"@/services/permissions\"\u0027 declares \u0027UserRole\u0027 locally, but it is not exported."
+  },
+  {
+    "File": "src/router/routes.ts",
+    "Line": 4,
+    "Col": 3,
+    "Code": "TS2459",
+    "Message": "Module \u0027\"@/services/permissions\"\u0027 declares \u0027PermissionType\u0027 locally, but it is not exported."
+  },
+  {
+    "File": "src/router/routes.ts",
+    "Line": 5,
+    "Col": 3,
+    "Code": "TS2459",
+    "Message": "Module \u0027\"@/services/permissions\"\u0027 declares \u0027ResourceType\u0027 locally, but it is not exported."
+  },
+  {
+    "File": "src/services/admin.ts",
+    "Line": 3,
+    "Col": 3,
+    "Code": "TS2305",
+    "Message": "Module \u0027\"@/types/supabase\"\u0027 has no exported member \u0027Location\u0027."
+  },
+  {
+    "File": "src/services/admin.ts",
+    "Line": 4,
+    "Col": 3,
+    "Code": "TS2305",
+    "Message": "Module \u0027\"@/types/supabase\"\u0027 has no exported member \u0027LocationInsert\u0027."
+  },
+  {
+    "File": "src/services/admin.ts",
+    "Line": 5,
+    "Col": 3,
+    "Code": "TS2305",
+    "Message": "Module \u0027\"@/types/supabase\"\u0027 has no exported member \u0027LocationUpdate\u0027."
+  },
+  {
+    "File": "src/services/admin.ts",
+    "Line": 6,
+    "Col": 3,
+    "Code": "TS2305",
+    "Message": "Module \u0027\"@/types/supabase\"\u0027 has no exported member \u0027UserPermission\u0027."
+  },
+  {
+    "File": "src/services/admin.ts",
+    "Line": 7,
+    "Col": 3,
+    "Code": "TS2305",
+    "Message": "Module \u0027\"@/types/supabase\"\u0027 has no exported member \u0027UserPermissionInsert\u0027."
+  },
+  {
+    "File": "src/services/admin.ts",
+    "Line": 84,
+    "Col": 45,
+    "Code": "TS2345",
+    "Message": "Argument of type \u0027\"practice\"\u0027 is not assignable to parameter of type \u0027ResourceType\u0027."
+  },
+  {
+    "File": "src/services/admin.ts",
+    "Line": 142,
+    "Col": 45,
+    "Code": "TS2345",
+    "Message": "Argument of type \u0027\"practice\"\u0027 is not assignable to parameter of type \u0027ResourceType\u0027."
+  },
+  {
+    "File": "src/services/admin.ts",
+    "Line": 160,
+    "Col": 31,
+    "Code": "TS2339",
+    "Message": "Property \u0027authStore\u0027 does not exist on type \u0027AdminService\u0027."
+  },
+  {
+    "File": "src/services/admin.ts",
+    "Line": 185,
+    "Col": 45,
+    "Code": "TS2345",
+    "Message": "Argument of type \u0027\"practice\"\u0027 is not assignable to parameter of type \u0027ResourceType\u0027."
+  },
+  {
+    "File": "src/services/admin.ts",
+    "Line": 240,
+    "Col": 45,
+    "Code": "TS2345",
+    "Message": "Argument of type \u0027\"practice\"\u0027 is not assignable to parameter of type \u0027ResourceType\u0027."
+  },
+  {
+    "File": "src/services/admin.ts",
+    "Line": 282,
+    "Col": 45,
+    "Code": "TS2345",
+    "Message": "Argument of type \u0027\"practice\"\u0027 is not assignable to parameter of type \u0027ResourceType\u0027."
+  },
+  {
+    "File": "src/services/admin.ts",
+    "Line": 474,
+    "Col": 23,
+    "Code": "TS2304",
+    "Message": "Cannot find name \u0027$t\u0027."
+  },
+  {
+    "File": "src/services/admin.ts",
+    "Line": 478,
+    "Col": 44,
+    "Code": "TS2345",
+    "Message": "Argument of type \u0027\"practice\"\u0027 is not assignable to parameter of type \u0027ResourceType\u0027."
+  },
+  {
+    "File": "src/services/admin.ts",
+    "Line": 479,
+    "Col": 23,
+    "Code": "TS2304",
+    "Message": "Cannot find name \u0027$t\u0027."
+  },
+  {
+    "File": "src/services/admin.ts",
+    "Line": 553,
+    "Col": 45,
+    "Code": "TS2345",
+    "Message": "Argument of type \u0027\"practice\"\u0027 is not assignable to parameter of type \u0027ResourceType\u0027."
+  },
+  {
+    "File": "src/services/admin.ts",
+    "Line": 554,
+    "Col": 23,
+    "Code": "TS2304",
+    "Message": "Cannot find name \u0027$t\u0027."
+  },
+  {
+    "File": "src/services/admin.ts",
+    "Line": 562,
+    "Col": 38,
+    "Code": "TS2551",
+    "Message": "Property \u0027event_data\u0027 does not exist on type \u0027UsageAnalytics\u0027. Did you mean \u0027eventData\u0027?"
+  },
+  {
+    "File": "src/services/admin.ts",
+    "Line": 566,
+    "Col": 17,
+    "Code": "TS2551",
+    "Message": "Property \u0027event_data\u0027 does not exist on type \u0027UsageAnalytics\u0027. Did you mean \u0027eventData\u0027?"
+  },
+  {
+    "File": "src/services/admin.ts",
+    "Line": 573,
+    "Col": 28,
+    "Code": "TS2551",
+    "Message": "Property \u0027practice_id\u0027 does not exist on type \u0027UsageAnalytics\u0027. Did you mean \u0027practiceId\u0027?"
+  },
+  {
+    "File": "src/services/admin.ts",
+    "Line": 574,
+    "Col": 24,
+    "Code": "TS2551",
+    "Message": "Property \u0027user_id\u0027 does not exist on type \u0027UsageAnalytics\u0027. Did you mean \u0027userId\u0027?"
+  },
+  {
+    "File": "src/services/admin.ts",
+    "Line": 575,
+    "Col": 23,
+    "Code": "TS2551",
+    "Message": "Property \u0027event_data\u0027 does not exist on type \u0027UsageAnalytics\u0027. Did you mean \u0027eventData\u0027?"
+  },
+  {
+    "File": "src/services/admin.ts",
+    "Line": 576,
+    "Col": 30,
+    "Code": "TS2551",
+    "Message": "Property \u0027event_data\u0027 does not exist on type \u0027UsageAnalytics\u0027. Did you mean \u0027eventData\u0027?"
+  },
+  {
+    "File": "src/services/admin.ts",
+    "Line": 577,
+    "Col": 28,
+    "Code": "TS2551",
+    "Message": "Property \u0027event_data\u0027 does not exist on type \u0027UsageAnalytics\u0027. Did you mean \u0027eventData\u0027?"
+  },
+  {
+    "File": "src/services/admin.ts",
+    "Line": 578,
+    "Col": 27,
+    "Code": "TS2551",
+    "Message": "Property \u0027event_data\u0027 does not exist on type \u0027UsageAnalytics\u0027. Did you mean \u0027eventData\u0027?"
+  },
+  {
+    "File": "src/services/admin.ts",
+    "Line": 579,
+    "Col": 27,
+    "Code": "TS2551",
+    "Message": "Property \u0027event_data\u0027 does not exist on type \u0027UsageAnalytics\u0027. Did you mean \u0027eventData\u0027?"
+  },
+  {
+    "File": "src/services/admin.ts",
+    "Line": 580,
+    "Col": 25,
+    "Code": "TS2551",
+    "Message": "Property \u0027event_data\u0027 does not exist on type \u0027UsageAnalytics\u0027. Did you mean \u0027eventData\u0027?"
+  },
+  {
+    "File": "src/services/admin.ts",
+    "Line": 581,
+    "Col": 35,
+    "Code": "TS2551",
+    "Message": "Property \u0027created_at\u0027 does not exist on type \u0027UsageAnalytics\u0027. Did you mean \u0027createdAt\u0027?"
+  },
+  {
+    "File": "src/services/admin.ts",
+    "Line": 582,
+    "Col": 27,
+    "Code": "TS2551",
+    "Message": "Property \u0027ip_address\u0027 does not exist on type \u0027UsageAnalytics\u0027. Did you mean \u0027ipAddress\u0027?"
+  },
+  {
+    "File": "src/services/admin.ts",
+    "Line": 583,
+    "Col": 27,
+    "Code": "TS2551",
+    "Message": "Property \u0027user_agent\u0027 does not exist on type \u0027UsageAnalytics\u0027. Did you mean \u0027userAgent\u0027?"
+  },
+  {
+    "File": "src/services/admin.ts",
+    "Line": 602,
+    "Col": 45,
+    "Code": "TS2345",
+    "Message": "Argument of type \u0027\"practice\"\u0027 is not assignable to parameter of type \u0027ResourceType\u0027."
+  },
+  {
+    "File": "src/services/admin.ts",
+    "Line": 707,
+    "Col": 45,
+    "Code": "TS2345",
+    "Message": "Argument of type \u0027\"practice\"\u0027 is not assignable to parameter of type \u0027ResourceType\u0027."
+  },
+  {
+    "File": "src/services/admin.ts",
+    "Line": 745,
+    "Col": 14,
+    "Code": "TS2304",
+    "Message": "Cannot find name \u0027profile\u0027."
+  },
+  {
+    "File": "src/services/admin.ts",
+    "Line": 761,
+    "Col": 45,
+    "Code": "TS2345",
+    "Message": "Argument of type \u0027\"practice\"\u0027 is not assignable to parameter of type \u0027ResourceType\u0027."
+  },
+  {
+    "File": "src/services/admin.ts",
+    "Line": 784,
+    "Col": 9,
+    "Code": "TS2367",
+    "Message": "This comparison appears to be unintentional because the types \u0027\"owner\" | \"manager\" | \"assistant\" | \"logistics\" | \"member\" | \"guest\" | \"platform_owner\"\u0027 and \u0027\"inactive\"\u0027 have no overlap."
+  },
+  {
+    "File": "src/services/admin.ts",
+    "Line": 792,
+    "Col": 9,
+    "Code": "TS2322",
+    "Message": "Type \u0027\"owner\" | \"manager\" | \"assistant\" | \"logistics\" | \"member\" | \"guest\" | \"platform_owner\" | \"inactive\"\u0027 is not assignable to type \u0027\"owner\" | \"manager\" | \"assistant\" | \"logistics\" | \"member\" | \"guest\" | \"platform_owner\"\u0027."
+  },
+  {
+    "File": "src/services/admin.ts",
+    "Line": 832,
+    "Col": 45,
+    "Code": "TS2345",
+    "Message": "Argument of type \u0027\"practice\"\u0027 is not assignable to parameter of type \u0027ResourceType\u0027."
+  },
+  {
+    "File": "src/services/admin.ts",
+    "Line": 833,
+    "Col": 23,
+    "Code": "TS2304",
+    "Message": "Cannot find name \u0027$t\u0027."
+  },
+  {
+    "File": "src/services/admin.ts",
+    "Line": 841,
+    "Col": 11,
+    "Code": "TS2345",
+    "Message": "Argument of type \u0027\"bestellijst\"\u0027 is not assignable to parameter of type \u0027ResourceType\u0027."
+  },
+  {
+    "File": "src/services/dashboard/platform-dashboard.ts",
+    "Line": 83,
+    "Col": 66,
+    "Code": "TS2345",
+    "Message": "Argument of type \u0027unknown\u0027 is not assignable to parameter of type \u0027LogData\u0027."
+  },
+  {
+    "File": "src/services/dashboard/platform-dashboard.ts",
+    "Line": 152,
+    "Col": 64,
+    "Code": "TS2345",
+    "Message": "Argument of type \u0027unknown\u0027 is not assignable to parameter of type \u0027LogData\u0027."
+  },
+  {
+    "File": "src/services/dashboard/platform-dashboard.ts",
+    "Line": 169,
+    "Col": 46,
+    "Code": "TS2345",
+    "Message": "Argument of type \u0027string | undefined\u0027 is not assignable to parameter of type \u0027string\u0027."
+  },
+  {
+    "File": "src/services/dashboard/platform-dashboard.ts",
+    "Line": 175,
+    "Col": 11,
+    "Code": "TS2345",
+    "Message": "Argument of type \u0027unknown\u0027 is not assignable to parameter of type \u0027ErrorLike\u0027."
+  },
+  {
+    "File": "src/services/dashboard/platform-dashboard.ts",
+    "Line": 186,
+    "Col": 11,
+    "Code": "TS2322",
+    "Message": "Type \u0027string | undefined\u0027 is not assignable to type \u0027string\u0027."
+  },
+  {
+    "File": "src/services/dashboard/platform-dashboard.ts",
+    "Line": 187,
+    "Col": 38,
+    "Code": "TS2345",
+    "Message": "Argument of type \u0027string | undefined\u0027 is not assignable to parameter of type \u0027string\u0027."
+  },
+  {
+    "File": "src/services/dashboard/platform-dashboard.ts",
+    "Line": 427,
+    "Col": 22,
+    "Code": "TS2769",
+    "Message": "No overload matches this call."
+  },
+  {
+    "File": "src/services/dashboard/platform-dashboard.ts",
+    "Line": 507,
+    "Col": 20,
+    "Code": "TS2538",
+    "Message": "Type \u0027undefined\u0027 cannot be used as an index type."
+  },
+  {
+    "File": "src/services/dashboard/platform-dashboard.ts",
+    "Line": 511,
+    "Col": 19,
+    "Code": "TS18047",
+    "Message": "\u0027event.created_at\u0027 is possibly \u0027null\u0027."
+  },
+  {
+    "File": "src/services/dashboard/platform-dashboard.ts",
+    "Line": 512,
+    "Col": 62,
+    "Code": "TS2345",
+    "Message": "Argument of type \u0027string | undefined\u0027 is not assignable to parameter of type \u0027PropertyKey\u0027."
+  },
+  {
+    "File": "src/services/dashboard/platform-dashboard.ts",
+    "Line": 513,
+    "Col": 22,
+    "Code": "TS2538",
+    "Message": "Type \u0027undefined\u0027 cannot be used as an index type."
+  },
+  {
+    "File": "src/services/dashboard/platform-dashboard.ts",
+    "Line": 519,
+    "Col": 46,
+    "Code": "TS2769",
+    "Message": "No overload matches this call."
+  },
+  {
+    "File": "src/services/dashboard/platform-dashboard.ts",
+    "Line": 523,
+    "Col": 52,
+    "Code": "TS2538",
+    "Message": "Type \u0027undefined\u0027 cannot be used as an index type."
+  },
+  {
+    "File": "src/services/dashboard/platform-dashboard.ts",
+    "Line": 553,
+    "Col": 11,
+    "Code": "TS2345",
+    "Message": "Argument of type \u0027unknown\u0027 is not assignable to parameter of type \u0027ErrorLike\u0027."
+  },
+  {
+    "File": "src/services/dashboard/platform-dashboard.ts",
+    "Line": 611,
+    "Col": 11,
+    "Code": "TS2322",
+    "Message": "Type \u0027string | null\u0027 is not assignable to type \u0027string\u0027."
+  },
+  {
+    "File": "src/services/dashboard/platform-dashboard.ts",
+    "Line": 616,
+    "Col": 7,
+    "Code": "TS2532",
+    "Message": "Object is possibly \u0027undefined\u0027."
+  },
+  {
+    "File": "src/services/dashboard/platform-dashboard.ts",
+    "Line": 617,
+    "Col": 7,
+    "Code": "TS2532",
+    "Message": "Object is possibly \u0027undefined\u0027."
+  },
+  {
+    "File": "src/services/dashboard/platform-dashboard.ts",
+    "Line": 621,
+    "Col": 20,
+    "Code": "TS2769",
+    "Message": "No overload matches this call."
+  },
+  {
+    "File": "src/services/dashboard/platform-dashboard.ts",
+    "Line": 621,
+    "Col": 49,
+    "Code": "TS2532",
+    "Message": "Object is possibly \u0027undefined\u0027."
+  },
+  {
+    "File": "src/services/dashboard/platform-dashboard.ts",
+    "Line": 622,
+    "Col": 9,
+    "Code": "TS2532",
+    "Message": "Object is possibly \u0027undefined\u0027."
+  },
+  {
+    "File": "src/services/dashboard/platform-dashboard.ts",
+    "Line": 622,
+    "Col": 9,
+    "Code": "TS2322",
+    "Message": "Type \u0027string | null\u0027 is not assignable to type \u0027string\u0027."
+  },
+  {
+    "File": "src/services/dashboard/practice-dashboard.ts",
+    "Line": 15,
+    "Col": 31,
+    "Code": "TS2375",
+    "Message": "Type \u0027{ productId: string; locationId: string; currentQuantity: number; minimumQuantity: number; reservedQuantity: number; availableQuantity: number; productName: string | undefined; locationName: string | undefined; preferredSupplierId: string | undefined; updatedAt: string | undefined; }\u0027 is not assignable to type \u0027AnalyticsStockLevelDTO\u0027 with \u0027exactOptionalPropertyTypes: true\u0027. Consider adding \u0027undefined\u0027 to the types of the target\u0027s properties."
+  },
+  {
+    "File": "src/services/dashboard/practice-dashboard.ts",
+    "Line": 130,
+    "Col": 29,
+    "Code": "TS2339",
+    "Message": "Property \u0027normalizeError\u0027 does not exist on type \u0027typeof ServiceErrorHandler\u0027."
+  },
+  {
+    "File": "src/services/dashboard/practice-dashboard.ts",
+    "Line": 222,
+    "Col": 20,
+    "Code": "TS18047",
+    "Message": "\u0027stock.current_quantity\u0027 is possibly \u0027null\u0027."
+  },
+  {
+    "File": "src/services/dashboard/practice-dashboard.ts",
+    "Line": 226,
+    "Col": 62,
+    "Code": "TS2345",
+    "Message": "Argument of type \u0027string | null\u0027 is not assignable to parameter of type \u0027string\u0027."
+  },
+  {
+    "File": "src/services/dashboard/practice-dashboard.ts",
+    "Line": 234,
+    "Col": 26,
+    "Code": "TS18047",
+    "Message": "\u0027item.current_quantity\u0027 is possibly \u0027null\u0027."
+  },
+  {
+    "File": "src/services/dashboard/practice-dashboard.ts",
+    "Line": 245,
+    "Col": 55,
+    "Code": "TS2345",
+    "Message": "Argument of type \u0027unknown\u0027 is not assignable to parameter of type \u0027LogData\u0027."
+  },
+  {
+    "File": "src/services/dashboard/practice-dashboard.ts",
+    "Line": 271,
+    "Col": 11,
+    "Code": "TS2345",
+    "Message": "Argument of type \u0027string | undefined\u0027 is not assignable to parameter of type \u0027string\u0027."
+  },
+  {
+    "File": "src/services/dashboard/practice-dashboard.ts",
+    "Line": 281,
+    "Col": 11,
+    "Code": "TS2345",
+    "Message": "Argument of type \u0027unknown\u0027 is not assignable to parameter of type \u0027ErrorLike\u0027."
+  },
+  {
+    "File": "src/services/dashboard/practice-dashboard.ts",
+    "Line": 294,
+    "Col": 11,
+    "Code": "TS2322",
+    "Message": "Type \u0027string | undefined\u0027 is not assignable to type \u0027string\u0027."
+  },
+  {
+    "File": "src/services/dashboard/practice-dashboard.ts",
+    "Line": 557,
+    "Col": 8,
+    "Code": "TS2352",
+    "Message": "Conversion of type \u0027{ current_quantity: number | null; minimum_quantity: number | null; products: { name: string; category: string | null; }; practice_locations: { name: string; }; }[]\u0027 to type \u0027StockLevelView[]\u0027 may be a mistake because neither type sufficiently overlaps with the other. If this was intentional, convert the expression to \u0027unknown\u0027 first."
+  },
+  {
+    "File": "src/services/dashboard/practice-dashboard.ts",
+    "Line": 673,
+    "Col": 20,
+    "Code": "TS2769",
+    "Message": "No overload matches this call."
+  },
+  {
+    "File": "src/services/dashboard/practice-dashboard.ts",
+    "Line": 729,
+    "Col": 29,
+    "Code": "TS2769",
+    "Message": "No overload matches this call."
+  },
+  {
+    "File": "src/services/dashboard/practice-dashboard.ts",
+    "Line": 730,
+    "Col": 23,
+    "Code": "TS2538",
+    "Message": "Type \u0027undefined\u0027 cannot be used as an index type."
+  },
+  {
+    "File": "src/services/dashboard/practice-dashboard.ts",
+    "Line": 730,
+    "Col": 41,
+    "Code": "TS2538",
+    "Message": "Type \u0027undefined\u0027 cannot be used as an index type."
+  },
+  {
+    "File": "src/services/dashboard/practice-dashboard.ts",
+    "Line": 731,
+    "Col": 23,
+    "Code": "TS2538",
+    "Message": "Type \u0027undefined\u0027 cannot be used as an index type."
+  },
+  {
+    "File": "src/services/dashboard/practice-dashboard.ts",
+    "Line": 732,
+    "Col": 20,
+    "Code": "TS2538",
+    "Message": "Type \u0027undefined\u0027 cannot be used as an index type."
+  },
+  {
+    "File": "src/services/dashboard/practice-dashboard.ts",
+    "Line": 733,
+    "Col": 18,
+    "Code": "TS2538",
+    "Message": "Type \u0027undefined\u0027 cannot be used as an index type."
+  },
+  {
+    "File": "src/services/dashboard/practice-dashboard.ts",
+    "Line": 746,
+    "Col": 26,
+    "Code": "TS2532",
+    "Message": "Object is possibly \u0027undefined\u0027."
+  },
+  {
+    "File": "src/services/dashboard/practice-dashboard.ts",
+    "Line": 753,
+    "Col": 35,
+    "Code": "TS2532",
+    "Message": "Object is possibly \u0027undefined\u0027."
+  },
+  {
+    "File": "src/services/dashboard/practice-dashboard.ts",
+    "Line": 801,
+    "Col": 9,
+    "Code": "TS2345",
+    "Message": "Argument of type \u0027unknown\u0027 is not assignable to parameter of type \u0027ErrorLike\u0027."
+  },
+  {
+    "File": "src/services/dashboard/practice-dashboard.ts",
+    "Line": 1040,
+    "Col": 19,
+    "Code": "TS2769",
+    "Message": "No overload matches this call."
+  },
+  {
+    "File": "src/services/dashboard/practice-dashboard.ts",
+    "Line": 1095,
+    "Col": 19,
+    "Code": "TS18047",
+    "Message": "\u0027session.products_with_variance\u0027 is possibly \u0027null\u0027."
+  },
+  {
+    "File": "src/services/dashboard/practice-dashboard.ts",
+    "Line": 1196,
+    "Col": 54,
+    "Code": "TS2345",
+    "Message": "Argument of type \u0027unknown\u0027 is not assignable to parameter of type \u0027LogData\u0027."
+  },
+  {
+    "File": "src/services/dashboard/practice-dashboard.ts",
+    "Line": 1300,
+    "Col": 17,
+    "Code": "TS18047",
+    "Message": "\u0027item.current_quantity\u0027 is possibly \u0027null\u0027."
+  },
+  {
+    "File": "src/services/dashboard/practice-dashboard.ts",
+    "Line": 1303,
+    "Col": 28,
+    "Code": "TS18047",
+    "Message": "\u0027item.current_quantity\u0027 is possibly \u0027null\u0027."
+  },
+  {
+    "File": "src/services/dashboard/role-config.ts",
+    "Line": 506,
+    "Col": 16,
+    "Code": "TS7053",
+    "Message": "Element implicitly has an \u0027any\u0027 type because expression of type \u0027string\u0027 can\u0027t be used to index type \u0027RoleDashboardMap\u0027."
+  },
+  {
+    "File": "src/services/dashboard/role-config.ts",
+    "Line": 508,
+    "Col": 13,
+    "Code": "TS7053",
+    "Message": "Element implicitly has an \u0027any\u0027 type because expression of type \u0027string\u0027 can\u0027t be used to index type \u0027RoleDashboardMap\u0027."
+  },
+  {
+    "File": "src/services/dashboard/role-config.ts",
+    "Line": 509,
+    "Col": 14,
+    "Code": "TS7053",
+    "Message": "Element implicitly has an \u0027any\u0027 type because expression of type \u0027string\u0027 can\u0027t be used to index type \u0027RoleDashboardMap\u0027."
+  },
+  {
+    "File": "src/services/integration/inventoryOrderIntegration.ts",
+    "Line": 61,
+    "Col": 53,
+    "Code": "TS2769",
+    "Message": "No overload matches this call."
+  },
+  {
+    "File": "src/services/integration/inventoryOrderIntegration.ts",
+    "Line": 102,
+    "Col": 59,
+    "Code": "TS2345",
+    "Message": "Argument of type \u0027unknown\u0027 is not assignable to parameter of type \u0027LogData\u0027."
+  },
+  {
+    "File": "src/services/integration/inventoryOrderIntegration.ts",
+    "Line": 199,
+    "Col": 11,
+    "Code": "TS2345",
+    "Message": "Argument of type \u0027{ product_id: any; product_name: any; sku: any; location_id: any; location_name: any; current_stock: any; minimum_stock: any; reorder_point: any; calculated_order_quantity: any; unit_price: any; ... 7 more ...; stock_trend: string; }[]\u0027 is not assignable to parameter of type \u0027ReorderSuggestion[]\u0027."
+  },
+  {
+    "File": "src/services/integration/inventoryOrderIntegration.ts",
+    "Line": 226,
+    "Col": 11,
+    "Code": "TS2345",
+    "Message": "Argument of type \u0027{ product_id: any; product_name: any; sku: any; location_id: any; location_name: any; current_stock: any; minimum_stock: any; reorder_point: any; calculated_order_quantity: any; unit_price: any; ... 7 more ...; stock_trend: string; }[]\u0027 is not assignable to parameter of type \u0027ReorderSuggestion[]\u0027."
+  },
+  {
+    "File": "src/services/integration/inventoryOrderIntegration.ts",
+    "Line": 242,
+    "Col": 64,
+    "Code": "TS2345",
+    "Message": "Argument of type \u0027unknown\u0027 is not assignable to parameter of type \u0027LogData\u0027."
+  },
+  {
+    "File": "src/services/integration/inventoryOrderIntegration.ts",
+    "Line": 288,
+    "Col": 30,
+    "Code": "TS2339",
+    "Message": "Property \u0027practice_id\u0027 does not exist on type \u0027SelectQueryError\u003c\"column \u0027order_reference\u0027 does not exist on \u0027supplier_orders\u0027.\"\u003e\u0027."
+  },
+  {
+    "File": "src/services/integration/inventoryOrderIntegration.ts",
+    "Line": 290,
+    "Col": 40,
+    "Code": "TS2339",
+    "Message": "Property \u0027order_reference\u0027 does not exist on type \u0027SelectQueryError\u003c\"column \u0027order_reference\u0027 does not exist on \u0027supplier_orders\u0027.\"\u003e\u0027."
+  },
+  {
+    "File": "src/services/integration/inventoryOrderIntegration.ts",
+    "Line": 290,
+    "Col": 69,
+    "Code": "TS2339",
+    "Message": "Property \u0027suppliers\u0027 does not exist on type \u0027SelectQueryError\u003c\"column \u0027order_reference\u0027 does not exist on \u0027supplier_orders\u0027.\"\u003e\u0027."
+  },
+  {
+    "File": "src/services/integration/inventoryOrderIntegration.ts",
+    "Line": 290,
+    "Col": 97,
+    "Code": "TS2339",
+    "Message": "Property \u0027estimated_delivery_date\u0027 does not exist on type \u0027SelectQueryError\u003c\"column \u0027order_reference\u0027 does not exist on \u0027supplier_orders\u0027.\"\u003e\u0027."
+  },
+  {
+    "File": "src/services/integration/inventoryOrderIntegration.ts",
+    "Line": 313,
+    "Col": 63,
+    "Code": "TS2345",
+    "Message": "Argument of type \u0027unknown\u0027 is not assignable to parameter of type \u0027LogData\u0027."
+  },
+  {
+    "File": "src/services/integration/inventoryOrderIntegration.ts",
+    "Line": 360,
+    "Col": 71,
+    "Code": "TS2345",
+    "Message": "Argument of type \u0027unknown\u0027 is not assignable to parameter of type \u0027LogData\u0027."
+  },
+  {
+    "File": "src/services/inventory/automationService.ts",
+    "Line": 56,
+    "Col": 5,
+    "Code": "TS2322",
+    "Message": "Type \u0027{ urgencyLevel: \"critical\" | \"low\" | \"medium\" | \"high\"; daysOutOfStock: number | undefined; productId: string; productName: string; currentQuantity: number; minimumQuantity: number; ... 7 more ...; unitPrice?: number | null; }[]\u0027 is not assignable to type \u0027(LowStockItemDTO \u0026 { urgencyLevel: \"critical\" | \"low\" | \"medium\" | \"high\"; daysOutOfStock?: number; })[]\u0027."
+  },
+  {
+    "File": "src/services/inventory/automationService.ts",
+    "Line": 65,
+    "Col": 42,
+    "Code": "TS2345",
+    "Message": "Argument of type \u0027undefined\u0027 is not assignable to parameter of type \u0027string\u0027."
+  },
+  {
+    "File": "src/services/inventory/automationService.ts",
+    "Line": 129,
+    "Col": 70,
+    "Code": "TS2345",
+    "Message": "Argument of type \u0027unknown\u0027 is not assignable to parameter of type \u0027LogData\u0027."
+  },
+  {
+    "File": "src/services/inventory/automationService.ts",
+    "Line": 206,
+    "Col": 13,
+    "Code": "TS2345",
+    "Message": "Argument of type \u0027unknown\u0027 is not assignable to parameter of type \u0027LogData\u0027."
+  },
+  {
+    "File": "src/services/inventory/automationService.ts",
+    "Line": 219,
+    "Col": 71,
+    "Code": "TS2345",
+    "Message": "Argument of type \u0027unknown\u0027 is not assignable to parameter of type \u0027LogData\u0027."
+  },
+  {
+    "File": "src/services/inventory/automationService.ts",
+    "Line": 259,
+    "Col": 68,
+    "Code": "TS2339",
+    "Message": "Property \u0027id\u0027 does not exist on type \u0027SelectQueryError\u003c\"column \u0027order_reference\u0027 does not exist on \u0027supplier_orders\u0027.\"\u003e\u0027."
+  },
+  {
+    "File": "src/services/inventory/automationService.ts",
+    "Line": 268,
+    "Col": 29,
+    "Code": "TS2339",
+    "Message": "Property \u0027id\u0027 does not exist on type \u0027SelectQueryError\u003c\"column \u0027order_reference\u0027 does not exist on \u0027supplier_orders\u0027.\"\u003e\u0027."
+  },
+  {
+    "File": "src/services/inventory/automationService.ts",
+    "Line": 271,
+    "Col": 28,
+    "Code": "TS2339",
+    "Message": "Property \u0027id\u0027 does not exist on type \u0027SelectQueryError\u003c\"column \u0027order_reference\u0027 does not exist on \u0027supplier_orders\u0027.\"\u003e\u0027."
+  },
+  {
+    "File": "src/services/inventory/automationService.ts",
+    "Line": 279,
+    "Col": 64,
+    "Code": "TS2339",
+    "Message": "Property \u0027order_reference\u0027 does not exist on type \u0027SelectQueryError\u003c\"column \u0027order_reference\u0027 does not exist on \u0027supplier_orders\u0027.\"\u003e\u0027."
+  },
+  {
+    "File": "src/services/inventory/automationService.ts",
+    "Line": 280,
+    "Col": 29,
+    "Code": "TS2339",
+    "Message": "Property \u0027suppliers\u0027 does not exist on type \u0027SelectQueryError\u003c\"column \u0027order_reference\u0027 does not exist on \u0027supplier_orders\u0027.\"\u003e\u0027."
+  },
+  {
+    "File": "src/services/inventory/automationService.ts",
+    "Line": 284,
+    "Col": 58,
+    "Code": "TS2339",
+    "Message": "Property \u0027id\u0027 does not exist on type \u0027SelectQueryError\u003c\"column \u0027order_reference\u0027 does not exist on \u0027supplier_orders\u0027.\"\u003e\u0027."
+  },
+  {
+    "File": "src/services/inventory/automationService.ts",
+    "Line": 285,
+    "Col": 13,
+    "Code": "TS2345",
+    "Message": "Argument of type \u0027unknown\u0027 is not assignable to parameter of type \u0027LogData\u0027."
+  },
+  {
+    "File": "src/services/inventory/automationService.ts",
+    "Line": 289,
+    "Col": 28,
+    "Code": "TS2339",
+    "Message": "Property \u0027id\u0027 does not exist on type \u0027SelectQueryError\u003c\"column \u0027order_reference\u0027 does not exist on \u0027supplier_orders\u0027.\"\u003e\u0027."
+  },
+  {
+    "File": "src/services/inventory/automationService.ts",
+    "Line": 304,
+    "Col": 70,
+    "Code": "TS2345",
+    "Message": "Argument of type \u0027unknown\u0027 is not assignable to parameter of type \u0027LogData\u0027."
+  },
+  {
+    "File": "src/services/inventory/automationService.ts",
+    "Line": 357,
+    "Col": 46,
+    "Code": "TS2345",
+    "Message": "Argument of type \u0027\"maximum_quantity\"\u0027 is not assignable to parameter of type \u0027\"get_order_advice\" | \"calculate_next_run_time\" | \"calculate_order_suggestions\" | \"check_and_create_stock_alerts\" | \"check_user_permission\" | \"check_user_permission_v2\" | ... 29 more ... | \"validate_personal_magic_code\"\u0027."
+  },
+  {
+    "File": "src/services/inventory/automationService.ts",
+    "Line": 401,
+    "Col": 70,
+    "Code": "TS2345",
+    "Message": "Argument of type \u0027unknown\u0027 is not assignable to parameter of type \u0027LogData\u0027."
+  },
+  {
+    "File": "src/services/magento/index.ts",
+    "Line": 11,
+    "Col": 3,
+    "Code": "TS2440",
+    "Message": "Import declaration conflicts with local declaration of \u0027MagentoOrder\u0027."
+  },
+  {
+    "File": "src/services/magento/index.ts",
+    "Line": 12,
+    "Col": 3,
+    "Code": "TS2440",
+    "Message": "Import declaration conflicts with local declaration of \u0027MagentoOrderItem\u0027."
+  },
+  {
+    "File": "src/services/magento/index.ts",
+    "Line": 13,
+    "Col": 3,
+    "Code": "TS2440",
+    "Message": "Import declaration conflicts with local declaration of \u0027MagentoProduct\u0027."
+  },
+  {
+    "File": "src/services/magento/index.ts",
+    "Line": 14,
+    "Col": 3,
+    "Code": "TS2440",
+    "Message": "Import declaration conflicts with local declaration of \u0027MagentoSearchCriteria\u0027."
+  },
+  {
+    "File": "src/services/magento/index.ts",
+    "Line": 129,
+    "Col": 23,
+    "Code": "TS2339",
+    "Message": "Property \u0027token\u0027 does not exist on type \u0027MagentoConfig\u0027."
+  },
+  {
+    "File": "src/services/magento/index.ts",
+    "Line": 140,
+    "Col": 7,
+    "Code": "TS2353",
+    "Message": "Object literal may only specify known properties, and \u0027storeCode\u0027 does not exist in type \u0027MagentoConfig\u0027."
+  },
+  {
+    "File": "src/services/magento/index.ts",
+    "Line": 140,
+    "Col": 25,
+    "Code": "TS2339",
+    "Message": "Property \u0027storeCode\u0027 does not exist on type \u0027MagentoConfig\u0027."
+  },
+  {
+    "File": "src/services/magento/index.ts",
+    "Line": 149,
+    "Col": 23,
+    "Code": "TS2304",
+    "Message": "Cannot find name \u0027$t\u0027."
+  },
+  {
+    "File": "src/services/magento/index.ts",
+    "Line": 164,
+    "Col": 48,
+    "Code": "TS2339",
+    "Message": "Property \u0027token\u0027 does not exist on type \u0027MagentoConfig\u0027."
+  },
+  {
+    "File": "src/services/magento/index.ts",
+    "Line": 166,
+    "Col": 30,
+    "Code": "TS2339",
+    "Message": "Property \u0027storeCode\u0027 does not exist on type \u0027MagentoConfig\u0027."
+  },
+  {
+    "File": "src/services/magento/index.ts",
+    "Line": 177,
+    "Col": 21,
+    "Code": "TS2304",
+    "Message": "Cannot find name \u0027$t\u0027."
+  },
+  {
+    "File": "src/services/magento/index.ts",
+    "Line": 192,
+    "Col": 11,
+    "Code": "TS18046",
+    "Message": "\u0027error\u0027 is of type \u0027unknown\u0027."
+  },
+  {
+    "File": "src/services/magento/index.ts",
+    "Line": 193,
+    "Col": 34,
+    "Code": "TS2304",
+    "Message": "Cannot find name \u0027$t\u0027."
+  },
+  {
+    "File": "src/services/magento/index.ts",
+    "Line": 200,
+    "Col": 22,
+    "Code": "TS2345",
+    "Message": "Argument of type \u0027unknown\u0027 is not assignable to parameter of type \u0027ErrorLike\u0027."
+  },
+  {
+    "File": "src/services/magento/index.ts",
+    "Line": 277,
+    "Col": 11,
+    "Code": "TS2741",
+    "Message": "Property \u0027filterGroups\u0027 is missing in type \u0027{}\u0027 but required in type \u0027MagentoSearchCriteria\u0027."
+  },
+  {
+    "File": "src/services/magento/index.ts",
+    "Line": 473,
+    "Col": 52,
+    "Code": "TS2339",
+    "Message": "Property \u0027token\u0027 does not exist on type \u0027MagentoConfig\u0027."
+  },
+  {
+    "File": "src/services/magento/index.ts",
+    "Line": 517,
+    "Col": 23,
+    "Code": "TS2304",
+    "Message": "Cannot find name \u0027$t\u0027."
+  },
+  {
+    "File": "src/services/magento/index.ts",
+    "Line": 537,
+    "Col": 7,
+    "Code": "TS2322",
+    "Message": "Type \u0027{ id: number; increment_id: string; status: string; created_at: string | null; updated_at: string | null; grand_total: number; items: { id: number; product_id: number; name: string; sku: string; qty_ordered: number; price: number; product_type: string; }[]; }[]\u0027 is not assignable to type \u0027MagentoOrder[]\u0027."
+  },
+  {
+    "File": "src/services/magento/index.ts",
+    "Line": 541,
+    "Col": 39,
+    "Code": "TS2345",
+    "Message": "Argument of type \u0027string | null\u0027 is not assignable to parameter of type \u0027string\u0027."
+  },
+  {
+    "File": "src/services/magento/index.ts",
+    "Line": 575,
+    "Col": 23,
+    "Code": "TS2304",
+    "Message": "Cannot find name \u0027$t\u0027."
+  },
+  {
+    "File": "src/services/magento/index.ts",
+    "Line": 587,
+    "Col": 7,
+    "Code": "TS2322",
+    "Message": "Type \u0027{ id: number; sku: string; name: string; price: number; status: number; type_id: string; }[]\u0027 is not assignable to type \u0027MagentoProduct[]\u0027."
+  },
+  {
+    "File": "src/services/magento/index.ts",
+    "Line": 592,
+    "Col": 29,
+    "Code": "TS2345",
+    "Message": "Argument of type \u0027number | \"0\"\u0027 is not assignable to parameter of type \u0027string\u0027."
+  },
+  {
+    "File": "src/services/magento/index.ts",
+    "Line": 593,
+    "Col": 27,
+    "Code": "TS2551",
+    "Message": "Property \u0027is_active\u0027 does not exist on type \u0027{ active: boolean | null; barcode: string | null; base_unit_indicator: boolean | null; brand: string | null; category: string | null; country_of_origin: string | null; created_at: string | null; ... 24 more ...; updated_at: string | null; }\u0027. Did you mean \u0027active\u0027?"
+  },
+  {
+    "File": "src/services/magento/index.ts",
+    "Line": 611,
+    "Col": 23,
+    "Code": "TS2304",
+    "Message": "Cannot find name \u0027$t\u0027."
+  },
+  {
+    "File": "src/services/magento/index.ts",
+    "Line": 631,
+    "Col": 7,
+    "Code": "TS2322",
+    "Message": "Type \u0027{ id: number; order_id: number; increment_id: string; created_at: string | null; grand_total: number; }[]\u0027 is not assignable to type \u0027MagentoInvoice[]\u0027."
+  },
+  {
+    "File": "src/services/magicInvites.ts",
+    "Line": 2,
+    "Col": 15,
+    "Code": "TS2305",
+    "Message": "Module \u0027\"../types/supabase\"\u0027 has no exported member \u0027Json\u0027."
+  },
+  {
+    "File": "src/services/magicInvites.ts",
+    "Line": 106,
+    "Col": 9,
+    "Code": "TS2322",
+    "Message": "Type \u0027string | null\u0027 is not assignable to type \u0027string | undefined\u0027."
+  },
+  {
+    "File": "src/services/magicInvites.ts",
+    "Line": 172,
+    "Col": 10,
+    "Code": "TS2769",
+    "Message": "No overload matches this call."
+  },
+  {
+    "File": "src/services/magicInvites.ts",
+    "Line": 181,
+    "Col": 7,
+    "Code": "TS2322",
+    "Message": "Type \u0027{ ai_role_suggestions: Json; allow_guest_mode: boolean | null; auto_regenerate: boolean | null; auto_upgrade_to_member: boolean | null; color_theme: string | null; contextual_welcome_message: string | null; ... 29 more ...; whatsapp_link: string | null; }\u0027 is not assignable to type \u0027MagicInvite\u0027."
+  },
+  {
+    "File": "src/services/magicInvites.ts",
+    "Line": 184,
+    "Col": 23,
+    "Code": "TS2304",
+    "Message": "Cannot find name \u0027$t\u0027."
+  },
+  {
+    "File": "src/services/magicInvites.ts",
+    "Line": 295,
+    "Col": 36,
+    "Code": "TS2304",
+    "Message": "Cannot find name \u0027$t\u0027."
+  },
+  {
+    "File": "src/services/magicInvites.ts",
+    "Line": 306,
+    "Col": 24,
+    "Code": "TS18047",
+    "Message": "\u0027invite.guest_session_hours\u0027 is possibly \u0027null\u0027."
+  },
+  {
+    "File": "src/services/magicInvites.ts",
+    "Line": 310,
+    "Col": 55,
+    "Code": "TS2345",
+    "Message": "Argument of type \u0027string | null\u0027 is not assignable to parameter of type \u0027string\u0027."
+  },
+  {
+    "File": "src/services/magicInvites.ts",
+    "Line": 312,
+    "Col": 57,
+    "Code": "TS2345",
+    "Message": "Argument of type \u0027string | null\u0027 is not assignable to parameter of type \u0027string\u0027."
+  },
+  {
+    "File": "src/services/magicInvites.ts",
+    "Line": 326,
+    "Col": 10,
+    "Code": "TS2769",
+    "Message": "No overload matches this call."
+  },
+  {
+    "File": "src/services/magicInvites.ts",
+    "Line": 346,
+    "Col": 7,
+    "Code": "TS2322",
+    "Message": "Type \u0027{ accessible_locations: string[] | null; achievements_unlocked: string[] | null; actions_performed: Json; can_extend: boolean | null; converted_to_user_id: string | null; created_at: string | null; ... 19 more ...; user_agent: string | null; }\u0027 is not assignable to type \u0027GuestSession\u0027."
+  },
+  {
+    "File": "src/services/magicInvites.ts",
+    "Line": 349,
+    "Col": 23,
+    "Code": "TS2304",
+    "Message": "Cannot find name \u0027$t\u0027."
+  },
+  {
+    "File": "src/services/magicInvites.ts",
+    "Line": 396,
+    "Col": 5,
+    "Code": "TS2322",
+    "Message": "Type \u0027string | undefined\u0027 is not assignable to type \u0027string\u0027."
+  },
+  {
+    "File": "src/services/magicInvites.ts",
+    "Line": 465,
+    "Col": 7,
+    "Code": "TS2322",
+    "Message": "Type \u0027{ accessible_locations: string[] | null; achievements_unlocked: string[] | null; actions_performed: Json; can_extend: boolean | null; converted_to_user_id: string | null; created_at: string | null; ... 19 more ...; user_agent: string | null; }[]\u0027 is not assignable to type \u0027GuestSession[]\u0027."
+  },
+  {
+    "File": "src/services/magicInvites.ts",
+    "Line": 491,
+    "Col": 23,
+    "Code": "TS2304",
+    "Message": "Cannot find name \u0027$t\u0027."
+  },
+  {
+    "File": "src/services/magicInvites.ts",
+    "Line": 505,
+    "Col": 7,
+    "Code": "TS2322",
+    "Message": "Type \u0027{ ai_role_suggestions: Json; allow_guest_mode: boolean | null; auto_regenerate: boolean | null; auto_upgrade_to_member: boolean | null; color_theme: string | null; contextual_welcome_message: string | null; ... 29 more ...; whatsapp_link: string | null; }[]\u0027 is not assignable to type \u0027MagicInvite[]\u0027."
+  },
+  {
+    "File": "src/services/monitoring.ts",
+    "Line": 14,
+    "Col": 5,
+    "Code": "TS2322",
+    "Message": "Type \u0027(message: string, data?: Record\u003cstring, unknown\u003e) =\u003e void\u0027 is not assignable to type \u0027((message: string, data?: LogData) =\u003e void) \u0026 ((message: string, data?: Record\u003cstring, unknown\u003e | undefined) =\u003e void)\u0027."
+  },
+  {
+    "File": "src/services/monitoring.ts",
+    "Line": 16,
+    "Col": 5,
+    "Code": "TS2322",
+    "Message": "Type \u0027(message: string, data?: Record\u003cstring, unknown\u003e) =\u003e void\u0027 is not assignable to type \u0027((message: string, data?: LogData) =\u003e void) \u0026 ((message: string, data?: Record\u003cstring, unknown\u003e | undefined) =\u003e void)\u0027."
+  },
+  {
+    "File": "src/services/monitoring.ts",
+    "Line": 18,
+    "Col": 5,
+    "Code": "TS2322",
+    "Message": "Type \u0027(message: string, data?: Record\u003cstring, unknown\u003e) =\u003e void\u0027 is not assignable to type \u0027((message: string, error?: LogData) =\u003e void) \u0026 ((message: string, data?: Record\u003cstring, unknown\u003e | undefined) =\u003e void)\u0027."
+  },
+  {
+    "File": "src/services/monitoring.ts",
+    "Line": 223,
+    "Col": 37,
+    "Code": "TS2379",
+    "Message": "Argument of type \u0027{ router: Router | undefined; }\u0027 is not assignable to parameter of type \u0027Partial\u003cBrowserTracingOptions\u003e \u0026 { router?: VueRouter; routeLabel?: \"name\" | \"path\"; }\u0027 with \u0027exactOptionalPropertyTypes: true\u0027. Consider adding \u0027undefined\u0027 to the types of the target\u0027s properties."
+  },
+  {
+    "File": "src/services/monitoring.ts",
+    "Line": 236,
+    "Col": 9,
+    "Code": "TS2322",
+    "Message": "Type \u0027unknown[]\u0027 is not assignable to type \u0027Integration[] | ((integrations: Integration[]) =\u003e Integration[]) | undefined\u0027."
+  },
+  {
+    "File": "src/services/notifications.ts",
+    "Line": 5,
+    "Col": 3,
+    "Code": "TS2305",
+    "Message": "Module \u0027\"@/types/supabase\"\u0027 has no exported member \u0027PushToken\u0027."
+  },
+  {
+    "File": "src/services/notifications.ts",
+    "Line": 6,
+    "Col": 3,
+    "Code": "TS2305",
+    "Message": "Module \u0027\"@/types/supabase\"\u0027 has no exported member \u0027PushTokenInsert\u0027."
+  },
+  {
+    "File": "src/services/notifications.ts",
+    "Line": 34,
+    "Col": 11,
+    "Code": "TS2345",
+    "Message": "Argument of type \u0027ServiceWorkerRegistration\u0027 is not assignable to parameter of type \u0027LogData\u0027."
+  },
+  {
+    "File": "src/services/notifications.ts",
+    "Line": 37,
+    "Col": 73,
+    "Code": "TS2345",
+    "Message": "Argument of type \u0027unknown\u0027 is not assignable to parameter of type \u0027LogData\u0027."
+  },
+  {
+    "File": "src/services/notifications.ts",
+    "Line": 47,
+    "Col": 23,
+    "Code": "TS2304",
+    "Message": "Cannot find name \u0027$t\u0027."
+  },
+  {
+    "File": "src/services/notifications.ts",
+    "Line": 64,
+    "Col": 23,
+    "Code": "TS2304",
+    "Message": "Cannot find name \u0027$t\u0027."
+  },
+  {
+    "File": "src/services/notifications.ts",
+    "Line": 83,
+    "Col": 9,
+    "Code": "TS2345",
+    "Message": "Argument of type \u0027unknown\u0027 is not assignable to parameter of type \u0027LogData\u0027."
+  },
+  {
+    "File": "src/services/notifications.ts",
+    "Line": 182,
+    "Col": 7,
+    "Code": "TS2353",
+    "Message": "Object literal may only specify known properties, and \u0027actions\u0027 does not exist in type \u0027NotificationOptions\u0027."
+  },
+  {
+    "File": "src/services/notifications.ts",
+    "Line": 272,
+    "Col": 5,
+    "Code": "TS2322",
+    "Message": "Type \u0027{ id: `${string}-${string}-${string}-${string}-${string}`; created_at: string; updated_at: string; channel: string; is_enabled?: boolean | null; notification_type: string; practice_id: string; settings?: Json | null; user_id: string; }\u0027 is not assignable to type \u0027{ channel: string; created_at: string | null; id: string; is_enabled: boolean | null; notification_type: string; practice_id: string; settings: Json; updated_at: string | null; user_id: string; }\u0027."
+  },
+  {
+    "File": "src/services/notifications.ts",
+    "Line": 430,
+    "Col": 49,
+    "Code": "TS2339",
+    "Message": "Property \u0027raw\u0027 does not exist on type \u0027SupabaseClient\u003cDatabase, \"public\", { Tables: { activity_log: { Row: { activity_type: string; created_at: string | null; description: string | null; id: string; new_values: Json; old_values: Json; practice_id: string | null; record_id: string | null; table_name: string | null; user_id: string | null; }; Insert: { ......\u0027."
+  },
+  {
+    "File": "src/services/notifications.ts",
+    "Line": 445,
+    "Col": 59,
+    "Code": "TS2345",
+    "Message": "Argument of type \u0027unknown\u0027 is not assignable to parameter of type \u0027LogData\u0027."
+  },
+  {
+    "File": "src/services/notifications.ts",
+    "Line": 472,
+    "Col": 37,
+    "Code": "TS2345",
+    "Message": "Argument of type \u0027number | undefined\u0027 is not assignable to parameter of type \u0027number\u0027."
+  },
+  {
+    "File": "src/services/offline.ts",
+    "Line": 4,
+    "Col": 3,
+    "Code": "TS2305",
+    "Message": "Module \u0027\"@/types/supabase\"\u0027 has no exported member \u0027Bestellijst\u0027."
+  },
+  {
+    "File": "src/services/offline.ts",
+    "Line": 5,
+    "Col": 3,
+    "Code": "TS2305",
+    "Message": "Module \u0027\"@/types/supabase\"\u0027 has no exported member \u0027BestellijstItem\u0027."
+  },
+  {
+    "File": "src/services/offline.ts",
+    "Line": 164,
+    "Col": 63,
+    "Code": "TS2345",
+    "Message": "Argument of type \u0027unknown\u0027 is not assignable to parameter of type \u0027LogData\u0027."
+  },
+  {
+    "File": "src/services/offline.ts",
+    "Line": 241,
+    "Col": 65,
+    "Code": "TS2554",
+    "Message": "Expected 1-2 arguments, but got 3."
+  },
+  {
+    "File": "src/services/offline.ts",
+    "Line": 284,
+    "Col": 51,
+    "Code": "TS2345",
+    "Message": "Argument of type \u0027unknown\u0027 is not assignable to parameter of type \u0027LogData\u0027."
+  },
+  {
+    "File": "src/services/offline.ts",
+    "Line": 305,
+    "Col": 25,
+    "Code": "TS2304",
+    "Message": "Cannot find name \u0027$t\u0027."
+  },
+  {
+    "File": "src/services/offline.ts",
+    "Line": 313,
+    "Col": 43,
+    "Code": "TS2769",
+    "Message": "No overload matches this call."
+  },
+  {
+    "File": "src/services/offline.ts",
+    "Line": 313,
+    "Col": 64,
+    "Code": "TS2769",
+    "Message": "No overload matches this call."
+  },
+  {
+    "File": "src/services/offline.ts",
+    "Line": 316,
+    "Col": 23,
+    "Code": "TS2304",
+    "Message": "Cannot find name \u0027$t\u0027."
+  },
+  {
+    "File": "src/services/offline.ts",
+    "Line": 327,
+    "Col": 13,
+    "Code": "TS2769",
+    "Message": "No overload matches this call."
+  },
+  {
+    "File": "src/services/offline.ts",
+    "Line": 329,
+    "Col": 17,
+    "Code": "TS2345",
+    "Message": "Argument of type \u0027unknown\u0027 is not assignable to parameter of type \u0027{}\u0027."
+  },
+  {
+    "File": "src/services/offline.ts",
+    "Line": 332,
+    "Col": 23,
+    "Code": "TS2304",
+    "Message": "Cannot find name \u0027$t\u0027."
+  },
+  {
+    "File": "src/services/offline.ts",
+    "Line": 341,
+    "Col": 13,
+    "Code": "TS2769",
+    "Message": "No overload matches this call."
+  },
+  {
+    "File": "src/services/offline.ts",
+    "Line": 343,
+    "Col": 17,
+    "Code": "TS2345",
+    "Message": "Argument of type \u0027unknown\u0027 is not assignable to parameter of type \u0027{}\u0027."
+  },
+  {
+    "File": "src/services/offline.ts",
+    "Line": 346,
+    "Col": 23,
+    "Code": "TS2304",
+    "Message": "Cannot find name \u0027$t\u0027."
+  },
+  {
+    "File": "src/services/offline.ts",
+    "Line": 388,
+    "Col": 7,
+    "Code": "TS18046",
+    "Message": "\u0027existingItem.quantity\u0027 is of type \u0027unknown\u0027."
+  },
+  {
+    "File": "src/services/offline.ts",
+    "Line": 428,
+    "Col": 59,
+    "Code": "TS2345",
+    "Message": "Argument of type \u0027unknown\u0027 is not assignable to parameter of type \u0027LogData\u0027."
+  },
+  {
+    "File": "src/services/offline.ts",
+    "Line": 446,
+    "Col": 59,
+    "Code": "TS2345",
+    "Message": "Argument of type \u0027unknown\u0027 is not assignable to parameter of type \u0027LogData\u0027."
+  },
+  {
+    "File": "src/services/offline.ts",
+    "Line": 465,
+    "Col": 62,
+    "Code": "TS2345",
+    "Message": "Argument of type \u0027unknown\u0027 is not assignable to parameter of type \u0027LogData\u0027."
+  },
+  {
+    "File": "src/services/offline.ts",
+    "Line": 483,
+    "Col": 62,
+    "Code": "TS2345",
+    "Message": "Argument of type \u0027unknown\u0027 is not assignable to parameter of type \u0027LogData\u0027."
+  },
+  {
+    "File": "src/services/offline.ts",
+    "Line": 543,
+    "Col": 23,
+    "Code": "TS2304",
+    "Message": "Cannot find name \u0027$t\u0027."
+  },
+  {
+    "File": "src/services/offline/action-queue.ts",
+    "Line": 138,
+    "Col": 31,
+    "Code": "TS2304",
+    "Message": "Cannot find name \u0027$t\u0027."
+  },
+  {
+    "File": "src/services/offline/action-queue.ts",
+    "Line": 166,
+    "Col": 9,
+    "Code": "TS2345",
+    "Message": "Argument of type \u0027unknown\u0027 is not assignable to parameter of type \u0027ErrorLike\u0027."
+  },
+  {
+    "File": "src/services/offline/action-queue.ts",
+    "Line": 216,
+    "Col": 21,
+    "Code": "TS2304",
+    "Message": "Cannot find name \u0027$t\u0027."
+  },
+  {
+    "File": "src/services/offline/data-sync.ts",
+    "Line": 6,
+    "Col": 3,
+    "Code": "TS2305",
+    "Message": "Module \u0027\"src/types/supabase\"\u0027 has no exported member \u0027Bestellijst\u0027."
+  },
+  {
+    "File": "src/services/offline/data-sync.ts",
+    "Line": 7,
+    "Col": 3,
+    "Code": "TS2305",
+    "Message": "Module \u0027\"src/types/supabase\"\u0027 has no exported member \u0027BestellijstItem\u0027."
+  },
+  {
+    "File": "src/services/offline/data-sync.ts",
+    "Line": 58,
+    "Col": 5,
+    "Code": "TS2589",
+    "Message": "Type instantiation is excessively deep and possibly infinite."
+  },
+  {
+    "File": "src/services/offline/data-sync.ts",
+    "Line": 83,
+    "Col": 23,
+    "Code": "TS2304",
+    "Message": "Cannot find name \u0027$t\u0027."
+  },
+  {
+    "File": "src/services/offline/index.ts",
+    "Line": 108,
+    "Col": 23,
+    "Code": "TS2304",
+    "Message": "Cannot find name \u0027$t\u0027."
+  },
+  {
+    "File": "src/services/offline/index.ts",
+    "Line": 136,
+    "Col": 23,
+    "Code": "TS2304",
+    "Message": "Cannot find name \u0027$t\u0027."
+  },
+  {
+    "File": "src/services/offline/index.ts",
+    "Line": 140,
+    "Col": 23,
+    "Code": "TS2304",
+    "Message": "Cannot find name \u0027$t\u0027."
+  },
+  {
+    "File": "src/services/offline/index.ts",
+    "Line": 173,
+    "Col": 23,
+    "Code": "TS2304",
+    "Message": "Cannot find name \u0027$t\u0027."
+  },
+  {
+    "File": "src/services/offline/network-monitor.ts",
+    "Line": 100,
+    "Col": 9,
+    "Code": "TS2769",
+    "Message": "No overload matches this call."
+  },
+  {
+    "File": "src/services/offline/network-monitor.ts",
+    "Line": 109,
+    "Col": 11,
+    "Code": "TS2769",
+    "Message": "No overload matches this call."
+  },
+  {
+    "File": "src/services/orderOrchestration/centralOrderService.ts",
+    "Line": 100,
+    "Col": 68,
+    "Code": "TS2339",
+    "Message": "Property \u0027unit_price\u0027 does not exist on type \u0027ReorderSuggestion\u0027."
+  },
+  {
+    "File": "src/services/orderOrchestration/centralOrderService.ts",
+    "Line": 118,
+    "Col": 64,
+    "Code": "TS2345",
+    "Message": "Argument of type \u0027unknown\u0027 is not assignable to parameter of type \u0027LogData\u0027."
+  },
+  {
+    "File": "src/services/orderOrchestration/centralOrderService.ts",
+    "Line": 157,
+    "Col": 37,
+    "Code": "TS2339",
+    "Message": "Property \u0027total_value\u0027 does not exist on type \u0027SupplierOrder\u0027."
+  },
+  {
+    "File": "src/services/orderOrchestration/centralOrderService.ts",
+    "Line": 180,
+    "Col": 65,
+    "Code": "TS2345",
+    "Message": "Argument of type \u0027unknown\u0027 is not assignable to parameter of type \u0027LogData\u0027."
+  },
+  {
+    "File": "src/services/orderOrchestration/centralOrderService.ts",
+    "Line": 197,
+    "Col": 13,
+    "Code": "TS2367",
+    "Message": "This comparison appears to be unintentional because the types \u0027\"pending\" | \"success\" | \"failed\"\u0027 and \u0027\"sent\"\u0027 have no overlap."
+  },
+  {
+    "File": "src/services/orderOrchestration/centralOrderService.ts",
+    "Line": 197,
+    "Col": 41,
+    "Code": "TS2367",
+    "Message": "This comparison appears to be unintentional because the types \u0027\"pending\" | \"success\" | \"failed\"\u0027 and \u0027\"confirmed\"\u0027 have no overlap."
+  },
+  {
+    "File": "src/services/orderOrchestration/centralOrderService.ts",
+    "Line": 217,
+    "Col": 63,
+    "Code": "TS2345",
+    "Message": "Argument of type \u0027unknown\u0027 is not assignable to parameter of type \u0027LogData\u0027."
+  },
+  {
+    "File": "src/services/orderOrchestration/centralOrderService.ts",
+    "Line": 246,
+    "Col": 24,
+    "Code": "TS2339",
+    "Message": "Property \u0027id\u0027 does not exist on type \u0027SelectQueryError\u003c\"column \u0027order_reference\u0027 does not exist on \u0027supplier_orders\u0027.\"\u003e\u0027."
+  },
+  {
+    "File": "src/services/orderOrchestration/centralOrderService.ts",
+    "Line": 247,
+    "Col": 32,
+    "Code": "TS2339",
+    "Message": "Property \u0027id\u0027 does not exist on type \u0027SelectQueryError\u003c\"column \u0027order_reference\u0027 does not exist on \u0027supplier_orders\u0027.\"\u003e\u0027."
+  },
+  {
+    "File": "src/services/orderOrchestration/centralOrderService.ts",
+    "Line": 248,
+    "Col": 27,
+    "Code": "TS2339",
+    "Message": "Property \u0027suppliers\u0027 does not exist on type \u0027SelectQueryError\u003c\"column \u0027order_reference\u0027 does not exist on \u0027supplier_orders\u0027.\"\u003e\u0027."
+  },
+  {
+    "File": "src/services/orderOrchestration/centralOrderService.ts",
+    "Line": 249,
+    "Col": 29,
+    "Code": "TS2339",
+    "Message": "Property \u0027suppliers\u0027 does not exist on type \u0027SelectQueryError\u003c\"column \u0027order_reference\u0027 does not exist on \u0027supplier_orders\u0027.\"\u003e\u0027."
+  },
+  {
+    "File": "src/services/orderOrchestration/centralOrderService.ts",
+    "Line": 250,
+    "Col": 23,
+    "Code": "TS2339",
+    "Message": "Property \u0027status\u0027 does not exist on type \u0027SelectQueryError\u003c\"column \u0027order_reference\u0027 does not exist on \u0027supplier_orders\u0027.\"\u003e\u0027."
+  },
+  {
+    "File": "src/services/orderOrchestration/centralOrderService.ts",
+    "Line": 251,
+    "Col": 31,
+    "Code": "TS2339",
+    "Message": "Property \u0027order_reference\u0027 does not exist on type \u0027SelectQueryError\u003c\"column \u0027order_reference\u0027 does not exist on \u0027supplier_orders\u0027.\"\u003e\u0027."
+  },
+  {
+    "File": "src/services/orderOrchestration/centralOrderService.ts",
+    "Line": 252,
+    "Col": 31,
+    "Code": "TS2339",
+    "Message": "Property \u0027tracking_number\u0027 does not exist on type \u0027SelectQueryError\u003c\"column \u0027order_reference\u0027 does not exist on \u0027supplier_orders\u0027.\"\u003e\u0027."
+  },
+  {
+    "File": "src/services/orderOrchestration/centralOrderService.ts",
+    "Line": 253,
+    "Col": 34,
+    "Code": "TS2339",
+    "Message": "Property \u0027estimated_delivery_date\u0027 does not exist on type \u0027SelectQueryError\u003c\"column \u0027order_reference\u0027 does not exist on \u0027supplier_orders\u0027.\"\u003e\u0027."
+  },
+  {
+    "File": "src/services/orderOrchestration/centralOrderService.ts",
+    "Line": 254,
+    "Col": 31,
+    "Code": "TS2339",
+    "Message": "Property \u0027actual_delivery_date\u0027 does not exist on type \u0027SelectQueryError\u003c\"column \u0027order_reference\u0027 does not exist on \u0027supplier_orders\u0027.\"\u003e\u0027."
+  },
+  {
+    "File": "src/services/orderOrchestration/centralOrderService.ts",
+    "Line": 255,
+    "Col": 28,
+    "Code": "TS2339",
+    "Message": "Property \u0027updated_at\u0027 does not exist on type \u0027SelectQueryError\u003c\"column \u0027order_reference\u0027 does not exist on \u0027supplier_orders\u0027.\"\u003e\u0027."
+  },
+  {
+    "File": "src/services/orderOrchestration/centralOrderService.ts",
+    "Line": 258,
+    "Col": 57,
+    "Code": "TS2345",
+    "Message": "Argument of type \u0027unknown\u0027 is not assignable to parameter of type \u0027LogData\u0027."
+  },
+  {
+    "File": "src/services/orderOrchestration/centralOrderService.ts",
+    "Line": 272,
+    "Col": 15,
+    "Code": "TS2769",
+    "Message": "No overload matches this call."
+  },
+  {
+    "File": "src/services/orderOrchestration/centralOrderService.ts",
+    "Line": 285,
+    "Col": 43,
+    "Code": "TS2339",
+    "Message": "Property \u0027data\u0027 does not exist on type \u0027(SelectQueryError\u003c\"column \u0027product_id\u0027 does not exist on \u0027practices\u0027.\"\u003e | SelectQueryError\u003c\"column \u0027product_id\u0027 does not exist on \u0027counting_sessions\u0027.\"\u003e | ... 34 more ... | SelectQueryError\u003c...\u003e)[]\u0027."
+  },
+  {
+    "File": "src/services/orderOrchestration/centralOrderService.ts",
+    "Line": 291,
+    "Col": 9,
+    "Code": "TS2345",
+    "Message": "Argument of type \u0027{ value: any; }\u0027 is not assignable to parameter of type \u0027Ref\u003cstring | null, string | null\u003e\u0027."
+  },
+  {
+    "File": "src/services/orderOrchestration/centralOrderService.ts",
+    "Line": 291,
+    "Col": 64,
+    "Code": "TS2304",
+    "Message": "Cannot find name \u0027practiceId\u0027."
+  },
+  {
+    "File": "src/services/orderOrchestration/centralOrderService.ts",
+    "Line": 317,
+    "Col": 11,
+    "Code": "TS2322",
+    "Message": "Type \u0027null\u0027 is not assignable to type \u0027string\u0027."
+  },
+  {
+    "File": "src/services/orderOrchestration/centralOrderService.ts",
+    "Line": 318,
+    "Col": 11,
+    "Code": "TS2322",
+    "Message": "Type \u0027null\u0027 is not assignable to type \u0027string\u0027."
+  },
+  {
+    "File": "src/services/orderOrchestration/centralOrderService.ts",
+    "Line": 324,
+    "Col": 24,
+    "Code": "TS7006",
+    "Message": "Parameter \u0027item\u0027 implicitly has an \u0027any\u0027 type."
+  },
+  {
+    "File": "src/services/orderOrchestration/centralOrderService.ts",
+    "Line": 348,
+    "Col": 65,
+    "Code": "TS2345",
+    "Message": "Argument of type \u0027unknown\u0027 is not assignable to parameter of type \u0027LogData\u0027."
+  },
+  {
+    "File": "src/services/orderOrchestration/centralOrderService.ts",
+    "Line": 371,
+    "Col": 5,
+    "Code": "TS2322",
+    "Message": "Type \u0027{ product_id: string; product_name: string; sku: string; location_id: string; location_name: string; current_stock: number; minimum_stock: number; reorder_point: null; calculated_order_quantity: number; ... 8 more ...; stock_trend: string; }[]\u0027 is not assignable to type \u0027ReorderSuggestion[]\u0027."
+  },
+  {
+    "File": "src/services/orderOrchestration/centralOrderService.ts",
+    "Line": 408,
+    "Col": 8,
+    "Code": "TS2769",
+    "Message": "No overload matches this call."
+  },
+  {
+    "File": "src/services/orderOrchestration/centralOrderService.ts",
+    "Line": 415,
+    "Col": 70,
+    "Code": "TS2339",
+    "Message": "Property \u0027unit_price\u0027 does not exist on type \u0027ReorderSuggestion\u0027."
+  },
+  {
+    "File": "src/services/orderOrchestration/centralOrderService.ts",
+    "Line": 433,
+    "Col": 23,
+    "Code": "TS2339",
+    "Message": "Property \u0027unit_price\u0027 does not exist on type \u0027ReorderSuggestion\u0027."
+  },
+  {
+    "File": "src/services/orderOrchestration/centralOrderService.ts",
+    "Line": 434,
+    "Col": 17,
+    "Code": "TS2367",
+    "Message": "This comparison appears to be unintentional because the types \u0027UrgencyLevel\u0027 and \u0027\"urgent\"\u0027 have no overlap."
+  },
+  {
+    "File": "src/services/orderOrchestration/centralOrderService.ts",
+    "Line": 444,
+    "Col": 29,
+    "Code": "TS2339",
+    "Message": "Property \u0027estimated_total\u0027 does not exist on type \u0027{ auto_reorder_enabled: boolean | null; created_at: string | null; created_by: string | null; description: string | null; id: string; is_template: boolean | null; last_auto_check: string | null; ... 14 more ...; updated_at: string | null; }\u0027."
+  },
+  {
+    "File": "src/services/orderOrchestration/centralOrderService.ts",
+    "Line": 460,
+    "Col": 9,
+    "Code": "TS2769",
+    "Message": "No overload matches this call."
+  },
+  {
+    "File": "src/services/orderOrchestration/centralOrderService.ts",
+    "Line": 460,
+    "Col": 22,
+    "Code": "TS18048",
+    "Message": "\u0027order\u0027 is possibly \u0027undefined\u0027."
+  },
+  {
+    "File": "src/services/orderOrchestration/centralOrderService.ts",
+    "Line": 462,
+    "Col": 22,
+    "Code": "TS18048",
+    "Message": "\u0027order\u0027 is possibly \u0027undefined\u0027."
+  },
+  {
+    "File": "src/services/orderOrchestration/centralOrderService.ts",
+    "Line": 463,
+    "Col": 18,
+    "Code": "TS18048",
+    "Message": "\u0027result\u0027 is possibly \u0027undefined\u0027."
+  },
+  {
+    "File": "src/services/orderOrchestration/centralOrderService.ts",
+    "Line": 464,
+    "Col": 28,
+    "Code": "TS18048",
+    "Message": "\u0027order\u0027 is possibly \u0027undefined\u0027."
+  },
+  {
+    "File": "src/services/orderOrchestration/centralOrderService.ts",
+    "Line": 465,
+    "Col": 22,
+    "Code": "TS18048",
+    "Message": "\u0027order\u0027 is possibly \u0027undefined\u0027."
+  },
+  {
+    "File": "src/services/orderOrchestration/centralOrderService.ts",
+    "Line": 466,
+    "Col": 22,
+    "Code": "TS18048",
+    "Message": "\u0027order\u0027 is possibly \u0027undefined\u0027."
+  },
+  {
+    "File": "src/services/orderOrchestration/centralOrderService.ts",
+    "Line": 466,
+    "Col": 28,
+    "Code": "TS2339",
+    "Message": "Property \u0027total_value\u0027 does not exist on type \u0027SupplierOrder\u0027."
+  },
+  {
+    "File": "src/services/orderOrchestration/centralOrderService.ts",
+    "Line": 468,
+    "Col": 19,
+    "Code": "TS18048",
+    "Message": "\u0027result\u0027 is possibly \u0027undefined\u0027."
+  },
+  {
+    "File": "src/services/orderOrchestration/centralOrderService.ts",
+    "Line": 469,
+    "Col": 28,
+    "Code": "TS18048",
+    "Message": "\u0027result\u0027 is possibly \u0027undefined\u0027."
+  },
+  {
+    "File": "src/services/orderOrchestration/centralOrderService.ts",
+    "Line": 470,
+    "Col": 26,
+    "Code": "TS18048",
+    "Message": "\u0027result\u0027 is possibly \u0027undefined\u0027."
+  },
+  {
+    "File": "src/services/orderOrchestration/centralOrderService.ts",
+    "Line": 471,
+    "Col": 18,
+    "Code": "TS18048",
+    "Message": "\u0027result\u0027 is possibly \u0027undefined\u0027."
+  },
+  {
+    "File": "src/services/orderOrchestration/centralOrderService.ts",
+    "Line": 473,
+    "Col": 17,
+    "Code": "TS18048",
+    "Message": "\u0027result\u0027 is possibly \u0027undefined\u0027."
+  },
+  {
+    "File": "src/services/orderOrchestration/centralOrderService.ts",
+    "Line": 474,
+    "Col": 24,
+    "Code": "TS18048",
+    "Message": "\u0027result\u0027 is possibly \u0027undefined\u0027."
+  },
+  {
+    "File": "src/services/orderOrchestration/centralOrderService.ts",
+    "Line": 492,
+    "Col": 30,
+    "Code": "TS2365",
+    "Message": "Operator \u0027+\u0027 cannot be applied to types \u0027PostgrestFilterBuilder\u003c{ Tables: { activity_log: { Row: { activity_type: string; created_at: string | null; description: string | null; id: string; new_values: Json; old_values: Json; practice_id: string | null; record_id: string | null; table_name: string | null; user_id: string | null; }; Insert: { ...; }; Update:...\u0027 and \u0027number\u0027."
+  },
+  {
+    "File": "src/services/orderOrchestration/centralOrderService.ts",
+    "Line": 492,
+    "Col": 43,
+    "Code": "TS2345",
+    "Message": "Argument of type \u0027\"reserved_quantity\"\u0027 is not assignable to parameter of type \u0027\"get_order_advice\" | \"calculate_next_run_time\" | \"calculate_order_suggestions\" | \"check_and_create_stock_alerts\" | \"check_user_permission\" | \"check_user_permission_v2\" | ... 29 more ... | \"validate_personal_magic_code\"\u0027."
+  },
+  {
+    "File": "src/services/orderOrchestration/centralOrderService.ts",
+    "Line": 515,
+    "Col": 20,
+    "Code": "TS2304",
+    "Message": "Cannot find name \u0027supplierOrders\u0027."
+  },
+  {
+    "File": "src/services/orderOrchestration/centralOrderService.ts",
+    "Line": 515,
+    "Col": 35,
+    "Code": "TS2304",
+    "Message": "Cannot find name \u0027i\u0027."
+  },
+  {
+    "File": "src/services/orderProcessing.ts",
+    "Line": 23,
+    "Col": 23,
+    "Code": "TS2304",
+    "Message": "Cannot find name \u0027$t\u0027."
+  },
+  {
+    "File": "src/services/orderProcessing.ts",
+    "Line": 42,
+    "Col": 23,
+    "Code": "TS2304",
+    "Message": "Cannot find name \u0027$t\u0027."
+  },
+  {
+    "File": "src/services/orderProcessing.ts",
+    "Line": 48,
+    "Col": 9,
+    "Code": "TS2322",
+    "Message": "Type \u0027string\u0027 is not assignable to type \u0027never\u0027."
+  },
+  {
+    "File": "src/services/orderProcessing.ts",
+    "Line": 52,
+    "Col": 23,
+    "Code": "TS2304",
+    "Message": "Cannot find name \u0027$t\u0027."
+  },
+  {
+    "File": "src/services/orderProcessing.ts",
+    "Line": 56,
+    "Col": 11,
+    "Code": "TS2375",
+    "Message": "Type \u0027{ practice_id: string; cart_id: string; order_number: string; status: string; notes: string | undefined; created_by: string; }\u0027 is not assignable to type \u0027{ actual_delivery_date?: string | null; bestellijst_id?: string | null; cart_id?: string | null; created_at?: string | null; created_by?: string | null; currency?: string | null; expected_delivery_date?: string | null; ... 11 more ...; updated_at?: string | null; }\u0027 with \u0027exactOptionalPropertyTypes: true\u0027. Consider adding \u0027undefined\u0027 to the types of the target\u0027s properties."
+  },
+  {
+    "File": "src/services/orderProcessing.ts",
+    "Line": 72,
+    "Col": 23,
+    "Code": "TS2304",
+    "Message": "Cannot find name \u0027$t\u0027."
+  },
+  {
+    "File": "src/services/orderProcessing.ts",
+    "Line": 93,
+    "Col": 25,
+    "Code": "TS2304",
+    "Message": "Cannot find name \u0027$t\u0027."
+  },
+  {
+    "File": "src/services/orderProcessing.ts",
+    "Line": 119,
+    "Col": 23,
+    "Code": "TS2304",
+    "Message": "Cannot find name \u0027$t\u0027."
+  },
+  {
+    "File": "src/services/orderProcessing.ts",
+    "Line": 153,
+    "Col": 23,
+    "Code": "TS2304",
+    "Message": "Cannot find name \u0027$t\u0027."
+  },
+  {
+    "File": "src/services/orderProcessing.ts",
+    "Line": 181,
+    "Col": 23,
+    "Code": "TS2304",
+    "Message": "Cannot find name \u0027$t\u0027."
+  },
+  {
+    "File": "src/services/orderProcessing.ts",
+    "Line": 193,
+    "Col": 23,
+    "Code": "TS2304",
+    "Message": "Cannot find name \u0027$t\u0027."
+  },
+  {
+    "File": "src/services/orderProcessing.ts",
+    "Line": 253,
+    "Col": 22,
+    "Code": "TS2769",
+    "Message": "No overload matches this call."
+  },
+  {
+    "File": "src/services/orderProcessing.ts",
+    "Line": 254,
+    "Col": 13,
+    "Code": "TS2322",
+    "Message": "Type \u0027string | null\u0027 is not assignable to type \u0027string\u0027."
+  },
+  {
+    "File": "src/services/orderProcessing.ts",
+    "Line": 268,
+    "Col": 20,
+    "Code": "TS2769",
+    "Message": "No overload matches this call."
+  },
+  {
+    "File": "src/services/orderProcessing.ts",
+    "Line": 269,
+    "Col": 11,
+    "Code": "TS2322",
+    "Message": "Type \u0027string | null\u0027 is not assignable to type \u0027string\u0027."
+  },
+  {
+    "File": "src/services/orderProcessing.ts",
+    "Line": 300,
+    "Col": 23,
+    "Code": "TS2304",
+    "Message": "Cannot find name \u0027$t\u0027."
+  },
+  {
+    "File": "src/services/orderProcessing.ts",
+    "Line": 347,
+    "Col": 13,
+    "Code": "TS2769",
+    "Message": "No overload matches this call."
+  },
+  {
+    "File": "src/services/orderProcessing.ts",
+    "Line": 405,
+    "Col": 23,
+    "Code": "TS2304",
+    "Message": "Cannot find name \u0027$t\u0027."
+  },
+  {
+    "File": "src/services/orderProcessing.ts",
+    "Line": 425,
+    "Col": 56,
+    "Code": "TS2304",
+    "Message": "Cannot find name \u0027MagentoOrder\u0027."
+  },
+  {
+    "File": "src/services/orderProcessing.ts",
+    "Line": 430,
+    "Col": 23,
+    "Code": "TS2304",
+    "Message": "Cannot find name \u0027$t\u0027."
+  },
+  {
+    "File": "src/services/orderProcessing.ts",
+    "Line": 434,
+    "Col": 25,
+    "Code": "TS2304",
+    "Message": "Cannot find name \u0027MagentoOrder\u0027."
+  },
+  {
+    "File": "src/services/orderProcessing.ts",
+    "Line": 447,
+    "Col": 30,
+    "Code": "TS2304",
+    "Message": "Cannot find name \u0027MagentoOrder\u0027."
+  },
+  {
+    "File": "src/services/permissions.ts",
+    "Line": 189,
+    "Col": 9,
+    "Code": "TS2322",
+    "Message": "Type \u0027string | null\u0027 is not assignable to type \u0027string | undefined\u0027."
+  },
+  {
+    "File": "src/services/stockMovements.ts",
+    "Line": 67,
+    "Col": 40,
+    "Code": "TS2375",
+    "Message": "Type \u0027{ practice_id: string; location_id: string; product_id: string; movement_type: MovementType; quantity_change: number; quantity_before: number; quantity_after: number; reference_type: string | null; ... 6 more ...; created_at: string; }\u0027 is not assignable to type \u0027{ batch_id?: string | null; batch_number?: string | null; created_at?: string | null; created_by?: string | null; expiry_date?: string | null; id?: string; location_id: string; movement_type: string; ... 8 more ...; reference_type?: string | null; }\u0027 with \u0027exactOptionalPropertyTypes: true\u0027. Consider adding \u0027undefined\u0027 to the types of the target\u0027s properties."
+  },
+  {
+    "File": "src/services/supabase.ts",
+    "Line": 214,
+    "Col": 7,
+    "Code": "TS2322",
+    "Message": "Type \u0027\"owner\" | \"manager\" | \"assistant\" | \"logistics\" | \"member\" | \"guest\" | \"platform_owner\" | null\u0027 is not assignable to type \u0027\"owner\" | \"manager\" | \"assistant\" | \"logistics\" | \"member\" | \"guest\" | \"platform_owner\"\u0027."
+  },
+  {
+    "File": "src/services/supplierAgnostic/multiSupplierOrderListService.ts",
+    "Line": 141,
+    "Col": 52,
+    "Code": "TS2551",
+    "Message": "Property \u0027current_quantity\u0027 does not exist on type \u0027StockLevelView\u0027. Did you mean \u0027currentQuantity\u0027?"
+  },
+  {
+    "File": "src/services/supplierAgnostic/multiSupplierOrderListService.ts",
+    "Line": 390,
+    "Col": 38,
+    "Code": "TS2339",
+    "Message": "Property \u0027supplier_product\u0027 does not exist on type \u0027{ minimum_stock: number | null; maximum_stock: number | null; current_stock: number | null; unit_price: number | null; lead_time_days: number | null; suppliers: { id: string; name: string; } | null; }\u0027."
+  },
+  {
+    "File": "src/services/supplierAgnostic/multiSupplierOrderListService.ts",
+    "Line": 423,
+    "Col": 42,
+    "Code": "TS2339",
+    "Message": "Property \u0027supplier_product\u0027 does not exist on type \u0027{ minimum_stock: number | null; maximum_stock: number | null; current_stock: number | null; unit_price: number | null; lead_time_days: number | null; suppliers: { id: string; name: string; } | null; }\u0027."
+  },
+  {
+    "File": "src/services/supplierAgnostic/multiSupplierOrderListService.ts",
+    "Line": 580,
+    "Col": 47,
+    "Code": "TS2339",
+    "Message": "Property \u0027name\u0027 does not exist on type \u0027SelectQueryError\u003c\"column \u0027lead_time_days\u0027 does not exist on \u0027suppliers\u0027.\"\u003e\u0027."
+  },
+  {
+    "File": "src/services/supplierAgnostic/multiSupplierOrderListService.ts",
+    "Line": 662,
+    "Col": 55,
+    "Code": "TS2379",
+    "Message": "Argument of type \u0027{ practice_id: string; name: string; description: string | undefined; location_id: string; auto_reorder_enabled: boolean; }\u0027 is not assignable to parameter of type \u0027{ practice_id: string; name: string; description?: string; location_id: string; auto_reorder_enabled?: boolean; }\u0027 with \u0027exactOptionalPropertyTypes: true\u0027. Consider adding \u0027undefined\u0027 to the types of the target\u0027s properties."
+  },
+  {
+    "File": "src/stores/batch.ts",
+    "Line": 23,
+    "Col": 25,
+    "Code": "TS2307",
+    "Message": "Cannot find module \u0027@/utils/array\u0027 or its corresponding type declarations."
+  },
+  {
+    "File": "src/stores/batch.ts",
+    "Line": 27,
+    "Col": 3,
+    "Code": "TS2459",
+    "Message": "Module \u0027\"@/domain/inventory/bridge\"\u0027 declares \u0027ProductBatchDTO\u0027 locally, but it is not exported."
+  },
+  {
+    "File": "src/stores/batch.ts",
+    "Line": 50,
+    "Col": 28,
+    "Code": "TS7006",
+    "Message": "Parameter \u0027batch\u0027 implicitly has an \u0027any\u0027 type."
+  },
+  {
+    "File": "src/stores/batch.ts",
+    "Line": 54,
+    "Col": 28,
+    "Code": "TS7006",
+    "Message": "Parameter \u0027batch\u0027 implicitly has an \u0027any\u0027 type."
+  },
+  {
+    "File": "src/stores/batch.ts",
+    "Line": 58,
+    "Col": 26,
+    "Code": "TS7006",
+    "Message": "Parameter \u0027batch\u0027 implicitly has an \u0027any\u0027 type."
+  },
+  {
+    "File": "src/stores/batch.ts",
+    "Line": 64,
+    "Col": 33,
+    "Code": "TS7006",
+    "Message": "Parameter \u0027batch\u0027 implicitly has an \u0027any\u0027 type."
+  },
+  {
+    "File": "src/stores/batch.ts",
+    "Line": 71,
+    "Col": 26,
+    "Code": "TS7006",
+    "Message": "Parameter \u0027batch\u0027 implicitly has an \u0027any\u0027 type."
+  },
+  {
+    "File": "src/stores/batch.ts",
+    "Line": 75,
+    "Col": 27,
+    "Code": "TS7006",
+    "Message": "Parameter \u0027total\u0027 implicitly has an \u0027any\u0027 type."
+  },
+  {
+    "File": "src/stores/batch.ts",
+    "Line": 75,
+    "Col": 34,
+    "Code": "TS7006",
+    "Message": "Parameter \u0027batch\u0027 implicitly has an \u0027any\u0027 type."
+  },
+  {
+    "File": "src/stores/batch.ts",
+    "Line": 83,
+    "Col": 25,
+    "Code": "TS7006",
+    "Message": "Parameter \u0027batch\u0027 implicitly has an \u0027any\u0027 type."
+  },
+  {
+    "File": "src/stores/batch.ts",
+    "Line": 94,
+    "Col": 25,
+    "Code": "TS7006",
+    "Message": "Parameter \u0027batch\u0027 implicitly has an \u0027any\u0027 type."
+  },
+  {
+    "File": "src/stores/batch.ts",
+    "Line": 105,
+    "Col": 25,
+    "Code": "TS7006",
+    "Message": "Parameter \u0027batch\u0027 implicitly has an \u0027any\u0027 type."
+  },
+  {
+    "File": "src/stores/batch.ts",
+    "Line": 115,
+    "Col": 23,
+    "Code": "TS7006",
+    "Message": "Parameter \u0027batch\u0027 implicitly has an \u0027any\u0027 type."
+  },
+  {
+    "File": "src/stores/batch.ts",
+    "Line": 131,
+    "Col": 27,
+    "Code": "TS7006",
+    "Message": "Parameter \u0027batch\u0027 implicitly has an \u0027any\u0027 type."
+  },
+  {
+    "File": "src/stores/batch.ts",
+    "Line": 133,
+    "Col": 7,
+    "Code": "TS2532",
+    "Message": "Object is possibly \u0027undefined\u0027."
+  },
+  {
+    "File": "src/stores/batch.ts",
+    "Line": 183,
+    "Col": 41,
+    "Code": "TS7006",
+    "Message": "Parameter \u0027batchRow\u0027 implicitly has an \u0027any\u0027 type."
+  },
+  {
+    "File": "src/stores/batch.ts",
+    "Line": 185,
+    "Col": 11,
+    "Code": "TS2322",
+    "Message": "Type \u0027{ id: string; name: string | null; sku: string | null; } | null\u0027 is not assignable to type \u0027Pick\u003c{ active: boolean | null; barcode: string | null; base_unit_indicator: boolean | null; brand: string | null; category: string | null; country_of_origin: string | null; created_at: string | null; ... 24 more ...; updated_at: string | null; }, \"name\" | \"sku\"\u003e | null | undefined\u0027."
+  },
+  {
+    "File": "src/stores/batch.ts",
+    "Line": 186,
+    "Col": 11,
+    "Code": "TS2322",
+    "Message": "Type \u0027{ id: string; name: string | null; } | null\u0027 is not assignable to type \u0027Pick\u003c{ access_code: string | null; address: string | null; allows_negative_stock: boolean | null; code: string; created_at: string | null; created_by: string | null; description: string | null; ... 12 more ...; updated_by: string | null; }, \"name\"\u003e | null | undefined\u0027."
+  },
+  {
+    "File": "src/stores/batch.ts",
+    "Line": 187,
+    "Col": 11,
+    "Code": "TS2322",
+    "Message": "Type \u0027{ id: string; name: string | null; } | null\u0027 is not assignable to type \u0027Pick\u003c{ address: string | null; api_endpoint: string | null; api_key_encrypted: string | null; api_type: string | null; auto_sync_enabled: boolean | null; business_registration: string | null; ... 27 more ...; website: string | null; }, \"name\"\u003e | null | undefined\u0027."
+  },
+  {
+    "File": "src/stores/batch.ts",
+    "Line": 236,
+    "Col": 59,
+    "Code": "TS7006",
+    "Message": "Parameter \u0027row\u0027 implicitly has an \u0027any\u0027 type."
+  },
+  {
+    "File": "src/stores/batch.ts",
+    "Line": 238,
+    "Col": 13,
+    "Code": "TS2322",
+    "Message": "Type \u0027{ id: string; name: string | null; sku: string | null; } | null\u0027 is not assignable to type \u0027Pick\u003c{ active: boolean | null; barcode: string | null; base_unit_indicator: boolean | null; brand: string | null; category: string | null; country_of_origin: string | null; created_at: string | null; ... 24 more ...; updated_at: string | null; }, \"name\" | \"sku\"\u003e | null | undefined\u0027."
+  },
+  {
+    "File": "src/stores/batch.ts",
+    "Line": 239,
+    "Col": 13,
+    "Code": "TS2322",
+    "Message": "Type \u0027{ id: string; name: string | null; } | null\u0027 is not assignable to type \u0027Pick\u003c{ access_code: string | null; address: string | null; allows_negative_stock: boolean | null; code: string; created_at: string | null; created_by: string | null; description: string | null; ... 12 more ...; updated_by: string | null; }, \"name\"\u003e | null | undefined\u0027."
+  },
+  {
+    "File": "src/stores/batch.ts",
+    "Line": 240,
+    "Col": 13,
+    "Code": "TS2322",
+    "Message": "Type \u0027{ id: string; name: string | null; } | null\u0027 is not assignable to type \u0027Pick\u003c{ address: string | null; api_endpoint: string | null; api_key_encrypted: string | null; api_type: string | null; auto_sync_enabled: boolean | null; business_registration: string | null; ... 27 more ...; website: string | null; }, \"name\"\u003e | null | undefined\u0027."
+  },
+  {
+    "File": "src/stores/batch.ts",
+    "Line": 268,
+    "Col": 7,
+    "Code": "TS2322",
+    "Message": "Type \u0027{ batch_id: string; product_id: string; product_name: string; product_sku: string; location_id: string; location_name: string; batch_number: string; expiry_date: string; current_quantity: number; days_until_expiry: number; urgency_level: string; }[]\u0027 is not assignable to type \u0027ExpiringBatch[] | { batch_id: string; product_id: string; product_name: string; product_sku: string; location_id: string; location_name: string; batch_number: string; expiry_date: string; current_quantity: number; days_until_expiry: number; urgency_level: \"warning\" | ... 2 more ... | \"expired\"; }[]\u0027."
+  },
+  {
+    "File": "src/stores/batch.ts",
+    "Line": 326,
+    "Col": 47,
+    "Code": "TS7006",
+    "Message": "Parameter \u0027row\u0027 implicitly has an \u0027any\u0027 type."
+  },
+  {
+    "File": "src/stores/batch.ts",
+    "Line": 328,
+    "Col": 13,
+    "Code": "TS2322",
+    "Message": "Type \u0027{ id: string; name: string | null; sku: string | null; } | null\u0027 is not assignable to type \u0027Pick\u003c{ active: boolean | null; barcode: string | null; base_unit_indicator: boolean | null; brand: string | null; category: string | null; country_of_origin: string | null; created_at: string | null; ... 24 more ...; updated_at: string | null; }, \"name\" | \"sku\"\u003e | null | undefined\u0027."
+  },
+  {
+    "File": "src/stores/batch.ts",
+    "Line": 329,
+    "Col": 13,
+    "Code": "TS2322",
+    "Message": "Type \u0027{ id: string; name: string | null; } | null\u0027 is not assignable to type \u0027Pick\u003c{ access_code: string | null; address: string | null; allows_negative_stock: boolean | null; code: string; created_at: string | null; created_by: string | null; description: string | null; ... 12 more ...; updated_by: string | null; }, \"name\"\u003e | null | undefined\u0027."
+  },
+  {
+    "File": "src/stores/batch.ts",
+    "Line": 330,
+    "Col": 13,
+    "Code": "TS2322",
+    "Message": "Type \u0027{ id: string; name: string | null; } | null\u0027 is not assignable to type \u0027Pick\u003c{ address: string | null; api_endpoint: string | null; api_key_encrypted: string | null; api_type: string | null; auto_sync_enabled: boolean | null; business_registration: string | null; ... 27 more ...; website: string | null; }, \"name\"\u003e | null | undefined\u0027."
+  },
+  {
+    "File": "src/stores/batch.ts",
+    "Line": 338,
+    "Col": 27,
+    "Code": "TS2339",
+    "Message": "Property \u0027practice_id\u0027 does not exist on type \u0027{ available_quantity: number; batch_id: string; batch_number: string; expiry_date: string; use_quantity: number; }\u0027."
+  },
+  {
+    "File": "src/stores/batch.ts",
+    "Line": 339,
+    "Col": 26,
+    "Code": "TS2339",
+    "Message": "Property \u0027product_id\u0027 does not exist on type \u0027{ available_quantity: number; batch_id: string; batch_number: string; expiry_date: string; use_quantity: number; }\u0027."
+  },
+  {
+    "File": "src/stores/batch.ts",
+    "Line": 340,
+    "Col": 27,
+    "Code": "TS2339",
+    "Message": "Property \u0027location_id\u0027 does not exist on type \u0027{ available_quantity: number; batch_id: string; batch_number: string; expiry_date: string; use_quantity: number; }\u0027."
+  },
+  {
+    "File": "src/stores/batch.ts",
+    "Line": 341,
+    "Col": 27,
+    "Code": "TS2339",
+    "Message": "Property \u0027supplier_id\u0027 does not exist on type \u0027{ available_quantity: number; batch_id: string; batch_number: string; expiry_date: string; use_quantity: number; }\u0027."
+  },
+  {
+    "File": "src/stores/batch.ts",
+    "Line": 344,
+    "Col": 29,
+    "Code": "TS2339",
+    "Message": "Property \u0027received_date\u0027 does not exist on type \u0027{ available_quantity: number; batch_id: string; batch_number: string; expiry_date: string; use_quantity: number; }\u0027."
+  },
+  {
+    "File": "src/stores/batch.ts",
+    "Line": 345,
+    "Col": 60,
+    "Code": "TS2551",
+    "Message": "Property \u0027current_quantity\u0027 does not exist on type \u0027{ available_quantity: number; batch_id: string; batch_number: string; expiry_date: string; use_quantity: number; }\u0027. Did you mean \u0027use_quantity\u0027?"
+  },
+  {
+    "File": "src/stores/batch.ts",
+    "Line": 346,
+    "Col": 33,
+    "Code": "TS2339",
+    "Message": "Property \u0027reserved_quantity\u0027 does not exist on type \u0027{ available_quantity: number; batch_id: string; batch_number: string; expiry_date: string; use_quantity: number; }\u0027."
+  },
+  {
+    "File": "src/stores/batch.ts",
+    "Line": 347,
+    "Col": 62,
+    "Code": "TS2551",
+    "Message": "Property \u0027current_quantity\u0027 does not exist on type \u0027{ available_quantity: number; batch_id: string; batch_number: string; expiry_date: string; use_quantity: number; }\u0027. Did you mean \u0027use_quantity\u0027?"
+  },
+  {
+    "File": "src/stores/batch.ts",
+    "Line": 348,
+    "Col": 25,
+    "Code": "TS2339",
+    "Message": "Property \u0027unit_cost\u0027 does not exist on type \u0027{ available_quantity: number; batch_id: string; batch_number: string; expiry_date: string; use_quantity: number; }\u0027."
+  },
+  {
+    "File": "src/stores/batch.ts",
+    "Line": 349,
+    "Col": 26,
+    "Code": "TS2339",
+    "Message": "Property \u0027total_cost\u0027 does not exist on type \u0027{ available_quantity: number; batch_id: string; batch_number: string; expiry_date: string; use_quantity: number; }\u0027."
+  },
+  {
+    "File": "src/stores/batch.ts",
+    "Line": 350,
+    "Col": 25,
+    "Code": "TS2339",
+    "Message": "Property \u0027currency\u0027 does not exist on type \u0027{ available_quantity: number; batch_id: string; batch_number: string; expiry_date: string; use_quantity: number; }\u0027."
+  },
+  {
+    "File": "src/stores/batch.ts",
+    "Line": 351,
+    "Col": 23,
+    "Code": "TS2339",
+    "Message": "Property \u0027status\u0027 does not exist on type \u0027{ available_quantity: number; batch_id: string; batch_number: string; expiry_date: string; use_quantity: number; }\u0027."
+  },
+  {
+    "File": "src/stores/batch.ts",
+    "Line": 404,
+    "Col": 31,
+    "Code": "TS2339",
+    "Message": "Property \u0027product_id\u0027 does not exist on type \u0027UpdateBatchRequest\u0027."
+  },
+  {
+    "File": "src/stores/batch.ts",
+    "Line": 405,
+    "Col": 32,
+    "Code": "TS2339",
+    "Message": "Property \u0027location_id\u0027 does not exist on type \u0027UpdateBatchRequest\u0027."
+  },
+  {
+    "File": "src/stores/batch.ts",
+    "Line": 406,
+    "Col": 32,
+    "Code": "TS2339",
+    "Message": "Property \u0027supplier_id\u0027 does not exist on type \u0027UpdateBatchRequest\u0027."
+  },
+  {
+    "File": "src/stores/batch.ts",
+    "Line": 407,
+    "Col": 33,
+    "Code": "TS2339",
+    "Message": "Property \u0027batch_number\u0027 does not exist on type \u0027UpdateBatchRequest\u0027."
+  },
+  {
+    "File": "src/stores/batch.ts",
+    "Line": 408,
+    "Col": 42,
+    "Code": "TS2339",
+    "Message": "Property \u0027supplier_batch_number\u0027 does not exist on type \u0027UpdateBatchRequest\u0027."
+  },
+  {
+    "File": "src/stores/batch.ts",
+    "Line": 409,
+    "Col": 32,
+    "Code": "TS2339",
+    "Message": "Property \u0027expiry_date\u0027 does not exist on type \u0027UpdateBatchRequest\u0027."
+  },
+  {
+    "File": "src/stores/batch.ts",
+    "Line": 410,
+    "Col": 34,
+    "Code": "TS2339",
+    "Message": "Property \u0027received_date\u0027 does not exist on type \u0027UpdateBatchRequest\u0027."
+  },
+  {
+    "File": "src/stores/batch.ts",
+    "Line": 414,
+    "Col": 39,
+    "Code": "TS2339",
+    "Message": "Property \u0027available_quantity\u0027 does not exist on type \u0027UpdateBatchRequest\u0027."
+  },
+  {
+    "File": "src/stores/batch.ts",
+    "Line": 416,
+    "Col": 31,
+    "Code": "TS2339",
+    "Message": "Property \u0027total_cost\u0027 does not exist on type \u0027UpdateBatchRequest\u0027."
+  },
+  {
+    "File": "src/stores/batch.ts",
+    "Line": 417,
+    "Col": 29,
+    "Code": "TS2339",
+    "Message": "Property \u0027currency\u0027 does not exist on type \u0027UpdateBatchRequest\u0027."
+  },
+  {
+    "File": "src/stores/batch.ts",
+    "Line": 419,
+    "Col": 42,
+    "Code": "TS2339",
+    "Message": "Property \u0027purchase_order_number\u0027 does not exist on type \u0027UpdateBatchRequest\u0027."
+  },
+  {
+    "File": "src/stores/batch.ts",
+    "Line": 420,
+    "Col": 35,
+    "Code": "TS2339",
+    "Message": "Property \u0027invoice_number\u0027 does not exist on type \u0027UpdateBatchRequest\u0027."
+  },
+  {
+    "File": "src/stores/batch.ts",
+    "Line": 426,
+    "Col": 11,
+    "Code": "TS1117",
+    "Message": "An object literal cannot have multiple properties with the same name."
+  },
+  {
+    "File": "src/stores/batch.ts",
+    "Line": 426,
+    "Col": 32,
+    "Code": "TS2339",
+    "Message": "Property \u0027supplier_id\u0027 does not exist on type \u0027UpdateBatchRequest\u0027."
+  },
+  {
+    "File": "src/stores/batch.ts",
+    "Line": 427,
+    "Col": 11,
+    "Code": "TS1117",
+    "Message": "An object literal cannot have multiple properties with the same name."
+  },
+  {
+    "File": "src/stores/batch.ts",
+    "Line": 427,
+    "Col": 42,
+    "Code": "TS2339",
+    "Message": "Property \u0027supplier_batch_number\u0027 does not exist on type \u0027UpdateBatchRequest\u0027."
+  },
+  {
+    "File": "src/stores/batch.ts",
+    "Line": 433,
+    "Col": 17,
+    "Code": "TS2379",
+    "Message": "Argument of type \u0027{ supplier_id: string | null | undefined; batch_number: string | undefined; supplier_batch_number: string | null | undefined; expiry_date: string | undefined; received_date: string | undefined; ... 12 more ...; quarantine_until: string | ... 1 more ... | undefined; }\u0027 is not assignable to parameter of type \u0027{ available_quantity?: number | null; batch_number?: string; created_at?: string | null; created_by?: string | null; currency?: string | null; current_quantity?: number; expiry_date?: string; ... 17 more ...; updated_at?: string | null; }\u0027 with \u0027exactOptionalPropertyTypes: true\u0027. Consider adding \u0027undefined\u0027 to the types of the target\u0027s properties."
+  },
+  {
+    "File": "src/stores/batch.ts",
+    "Line": 441,
+    "Col": 45,
+    "Code": "TS7006",
+    "Message": "Parameter \u0027batch\u0027 implicitly has an \u0027any\u0027 type."
+  },
+  {
+    "File": "src/stores/batch.ts",
+    "Line": 446,
+    "Col": 13,
+    "Code": "TS2322",
+    "Message": "Type \u0027{ id: string; name: string | null; sku: string | null; } | null\u0027 is not assignable to type \u0027Pick\u003c{ active: boolean | null; barcode: string | null; base_unit_indicator: boolean | null; brand: string | null; category: string | null; country_of_origin: string | null; created_at: string | null; ... 24 more ...; updated_at: string | null; }, \"name\" | \"sku\"\u003e | null | undefined\u0027."
+  },
+  {
+    "File": "src/stores/batch.ts",
+    "Line": 447,
+    "Col": 13,
+    "Code": "TS2322",
+    "Message": "Type \u0027{ id: string; name: string | null; } | null\u0027 is not assignable to type \u0027Pick\u003c{ access_code: string | null; address: string | null; allows_negative_stock: boolean | null; code: string; created_at: string | null; created_by: string | null; description: string | null; ... 12 more ...; updated_by: string | null; }, \"name\"\u003e | null | undefined\u0027."
+  },
+  {
+    "File": "src/stores/batch.ts",
+    "Line": 448,
+    "Col": 13,
+    "Code": "TS2322",
+    "Message": "Type \u0027{ id: string; name: string | null; } | null\u0027 is not assignable to type \u0027Pick\u003c{ address: string | null; api_endpoint: string | null; api_key_encrypted: string | null; api_type: string | null; auto_sync_enabled: boolean | null; business_registration: string | null; ... 27 more ...; website: string | null; }, \"name\"\u003e | null | undefined\u0027."
+  },
+  {
+    "File": "src/stores/batch.ts",
+    "Line": 478,
+    "Col": 44,
+    "Code": "TS7006",
+    "Message": "Parameter \u0027batch\u0027 implicitly has an \u0027any\u0027 type."
+  },
+  {
+    "File": "src/stores/batch.ts",
+    "Line": 599,
+    "Col": 7,
+    "Code": "TS7006",
+    "Message": "Parameter \u0027batch\u0027 implicitly has an \u0027any\u0027 type."
+  },
+  {
+    "File": "src/stores/batch.ts",
+    "Line": 614,
+    "Col": 7,
+    "Code": "TS7006",
+    "Message": "Parameter \u0027batch\u0027 implicitly has an \u0027any\u0027 type."
+  },
+  {
+    "File": "src/stores/batch.ts",
+    "Line": 647,
+    "Col": 7,
+    "Code": "TS7006",
+    "Message": "Parameter \u0027batch\u0027 implicitly has an \u0027any\u0027 type."
+  },
+  {
+    "File": "src/stores/batch.ts",
+    "Line": 684,
+    "Col": 7,
+    "Code": "TS2448",
+    "Message": "Block-scoped variable \u0027error\u0027 used before its declaration."
+  },
+  {
+    "File": "src/stores/batch.ts",
+    "Line": 684,
+    "Col": 7,
+    "Code": "TS2454",
+    "Message": "Variable \u0027error\u0027 is used before being assigned."
+  },
+  {
+    "File": "src/stores/batch.ts",
+    "Line": 684,
+    "Col": 7,
+    "Code": "TS18047",
+    "Message": "\u0027error\u0027 is possibly \u0027null\u0027."
+  },
+  {
+    "File": "src/stores/batch.ts",
+    "Line": 684,
+    "Col": 13,
+    "Code": "TS2339",
+    "Message": "Property \u0027value\u0027 does not exist on type \u0027PostgrestError\u0027."
+  },
+  {
+    "File": "src/stores/clinic.ts",
+    "Line": 20,
+    "Col": 29,
+    "Code": "TS2769",
+    "Message": "No overload matches this call."
+  },
+  {
+    "File": "src/stores/counting.ts",
+    "Line": 187,
+    "Col": 7,
+    "Code": "TS2322",
+    "Message": "Type \u0027{ id: string; name: string; sku: string; currentSystemQuantity: number; locationName: string; category: string | undefined; brand: string | undefined; unit: string | undefined; imageUrl: string | undefined; lastCountedAt: string | undefined; }[]\u0027 is not assignable to type \u0027CountingProduct[] | { id: string; name: string; sku: string; category?: string; brand?: string; unit?: string; currentSystemQuantity: number; lastCountedAt?: string; locationName: string; barcode?: string; imageUrl?: string; }[]\u0027."
+  },
+  {
+    "File": "src/stores/counting.ts",
+    "Line": 200,
+    "Col": 14,
+    "Code": "TS1360",
+    "Message": "Type \u0027{ id: string; name: string; sku: string; currentSystemQuantity: number; locationName: string; category: string | undefined; brand: string | undefined; unit: string | undefined; imageUrl: string | undefined; lastCountedAt: string | undefined; }\u0027 does not satisfy the expected type \u0027CountingProduct\u0027."
+  },
+  {
+    "File": "src/stores/inventory/inventory-alerts.ts",
+    "Line": 31,
+    "Col": 39,
+    "Code": "TS2551",
+    "Message": "Property \u0027minimum_quantity\u0027 does not exist on type \u0027StockLevelView\u0027. Did you mean \u0027minimumQuantity\u0027?"
+  },
+  {
+    "File": "src/stores/inventory/inventory-alerts.ts",
+    "Line": 32,
+    "Col": 22,
+    "Code": "TS2551",
+    "Message": "Property \u0027current_quantity\u0027 does not exist on type \u0027StockLevelView\u0027. Did you mean \u0027currentQuantity\u0027?"
+  },
+  {
+    "File": "src/stores/inventory/inventory-alerts.ts",
+    "Line": 34,
+    "Col": 29,
+    "Code": "TS2551",
+    "Message": "Property \u0027product_id\u0027 does not exist on type \u0027StockLevelView\u0027. Did you mean \u0027productId\u0027?"
+  },
+  {
+    "File": "src/stores/inventory/inventory-alerts.ts",
+    "Line": 34,
+    "Col": 54,
+    "Code": "TS2551",
+    "Message": "Property \u0027location_id\u0027 does not exist on type \u0027StockLevelView\u0027. Did you mean \u0027locationId\u0027?"
+  },
+  {
+    "File": "src/stores/inventory/inventory-alerts.ts",
+    "Line": 35,
+    "Col": 34,
+    "Code": "TS2551",
+    "Message": "Property \u0027product_id\u0027 does not exist on type \u0027StockLevelView\u0027. Did you mean \u0027productId\u0027?"
+  },
+  {
+    "File": "src/stores/inventory/inventory-alerts.ts",
+    "Line": 36,
+    "Col": 35,
+    "Code": "TS2551",
+    "Message": "Property \u0027location_id\u0027 does not exist on type \u0027StockLevelView\u0027. Did you mean \u0027locationId\u0027?"
+  },
+  {
+    "File": "src/stores/inventory/inventory-alerts.ts",
+    "Line": 38,
+    "Col": 37,
+    "Code": "TS2551",
+    "Message": "Property \u0027current_quantity\u0027 does not exist on type \u0027StockLevelView\u0027. Did you mean \u0027currentQuantity\u0027?"
+  },
+  {
+    "File": "src/stores/inventory/inventory-alerts.ts",
+    "Line": 41,
+    "Col": 24,
+    "Code": "TS2551",
+    "Message": "Property \u0027current_quantity\u0027 does not exist on type \u0027StockLevelView\u0027. Did you mean \u0027currentQuantity\u0027?"
+  },
+  {
+    "File": "src/stores/inventory/inventory-alerts.ts",
+    "Line": 46,
+    "Col": 22,
+    "Code": "TS2551",
+    "Message": "Property \u0027current_quantity\u0027 does not exist on type \u0027StockLevelView\u0027. Did you mean \u0027currentQuantity\u0027?"
+  },
+  {
+    "File": "src/stores/inventory/inventory-alerts.ts",
+    "Line": 48,
+    "Col": 29,
+    "Code": "TS2551",
+    "Message": "Property \u0027product_id\u0027 does not exist on type \u0027StockLevelView\u0027. Did you mean \u0027productId\u0027?"
+  },
+  {
+    "File": "src/stores/inventory/inventory-alerts.ts",
+    "Line": 48,
+    "Col": 54,
+    "Code": "TS2551",
+    "Message": "Property \u0027location_id\u0027 does not exist on type \u0027StockLevelView\u0027. Did you mean \u0027locationId\u0027?"
+  },
+  {
+    "File": "src/stores/inventory/inventory-alerts.ts",
+    "Line": 49,
+    "Col": 34,
+    "Code": "TS2551",
+    "Message": "Property \u0027product_id\u0027 does not exist on type \u0027StockLevelView\u0027. Did you mean \u0027productId\u0027?"
+  },
+  {
+    "File": "src/stores/inventory/inventory-alerts.ts",
+    "Line": 50,
+    "Col": 35,
+    "Code": "TS2551",
+    "Message": "Property \u0027location_id\u0027 does not exist on type \u0027StockLevelView\u0027. Did you mean \u0027locationId\u0027?"
+  },
+  {
+    "File": "src/stores/inventory/inventory-alerts.ts",
+    "Line": 52,
+    "Col": 37,
+    "Code": "TS2551",
+    "Message": "Property \u0027current_quantity\u0027 does not exist on type \u0027StockLevelView\u0027. Did you mean \u0027currentQuantity\u0027?"
+  },
+  {
+    "File": "src/stores/inventory/inventory-alerts.ts",
+    "Line": 54,
+    "Col": 61,
+    "Code": "TS2551",
+    "Message": "Property \u0027current_quantity\u0027 does not exist on type \u0027StockLevelView\u0027. Did you mean \u0027currentQuantity\u0027?"
+  },
+  {
+    "File": "src/stores/inventory/inventory-alerts.ts",
+    "Line": 81,
+    "Col": 34,
+    "Code": "TS2551",
+    "Message": "Property \u0027location_id\u0027 does not exist on type \u0027StockLevelView\u0027. Did you mean \u0027locationId\u0027?"
+  },
+  {
+    "File": "src/stores/inventory/inventory-alerts.ts",
+    "Line": 83,
+    "Col": 45,
+    "Code": "TS2551",
+    "Message": "Property \u0027location_name\u0027 does not exist on type \u0027StockLevelView\u0027. Did you mean \u0027locationName\u0027?"
+  },
+  {
+    "File": "src/stores/inventory/inventory-alerts.ts",
+    "Line": 128,
+    "Col": 16,
+    "Code": "TS2551",
+    "Message": "Property \u0027product_id\u0027 does not exist on type \u0027StockLevelView\u0027. Did you mean \u0027productId\u0027?"
+  },
+  {
+    "File": "src/stores/inventory/inventory-alerts.ts",
+    "Line": 128,
+    "Col": 48,
+    "Code": "TS2551",
+    "Message": "Property \u0027location_id\u0027 does not exist on type \u0027StockLevelView\u0027. Did you mean \u0027locationId\u0027?"
+  },
+  {
+    "File": "src/stores/inventory/inventory-alerts.ts",
+    "Line": 130,
+    "Col": 24,
+    "Code": "TS2551",
+    "Message": "Property \u0027current_quantity\u0027 does not exist on type \u0027StockLevelView\u0027. Did you mean \u0027currentQuantity\u0027?"
+  },
+  {
+    "File": "src/stores/inventory/inventory-realtime.ts",
+    "Line": 56,
+    "Col": 40,
+    "Code": "TS2345",
+    "Message": "Argument of type \u0027{ topic: string; params: { config: { broadcast?: { self?: boolean; ack?: boolean; }; presence?: { key?: string; }; private?: boolean; }; }; socket: { accessTokenValue: string | null; apiKey: string | null; channels: ...[]; ... 40 more ...; flushSendBuffer: () =\u003e void; }; ... 19 more ...; teardown: () =\u003e void; }\u0027 is not assignable to parameter of type \u0027RealtimeChannel\u0027."
+  },
+  {
+    "File": "src/stores/inventory/inventory-realtime.ts",
+    "Line": 86,
+    "Col": 41,
+    "Code": "TS2345",
+    "Message": "Argument of type \u0027{ topic: string; params: { config: { broadcast?: { self?: boolean; ack?: boolean; }; presence?: { key?: string; }; private?: boolean; }; }; socket: { accessTokenValue: string | null; apiKey: string | null; channels: ...[]; ... 40 more ...; flushSendBuffer: () =\u003e void; }; ... 19 more ...; teardown: () =\u003e void; }\u0027 is not assignable to parameter of type \u0027RealtimeChannel\u0027."
+  },
+  {
+    "File": "src/stores/orderLists/orderLists-minmax.ts",
+    "Line": 143,
+    "Col": 43,
+    "Code": "TS2339",
+    "Message": "Property \u0027lead_time_days\u0027 does not exist on type \u0027{ id: string; order_list_id: string; product_id: string; current_stock: number; minimum_stock: number; maximum_stock: number; reorder_point: number; suggested_quantity: number; urgency_level: UrgencyLevel; ... 12 more ...; preferred_supplier_id?: string; }\u0027."
+  },
+  {
+    "File": "src/stores/orderLists/orderLists-minmax.ts",
+    "Line": 147,
+    "Col": 7,
+    "Code": "TS2322",
+    "Message": "Type \u0027string | undefined\u0027 is not assignable to type \u0027string\u0027."
+  },
+  {
+    "File": "src/stores/orderLists/orderLists-minmax.ts",
+    "Line": 322,
+    "Col": 11,
+    "Code": "TS2353",
+    "Message": "Object literal may only specify known properties, and \u0027total_cost\u0027 does not exist in type \u0027{ auto_reorder_enabled?: boolean | null; created_at?: string | null; created_by?: string | null; description?: string | null; id?: string; is_template?: boolean | null; last_auto_check?: string | null; ... 14 more ...; updated_at?: string | null; }\u0027."
+  },
+  {
+    "File": "src/stores/orderLists/orderLists-minmax.ts",
+    "Line": 339,
+    "Col": 27,
+    "Code": "TS2304",
+    "Message": "Cannot find name \u0027OrderListItemInsert\u0027."
+  },
+  {
+    "File": "src/stores/orderLists/orderLists-realtime.ts",
+    "Line": 112,
+    "Col": 43,
+    "Code": "TS2345",
+    "Message": "Argument of type \u0027{ topic: string; params: { config: { broadcast?: { self?: boolean; ack?: boolean; }; presence?: { key?: string; }; private?: boolean; }; }; socket: { accessTokenValue: string | null; apiKey: string | null; channels: ...[]; ... 40 more ...; flushSendBuffer: () =\u003e void; }; ... 19 more ...; teardown: () =\u003e void; }\u0027 is not assignable to parameter of type \u0027RealtimeChannel\u0027."
+  },
+  {
+    "File": "src/stores/orderLists/orderLists-realtime.ts",
+    "Line": 122,
+    "Col": 45,
+    "Code": "TS2345",
+    "Message": "Argument of type \u0027{ topic: string; params: { config: { broadcast?: { self?: boolean; ack?: boolean; }; presence?: { key?: string; }; private?: boolean; }; }; socket: { accessTokenValue: string | null; apiKey: string | null; channels: ...[]; ... 40 more ...; flushSendBuffer: () =\u003e void; }; ... 19 more ...; teardown: () =\u003e void; }\u0027 is not assignable to parameter of type \u0027RealtimeChannel\u0027."
+  },
+  {
+    "File": "src/stores/orderLists/orderLists-realtime.ts",
+    "Line": 297,
+    "Col": 13,
+    "Code": "TS18047",
+    "Message": "\u0027newRow.current_quantity\u0027 is possibly \u0027null\u0027."
+  },
+  {
+    "File": "src/stores/orderLists/orderLists-realtime.ts",
+    "Line": 298,
+    "Col": 13,
+    "Code": "TS18047",
+    "Message": "\u0027oldRow.current_quantity\u0027 is possibly \u0027null\u0027."
+  },
+  {
+    "File": "src/stores/orderLists/orderLists-supplier-splitting.ts",
+    "Line": 258,
+    "Col": 9,
+    "Code": "TS2322",
+    "Message": "Type \u0027string | undefined\u0027 is not assignable to type \u0027string\u0027."
+  },
+  {
+    "File": "src/stores/orderLists/orderLists-supplier-splitting.ts",
+    "Line": 262,
+    "Col": 9,
+    "Code": "TS2322",
+    "Message": "Type \u0027string | undefined\u0027 is not assignable to type \u0027string\u0027."
+  },
+  {
+    "File": "src/stores/orderLists/orderLists-supplier-splitting.ts",
+    "Line": 353,
+    "Col": 9,
+    "Code": "TS2322",
+    "Message": "Type \u0027string | undefined\u0027 is not assignable to type \u0027string\u0027."
+  },
+  {
+    "File": "src/stores/orderLists/orderLists-supplier-splitting.ts",
+    "Line": 354,
+    "Col": 9,
+    "Code": "TS2322",
+    "Message": "Type \u0027string | undefined\u0027 is not assignable to type \u0027string\u0027."
+  },
+  {
+    "File": "src/stores/products/products-core.ts",
+    "Line": 16,
+    "Col": 62,
+    "Code": "TS2307",
+    "Message": "Cannot find module \u0027@/types/supplier\u0027 or its corresponding type declarations."
+  },
+  {
+    "File": "src/stores/products/products-core.ts",
+    "Line": 135,
+    "Col": 21,
+    "Code": "TS2339",
+    "Message": "Property \u0027lifecycleStatus\u0027 does not exist on type \u0027{ id: string; practiceId: string; sku: string; name: string; category: string | null; brand: string | null; unit: string | null; totalStock: number; availableStock: number; reservedStock: number; ... 28 more ...; raw?: { ...; }; }\u0027."
+  },
+  {
+    "File": "src/stores/products/products-core.ts",
+    "Line": 252,
+    "Col": 7,
+    "Code": "TS2322",
+    "Message": "Type \u0027{ id: string; name: string; description: string; parent_id: null; sort_order: number; is_active: true; }[]\u0027 is not assignable to type \u0027ProductCategory[] | { id: string; name: string; description?: string; parent_id?: string; sort_order: number; is_active: boolean; }[]\u0027."
+  },
+  {
+    "File": "src/stores/products/products-core.ts",
+    "Line": 258,
+    "Col": 13,
+    "Code": "TS2322",
+    "Message": "Type \u0027null\u0027 is not assignable to type \u0027string\u0027."
+  },
+  {
+    "File": "src/stores/products/products-core.ts",
+    "Line": 354,
+    "Col": 46,
+    "Code": "TS2339",
+    "Message": "Property \u0027batchStatus\u0027 does not exist on type \u0027{ id: string; practiceId: string; sku: string; name: string; category: string | null; brand: string | null; unit: string | null; totalStock: number; availableStock: number; reservedStock: number; ... 28 more ...; raw?: { ...; }; }\u0027."
+  },
+  {
+    "File": "src/stores/products/products-filters.ts",
+    "Line": 25,
+    "Col": 15,
+    "Code": "TS2339",
+    "Message": "Property \u0027minimumStock\u0027 does not exist on type \u0027ProductWithStock\u0027."
+  },
+  {
+    "File": "src/stores/products/products-filters.ts",
+    "Line": 197,
+    "Col": 52,
+    "Code": "TS2339",
+    "Message": "Property \u0027minimumStock\u0027 does not exist on type \u0027ProductWithStock\u0027."
+  },
+  {
+    "File": "src/stores/products/products-filters.ts",
+    "Line": 204,
+    "Col": 32,
+    "Code": "TS2339",
+    "Message": "Property \u0027minimumStock\u0027 does not exist on type \u0027ProductWithStock\u0027."
+  },
+  {
+    "File": "src/stores/products/products-inventory.ts",
+    "Line": 9,
+    "Col": 11,
+    "Code": "TS2339",
+    "Message": "Property \u0027minimumStock\u0027 does not exist on type \u0027ProductWithStock\u0027."
+  },
+  {
+    "File": "src/stores/products/products-inventory.ts",
+    "Line": 66,
+    "Col": 49,
+    "Code": "TS2339",
+    "Message": "Property \u0027minimumStock\u0027 does not exist on type \u0027ProductWithStock\u0027."
+  },
+  {
+    "File": "src/stores/products/products-inventory.ts",
+    "Line": 113,
+    "Col": 60,
+    "Code": "TS2339",
+    "Message": "Property \u0027minimumStock\u0027 does not exist on type \u0027ProductWithStock\u0027."
+  },
+  {
+    "File": "src/stores/products/products-inventory.ts",
+    "Line": 248,
+    "Col": 46,
+    "Code": "TS2339",
+    "Message": "Property \u0027batchStatus\u0027 does not exist on type \u0027ProductWithStock\u0027."
+  },
+  {
+    "File": "src/stores/suppliers.ts",
+    "Line": 18,
+    "Col": 3,
+    "Code": "TS2353",
+    "Message": "Object literal may only specify known properties, and \u0027practice_id\u0027 does not exist in type \u0027SupplierView\u0027."
+  },
+  {
+    "File": "src/stores/suppliers.ts",
+    "Line": 18,
+    "Col": 20,
+    "Code": "TS2339",
+    "Message": "Property \u0027practice_id\u0027 does not exist on type \u0027{ address: string | null; api_endpoint: string | null; api_key_encrypted: string | null; api_type: string | null; auto_sync_enabled: boolean | null; business_registration: string | null; ... 27 more ...; website: string | null; }\u0027."
+  },
+  {
+    "File": "src/stores/suppliers.ts",
+    "Line": 255,
+    "Col": 13,
+    "Code": "TS2353",
+    "Message": "Object literal may only specify known properties, and \u0027practice_id\u0027 does not exist in type \u0027{ cost_price?: number | null; created_at?: string | null; currency?: string | null; gtin?: string | null; id?: string; is_available?: boolean | null; is_preferred?: boolean | null; last_synced_at?: string | null; ... 8 more ...; updated_at?: string | null; }\u0027."
+  },
+  {
+    "File": "src/stores/suppliers.ts",
+    "Line": 313,
+    "Col": 17,
+    "Code": "TS2379",
+    "Message": "Argument of type \u0027{ cost_price: number | null; currency: string | null; list_price: number | null; minimum_order_quantity: number | null; order_multiple: number | null; is_available: boolean | null; ... 5 more ...; updated_at: string; }\u0027 is not assignable to parameter of type \u0027{ cost_price?: number | null; created_at?: string | null; currency?: string | null; gtin?: string | null; id?: string; is_available?: boolean | null; is_preferred?: boolean | null; last_synced_at?: string | null; ... 8 more ...; updated_at?: string | null; }\u0027 with \u0027exactOptionalPropertyTypes: true\u0027. Consider adding \u0027undefined\u0027 to the types of the target\u0027s properties."
+  },
+  {
+    "File": "src/stores/suppliers.ts",
+    "Line": 326,
+    "Col": 11,
+    "Code": "TS1360",
+    "Message": "Type \u0027{ cost_price: number | null; currency: string | null; list_price: number | null; minimum_order_quantity: number | null; order_multiple: number | null; is_available: boolean | null; ... 5 more ...; updated_at: string; }\u0027 does not satisfy the expected type \u0027{ cost_price?: number | null; created_at?: string | null; currency?: string | null; gtin?: string | null; id?: string; is_available?: boolean | null; is_preferred?: boolean | null; last_synced_at?: string | null; ... 8 more ...; updated_at?: string | null; }\u0027."
+  },
+  {
+    "File": "src/types/index.ts",
+    "Line": 34,
+    "Col": 15,
+    "Code": "TS2307",
+    "Message": "Cannot find module \u0027./compat\u0027 or its corresponding type declarations."
+  },
+  {
+    "File": "src/types/inventory.ts",
+    "Line": 102,
+    "Col": 3,
+    "Code": "TS2740",
+    "Message": "Type \u0027{ id: string; practiceId: string; productId: string; locationId: string; supplierId: string | null; batchNumber: string; expiryDate: string; currentQuantity: number; availableQuantity: number | null; ... 15 more ...; raw: ProductBatchRowWithRelations; }\u0027 is missing the following properties from type \u0027ProductBatchWithDetails\u0027: practice_id, product_id, location_id, supplier_id, and 14 more."
+  },
+  {
+    "File": "src/types/inventory.ts",
+    "Line": 146,
+    "Col": 20,
+    "Code": "TS2339",
+    "Message": "Property \u0027minimum_quantity\u0027 does not exist on type \u0027{ available_quantity: number | null; batch_number: string; created_at: string | null; created_by: string | null; currency: string | null; current_quantity: number; expiry_date: string; ... 17 more ...; updated_at: string | null; } | ProductBatchRowWithRelations\u0027."
+  },
+  {
+    "File": "src/types/inventory.ts",
+    "Line": 147,
+    "Col": 20,
+    "Code": "TS2339",
+    "Message": "Property \u0027maximum_quantity\u0027 does not exist on type \u0027{ available_quantity: number | null; batch_number: string; created_at: string | null; created_by: string | null; currency: string | null; current_quantity: number; expiry_date: string; ... 17 more ...; updated_at: string | null; } | ProductBatchRowWithRelations\u0027."
+  },
+  {
+    "File": "src/types/inventory.ts",
+    "Line": 148,
+    "Col": 25,
+    "Code": "TS2339",
+    "Message": "Property \u0027reorder_point\u0027 does not exist on type \u0027{ available_quantity: number | null; batch_number: string; created_at: string | null; created_by: string | null; currency: string | null; current_quantity: number; expiry_date: string; ... 17 more ...; updated_at: string | null; } | ProductBatchRowWithRelations\u0027."
+  },
+  {
+    "File": "src/types/inventory.ts",
+    "Line": 433,
+    "Col": 14,
+    "Code": "TS2339",
+    "Message": "Property \u0027location_name\u0027 does not exist on type \u0027StockLevelRowWithRelations\u0027."
+  },
+  {
+    "File": "src/types/inventory.ts",
+    "Line": 434,
+    "Col": 32,
+    "Code": "TS2339",
+    "Message": "Property \u0027product_name\u0027 does not exist on type \u0027StockLevelRowWithRelations\u0027."
+  },
+  {
+    "File": "src/types/inventory.ts",
+    "Line": 435,
+    "Col": 32,
+    "Code": "TS2339",
+    "Message": "Property \u0027stock_status\u0027 does not exist on type \u0027StockLevelRowWithRelations\u0027."
+  },
+  {
+    "File": "src/types/inventory.ts",
+    "Line": 436,
+    "Col": 39,
+    "Code": "TS2339",
+    "Message": "Property \u0027average_consumption\u0027 does not exist on type \u0027StockLevelRowWithRelations\u0027."
+  },
+  {
+    "File": "src/types/inventory.ts",
+    "Line": 437,
+    "Col": 42,
+    "Code": "TS2339",
+    "Message": "Property \u0027reorder_recommendation\u0027 does not exist on type \u0027StockLevelRowWithRelations\u0027."
+  },
+  {
+    "File": "src/types/inventory.ts",
+    "Line": 438,
+    "Col": 29,
+    "Code": "TS2339",
+    "Message": "Property \u0027priority\u0027 does not exist on type \u0027StockLevelRowWithRelations\u0027."
+  },
+  {
+    "File": "src/types/inventory.ts",
+    "Line": 439,
+    "Col": 42,
+    "Code": "TS2551",
+    "Message": "Property \u0027preferred_supplier_name\u0027 does not exist on type \u0027StockLevelRowWithRelations\u0027. Did you mean \u0027preferred_supplier_id\u0027?"
+  },
+  {
+    "File": "src/types/inventory.ts",
+    "Line": 477,
+    "Col": 7,
+    "Code": "TS2552",
+    "Message": "Cannot find name \u0027preferred_supplier_name\u0027. Did you mean \u0027preferredSupplierName\u0027?"
+  },
+  {
+    "File": "src/types/inventory.ts",
+    "Line": 1002,
+    "Col": 28,
+    "Code": "TS2339",
+    "Message": "Property \u0027minimum_stock\u0027 does not exist on type \u0027ProductWithRelations\u0027."
+  },
+  {
+    "File": "src/types/inventory.ts",
+    "Line": 1010,
+    "Col": 21,
+    "Code": "TS2339",
+    "Message": "Property \u0027supplier_id\u0027 does not exist on type \u0027ProductWithRelations\u0027."
+  },
+  {
+    "File": "src/types/inventory.ts",
+    "Line": 1011,
+    "Col": 23,
+    "Code": "TS2339",
+    "Message": "Property \u0027supplier_name\u0027 does not exist on type \u0027ProductWithRelations\u0027."
+  },
+  {
+    "File": "src/types/inventory.ts",
+    "Line": 1012,
+    "Col": 23,
+    "Code": "TS2339",
+    "Message": "Property \u0027supplier_code\u0027 does not exist on type \u0027ProductWithRelations\u0027."
+  },
+  {
+    "File": "src/types/inventory.ts",
+    "Line": 1013,
+    "Col": 24,
+    "Code": "TS2339",
+    "Message": "Property \u0027supplier_phone\u0027 does not exist on type \u0027ProductWithRelations\u0027."
+  },
+  {
+    "File": "src/types/inventory.ts",
+    "Line": 1014,
+    "Col": 24,
+    "Code": "TS2339",
+    "Message": "Property \u0027supplier_email\u0027 does not exist on type \u0027ProductWithRelations\u0027."
+  },
+  {
+    "File": "src/types/inventory.ts",
+    "Line": 1015,
+    "Col": 21,
+    "Code": "TS2339",
+    "Message": "Property \u0027expiry_date\u0027 does not exist on type \u0027ProductWithRelations\u0027."
+  },
+  {
+    "File": "src/types/inventory.ts",
+    "Line": 1016,
+    "Col": 20,
+    "Code": "TS2339",
+    "Message": "Property \u0027gs1_status\u0027 does not exist on type \u0027ProductWithRelations\u0027."
+  },
+  {
+    "File": "src/types/inventory.ts",
+    "Line": 1017,
+    "Col": 22,
+    "Code": "TS2339",
+    "Message": "Property \u0027batch_status\u0027 does not exist on type \u0027ProductWithRelations\u0027."
+  },
+  {
+    "File": "src/types/inventory.ts",
+    "Line": 1026,
+    "Col": 41,
+    "Code": "TS2339",
+    "Message": "Property \u0027supplier_id\u0027 does not exist on type \u0027ProductWithRelations\u0027."
+  },
+  {
+    "File": "src/types/inventory.ts",
+    "Line": 1027,
+    "Col": 43,
+    "Code": "TS2339",
+    "Message": "Property \u0027supplier_name\u0027 does not exist on type \u0027ProductWithRelations\u0027."
+  },
+  {
+    "File": "src/types/inventory.ts",
+    "Line": 1028,
+    "Col": 43,
+    "Code": "TS2339",
+    "Message": "Property \u0027supplier_code\u0027 does not exist on type \u0027ProductWithRelations\u0027."
+  },
+  {
+    "File": "src/types/inventory.ts",
+    "Line": 1029,
+    "Col": 44,
+    "Code": "TS2339",
+    "Message": "Property \u0027supplier_phone\u0027 does not exist on type \u0027ProductWithRelations\u0027."
+  },
+  {
+    "File": "src/types/inventory.ts",
+    "Line": 1030,
+    "Col": 44,
+    "Code": "TS2339",
+    "Message": "Property \u0027supplier_email\u0027 does not exist on type \u0027ProductWithRelations\u0027."
+  },
+  {
+    "File": "src/types/inventory.ts",
+    "Line": 1031,
+    "Col": 41,
+    "Code": "TS2339",
+    "Message": "Property \u0027expiry_date\u0027 does not exist on type \u0027ProductWithRelations\u0027."
+  },
+  {
+    "File": "src/types/inventory.ts",
+    "Line": 1032,
+    "Col": 40,
+    "Code": "TS2339",
+    "Message": "Property \u0027gs1_status\u0027 does not exist on type \u0027ProductWithRelations\u0027."
+  },
+  {
+    "File": "src/types/inventory.ts",
+    "Line": 1033,
+    "Col": 42,
+    "Code": "TS2339",
+    "Message": "Property \u0027batch_status\u0027 does not exist on type \u0027ProductWithRelations\u0027."
+  },
+  {
+    "File": "src/types/inventory.ts",
+    "Line": 1038,
+    "Col": 21,
+    "Code": "TS2339",
+    "Message": "Property \u0027practice_id\u0027 does not exist on type \u0027ProductWithRelations\u0027."
+  },
+  {
+    "File": "src/types/inventory.ts",
+    "Line": 1049,
+    "Col": 20,
+    "Code": "TS2339",
+    "Message": "Property \u0027unit_price\u0027 does not exist on type \u0027ProductWithRelations\u0027."
+  },
+  {
+    "File": "src/types/inventory.ts",
+    "Line": 1050,
+    "Col": 22,
+    "Code": "TS2339",
+    "Message": "Property \u0027lowest_price\u0027 does not exist on type \u0027ProductWithRelations\u0027."
+  },
+  {
+    "File": "src/types/inventory.ts",
+    "Line": 1051,
+    "Col": 19,
+    "Code": "TS2339",
+    "Message": "Property \u0027supplier_id\u0027 does not exist on type \u0027ProductWithRelations\u0027."
+  },
+  {
+    "File": "src/types/inventory.ts",
+    "Line": 1052,
+    "Col": 19,
+    "Code": "TS2339",
+    "Message": "Property \u0027supplier_id\u0027 does not exist on type \u0027ProductWithRelations\u0027."
+  },
+  {
+    "File": "src/types/inventory.ts",
+    "Line": 1052,
+    "Col": 42,
+    "Code": "TS2339",
+    "Message": "Property \u0027supplier_name\u0027 does not exist on type \u0027ProductWithRelations\u0027."
+  },
+  {
+    "File": "src/types/inventory.ts",
+    "Line": 1057,
+    "Col": 3,
+    "Code": "TS2353",
+    "Message": "Object literal may only specify known properties, and \u0027minimumStock\u0027 does not exist in type \u0027ProductWithStock\u0027."
+  },
+  {
+    "File": "src/types/inventory.ts",
+    "Line": 1248,
+    "Col": 19,
+    "Code": "TS2339",
+    "Message": "Property \u0027updated_at\u0027 does not exist on type \u0027{ alternative_suppliers: string[] | null; auto_suggest_enabled: boolean | null; average_consumption: number | null; created_at: string | null; current_stock: number | null; id: string; ... 19 more ...; urgency_level: string | null; }\u0027."
+  },
+  {
+    "File": "src/utils/batch-helpers.ts",
+    "Line": 326,
+    "Col": 34,
+    "Code": "TS2339",
+    "Message": "Property \u0027received_date\u0027 does not exist on type \u0027ProductBatchWithDetails\u0027."
+  },
+  {
+    "File": "src/utils/batch-helpers.ts",
+    "Line": 326,
+    "Col": 53,
+    "Code": "TS2339",
+    "Message": "Property \u0027created_at\u0027 does not exist on type \u0027ProductBatchWithDetails\u0027."
+  },
+  {
+    "File": "src/utils/batch-helpers.ts",
+    "Line": 327,
+    "Col": 34,
+    "Code": "TS2339",
+    "Message": "Property \u0027received_date\u0027 does not exist on type \u0027ProductBatchWithDetails\u0027."
+  },
+  {
+    "File": "src/utils/batch-helpers.ts",
+    "Line": 327,
+    "Col": 53,
+    "Code": "TS2339",
+    "Message": "Property \u0027created_at\u0027 does not exist on type \u0027ProductBatchWithDetails\u0027."
+  }
+]

@@ -14,6 +14,7 @@ export type ResourceType =
   | 'orders'
   | 'analytics'
   | 'users'
+  | 'practice'
   | 'all';
 
 export interface Permission {

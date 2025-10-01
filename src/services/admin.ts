@@ -91,7 +91,7 @@ export class AdminService {
     };
 
     const { data, error } = await supabase
-      .from('locations')
+      .from('practice_locations')
       .insert(newLocation)
       .select()
       .single();
@@ -118,7 +118,7 @@ export class AdminService {
     }
 
     const { data, error } = await supabase
-      .from('locations')
+      .from('practice_locations')
       .select('*')
       .eq('practice_id', practiceId)
       .order('is_main', { ascending: false })
@@ -143,21 +143,28 @@ export class AdminService {
       throw new Error(ADMIN_ERRORS.INSUFFICIENT_PERMISSIONS_UPDATE);
     }
 
+    const authStore = useAuthStore();
+    const practiceId = authStore.selectedPractice?.id;
+
+    if (!practiceId) {
+      throw new Error(ADMIN_ERRORS.NO_PRACTICE_SELECTED);
+    }
+
     // Get current data for audit log
     const { data: currentData } = await supabase
-      .from('locations')
+      .from('practice_locations')
       .select('*')
       .eq('id', locationId)
       .single();
 
     const { data, error } = await supabase
-      .from('locations')
+      .from('practice_locations')
       .update({
         ...updates,
         updated_at: new Date().toISOString(),
       })
       .eq('id', locationId)
-      .eq('practice_id', this.authStore?.userProfile?.clinic_id || '')
+      .eq('practice_id', practiceId)
       .select()
       .single();
 
@@ -188,7 +195,7 @@ export class AdminService {
 
     // Get current data for audit log
     const { data: currentData } = await supabase
-      .from('locations')
+      .from('practice_locations')
       .select('*')
       .eq('id', locationId)
       .single();
@@ -199,7 +206,7 @@ export class AdminService {
     }
 
     const { error } = await supabase
-      .from('locations')
+      .from('practice_locations')
       .delete()
       .eq('id', locationId);
 
@@ -605,13 +612,13 @@ export class AdminService {
 
     // Remove main flag from all locations
     await supabase
-      .from('locations')
+      .from('practice_locations')
       .update({ is_main: false })
       .eq('practice_id', practiceId);
 
     // Set new main location
     const { error } = await supabase
-      .from('locations')
+      .from('practice_locations')
       .update({ is_main: true })
       .eq('id', locationId)
       .eq('practice_id', practiceId);

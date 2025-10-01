@@ -73,3 +73,11 @@ export type ShoppingCartWithItems = ShoppingCart & {
 export type PermanentUserWithPractice = PermanentUser & {
   practices: SupabaseTable<'practices'> | null;
 };
+
+// Additional type exports for admin service
+export type Location = SupabaseTable<'practice_locations'>;
+export type LocationInsert = SupabaseInsert<'practice_locations'>;
+export type LocationUpdate = SupabaseUpdate<'practice_locations'>;
+export type UserPermission = SupabaseTable<'user_permissions'>;
+export type UserPermissionInsert = SupabaseInsert<'user_permissions'>;
+export type UserPermissionUpdate = SupabaseUpdate<'user_permissions'>;
