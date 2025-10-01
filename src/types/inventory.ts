@@ -62,6 +62,7 @@ interface SupplierProductView {
   supplier: SimpleSupplierView;
   supplierSku: string | null;
   costPrice: number | null;
+  listPrice: number | null;
   currency: string | null;
   leadTimeDays: number | null;
   isPreferred: boolean | null;
@@ -142,12 +143,31 @@ export const mapProductBatchRowToDetails = (
       onHand: row.current_quantity,
       reserved: row.reserved_quantity ?? null,
       available: row.available_quantity ?? null,
-      minimum: row.minimum_quantity ?? null,
-      maximum: row.maximum_quantity ?? null,
-      reorderPoint: row.reorder_point ?? null,
+      minimum: null, // Not available on batch records
+      maximum: null, // Not available on batch records
+      reorderPoint: null, // Not available on batch records
     },
     legacy,
     raw: withRelations,
+    // Deprecated snake_case properties (for backward compatibility)
+    practice_id: row.practice_id,
+    product_id: row.product_id,
+    location_id: row.location_id,
+    supplier_id: row.supplier_id ?? resolvedSupplier?.id ?? null,
+    batch_number: row.batch_number,
+    expiry_date: row.expiry_date,
+    current_quantity: row.current_quantity,
+    available_quantity: row.available_quantity ?? null,
+    reserved_quantity: row.reserved_quantity ?? null,
+    unit_cost: row.unit_cost ?? null,
+    total_cost: resolveNullableNumber(withRelations.total_cost),
+    product_name: legacy.product_name,
+    product_sku: legacy.product_sku,
+    product_category: legacy.product_category,
+    location_name: legacy.location_name,
+    location_code: legacy.location_code,
+    location_type: legacy.location_type,
+    supplier_name: legacy.supplier_name,
   };
 };
 
@@ -428,14 +448,13 @@ export const mapStockLevelRowToView = (
   row: StockLevelRow | StockLevelRowWithRelations
 ): StockLevelView => {
   const extended = row as StockLevelRowWithRelations;
-  const locationName =
-    extended.location_name ?? extended.practice_locations?.name ?? null;
-  const productName = extended.product_name ?? extended.products?.name ?? null;
-  const stockStatus = extended.stock_status ?? null;
-  const averageConsumption = extended.average_consumption ?? null;
-  const reorderRecommendation = extended.reorder_recommendation ?? null;
-  const priority = extended.priority ?? null;
-  const preferredSupplierName = extended.preferred_supplier_name ?? null;
+  const locationName = extended.practice_locations?.name ?? null;
+  const productName = extended.products?.name ?? null;
+  const stockStatus = null; // Computed field not available on row
+  const averageConsumption = null; // Computed field not available on row
+  const reorderRecommendation = null; // Computed field not available on row
+  const priority = null; // Computed field not available on row
+  const preferredSupplierName = null; // Would need supplier join
 
   return {
     id: row.id,
@@ -886,6 +905,25 @@ export interface ProductWithStock {
   supplierProducts: SupplierProductView[];
   batches: ProductBatchSummary[];
   legacy: ProductLegacyView;
+  netContentValue?: number | null;
+  netContentUom?: string | null;
+  netWeight?: number | null;
+  grossWeight?: number | null;
+  gtin?: string | null;
+  gpcBrickCode?: string | null;
+  countryOfOrigin?: string | null;
+  productLifecycleStatus?: string | null;
+  imageUrl?: string | null;
+  requiresBatchTracking?: boolean | null;
+  baseUnitIndicator?: boolean | null;
+  orderableUnitIndicator?: boolean | null;
+  despatchUnitIndicator?: boolean | null;
+  effectiveFromDate?: string | null;
+  effectiveToDate?: string | null;
+  description?: string | null;
+  createdAt?: string | null;
+  updatedAt?: string | null;
+  barcode?: string | null;
   raw?: ProductWithRelations;
 }
 
@@ -901,8 +939,8 @@ export interface ProductLegacyView {
   supplierPhone?: string | null;
   supplierEmail?: string | null;
   expiryDate?: string | null;
-  gs1Status?: 'complete' | 'incomplete';
-  batchStatus?: 'batch_tracked' | 'manual_stock';
+  gs1Status?: 'complete' | 'incomplete' | null;
+  batchStatus?: 'batch_tracked' | 'manual_stock' | null;
   /** @deprecated use camelCase fields */
   total_stock?: number;
   /** @deprecated use camelCase fields */
@@ -926,9 +964,9 @@ export interface ProductLegacyView {
   /** @deprecated use camelCase fields */
   expiry_date?: string | null;
   /** @deprecated use camelCase fields */
-  gs1_status?: 'complete' | 'incomplete';
+  gs1_status?: 'complete' | 'incomplete' | null;
   /** @deprecated use camelCase fields */
-  batch_status?: 'batch_tracked' | 'manual_stock';
+  batch_status?: 'batch_tracked' | 'manual_stock' | null;
 }
 
 export const determineStockStatus = (
@@ -953,6 +991,7 @@ export const mapProductRowToView = (
     },
     supplierSku: product.supplier_sku ?? null,
     costPrice: product.cost_price ?? null,
+    listPrice: product.list_price ?? null,
     currency: product.currency ?? null,
     leadTimeDays: product.lead_time_days ?? null,
     isPreferred: product.is_preferred ?? null,
@@ -1033,6 +1072,27 @@ export const mapProductRowToView = (
     stockLevels,
     supplierProducts,
     batches: [],
+    minimumStock,
+    description: row.description ?? null,
+    createdAt: row.created_at ?? null,
+    updatedAt: row.updated_at ?? null,
+    requiresBatchTracking: row.requires_batch_tracking ?? null,
+    productLifecycleStatus: row.product_lifecycle_status ?? null,
+    gpcBrickCode: row.gpc_brick_code ?? null,
+    countryOfOrigin: row.country_of_origin ?? null,
+    imageUrl: row.image_url ?? null,
+    barcode: row.barcode ?? null,
+    gtin: row.gtin ?? null,
+    baseUnitIndicator: row.base_unit_indicator ?? null,
+    orderableUnitIndicator: row.orderable_unit_indicator ?? null,
+    despatchUnitIndicator: row.despatch_unit_indicator ?? null,
+    effectiveFromDate: row.effective_from_date ?? null,
+    effectiveToDate: row.effective_to_date ?? null,
+    netContentValue: row.net_content_value ?? null,
+    netContentUom: row.net_content_uom ?? null,
+    netWeight: row.net_weight ?? null,
+    grossWeight: row.gross_weight ?? null,
+    preferredSupplierId: row.preferred_supplier_id ?? null,
     legacy,
     raw: row,
   };
