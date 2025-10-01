@@ -38,6 +38,26 @@ interface ProductBatchFetchRow extends Tables<'product_batches'> {
   supplier: { id: string; name: string | null } | null;
 }
 
+// Type for get_fifo_batches RPC function result
+interface FifoBatchResult {
+  batch_id: string;
+  batch_number: string;
+  expiry_date: string;
+  available_quantity: number;
+  use_quantity: number;
+  practice_id?: string;
+  product_id?: string;
+  location_id?: string;
+  supplier_id?: string | null;
+  received_date?: string;
+  current_quantity?: number;
+  reserved_quantity?: number;
+  unit_cost?: number | null;
+  total_cost?: number | null;
+  currency?: string | null;
+  status?: string | null;
+}
+
 export const useBatchStore = defineStore('batch', () => {
   const batches = ref<ProductBatchDTO[]>([]);
   const expiringBatches = ref<ExpiringBatch[]>([]);
@@ -300,7 +320,7 @@ export const useBatchStore = defineStore('batch', () => {
       loading.value = true;
       error.value = null;
 
-      const { data, error: fetchError } = await supabase.rpc(
+      const { data, error: fetchError } = await supabase.rpc<FifoBatchResult>(
         'get_fifo_batches',
         {
           p_product_id: productId,
