@@ -40,3 +40,10 @@ export function sortBy<T>(
     return aKey < bKey ? -1 : aKey > bKey ? 1 : 0;
   });
 }
+
+/**
+ * Ensure value is an array (convert single items to array)
+ */
+export function toArray<T>(value: T | T[]): T[] {
+  return Array.isArray(value) ? value : [value];
+}
