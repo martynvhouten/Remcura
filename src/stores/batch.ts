@@ -105,7 +105,7 @@ export const useBatchStore = defineStore('batch', () => {
         expiry_date: batch.expiryDate,
         current_quantity: batch.currentQuantity,
         created_at: batch.createdAt,
-      }))
+      })) as any
     )
   );
 
@@ -115,7 +115,7 @@ export const useBatchStore = defineStore('batch', () => {
         id: batch.id,
         expiry_date: batch.expiryDate,
         current_quantity: batch.currentQuantity,
-      })),
+      })) as any,
       ['critical', 'expired']
     )
   );
@@ -126,7 +126,7 @@ export const useBatchStore = defineStore('batch', () => {
         id: batch.id,
         expiry_date: batch.expiryDate,
         current_quantity: batch.currentQuantity,
-      })),
+      })) as any,
       ['warning', 'high']
     )
   );
@@ -150,7 +150,10 @@ export const useBatchStore = defineStore('batch', () => {
 
     batches.value.forEach(batch => {
       const urgency = calculateBatchUrgency(batch.expiryDate);
-      grouped[urgency.level].push(batch);
+      const level = urgency.level || 'normal';
+      if (grouped[level]) {
+        grouped[level].push(batch);
+      }
     });
 
     return grouped;
@@ -202,9 +205,9 @@ export const useBatchStore = defineStore('batch', () => {
 
       batches.value = toArray(data).map(batchRow =>
         mapProductBatchRow(batchRow as ProductBatchFetchRow, {
-          product: (batchRow as ProductBatchFetchRow).product,
-          location: (batchRow as ProductBatchFetchRow).location,
-          supplier: (batchRow as ProductBatchFetchRow).supplier,
+          product: (batchRow as ProductBatchFetchRow).product as any,
+          location: (batchRow as ProductBatchFetchRow).location as any,
+          supplier: (batchRow as ProductBatchFetchRow).supplier as any,
         })
       );
     } catch (err) {
@@ -255,9 +258,9 @@ export const useBatchStore = defineStore('batch', () => {
 
         expiringBatches.value = toArray(fallbackData).map(row => {
           const mapped = mapProductBatchRow(row as ProductBatchFetchRow, {
-            product: (row as ProductBatchFetchRow).product,
-            location: (row as ProductBatchFetchRow).location,
-            supplier: (row as ProductBatchFetchRow).supplier,
+            product: (row as ProductBatchFetchRow).product as any,
+            location: (row as ProductBatchFetchRow).location as any,
+            supplier: (row as ProductBatchFetchRow).supplier as any,
           });
           const diffDays = Math.ceil(
             (new Date(mapped.expiryDate).getTime() - Date.now()) /
