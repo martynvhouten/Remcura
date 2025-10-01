@@ -125,10 +125,7 @@ class PracticeDashboardService {
         alerts,
       };
     } catch (error) {
-      dashboardLogger.error(
-        'Error loading practice dashboard:',
-        ServiceErrorHandler.normalizeError(error)
-      );
+      dashboardLogger.error('Error loading practice dashboard:', error);
       throw error;
     }
   }
@@ -219,19 +216,21 @@ class PracticeDashboardService {
       // 🚀 PERFORMANCE: Calculate metrics from parallel data
       const lowStockCount =
         stockLevels?.filter(
-          stock => stock.current_quantity <= (stock.minimum_quantity || 0)
+          stock =>
+            (stock.current_quantity ?? 0) <= (stock.minimum_quantity ?? 0)
         ).length || 0;
 
       const pendingOrders =
-        orders?.filter(order => ['draft', 'active'].includes(order.status))
-          .length || 0;
+        orders?.filter(
+          order => order.status && ['draft', 'active'].includes(order.status)
+        ).length || 0;
 
       const totalProducts = products?.length || 0;
 
       const totalValue =
         inventoryValue?.reduce((total, item) => {
           const price = (item.products as any)?.price || 0;
-          return total + item.current_quantity * price;
+          return total + (item.current_quantity ?? 0) * price;
         }, 0) || 0;
 
       return {
@@ -278,7 +277,7 @@ class PracticeDashboardService {
         }
       } catch (error) {
         ServiceErrorHandler.handle(
-          error,
+          error as Error,
           {
             service: 'PracticeDashboardService',
             operation: 'loadWidget',
@@ -553,17 +552,22 @@ class PracticeDashboardService {
       return { items: [] };
     }
 
-    const dtoItems =
-      (data as StockLevelView[] | null)?.map(mapStockLevelToDashboardDTO) ?? [];
-    const items = dtoItems
-      .filter(item => item.currentQuantity <= item.minimumQuantity)
-      .map(item => ({
-        name: item.productName ?? 'Unknown product',
-        category: 'N/A',
-        current_quantity: item.currentQuantity,
-        minimum_quantity: item.minimumQuantity,
-        location: item.locationName ?? 'Unknown',
-      }));
+    // Map Supabase response to expected format
+    interface LowStockRow {
+      current_quantity: number | null;
+      minimum_quantity: number | null;
+      products: { name: string; category: string | null } | null;
+      practice_locations: { name: string } | null;
+    }
+
+    const items =
+      (data as LowStockRow[] | null)?.map(row => ({
+        name: row.products?.name ?? 'Unknown product',
+        category: row.products?.category ?? 'N/A',
+        current_quantity: row.current_quantity ?? 0,
+        minimum_quantity: row.minimum_quantity ?? 0,
+        location: row.practice_locations?.name ?? 'Unknown',
+      })) ?? [];
 
     return {
       items: items || [],
@@ -765,7 +769,7 @@ class PracticeDashboardService {
 
       if (error) {
         ServiceErrorHandler.handle(
-          error,
+          error as Error,
           {
             service: 'PracticeDashboardService',
             operation: 'loadSupplierPerformance',
@@ -798,7 +802,7 @@ class PracticeDashboardService {
       };
     } catch (error) {
       ServiceErrorHandler.handle(
-        error,
+        error as Error,
         {
           service: 'PracticeDashboardService',
           operation: 'loadSupplierPerformance',
