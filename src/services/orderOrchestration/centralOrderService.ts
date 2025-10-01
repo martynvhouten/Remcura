@@ -10,6 +10,28 @@ import type { ReorderSuggestion } from '@/stores/orderLists/orderLists-minmax';
 import type { LowStockItemDTO } from '@/types/analytics';
 import { AnalyticsService } from '@/services/analytics';
 
+// Extended ReorderSuggestion with additional fields used in this service
+interface ExtendedReorderSuggestion extends Partial<ReorderSuggestion> {
+  product_id: string;
+  product_name?: string;
+  sku?: string;
+  location_id?: string;
+  location_name?: string;
+  current_stock: number;
+  minimum_stock: number;
+  reorder_point: number | null;
+  calculated_order_quantity: number;
+  unit_price: number;
+  preferred_supplier_id?: string | null;
+  preferred_supplier_name?: string;
+  urgency_level: string;
+  estimated_cost?: number;
+  lead_time_days?: number;
+  practice_id?: string;
+  last_ordered_at?: string | null;
+  stock_trend?: string;
+}
+
 export interface OrderResult {
   orderId: string;
   supplierOrders: SupplierOrder[];
@@ -124,7 +146,7 @@ export class CentralOrderService {
    * Create multi-supplier order from reorder suggestions
    */
   async createMultiSupplierOrder(
-    items: ReorderSuggestion[]
+    items: ExtendedReorderSuggestion[]
   ): Promise<OrderResult> {
     try {
       orderLogger.info(
@@ -367,7 +389,7 @@ export class CentralOrderService {
 
   private async generateReorderSuggestions(
     lowStockItems: LowStockItemDTO[]
-  ): Promise<ReorderSuggestion[]> {
+  ): Promise<ExtendedReorderSuggestion[]> {
     return lowStockItems.map(item => ({
       product_id: item.productId,
       product_name: item.productName,
@@ -400,7 +422,7 @@ export class CentralOrderService {
 
   private async createDraftOrderForApproval(
     practiceId: string,
-    items: ReorderSuggestion[]
+    items: ExtendedReorderSuggestion[]
   ): Promise<OrderResult> {
     // Create draft order list for manual approval
     const { data: orderList, error } = await supabase
@@ -477,7 +499,7 @@ export class CentralOrderService {
   }
 
   private async updateStockReservations(
-    items: ReorderSuggestion[],
+    items: ExtendedReorderSuggestion[],
     action: 'reserve' | 'unreserve'
   ): Promise<void> {
     for (const item of items) {
