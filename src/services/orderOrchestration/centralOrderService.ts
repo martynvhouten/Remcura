@@ -11,7 +11,8 @@ import type { LowStockItemDTO } from '@/types/analytics';
 import { AnalyticsService } from '@/services/analytics';
 
 // Extended ReorderSuggestion with additional fields used in this service
-interface ExtendedReorderSuggestion extends Partial<ReorderSuggestion> {
+// Independent interface - not extending ReorderSuggestion to avoid conflicts
+interface ExtendedReorderSuggestion {
   product_id: string;
   product_name?: string;
   sku?: string;
@@ -137,7 +138,10 @@ export class CentralOrderService {
       // 4. Process automatic order
       return await this.createMultiSupplierOrder(reorderSuggestions);
     } catch (error) {
-      orderLogger.error('Error in automatic reorder process:', error);
+      orderLogger.error(
+        'Error in automatic reorder process:',
+        error as Record<string, unknown>
+      );
       throw error;
     }
   }
@@ -155,7 +159,7 @@ export class CentralOrderService {
 
       // 1. Split items by supplier
       const splitResult =
-        await this.supplierSplittingService.splitOrderBySuppliers(items);
+        await this.supplierSplittingService.splitOrderBySuppliers(items as any);
 
       // 2. Send orders to suppliers
       const sendingResults = await this.sendOrdersToSuppliers(
@@ -176,7 +180,7 @@ export class CentralOrderService {
         0
       );
       const totalValue = splitResult.supplier_orders.reduce(
-        (sum, order) => sum + order.total_value,
+        (sum, order) => sum + (order.total_cost ?? 0),
         0
       );
 
@@ -199,7 +203,10 @@ export class CentralOrderService {
         errors,
       };
     } catch (error) {
-      orderLogger.error('Error creating multi-supplier order:', error);
+      orderLogger.error(
+        'Error creating multi-supplier order:',
+        error as Record<string, unknown>
+      );
       throw error;
     }
   }
@@ -216,7 +223,7 @@ export class CentralOrderService {
 
       // Create notifications for successful orders
       for (const result of results) {
-        if (result.status === 'sent' || result.status === 'confirmed') {
+        if (result.status === 'success') {
           await this.createOrderNotification(
             result.supplier_id,
             result.supplier_name,
@@ -236,7 +243,10 @@ export class CentralOrderService {
 
       return results;
     } catch (error) {
-      orderLogger.error('Error sending orders to suppliers:', error);
+      orderLogger.error(
+        'Error sending orders to suppliers:',
+        error as Record<string, unknown>
+      );
       throw error;
     }
   }
@@ -246,6 +256,18 @@ export class CentralOrderService {
    */
   async trackOrderStatus(orderIds: string[]): Promise<OrderStatus[]> {
     try {
+      // Boundary type for Supabase response
+      interface SupplierOrderRow {
+        id: string;
+        order_reference: string | null;
+        status: string | null;
+        tracking_number: string | null;
+        estimated_delivery_date: string | null;
+        actual_delivery_date: string | null;
+        updated_at: string | null;
+        suppliers: { id: string; name: string } | null;
+      }
+
       const { data, error } = await supabase
         .from('supplier_orders')
         .select(
@@ -264,20 +286,23 @@ export class CentralOrderService {
 
       if (error) throw error;
 
-      return (data || []).map(order => ({
+      return ((data as SupplierOrderRow[] | null) || []).map(order => ({
         orderId: order.id,
         supplierOrderId: order.id,
-        supplierId: order.suppliers.id,
-        supplierName: order.suppliers.name,
-        status: order.status,
-        orderReference: order.order_reference,
-        trackingNumber: order.tracking_number,
-        estimatedDelivery: order.estimated_delivery_date,
-        actualDelivery: order.actual_delivery_date,
-        lastUpdated: order.updated_at,
+        supplierId: order.suppliers?.id ?? '',
+        supplierName: order.suppliers?.name ?? 'Unknown',
+        status: order.status ?? 'unknown',
+        orderReference: order.order_reference ?? '',
+        trackingNumber: order.tracking_number ?? null,
+        estimatedDelivery: order.estimated_delivery_date ?? null,
+        actualDelivery: order.actual_delivery_date ?? null,
+        lastUpdated: order.updated_at ?? null,
       }));
     } catch (error) {
-      orderLogger.error('Error tracking order status:', error);
+      orderLogger.error(
+        'Error tracking order status:',
+        error as Record<string, unknown>
+      );
       throw error;
     }
   }
@@ -367,7 +392,10 @@ export class CentralOrderService {
         `Successfully updated stock for ${orderItems.length} items`
       );
     } catch (error) {
-      orderLogger.error('Error updating stock after delivery:', error);
+      orderLogger.error(
+        'Error updating stock after delivery:',
+        error as Record<string, unknown>
+      );
       throw error;
     }
   }
