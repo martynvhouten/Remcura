@@ -1,11 +1,11 @@
 import { ref, reactive } from 'vue';
 import { supabase } from '@/services/supabase';
 import type {
-  Bestellijst,
-  BestellijstItem,
   Product,
   ShoppingCart,
   ShoppingCartItem,
+  OrderList,
+  OrderListInsert,
 } from '@/types/supabase';
 import { useAuthStore } from '@/stores/auth';
 import { offlineLogger } from 'src/utils/logger';
@@ -161,7 +161,10 @@ export class OfflineService {
         products_count: this.offlineData.products.length,
       });
     } catch (error) {
-      offlineLogger.error('Failed to download offline data:', error);
+      offlineLogger.error(
+        'Failed to download offline data:',
+        error as Record<string, unknown>
+      );
       throw error;
     }
   }
@@ -238,7 +241,10 @@ export class OfflineService {
           await this.syncSingleAction(action);
           syncedActions.push(action.id);
         } catch (error) {
-          offlineLogger.error('Failed to sync action:', action, error);
+          offlineLogger.error('Failed to sync action:', {
+            action,
+            error: error as Record<string, unknown>,
+          });
 
           // Increment retry count
           action.retry_count++;
@@ -281,7 +287,10 @@ export class OfflineService {
         remaining_count: this.offlineActions.value.length,
       });
     } catch (error) {
-      offlineLogger.error('Sync process failed:', error);
+      offlineLogger.error(
+        'Sync process failed:',
+        error as Record<string, unknown>
+      );
     } finally {
       this.syncInProgress.value = false;
     }
@@ -302,7 +311,7 @@ export class OfflineService {
         await this.syncDeleteAction(action);
         break;
       default:
-        throw new Error($t('offline.unknownactiontypeactiontype'));
+        throw new Error(`Unknown action type: ${action.type}`);
     }
   }
 
@@ -310,10 +319,12 @@ export class OfflineService {
    * Sync create action
    */
   private async syncCreateAction(action: OfflineAction): Promise<void> {
-    const { error } = await supabase.from(action.table).insert(action.data);
+    const table = (supabase as any).from(action.table);
+    const result: any = await table.insert(action.data);
+    const { error } = result;
 
     if (error) {
-      throw new Error($t('offline.failedtosynccreate'));
+      throw new Error(`Failed to sync create: ${error.message}`);
     }
   }
 
@@ -323,13 +334,12 @@ export class OfflineService {
   private async syncUpdateAction(action: OfflineAction): Promise<void> {
     const { id, ...updateData } = action.data;
 
-    const { error } = await supabase
-      .from(action.table)
-      .update(updateData)
-      .eq('id', id);
+    const table = (supabase as any).from(action.table);
+    const result: any = await table.update(updateData).eq('id', id);
+    const { error } = result;
 
     if (error) {
-      throw new Error($t('offline.failedtosyncupdate'));
+      throw new Error(`Failed to sync update: ${error.message}`);
     }
   }
 
@@ -337,13 +347,12 @@ export class OfflineService {
    * Sync delete action
    */
   private async syncDeleteAction(action: OfflineAction): Promise<void> {
-    const { error } = await supabase
-      .from(action.table)
-      .delete()
-      .eq('id', action.data.id);
+    const table = (supabase as any).from(action.table);
+    const result: any = await table.delete().eq('id', action.data.id);
+    const { error } = result;
 
     if (error) {
-      throw new Error($t('offline.failedtosyncdelete'));
+      throw new Error(`Failed to sync delete: ${error.message}`);
     }
   }
 
@@ -352,7 +361,7 @@ export class OfflineService {
    */
   updateBestellijstItemOffline(
     itemId: string,
-    updates: Partial<BestellijstItem>
+    updates: Record<string, unknown>
   ): void {
     // Update local data
     const index = this.offlineData.bestellijst_items.findIndex(
@@ -385,7 +394,7 @@ export class OfflineService {
     );
 
     if (existingItem) {
-      existingItem.quantity += quantity;
+      existingItem.quantity = (existingItem.quantity as number) + quantity;
       existingItem.updated_at = new Date().toISOString();
 
       this.addOfflineAction('update', 'shopping_cart_items', {
@@ -425,7 +434,10 @@ export class OfflineService {
         })
       );
     } catch (error) {
-      offlineLogger.error('Failed to save offline data:', error);
+      offlineLogger.error(
+        'Failed to save offline data:',
+        error as Record<string, unknown>
+      );
     }
   }
 
@@ -443,7 +455,10 @@ export class OfflineService {
         });
       }
     } catch (error) {
-      offlineLogger.error('Failed to load offline data:', error);
+      offlineLogger.error(
+        'Failed to load offline data:',
+        error as Record<string, unknown>
+      );
     }
   }
 
@@ -462,7 +477,10 @@ export class OfflineService {
         )
       );
     } catch (error) {
-      offlineLogger.error('Failed to save offline actions:', error);
+      offlineLogger.error(
+        'Failed to save offline actions:',
+        error as Record<string, unknown>
+      );
     }
   }
 
@@ -480,7 +498,10 @@ export class OfflineService {
         }));
       }
     } catch (error) {
-      offlineLogger.error('Failed to load offline actions:', error);
+      offlineLogger.error(
+        'Failed to load offline actions:',
+        error as Record<string, unknown>
+      );
     }
   }
 
@@ -489,11 +510,14 @@ export class OfflineService {
    */
   private startPeriodicSync(): void {
     // Sync every 5 minutes when online
-    this.syncInterval = setInterval(() => {
-      if (this.isOnline.value && this.offlineActions.value.length > 0) {
-        this.syncToServer();
-      }
-    }, 5 * 60 * 1000);
+    this.syncInterval = setInterval(
+      () => {
+        if (this.isOnline.value && this.offlineActions.value.length > 0) {
+          this.syncToServer();
+        }
+      },
+      5 * 60 * 1000
+    );
   }
 
   /**
@@ -540,7 +564,7 @@ export class OfflineService {
       await this.syncToServer();
       await this.downloadLatestData();
     } else {
-      throw new Error($t('offline.cannotsyncwhileoffline'));
+      throw new Error('Cannot sync while offline');
     }
   }
 

@@ -1,0 +1,173 @@
+﻿================================================================================
+TYPESCRIPT ERROR ANALYSIS REPORT
+================================================================================
+
+Generated: 2025-10-01 19:33:22
+
+## 1. SUMMARY
+--------------------------------------------------------------------------------
+Total Errors: 510
+Affected Files: 53
+Unique Error Codes: 33
+
+## 2. ERROR CODE BREAKDOWN
+--------------------------------------------------------------------------------
+Error Code         Count        % Description                                       
+--------------------------------------------------------------------------------
+TS2339               119    23,3% Property does not exist on type                   
+TS2345                77    15,1% Argument type not assignable                      
+TS2322                61      12% Type not assignable                               
+TS2304                50     9,8% Cannot find name                                  
+TS2551                38     7,5% Property does not exist (with suggestion)         
+TS2769                27     5,3% No overload matches call                          
+TS7006                21     4,1% Parameter implicitly has any type                 
+TS2305                13     2,5% Module has no exported member                     
+TS2353                13     2,5% Unknown property in object literal                
+TS18048               12     2,4% Possibly undefined                                
+TS2532                10       2% Object possibly undefined                         
+TS18047               10       2% Other                                             
+TS2538                 8     1,6% Type cannot be used as index                      
+TS2379                 6     1,2% exactOptionalPropertyTypes issue                  
+TS2440                 4     0,8% Other                                             
+TS2352                 4     0,8% Conversion may be a mistake                       
+TS2459                 4     0,8% Other                                             
+TS2367                 4     0,8% Other                                             
+TS1117                 4     0,8% Duplicate property in object literal              
+TS2307                 3     0,6% Other                                             
+TS2412                 3     0,6% exactOptionalPropertyTypes type mismatch          
+TS2375                 3     0,6% Other                                             
+TS7053                 3     0,6% Other                                             
+TS1360                 2     0,4% Other                                             
+TS2552                 2     0,4% Cannot find name (with suggestion)                
+TS18046                2     0,4% Other                                             
+TS2740                 1     0,2% Other                                             
+TS2448                 1     0,2% Other                                             
+TS2454                 1     0,2% Other                                             
+TS2554                 1     0,2% Expected X arguments but got Y                    
+TS2741                 1     0,2% Other                                             
+TS2365                 1     0,2% Other                                             
+TS2589                 1     0,2% Other                                             
+
+## 3. TOP 20 FILES WITH MOST ERRORS
+--------------------------------------------------------------------------------
+
+1. src/stores/batch.ts
+   Errors: 69
+
+   +- Line 23, Col 25: TS2307
+   |  Cannot find module '@/utils/array' or its corresponding type declarations.
+
+2. src/services/orderOrchestration/centralOrderService.ts
+   Errors: 50
+
+   +- Line 100, Col 68: TS2339
+   |  Property 'unit_price' does not exist on type 'ReorderSuggestion'.
+
+3. src/services/admin.ts
+   Errors: 38
+
+   +- Line 3, Col 3: TS2305
+   |  Module '"@/types/supabase"' has no exported member 'Location'.
+
+4. src/types/inventory.ts
+   Errors: 37
+
+   +- Line 102, Col 3: TS2740
+   |  Type '{ id: string; practiceId: string; productId: string; locationId: string; supplierId: string | null; batchNumber: s...
+
+5. src/services/dashboard/practice-dashboard.ts
+   Errors: 25
+
+   +- Line 15, Col 31: TS2375
+   |  Type '{ productId: string; locationId: string; currentQuantity: number; minimumQuantity: number; reservedQuantity: numbe...
+
+6. src/services/magento/index.ts
+   Errors: 25
+
+   +- Line 11, Col 3: TS2440
+   |  Import declaration conflicts with local declaration of 'MagentoOrder'.
+
+7. src/services/orderProcessing.ts
+   Errors: 22
+
+   +- Line 23, Col 23: TS2304
+   |  Cannot find name '$t'.
+
+8. src/services/offline.ts
+   Errors: 21
+
+   +- Line 4, Col 3: TS2305
+   |  Module '"@/types/supabase"' has no exported member 'Bestellijst'.
+
+9. src/services/dashboard/platform-dashboard.ts
+   Errors: 21
+
+   +- Line 83, Col 66: TS2345
+   |  Argument of type 'unknown' is not assignable to parameter of type 'LogData'.
+
+10. src/stores/inventory/inventory-alerts.ts
+   Errors: 20
+
+   +- Line 31, Col 39: TS2551
+   |  Property 'minimum_quantity' does not exist on type 'StockLevelView'. Did you mean 'minimumQuantity'?
+
+11. src/services/inventory/automationService.ts
+   Errors: 16
+
+   +- Line 56, Col 5: TS2322
+   |  Type '{ urgencyLevel: "critical" | "low" | "medium" | "high"; daysOutOfStock: number | undefined; productId: string; pro...
+
+12. src/services/magicInvites.ts
+   Errors: 16
+
+   +- Line 2, Col 15: TS2305
+   |  Module '"../types/supabase"' has no exported member 'Json'.
+
+13. src/services/notifications.ts
+   Errors: 12
+
+   +- Line 5, Col 3: TS2305
+   |  Module '"@/types/supabase"' has no exported member 'PushToken'.
+
+14. src/services/integration/inventoryOrderIntegration.ts
+   Errors: 11
+
+   +- Line 61, Col 53: TS2769
+   |  No overload matches this call.
+
+15. src/presets/filters/products.ts
+   Errors: 10
+
+   +- Line 29, Col 7: TS2322
+   |  Type '"large"' is not assignable to type '"xs" | "sm" | "md" | "lg"'.
+
+16. src/composables/useBulkData.ts
+   Errors: 8
+
+   +- Line 78, Col 9: TS2532
+   |  Object is possibly 'undefined'.
+
+17. src/composables/useFormValidation.ts
+   Errors: 6
+
+   +- Line 196, Col 7: TS2353
+   |  Object literal may only specify known properties, and 'value' does not exist in type 'FieldValidation'.
+
+18. src/composables/useTableSorting.ts
+   Errors: 6
+
+   +- Line 21, Col 43: TS2379
+   |  Argument of type '{ sortBy: string; descending: boolean; page: number; rowsPerPage: number; rowsNumber: number; }' is no...
+
+19. src/services/monitoring.ts
+   Errors: 5
+
+   +- Line 14, Col 5: TS2322
+   |  Type '(message: string, data?: Record<string, unknown>) => void' is not assignable to type '((message: string, data?: Lo...
+
+20. src/stores/products/products-core.ts
+   Errors: 5
+
+   +- Line 16, Col 62: TS2307
+   |  Cannot find module '@/types/supplier' or its corresponding type declarations.
+
