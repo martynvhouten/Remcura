@@ -26,7 +26,7 @@ export const productsFilterPreset: FilterPreset = {
       clearable: true,
       debounce: 300,
       priority: 1,
-      size: 'large',
+      size: 'lg',
     },
 
     // === CATALOG GROUP ===
@@ -48,7 +48,7 @@ export const productsFilterPreset: FilterPreset = {
       },
       clearable: true,
       priority: 2,
-      size: 'medium',
+      size: 'md',
     },
 
     {
@@ -68,7 +68,7 @@ export const productsFilterPreset: FilterPreset = {
       },
       clearable: true,
       priority: 3,
-      size: 'medium',
+      size: 'md',
     },
 
     // === INVENTORY GROUP ===
@@ -104,7 +104,7 @@ export const productsFilterPreset: FilterPreset = {
       },
       clearable: true,
       priority: 4,
-      size: 'medium',
+      size: 'md',
     },
 
     {
@@ -120,7 +120,7 @@ export const productsFilterPreset: FilterPreset = {
       step: 0.01,
       group: 'catalog',
       priority: 5,
-      size: 'medium',
+      size: 'md',
     },
 
     {
@@ -133,7 +133,7 @@ export const productsFilterPreset: FilterPreset = {
       color: 'positive',
       group: 'inventory',
       priority: 6,
-      size: 'small',
+      size: 'sm',
     },
 
     // === ADVANCED GROUP ===
@@ -148,7 +148,7 @@ export const productsFilterPreset: FilterPreset = {
       clearable: true,
       group: 'advanced',
       priority: 7,
-      size: 'medium',
+      size: 'md',
     },
 
     {
@@ -173,7 +173,7 @@ export const productsFilterPreset: FilterPreset = {
       },
       clearable: true,
       priority: 8,
-      size: 'medium',
+      size: 'md',
     },
 
     {
@@ -197,7 +197,7 @@ export const productsFilterPreset: FilterPreset = {
       },
       clearable: true,
       priority: 9,
-      size: 'medium',
+      size: 'md',
     },
 
     {
@@ -235,7 +235,7 @@ export const productsFilterPreset: FilterPreset = {
       },
       clearable: true,
       priority: 10,
-      size: 'medium',
+      size: 'md',
     },
   ],
 
