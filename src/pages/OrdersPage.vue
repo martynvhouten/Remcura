@@ -249,7 +249,9 @@
   };
 
   const handleFilterReset = (event: FilterResetEvent) => {
-    filterValues.value = { ...ordersFilterPreset.defaultFilters };
+    filterValues.value = {
+      ...(ordersFilterPreset.defaultFilters as FilterValues),
+    };
   };
 
   const handleFilterClear = () => {
@@ -274,10 +276,16 @@
 
     // Apply date range filter
     const orderDateRange = filterValues.value.order_date_range;
-    if (orderDateRange && orderDateRange.from) {
-      const fromDate = new Date(orderDateRange.from);
-      const toDate = orderDateRange.to
-        ? new Date(orderDateRange.to)
+    if (
+      orderDateRange &&
+      typeof orderDateRange === 'object' &&
+      'from' in orderDateRange
+    ) {
+      const fromDate = new Date(
+        (orderDateRange as { from?: Date; to?: Date }).from ?? new Date()
+      );
+      const toDate = (orderDateRange as { from?: Date; to?: Date }).to
+        ? new Date((orderDateRange as { from?: Date; to?: Date }).to!)
         : new Date();
 
       filtered = filtered.filter(order => {
@@ -290,14 +298,16 @@
     const amountRange = filterValues.value.amount_range;
     if (
       amountRange &&
-      (amountRange.min !== undefined || amountRange.max !== undefined)
+      typeof amountRange === 'object' &&
+      ('min' in amountRange || 'max' in amountRange)
     ) {
       filtered = filtered.filter(order => {
         const amount = order.total_amount || 0;
-        if (amountRange.min !== undefined && amount < amountRange.min) {
+        const range = amountRange as { min?: number; max?: number };
+        if (range.min !== undefined && amount < range.min) {
           return false;
         }
-        if (amountRange.max !== undefined && amount > amountRange.max) {
+        if (range.max !== undefined && amount > range.max) {
           return false;
         }
         return true;
@@ -306,10 +316,16 @@
 
     // Apply expected delivery date range filter
     const deliveryDateRange = filterValues.value.expected_delivery_date_range;
-    if (deliveryDateRange && deliveryDateRange.from) {
-      const fromDate = new Date(deliveryDateRange.from);
-      const toDate = deliveryDateRange.to
-        ? new Date(deliveryDateRange.to)
+    if (
+      deliveryDateRange &&
+      typeof deliveryDateRange === 'object' &&
+      'from' in deliveryDateRange
+    ) {
+      const fromDate = new Date(
+        (deliveryDateRange as { from?: Date; to?: Date }).from ?? new Date()
+      );
+      const toDate = (deliveryDateRange as { from?: Date; to?: Date }).to
+        ? new Date((deliveryDateRange as { from?: Date; to?: Date }).to!)
         : new Date();
 
       filtered = filtered.filter(order => {
