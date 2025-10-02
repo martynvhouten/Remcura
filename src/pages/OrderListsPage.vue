@@ -344,7 +344,7 @@
       transition-hide="slide-down"
     >
       <MobileCountingInterface
-        :practice-id="authStore.clinicId"
+        :practice-id="authStore.clinicId ?? undefined"
         @close="showMobileCountingDialog = false"
       />
     </q-dialog>
@@ -367,6 +367,7 @@
   import { ref, computed, onMounted, watch } from 'vue';
   import { useQuasar } from 'quasar';
   import { useRouter } from 'vue-router';
+  import { useI18n } from 'vue-i18n';
   import { useOrderListsStore } from '@/stores/orderLists';
   import { useAuthStore } from '@/stores/auth';
   import { useSuppliersStore } from '@/stores/suppliers';
@@ -387,6 +388,7 @@
   import { advancedOrderListsFilterPreset as orderListsFilterPreset } from '@/presets/filters/advancedOrderLists';
 
   const $q = useQuasar();
+  const $t = useI18n().t;
   const router = useRouter();
   const orderListsStore = useOrderListsStore();
   const authStore = useAuthStore();
@@ -425,7 +427,7 @@
         f => f.id === 'supplier'
       );
       if (supplierFilter && supplierFilter.type === 'select') {
-        supplierFilter.options = suppliers.map(supplier => ({
+        (supplierFilter as any).options = suppliers.map(supplier => ({
           label: supplier.name,
           value: supplier.id,
         }));
@@ -440,27 +442,27 @@
       name: 'name',
       required: true,
       label: 'Naam',
-      align: 'left',
+      align: 'left' as const,
       field: 'name',
       sortable: true,
     },
     {
       name: 'status',
-      align: 'center',
+      align: 'center' as const,
       label: 'Status',
       field: 'status',
       sortable: true,
     },
     {
       name: 'items',
-      align: 'center',
+      align: 'center' as const,
       label: 'Items',
       field: 'total_items',
       sortable: true,
     },
     {
       name: 'value',
-      align: 'right',
+      align: 'right' as const,
       label: 'Waarde',
       field: 'total_value',
       sortable: true,
@@ -468,13 +470,13 @@
     },
     {
       name: 'urgency',
-      align: 'center',
+      align: 'center' as const,
       label: 'Urgentie',
       field: 'id',
     },
     {
       name: 'actions',
-      align: 'center',
+      align: 'center' as const,
       label: 'Acties',
       field: 'id',
     },
@@ -506,10 +508,16 @@
   const globalOrderAdvice = computed(() => {
     const suggestions = orderListsStore.orderSuggestions || [];
     const itemsByUrgency = {
-      critical: suggestions.filter(item => item.urgency_level === 'critical'),
-      high: suggestions.filter(item => item.urgency_level === 'high'),
-      normal: suggestions.filter(item => item.urgency_level === 'normal'),
-      low: suggestions.filter(item => item.urgency_level === 'low'),
+      critical: suggestions.filter(
+        item => (item.urgency_level as string) === 'critical'
+      ),
+      high: suggestions.filter(
+        item => (item.urgency_level as string) === 'high'
+      ),
+      normal: suggestions.filter(
+        item => (item.urgency_level as string) === 'normal'
+      ),
+      low: suggestions.filter(item => (item.urgency_level as string) === 'low'),
     };
 
     return {
@@ -547,7 +555,7 @@
 
     // Apply search filter
     if (filterValues.value.search) {
-      const searchTerm = filterValues.value.search.toLowerCase();
+      const searchTerm = String(filterValues.value.search).toLowerCase();
       result = result.filter(
         list =>
           list.name.toLowerCase().includes(searchTerm) ||
@@ -632,10 +640,12 @@
     }
 
     const itemsByUrgency = {
-      critical: items.filter(item => item.urgency_level === 'critical'),
-      high: items.filter(item => item.urgency_level === 'high'),
-      normal: items.filter(item => item.urgency_level === 'normal'),
-      low: items.filter(item => item.urgency_level === 'low'),
+      critical: items.filter(
+        item => (item.urgency_level as string) === 'critical'
+      ),
+      high: items.filter(item => (item.urgency_level as string) === 'high'),
+      normal: items.filter(item => (item.urgency_level as string) === 'normal'),
+      low: items.filter(item => (item.urgency_level as string) === 'low'),
     };
 
     const totalCost = items.reduce(
@@ -666,10 +676,15 @@
     const items = suggestions.filter(item => item.order_list_id === listId);
 
     return {
-      critical: items.filter(item => item.urgency_level === 'critical').length,
-      high: items.filter(item => item.urgency_level === 'high').length,
-      normal: items.filter(item => item.urgency_level === 'normal').length,
-      low: items.filter(item => item.urgency_level === 'low').length,
+      critical: items.filter(
+        item => (item.urgency_level as string) === 'critical'
+      ).length,
+      high: items.filter(item => (item.urgency_level as string) === 'high')
+        .length,
+      normal: items.filter(item => (item.urgency_level as string) === 'normal')
+        .length,
+      low: items.filter(item => (item.urgency_level as string) === 'low')
+        .length,
     };
   };
 
@@ -696,7 +711,7 @@
 
       // Split orders by suppliers
       const splitResult =
-        await orderListsStore.splitOrdersBySupplier(urgentItems);
+        await orderListsStore.splitOrderBySuppliers(urgentItems);
 
       $q.notify({
         type: 'positive',
@@ -780,7 +795,11 @@
 
   const duplicateOrderList = async (orderList: OrderListWithItems) => {
     try {
-      const newList = await orderListsStore.duplicateOrderList(orderList.id);
+      const newName = `${orderList.name} (kopie)`;
+      const newList = await orderListsStore.duplicateOrderList(
+        orderList.id,
+        newName
+      );
 
       $q.notify({
         type: 'positive',
