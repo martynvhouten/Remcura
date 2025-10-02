@@ -140,7 +140,7 @@ class MagentoApiService {
     options: RequestInit = {}
   ): Promise<any> {
     if (!this.config) {
-      throw new Error($t('index.magentoapiconfigurationis'));
+      throw new Error('Magento API configuration is not initialized');
     }
 
     const url = `${this.config.baseUrl}/rest/V1${endpoint}`;
@@ -168,7 +168,7 @@ class MagentoApiService {
       if (!response.ok) {
         const errorBody = await response.text();
         handleApiError(
-          new Error($t('index.httpresponsestatusresponsestatuste')),
+          new Error(`HTTP ${response.status}: ${response.statusText}`),
           {
             service: 'MagentoApiService',
             operation: 'makeRequest',
@@ -184,7 +184,7 @@ class MagentoApiService {
       return response.json();
     } catch (error) {
       if (error.name === 'AbortError') {
-        handleApiError(new Error($t('index.requesttimeout')), {
+        handleApiError(new Error('Request timeout'), {
           service: 'MagentoApiService',
           operation: 'makeRequest',
           metadata: { endpoint, timeout: this.config.timeout },
@@ -508,7 +508,7 @@ export const magentoDataService = {
     const currentPracticeId = practiceId || authStore.clinicId;
 
     if (!currentPracticeId) {
-      throw new Error($t('index.nopracticeidavailable'));
+      throw new Error('No practice ID available');
     }
 
     try {
@@ -566,7 +566,7 @@ export const magentoDataService = {
     const currentPracticeId = practiceId || authStore.clinicId;
 
     if (!currentPracticeId) {
-      throw new Error($t('index.nopracticeidavailable'));
+      throw new Error('No practice ID available');
     }
 
     try {
@@ -602,7 +602,7 @@ export const magentoDataService = {
     const currentPracticeId = practiceId || authStore.clinicId;
 
     if (!currentPracticeId) {
-      throw new Error($t('index.nopracticeidavailable'));
+      throw new Error('No practice ID available');
     }
 
     try {

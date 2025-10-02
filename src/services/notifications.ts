@@ -44,7 +44,7 @@ export class NotificationService {
    */
   async requestNotificationPermission(): Promise<NotificationPermission> {
     if (!('Notification' in window)) {
-      throw new Error($t('notificati.thisbrowserdoesnot'));
+      throw new Error('This browser does not support notifications');
     }
 
     const permission = await Notification.requestPermission();
@@ -61,7 +61,7 @@ export class NotificationService {
    */
   async subscribeToPushNotifications(): Promise<PushSubscription | null> {
     if (!this.registration) {
-      throw new Error($t('notificati.serviceworkernotregistered'));
+      throw new Error('Service worker not registered');
     }
 
     try {
@@ -397,9 +397,12 @@ export class NotificationService {
    */
   startStockMonitoring(): void {
     // Check stock levels every hour
-    setInterval(async () => {
-      await this.checkStockLevels();
-    }, 60 * 60 * 1000);
+    setInterval(
+      async () => {
+        await this.checkStockLevels();
+      },
+      60 * 60 * 1000
+    );
 
     // Initial check
     this.checkStockLevels();

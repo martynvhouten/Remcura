@@ -105,7 +105,7 @@ export class OfflineService {
     const userId = authStore.user?.id;
 
     if (!practiceId || !userId) {
-      throw new Error($t('index.cannotaddofflineaction'));
+      throw new Error('Cannot add offline action - no practice or user');
     }
 
     const actionId = actionQueue.addAction(
@@ -133,11 +133,11 @@ export class OfflineService {
     const practiceId = authStore.selectedPractice?.id;
 
     if (!practiceId) {
-      throw new Error($t('index.nopracticeselectedfor'));
+      throw new Error('No practice selected for offline data download');
     }
 
     if (!this.isOnline) {
-      throw new Error($t('index.cannotdownloaddatadevice'));
+      throw new Error('Cannot download data - device is offline');
     }
 
     await dataSyncManager.downloadData(practiceId, onProgress);
@@ -170,7 +170,7 @@ export class OfflineService {
    */
   async fullSync(onProgress?: SyncProgressCallback): Promise<void> {
     if (!this.isOnline) {
-      throw new Error($t('index.cannotsyncdeviceis'));
+      throw new Error('Cannot sync - device is offline');
     }
 
     // First sync actions

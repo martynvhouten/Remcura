@@ -135,7 +135,9 @@ export class ActionQueue {
     const executor = this.executors.get(action.table);
 
     if (!executor) {
-      const error = new Error($t('actionqueu.noexecutorregisteredfor'));
+      const error = new Error(
+        `No executor registered for action type: ${action.type}`
+      );
       ServiceErrorHandler.handle(
         error,
         {
@@ -213,7 +215,7 @@ export class ActionQueue {
       if (action.retry_count >= this.maxRetries) {
         console.error('Max retries reached for action:', action);
         ServiceErrorHandler.handle(
-          new Error($t('actionqueu.actionfailedafterthismaxretri')),
+          new Error(`Action failed after ${this.maxRetries} retries`),
           {
             service: 'ActionQueue',
             operation: 'incrementRetryCount',

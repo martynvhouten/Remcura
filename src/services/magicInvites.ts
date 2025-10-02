@@ -181,7 +181,7 @@ export class MagicInviteService {
       return data;
     } catch (error) {
       console.error('Error creating magic invite:', error);
-      throw new Error($t('magicinvit.failedtocreatemagic'));
+      throw new Error('Failed to create magic invite');
     }
   }
 
@@ -292,7 +292,7 @@ export class MagicInviteService {
         .select('*')
         .eq('id', request.magic_invite_id)
         .single();
-      if (!invite) throw new Error($t('magicinvit.invalidinvite'));
+      if (!invite) throw new Error('Invalid invite');
 
       const sessionData = {
         id: uuidv4(),
@@ -346,7 +346,7 @@ export class MagicInviteService {
       return data;
     } catch (error) {
       console.error('Error creating guest session:', error);
-      throw new Error($t('magicinvit.failedtocreateguest'));
+      throw new Error('Failed to create guest session');
     }
   }
 
@@ -488,7 +488,7 @@ export class MagicInviteService {
         .eq('id', sessionId);
     } catch (error) {
       console.error('Error extending guest session:', error);
-      throw new Error($t('magicinvit.failedtoextendsession'));
+      throw new Error('Failed to extend session');
     }
   }
 

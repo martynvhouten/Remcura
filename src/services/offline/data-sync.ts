@@ -80,7 +80,7 @@ export class DataSyncManager {
     onProgress?: SyncProgressCallback
   ): Promise<void> {
     if (this.syncInProgress) {
-      throw new Error($t('datasync.syncalreadyinprogress'));
+      throw new Error('Sync already in progress');
     }
 
     this.syncInProgress = true;

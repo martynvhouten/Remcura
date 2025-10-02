@@ -837,7 +837,7 @@ export class AdminService {
   ): Promise<void> {
     // Check admin permissions
     if (!(await this.hasPermission('admin', 'practice'))) {
-      throw new Error($t('admin.insufficientpermissionstobulk'));
+      throw new Error('Insufficient permissions to perform bulk user updates');
     }
 
     for (const update of userUpdates) {
