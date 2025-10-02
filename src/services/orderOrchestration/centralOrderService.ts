@@ -256,14 +256,13 @@ export class CentralOrderService {
    */
   async trackOrderStatus(orderIds: string[]): Promise<OrderStatus[]> {
     try {
-      // Boundary type for Supabase response
+      // Boundary type for Supabase response - aligned with actual DB columns
       interface SupplierOrderRow {
         id: string;
-        order_reference: string | null;
         status: string | null;
-        tracking_number: string | null;
-        estimated_delivery_date: string | null;
-        actual_delivery_date: string | null;
+        tracking_info: Record<string, unknown> | null;
+        delivery_expected: string | null;
+        delivery_confirmed_at: string | null;
         updated_at: string | null;
         suppliers: { id: string; name: string } | null;
       }
@@ -285,14 +284,14 @@ export class CentralOrderService {
 
       if (error) throw error;
 
-      return ((data || []) as any[]).map((order: any) => ({
+      return ((data as SupplierOrderRow[] | null) || []).map(order => ({
         orderId: order.id,
         supplierOrderId: order.id,
         supplierId: order.suppliers?.id ?? '',
         supplierName: order.suppliers?.name ?? 'Unknown',
         status: order.status ?? 'unknown',
-        orderReference: order.id, // Use ID as reference since order_reference doesn't exist
-        trackingNumber: order.tracking_info?.tracking_number ?? null,
+        orderReference: order.id,
+        trackingNumber: (order.tracking_info as any)?.trackingNumber ?? null,
         estimatedDelivery: order.delivery_expected ?? null,
         actualDelivery: order.delivery_confirmed_at ?? null,
         lastUpdated: order.updated_at ?? null,
