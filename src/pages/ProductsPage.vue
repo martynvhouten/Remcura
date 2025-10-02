@@ -387,7 +387,6 @@
     cart,
     cartItemsCount,
     cartTotal,
-    orderLists,
     filters,
     availableCategories,
     availableCountries,
@@ -396,6 +395,8 @@
     availableSuppliers,
     productStats,
   } = storeToRefs(productsStore);
+  
+  const { orderLists } = storeToRefs(orderListsStore);
 
   // Development mode indicator
   const isDevelopment = computed(() => process.env.NODE_ENV === 'development');
@@ -411,15 +412,11 @@
       const practiceId = authStore.clinicId;
       if (!practiceId) return { data: [], totalCount: 0 };
 
-      const result = await productsStore.fetchProductsPaginated({
-        ...pagination,
-        filters,
-        practiceId,
-      });
-
+      // TODO: Implement server-side pagination when needed
+      // For now, return all products (client-side handles pagination)
       return {
-        data: result.products,
-        totalCount: result.total,
+        data: products.value,
+        totalCount: products.value.length,
       };
     },
   }));
@@ -509,10 +506,12 @@
   // Legacy filter options for compatibility
   const categoryOptions = computed(
     () =>
-      availableCategories.value?.map((cat: string) => ({
-        label: cat,
-        value: cat,
-      })) ?? []
+      availableCategories.value
+        ?.filter((cat): cat is string => cat !== null)
+        .map((cat) => ({
+          label: cat,
+          value: cat,
+        })) ?? []
   );
 
   const stockStatusOptions = computed(() => [
@@ -526,10 +525,12 @@
 
   const countryOptions = computed(
     () =>
-      availableCountries.value?.map((country: string) => ({
-        label: `${getCountryFlag(country)} ${getCountryName(country)}`,
-        value: country,
-      })) ?? []
+      availableCountries.value
+        ?.filter((country): country is string => country !== null && country !== undefined)
+        .map((country) => ({
+          label: `${getCountryFlag(country)} ${getCountryName(country)}`,
+          value: country,
+        })) ?? []
   );
 
   const gpcOptions = computed(
@@ -551,9 +552,9 @@
   ]);
 
   const supplierOptions = computed(() =>
-    availableSuppliers.value.map((supplier: string) => ({
-      label: supplier,
-      value: supplier,
+    availableSuppliers.value.map((supplier) => ({
+      label: typeof supplier === 'string' ? supplier : supplier.name,
+      value: typeof supplier === 'string' ? supplier : supplier.id,
     }))
   );
 
@@ -657,7 +658,7 @@
     filterValues.value = { ...filterValues.value, gtin };
 
     // Check if we found a product with this GTIN
-    const gtinMatch = filteredProducts.value.find(
+    const gtinMatch = products.value.find(
       (product: ProductWithStock) => product.gtin === gtin
     );
     if (gtinMatch) {
@@ -758,12 +759,12 @@
     Object.assign(filters, criteria);
 
     // Update search results count
-    searchResultsCount.value = filteredProducts.value.length;
+    searchResultsCount.value = products.value.length;
 
     $q.notify({
       type: 'positive',
       message: t('productsPage.advancedSearch.resultsFound', {
-        count: filteredProducts.value.length,
+        count: products.value.length,
       }),
     });
   };
@@ -832,7 +833,7 @@
   const onTableRequest = (props: any) => {
     // Use the composable's handler and then update rowsNumber
     tableRequestHandler(props);
-    pagination.value.rowsNumber = filteredProducts.value.length;
+    pagination.value.rowsNumber = products.value.length;
   };
 
   // Lifecycle
