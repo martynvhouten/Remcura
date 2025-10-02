@@ -391,6 +391,8 @@
       name: 'actions',
       label: t('common.actions'),
       align: 'center',
+      sortable: false,
+      field: '',
     },
   ]);
 
@@ -432,21 +434,21 @@
     // Apply location filter
     if (filters.value.location) {
       batches = batches.filter(
-        batch => batch.location_id === filters.value.location
+        batch => batch.locationId === filters.value.location
       );
     }
 
     // Apply urgency filter
     if (filters.value.urgency) {
       batches = batches.filter(
-        batch => batch.urgency_level === filters.value.urgency
+        batch => batch.urgencyLevel === filters.value.urgency
       );
     }
 
     // Sort by expiry date (FIFO)
     batches.sort((a, b) => {
-      const dateA = new Date(a.expiry_date).getTime();
-      const dateB = new Date(b.expiry_date).getTime();
+      const dateA = new Date(a.expiryDate).getTime();
+      const dateB = new Date(b.expiryDate).getTime();
       return dateA - dateB;
     });
 
@@ -475,7 +477,7 @@
       treatment: 'green',
       default: 'grey',
     };
-    return colors[type] || colors.default;
+    return colors[type as keyof typeof colors] || colors.default;
   };
 
   const getQuantityColor = (ratio: number) => {
@@ -495,7 +497,7 @@
       warning: 'schedule',
       normal: 'check_circle',
     };
-    return icons[urgency] || 'check_circle';
+    return icons[urgency as keyof typeof icons] || 'check_circle';
   };
 
   const getExpiryColor = (urgency: string) => {
@@ -505,7 +507,7 @@
       warning: 'amber',
       normal: 'green',
     };
-    return colors[urgency] || 'green';
+    return colors[urgency as keyof typeof colors] || 'green';
   };
 
   const getExpiryTextClass = (urgency: string) => {
@@ -515,7 +517,7 @@
       warning: 'text-amber-8',
       normal: 'text-green',
     };
-    return classes[urgency] || 'text-green';
+    return classes[urgency as keyof typeof classes] || 'text-green';
   };
 
   const getExpiryText = (days: number, urgency: string) => {
@@ -538,7 +540,7 @@
       recalled: 'deep-orange',
       quarantine: 'amber',
     };
-    return colors[status] || 'grey';
+    return colors[status as keyof typeof colors] || 'grey';
   };
 
   const applyFilters = () => {
