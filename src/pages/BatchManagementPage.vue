@@ -389,11 +389,11 @@
         <div class="detail-row">
           <span class="label">{{ $t('batch.status') }}:</span>
           <q-chip
-            :color="getStatusColor(selectedBatch.status)"
+            :color="getStatusColor(selectedBatch.raw?.status ?? (selectedBatch.currentQuantity > 0 ? 'active' : 'depleted'))"
             text-color="white"
             size="sm"
           >
-            {{ $t(`batch.status.${selectedBatch.status}`) }}
+            {{ $t(`batch.status.${selectedBatch.raw?.status ?? (selectedBatch.currentQuantity > 0 ? 'active' : 'depleted')}`) }}
           </q-chip>
         </div>
       </div>
@@ -476,7 +476,7 @@
       recalled: 'deep-orange',
       quarantine: 'warning',
     };
-    return colors[status] || 'grey';
+    return colors[status as keyof typeof colors] || 'grey';
   };
 
   // State
@@ -507,22 +507,22 @@
     () =>
       batchStore.expiringBatches.filter(
         batch =>
-          batch.urgency_level === 'critical' ||
-          batch.urgency_level === 'warning'
+          batch.urgencyLevel === 'critical' ||
+          batch.urgencyLevel === 'warning'
       ).length
   );
 
   const criticalBatches = computed(() =>
     batchStore.expiringBatches.filter(
       batch =>
-        batch.urgency_level === 'expired' || batch.urgency_level === 'critical'
+        batch.urgencyLevel === 'expired' || batch.urgencyLevel === 'critical'
     )
   );
 
   const totalValue = computed(() =>
     batchStore.batches.reduce(
       (sum, batch) =>
-        sum + (batch.current_quantity || 0) * (batch.unit_cost || 0),
+        sum + (batch.currentQuantity || 0) * (batch.unitCost || 0),
       0
     )
   );
@@ -610,12 +610,12 @@
   const exportBatches = () => {
     // Export batch data as CSV
     const csvData = batchStore.batches.map(batch => ({
-      [t('batch.batchNumber')]: batch.batch_number,
-      [t('product.product')]: batch.product.name,
-      [t('location.location')]: batch.location.name,
-      [t('batch.currentQuantity')]: batch.current_quantity,
-      [t('batch.expiryDate')]: batch.expiry_date,
-      [t('common.status')]: batch.status,
+      [t('batch.batchNumber')]: batch.batchNumber,
+      [t('product.product')]: batch.product?.name ?? batch.productName,
+      [t('location.location')]: batch.location?.name ?? batch.locationName,
+      [t('batch.currentQuantity')]: batch.currentQuantity,
+      [t('batch.expiryDate')]: batch.expiryDate,
+      [t('common.status')]: batch.raw?.status ?? (batch.currentQuantity > 0 ? 'active' : 'depleted'),
     }));
 
     const csv = convertToCSV(csvData);
@@ -651,8 +651,8 @@
     window.URL.revokeObjectURL(url);
   };
 
-  const onBatchSelected = (batch: ProductBatchWithDetails) => {
-    selectedBatch.value = batch;
+  const onBatchSelected = (batch: ProductBatchWithDetails | any) => {
+    selectedBatch.value = batch as ProductBatchWithDetails;
     showBatchDetailDialog.value = true;
   };
 
