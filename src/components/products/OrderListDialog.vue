@@ -16,7 +16,7 @@
         <div class="orderlist-details-panel">
           <h3 class="panel-title">{{ $t('orderLists.details') }}</h3>
 
-          <q-form class="q-gutter-md" @submit="onSubmit">
+          <q-form class="q-gutter-md">
             <q-input
               ref="nameInput"
               v-model="form.name"
@@ -292,7 +292,7 @@
   import { useAuthStore } from 'src/stores/auth';
   import { BaseCard } from 'src/components/cards';
   import BaseDialog from 'src/components/base/BaseDialog.vue';
-  import type { OrderListItem, ProductWithStock } from 'src/types/inventory';
+  import type { OrderListItemRow, ProductWithStock } from 'src/types/inventory';
 
   interface Props {
     modelValue: boolean;
@@ -364,14 +364,14 @@
 
   const totalItems = computed(() => {
     return orderListItems.value.reduce(
-      (sum, item) => sum + item.requested_quantity,
+      (sum: number, item: any) => sum + item.requested_quantity,
       0
     );
   });
 
   const totalAmount = computed(() => {
     return orderListItems.value.reduce(
-      (sum, item) => sum + item.total_price,
+      (sum: number, item: any) => sum + item.total_price,
       0
     );
   });
@@ -380,11 +380,11 @@
     if (!form.value.supplier_id) return [];
 
     return productsStore.products.filter(product => {
-      const hasSupplierProduct = product.supplier_products?.some(
-        sp => sp.supplier_id === form.value.supplier_id
+      const hasSupplierProduct = product.supplierProducts?.some(
+        (sp: any) => sp.supplier_id === form.value.supplier_id
       );
       const notAlreadyAdded = !orderListItems.value.some(
-        item => item.product_id === product.id
+        (item: any) => item.product_id === product.id
       );
       return hasSupplierProduct && notAlreadyAdded;
     });
@@ -408,14 +408,15 @@
 
   const populateForm = () => {
     if (props.orderList) {
+      const orderListAny = props.orderList as any;
       form.value = {
         name: props.orderList.name,
         description: props.orderList.description || '',
-        supplier_id: props.orderList.supplier_id,
-        notes: props.orderList.notes || '',
+        supplier_id: orderListAny.supplier_id ?? null,
+        notes: orderListAny.notes || '',
         auto_suggest_quantities:
-          props.orderList.auto_suggest_quantities || false,
-        urgent_order: props.orderList.urgent_order || false,
+          orderListAny.auto_suggest_quantities || false,
+        urgent_order: orderListAny.urgent_order || false,
       };
       orderListItems.value = [...(props.orderList.items || [])];
     }
@@ -464,7 +465,7 @@
     if (!product) return;
 
     const existingItem = orderListItems.value.find(
-      item => item.product_id === product.id
+      (item: any) => item.product_id === product.id
     );
 
     if (existingItem) {
@@ -497,12 +498,12 @@
 
       const practiceId = authStore.clinicId;
       if (!practiceId) {
-        throw new Error($t('orderlistd.nopracticeselected'));
+        throw new Error(t('orderlistd.nopracticeselected'));
       }
 
       if (isEditing.value && props.orderList) {
         // Update existing order list
-        const updateRequest: UpdateOrderListRequest = {
+        const updateRequest: any = {
           id: props.orderList.id,
           name: form.value.name,
           description: form.value.description,
@@ -523,7 +524,7 @@
         });
       } else {
         // Create new order list
-        const createRequest: CreateOrderListRequest = {
+        const createRequest: any = {
           practice_id: practiceId,
           supplier_id: form.value.supplier_id,
           name: form.value.name,
