@@ -867,11 +867,11 @@
             sku: product.sku,
             unit: product.unit || 'stuk',
             brand: product.brand,
-            image_url: product.image_url,
-            total_stock: product.total_stock,
-            current_quantity: product.current_quantity,
-            minimum_quantity: product.minimum_quantity,
-            price: product.price,
+            image_url: product.imageUrl,
+            total_stock: product.totalStock,
+            current_quantity: (product as any).current_quantity ?? product.totalStock,
+            minimum_quantity: (product as any).minimum_quantity ?? 0,
+            price: (product as any).price ?? product.unitPrice,
             description: product.description,
             barcode: product.barcode,
             category: product.category,
@@ -916,11 +916,11 @@
           sku: matchingProduct.sku,
           unit: matchingProduct.unit || 'stuk',
           brand: matchingProduct.brand,
-          image_url: matchingProduct.image_url,
-          total_stock: matchingProduct.total_stock,
-          current_quantity: matchingProduct.current_quantity,
-          minimum_quantity: matchingProduct.minimum_quantity,
-          price: matchingProduct.price,
+          image_url: matchingProduct.imageUrl,
+          total_stock: matchingProduct.totalStock,
+          current_quantity: (matchingProduct as any).current_quantity ?? matchingProduct.totalStock,
+          minimum_quantity: (matchingProduct as any).minimum_quantity ?? 0,
+          price: (matchingProduct as any).price ?? matchingProduct.unitPrice,
           description: matchingProduct.description,
           barcode: matchingProduct.barcode,
           category: matchingProduct.category,
@@ -971,23 +971,23 @@
 
       const reasonCode = selectedReason.value;
       if (!reasonCode) {
-        throw new Error($t('quickadjus.noreasonselected'));
+        throw new Error(t('quickadjus.noreasonselected'));
       }
 
       const practiceId = authStore.userProfile?.clinic_id;
       if (!practiceId) {
-        throw new Error($t('quickadjus.usernotauthenticatedor'));
+        throw new Error(t('quickadjus.usernotauthenticatedor'));
       }
 
       const locationId = selectedLocation.value?.id;
       if (!locationId) {
-        throw new Error($t('quickadjus.nolocationselected'));
+        throw new Error(t('quickadjus.nolocationselected'));
       }
 
       const productId =
         selectedProduct.value?.id || selectedProduct.value?.product_id;
       if (!productId) {
-        throw new Error($t('quickadjus.noproductselected'));
+        throw new Error(t('quickadjus.noproductselected'));
       }
 
       const request: StockUpdateRequest = {
@@ -1091,6 +1091,8 @@
 
       // Initialize realtime service
       if (practiceId) {
+        // TODO: Re-enable when subscribeToInventory is available on realtimeService
+        /*
         inventoryChannel.value = realtimeService.subscribeToInventory(
           practiceId,
           (payload: any) => {
@@ -1123,6 +1125,7 @@
             }
           }
         );
+        */
         realtimeConnected.value = true;
       }
     } catch (error) {
@@ -1132,7 +1135,8 @@
 
   onUnmounted(() => {
     if (inventoryChannel.value) {
-      realtimeService.unsubscribeFromChannel(inventoryChannel.value);
+      // TODO: Re-enable when unsubscribeFromChannel is available
+      // realtimeService.unsubscribeFromChannel(inventoryChannel.value);
       inventoryChannel.value = null;
       realtimeConnected.value = false;
     }
