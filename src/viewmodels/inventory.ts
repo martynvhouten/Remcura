@@ -29,6 +29,8 @@ export interface ProductBatchViewModel {
   status: string | null;
   createdAt: string | null;
   updatedAt: string | null;
+  urgencyLevel: 'normal' | 'low' | 'warning' | 'high' | 'critical' | 'expired';
+  daysUntilExpiry: number;
 }
 
 /**
@@ -37,6 +39,23 @@ export interface ProductBatchViewModel {
 export function toProductBatchViewModel(
   row: Tables<'product_batches'>
 ): ProductBatchViewModel {
+  const daysUntilExpiry = Math.ceil(
+    (new Date(row.expiry_date).getTime() - Date.now()) / (1000 * 60 * 60 * 24)
+  );
+
+  let urgencyLevel: ProductBatchViewModel['urgencyLevel'] = 'normal';
+  if (daysUntilExpiry < 0) {
+    urgencyLevel = 'expired';
+  } else if (daysUntilExpiry <= 7) {
+    urgencyLevel = 'critical';
+  } else if (daysUntilExpiry <= 30) {
+    urgencyLevel = 'high';
+  } else if (daysUntilExpiry <= 90) {
+    urgencyLevel = 'warning';
+  } else if (daysUntilExpiry <= 180) {
+    urgencyLevel = 'low';
+  }
+
   return {
     id: row.id,
     practiceId: row.practice_id,
@@ -56,6 +75,8 @@ export function toProductBatchViewModel(
     status: row.status ?? null,
     createdAt: row.created_at,
     updatedAt: row.updated_at,
+    urgencyLevel,
+    daysUntilExpiry,
   };
 }
 

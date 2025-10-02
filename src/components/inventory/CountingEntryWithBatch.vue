@@ -62,24 +62,24 @@
                   <div class="flex justify-between items-center">
                     <div>
                       <div class="text-weight-medium">
-                        {{ batch.batch_number }}
+                        {{ batch.batchNumber }}
                       </div>
                       <div class="text-caption">
                         {{ $t('batch.expires') }}:
-                        {{ formatDate(batch.expiry_date) }}
+                        {{ formatDate(batch.expiryDate) }}
                       </div>
                     </div>
                     <div class="text-right">
                       <div class="text-weight-medium">
-                        {{ batch.current_quantity }}
+                        {{ batch.currentQuantity }}
                       </div>
                       <div class="text-caption">{{ product.unit }}</div>
                     </div>
                   </div>
                   <q-linear-progress
-                    v-if="batch.urgency_level !== 'normal'"
-                    :value="getUrgencyValue(batch.urgency_level)"
-                    :color="getUrgencyColor(batch.urgency_level)"
+                    v-if="batch.urgencyLevel !== 'normal'"
+                    :value="getUrgencyValue(batch.urgencyLevel)"
+                    :color="getUrgencyColor(batch.urgencyLevel)"
                     size="2px"
                     class="q-mt-xs"
                   />
@@ -199,12 +199,24 @@
     ProductBatchWithDetails,
     CountingEntryDTO,
   } from 'src/types/inventory';
+  import {
+    toProductBatchViewModel,
+    type ProductBatchViewModel,
+  } from 'src/viewmodels/inventory';
   import { useFormatting } from 'src/composables/useFormatting';
 
   interface Props {
     entry?: CountingEntryDTO;
     sessionId: string;
     practiceId: string;
+    locationId: string;
+    product: {
+      id: string;
+      name: string;
+      sku: string | null;
+      category: string | null;
+      unit: string | null;
+    };
     viewMode?: 'lite' | 'full';
     existingEntry?: CountingEntryDTO;
   }
@@ -229,7 +241,7 @@
 
   // Reactive state
   const countedQuantity = ref<number | null>(null);
-  const selectedBatch = ref<ProductBatchWithDetails | null>(null);
+  const selectedBatch = ref<ProductBatchViewModel | null>(null);
   const newBatchData = ref<any>({});
   const notes = ref('');
   const saving = ref(false);
@@ -238,16 +250,17 @@
 
   // Computed
   const existingBatches = computed(() => {
-    return batchStore
+    const rawBatches = batchStore
       .batchesByProduct(props.product.id)
-      .filter(batch => batch.location_id === props.locationId);
+      .filter(batch => batch.locationId === props.locationId);
+    return rawBatches.map(batch => toProductBatchViewModel(batch as any));
   });
 
   const hasBatches = computed(() => existingBatches.value.length > 0);
 
   const currentStock = computed(() => {
     return existingBatches.value.reduce(
-      (total, batch) => total + batch.current_quantity,
+      (total, batch) => total + batch.currentQuantity,
       0
     );
   });
@@ -285,7 +298,7 @@
 
   const statusColor = computed(() => {
     if (props.existingEntry) {
-      switch (props.existingEntry.status) {
+      switch (props.existingEntry.status as any) {
         case 'completed':
           return 'positive';
         case 'reviewed':
@@ -301,7 +314,7 @@
 
   const statusIcon = computed(() => {
     if (props.existingEntry) {
-      switch (props.existingEntry.status) {
+      switch (props.existingEntry.status as any) {
         case 'completed':
           return 'check_circle';
         case 'reviewed':
@@ -330,7 +343,7 @@
   });
 
   // Methods
-  const selectBatch = (batch: ProductBatchWithDetails) => {
+  const selectBatch = (batch: ProductBatchViewModel) => {
     selectedBatch.value = selectedBatch.value?.id === batch.id ? null : batch;
   };
 
@@ -373,7 +386,7 @@
     try {
       saving.value = true;
 
-      const entryData = {
+      const entryData: any = {
         session_id: props.sessionId,
         product_id: props.product.id,
         location_id: props.locationId,
@@ -394,7 +407,7 @@
       // Handle new batch creation if needed
       if (addingNewBatch.value && newBatchData.value.batchNumber) {
         // Create new batch first
-        const batchRequest = {
+        const batchRequest: any = {
           practice_id: authStore.clinicId,
           product_id: props.product.id,
           location_id: props.locationId,
@@ -437,11 +450,10 @@
     countedQuantity.value = props.existingEntry.counted_quantity;
     notes.value = props.existingEntry.notes || '';
 
-    if (props.existingEntry.batch_id) {
+    const batchId = (props.existingEntry as any).batch_id;
+    if (batchId) {
       selectedBatch.value =
-        existingBatches.value.find(
-          b => b.id === props.existingEntry.batch_id
-        ) || null;
+        existingBatches.value.find(b => b.id === batchId) || null;
     }
   }
 </script>
