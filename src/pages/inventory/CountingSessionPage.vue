@@ -22,13 +22,13 @@
             <!-- Progress Info -->
             <div v-if="session" class="progress-info">
               <span class="progress-text">
-                {{ session.products_counted }}/{{
-                  session.total_products_to_count
+                {{ sessionAny.products_counted ?? 0 }}/{{
+                  session.total_products_counted ?? 0
                 }}
               </span>
               <q-linear-progress
                 :value="
-                  session.products_counted / session.total_products_to_count
+                  (sessionAny.products_counted ?? 0) / (session.total_products_counted ?? 1)
                 "
                 color="primary"
                 size="4px"
@@ -38,7 +38,7 @@
 
             <!-- Action Buttons -->
             <q-btn
-              v-if="session?.status === 'active'"
+              v-if="session?.status === 'in_progress'"
               color="positive"
               icon="check"
               :label="$t('counting.completeSession')"
@@ -121,7 +121,7 @@
                   {{ $t('counting.sessionType') }}
                 </div>
                 <div class="summary-value">
-                  {{ formatSessionType(session.session_type) }}
+                  {{ formatSessionType(sessionAny.session_type) }}
                 </div>
               </div>
 
@@ -130,7 +130,7 @@
                   {{ $t('counting.totalProducts') }}
                 </div>
                 <div class="summary-value">
-                  {{ session.total_products_to_count }}
+                  {{ session.total_products_counted ?? 0 }}
                 </div>
               </div>
 
@@ -138,7 +138,7 @@
                 <div class="summary-label">
                   {{ $t('counting.countedProducts') }}
                 </div>
-                <div class="summary-value">{{ session.products_counted }}</div>
+                <div class="summary-value">{{ sessionAny.products_counted ?? 0 }}</div>
               </div>
 
               <div class="summary-item">
@@ -148,17 +148,17 @@
                 <div
                   class="summary-value"
                   :class="{
-                    'has-discrepancies': session.discrepancies_found > 0,
+                    'has-discrepancies': (sessionAny.discrepancies_found ?? 0) > 0,
                   }"
                 >
-                  {{ session.discrepancies_found }}
+                  {{ sessionAny.discrepancies_found ?? 0 }}
                 </div>
               </div>
 
               <div class="summary-item">
                 <div class="summary-label">{{ $t('common.startedAt') }}</div>
                 <div class="summary-value">
-                  {{ formatDateTime(session.started_at) }}
+                  {{ formatDateTime(sessionAny.started_at ?? session.created_at) }}
                 </div>
               </div>
 
@@ -174,7 +174,7 @@
 
         <!-- Mobile Counting Interface -->
         <MobileCountingInterface
-          v-if="session.status === 'active'"
+          v-if="session.status === 'in_progress'"
           :session="session"
           :products="countingProducts"
           @product-counted="onProductCounted"
@@ -319,19 +319,20 @@
 
   // Computed properties
   const session = computed(() => countingStore.currentSession);
+  const sessionAny = computed(() => session.value as any);
 
   const sessionName = computed(
     () => session.value?.name || t('counting.unknownSession')
   );
 
   const sessionType = computed(() =>
-    session.value ? formatSessionType(session.value.session_type) : ''
+    session.value ? formatSessionType(sessionAny.value.session_type) : ''
   );
 
   const statusColor = computed(() => {
     if (!session.value) return 'grey';
     switch (session.value.status) {
-      case 'active':
+      case 'in_progress':
         return 'primary';
       case 'completed':
         return 'positive';
@@ -347,7 +348,7 @@
   const statusIcon = computed(() => {
     if (!session.value) return 'help';
     switch (session.value.status) {
-      case 'active':
+      case 'in_progress':
         return 'play_circle';
       case 'completed':
         return 'check_circle';
@@ -361,7 +362,7 @@
   });
 
   const canComplete = computed(() => {
-    return session.value && session.value.products_counted > 0;
+    return session.value && (sessionAny.value.products_counted ?? 0) > 0;
   });
 
   const resultsColumns = computed(() => [
@@ -423,8 +424,8 @@
   const loadCountingEntries = async () => {
     entriesLoading.value = true;
     try {
-      const data = await countingStore.fetchCountingEntries(props.sessionId);
-      countingEntries.value = data.entries as CountingEntryDTO[];
+      await countingStore.fetchCountingEntries(props.sessionId);
+      countingEntries.value = countingStore.entries as CountingEntryDTO[];
       entriesError.value = false;
     } catch (error) {
       console.error('Error loading counting entries:', error);
