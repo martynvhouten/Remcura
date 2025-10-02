@@ -77,6 +77,30 @@ export const mapProductBatchRowToDetails = (
   const resolvedSupplier = resolveRelation(withRelations.supplier);
   const resolvedLocation = resolveRelation(withRelations.location);
 
+  // Calculate urgency fields
+  const daysUntilExpiry = Math.ceil(
+    (new Date(row.expiry_date).getTime() - Date.now()) / (1000 * 60 * 60 * 24)
+  );
+
+  let urgencyLevel:
+    | 'normal'
+    | 'low'
+    | 'warning'
+    | 'high'
+    | 'critical'
+    | 'expired' = 'normal';
+  if (daysUntilExpiry < 0) {
+    urgencyLevel = 'expired';
+  } else if (daysUntilExpiry <= 7) {
+    urgencyLevel = 'critical';
+  } else if (daysUntilExpiry <= 30) {
+    urgencyLevel = 'high';
+  } else if (daysUntilExpiry <= 90) {
+    urgencyLevel = 'warning';
+  } else if (daysUntilExpiry <= 180) {
+    urgencyLevel = 'low';
+  }
+
   const legacy: ProductBatchLegacyView = {
     id: row.id,
     practice_id: row.practice_id,
@@ -147,6 +171,8 @@ export const mapProductBatchRowToDetails = (
       maximum: null, // Not available on batch records
       reorderPoint: null, // Not available on batch records
     },
+    urgencyLevel,
+    daysUntilExpiry,
     legacy,
     raw: withRelations,
     // Deprecated snake_case properties (for backward compatibility)
@@ -254,6 +280,9 @@ export interface ProductBatchWithDetails {
   stock: StockMetricsView;
   legacy: ProductBatchLegacyView;
   raw?: ProductBatchRowWithRelations;
+  // Computed fields
+  urgencyLevel: 'normal' | 'low' | 'warning' | 'high' | 'critical' | 'expired';
+  daysUntilExpiry: number;
   /** @deprecated use practiceId */
   practice_id: string;
   /** @deprecated use productId */

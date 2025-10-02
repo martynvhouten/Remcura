@@ -12,6 +12,50 @@ export type CountingSessionRow = Tables<'counting_sessions'>;
 export type CountingEntryRow = Tables<'counting_entries'>;
 export type PracticeRow = Tables<'practices'>;
 
+export interface ProductWithStockDTO {
+  id: string;
+  practiceId: string | null;
+  sku: string;
+  name: string;
+  category: string | null;
+  brand: string | null;
+  unit: string | null;
+  totalStock: number;
+  availableStock: number;
+  reservedStock: number;
+  status: 'in_stock' | 'low_stock' | 'out_of_stock';
+  reorderLevel: number | null;
+  unitPrice: number | null;
+  lowestPrice: number | null;
+  supplierId?: string | null;
+  supplierName?: string | null;
+  supplierCode?: string | null;
+  supplierPhone?: string | null;
+  supplierEmail?: string | null;
+  imageUrl?: string | null;
+  barcode?: string | null;
+  gtin?: string | null;
+  gpcBrickCode?: string | null;
+  countryOfOrigin?: string | null;
+  description?: string | null;
+  createdAt?: string | null;
+  updatedAt?: string | null;
+  requiresBatchTracking?: boolean | null;
+  productLifecycleStatus?: string | null;
+  baseUnitIndicator?: boolean | null;
+  orderableUnitIndicator?: boolean | null;
+  despatchUnitIndicator?: boolean | null;
+  effectiveFromDate?: string | null;
+  effectiveToDate?: string | null;
+  netContentValue?: number | null;
+  netContentUom?: string | null;
+  netWeight?: number | null;
+  grossWeight?: number | null;
+  preferredSupplierId?: string | null;
+  minimumStock?: number | null;
+  batches?: ProductBatchSummary[];
+}
+
 export interface ProductBatchDTO {
   id: string;
   practiceId: string;
@@ -41,6 +85,9 @@ export interface ProductBatchDTO {
   productName?: string | null;
   productSku?: string | null;
   locationName?: string | null;
+  // Computed fields
+  urgencyLevel: 'normal' | 'low' | 'warning' | 'high' | 'critical' | 'expired';
+  daysUntilExpiry: number;
 }
 
 export interface StockLevelDTO {
