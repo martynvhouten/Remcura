@@ -28,30 +28,30 @@ export function useInventoryAlerts(stockLevels: Ref<StockLevelView[]>) {
     const alerts: StockAlert[] = [];
 
     stockLevels.value.forEach(stockLevel => {
-      const minimumStock = stockLevel.minimum_quantity ?? 0;
-      if (stockLevel.current_quantity <= minimumStock) {
+      const minimumStock = stockLevel.minimumQuantity ?? 0;
+      if (stockLevel.currentQuantity <= minimumStock) {
         alerts.push({
-          id: `${stockLevel.product_id}-${stockLevel.location_id}-low`,
-          product_id: stockLevel.product_id,
-          location_id: stockLevel.location_id ?? '',
+          id: `${stockLevel.productId}-${stockLevel.locationId}-low`,
+          product_id: stockLevel.productId,
+          location_id: stockLevel.locationId ?? '',
           type: 'low_stock',
-          current_stock: stockLevel.current_quantity,
+          current_stock: stockLevel.currentQuantity,
           minimum_stock: minimumStock,
           message:
-            stockLevel.current_quantity === 0 ? 'Out of Stock' : 'Low Stock',
+            stockLevel.currentQuantity === 0 ? 'Out of Stock' : 'Low Stock',
           created_at: new Date().toISOString(),
         });
       }
 
-      if (stockLevel.current_quantity < 0) {
+      if (stockLevel.currentQuantity < 0) {
         alerts.push({
-          id: `${stockLevel.product_id}-${stockLevel.location_id}-negative`,
-          product_id: stockLevel.product_id,
-          location_id: stockLevel.location_id ?? '',
+          id: `${stockLevel.productId}-${stockLevel.locationId}-negative`,
+          product_id: stockLevel.productId,
+          location_id: stockLevel.locationId ?? '',
           type: 'out_of_stock',
-          current_stock: stockLevel.current_quantity,
+          current_stock: stockLevel.currentQuantity,
           minimum_stock: 0,
-          message: `Stock level is below zero: ${stockLevel.current_quantity}`,
+          message: `Stock level is below zero: ${stockLevel.currentQuantity}`,
           created_at: new Date().toISOString(),
         });
       }
@@ -78,9 +78,9 @@ export function useInventoryAlerts(stockLevels: Ref<StockLevelView[]>) {
 
       const locationMap = new Map<string, string>();
       stockLevels.value.forEach(level => {
-        const locationId = level.location_id ?? '';
+        const locationId = level.locationId ?? '';
         if (!locationMap.has(locationId)) {
-          locationMap.set(locationId, level.location_name ?? 'Main Location');
+          locationMap.set(locationId, level.locationName ?? 'Main Location');
         }
       });
 
@@ -125,9 +125,9 @@ export function useInventoryAlerts(stockLevels: Ref<StockLevelView[]>) {
 
   const getProductStockAtLocation = (productId: string, locationId: string) => {
     const stockLevel = stockLevels.value.find(
-      sl => sl.product_id === productId && (sl.location_id ?? '') === locationId
+      sl => sl.productId === productId && (sl.locationId ?? '') === locationId
     );
-    return stockLevel?.current_quantity ?? 0;
+    return stockLevel?.currentQuantity ?? 0;
   };
 
   return {
