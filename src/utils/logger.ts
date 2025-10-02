@@ -73,6 +73,29 @@ class Logger {
   }
 }
 
+/**
+ * Convert unknown values to LogData format
+ * Safely handles Error objects, unknown types, and complex objects
+ */
+export function toLogData(value: unknown): Record<string, unknown> {
+  if (value instanceof Error) {
+    return {
+      name: value.name,
+      message: value.message,
+      stack: value.stack,
+      ...(value.cause && { cause: String(value.cause) }),
+    };
+  }
+
+  if (typeof value === 'object' && value !== null) {
+    // Already an object, just cast it
+    return value as Record<string, unknown>;
+  }
+
+  // Primitive or null/undefined
+  return { value: String(value) };
+}
+
 // Export singleton instance
 export const logger = new Logger();
 
