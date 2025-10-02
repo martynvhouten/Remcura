@@ -492,7 +492,7 @@ export const mapStockLevelRowToView = (
       maximum_quantity: row.maximum_quantity ?? null,
       reorder_point: row.reorder_point ?? null,
       preferred_supplier_id: row.preferred_supplier_id ?? null,
-      preferred_supplier_name,
+      preferred_supplier_name: preferredSupplierName,
       last_counted_at: row.last_counted_at ?? null,
       last_movement_at: row.last_movement_at ?? null,
       last_ordered_at: row.last_ordered_at ?? null,
@@ -1017,7 +1017,7 @@ export const mapProductRowToView = (
     0
   );
 
-  const minimumStock = row.minimum_stock ?? null;
+  const minimumStock = (row as any).minimum_stock ?? null;
 
   const legacy: ProductLegacyView = {
     totalStock,
@@ -1025,14 +1025,14 @@ export const mapProductRowToView = (
     reservedStock,
     status: determineStockStatus(totalStock, minimumStock ?? 0),
     reorderLevel: minimumStock,
-    supplierId: row.supplier_id ?? null,
-    supplierName: row.supplier_name ?? null,
-    supplierCode: row.supplier_code ?? null,
-    supplierPhone: row.supplier_phone ?? null,
-    supplierEmail: row.supplier_email ?? null,
-    expiryDate: row.expiry_date ?? null,
-    gs1Status: row.gs1_status ?? null,
-    batchStatus: row.batch_status ?? null,
+    supplierId: (row as any).supplier_id ?? null,
+    supplierName: (row as any).supplier_name ?? null,
+    supplierCode: (row as any).supplier_code ?? null,
+    supplierPhone: (row as any).supplier_phone ?? null,
+    supplierEmail: (row as any).supplier_email ?? null,
+    expiryDate: (row as any).expiry_date ?? null,
+    gs1Status: (row as any).gs1_status ?? null,
+    batchStatus: (row as any).batch_status ?? null,
     /** @deprecated */ total_stock: totalStock,
     /** @deprecated */ available_stock: availableStock,
     /** @deprecated */ reserved_stock: reservedStock,
@@ -1041,19 +1041,20 @@ export const mapProductRowToView = (
       minimumStock ?? 0
     ),
     /** @deprecated */ reorder_level: minimumStock,
-    /** @deprecated */ supplier_id: row.supplier_id ?? null,
-    /** @deprecated */ supplier_name: row.supplier_name ?? null,
-    /** @deprecated */ supplier_code: row.supplier_code ?? null,
-    /** @deprecated */ supplier_phone: row.supplier_phone ?? null,
-    /** @deprecated */ supplier_email: row.supplier_email ?? null,
-    /** @deprecated */ expiry_date: row.expiry_date ?? null,
-    /** @deprecated */ gs1_status: row.gs1_status ?? null,
-    /** @deprecated */ batch_status: row.batch_status ?? null,
+    /** @deprecated */ supplier_id: (row as any).supplier_id ?? null,
+    /** @deprecated */ supplier_name: (row as any).supplier_name ?? null,
+    /** @deprecated */ supplier_code: (row as any).supplier_code ?? null,
+    /** @deprecated */ supplier_phone: (row as any).supplier_phone ?? null,
+    /** @deprecated */ supplier_email: (row as any).supplier_email ?? null,
+    /** @deprecated */ expiry_date: (row as any).expiry_date ?? null,
+    /** @deprecated */ gs1_status: (row as any).gs1_status ?? null,
+    /** @deprecated */ batch_status: (row as any).batch_status ?? null,
   };
 
+  const rowAny = row as any;
   return {
     id: row.id,
-    practiceId: row.practice_id,
+    practiceId: rowAny.practice_id ?? row.id,
     sku: row.sku,
     name: row.name,
     category: row.category ?? null,
@@ -1064,15 +1065,14 @@ export const mapProductRowToView = (
     reservedStock,
     status: legacy.status,
     reorderLevel: minimumStock,
-    unitPrice: row.unit_price ?? null,
-    lowestPrice: row.lowest_price ?? null,
-    supplier: row.supplier_id
-      ? { id: row.supplier_id, name: row.supplier_name ?? null }
+    unitPrice: rowAny.unit_price ?? null,
+    lowestPrice: rowAny.lowest_price ?? null,
+    supplier: rowAny.supplier_id
+      ? { id: rowAny.supplier_id, name: rowAny.supplier_name ?? null }
       : null,
     stockLevels,
     supplierProducts,
     batches: [],
-    minimumStock,
     description: row.description ?? null,
     createdAt: row.created_at ?? null,
     updatedAt: row.updated_at ?? null,
@@ -1092,7 +1092,6 @@ export const mapProductRowToView = (
     netContentUom: row.net_content_uom ?? null,
     netWeight: row.net_weight ?? null,
     grossWeight: row.gross_weight ?? null,
-    preferredSupplierId: row.preferred_supplier_id ?? null,
     legacy,
     raw: row,
   };
@@ -1263,7 +1262,7 @@ export const mapOrderListItemRowToDTO = (
   status: row.status ?? null,
   notes: row.notes ?? null,
   created_at: row.created_at ?? null,
-  updated_at: row.updated_at ?? null,
+  updated_at: (row as any).updated_at ?? null,
   product: null,
   supplier_product: null,
 });
