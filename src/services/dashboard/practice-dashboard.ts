@@ -125,7 +125,7 @@ class PracticeDashboardService {
         alerts,
       };
     } catch (error) {
-      dashboardLogger.error('Error loading practice dashboard:', error);
+      dashboardLogger.error('Error loading practice dashboard:', error as Record<string, unknown>);
       throw error;
     }
   }
@@ -241,7 +241,7 @@ class PracticeDashboardService {
         recentActivity: recentActivity?.length || 0,
       };
     } catch (error) {
-      dashboardLogger.error('Error loading metrics:', error);
+      dashboardLogger.error('Error loading metrics:', error as Record<string, unknown>);
       // Return fallback metrics
       return {
         totalProducts: 0,
@@ -268,7 +268,7 @@ class PracticeDashboardService {
         const widgetConfig = roleConfig.widgets.find(w => w.id === widgetId);
         const widget = await this.loadWidget(
           widgetId,
-          practiceId,
+          practiceId ?? '',
           widgetConfig?.position || i,
           widgetConfig
         );
@@ -291,7 +291,7 @@ class PracticeDashboardService {
         const widgetConfig = roleConfig.widgets.find(w => w.id === widgetId);
         widgets.push({
           id: widgetId,
-          title: t(widgetConfig?.titleKey || 'dashboard.widgets.error'),
+          title: t((widgetConfig?.titleKey ?? 'dashboard.widgets.error') as string),
           type: 'alert',
           data: { error: 'Failed to load widget data' },
           size: widgetConfig?.size || 'medium',
@@ -674,7 +674,7 @@ class PracticeDashboardService {
           item.total_items,
           `€${item.total_value}`,
           item.status,
-          new Date(item.created_at).toLocaleDateString(),
+          item.created_at ? new Date(item.created_at).toLocaleDateString() : 'N/A',
         ]) || [],
     };
   }
@@ -730,12 +730,13 @@ class PracticeDashboardService {
     const weeklyData: Record<string, Record<string, number>> = {};
 
     data?.forEach(movement => {
+      if (!movement.created_at || !movement.movement_type) return;
       const week = new Date(movement.created_at).toISOString().split('T')[0]; // Simplified to daily for now
       if (!weeklyData[week]) weeklyData[week] = {};
       if (!weeklyData[week][movement.movement_type])
         weeklyData[week][movement.movement_type] = 0;
       weeklyData[week][movement.movement_type] += Number(
-        movement.quantity_change
+        movement.quantity_change ?? 0
       );
     });
 
@@ -747,14 +748,14 @@ class PracticeDashboardService {
           label: 'In',
           data: Object.keys(weeklyData)
             .slice(-14)
-            .map(week => weeklyData[week]['in'] || 0),
+            .map(week => weeklyData[week]?.['in'] ?? 0),
           color: '#4CAF50',
         },
         {
           label: 'Out',
           data: Object.keys(weeklyData)
             .slice(-14)
-            .map(week => Math.abs(weeklyData[week]['out'] || 0)),
+            .map(week => Math.abs(weeklyData[week]?.['out'] ?? 0)),
           color: '#F44336',
         },
       ],
@@ -1039,6 +1040,7 @@ class PracticeDashboardService {
     > = {};
 
     data?.forEach(batch => {
+      if (!batch.created_at || !batch.received_date) return;
       const category = (batch.products as any).category || 'Unknown';
       const shelfLifeDays = Math.ceil(
         (new Date(batch.created_at).getTime() -
@@ -1093,10 +1095,10 @@ class PracticeDashboardService {
           session_name: session.name,
           location: (session.practice_locations as any).name,
           products_counted: session.total_products_counted,
-          variances: session.products_with_variance,
+          variances: session.products_with_variance ?? 0,
           variance_value: session.total_variance_value,
           completed_at: session.completed_at,
-          status: session.products_with_variance > 0 ? 'warning' : 'success',
+          status: (session.products_with_variance ?? 0) > 0 ? 'warning' : 'success',
         })) || [],
     };
   }
@@ -1197,7 +1199,7 @@ class PracticeDashboardService {
         }
       }
     } catch (error) {
-      dashboardLogger.error('Error loading alerts:', error);
+      dashboardLogger.error('Error loading alerts:', error as Record<string, unknown>);
     }
 
     return alerts;
@@ -1301,10 +1303,10 @@ class PracticeDashboardService {
     const totalItems = data?.length || 0;
     const lowStockItems =
       data?.filter(
-        item => item.current_quantity <= (item.minimum_quantity || 0)
+        item => (item.current_quantity ?? 0) <= (item.minimum_quantity || 0)
       ).length || 0;
     const outOfStockItems =
-      data?.filter(item => item.current_quantity <= 0).length || 0;
+      data?.filter(item => (item.current_quantity ?? 0) <= 0).length || 0;
 
     return {
       total_items: totalItems,
