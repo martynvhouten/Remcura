@@ -497,7 +497,7 @@
       const videoTrack = currentStream.value.getVideoTracks()[0];
       if (videoTrack) {
         await videoTrack.applyConstraints({
-          advanced: [{ torch: !flashEnabled.value }],
+          advanced: [{ torch: !flashEnabled.value } as any], // torch is not standard
         });
         flashEnabled.value = !flashEnabled.value;
       }
@@ -524,6 +524,8 @@
       if (!stream) return false;
 
       const videoTrack = stream.getVideoTracks()[0];
+      if (!videoTrack) return false;
+      
       const capabilities = videoTrack.getCapabilities();
       return 'torch' in capabilities;
     } catch {
@@ -535,11 +537,11 @@
     if (!barcodeDetector || scanInterval.value) return;
 
     scanInterval.value = window.setInterval(async () => {
-      if (!videoElement.value || currentStep.value !== 'counting') return;
+      if (!videoElement.value || currentStep.value !== 'counting' || !barcodeDetector) return;
 
       try {
         const barcodes = await barcodeDetector.detect(videoElement.value);
-        if (barcodes.length > 0) {
+        if (barcodes.length > 0 && barcodes[0]) {
           const barcode = barcodes[0].rawValue;
           await handleBarcodeScan(barcode);
         }
@@ -678,15 +680,15 @@
     // Initialize products list
     if (!props.products || props.products.length === 0) {
       productsList.value = inventoryStore.stockLevels.map(stock => ({
-        id: stock.product_id,
-        name: stock.product?.name ?? 'Onbekend product',
-        sku: stock.product?.sku ?? '',
-        current_stock: stock.current_quantity ?? 0,
-        minimum_stock: stock.minimum_stock ?? 0,
-        maximum_stock: stock.maximum_stock ?? 100,
-        barcode: stock.product?.barcode,
-        gtin: stock.product?.gtin,
-        image_url: stock.product?.image_url,
+        id: stock.productId,
+        name: stock.productName ?? 'Onbekend product',
+        sku: stock.productName ?? '', // SKU not available on stock level view
+        current_stock: stock.currentQuantity ?? 0,
+        minimum_stock: stock.minimumQuantity ?? 0,
+        maximum_stock: stock.maximumQuantity ?? 100,
+        barcode: undefined, // Barcode not available on stock level view
+        gtin: undefined,
+        image_url: undefined,
       }));
     }
 
