@@ -126,7 +126,12 @@ export class InventoryAutomationService {
 
       return suggestions;
     } catch (error) {
-      inventoryLogger.error('Error generating reorder suggestions:', error);
+      inventoryLogger.error(
+        'Error generating reorder suggestions:',
+        error instanceof Error
+          ? { message: error.message, stack: error.stack }
+          : { error: String(error) }
+      );
       throw error;
     }
   }
@@ -203,7 +208,9 @@ export class InventoryAutomationService {
         } catch (practiceError) {
           inventoryLogger.error(
             `Error processing automatic reorder for practice ${practice.practice_id}:`,
-            practiceError
+            practiceError instanceof Error
+              ? { message: practiceError.message, stack: practiceError.stack }
+              : { error: String(practiceError) }
           );
 
           // Create error notification
@@ -216,7 +223,12 @@ export class InventoryAutomationService {
         }
       }
     } catch (error) {
-      inventoryLogger.error('Error in scheduled automatic reorders:', error);
+      inventoryLogger.error(
+        'Error in scheduled automatic reorders:',
+        error instanceof Error
+          ? { message: error.message, stack: error.stack }
+          : { error: String(error) }
+      );
       throw error;
     }
   }
@@ -234,15 +246,16 @@ export class InventoryAutomationService {
         .select(
           `
           id,
-          order_reference,
+          order_list_id,
           supplier_id,
-          practice_id,
           status,
+          delivery_expected,
+          delivery_confirmed_at,
+          tracking_info,
           suppliers(name)
         `
         )
-        .eq('status', 'delivered')
-        .is('stock_updated_at', null); // Not yet processed
+        .eq('status', 'delivered');
 
       if (error) throw error;
 
@@ -258,12 +271,12 @@ export class InventoryAutomationService {
           // Update stock for this order
           await centralOrderService.updateStockAfterDelivery(order.id);
 
-          // Mark order as stock updated
+          // Mark order as completed
           await supabase
             .from('supplier_orders')
             .update({
-              stock_updated_at: new Date().toISOString(),
               status: 'completed',
+              updated_at: new Date().toISOString(),
             })
             .eq('id', order.id);
 
@@ -275,14 +288,21 @@ export class InventoryAutomationService {
             errors: [],
           });
 
+          // Extract tracking number from tracking_info JSON if available
+          const trackingNumber = order.tracking_info
+            ? (order.tracking_info as any)?.trackingNumber || 'N/A'
+            : 'N/A';
+
           inventoryLogger.info(
-            `Successfully processed delivery for order ${order.order_reference} ` +
-              `from ${order.suppliers.name}`
+            `Successfully processed delivery for order ${order.id} (tracking: ${trackingNumber}) ` +
+              `from ${order.suppliers?.name ?? 'Unknown supplier'}`
           );
         } catch (orderError) {
           inventoryLogger.error(
             `Error processing delivery for order ${order.id}:`,
-            orderError
+            orderError instanceof Error
+              ? { message: orderError.message, stack: orderError.stack }
+              : { error: String(orderError) }
           );
 
           results.push({
@@ -301,7 +321,12 @@ export class InventoryAutomationService {
 
       return results;
     } catch (error) {
-      inventoryLogger.error('Error processing incoming deliveries:', error);
+      inventoryLogger.error(
+        'Error processing incoming deliveries:',
+        error instanceof Error
+          ? { message: error.message, stack: error.stack }
+          : { error: String(error) }
+      );
       throw error;
     }
   }
@@ -398,7 +423,12 @@ export class InventoryAutomationService {
         recommendations,
       };
     } catch (error) {
-      inventoryLogger.error('Error running inventory health check:', error);
+      inventoryLogger.error(
+        'Error running inventory health check:',
+        error instanceof Error
+          ? { message: error.message, stack: error.stack }
+          : { error: String(error) }
+      );
       throw error;
     }
   }
