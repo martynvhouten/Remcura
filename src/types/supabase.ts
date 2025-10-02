@@ -1,6 +1,6 @@
-import type { Database } from './supabase.generated';
+import type { Database, Json } from './supabase.generated';
 
-export type { Database } from './supabase.generated';
+export type { Database, Json } from './supabase.generated';
 
 export type SupabaseTable<T extends keyof Database['public']['Tables']> =
   Database['public']['Tables'][T]['Row'];
@@ -81,3 +81,25 @@ export type LocationUpdate = SupabaseUpdate<'practice_locations'>;
 export type UserPermission = SupabaseTable<'user_permissions'>;
 export type UserPermissionInsert = SupabaseInsert<'user_permissions'>;
 export type UserPermissionUpdate = SupabaseUpdate<'user_permissions'>;
+export type PracticeMember = SupabaseTable<'practice_members'>;
+export type PracticeMemberInsert = SupabaseInsert<'practice_members'>;
+export type PracticeMemberUpdate = SupabaseUpdate<'practice_members'>;
+
+// Push notification types (if push_tokens table exists in future)
+// For now, define placeholder types to satisfy service imports
+export type PushToken = {
+  id: string;
+  user_id: string;
+  endpoint: string;
+  p256dh: string;
+  auth: string;
+  created_at: string | null;
+};
+export type PushTokenInsert = Omit<PushToken, 'id' | 'created_at'> & {
+  id?: string;
+  created_at?: string | null;
+};
+
+// Legacy Dutch type aliases for backward compatibility
+export type Bestellijst = OrderList;
+export type BestellijstItem = SupabaseTable<'order_list_items'>;
