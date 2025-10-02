@@ -201,7 +201,7 @@ export class AdminService {
       .single();
 
     // Check if it's the main location
-    if (currentData?.is_main) {
+    if (currentData?.is_main_location) {
       throw new Error(ADMIN_ERRORS.CANNOT_DELETE_MAIN_LOCATION);
     }
 
@@ -478,12 +478,12 @@ export class AdminService {
     const practiceId = authStore.selectedPractice?.id;
 
     if (!practiceId) {
-      throw new Error($t('admin.nopracticeselected'));
+      throw new Error('No practice selected');
     }
 
     // Check admin permissions
     if (!(await this.hasPermission('read', 'practice'))) {
-      throw new Error($t('admin.insufficientpermissionstoview'));
+      throw new Error('Insufficient permissions to view members');
     }
 
     const { data: members, error } = await supabase
@@ -558,7 +558,7 @@ export class AdminService {
 
     // Check admin permissions
     if (!(await this.hasPermission('admin', 'practice'))) {
-      throw new Error($t('admin.insufficientpermissionstoview'));
+      throw new Error('Insufficient permissions to view audit log');
     }
 
     // TODO: Implement proper audit log retrieval
@@ -566,28 +566,28 @@ export class AdminService {
 
     const auditEntries: AuditLogEntry[] = events
       .filter(event => {
-        if (filters?.action && event.event_data?.action !== filters.action)
+        if (filters?.action && event.eventData?.action !== filters.action)
           return false;
         if (
           filters?.resourceType &&
-          event.event_data?.resource_type !== filters.resourceType
+          event.eventData?.resource_type !== filters.resourceType
         )
           return false;
         return true;
       })
       .map(event => ({
         id: event.id,
-        practice_id: event.practice_id,
-        user_id: event.user_id,
-        action: event.event_data?.action || 'unknown',
-        resource_type: event.event_data?.resource_type || 'unknown',
-        resource_id: event.event_data?.resource_id,
-        old_values: event.event_data?.old_values,
-        new_values: event.event_data?.new_values,
-        metadata: event.event_data?.metadata || {},
-        timestamp: new Date(event.created_at),
-        ip_address: event.ip_address,
-        user_agent: event.user_agent,
+        practice_id: event.practiceId ?? null,
+        user_id: event.userId ?? null,
+        action: event.eventData?.action || 'unknown',
+        resource_type: event.eventData?.resource_type || 'unknown',
+        resource_id: event.eventData?.resource_id,
+        old_values: event.eventData?.old_values,
+        new_values: event.eventData?.new_values,
+        metadata: event.eventData?.metadata || {},
+        timestamp: new Date(event.createdAt),
+        ip_address: event.ipAddress ?? null,
+        user_agent: event.userAgent ?? null,
       }))
       .slice(0, filters?.limit || 100);
 
@@ -613,13 +613,13 @@ export class AdminService {
     // Remove main flag from all locations
     await supabase
       .from('practice_locations')
-      .update({ is_main: false })
+      .update({ is_main_location: false })
       .eq('practice_id', practiceId);
 
     // Set new main location
     const { error } = await supabase
       .from('practice_locations')
-      .update({ is_main: true })
+      .update({ is_main_location: true })
       .eq('id', locationId)
       .eq('practice_id', practiceId);
 
@@ -633,7 +633,7 @@ export class AdminService {
       'location',
       locationId,
       null,
-      { is_main: true }
+      { is_main_location: true }
     );
   }
 
@@ -749,7 +749,7 @@ export class AdminService {
 
     // Log activity
     await this.logActivity('password_reset_initiated', 'user', userId, null, {
-      email: profile.email,
+      email: userData.user.email,
     });
   }
 
