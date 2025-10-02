@@ -913,6 +913,7 @@ export interface ProductWithStock {
   gpcBrickCode?: string | null;
   countryOfOrigin?: string | null;
   productLifecycleStatus?: string | null;
+  lifecycleStatus?: string | null; // Alias for productLifecycleStatus
   imageUrl?: string | null;
   requiresBatchTracking?: boolean | null;
   baseUnitIndicator?: boolean | null;
@@ -924,6 +925,12 @@ export interface ProductWithStock {
   createdAt?: string | null;
   updatedAt?: string | null;
   barcode?: string | null;
+  preferredSupplierId?: string | null;
+  minimumStock?: number | null;
+  // Legacy snake_case aliases for backward compatibility
+  stock_status?: 'in_stock' | 'low_stock' | 'out_of_stock';
+  minimum_stock?: number | null;
+  maximum_stock?: number | null;
   raw?: ProductWithRelations;
 }
 
@@ -1052,6 +1059,11 @@ export const mapProductRowToView = (
   };
 
   const rowAny = row as any;
+  const preferredSupplierId =
+    stockLevels[0]?.preferredSupplierId ?? rowAny.preferred_supplier_id ?? null;
+  const maximumStock =
+    rowAny.maximum_stock ?? stockLevels[0]?.maximumQuantity ?? null;
+
   return {
     id: row.id,
     practiceId: rowAny.practice_id ?? row.id,
@@ -1078,6 +1090,7 @@ export const mapProductRowToView = (
     updatedAt: row.updated_at ?? null,
     requiresBatchTracking: row.requires_batch_tracking ?? null,
     productLifecycleStatus: row.product_lifecycle_status ?? null,
+    lifecycleStatus: row.product_lifecycle_status ?? null, // Alias
     gpcBrickCode: row.gpc_brick_code ?? null,
     countryOfOrigin: row.country_of_origin ?? null,
     imageUrl: row.image_url ?? null,
@@ -1092,6 +1105,12 @@ export const mapProductRowToView = (
     netContentUom: row.net_content_uom ?? null,
     netWeight: row.net_weight ?? null,
     grossWeight: row.gross_weight ?? null,
+    preferredSupplierId,
+    minimumStock,
+    // Legacy snake_case aliases
+    stock_status: legacy.status,
+    minimum_stock: minimumStock,
+    maximum_stock: maximumStock,
     legacy,
     raw: row,
   };
