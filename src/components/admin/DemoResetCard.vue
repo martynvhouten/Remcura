@@ -124,7 +124,7 @@
             window.location.reload();
           }, 2000);
         } else {
-          throw new Error($t('demoresetc.resetfailed'));
+          throw new Error(t('demoresetc.resetfailed'));
         }
       } catch (error) {
         console.error('Demo reset error:', error);
