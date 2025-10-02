@@ -299,8 +299,8 @@ export const useBatchStore = defineStore('batch', () => {
         expiry_date: item.expiry_date,
         current_quantity: item.current_quantity,
         days_until_expiry: item.days_until_expiry,
-        urgency_level: item.urgency_level,
-      }));
+        urgency_level: item.urgency_level as 'warning' | 'high' | 'critical' | 'expired',
+      })) as ExpiringBatch[];
       return expiringBatches.value;
     } catch (err) {
       const handledError = ServiceErrorHandler.handle(err as Error, {
@@ -323,14 +323,14 @@ export const useBatchStore = defineStore('batch', () => {
       loading.value = true;
       error.value = null;
 
-      const { data, error: fetchError } = await supabase.rpc<FifoBatchResult>(
+      const { data, error: fetchError } = await supabase.rpc(
         'get_fifo_batches',
         {
           p_product_id: productId,
           p_location_id: locationId,
           p_quantity_needed: quantity,
         }
-      );
+      ) as { data: FifoBatchResult[] | null; error: any };
 
       if (fetchError) {
         const { data: rows, error: fbError } = await supabase
@@ -348,15 +348,15 @@ export const useBatchStore = defineStore('batch', () => {
 
         fifoBatches.value = toArray(rows).map(row =>
           mapProductBatchRow(row as ProductBatchFetchRow, {
-            product: (row as ProductBatchFetchRow).product,
-            location: (row as ProductBatchFetchRow).location,
-            supplier: (row as ProductBatchFetchRow).supplier,
+            product: (row as ProductBatchFetchRow).product as any,
+            location: (row as ProductBatchFetchRow).location as any,
+            supplier: (row as ProductBatchFetchRow).supplier as any,
           })
         );
         return fifoBatches.value;
       }
 
-      fifoBatches.value = (data || []).map(entry => ({
+      fifoBatches.value = ((data as any) || []).map((entry: any) => ({
         id: entry.batch_id,
         practiceId: entry.practice_id,
         productId: entry.product_id,
@@ -418,36 +418,35 @@ export const useBatchStore = defineStore('batch', () => {
       loading.value = true;
       error.value = null;
 
-      const practiceId = updates.practice_id ?? undefined;
+      const updatesAny = updates as any;
+      const practiceId = updatesAny.practice_id ?? undefined;
       const mappedUpdate = toProductBatchUpdate(
         mapProductBatchRow({
           ...updates,
           id,
-          practice_id: updates.practice_id ?? '',
-          product_id: updates.product_id ?? '',
-          location_id: updates.location_id ?? '',
-          supplier_id: updates.supplier_id ?? null,
-          batch_number: updates.batch_number ?? '',
-          supplier_batch_number: updates.supplier_batch_number ?? null,
-          expiry_date: updates.expiry_date ?? '',
-          received_date: updates.received_date ?? '',
-          initial_quantity: updates.current_quantity ?? 0,
-          current_quantity: updates.current_quantity ?? 0,
-          reserved_quantity: updates.reserved_quantity ?? null,
-          available_quantity: updates.available_quantity ?? null,
-          unit_cost: updates.unit_cost ?? null,
-          total_cost: updates.total_cost ?? null,
-          currency: updates.currency ?? null,
-          status: updates.status ?? null,
-          purchase_order_number: updates.purchase_order_number ?? null,
-          invoice_number: updates.invoice_number ?? null,
-          quality_check_passed: updates.quality_check_passed ?? null,
-          quality_notes: updates.quality_notes ?? null,
-          quarantine_until: updates.quarantine_until ?? null,
+          practice_id: updatesAny.practice_id ?? '',
+          product_id: updatesAny.product_id ?? '',
+          location_id: updatesAny.location_id ?? '',
+          supplier_id: updatesAny.supplier_id ?? null,
+          batch_number: updatesAny.batch_number ?? '',
+          supplier_batch_number: updatesAny.supplier_batch_number ?? null,
+          expiry_date: updatesAny.expiry_date ?? '',
+          received_date: updatesAny.received_date ?? '',
+          initial_quantity: updatesAny.current_quantity ?? 0,
+          current_quantity: updatesAny.current_quantity ?? 0,
+          reserved_quantity: updatesAny.reserved_quantity ?? null,
+          available_quantity: updatesAny.available_quantity ?? null,
+          unit_cost: updatesAny.unit_cost ?? null,
+          total_cost: updatesAny.total_cost ?? null,
+          currency: updatesAny.currency ?? null,
+          status: updatesAny.status ?? null,
+          purchase_order_number: updatesAny.purchase_order_number ?? null,
+          invoice_number: updatesAny.invoice_number ?? null,
+          quality_check_passed: updatesAny.quality_check_passed ?? null,
+          quality_notes: updatesAny.quality_notes ?? null,
+          quarantine_until: updatesAny.quarantine_until ?? null,
           created_at: null,
           updated_at: null,
-          supplier_id: updates.supplier_id ?? null,
-          supplier_batch_number: updates.supplier_batch_number ?? null,
         } as ProductBatch)
       );
 
@@ -466,9 +465,9 @@ export const useBatchStore = defineStore('batch', () => {
         batches.value[index] = mapProductBatchRow(
           data as ProductBatchFetchRow,
           {
-            product: (data as ProductBatchFetchRow).product,
-            location: (data as ProductBatchFetchRow).location,
-            supplier: (data as ProductBatchFetchRow).supplier,
+            product: (data as ProductBatchFetchRow).product as any,
+            location: (data as ProductBatchFetchRow).location as any,
+            supplier: (data as ProductBatchFetchRow).supplier as any,
           }
         );
       }
@@ -620,8 +619,8 @@ export const useBatchStore = defineStore('batch', () => {
   ): ProductBatchWithDetails[] => {
     return batches.value.filter(
       batch =>
-        batch.product_id === productId &&
-        areBatchNumbersSimilar(batch.batch_number, batchNumber)
+        batch.productId === productId &&
+        areBatchNumbersSimilar(batch.batchNumber, batchNumber)
     );
   };
 
@@ -635,8 +634,8 @@ export const useBatchStore = defineStore('batch', () => {
     // Check for duplicate batch numbers
     const existingBatch = batches.value.find(
       batch =>
-        batch.product_id === batchData.product_id &&
-        batch.batch_number.toLowerCase() ===
+        batch.productId === batchData.product_id &&
+        batch.batchNumber.toLowerCase() ===
           batchData.batch_number.toLowerCase()
     );
 
@@ -653,7 +652,7 @@ export const useBatchStore = defineStore('batch', () => {
     if (similarBatches.length > 0) {
       validationResult.warnings.push(
         `Vergelijkbare batchnummers gevonden: ${similarBatches
-          .map(b => b.batch_number)
+          .map(b => b.batchNumber)
           .join(', ')}`
       );
     }
@@ -668,13 +667,13 @@ export const useBatchStore = defineStore('batch', () => {
   ) => {
     const productBatches = batches.value.filter(
       batch =>
-        batch.product_id === productId &&
-        batch.location_id === locationId &&
+        batch.productId === productId &&
+        batch.locationId === locationId &&
         batch.status === 'active' &&
-        batch.current_quantity > 0
+        batch.currentQuantity > 0
     );
 
-    const sortedBatches = sortBatchesFIFO(productBatches);
+    const sortedBatches = sortBatchesFIFO(productBatches as any);
     const suggestion = [];
     let remainingQuantity = quantityNeeded;
 
@@ -682,7 +681,7 @@ export const useBatchStore = defineStore('batch', () => {
       if (remainingQuantity <= 0) break;
 
       const quantityFromBatch = Math.min(
-        batch.current_quantity,
+        batch.currentQuantity,
         remainingQuantity
       );
       suggestion.push({
@@ -706,7 +705,7 @@ export const useBatchStore = defineStore('batch', () => {
       loading.value = true;
       error.value = null;
 
-      const { data, error } = await supabase
+      const { data, error: fetchError } = await supabase
         .from('stock_movements')
         .select(
           `
@@ -722,7 +721,7 @@ export const useBatchStore = defineStore('batch', () => {
         .eq('batch_id', batchId)
         .order('created_at', { ascending: false });
 
-      if (error) throw error;
+      if (fetchError) throw fetchError;
 
       return data || [];
     } catch (err) {
