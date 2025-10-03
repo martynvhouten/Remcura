@@ -840,14 +840,14 @@
   const editUser = (user: PracticeMember) => {
     $q.notify({
       type: 'info',
-      message: $t('admin.userManagement.editingUser', { userId: user.user_id }),
+      message: t('admin.userManagement.editingUser', { userId: user.user_id }),
     });
   };
 
   const manageUserPermissions = (user: PracticeMember) => {
     $q.notify({
       type: 'info',
-      message: $t('admin.userManagement.managingPermissions', {
+      message: t('admin.userManagement.managingPermissions', {
         userId: user.user_id,
       }),
     });
@@ -858,7 +858,7 @@
     try {
       $q.dialog({
         title: 'Reset Password',
-        message: $t('admin.userManagement.resetPasswordConfirm', {
+        message: t('admin.userManagement.resetPasswordConfirm', {
           userId: user.user_id,
         }),
         cancel: true,
@@ -887,7 +887,7 @@
       const action = user.role === 'guest' ? 'activate' : 'deactivate';
       $q.dialog({
         title: `${action.charAt(0).toUpperCase() + action.slice(1)} User`,
-        message: $t('admin.userManagement.actionConfirm', {
+        message: t('admin.userManagement.actionConfirm', {
           action,
           userId: user.user_id,
         }),
@@ -917,7 +917,7 @@
   const manageLocationAccess = (location: Location) => {
     $q.notify({
       type: 'info',
-      message: $t('admin.locationManagement.managingAccess', {
+      message: t('admin.locationManagement.managingAccess', {
         locationName: location.name,
       }),
     });
@@ -931,7 +931,7 @@
   }) => {
     $q.notify({
       type: 'info',
-      message: $t('admin.permissionTemplates.showing', {
+      message: t('admin.permissionTemplates.showing', {
         templateKey: template.key,
       }),
     });
@@ -941,7 +941,7 @@
   const editLocation = (location: Location) => {
     $q.notify({
       type: 'info',
-      message: $t('admin.locationManagement.editing', {
+      message: t('admin.locationManagement.editing', {
         locationName: location.name,
       }),
     });
