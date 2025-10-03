@@ -1,9 +1,56 @@
 import { supabase } from 'src/boot/supabase';
 import type { Json } from '../types/supabase';
+import type { Tables } from '../types/supabase.generated';
 import { v4 as uuidv4 } from 'uuid';
 
 // 🎭 REVOLUTIONARY MAGIC INVITE SERVICE
 // The most innovative user management system ever created!
+
+// Boundary mapper: Supabase row → MagicInvite DTO
+function mapMagicInviteRow(row: Tables<'magic_invites'>): MagicInvite {
+  return {
+    id: row.id,
+    practice_id: row.practice_id,
+    magic_code: row.magic_code,
+    emoji_sequence: row.emoji_sequence ?? '',
+    color_theme: row.color_theme ?? '#3B82F6',
+    practice_avatar_seed: row.practice_avatar_seed ?? '',
+    target_role: row.target_role ?? 'member',
+    department: row.department ?? undefined,
+    location_access: (row.location_access as string[]) ?? [],
+    allow_guest_mode: row.allow_guest_mode ?? false,
+    guest_session_hours: row.guest_session_hours ?? 24,
+    auto_upgrade_to_member: row.auto_upgrade_to_member ?? false,
+    ai_role_suggestions: row.ai_role_suggestions,
+    contextual_welcome_message: row.contextual_welcome_message ?? undefined,
+    suggested_avatar_style: row.suggested_avatar_style ?? 'default',
+    qr_code_data: row.qr_code_data ?? undefined,
+    whatsapp_link: row.whatsapp_link ?? undefined,
+    deep_link: row.deep_link ?? '',
+    expires_at: row.expires_at ?? undefined,
+    max_uses: row.max_uses ?? 1,
+    current_uses: row.current_uses ?? 0,
+    auto_regenerate: row.auto_regenerate ?? false,
+    welcome_achievement: row.welcome_achievement ?? '',
+    onboarding_quest_enabled: row.onboarding_quest_enabled ?? false,
+    progress_rewards: row.progress_rewards,
+    created_by: row.created_by ?? '',
+    used_by: (row.used_by as string[]) ?? [],
+    shared_via: (row.shared_via as string[]) ?? [],
+    view_count: row.view_count ?? 0,
+    conversion_rate: row.conversion_rate ?? 0,
+    last_used_at: row.last_used_at ?? undefined,
+    created_at: row.created_at ?? '',
+    updated_at: row.updated_at ?? '',
+  };
+}
+
+// Boundary mapper: Supabase row → GuestSession DTO
+function mapGuestSessionRow(row: any): GuestSession {
+  // Note: GuestSession interface doesn't match guest_sessions table 1:1
+  // This is a best-effort mapping; consider updating the interface
+  return row as GuestSession;
+}
 
 export interface MagicInvite {
   id: string;
@@ -178,7 +225,7 @@ export class MagicInviteService {
       // Generate QR code and WhatsApp link
       await this.updateInviteLinks(data.id, magicCode);
 
-      return data;
+      return mapMagicInviteRow(data);
     } catch (error) {
       console.error('Error creating magic invite:', error);
       throw new Error('Failed to create magic invite');
@@ -343,7 +390,7 @@ export class MagicInviteService {
         }
       );
 
-      return data;
+      return mapGuestSessionRow(data);
     } catch (error) {
       console.error('Error creating guest session:', error);
       throw new Error('Failed to create guest session');
@@ -462,7 +509,7 @@ export class MagicInviteService {
         .order('created_at', { ascending: false });
 
       if (error) throw error;
-      return data || [];
+      return (data || []).map(mapGuestSessionRow);
     } catch (error) {
       console.error('Error getting active sessions:', error);
       return [];
@@ -502,7 +549,7 @@ export class MagicInviteService {
         .order('created_at', { ascending: false });
 
       if (error) throw error;
-      return data || [];
+      return (data || []).map(mapMagicInviteRow);
     } catch (error) {
       console.error('Error getting practice invites:', error);
       return [];
