@@ -308,7 +308,7 @@
           outlined
           class="filter-range-input filter-input-magento"
           hide-bottom-space
-          @update:model-value="value => handleDateRangeChange('start', value)"
+          @update:model-value="value => handleDateRangeChange('start', value as string | null)"
         >
           <template #append>
             <q-icon name="event" class="filter-date-icon icon-size-sm">
@@ -347,7 +347,7 @@
           outlined
           class="filter-range-input filter-input-magento"
           hide-bottom-space
-          @update:model-value="value => handleDateRangeChange('end', value)"
+          @update:model-value="value => handleDateRangeChange('end', value as string | null)"
         >
           <template #append>
             <q-icon name="event" class="filter-date-icon" size="16px">
@@ -655,8 +655,8 @@
         optionsLoading.value = true;
 
         let query = supabase
-          .from(dataSource.table)
-          .select(`${valueField}, ${labelField}`);
+          .from(dataSource.table as any)
+          .select(`${valueField}, ${labelField}` as any);
 
         // Apply filters
         if (dataSource.filters) {
@@ -698,8 +698,8 @@
 
         if (data) {
           let options = (data as Array<Record<string, unknown>>).map(item => ({
-            value: item[valueField],
-            label: item[labelField],
+            value: item[valueField] as string | number | boolean,
+            label: item[labelField] as string,
           }));
 
           // Handle distinct client-side
@@ -754,12 +754,10 @@
         const hasMin =
           range.min !== null &&
           range.min !== undefined &&
-          range.min !== '' &&
           range.min !== 0;
         const hasMax =
           range.max !== null &&
           range.max !== undefined &&
-          range.max !== '' &&
           range.max !== 0;
         return hasMin || hasMax;
       }
@@ -796,7 +794,7 @@
   });
 
   // Template ref for field wrapper
-  const fieldWrapper = ref(null);
+  const fieldWrapper = ref<HTMLElement | null>(null);
 
   // Enhanced label positioning that actually works
   const updateFieldValueClass = () => {
@@ -804,7 +802,7 @@
       if (!fieldWrapper.value) return;
 
       const fieldElements = fieldWrapper.value.querySelectorAll('.q-field');
-      fieldElements.forEach(fieldElement => {
+      fieldElements.forEach((fieldElement: Element) => {
         // Force proper classes based on value state
         if (hasValue.value) {
           fieldElement.classList.add('q-field--has-value');
