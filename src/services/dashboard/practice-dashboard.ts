@@ -731,9 +731,9 @@ class PracticeDashboardService {
     const weeklyData: Record<string, Record<string, number>> = {};
 
     data?.forEach(movement => {
-      if (!movement.created_at || !movement.movement_type) return;
       const createdAt = movement.created_at;
       const movementType = movement.movement_type;
+      if (!createdAt || !movementType) return;
       const week = new Date(createdAt).toISOString().split('T')[0]; // Simplified to daily for now
       if (!weeklyData[week]) weeklyData[week] = {};
       if (!weeklyData[week][movementType])
