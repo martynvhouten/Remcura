@@ -247,7 +247,7 @@
     <!-- Shopping Cart Dialog -->
     <ShoppingCartDialog
       v-model="showCartDialog"
-      :cart-items="cart"
+      :cart-items="cart as any"
       :cart-total="cartTotal"
       @update-quantity="updateCartItemQuantity"
       @remove-item="removeFromCart"
@@ -259,9 +259,9 @@
     <OrderListDialog
       v-model="showOrderListDialog"
       :order-lists="orderLists"
-      :selected-product="selectedProduct"
-      @create-order-list="handleCreateOrderList"
-      @add-to-existing="handleAddToExistingOrderList"
+      :selected-product="selectedProduct as any"
+      @create-order-list="handleCreateOrderList as any"
+      @add-to-existing="handleAddToExistingOrderList as any"
     />
 
     <!-- GTIN Barcode Scanner -->
@@ -286,7 +286,7 @@
     <!-- Product Form Dialog -->
     <ProductFormDialog
       v-model="showProductFormDialog"
-      :product="selectedProductForEdit"
+      :product="selectedProductForEdit as any"
       @saved="onProductSaved"
       @scan-barcode="showGtinScanner = true"
     />
@@ -830,11 +830,12 @@
   };
 
   // Table request handler for sorting and pagination
-  const onTableRequest = (props: any) => {
-    // Use the composable's handler and then update rowsNumber
-    tableRequestHandler(props);
-    pagination.value.rowsNumber = products.value.length;
-  };
+  // NOTE: SmartTable handles its own pagination/sorting via useSmartTable composable
+  // const onTableRequest = (props: any) => {
+  //   // Use the composable's handler and then update rowsNumber
+  //   tableRequestHandler(props);
+  //   pagination.value.rowsNumber = products.value.length;
+  // };
 
   // Lifecycle
   onMounted(async () => {
