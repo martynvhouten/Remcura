@@ -406,7 +406,7 @@
                           >
                           {{
                             getIntegrationTypeLabel(
-                              selectedSupplier?.integration_type
+                              selectedSupplier?.integration_type ?? 'manual'
                             )
                           }}
                         </div>
@@ -415,7 +415,7 @@
                             >{{ $t('suppliersPage.orderMethod') }}:</strong
                           >
                           {{
-                            getOrderMethodLabel(selectedSupplier?.order_method)
+                            getOrderMethodLabel(selectedSupplier?.order_method ?? 'email')
                           }}
                         </div>
                         <div>
@@ -447,12 +447,12 @@
 
               <div class="row q-gutter-md">
                 <q-btn
-                  v-if="canSync(selectedSupplier)"
+                  v-if="selectedSupplier && canSync(selectedSupplier)"
                   color="positive"
                   icon="sync"
                   :label="$t('suppliersPage.syncNow')"
                   @click="syncSupplierProducts(selectedSupplier)"
-                  :loading="syncing[selectedSupplier?.id]"
+                  :loading="syncing[selectedSupplier.id]"
                   unelevated
                 />
                 <q-btn
@@ -809,7 +809,7 @@
 
   const editSupplier = (supplier: Supplier) => {
     editingSupplier.value = supplier;
-    supplierForm.value = { ...supplier };
+    supplierForm.value = { ...supplier } as any;
     integrationConfig.value = supplier.integration_config || {};
     showDialog.value = true;
   };
@@ -935,7 +935,7 @@
 
   const editSupplierIntegration = () => {
     editingSupplier.value = selectedSupplier.value;
-    supplierForm.value = { ...selectedSupplier.value };
+    supplierForm.value = { ...selectedSupplier.value } as any;
     showDialog.value = true;
     closeIntegrationDialog();
   };
