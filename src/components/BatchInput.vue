@@ -90,11 +90,11 @@
           <q-card-section class="q-pa-sm">
             <div class="flex justify-between items-center">
               <div>
-                <div class="text-weight-medium">{{ batch.batch_number }}</div>
+                <div class="text-weight-medium">{{ batch.batchNumber }}</div>
                 <div class="text-caption text-grey-6">
                   {{ $t('batch.expires') }}:
-                  {{ formatDate(batch.expiry_date) }} •
-                  {{ $t('product.quantity') }}: {{ batch.current_quantity }}
+                  {{ formatDate(batch.expiryDate) }} •
+                  {{ $t('product.quantity') }}: {{ batch.currentQuantity }}
                 </div>
               </div>
               <q-btn
@@ -149,7 +149,7 @@
   import { useI18n } from 'vue-i18n';
   import { useQuasar } from 'quasar';
   import { useBatchStore } from 'src/stores/batch';
-  import { useProductStore } from '@/stores/products';
+  import { useProductsStore } from '@/stores/products';
   import { useAuthStore } from 'src/stores/auth';
   import BaseSelect from 'src/components/base/BaseSelect.vue';
   import type { ProductBatchDTO } from '@/domain/inventory/bridge';
@@ -186,7 +186,7 @@
         isExistingBatch?: boolean;
       }
     ): void;
-    (e: 'batch-selected', batch: ProductBatchWithDetails): void;
+    (e: 'batch-selected', batch: ProductBatchDTO): void;
     (e: 'validation-changed', isValid: boolean): void;
   }
 
@@ -201,7 +201,7 @@
   const { t } = useI18n();
   const $q = useQuasar();
   const batchStore = useBatchStore();
-  const productStore = useProductStore();
+  const productStore = useProductsStore();
   const authStore = useAuthStore();
   const { formatDate } = useFormatting();
 
@@ -323,7 +323,7 @@
 
       // If exact match found, auto-select it
       const exactMatch = existingBatches.value.find(
-        batch => batch.batch_number === scannedCode
+        batch => batch.batchNumber === scannedCode
       );
 
       if (exactMatch) {
