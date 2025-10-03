@@ -150,7 +150,7 @@ export class MagicInviteService {
     try {
       const { data, error } = await supabase.rpc('generate_magic_code', {
         practice_name: practiceName,
-        department: department || null,
+        department: department ?? undefined,
         style,
       });
 
@@ -350,13 +350,13 @@ export class MagicInviteService {
         session_color: this.generateSessionColor(),
         session_token: sessionToken,
         expires_at: new Date(
-          Date.now() + invite.guest_session_hours * 60 * 60 * 1000
+          Date.now() + (invite.guest_session_hours ?? 24) * 60 * 60 * 1000
         ).toISOString(),
         is_active: true,
         can_extend: true,
-        granted_permissions: this.getGuestPermissions(invite.target_role),
+        granted_permissions: this.getGuestPermissions(invite.target_role ?? 'guest'),
         accessible_locations: invite.location_access,
-        restricted_features: this.getRestrictedFeatures(invite.target_role),
+        restricted_features: this.getRestrictedFeatures(invite.target_role ?? 'guest'),
         device_fingerprint: request.device_fingerprint,
         ip_address: request.ip_address || '',
         user_agent: request.user_agent || '',
@@ -370,7 +370,7 @@ export class MagicInviteService {
 
       const { data, error } = await supabase
         .from('guest_sessions')
-        .insert([sessionData])
+        .insert([sessionData as any])
         .select()
         .single();
 
@@ -440,7 +440,7 @@ export class MagicInviteService {
       '#F44336',
       '#009688',
     ];
-    return colors[Math.floor(Math.random() * colors.length)];
+    return colors[Math.floor(Math.random() * colors.length)] ?? '#2196F3';
   }
 
   static getGuestPermissions(role: string): Record<string, any> {
