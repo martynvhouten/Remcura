@@ -13,7 +13,7 @@
             icon="refresh"
             size="md"
             @click="refreshData"
-             :loading="inventoryStore.movementsLoading"
+            :loading="movementsLoading"
             class="app-btn-refresh"
           >
             <q-tooltip>{{ $t('common.refresh') }}</q-tooltip>
@@ -39,7 +39,7 @@
         @change="handleFilterChange"
         @reset="handleFilterReset"
         @clear="handleFilterClear"
-         :loading="inventoryStore.movementsLoading"
+        :loading="movementsLoading"
         collapsible
         class="movements-filter-panel"
       />
@@ -64,7 +64,7 @@
     <!-- Main Content -->
     <div class="movements-content">
       <!-- Loading State -->
-      <div v-if="inventoryStore.movementsLoading" class="loading-container">
+      <div v-if="movementsLoading" class="loading-container">
         <q-spinner-dots size="xl" color="primary" />
         <p class="loading-text">{{ $t('inventory.movements.loading') }}</p>
       </div>
@@ -77,7 +77,7 @@
           row-key="id"
           v-model:pagination="pagination"
           :rows-number="inventoryStore.stockMovementsTotal || 0"
-          :loading="inventoryStore.movementsLoading"
+          :loading="movementsLoading"
           :no-data-label="$t('inventory.movements.noData')"
           class="movements-table"
           flat
@@ -186,10 +186,10 @@
         <div class="detail-row">
           <span class="label">{{ $t('inventory.movementType') }}:</span>
           <q-chip
-            :icon="movementIcon(selectedMovement.movement_type)"
-            :color="movementColor(selectedMovement.movement_type)"
+            :icon="movementIcon(selectedMovement.movement_type as MovementType)"
+            :color="movementColor(selectedMovement.movement_type as MovementType)"
             text-color="white"
-            :label="formatMovementType(selectedMovement.movement_type)"
+            :label="formatMovementType(selectedMovement.movement_type as MovementType)"
             size="sm"
           />
         </div>
@@ -235,10 +235,10 @@
           <span class="value">{{ selectedMovement.quantity_after }}</span>
         </div>
 
-        <div v-if="selectedMovement.reason_code" class="detail-row">
+        <div v-if="(selectedMovement as any).reason_code" class="detail-row">
           <span class="label">{{ $t('inventory.reasonCode') }}:</span>
           <span class="value">{{
-            formatReasonCode(selectedMovement.reason_code)
+            formatReasonCode((selectedMovement as any).reason_code)
           }}</span>
         </div>
 
@@ -250,7 +250,7 @@
         <div class="detail-row">
           <span class="label">{{ $t('common.date') }}:</span>
           <span class="value">{{
-            formatDateTime(selectedMovement.created_at)
+            formatDateTime(selectedMovement.created_at ?? '')
           }}</span>
         </div>
       </div>
@@ -299,6 +299,7 @@
   const clinicStore = useClinicStore();
 
   // Reactive state
+  const movementsLoading = ref(false);
   const showMovementDetails = ref(false);
   const selectedMovement = ref<MovementWithRelations | null>(null);
   const isUnmounted = ref(false);
