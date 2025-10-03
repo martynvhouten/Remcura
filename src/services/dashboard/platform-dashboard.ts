@@ -171,6 +171,8 @@ class PlatformDashboardService {
 
     for (let i = 0; i < widgetIds.length; i++) {
       const widgetId = widgetIds[i];
+      if (!widgetId) continue; // Skip undefined widget IDs
+      
       try {
         const widget = await this.loadWidget(widgetId, i);
         if (widget) {
@@ -427,8 +429,8 @@ class PlatformDashboardService {
           return [
             practice.name,
             practice.email || 'N/A',
-            userCount,
-            locationCount,
+            String(userCount),
+            String(locationCount),
             lastActivity,
             new Date(practice.created_at).toLocaleDateString(),
           ];
@@ -560,7 +562,7 @@ class PlatformDashboardService {
         largestTable = tableStats?.[0]?.table_name || 'unknown';
       } catch (rpcError) {
         ServiceErrorHandler.handle(
-          rpcError,
+          rpcError as Error,
           {
             service: 'PlatformDashboardService',
             operation: 'get_table_stats',
@@ -614,11 +616,13 @@ class PlatformDashboardService {
     > = {};
 
     data?.forEach(error => {
-      const type = error.activity_type;
+      const type = error.activity_type ?? 'unknown';
+      const createdAt = error.created_at ?? new Date().toISOString();
+      
       if (!errorGroups[type]) {
         errorGroups[type] = {
           count: 0,
-          last_seen: error.created_at,
+          last_seen: createdAt,
           practices: new Set(),
         };
       }
@@ -628,8 +632,8 @@ class PlatformDashboardService {
         (error.practices as any)?.name || 'Unknown'
       );
 
-      if (new Date(error.created_at) > new Date(errorGroups[type].last_seen)) {
-        errorGroups[type].last_seen = error.created_at;
+      if (new Date(createdAt) > new Date(errorGroups[type].last_seen)) {
+        errorGroups[type].last_seen = createdAt;
       }
     });
 
