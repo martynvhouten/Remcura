@@ -3,7 +3,7 @@
     v-model="isOpen"
     :title="$t('productsPage.details.title')"
     icon="info"
-    size="fullscreen"
+    size="full"
     variant="elegant"
     header-variant="solid"
     position="right"
@@ -12,12 +12,12 @@
       <!-- Product Image - Optimized -->
       <div class="text-center">
         <OptimizedImage
-          :src="product.raw?.image_url || ''"
+          :src="product.imageUrl || product.raw?.image_url || ''"
           :alt="product.name"
           width="300"
           height="200"
           :lazy="true"
-          quality="85"
+          :quality="85"
           format="webp"
           class="product-image"
           placeholder-icon="image"
@@ -151,14 +151,14 @@
             <!-- Left Column: Core Identifiers -->
             <div class="col-12 col-md-6">
               <q-list dense>
-                <q-item v-if="product.raw?.gtin">
+                <q-item v-if="product.gtin || product.raw?.gtin">
                   <q-item-section>
                     <q-item-label class="text-caption text-grey-6">
                       {{ $t('productsPage.details.gtin') }}
                     </q-item-label>
                     <q-item-label class="text-weight-medium">
                       <q-chip
-                        :label="product.raw?.gtin ?? ''"
+                        :label="product.gtin ?? product.raw?.gtin ?? ''"
                         icon="qr_code_2"
                         color="primary"
                         text-color="white"
@@ -168,18 +168,24 @@
                   </q-item-section>
                 </q-item>
 
-                <q-item v-if="product.raw?.gpc_brick_code">
+                <q-item
+                  v-if="product.gpcBrickCode || product.raw?.gpc_brick_code"
+                >
                   <q-item-section>
                     <q-item-label class="text-caption text-grey-6">
                       {{ $t('productsPage.details.gpcBrickCode') }}
                     </q-item-label>
                     <q-item-label class="text-weight-medium">
-                      {{ product.raw?.gpc_brick_code }}
+                      {{ product.gpcBrickCode ?? product.raw?.gpc_brick_code }}
                     </q-item-label>
                   </q-item-section>
                 </q-item>
 
-                <q-item v-if="product.raw?.country_of_origin">
+                <q-item
+                  v-if="
+                    product.countryOfOrigin || product.raw?.country_of_origin
+                  "
+                >
                   <q-item-section>
                     <q-item-label class="text-caption text-grey-6">
                       {{ $t('productsPage.details.countryOfOrigin') }}
@@ -187,10 +193,18 @@
                     <q-item-label class="text-weight-medium">
                       <q-chip
                         :label="
-                          getCountryName(product.raw?.country_of_origin ?? '')
+                          getCountryName(
+                            product.countryOfOrigin ??
+                              product.raw?.country_of_origin ??
+                              ''
+                          )
                         "
                         :icon="
-                          getCountryFlag(product.raw?.country_of_origin ?? '')
+                          getCountryFlag(
+                            product.countryOfOrigin ??
+                              product.raw?.country_of_origin ??
+                              ''
+                          )
                         "
                         color="blue-grey-2"
                         text-color="blue-grey-8"
@@ -200,7 +214,12 @@
                   </q-item-section>
                 </q-item>
 
-                <q-item v-if="product.raw?.product_lifecycle_status">
+                <q-item
+                  v-if="
+                    product.productLifecycleStatus ||
+                    product.raw?.product_lifecycle_status
+                  "
+                >
                   <q-item-section>
                     <q-item-label class="text-caption text-grey-6">
                       {{ $t('productsPage.details.lifecycleStatus') }}
@@ -208,7 +227,9 @@
                     <q-item-label class="text-weight-medium">
                       {{
                         mapLifecycleStatus(
-                          product.raw?.product_lifecycle_status ?? ''
+                          product.productLifecycleStatus ??
+                            product.raw?.product_lifecycle_status ??
+                            ''
                         )
                       }}
                     </q-item-label>
@@ -226,8 +247,13 @@
                       {{ $t('productsPage.details.netContent') }}
                     </q-item-label>
                     <q-item-label class="text-weight-medium">
-                      {{ product.net_content_value }}
-                      {{ product.net_content_uom }}
+                      {{
+                        product.netContentValue ??
+                        product.raw?.net_content_value
+                      }}
+                      {{
+                        product.netContentUom ?? product.raw?.net_content_uom
+                      }}
                     </q-item-label>
                   </q-item-section>
                 </q-item>
@@ -239,13 +265,21 @@
                     </q-item-label>
                     <q-item-label class="text-weight-medium">
                       <div class="column">
-                        <span v-if="product.net_weight">
+                        <span
+                          v-if="product.netWeight ?? product.raw?.net_weight"
+                        >
                           {{ $t('productsPage.details.netWeight') }}:
-                          {{ product.net_weight }}g
+                          {{ product.netWeight ?? product.raw?.net_weight }}g
                         </span>
-                        <span v-if="product.gross_weight">
+                        <span
+                          v-if="
+                            product.grossWeight ?? product.raw?.gross_weight
+                          "
+                        >
                           {{ $t('productsPage.details.grossWeight') }}:
-                          {{ product.gross_weight }}g
+                          {{
+                            product.grossWeight ?? product.raw?.gross_weight
+                          }}g
                         </span>
                       </div>
                     </q-item-label>
@@ -259,13 +293,35 @@
                     </q-item-label>
                     <q-item-label class="text-weight-medium">
                       <div class="column">
-                        <span v-if="product.effective_from_date">
+                        <span
+                          v-if="
+                            product.effectiveFromDate ??
+                            product.raw?.effective_from_date
+                          "
+                        >
                           {{ $t('productsPage.details.from') }}:
-                          {{ formatDate(product.effective_from_date) }}
+                          {{
+                            formatDate(
+                              product.effectiveFromDate ??
+                                product.raw?.effective_from_date ??
+                                ''
+                            )
+                          }}
                         </span>
-                        <span v-if="product.effective_to_date">
+                        <span
+                          v-if="
+                            product.effectiveToDate ??
+                            product.raw?.effective_to_date
+                          "
+                        >
                           {{ $t('productsPage.details.to') }}:
-                          {{ formatDate(product.effective_to_date) }}
+                          {{
+                            formatDate(
+                              product.effectiveToDate ??
+                                product.raw?.effective_to_date ??
+                                ''
+                            )
+                          }}
                         </span>
                       </div>
                     </q-item-label>
@@ -282,7 +338,9 @@
             </q-item-label>
             <div class="row q-gutter-sm">
               <q-chip
-                v-if="product.base_unit_indicator"
+                v-if="
+                  product.baseUnitIndicator ?? product.raw?.base_unit_indicator
+                "
                 :label="$t('productsPage.details.baseUnit')"
                 icon="inventory"
                 color="green"
@@ -290,7 +348,10 @@
                 size="sm"
               />
               <q-chip
-                v-if="product.orderable_unit_indicator"
+                v-if="
+                  product.orderableUnitIndicator ??
+                  product.raw?.orderable_unit_indicator
+                "
                 :label="$t('productsPage.details.orderable')"
                 icon="shopping_cart"
                 color="blue"
@@ -298,7 +359,10 @@
                 size="sm"
               />
               <q-chip
-                v-if="product.despatch_unit_indicator"
+                v-if="
+                  product.despatchUnitIndicator ??
+                  product.raw?.despatch_unit_indicator
+                "
                 :label="$t('productsPage.details.despatchable')"
                 icon="local_shipping"
                 color="orange"
@@ -326,7 +390,7 @@
                     {{ $t('productsPage.details.currentStock') }}
                   </q-item-label>
                   <q-item-label class="text-h6">
-                    {{ product.total_stock }} {{ product.unit || '' }}
+                    {{ product.totalStock ?? 0 }} {{ product.unit || '' }}
                   </q-item-label>
                 </q-item-section>
                 <q-item-section side>
@@ -349,7 +413,9 @@
                     <q-badge
                       :color="stockStatusColor"
                       :label="
-                        $t(`productsPage.stockStatus.${product.stock_status}`)
+                        $t(
+                          `productsPage.stockStatus.${product.status ?? 'unknown'}`
+                        )
                       "
                     />
                   </q-item-label>
@@ -367,7 +433,7 @@
         icon="add_shopping_cart"
         color="primary"
         :disable="product?.stock_status === 'out_of_stock'"
-        @click="$emit('addToCart', product)"
+        @click="emit('addToCart', product)"
         unelevated
       />
       <q-btn
@@ -375,7 +441,7 @@
         icon="playlist_add"
         color="secondary"
         outline
-        @click="$emit('addToOrderList', product)"
+        @click="emit('addToOrderList', product)"
       />
       <q-btn
         :label="$t('common.close')"
@@ -418,9 +484,8 @@
   });
 
   const stockStatusColor = computed(() => {
-    if (!props.product) return 'grey';
-
-    switch (props.product.stock_status) {
+    const status = props.product?.status ?? props.product?.stock_status;
+    switch (status) {
       case 'in_stock':
         return 'positive';
       case 'low_stock':
@@ -433,9 +498,8 @@
   });
 
   const stockStatusIcon = computed(() => {
-    if (!props.product) return 'help';
-
-    switch (props.product.stock_status) {
+    const status = props.product?.status ?? props.product?.stock_status;
+    switch (status) {
       case 'in_stock':
         return 'check_circle';
       case 'low_stock':
@@ -448,13 +512,17 @@
   });
 
   const bestPrice = computed(() => {
-    if (!props.product?.supplier_products?.length) return null;
+    const supplierProducts = props.product?.supplierProducts ?? [];
+    if (!supplierProducts.length) return null;
 
-    const pricesWithSupplier = props.product.supplier_products
-      .filter(sp => sp.price && sp.price > 0)
+    const pricesWithSupplier = supplierProducts
+      .filter(sp => {
+        const price = sp.listPrice ?? sp.costPrice;
+        return price !== null && price !== undefined && price > 0;
+      })
       .map(sp => ({
-        price: sp.price,
-        supplier: sp.supplier_name || sp.supplier_id,
+        price: sp.listPrice ?? sp.costPrice ?? 0,
+        supplier: sp.supplier.name ?? sp.supplier.id,
       }))
       .sort((a, b) => a.price - b.price);
 
@@ -465,6 +533,10 @@
   const hasGS1Data = computed(() => {
     if (!props.product) return false;
     return !!(
+      props.product.gtin ||
+      props.product.gpcBrickCode ||
+      props.product.countryOfOrigin ||
+      props.product.productLifecycleStatus ||
       props.product.raw?.gtin ||
       props.product.raw?.gpc_brick_code ||
       props.product.raw?.country_of_origin ||
@@ -477,26 +549,39 @@
   });
 
   const hasPackagingInfo = computed(() => {
-    return !!(
-      props.product?.net_content_value && props.product?.net_content_uom
-    );
+    const value =
+      props.product?.netContentValue ?? props.product?.raw?.net_content_value;
+    const uom =
+      props.product?.netContentUom ?? props.product?.raw?.net_content_uom;
+    return !!(value && uom);
   });
 
   const hasWeightInfo = computed(() => {
-    return !!(props.product?.net_weight || props.product?.gross_weight);
+    return !!(
+      props.product?.netWeight ??
+      props.product?.grossWeight ??
+      props.product?.raw?.net_weight ??
+      props.product?.raw?.gross_weight
+    );
   });
 
   const hasValidityInfo = computed(() => {
     return !!(
-      props.product?.effective_from_date || props.product?.effective_to_date
+      props.product?.effectiveFromDate ??
+      props.product?.effectiveToDate ??
+      props.product?.raw?.effective_from_date ??
+      props.product?.raw?.effective_to_date
     );
   });
 
   const hasUnitIndicators = computed(() => {
     return !!(
-      props.product?.base_unit_indicator ||
-      props.product?.orderable_unit_indicator ||
-      props.product?.despatch_unit_indicator
+      props.product?.baseUnitIndicator ??
+      props.product?.orderableUnitIndicator ??
+      props.product?.despatchUnitIndicator ??
+      props.product?.raw?.base_unit_indicator ??
+      props.product?.raw?.orderable_unit_indicator ??
+      props.product?.raw?.despatch_unit_indicator
     );
   });
 
@@ -545,13 +630,13 @@
   const mapLifecycleStatus = (status: string): string => {
     switch (status?.toLowerCase()) {
       case 'active':
-        return $t('productsPage.lifecycleStatus.active');
+        return t('productsPage.lifecycleStatus.active');
       case 'discontinued':
-        return $t('productsPage.lifecycleStatus.discontinued');
+        return t('productsPage.lifecycleStatus.discontinued');
       case 'new':
-        return $t('productsPage.lifecycleStatus.new');
+        return t('productsPage.lifecycleStatus.new');
       case 'phase_out':
-        return $t('productsPage.lifecycleStatus.phaseOut');
+        return t('productsPage.lifecycleStatus.phaseOut');
       default:
         return status;
     }
