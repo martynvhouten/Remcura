@@ -498,11 +498,14 @@
   import { supabase } from 'src/services/supabase';
   import { monitoringService } from 'src/services/monitoring';
   import { useTableSorting } from 'src/composables/useTableSorting';
+  import type { Tables } from '@/types/supabase.generated';
   import type {
     FilterValues,
     FilterChangeEvent,
     FilterResetEvent,
   } from '@/types/filters';
+
+  type Supplier = Tables<'suppliers'>;
 
   const $q = useQuasar();
   const { t } = useI18n();
@@ -512,8 +515,8 @@
   const saving = ref(false);
   const showDialog = ref(false);
   const showIntegrationDialog = ref(false);
-  const editingSupplier = ref<any>(null);
-  const selectedSupplier = ref<any>(null);
+  const editingSupplier = ref<Supplier | null>(null);
+  const selectedSupplier = ref<Supplier | null>(null);
   const syncing = ref<Record<string, boolean>>({});
 
   // New filter state for FilterPanel
@@ -952,7 +955,7 @@
     } catch (error: unknown) {
       $q.notify({
         type: 'negative',
-        message: t('suppliersPage.connectionFailed', { error: error.message }),
+        message: t('suppliersPage.connectionFailed', { error: error instanceof Error ? error.message : 'Unknown error' }),
       });
     }
   };
@@ -977,25 +980,26 @@
         throw error;
       }
 
-      if (data?.success) {
+      const result = data as { success?: boolean; products_synced?: number; error?: string } | null;
+      if (result?.success) {
         $q.notify({
           type: 'positive',
           message: t('suppliersPage.syncSuccess', {
             name: supplier.name,
-            count: data.products_synced,
+            count: result.products_synced ?? 0,
           }),
         });
         // Reload suppliers to get updated sync time
         await loadSuppliers();
       } else {
-        throw new Error(data?.error || 'Sync failed');
+        throw new Error(result?.error || 'Sync failed');
       }
     } catch (error: unknown) {
       $q.notify({
         type: 'negative',
         message: t('suppliersPage.syncFailed', {
           name: supplier.name,
-          error: error.message,
+          error: error instanceof Error ? error.message : 'Unknown error',
         }),
       });
     } finally {
