@@ -517,11 +517,11 @@
       return 'grey';
     }
     const status = orderList.value.status;
-    // Map status to colors (handle both old and new status values)
-    if (status === 'active' || status === 'ready') return 'positive';
+    // Map status to colors
+    if (status === 'active') return 'positive';
     if (status === 'draft') return 'warning';
     if (status === 'submitted') return 'info';
-    if (status === 'completed' || status === 'delivered' || status === 'confirmed') return 'primary';
+    if (status === 'completed') return 'primary';
     if (status === 'cancelled') return 'negative';
     return 'grey';
   });
@@ -531,12 +531,11 @@
       return 'Onbekend';
     }
     const status = orderList.value.status;
-    // Map status to labels (handle both old and new status values)
-    if (status === 'active' || status === 'ready') return 'Klaar';
+    // Map status to labels
+    if (status === 'active') return 'Klaar';
     if (status === 'draft') return 'Concept';
     if (status === 'submitted') return 'Verzonden';
-    if (status === 'confirmed') return 'Bevestigd';
-    if (status === 'completed' || status === 'delivered') return 'Geleverd';
+    if (status === 'completed') return 'Geleverd';
     if (status === 'cancelled') return 'Geannuleerd';
     return 'Onbekend';
   });
@@ -784,7 +783,10 @@
 
   const duplicateList = async () => {
     try {
-      await orderListsStore.duplicateOrderList(orderList.value!.id);
+      await orderListsStore.duplicateOrderList(
+        orderList.value!.id,
+        `${orderList.value!.name} (kopie)`
+      );
       $q.notify({
         type: 'positive',
         message: 'Bestellijst gedupliceerd',
@@ -803,11 +805,11 @@
       processingGlobalOrder.value = true;
       // Delegate to min/max orchestration if available
       if (orderListsStore.applyOrderSuggestions && orderList.value) {
-        await orderListsStore.applyOrderSuggestions(orderList.value.id, orderList.value.practice_id);
+        await orderListsStore.applyOrderSuggestions();
       }
-      $q.notify({ type: 'positive', message: $t('orderLists.ordersCreated') as string });
+      $q.notify({ type: 'positive', message: t('orderLists.ordersCreated') });
     } catch (err) {
-      $q.notify({ type: 'negative', message: $t('orderLists.processingError') as string });
+      $q.notify({ type: 'negative', message: t('orderLists.processingError') });
     } finally {
       processingGlobalOrder.value = false;
     }
