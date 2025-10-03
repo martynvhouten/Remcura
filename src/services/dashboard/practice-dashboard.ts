@@ -263,6 +263,7 @@ class PracticeDashboardService {
 
     for (let i = 0; i < widgetIds.length; i++) {
       const widgetId = widgetIds[i];
+      if (!widgetId) continue;
       try {
         // Krijg widget config voor titel en eigenschappen
         const widgetConfig = roleConfig.widgets.find(w => w.id === widgetId);
@@ -731,11 +732,13 @@ class PracticeDashboardService {
 
     data?.forEach(movement => {
       if (!movement.created_at || !movement.movement_type) return;
-      const week = new Date(movement.created_at).toISOString().split('T')[0]; // Simplified to daily for now
+      const createdAt = movement.created_at;
+      const movementType = movement.movement_type;
+      const week = new Date(createdAt).toISOString().split('T')[0]; // Simplified to daily for now
       if (!weeklyData[week]) weeklyData[week] = {};
-      if (!weeklyData[week][movement.movement_type])
-        weeklyData[week][movement.movement_type] = 0;
-      weeklyData[week][movement.movement_type] += Number(
+      if (!weeklyData[week][movementType])
+        weeklyData[week][movementType] = 0;
+      weeklyData[week][movementType] += Number(
         movement.quantity_change ?? 0
       );
     });
