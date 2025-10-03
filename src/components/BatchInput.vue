@@ -149,13 +149,11 @@
   import { useI18n } from 'vue-i18n';
   import { useQuasar } from 'quasar';
   import { useBatchStore } from 'src/stores/batch';
-  import { useProductStore } from 'src/stores/product';
+  import { useProductStore } from '@/stores/products';
   import { useAuthStore } from 'src/stores/auth';
   import BaseSelect from 'src/components/base/BaseSelect.vue';
-  import type {
-    ProductBatchWithDetails,
-    ProductWithStock,
-  } from 'src/types/inventory';
+  import type { ProductBatchDTO } from '@/domain/inventory/bridge';
+  import type { ProductWithStock } from 'src/types/inventory';
   import { useFormatting } from 'src/composables/useFormatting';
 
   // Lazy load barcode scanner
@@ -212,13 +210,13 @@
   const batchNumber = ref('');
   const expiryDate = ref('');
   const quantity = ref<number | null>(null);
-  const existingBatches = ref<ProductBatchWithDetails[]>([]);
+  const existingBatches = ref<ProductBatchDTO[]>([]);
   const showScanner = ref(false);
   const productsLoading = ref(false);
 
   // Computed
   const productOptions = computed(() => {
-    return productStore.products.map(product => ({
+    return productStore.products.map((product: ProductWithStock) => ({
       ...product,
       label: `${product.name} (${product.sku})`,
       value: product.id,
@@ -282,7 +280,7 @@
       const batches = batchStore
         .batchesByProduct(selectedProduct.value.id)
         .filter(batch =>
-          batch.batch_number
+          batch.batchNumber
             .toLowerCase()
             .includes(batchNumber.value.toLowerCase())
         );
@@ -293,15 +291,15 @@
     }
   };
 
-  const selectExistingBatch = (batch: ProductBatchWithDetails) => {
-    batchNumber.value = batch.batch_number;
-    expiryDate.value = batch.expiry_date;
-    quantity.value = batch.current_quantity;
+  const selectExistingBatch = (batch: ProductBatchDTO) => {
+    batchNumber.value = batch.batchNumber;
+    expiryDate.value = batch.expiryDate;
+    quantity.value = batch.currentQuantity;
 
     const value = {
       productId: selectedProduct.value?.id,
-      batchNumber: batch.batch_number,
-      expiryDate: batch.expiry_date,
+      batchNumber: batch.batchNumber,
+      expiryDate: batch.expiryDate,
       quantity: quantity.value,
       batchId: batch.id,
       isExistingBatch: true,
@@ -361,7 +359,7 @@
       if (newValue) {
         if (newValue.productId) {
           const product = productStore.products.find(
-            p => p.id === newValue.productId
+            (p: ProductWithStock) => p.id === newValue.productId
           );
           selectedProduct.value = product || null;
         }
