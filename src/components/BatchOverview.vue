@@ -319,7 +319,7 @@
   import BatchRegistrationForm from './BatchRegistrationForm.vue';
   import BaseDialog from 'src/components/base/BaseDialog.vue';
   import UseBatchDialog from './UseBatchDialog.vue';
-  import type { ProductBatchWithDetails } from '@/types/inventory';
+  import type { ProductBatchDTO } from '@/domain/inventory/bridge';
 
   // Composables
   const { t } = useI18n();
@@ -334,7 +334,7 @@
   const showDetailsDialog = ref(false);
   const showUseBatchDialog = ref(false);
   const showExpiringOnly = ref(false);
-  const selectedBatch = ref<ProductBatchWithDetails | null>(null);
+  const selectedBatch = ref<ProductBatchDTO | null>(null);
 
   // Filters
   const filters = ref({
@@ -547,25 +547,23 @@
     // Filters are reactive, so this just triggers recomputation
   };
 
-  const editBatch = (batch: ProductBatchWithDetails) => {
+  const editBatch = (batch: ProductBatchDTO) => {
     selectedBatch.value = batch;
     showDetailsDialog.value = true;
   };
 
-  const useBatch = (batch: ProductBatchWithDetails) => {
+  const useBatch = (batch: ProductBatchDTO) => {
     selectedBatch.value = batch;
     showUseBatchDialog.value = true;
   };
 
-  const quarantineBatch = async (batch: ProductBatchWithDetails) => {
+  const quarantineBatch = async (batch: ProductBatchDTO) => {
     try {
       const clinicId = authStore.clinicId;
       if (!clinicId) {
-        throw new Error($t('batchoverv.noclinicidavailable'));
+        throw new Error(t('batchoverv.noclinicidavailable'));
       }
-      await batchStore.updateBatch({
-        id: batch.id,
-        practice_id: clinicId,
+      await batchStore.updateBatch(batch.id, {
         status: 'quarantine',
       });
       $q.notify({
@@ -605,10 +603,10 @@
       loading.value = true;
       const clinicId = authStore.clinicId;
       if (!clinicId) {
-        throw new Error($t('batchoverv.noclinicidavailable'));
+        throw new Error(t('batchoverv.noclinicidavailable'));
       }
       await Promise.all([
-        batchStore.fetchBatches(clinicId),
+        batchStore.fetchBatches({ practiceId: clinicId }),
         batchStore.fetchExpiringBatches(clinicId),
       ]);
     } catch (error) {
@@ -624,7 +622,10 @@
 
   // Lifecycle
   onMounted(async () => {
-    await Promise.all([loadBatches(), clinicStore.fetchLocations()]);
+    const clinicId = authStore.clinicId;
+    if (clinicId) {
+      await Promise.all([loadBatches(), clinicStore.fetchLocations(clinicId)]);
+    }
   });
 </script>
 
