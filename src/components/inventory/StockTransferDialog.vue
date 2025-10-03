@@ -56,8 +56,8 @@
         <div class="row items-center q-gutter-md">
           <q-avatar size="48px" color="grey-3">
             <q-img
-              v-if="selectedProduct.image_url"
-              :src="selectedProduct.image_url"
+              v-if="selectedProduct.imageUrl"
+              :src="selectedProduct.imageUrl"
               :alt="selectedProduct.name"
             />
             <q-icon
@@ -140,7 +140,7 @@
         <!-- Batch Selection (if product requires batch tracking) -->
         <div
           v-if="
-            selectedProduct?.requires_batch_tracking &&
+            selectedProduct?.requiresBatchTracking &&
             availableBatches.length > 0
           "
         >
@@ -336,6 +336,7 @@
   import { useQuasar } from 'quasar';
   import { useInventoryStore } from 'src/stores/inventory';
   import { useClinicStore } from 'src/stores/clinic';
+  import { useBatchStore } from 'src/stores/batch';
   import { formatDate } from 'src/utils/date';
   import BarcodeScanner from 'src/components/BarcodeScanner.vue';
   import BaseDialog from 'src/components/base/BaseDialog.vue';
@@ -354,7 +355,6 @@
 
   const props = withDefaults(defineProps<Props>(), {
     modelValue: false,
-    currentLocation: null,
   });
 
   const emit = defineEmits<{
@@ -368,6 +368,7 @@
   const $q = useQuasar();
   const inventoryStore = useInventoryStore();
   const clinicStore = useClinicStore();
+  const batchStore = useBatchStore();
 
   // State
   const fromLocation = ref<LocationSummary | null>(
@@ -420,28 +421,25 @@
 
   // Available batches for the selected product and location
   const availableBatches = computed<ProductBatchSummary[]>(() => {
-    if (
-      !props.selectedProduct?.requires_batch_tracking ||
-      !fromLocation.value
-    ) {
-      return [] as any[];
+    if (!props.selectedProduct?.requiresBatchTracking || !fromLocation.value) {
+      return [];
     }
 
-    // Get batches for this product at the from location
-    const batches = inventoryStore.getProductBatches(
-      props.selectedProduct.id,
-      fromLocation.value.id
+    const batches = batchStore.batches.filter(
+      batch =>
+        batch.productId === props.selectedProduct.id &&
+        batch.locationId === fromLocation.value.id &&
+        batch.currentQuantity > 0
     );
 
     return batches
-      .filter(batch => batch.available_quantity > 0)
-      .map(batch => ({
+      .map((batch: any) => ({
         ...batch,
-        batchDisplay: `${batch.batch_number} (${formatDate(batch.expiry_date)})`,
+        batchDisplay: `${batch.batchNumber} (${formatDate(batch.expiryDate)})`,
       }))
       .sort(
-        (a, b) =>
-          new Date(a.expiry_date).getTime() - new Date(b.expiry_date).getTime()
+        (a: any, b: any) =>
+          new Date(a.expiryDate).getTime() - new Date(b.expiryDate).getTime()
       );
   });
 
@@ -449,8 +447,8 @@
   const maxTransferQuantity = computed(() => {
     if (!fromLocation.value || !props.selectedProduct) return 0;
 
-    if (props.selectedProduct.requires_batch_tracking && selectedBatch.value) {
-      return selectedBatch.value.available_quantity;
+    if (props.selectedProduct.requiresBatchTracking && selectedBatch.value) {
+      return selectedBatch.value.current_quantity;
     }
 
     return getLocationStock(fromLocation.value.id);
@@ -458,14 +456,14 @@
 
   // Validation
   const isValidTransfer = computed(() => {
-    return (
-      fromLocation.value &&
-      toLocation.value &&
+    const hasLocations = !!(fromLocation.value?.id && toLocation.value?.id);
+    const withinQuantityLimits =
       transferQuantity.value > 0 &&
-      transferQuantity.value <= maxTransferQuantity.value &&
-      transferReason.value &&
-      (!props.selectedProduct?.requires_batch_tracking || selectedBatch.value)
-    );
+      transferQuantity.value <= maxTransferQuantity.value;
+    const batchOk =
+      !props.selectedProduct?.requiresBatchTracking || !!selectedBatch.value;
+
+    return hasLocations && withinQuantityLimits && batchOk;
   });
 
   // Methods
@@ -518,13 +516,13 @@
   };
 
   const executeTransfer = async () => {
-    if (!isValidTransfer.value) return;
+    if (!isValidTransfer.value || !props.selectedProduct) return;
 
     transferLoading.value = true;
 
     try {
       const transfer: StockTransferRequest = {
-        practice_id: props.selectedProduct.practice_id,
+        practice_id: props.selectedProduct.practiceId,
         product_id: props.selectedProduct.id,
         from_location_id: fromLocation.value?.id ?? '',
         to_location_id: toLocation.value?.id ?? '',
@@ -542,8 +540,8 @@
         caption: t('inventory.transferCompletedDetails', {
           quantity: transferQuantity.value,
           product: props.selectedProduct.name,
-          from: fromLocation.value.name,
-          to: toLocation.value.name,
+          from: fromLocation.value?.name ?? '-',
+          to: toLocation.value?.name ?? '-',
         }),
       });
 
@@ -572,7 +570,7 @@
     transferQuantity.value = 1;
     transferReason.value = 'location_rebalance';
     notes.value = '';
-    internalSelectedProduct.value = null;
+    internalSelectedProduct.value = null as unknown as ProductWithStock;
   };
 
   // Product selection functions
@@ -604,8 +602,8 @@
   const handleBarcodeScan = async (barcode: string) => {
     try {
       // This would search for products by barcode
-      const notificationOptions: QNotifyCreateOptions = {
-        type: 'info',
+      const notificationOptions = {
+        type: 'info' as const,
         message: t('inventory.barcodeScanned', { barcode }),
         icon: 'qr_code_scanner',
       };
