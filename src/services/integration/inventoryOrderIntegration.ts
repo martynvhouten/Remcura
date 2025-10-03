@@ -1,7 +1,7 @@
 import { centralOrderService } from '@/services/orderOrchestration/centralOrderService';
 import { inventoryAutomationService } from '@/services/inventory/automationService';
 import { supabase } from '@/boot/supabase';
-import { orderLogger } from '@/utils/logger';
+import { orderLogger, toLogData } from '@/utils/logger';
 
 /**
  * Integration Service for Inventory & Order Management
@@ -68,7 +68,7 @@ export class InventoryOrderIntegrationService {
           auto_approve: false,
           max_order_value: 1000,
           min_urgency_level: 'medium',
-        });
+        } as any);
         schedulesCreated = 1;
       }
 
@@ -99,7 +99,7 @@ export class InventoryOrderIntegrationService {
         notificationsEnabled: true,
       };
     } catch (error) {
-      orderLogger.error('Error initializing automation:', error);
+      orderLogger.error('Error initializing automation:', toLogData(error));
       throw error;
     }
   }
@@ -239,7 +239,7 @@ export class InventoryOrderIntegrationService {
         };
       }
     } catch (error) {
-      orderLogger.error('Error in complete reorder workflow:', error);
+      orderLogger.error('Error in complete reorder workflow:', toLogData(error));
       return {
         itemsAnalyzed: 0,
         itemsToOrder: 0,
@@ -273,26 +273,25 @@ export class InventoryOrderIntegrationService {
         .select(
           `
           id,
-          order_reference,
-          estimated_delivery_date,
+          delivery_expected,
           practice_id,
           suppliers(name)
         `
         )
         .eq('status', 'shipped')
-        .lt('estimated_delivery_date', new Date().toISOString().split('T')[0]);
+        .lt('delivery_expected', new Date().toISOString().split('T')[0]);
 
       // Create notifications for overdue orders
       for (const order of overdueOrders || []) {
         await supabase.from('notifications').insert({
           practice_id: order.practice_id,
           title: 'Bestelling is verlaat',
-          message: `Bestelling ${order.order_reference} van ${order.suppliers.name} had ${order.estimated_delivery_date} moeten aankomen`,
+          message: `Bestelling ${order.id} had ${(order as any).delivery_expected} moeten aankomen`,
           category: 'order_update',
           priority: 'normal',
           action_url: '/orders',
           action_label: 'Bekijk bestelling',
-        });
+        } as any);
       }
 
       const successfulDeliveries = deliveryResults.filter(
@@ -310,7 +309,7 @@ export class InventoryOrderIntegrationService {
         errors: deliveryResults.flatMap(r => r.errors),
       };
     } catch (error) {
-      orderLogger.error('Error processing delivery updates:', error);
+      orderLogger.error('Error processing delivery updates:', toLogData(error));
       throw error;
     }
   }
@@ -357,7 +356,7 @@ export class InventoryOrderIntegrationService {
         automationStatus: automationSettings,
       };
     } catch (error) {
-      orderLogger.error('Error generating inventory dashboard data:', error);
+      orderLogger.error('Error generating inventory dashboard data:', toLogData(error));
       throw error;
     }
   }
