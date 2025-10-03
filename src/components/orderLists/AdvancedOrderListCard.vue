@@ -527,30 +527,21 @@
   }));
 
   const statusColor = computed(() => {
-    switch (props.orderList.status) {
-      case 'ready':
-        return 'positive';
-      case 'draft':
-        return 'warning';
-      case 'submitted':
-        return 'info';
-      case 'confirmed':
-        return 'primary';
-      case 'delivered':
-        return 'positive';
-      case 'cancelled':
-        return 'negative';
-      default:
-        return 'grey';
-    }
+    const status = props.orderList.status;
+    if (status === 'active' || status === 'ready') return 'positive';
+    if (status === 'draft') return 'warning';
+    if (status === 'submitted') return 'info';
+    if (status === 'completed' || status === 'delivered' || status === 'confirmed') return 'primary';
+    if (status === 'cancelled') return 'negative';
+    return 'grey';
   });
 
-  const statusLabel = computed(() => getStatusLabel(props.orderList.status));
+  const statusLabel = computed(() => getStatusLabel(props.orderList.status ?? 'draft'));
 
   const hasUrgentItems = computed(() => {
     return (
-      props.reorderAdvice?.items_by_urgency.critical.length > 0 ||
-      props.reorderAdvice?.items_by_urgency.high.length > 0
+      (props.reorderAdvice?.items_by_urgency.critical?.length ?? 0) > 0 ||
+      (props.reorderAdvice?.items_by_urgency.high?.length ?? 0) > 0
     );
   });
 
@@ -588,7 +579,7 @@
     return (
       orderListsStore.orderSuggestions?.filter(
         item =>
-          item.urgency_level === 'low' &&
+          (item.urgency_level as string) === 'low' &&
           item.order_list_id === props.orderList.id
       ).length || 0
     );
@@ -600,14 +591,14 @@
     }
 
     return [
-      ...props.reorderAdvice.items_by_urgency.critical,
-      ...props.reorderAdvice.items_by_urgency.high,
-      ...props.reorderAdvice.items_by_urgency.normal,
+      ...(props.reorderAdvice.items_by_urgency.critical ?? []),
+      ...(props.reorderAdvice.items_by_urgency.high ?? []),
+      ...(props.reorderAdvice.items_by_urgency.normal ?? []),
     ].slice(0, 5);
   });
 
   const hasItemsToOrder = computed(() => {
-    return props.reorderAdvice?.total_items_to_order > 0;
+    return (props.reorderAdvice?.total_items_to_order ?? 0) > 0;
   });
 
   const itemsToOrderCount = computed(() => {
@@ -736,7 +727,8 @@
       ].filter(item => item.calculated_order_quantity > 0);
 
       const orders = await orderListsStore.applyOrderSuggestions(
-        itemsToOrder.map(item => item.id)
+        props.orderList.id,
+        props.orderList.practice_id
       );
 
       $q.notify({
@@ -767,7 +759,8 @@
         ) || [];
 
       const orders = await orderListsStore.applyOrderSuggestions(
-        allItems.map(item => item.id)
+        props.orderList.id,
+        props.orderList.practice_id
       );
 
       $q.notify({
@@ -797,7 +790,8 @@
     creatingOrder.value = true;
     try {
       const orders = await orderListsStore.applyOrderSuggestions(
-        props.reorderAdvice.items_by_urgency.critical.map(item => item.id)
+        props.orderList.id,
+        props.orderList.practice_id
       );
 
       $q.notify({
