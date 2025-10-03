@@ -24,7 +24,7 @@
         bordered
         separator="cell"
         v-bind="$attrs"
-        @request="onTableRequest"
+        @request="onTableRequest as any"
       >
         <!-- Pass through all slots -->
         <template v-for="(_, slot) in $slots" #[slot]="scope">
@@ -46,7 +46,7 @@
         bordered
         separator="cell"
         v-bind="$attrs"
-        @request="onTableRequest"
+        @request="onTableRequest as any"
       >
         <!-- Pass through all slots -->
         <template v-for="(_, slot) in $slots" #[slot]="scope">
@@ -59,8 +59,8 @@
     <div v-else-if="isVirtualized" class="medical-table">
       <VirtualizedTable
         :rows="visibleData"
-        :columns="columns"
-        :row-key="rowKey"
+        :columns="columns as any"
+        :row-key="rowKey as string"
         :item-height="itemHeight"
         :container-height="virtualizedHeight"
         :loading="loading"
@@ -107,15 +107,15 @@
     type SmartTableConfig,
   } from 'src/composables/useSmartTable';
   import VirtualizedTable from './VirtualizedTable.vue';
+  import type { QTableColumn } from 'quasar';
 
   type TableRow = Record<string, unknown>;
-  type RowKeyFn<T> = (row: T) => string;
 
   interface Props {
     // Data
     data?: TableRow[];
-    columns: Array<Record<string, unknown>>;
-    rowKey?: string | RowKeyFn<TableRow>;
+    columns: QTableColumn[];
+    rowKey?: string;
 
     // Smart table config
     config?: SmartTableConfig;
