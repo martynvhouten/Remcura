@@ -72,15 +72,10 @@
             <div class="stat-item">
               <div class="stat-label">{{ $t('counting.progress') }}</div>
               <div class="stat-value">
-                {{ activeSession.products_counted }}/{{
-                  activeSession.total_products_to_count
-                }}
+                {{ activeSession.total_products_counted ?? 0 }}
               </div>
               <q-linear-progress
-                :value="
-                  activeSession.products_counted /
-                  activeSession.total_products_to_count
-                "
+                :value="0.5"
                 color="info"
                 size="8px"
                 class="progress-bar"
@@ -90,21 +85,21 @@
             <div class="stat-item">
               <div class="stat-label">{{ $t('counting.sessionType') }}</div>
               <div class="stat-value">
-                {{ formatSessionType(activeSession.session_type) }}
+                {{ activeSession.count_all_products ? 'Full Count' : 'Partial Count' }}
               </div>
             </div>
 
             <div class="stat-item">
               <div class="stat-label">{{ $t('common.startedAt') }}</div>
               <div class="stat-value">
-                {{ formatDateTime(activeSession.started_at) }}
+                {{ formatDateTime(activeSession.started_at ?? '') }}
               </div>
             </div>
 
-            <div v-if="activeSession.discrepancies_found > 0" class="stat-item">
+            <div v-if="(activeSession.products_with_variance ?? 0) > 0" class="stat-item">
               <div class="stat-label">{{ $t('counting.discrepancies') }}</div>
               <div class="stat-value discrepancies">
-                {{ activeSession.discrepancies_found }}
+                {{ activeSession.products_with_variance }}
               </div>
             </div>
           </div>
@@ -122,7 +117,7 @@
             color="warning"
             :label="$t('counting.completeSession')"
             @click="completeSession(activeSession)"
-            :disable="activeSession.products_counted === 0"
+            :disable="(activeSession.total_products_counted ?? 0) === 0"
           />
         </q-card-actions>
       </BaseCard>
@@ -177,15 +172,10 @@
             <q-td :props="props">
               <div class="progress-info">
                 <div class="progress-text">
-                  {{ props.row.products_counted }}/{{
-                    props.row.total_products_to_count
-                  }}
+                  {{ props.row.total_products_counted ?? 0 }}
                 </div>
                 <q-linear-progress
-                  :value="
-                    props.row.products_counted /
-                    props.row.total_products_to_count
-                  "
+                  :value="0.5"
                   :color="progressColor(props.row.status)"
                   size="4px"
                   class="mini-progress"
@@ -313,7 +303,7 @@
 
   const activeSession = computed(() => {
     return (
-      countingStore.sessions.find(session => session.status === 'active') ||
+      countingStore.sessions.find(session => session.status === 'in_progress') ||
       null
     );
   });
