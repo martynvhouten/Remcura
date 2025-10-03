@@ -75,7 +75,7 @@ export function useBulkData() {
         if (!stockByProduct[stock.product_id]) {
           stockByProduct[stock.product_id] = [];
         }
-        stockByProduct[stock.product_id].push(stock);
+        stockByProduct[stock.product_id]?.push(stock);
       });
 
       return stockByProduct;
@@ -102,19 +102,20 @@ export function useBulkData() {
         .from('supplier_products')
         .select(
           `
+          id,
           product_id,
           supplier_id,
           supplier_sku,
-          unit_price,
+          cost_price,
+          list_price,
           minimum_order_quantity,
           lead_time_days,
           is_preferred,
           suppliers!inner(name, contact_email)
         `
         )
-        .eq('practice_id', practiceId)
         .in('product_id', productIds)
-        .eq('is_active', true);
+        .eq('is_available', true);
 
       if (queryError) throw queryError;
 
@@ -123,7 +124,7 @@ export function useBulkData() {
         if (!suppliersByProduct[sp.product_id]) {
           suppliersByProduct[sp.product_id] = [];
         }
-        suppliersByProduct[sp.product_id].push(sp);
+        suppliersByProduct[sp.product_id]?.push(sp);
       });
 
       return suppliersByProduct;
@@ -150,17 +151,19 @@ export function useBulkData() {
         .from('product_batches')
         .select(
           `
+          id,
           product_id,
           batch_number,
           expiry_date,
-          quantity_remaining,
+          current_quantity,
+          available_quantity,
           location_id,
           practice_locations!inner(name)
         `
         )
         .eq('practice_id', practiceId)
         .in('product_id', productIds)
-        .gt('quantity_remaining', 0)
+        .gt('current_quantity', 0)
         .order('expiry_date', { ascending: true });
 
       if (queryError) throw queryError;
@@ -170,7 +173,7 @@ export function useBulkData() {
         if (!batchesByProduct[batch.product_id]) {
           batchesByProduct[batch.product_id] = [];
         }
-        batchesByProduct[batch.product_id].push(batch);
+        batchesByProduct[batch.product_id]?.push(batch);
       });
 
       return batchesByProduct;
@@ -198,11 +201,11 @@ export function useBulkData() {
     try {
       let query = supabase
         .from(table)
-        .select(selectFields)
-        .in(foreignKey, entityIds);
+        .select(selectFields as any)
+        .in(foreignKey as any, entityIds);
 
       Object.entries(additionalFilters).forEach(([key, value]) => {
-        query = query.eq(key, value);
+        query = query.eq(key as any, value as any);
       });
 
       const { data, error: queryError } = await query;
