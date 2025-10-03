@@ -183,7 +183,8 @@ class MagentoApiService {
 
       return response.json();
     } catch (error) {
-      if (error.name === 'AbortError') {
+      const err = error as Error;
+      if (err.name === 'AbortError') {
         handleApiError(new Error('Request timeout'), {
           service: 'MagentoApiService',
           operation: 'makeRequest',
@@ -191,7 +192,7 @@ class MagentoApiService {
         });
       }
 
-      handleApiError(error, {
+      handleApiError(err, {
         service: 'MagentoApiService',
         operation: 'makeRequest',
         metadata: { endpoint, method: options.method || 'GET' },
@@ -532,9 +533,9 @@ export const magentoDataService = {
         orders?.map(order => ({
           id: parseInt(order.id) || 0,
           increment_id: order.order_number || `ORD-${order.id}`,
-          status: this.mapOrderStatus(order.status),
-          created_at: order.created_at,
-          updated_at: order.updated_at,
+          status: this.mapOrderStatus(order.status ?? 'draft'),
+          created_at: order.created_at ?? new Date().toISOString(),
+          updated_at: order.updated_at ?? new Date().toISOString(),
           grand_total:
             order.order_items?.reduce(
               (sum, item) => sum + (item.total_price || 0),
@@ -583,8 +584,8 @@ export const magentoDataService = {
           id: parseInt(product.id) || 0,
           sku: product.sku || '',
           name: product.name || '',
-          price: parseFloat(product.price || '0'),
-          status: product.is_active ? 1 : 0,
+          price: parseFloat(String(product.unit_price || 0)),
+          status: product.active ? 1 : 0,
           type_id: 'simple',
         })) || []
       );
@@ -627,12 +628,21 @@ export const magentoDataService = {
           id: parseInt(order.id) || 0,
           order_id: parseInt(order.id) || 0,
           increment_id: `INV-${order.order_number || order.id}`,
-          created_at: order.updated_at || order.created_at,
+          created_at: order.updated_at || order.created_at || new Date().toISOString(),
           grand_total:
             order.order_items?.reduce(
               (sum, item) => sum + (item.total_price || 0),
               0
             ) || 0,
+          state: 1,
+          items:
+            order.order_items?.map(item => ({
+              id: parseInt(item.id) || 0,
+              name: item.products?.name || '',
+              sku: item.products?.sku || '',
+              qty: item.quantity,
+              price: item.unit_price || 0,
+            })) || [],
         })) || []
       );
     } catch (error) {
