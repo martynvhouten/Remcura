@@ -507,15 +507,15 @@
     () =>
       batchStore.expiringBatches.filter(
         batch =>
-          batch.urgencyLevel === 'critical' ||
-          batch.urgencyLevel === 'warning'
+          batch.urgency_level === 'critical' ||
+          batch.urgency_level === 'warning'
       ).length
   );
 
   const criticalBatches = computed(() =>
     batchStore.expiringBatches.filter(
       batch =>
-        batch.urgencyLevel === 'expired' || batch.urgencyLevel === 'critical'
+        batch.urgency_level === 'expired' || batch.urgency_level === 'critical'
     )
   );
 
@@ -611,11 +611,11 @@
     // Export batch data as CSV
     const csvData = batchStore.batches.map(batch => ({
       [t('batch.batchNumber')]: batch.batchNumber,
-      [t('product.product')]: batch.product?.name ?? batch.productName,
-      [t('location.location')]: batch.location?.name ?? batch.locationName,
+      [t('product.product')]: (batch as any).productName ?? `Product ${batch.productId}`,
+      [t('location.location')]: (batch as any).locationName ?? `Location ${batch.locationId}`,
       [t('batch.currentQuantity')]: batch.currentQuantity,
       [t('batch.expiryDate')]: batch.expiryDate,
-      [t('common.status')]: batch.raw?.status ?? (batch.currentQuantity > 0 ? 'active' : 'depleted'),
+      [t('common.status')]: batch.status ?? (batch.currentQuantity > 0 ? 'active' : 'depleted'),
     }));
 
     const csv = convertToCSV(csvData);
@@ -682,12 +682,12 @@
     // Try to find batch by batch number
     const foundBatch = batchStore.batches.find(
       batch =>
-        batch.batch_number === barcodeData ||
-        batch.supplier_batch_number === barcodeData
+        batch.batchNumber === barcodeData ||
+        (batch as any).supplierBatchNumber === barcodeData
     );
 
     if (foundBatch) {
-      selectedBatch.value = foundBatch;
+      selectedBatch.value = foundBatch as any;
       showBatchDetailDialog.value = true;
     } else {
       $q.notify({
