@@ -616,7 +616,7 @@ export const useBatchStore = defineStore('batch', () => {
   const findSimilarBatches = (
     batchNumber: string,
     productId: string
-  ): ProductBatchWithDetails[] => {
+  ): ProductBatchDTO[] => {
     return batches.value.filter(
       batch =>
         batch.productId === productId &&

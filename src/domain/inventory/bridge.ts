@@ -291,3 +291,17 @@ export const mapCountingEntryRow = (
   createdAt: toDateString(row.created_at),
   updatedAt: toDateString(row.updated_at),
 });
+
+// Re-export DTOs for convenience
+export type {
+  ProductBatchDTO,
+  ProductDTO,
+  StockLevelDTO,
+  PracticeLocationDTO,
+  SupplierDTO,
+  SupplierProductDTO,
+  OrderListDTO,
+  OrderListItemDTO,
+  CountingSessionDTO,
+  CountingEntryDTO,
+};
