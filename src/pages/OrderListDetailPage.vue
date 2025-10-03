@@ -438,6 +438,7 @@
   const loadingItems = ref(false);
   const loadingProducts = ref(false);
   const addingProduct = ref(false);
+  const processingGlobalOrder = ref(false);
   const error = ref<string | null>(null);
   const orderList = ref<OrderListWithItems | null>(null);
   const orderListItems = ref<any[]>([]);
@@ -515,44 +516,29 @@
     if (!orderList.value) {
       return 'grey';
     }
-    switch (orderList.value.status) {
-      case 'ready':
-        return 'positive';
-      case 'draft':
-        return 'warning';
-      case 'submitted':
-        return 'info';
-      case 'confirmed':
-        return 'primary';
-      case 'delivered':
-        return 'positive';
-      case 'cancelled':
-        return 'negative';
-      default:
-        return 'grey';
-    }
+    const status = orderList.value.status;
+    // Map status to colors (handle both old and new status values)
+    if (status === 'active' || status === 'ready') return 'positive';
+    if (status === 'draft') return 'warning';
+    if (status === 'submitted') return 'info';
+    if (status === 'completed' || status === 'delivered' || status === 'confirmed') return 'primary';
+    if (status === 'cancelled') return 'negative';
+    return 'grey';
   });
 
   const statusLabel = computed(() => {
     if (!orderList.value) {
       return 'Onbekend';
     }
-    switch (orderList.value.status) {
-      case 'ready':
-        return 'Klaar';
-      case 'draft':
-        return 'Concept';
-      case 'submitted':
-        return 'Verzonden';
-      case 'confirmed':
-        return 'Bevestigd';
-      case 'delivered':
-        return 'Geleverd';
-      case 'cancelled':
-        return 'Geannuleerd';
-      default:
-        return 'Onbekend';
-    }
+    const status = orderList.value.status;
+    // Map status to labels (handle both old and new status values)
+    if (status === 'active' || status === 'ready') return 'Klaar';
+    if (status === 'draft') return 'Concept';
+    if (status === 'submitted') return 'Verzonden';
+    if (status === 'confirmed') return 'Bevestigd';
+    if (status === 'completed' || status === 'delivered') return 'Geleverd';
+    if (status === 'cancelled') return 'Geannuleerd';
+    return 'Onbekend';
   });
 
   // Filter computed properties
@@ -617,7 +603,7 @@
 
     try {
       const listId = route.params.id as string;
-      orderList.value = await orderListsStore.getOrderListById(listId);
+      orderList.value = (await orderListsStore.getOrderListById(listId)) ?? null;
       await loadOrderListItems();
     } catch (err) {
       error.value = 'Kon bestellijst niet laden';
@@ -768,7 +754,7 @@
   const updateItemQuantity = async (item: any) => {
     try {
       await orderListsStore.updateOrderListItem(item.id, {
-        suggested_quantity: item.suggested_quantity,
+        requested_quantity: item.suggested_quantity || item.requested_quantity,
       });
 
       $q.notify({
@@ -816,8 +802,8 @@
       confirmPlaceAll.value = false;
       processingGlobalOrder.value = true;
       // Delegate to min/max orchestration if available
-      if (orderListsStore.applyOrderSuggestions) {
-        await orderListsStore.applyOrderSuggestions();
+      if (orderListsStore.applyOrderSuggestions && orderList.value) {
+        await orderListsStore.applyOrderSuggestions(orderList.value.id, orderList.value.practice_id);
       }
       $q.notify({ type: 'positive', message: $t('orderLists.ordersCreated') as string });
     } catch (err) {
