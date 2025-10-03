@@ -637,10 +637,10 @@
       const { data, error } = await supabase
         .from('stock_movements')
         .select('created_at')
-        .eq('practice_id', authStore.clinicId)
+        .eq('practice_id', authStore.clinicId ?? '')
         .order('created_at', { ascending: false })
         .limit(1);
-      if (!error && data && data.length > 0) {
+      if (!error && data && data.length > 0 && data[0]?.created_at) {
         lastUpdated.value = new Date(data[0].created_at);
       } else {
         lastUpdated.value = new Date();
@@ -722,15 +722,15 @@
         const idx = stockLevels.value.findIndex(
           s => s.id === selectedStockLevel.value!.id
         );
-        if (idx !== -1) {
-          const updated: StockLevelRow = {
+        if (idx !== -1 && stockLevels.value[idx]) {
+          const updated = {
             ...stockLevels.value[idx],
             current_quantity: Math.max(0, targetQty),
             stock_status: determineStockStatus(
               Math.max(0, targetQty),
-              stockLevels.value[idx].minimum_quantity || 0
+              stockLevels.value[idx]?.minimum_quantity || 0
             ),
-          };
+          } as StockLevelRow;
           stockLevels.value.splice(idx, 1, updated);
         }
         $q.notify({ type: 'positive', message: t('inventory.stockAdjusted') });
@@ -742,16 +742,16 @@
       // Prefer RPC if available, fallback to store update
       const tryRpc = async () => {
         return await supabase.rpc('update_stock_level', {
-          p_practice_id: authStore.clinicId,
+          p_practice_id: authStore.clinicId ?? '',
           p_location_id: selectedStockLevel.value!.location_id,
           p_product_id: selectedStockLevel.value!.product_id,
           p_quantity_change: delta,
           p_movement_type: 'adjustment',
-          p_performed_by: authStore.user?.id || null,
+          p_performed_by: authStore.user?.id ?? '',
           p_reference_type: 'manual_adjustment',
           p_reference_id: selectedStockLevel.value!.id,
           p_reason_code: 'manual_adjustment',
-          p_notes: adjustmentReason.value || null,
+          p_notes: adjustmentReason.value ?? '',
         });
       };
 
@@ -770,7 +770,7 @@
           product_id: selectedStockLevel.value.product_id,
           quantity_change: delta,
           movement_type: 'adjustment',
-          reason_code: 'manual_adjustment',
+          reason_code: 'manual_adjustment' as any,
           notes: adjustmentReason.value || '',
         };
         await inventoryStore.updateStockLevel(request);
