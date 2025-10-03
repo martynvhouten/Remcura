@@ -528,10 +528,10 @@
 
   const statusColor = computed(() => {
     const status = props.orderList.status;
-    if (status === 'active' || status === 'ready') return 'positive';
+    if (status === 'active') return 'positive';
     if (status === 'draft') return 'warning';
     if (status === 'submitted') return 'info';
-    if (status === 'completed' || status === 'delivered' || status === 'confirmed') return 'primary';
+    if (status === 'completed') return 'primary';
     if (status === 'cancelled') return 'negative';
     return 'grey';
   });
@@ -569,7 +569,7 @@
     return (
       orderListsStore.orderSuggestions?.filter(
         item =>
-          item.urgency_level === 'normal' &&
+          (item.urgency_level as string) === 'medium' &&
           item.order_list_id === props.orderList.id
       ).length || 0
     );
@@ -726,10 +726,7 @@
         ...props.reorderAdvice.items_by_urgency.normal,
       ].filter(item => item.calculated_order_quantity > 0);
 
-      const orders = await orderListsStore.applyOrderSuggestions(
-        props.orderList.id,
-        props.orderList.practice_id
-      );
+      const orders = await orderListsStore.applyOrderSuggestions();
 
       $q.notify({
         type: 'positive',
@@ -758,10 +755,7 @@
           item => item.order_list_id === props.orderList.id
         ) || [];
 
-      const orders = await orderListsStore.applyOrderSuggestions(
-        props.orderList.id,
-        props.orderList.practice_id
-      );
+      const orders = await orderListsStore.applyOrderSuggestions();
 
       $q.notify({
         type: 'positive',
@@ -789,10 +783,7 @@
 
     creatingOrder.value = true;
     try {
-      const orders = await orderListsStore.applyOrderSuggestions(
-        props.orderList.id,
-        props.orderList.practice_id
-      );
+      const orders = await orderListsStore.applyOrderSuggestions();
 
       $q.notify({
         type: 'positive',
@@ -833,7 +824,8 @@
   const duplicateList = async () => {
     try {
       const newList = await orderListsStore.duplicateOrderList(
-        props.orderList.id
+        props.orderList.id,
+        `${props.orderList.name} (kopie)`
       );
 
       $q.notify({
@@ -881,10 +873,10 @@
   const saveSettings = async () => {
     savingSettings.value = true;
     try {
-      const updatedList = await orderListsStore.updateOrderList(
-        props.orderList.id,
-        settingsForm.value
-      );
+      await orderListsStore.updateOrderList({
+        id: props.orderList.id,
+        ...settingsForm.value
+      });
 
       $q.notify({
         type: 'positive',
@@ -892,7 +884,7 @@
         timeout: 2000,
       });
 
-      emit('list-updated', updatedList);
+      emit('list-updated', props.orderList);
       showSettingsDialog.value = false;
     } catch (error) {
       $q.notify({
