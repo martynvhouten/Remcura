@@ -12,7 +12,7 @@
             round
             icon="refresh"
             size="md"
-            @click="refreshAnalytics"
+            @click="loadAnalytics"
             :loading="loading"
             class="app-btn-refresh"
           >
@@ -277,13 +277,13 @@
   import PageTitle from 'src/components/PageTitle.vue';
   import PageLayout from 'src/components/PageLayout.vue';
   import { BaseCard, InteractiveCard, AlertCard } from 'src/components/cards';
-  import {
-    AnalyticsService,
-    type AnalyticsSummary,
-    type OrderMetrics,
-    type ProductMetrics,
-    type UserActivityMetrics,
-  } from 'src/services/analytics';
+  import { AnalyticsService } from 'src/services/analytics';
+  import type {
+    AnalyticsSummary,
+    OrderMetrics,
+    ProductMetrics,
+    UserActivityMetrics,
+  } from '@/types/analytics';
   import { monitoringService } from 'src/services/monitoring';
 
   const $q = useQuasar();
@@ -294,7 +294,7 @@
   const exportBtn = computed(() =>
     quickActions.export({
       label: t('analyticsPage.export'),
-      variant: 'outline',
+      variant: 'outlined',
     })
   );
 
