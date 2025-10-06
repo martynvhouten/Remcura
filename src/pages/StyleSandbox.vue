@@ -241,16 +241,18 @@
           <div class="comparison-column">
             <h3>Quasar Components</h3>
             <div class="quasar-controls">
-              <q-input outlined label="Small QInput" class="control-sm" dense />
-              <q-input outlined label="Medium QInput" class="control-md" />
-              <q-input outlined label="Large QInput" class="control-lg" />
+              <q-input v-model="qInputSmall" outlined label="Small QInput" class="control-sm" dense />
+              <q-input v-model="qInputMedium" outlined label="Medium QInput" class="control-md" />
+              <q-input v-model="qInputLarge" outlined label="Large QInput" class="control-lg" />
               <q-select
+                v-model="qSelectValue"
                 outlined
                 label="Quasar QSelect"
                 class="control-md"
                 :options="['Quasar Select', 'Option B']"
               />
               <q-input
+                v-model="qTextareaValue"
                 outlined
                 type="textarea"
                 label="Quasar Textarea"
@@ -390,6 +392,13 @@
   const testValue = ref('');
   const testSelect = ref(null);
   const testTextarea = ref('');
+  
+  // Comparison section values
+  const qInputSmall = ref('');
+  const qInputMedium = ref('');
+  const qInputLarge = ref('');
+  const qSelectValue = ref(null);
+  const qTextareaValue = ref('');
 
   // Card testing controls
   const cardElevated = ref(false);
