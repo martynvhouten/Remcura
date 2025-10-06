@@ -17,9 +17,9 @@
     >
       <q-skeleton
         v-if="showSkeleton && !hasError"
-        type="img"
-        :width="width"
-        :height="height"
+        type="rect"
+        :width="width?.toString()"
+        :height="height?.toString()"
         class="skeleton-placeholder"
       />
       <div v-else-if="!hasError" class="placeholder-icon">
