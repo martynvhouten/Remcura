@@ -301,7 +301,7 @@
     <q-dialog v-model="showUseBatchDialog" max-width="500px">
       <UseBatchDialog
         v-if="selectedBatch"
-        :batch="selectedBatch"
+        :batch="selectedBatch as any"
         @close="showUseBatchDialog = false"
         @used="onBatchUsed"
       />
@@ -565,8 +565,8 @@
         throw new Error(t('batchoverv.noclinicidavailable'));
       }
       await batchStore.updateBatch(batch.id, {
-        status: 'recalled' as any, // Using 'recalled' for quarantine functionality
-      });
+        status: 'recalled',
+      } as any);
       $q.notify({
         type: 'positive',
         message: t('batch.quarantineSuccess'),
