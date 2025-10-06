@@ -128,12 +128,14 @@
             <h5>Form Controls</h5>
             <div class="preview-form">
               <q-input
+                v-model="sampleInputValue"
                 outlined
                 label="Sample Input"
                 placeholder="Type here..."
                 style="margin-bottom: 12px"
               />
               <q-select
+                v-model="sampleSelectValue"
                 outlined
                 label="Sample Select"
                 :options="['Option 1', 'Option 2']"
@@ -166,6 +168,8 @@
   const isPersistent = ref(false);
   const hasChanges = ref(false);
   const originalValues = ref<Record<string, string>>({});
+  const sampleInputValue = ref('');
+  const sampleSelectValue = ref('');
 
   // Define token categories
   const brandTokens = ref<Token[]>([
