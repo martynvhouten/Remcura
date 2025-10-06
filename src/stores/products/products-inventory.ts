@@ -228,7 +228,8 @@ export function useProductsInventory(products: Ref<ProductWithStock[]>) {
     );
 
     products.value.forEach(product => {
-      if (!product.batches?.length && !product.expiry_date) {
+      const productAny = product as any;
+      if (!product.batches?.length && !productAny.expiry_date) {
         return;
       }
 
@@ -247,15 +248,15 @@ export function useProductsInventory(products: Ref<ProductWithStock[]>) {
         }
       });
 
-      if (product.expiry_date) {
-        const directExpiry = new Date(product.expiry_date);
+      if (productAny.expiry_date) {
+        const directExpiry = new Date(productAny.expiry_date);
         if (directExpiry <= thirtyDaysFromNow && directExpiry >= today) {
           const daysUntilExpiry = Math.ceil(
             (directExpiry.getTime() - today.getTime()) / (1000 * 60 * 60 * 24)
           );
           expiringProducts.push({
             product,
-            expiry_date: product.expiry_date,
+            expiry_date: productAny.expiry_date,
             days_until_expiry: daysUntilExpiry,
           });
         }
