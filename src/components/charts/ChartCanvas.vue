@@ -60,7 +60,8 @@
         // Click handler
         onClick: (_event, activeElements) => {
           if (!chart || activeElements.length === 0) return;
-          const { index, datasetIndex } = activeElements[0];
+          const element = activeElements[0] as any;
+          const { index, datasetIndex } = element;
           const label = props.labels?.[index] ?? '';
           const value = (props.datasets?.[datasetIndex]?.data || [])[index] ?? 0;
           emit('datapoint-click', { label, value });
@@ -85,7 +86,7 @@
         renderChart();
         return;
       }
-      chart.config.type = props.type as any;
+      (chart.config as any).type = props.type;
       chart.data = buildData();
       chart.options = { ...chart.options, ...props.options } as ChartOptions;
       chart.update();
