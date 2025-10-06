@@ -15,7 +15,6 @@ import { useAuthStore } from '@/stores/auth';
 
 const mapSupplierRowToView = (row: SupplierRow): SupplierView => ({
   id: row.id,
-  practice_id: row.practice_id,
   name: row.name,
   code: row.code,
   contact_email: row.contact_email ?? null,
@@ -267,7 +266,7 @@ export const useSuppliersStore = defineStore('suppliers', () => {
             gtin: supplierProductData.gtin ?? null,
             supplier_name: supplierProductData.supplier_name ?? null,
             supplier_sku: supplierProductData.supplier_sku,
-          } satisfies SupplierProductInsert,
+          } as any,
         ])
         .select()
         .single<SupplierProductRow>();
