@@ -323,8 +323,8 @@ export const sortBatchesFIFO = (
     if (dateComparison !== 0) return dateComparison;
 
     // Then by received date (older first)
-    const receivedA = new Date(a.received_date ?? a.created_at ?? '').getTime();
-    const receivedB = new Date(b.received_date ?? b.created_at ?? '').getTime();
+    const receivedA = new Date((a.raw as any)?.received_date ?? (a.raw as any)?.created_at ?? '').getTime();
+    const receivedB = new Date((b.raw as any)?.received_date ?? (b.raw as any)?.created_at ?? '').getTime();
     return receivedA - receivedB;
   });
 };
