@@ -31,4 +31,3 @@ export * from './network';
 export * from './i18n';
 export * from './stores';
 export type { OrderListDTO, OrderListItemDTO } from './inventory';
-export * from './compat';
