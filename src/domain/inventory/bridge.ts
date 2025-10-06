@@ -65,6 +65,20 @@ export const mapProductBatchRow = (
   productName: relations?.product?.name ?? null,
   productSku: relations?.product?.sku ?? null,
   locationName: relations?.location?.name ?? null,
+  daysUntilExpiry: Math.ceil(
+    (new Date(row.expiry_date).getTime() - Date.now()) / (1000 * 60 * 60 * 24)
+  ),
+  urgencyLevel: (() => {
+    const days = Math.ceil(
+      (new Date(row.expiry_date).getTime() - Date.now()) / (1000 * 60 * 60 * 24)
+    );
+    if (days < 0) return 'expired' as const;
+    if (days <= 7) return 'critical' as const;
+    if (days <= 30) return 'high' as const;
+    if (days <= 90) return 'warning' as const;
+    if (days <= 180) return 'low' as const;
+    return 'normal' as const;
+  })(),
 });
 
 export const mapStockLevelRow = (
