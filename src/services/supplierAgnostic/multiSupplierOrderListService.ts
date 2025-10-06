@@ -138,7 +138,7 @@ export class MultiSupplierOrderListService {
       const product = productResult.data;
       const supplierProduct = supplierProductResult.data;
       const currentStock = stockResult.data
-        ? mapStockLevelRowToView(stockResult.data).current_quantity
+        ? mapStockLevelRowToView(stockResult.data).currentQuantity
         : null;
 
       if (!product || !supplierProduct) {
@@ -387,7 +387,7 @@ export class MultiSupplierOrderListService {
       );
       const avgLeadTime =
         items.reduce(
-          (sum, item) => sum + (item.supplier_product?.lead_time_days ?? 0),
+          (sum, item) => sum + ((item as any).supplier_product?.lead_time_days ?? 0),
           0
         ) / (totalItems || 1);
 
@@ -420,7 +420,7 @@ export class MultiSupplierOrderListService {
         if (!supplier) return;
         supplier.item_count++;
         supplier.total_value += item.unit_price ?? 0;
-        supplier.total_lead_time += item.supplier_product?.lead_time_days ?? 0;
+        supplier.total_lead_time += (item as any).supplier_product?.lead_time_days ?? 0;
       });
 
       const supplierBreakdown = Array.from(supplierMap.values()).map(
@@ -577,7 +577,7 @@ export class MultiSupplierOrderListService {
 
           recommendations.push({
             item_id: item.id,
-            current_supplier: item.suppliers?.name ?? 'Unknown',
+            current_supplier: (item.suppliers as any)?.name ?? 'Unknown',
             recommended_supplier: bestAlternative.supplier_name,
             price_savings: priceSavings,
             lead_time_improvement: leadTimeImprovement,
