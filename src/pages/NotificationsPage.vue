@@ -126,7 +126,7 @@
                     {{ $t(`notificationsPage.types.${notification.category}`) }}
                   </q-chip>
                   <span class="notification-time">
-                    {{ formatDate(notification.created_at) }}
+                    {{ formatDate(notification.created_at ?? '') }}
                   </span>
                 </div>
               </div>
@@ -229,7 +229,7 @@
 
     return filtered.sort(
       (a, b) =>
-        new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
+        new Date(b.created_at ?? '').getTime() - new Date(a.created_at ?? '').getTime()
     );
   });
 
