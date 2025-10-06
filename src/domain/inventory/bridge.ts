@@ -112,7 +112,7 @@ export const mapStockLevelRow = (
 });
 
 export const mapProductRow = (
-  row: ProductRow,
+  row: Tables<'products'>,
   relations?: {
     practice?: Pick<Tables<'practices'>, 'id'> | null;
   }
