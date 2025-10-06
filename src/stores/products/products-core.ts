@@ -206,7 +206,7 @@ export function useProductsCore() {
       const rows = (productRows ?? []) as Array<
         ProductRow & {
           stock_levels: StockLevelRow[] | null;
-          supplier_products: SupplierProductRow[] | null;
+          supplier_products: any[] | null;
         }
       >;
 
