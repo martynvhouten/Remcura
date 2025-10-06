@@ -158,7 +158,7 @@
 
   const chartOptions = computed(() => ({
     plugins: { legend: { display: true, position: 'bottom' } },
-  }));
+  } as any));
 
   function handlePointClick(payload: { label: string; value: number }) {
     // Drill-down hook: consumers can watch for this event via parent component if needed

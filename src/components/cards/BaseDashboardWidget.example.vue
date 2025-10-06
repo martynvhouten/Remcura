@@ -160,7 +160,7 @@
           <q-btn
             color="primary"
             :label="$t('common.save')"
-            @click="saveSettings"
+            @click="(saveSettings as any)()"
           />
         </q-card-actions>
       </q-card>
