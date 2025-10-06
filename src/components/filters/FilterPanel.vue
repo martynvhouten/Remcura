@@ -226,9 +226,9 @@
   // Debounced filter updates for better performance
   const { debouncedFn: debouncedEmitUpdate, pending: updatePending } =
     useDebounce(
-      (newValues: FilterValues) => {
+      ((newValues: FilterValues) => {
         emit('update:modelValue', newValues);
-      },
+      }) as any,
       300 // 300ms debounce delay
     );
 
@@ -296,7 +296,7 @@
       props.preset.defaultFilters &&
       Object.keys(props.modelValue).length === 0
     ) {
-      emit('update:modelValue', { ...props.preset.defaultFilters });
+      emit('update:modelValue', { ...props.preset.defaultFilters } as any);
     }
   });
 </script>
