@@ -223,12 +223,14 @@ export class CentralOrderService {
 
       // Create notifications for successful orders
       for (const result of results) {
+        const practiceId = orders[0]?.practice_id || '';
         if (result.status === 'success') {
           await this.createOrderNotification(
             result.supplier_id,
             result.supplier_name,
             result.order_reference || '',
-            'success'
+            'success',
+            practiceId
           );
         } else if (result.status === 'failed') {
           await this.createOrderNotification(
@@ -236,7 +238,8 @@ export class CentralOrderService {
             result.supplier_name,
             result.order_reference || '',
             'error',
-            result.error_message
+            practiceId,
+            result.error_message ?? ''
           );
         }
       }
@@ -284,7 +287,7 @@ export class CentralOrderService {
 
       if (error) throw error;
 
-      return ((data as SupplierOrderRow[] | null) || []).map(order => ({
+      return (((data as SupplierOrderRow[] | null) || []).map(order => ({
         orderId: order.id,
         supplierOrderId: order.id,
         supplierId: order.suppliers?.id ?? '',
@@ -295,7 +298,7 @@ export class CentralOrderService {
         estimatedDelivery: order.delivery_expected ?? null,
         actualDelivery: order.delivery_confirmed_at ?? null,
         lastUpdated: order.updated_at ?? null,
-      }));
+      })) as any);
     } catch (error) {
       orderLogger.error(
         'Error tracking order status:',
