@@ -17,11 +17,7 @@ const createStructuredLogger = (context: string) => {
       data ? base.structured(message, data) : base.warn(message),
     error: (message: string, data?: Record<string, unknown>) =>
       data ? base.structured(message, data) : base.error(message),
-  } satisfies StructuredLogger & {
-    info: (message: string, data?: Record<string, unknown>) => void;
-    warn: (message: string, data?: Record<string, unknown>) => void;
-    error: (message: string, data?: Record<string, unknown>) => void;
-  };
+  } as StructuredLogger;
 };
 
 export interface MonitoringConfig {
@@ -233,7 +229,7 @@ class MonitoringService {
         dsn: config.dsn,
         environment: config.environment,
         release: config.version,
-        integrations,
+        integrations: integrations as any,
         tracesSampleRate: config.environment === 'production' ? 0.1 : 1.0,
         beforeSend(event) {
           if (config.environment !== 'production') {
