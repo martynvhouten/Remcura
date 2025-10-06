@@ -39,7 +39,7 @@ const mapSupplierRowToView = (row: SupplierRow): SupplierView => ({
   order_cutoff_time: row.order_cutoff_time ?? null,
   created_at: row.created_at ?? null,
   updated_at: row.updated_at ?? null,
-});
+}) as SupplierView;
 
 export const useSuppliersStore = defineStore('suppliers', () => {
   const log = createLogger('SuppliersStore');

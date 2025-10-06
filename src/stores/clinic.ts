@@ -18,27 +18,30 @@ export const useClinicStore = defineStore('clinic', () => {
 
   // Computed
   const practiceLocations = computed<PracticeLocation[]>(() =>
-    locations.value.map(location => ({
-      id: location.id,
-      name: location.name,
-      code: location.code,
-      practice_id: location.practice_id,
-      description: location.description ?? null,
-      location_type: location.location_type,
-      address: location.address ?? null,
-      floor_level: location.floor_level ?? null,
-      room_number: location.room_number ?? null,
-      is_main_location: location.is_main_location ?? false,
-      requires_counting: location.requires_counting ?? false,
-      allows_negative_stock: location.allows_negative_stock ?? false,
-      restricted_access: location.restricted_access ?? false,
-      access_code: location.access_code ?? null,
-      responsible_user_id: location.responsible_user_id ?? null,
-      created_at: location.created_at ?? null,
-      created_by: location.created_by ?? null,
-      updated_at: location.updated_at ?? null,
-      updated_by: location.updated_by ?? null,
-    }))
+    locations.value.map(
+      location =>
+        ({
+          id: location.id,
+          name: location.name,
+          code: location.code,
+          practice_id: location.practice_id,
+          description: location.description ?? null,
+          location_type: location.location_type,
+          address: location.address ?? null,
+          floor_level: location.floor_level ?? null,
+          room_number: location.room_number ?? null,
+          is_main_location: location.is_main_location ?? false,
+          requires_counting: location.requires_counting ?? false,
+          allows_negative_stock: location.allows_negative_stock ?? false,
+          restricted_access: location.restricted_access ?? false,
+          access_code: location.access_code ?? null,
+          responsible_user_id: location.responsible_user_id ?? null,
+          created_at: location.created_at ?? null,
+          created_by: location.created_by ?? null,
+          updated_at: location.updated_at ?? null,
+          updated_by: location.updated_by ?? null,
+        }) as PracticeLocation
+    )
   );
 
   const mainLocation = computed(() => {

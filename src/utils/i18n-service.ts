@@ -34,7 +34,7 @@ export const t = <Values extends Record<string, unknown> | undefined>(
  * Get current locale
  */
 export const getCurrentLocale = (): string => {
-  return i18n.global.locale as string;
+  return i18n.global.locale.value;
 };
 
 /**
