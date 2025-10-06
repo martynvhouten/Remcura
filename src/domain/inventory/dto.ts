@@ -53,7 +53,7 @@ export interface ProductWithStockDTO {
   grossWeight?: number | null;
   preferredSupplierId?: string | null;
   minimumStock?: number | null;
-  batches?: ProductBatchSummary[];
+  batches?: ProductBatchDTO[];
 }
 
 export interface ProductBatchDTO {

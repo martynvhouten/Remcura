@@ -425,10 +425,11 @@
       return [];
     }
 
+    const fromLocationId = fromLocation.value.id;
     const batches = batchStore.batches.filter(
       batch =>
         batch.productId === props.selectedProduct.id &&
-        batch.locationId === fromLocation.value.id &&
+        batch.locationId === fromLocationId &&
         batch.currentQuantity > 0
     );
 

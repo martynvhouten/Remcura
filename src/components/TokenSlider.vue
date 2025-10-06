@@ -44,7 +44,8 @@
     return parseInt(props.token.value) || 0;
   });
 
-  function updateValue(value: number) {
+  function updateValue(value: number | null) {
+    if (value === null) return;
     const newValue = value.toString();
     const cssValue = props.token.unit
       ? `${newValue}${props.token.unit}`

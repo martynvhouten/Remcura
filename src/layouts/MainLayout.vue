@@ -431,7 +431,7 @@
 
   // Check if user has admin permissions
   const isAdmin = computed(() => {
-    const role = userProfile.value?.role || '';
+    const role = (userProfile.value?.role as string) || '';
     return role === 'admin' || role === 'owner' || role === 'platform_owner';
   });
 

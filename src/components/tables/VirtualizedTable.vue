@@ -174,7 +174,7 @@
   };
 
   const getRowKey = (row: TableRow) => {
-    return row[props.rowKey];
+    return row[props.rowKey] as string | number | symbol;
   };
 
   const formatCellValue = (row: TableRow, column: Column) => {

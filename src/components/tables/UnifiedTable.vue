@@ -133,9 +133,9 @@
   });
 
   // Handle pagination updates
-  const onPaginationUpdate = (newPagination: TablePagination) => {
+  const onPaginationUpdate = (newPagination: any) => {
     internalPagination.value = { ...newPagination };
-    emit('update:pagination', newPagination);
+    emit('update:pagination', newPagination as TablePagination);
   };
 
   // Handle table requests (sorting, pagination)
