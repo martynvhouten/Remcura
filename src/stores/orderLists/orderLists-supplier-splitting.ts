@@ -255,13 +255,13 @@ export function useOrderListsSupplierSplitting() {
         const latestDate = new Date(earliestDate);
         latestDate.setDate(latestDate.getDate() + 3);
 
-        supplierOrder.earliest_delivery_date = earliestDate
+        supplierOrder.earliest_delivery_date = (earliestDate
           .toISOString()
-          .split('T')[0];
+          .split('T')[0] ?? '')  as string;
 
-        supplierOrder.latest_delivery_date = latestDate
+        supplierOrder.latest_delivery_date = (latestDate
           .toISOString()
-          .split('T')[0];
+          .split('T')[0] ?? '') as string;
 
         // Adjust quantity based on supplier constraints
         let adjustedQuantity = item.calculated_order_quantity;
@@ -328,13 +328,13 @@ export function useOrderListsSupplierSplitting() {
         .map(order => Date.parse(order.estimated_delivery_date))
         .filter(time => Number.isFinite(time));
 
-      const fallbackDate = new Date().toISOString().split('T')[0];
+      const fallbackDate = (new Date().toISOString().split('T')[0] ?? '') as string;
       const earliestDelivery = deliveryTimes.length
-        ? new Date(Math.min(...deliveryTimes)).toISOString().split('T')[0]
+        ? (new Date(Math.min(...deliveryTimes)).toISOString().split('T')[0] ?? '') as string
         : fallbackDate;
 
       const latestDelivery = deliveryTimes.length
-        ? new Date(Math.max(...deliveryTimes)).toISOString().split('T')[0]
+        ? (new Date(Math.max(...deliveryTimes)).toISOString().split('T')[0] ?? '') as string
         : fallbackDate;
 
       infoLog('Supplier splitting completed', {
