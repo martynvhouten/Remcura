@@ -303,8 +303,8 @@
     if (!userName.value) {
       return t('upgrade.previewCode');
     }
-    const cleanName = userName.value
-      .split(' ')[0]
+    const parts = userName.value.split(' ');
+    const cleanName = (parts[0] ?? '')
       .toUpperCase()
       .replace(/[^A-Z]/g, '');
     return `🏥${cleanName}2024`;

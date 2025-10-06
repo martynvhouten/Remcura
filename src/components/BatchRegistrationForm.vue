@@ -357,7 +357,7 @@
         }),
       };
 
-      const newBatch = await batchStore.createBatch(batchData);
+      const newBatch = await batchStore.createBatch(batchData as any);
 
       $q.notify({
         type: 'positive',

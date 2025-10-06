@@ -283,7 +283,7 @@
           name: 'daysUntilExpiry',
           label: t('batch.daysUntilExpiry'),
           field: 'daysUntilExpiry',
-          align: 'center' as const,
+          align: 'left' as const,
         }
       );
     }

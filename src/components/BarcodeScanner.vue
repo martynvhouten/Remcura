@@ -288,7 +288,7 @@
     let sum = 0;
     for (let i = 0; i < digits.length; i++) {
       const weight = (digits.length - i) % 2 === 0 ? 1 : 3;
-      sum += digits[i] * weight;
+      sum += (digits[i] ?? 0) * weight;
     }
 
     const calculatedCheckDigit = (10 - (sum % 10)) % 10;
