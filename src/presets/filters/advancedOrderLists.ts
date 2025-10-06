@@ -18,13 +18,16 @@ export const advancedOrderListsFilterPreset: FilterPreset = {
       id: 'status',
       label: 'Status',
       type: 'select',
-      options: [
-        { label: 'Actief', value: 'active' },
-        { label: 'Concept', value: 'draft' },
-        { label: 'Verzonden', value: 'submitted' },
-        { label: 'Voltooid', value: 'completed' },
-        { label: 'Geannuleerd', value: 'cancelled' },
-      ],
+      dataSource: {
+        type: 'static',
+        options: [
+          { label: 'Actief', value: 'active' },
+          { label: 'Concept', value: 'draft' },
+          { label: 'Verzonden', value: 'submitted' },
+          { label: 'Voltooid', value: 'completed' },
+          { label: 'Geannuleerd', value: 'cancelled' },
+        ],
+      },
       priority: 2,
       variant: 'outlined',
       size: 'md',
@@ -33,7 +36,10 @@ export const advancedOrderListsFilterPreset: FilterPreset = {
       id: 'supplier',
       label: 'Leverancier',
       type: 'select',
-      options: [], // Will be populated dynamically
+      dataSource: {
+        type: 'static',
+        options: [], // Will be populated dynamically
+      },
       priority: 3,
       variant: 'outlined',
       size: 'md',
@@ -42,12 +48,15 @@ export const advancedOrderListsFilterPreset: FilterPreset = {
       id: 'urgency',
       label: 'Urgentie',
       type: 'select',
-      options: [
-        { label: 'Kritiek', value: 'critical' },
-        { label: 'Hoog', value: 'high' },
-        { label: 'Normaal', value: 'normal' },
-        { label: 'Laag', value: 'low' },
-      ],
+      dataSource: {
+        type: 'static',
+        options: [
+          { label: 'Kritiek', value: 'critical' },
+          { label: 'Hoog', value: 'high' },
+          { label: 'Normaal', value: 'normal' },
+          { label: 'Laag', value: 'low' },
+        ],
+      },
       priority: 4,
       variant: 'outlined',
       size: 'md',
@@ -55,13 +64,16 @@ export const advancedOrderListsFilterPreset: FilterPreset = {
     {
       id: 'viewMode',
       label: 'Weergave',
-      type: 'toggle',
-      options: [
-        { label: 'Kaarten', value: 'cards', icon: 'view_module' },
-        { label: 'Lijst', value: 'list', icon: 'view_list' },
-      ],
+      type: 'select',
+      dataSource: {
+        type: 'static',
+        options: [
+          { label: 'Kaarten', value: 'cards', icon: 'view_module' },
+          { label: 'Lijst', value: 'list', icon: 'view_list' },
+        ],
+      },
       priority: 5,
-      variant: 'outlined',
+      variant: 'toggle',
       size: 'md',
     },
   ],
