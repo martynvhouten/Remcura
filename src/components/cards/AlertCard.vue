@@ -104,6 +104,8 @@
     actionsClass?: string;
 
     // Accessibility
+    id?: string;
+    paddingClass?: string;
     role?: string;
   }
 
@@ -112,8 +114,7 @@
     title: undefined,
     subtitle: undefined,
     iconColor: 'primary',
-    variant: 'info',
-    severity: 'default',
+    severity: 'info',
     padding: 'md',
     role: 'region',
     iconVariant: 'default',
