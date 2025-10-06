@@ -53,7 +53,7 @@ export function useInventoryRealtime(
 
   const startRealtimeSubscription = (practiceId: string) => {
     if (inventoryChannel.value) {
-      void realtimeService.unsubscribe(inventoryChannel.value);
+      void realtimeService.unsubscribe(inventoryChannel.value as any);
     }
 
     inventoryLogger.info(
@@ -83,7 +83,7 @@ export function useInventoryRealtime(
 
   const stopRealtimeSubscription = async () => {
     if (inventoryChannel.value) {
-      await realtimeService.unsubscribe(inventoryChannel.value);
+      await realtimeService.unsubscribe(inventoryChannel.value as any);
       inventoryChannel.value = null;
     }
 
