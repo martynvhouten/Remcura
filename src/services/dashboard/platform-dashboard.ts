@@ -432,7 +432,7 @@ class PlatformDashboardService {
             String(userCount),
             String(locationCount),
             lastActivity,
-            new Date(practice.created_at).toLocaleDateString(),
+            practice.created_at ? new Date(practice.created_at).toLocaleDateString() : 'N/A',
           ];
         }) || [],
     };
@@ -521,7 +521,10 @@ class PlatformDashboardService {
       if (event.created_at) {
         const day = event.created_at.split('T')[0];
         if (day && Object.prototype.hasOwnProperty.call(dailyMetrics, day)) {
-          dailyMetrics[day]++;
+          const currentValue = dailyMetrics[day];
+          if (currentValue !== undefined) {
+            dailyMetrics[day] = currentValue + 1;
+          }
         }
       }
     });
