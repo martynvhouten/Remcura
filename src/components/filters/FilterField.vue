@@ -697,7 +697,7 @@
         }
 
         if (data) {
-          let options = (data as Array<Record<string, unknown>>).map(item => ({
+          let options = (data as unknown as Array<Record<string, unknown>>).map(item => ({
             value: item[valueField] as string | number | boolean,
             label: item[labelField] as string,
           }));

@@ -195,7 +195,7 @@
       value: location.id,
       description:
         location.description || `${location.location_type} - ${location.code}`,
-      icon: getLocationIcon(location.location_type),
+      icon: getLocationIcon(location.location_type ?? ''),
     }))
   );
 
