@@ -3,7 +3,7 @@
     <div class="medical-table">
       <q-table
         :rows="batches"
-        :columns="columns"
+        :columns="columns as any"
         row-key="batchId"
         :no-data-label="$t('batch.noExpiringBatches')"
         flat
@@ -101,14 +101,14 @@
     },
   ]);
 
-  const getUrgencyColor = (urgency: keyof typeof colors | string) => {
-    const colors = {
+  const getUrgencyColor = (urgency: string) => {
+    const colors: Record<string, string> = {
       expired: 'red',
       critical: 'deep-orange',
       warning: 'amber',
       normal: 'green',
-    } as const;
-    return colors[urgency as keyof typeof colors] || 'grey';
+    };
+    return colors[urgency] || 'grey';
   };
 </script>
 
