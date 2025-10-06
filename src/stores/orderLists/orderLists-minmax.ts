@@ -1,7 +1,7 @@
 import { ref, computed, onUnmounted } from 'vue';
 import { supabase } from '@/boot/supabase';
 import { orderLogger, createLogger } from '@/utils/logger';
-import type { UrgencyLevel, OrderListInsert } from '@/types/inventory';
+import type { UrgencyLevel, OrderListInsert, OrderListItemInsert } from '@/types/inventory';
 
 // Min/Max specific types
 export interface MinMaxItem {
@@ -140,13 +140,14 @@ export function useOrderListsMinMax() {
         item => item.preferred_supplier_name === supplier
       );
       const maxLeadTime = Math.max(
-        ...supplierItems.map(item => item.lead_time_days ?? 7)
+        ...supplierItems.map(item => (item as any).lead_time_days ?? 7)
       );
       const deliveryDate = new Date();
       deliveryDate.setDate(deliveryDate.getDate() + maxLeadTime);
-      estimatedDeliveryDates[supplier] =
+      estimatedDeliveryDates[supplier] = (
         deliveryDate.toISOString().split('T')[0] ??
-        new Date().toISOString().split('T')[0];
+        new Date().toISOString().split('T')[0]
+      ) as string;
     });
 
     return {
@@ -319,12 +320,6 @@ export function useOrderListsMinMax() {
           status: 'draft',
           supplier_id: null,
           total_items: items.length,
-          total_cost: items.reduce(
-            (sum, item) =>
-              sum +
-              item.calculated_order_quantity * (item.preferred_unit_price ?? 0),
-            0
-          ),
           created_by: null,
         };
 
