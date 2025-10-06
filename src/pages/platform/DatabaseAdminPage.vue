@@ -71,7 +71,7 @@
     <div class="q-mb-lg medical-table">
       <q-table
         :rows="tableStats"
-        :columns="tableColumns"
+        :columns="tableColumns as any"
         row-key="table_name"
         :loading="loading"
         :pagination="{ rowsPerPage: 10 }"

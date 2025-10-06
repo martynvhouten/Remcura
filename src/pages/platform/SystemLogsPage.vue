@@ -29,7 +29,7 @@
     <div class="q-mb-lg medical-table">
       <q-table
         :rows="logs"
-        :columns="columns"
+        :columns="columns as any"
         row-key="id"
         :loading="loading"
         virtual-scroll

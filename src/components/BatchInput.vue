@@ -15,19 +15,19 @@
         @update:model-value="onProductChange"
         :loading="productsLoading"
       >
-        <template #option="slotProps">
+        <template #option="(slotProps: any)">
           <q-item
             v-bind="{
-              selected: (slotProps as any).selected,
-              focused: (slotProps as any).focused,
+              selected: slotProps.selected,
+              focused: slotProps.focused,
             }"
             clickable
           >
             <q-item-section>
-              <q-item-label>{{ (slotProps as any).option.name }}</q-item-label>
+              <q-item-label>{{ slotProps.option.name }}</q-item-label>
               <q-item-label caption
-                >{{ (slotProps as any).option.sku }} •
-                {{ (slotProps as any).option.category }}</q-item-label
+                >{{ slotProps.option.sku }} •
+                {{ slotProps.option.category }}</q-item-label
               >
             </q-item-section>
           </q-item>

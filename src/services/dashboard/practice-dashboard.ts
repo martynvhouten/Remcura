@@ -734,7 +734,7 @@ class PracticeDashboardService {
       const createdAt = movement.created_at;
       const movementType = movement.movement_type;
       if (!createdAt || !movementType) return;
-      const week: string = new Date(createdAt).toISOString().split('T')[0]; // Simplified to daily for now
+      const week: string = new Date(createdAt).toISOString().split('T')[0] ?? ''; // Simplified to daily for now
       const type: string = movementType;
       if (!weeklyData[week]) weeklyData[week] = {};
       if (!weeklyData[week][type])

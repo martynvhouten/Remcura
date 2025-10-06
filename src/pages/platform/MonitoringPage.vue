@@ -70,7 +70,7 @@
     <div class="q-mb-lg medical-table">
       <q-table
         :rows="alerts"
-        :columns="alertColumns"
+        :columns="alertColumns as any"
         row-key="id"
         :loading="loading"
         :pagination="{ rowsPerPage: 10 }"

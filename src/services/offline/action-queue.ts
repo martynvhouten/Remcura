@@ -165,7 +165,7 @@ export class ActionQueue {
       };
     } catch (error) {
       ServiceErrorHandler.handle(
-        error,
+        error as Error,
         {
           service: 'ActionQueue',
           operation: 'executeAction',

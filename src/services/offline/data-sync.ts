@@ -139,11 +139,11 @@ export class DataSyncManager {
       const cartItems = await this.downloadCartItems(carts);
 
       // Update data
-      this.data.bestellijsten = bestellijsten;
-      this.data.bestellijst_items = items;
-      this.data.products = products;
-      this.data.shopping_carts = carts;
-      this.data.shopping_cart_items = cartItems;
+      this.data.bestellijsten = bestellijsten as any;
+      this.data.bestellijst_items = items as any;
+      this.data.products = products as any;
+      this.data.shopping_carts = carts as any;
+      this.data.shopping_cart_items = cartItems as any;
       this.data.last_sync = new Date();
 
       // Save to storage

@@ -182,8 +182,8 @@ export class PermissionService {
 
     try {
       const { data, error } = await supabase.rpc('check_user_permission_v2', {
-        user_id_param: userId,
-        practice_id_param: practiceId,
+        p_user_id: userId,
+        p_practice_id: practiceId,
         p_permission_type: permissionType,
         p_resource_type: resourceType,
         p_resource_id: resourceId,
