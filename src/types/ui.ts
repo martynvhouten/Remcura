@@ -8,6 +8,8 @@ export interface ButtonConfig {
   disabled?: boolean;
   loading?: boolean;
   onClick?: () => void | Promise<void>;
+  class?: string;
+  noCaps?: boolean;
 }
 
 export interface CardProps {

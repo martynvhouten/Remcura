@@ -91,8 +91,8 @@ export function useButtons() {
   const getThemeConfig = (
     theme: keyof typeof buttonThemes,
     overrides?: Partial<ButtonConfig>
-  ) => {
-    const baseConfig = buttonThemes[theme];
+  ): Partial<ButtonConfig> => {
+    const baseConfig = buttonThemes[theme] as Partial<ButtonConfig>;
     return overrides ? mergeConfigs(baseConfig, overrides) : baseConfig;
   };
 
