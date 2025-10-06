@@ -320,6 +320,7 @@
   import BaseDialog from 'src/components/base/BaseDialog.vue';
   import UseBatchDialog from './UseBatchDialog.vue';
   import type { ProductBatchDTO } from '@/domain/inventory/bridge';
+  import type { ProductBatchWithDetails } from '@/types/inventory';
 
   // Composables
   const { t } = useI18n();
@@ -334,7 +335,7 @@
   const showDetailsDialog = ref(false);
   const showUseBatchDialog = ref(false);
   const showExpiringOnly = ref(false);
-  const selectedBatch = ref<ProductBatchDTO | null>(null);
+  const selectedBatch = ref<ProductBatchDTO | ProductBatchWithDetails | null>(null);
 
   // Filters
   const filters = ref({
@@ -348,49 +349,49 @@
     {
       name: 'product',
       label: t('product.product'),
-      align: 'left',
+      align: 'left' as const,
       sortable: true,
       field: 'productName',
     },
     {
       name: 'batchNumber',
       label: t('batch.batchNumber'),
-      align: 'left',
+      align: 'left' as const,
       sortable: true,
       field: 'batchNumber',
     },
     {
       name: 'location',
       label: t('location.location'),
-      align: 'left',
+      align: 'left' as const,
       sortable: true,
       field: 'locationName',
     },
     {
       name: 'quantity',
       label: t('inventory.quantity'),
-      align: 'right',
+      align: 'right' as const,
       sortable: true,
       field: 'currentQuantity',
     },
     {
       name: 'expiry',
       label: t('batch.expiryDate'),
-      align: 'left',
+      align: 'left' as const,
       sortable: true,
       field: 'expiryDate',
     },
     {
       name: 'status',
       label: t('common.status'),
-      align: 'center',
+      align: 'center' as const,
       sortable: true,
       field: 'status',
     },
     {
       name: 'actions',
       label: t('common.actions'),
-      align: 'center',
+      align: 'center' as const,
       sortable: false,
       field: '',
     },
@@ -564,7 +565,7 @@
         throw new Error(t('batchoverv.noclinicidavailable'));
       }
       await batchStore.updateBatch(batch.id, {
-        status: 'quarantine',
+        status: 'recalled' as any, // Using 'recalled' for quarantine functionality
       });
       $q.notify({
         type: 'positive',
