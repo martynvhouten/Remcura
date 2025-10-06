@@ -84,7 +84,7 @@ export function useButtons() {
       ...base,
       ...override,
       class: `${base.class || ''} ${override.class || ''}`.trim(),
-    };
+    } as ButtonConfig;
   };
 
   // Get a themed button config

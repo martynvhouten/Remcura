@@ -72,10 +72,13 @@ export function useDebouncedRef<T>(
   const debouncedValue = ref(initialValue) as Ref<T>;
   const pending = ref(false);
 
-  const { debouncedFn } = useDebounce((newValue: T) => {
-    debouncedValue.value = newValue;
-    pending.value = false;
-  }, delay);
+  const { debouncedFn } = useDebounce(
+    ((newValue: T) => {
+      debouncedValue.value = newValue;
+      pending.value = false;
+    }) as any,
+    delay
+  );
 
   watch(
     value,

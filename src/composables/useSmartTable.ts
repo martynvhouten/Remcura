@@ -170,7 +170,7 @@ export function useSmartTable<Row extends TableRow = TableRow>(
 
   const applyClientSideFilters = () => {
     filteredData.value = applyClientSideOperations(
-      rawData.value,
+      rawData.value as Row[],
       pagination.value.sortBy,
       pagination.value.descending,
       filters.value
