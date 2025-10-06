@@ -280,7 +280,7 @@
         brand: props.product.brand || '',
         unit: props.product.unit || 'stuk',
         price: props.product.price || 0,
-        currency: props.product.currency || 'EUR',
+        currency: (props.product as any).currency || 'EUR',
         barcode: props.product.barcode || '',
         active: props.product.active !== false,
         requires_batch_tracking: props.product.requires_batch_tracking || false,
@@ -331,9 +331,9 @@
 
       let result;
       if (isEdit.value && props.product) {
-        result = await productService.update(props.product.id, productData);
+        result = await productService.update(props.product.id, productData as any);
       } else {
-        result = await productService.create(productData);
+        result = await productService.create(productData as any);
       }
 
       if (result) {
