@@ -168,13 +168,13 @@
       loading.value = true;
 
       // Call the FIFO function from our batch store
-      const results = await batchStore.getFifoBatches(
+      const results = await batchStore.fetchFifoBatches(
         form.value.productId,
         form.value.locationId,
         form.value.requestedQuantity
       );
 
-      fifoResults.value = results.map((result, index) => ({
+      fifoResults.value = results.map((result: any, index: number) => ({
         ...result,
         daysUntilExpiry: Math.ceil(
           (new Date(result.expiryDate).getTime() - Date.now()) /
