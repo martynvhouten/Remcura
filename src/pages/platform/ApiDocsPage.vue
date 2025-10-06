@@ -65,7 +65,7 @@
     <div class="q-mb-lg medical-table">
       <q-table
         :rows="endpoints"
-        :columns="endpointColumns"
+        :columns="endpointColumns as any"
         row-key="id"
         :loading="loading"
         :pagination="{ rowsPerPage: 10 }"

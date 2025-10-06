@@ -421,7 +421,7 @@
       if (error) throw error;
       practices.value = data || [];
       if (!selectedPracticeId.value && practices.value.length > 0) {
-        selectedPracticeId.value = practices.value[0].id;
+        selectedPracticeId.value = practices.value[0]?.id ?? '';
       }
     } catch (e) {
       console.error('Failed to load practices for owner', e);

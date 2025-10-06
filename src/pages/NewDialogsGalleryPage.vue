@@ -142,6 +142,7 @@
             <li>Responsive design</li>
           </ul>
           <q-input
+            v-model="sampleInputValue"
             outlined
             label="Sample Input"
             placeholder="Try pressing ESC to close"
@@ -537,6 +538,7 @@
   const showMedium = ref(false);
   const showLarge = ref(false);
   const showPersistent = ref(false);
+  const sampleInputValue = ref('');
 
   // FormDialog states
   const showSimpleForm = ref(false);

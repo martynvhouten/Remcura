@@ -585,7 +585,7 @@
 
     // Initialize filter values with defaults
     if (ordersFilterPreset.defaultFilters) {
-      filterValues.value = { ...ordersFilterPreset.defaultFilters };
+      filterValues.value = { ...ordersFilterPreset.defaultFilters } as FilterValues;
     }
   });
 </script>

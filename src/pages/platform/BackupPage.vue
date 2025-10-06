@@ -78,7 +78,7 @@
     <div class="q-mb-lg medical-table">
       <q-table
         :rows="backups"
-        :columns="backupColumns"
+        :columns="backupColumns as any"
         row-key="id"
         :loading="loading"
         :pagination="{ rowsPerPage: 10 }"

@@ -333,7 +333,7 @@
     totalSessions: 0,
     averageSessionDuration: 0,
     userList: [],
-  });
+  } as UserActivityMetrics);
   const dailyChartData = ref<Array<{ date: string; count: number }>>([]);
 
   // Options - computed for reactivity
