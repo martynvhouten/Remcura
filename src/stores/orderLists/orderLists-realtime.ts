@@ -109,7 +109,7 @@ export function useOrderListsRealtime() {
 
     try {
       if (orderListsChannel.value) {
-        await realtimeService.unsubscribe(orderListsChannel.value);
+        await realtimeService.unsubscribe(orderListsChannel.value as any);
         orderListsChannel.value = null;
       }
 
@@ -119,7 +119,7 @@ export function useOrderListsRealtime() {
         supplierOrdersChannel,
       ]) {
         if (channelRef.value) {
-          await realtimeService.unsubscribe(channelRef.value);
+          await realtimeService.unsubscribe(channelRef.value as any);
           channelRef.value = null;
         }
       }
@@ -294,14 +294,14 @@ export function useOrderListsRealtime() {
           // Check if this triggers low stock alert
           const minQuantity = newRow.minimum_quantity ?? 0;
           if (
-            newRow.current_quantity <= minQuantity &&
-            oldRow.current_quantity > minQuantity
+            (newRow.current_quantity ?? 0) <= minQuantity &&
+            (oldRow.current_quantity ?? 0) > minQuantity
           ) {
             await eventEmitter.emit(StoreEvents.DATA_REFRESH_REQUESTED, {
               scope: 'low_stock_alert',
               productId: newRow.product_id,
               locationId: newRow.location_id,
-              currentQuantity: newRow.current_quantity,
+              currentQuantity: newRow.current_quantity ?? 0,
               minimumQuantity: minQuantity,
               timestamp: new Date().toISOString(),
             });
