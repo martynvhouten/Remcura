@@ -3,18 +3,8 @@
  * TODO: Replace with proper implementations in Phase B
  */
 
-// Fix for service-error-handler exports
-declare module '@/utils/service-error-handler' {
-  export class ServiceErrorHandler {
-    static handle(error: unknown): void;
-    static logError(message: string, error: unknown): void;
-  }
-
-  // Export ServiceErrorHandler as ErrorHandler for backward compatibility
-  export { ServiceErrorHandler as ErrorHandler };
-
-  export function handleSupabaseError(error: unknown): never;
-}
+// Note: service-error-handler types are now properly exported from the actual file
+// No longer need module declaration shim here
 
 // Global i18n for services (temporary shim)
 // In services, use: import { i18n } from '@/i18n' instead
