@@ -211,7 +211,7 @@ export const userProfileService = {
     updates: PracticeMemberUpdate
   ): Promise<PracticeMemberRow | null> {
     const payload: TablesUpdate<'practice_members'> = {
-      role: updates.role ?? null,
+      role: updates.role,
       updated_at: new Date().toISOString(),
     };
 

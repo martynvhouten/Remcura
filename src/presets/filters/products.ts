@@ -291,12 +291,4 @@ export const productsFilterPreset: FilterPreset = {
       collapsible: true,
     },
   },
-
-  // Advanced options
-  options: {
-    enableBulkActions: true,
-    enableExport: true,
-    enableSavedFilters: true,
-    enableRealtime: true,
-  },
 };

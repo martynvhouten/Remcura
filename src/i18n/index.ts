@@ -43,7 +43,7 @@ export const i18n = createI18n({
   globalInjection: true,
   missingWarn: isDevelopment,
   fallbackWarn: isDevelopment,
-  missing: missingHandler,
+  missing: missingHandler as any,
 });
 
 // Async loader for lazy loading

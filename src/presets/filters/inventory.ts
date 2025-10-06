@@ -121,7 +121,6 @@ export const inventoryFilterPreset: FilterPreset = {
       id: 'low_stock_only',
       type: 'boolean',
       label: 'filters.inventory.fields.lowStockOnly.label',
-      tooltip: 'filters.inventory.fields.lowStockOnly.tooltip',
       icon: 'warning',
       variant: 'toggle',
       color: 'warning',

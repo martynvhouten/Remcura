@@ -186,7 +186,7 @@ export class PermissionService {
         practice_id_param: practiceId,
         p_permission_type: permissionType,
         p_resource_type: resourceType,
-        p_resource_id: resourceId ?? null,
+        p_resource_id: resourceId,
       });
 
       if (error) {
