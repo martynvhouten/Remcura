@@ -62,7 +62,7 @@ export class InventoryAutomationService {
 
       const daysOutOfStock =
         item.currentQuantity <= 0
-          ? this.calculateDaysOutOfStock(undefined)
+          ? this.calculateDaysOutOfStock((item as any).lastMovementAt ?? new Date().toISOString())
           : undefined;
 
       return {
@@ -374,12 +374,15 @@ export class InventoryAutomationService {
         .eq('status', 'active');
 
       // Check overstock items (above maximum quantity)
-      const { data: overStockItems } = await supabase
+      const { data: overStockData } = await supabase
         .from('stock_levels')
-        .select('id')
+        .select('id, current_quantity, maximum_quantity')
         .eq('practice_id', practiceId)
-        .not('maximum_quantity', 'is', null)
-        .gt('current_quantity', supabase.rpc('maximum_quantity'));
+        .not('maximum_quantity', 'is', null);
+      
+      const overStockItems = (overStockData || []).filter(
+        (item: any) => item.current_quantity > (item.maximum_quantity ?? 0)
+      );
 
       // Generate recommendations
       const recommendations = [];
