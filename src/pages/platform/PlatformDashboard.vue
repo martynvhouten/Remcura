@@ -289,7 +289,7 @@
 
       dashboardLogger.info('✅ Platform dashboard loaded successfully');
     } catch (error) {
-      dashboardLogger.error('❌ Failed to load platform dashboard:', error);
+      dashboardLogger.error('❌ Failed to load platform dashboard:', error as Record<string, unknown>);
 
       // Show error notification
       $q.notify({
@@ -334,7 +334,7 @@
         }
       }
     } catch (error) {
-      dashboardLogger.error(`❌ Failed to refresh widget ${widgetId}:`, error);
+      dashboardLogger.error(`❌ Failed to refresh widget ${widgetId}:`, error as Record<string, unknown>);
     }
   }
 
@@ -360,7 +360,7 @@
 
   function stopAutoRefresh() {
     if (refreshInterval.value) {
-      clearInterval(refreshInterval.value);
+      clearInterval(refreshInterval.value as any);
       refreshInterval.value = null;
     }
   }
