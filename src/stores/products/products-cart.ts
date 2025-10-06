@@ -45,8 +45,8 @@ export function useProductsCart() {
       product_id: product.id,
       product,
       quantity,
-      unit_price: product.unit_price ?? null,
-      supplier_id: supplierId ?? product.supplier_id ?? null,
+      unit_price: product.unitPrice ?? null,
+      supplier_id: supplierId ?? product.supplierId ?? null,
     });
   };
 
@@ -94,8 +94,8 @@ export function useProductsCart() {
       product_id: product.id,
       product,
       quantity,
-      unit_price: product.unit_price ?? null,
-      supplier_id: supplierId ?? product.supplier_id ?? null,
+      unit_price: product.unitPrice ?? null,
+      supplier_id: supplierId ?? product.supplierId ?? null,
     });
   };
 
