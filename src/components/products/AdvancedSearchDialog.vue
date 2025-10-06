@@ -418,6 +418,7 @@
     ): void;
     (e: 'open-scanner'): void;
     (e: 'preview', criteria: any): void;
+    (e: 'preview-table'): void;
   }
 
   const props = withDefaults(defineProps<Props>(), {
@@ -537,7 +538,7 @@
   };
 
   const performSearch = () => {
-    emit('search', { ...searchCriteria.value });
+    emit('search', { ...searchCriteria.value } as any);
     isOpen.value = false;
   };
 
