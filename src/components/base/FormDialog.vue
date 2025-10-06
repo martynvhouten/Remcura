@@ -160,8 +160,8 @@
     () => props.confirmCloseMessage || t('common.confirmClose')
   );
 
-  const dialogVariant = computed(() => 'elegant');
-  const headerVariant = computed(() => 'solid');
+  const dialogVariant = computed(() => 'elegant' as const);
+  const headerVariant = computed(() => 'solid' as const);
 
   // Methods
   const handleSubmit = () => {
