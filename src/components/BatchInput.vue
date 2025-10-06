@@ -15,7 +15,7 @@
         @update:model-value="onProductChange"
         :loading="productsLoading"
       >
-        <template #option="{ option, selected, focused }">
+        <template #option="{ option, selected, focused }: any">
           <q-item v-bind="{ selected, focused }" clickable>
             <q-item-section>
               <q-item-label>{{ option.name }}</q-item-label>
@@ -377,7 +377,7 @@
       productsLoading.value = true;
       const practiceId = authStore.clinicId;
       if (practiceId) {
-        await productStore.fetchProducts({ practiceId });
+        await productStore.fetchProducts(practiceId);
       }
     } catch (error) {
       console.error('Error loading products:', error);
