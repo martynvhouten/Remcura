@@ -13,7 +13,7 @@ import type {
 } from '@/types/inventory';
 import type { Database } from '@/types';
 import type { AnalyticsSummary } from '@/types/analytics';
-import type { SupplierProductRow, SupplierProductView } from '@/types/supplier';
+import type { SupplierProduct } from '@/types/supplier';
 
 // RPC response interface for get_products_with_stock_levels
 
@@ -255,7 +255,7 @@ export function useProductsCore() {
             id: cat,
             name: cat,
             description: '',
-            parent_id: null,
+            parent_id: undefined,
             sort_order: 0,
             is_active: true,
           }) satisfies ProductCategory
@@ -351,7 +351,7 @@ export function useProductsCore() {
   });
 
   const manualStockProducts = computed(() =>
-    products.value.filter(product => product.batchStatus === 'manual_stock')
+    products.value.filter(product => (product as any).batchStatus === 'manual_stock')
   );
 
   return {
