@@ -86,7 +86,11 @@ export function registerServiceWorker() {
                 navigator.serviceWorker.controller
               ) {
                 // New content is available
-                if (confirm(translations.newVersionAvailable)) {
+                if (
+                  confirm(
+                    'Er is een nieuwe versie van de app beschikbaar. Wilt u nu opnieuw laden?'
+                  )
+                ) {
                   window.location.reload();
                 }
               }
