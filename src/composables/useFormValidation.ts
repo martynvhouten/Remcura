@@ -27,16 +27,18 @@ export function useFormValidation() {
 
     minLength:
       (min: number) =>
-      (value: string): boolean | string => {
+      (value: unknown): boolean | string => {
         if (!value) return true; // Optional unless combined with required
-        return value.length >= min || t('validation.minLength', { min });
+        const strValue = String(value);
+        return strValue.length >= min || t('validation.minLength', { min });
       },
 
     maxLength:
       (max: number) =>
-      (value: string): boolean | string => {
+      (value: unknown): boolean | string => {
         if (!value) return true;
-        return value.length <= max || t('validation.maxLength', { max });
+        const strValue = String(value);
+        return strValue.length <= max || t('validation.maxLength', { max });
       },
 
     // Number validations
@@ -88,17 +90,17 @@ export function useFormValidation() {
       },
 
     // Date validations
-    futureDate: (value: string): boolean | string => {
+    futureDate: (value: unknown): boolean | string => {
       if (!value) return true;
-      const date = new Date(value);
+      const date = new Date(String(value));
       const today = new Date();
       today.setHours(0, 0, 0, 0); // Reset time for comparison
       return date >= today || t('validation.futureDate');
     },
 
-    pastDate: (value: string): boolean | string => {
+    pastDate: (value: unknown): boolean | string => {
       if (!value) return true;
-      const date = new Date(value);
+      const date = new Date(String(value));
       const today = new Date();
       return date <= today || t('validation.pastDate');
     },
