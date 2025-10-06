@@ -584,11 +584,11 @@ export const magentoDataService = {
           id: parseInt(product.id) || 0,
           sku: product.sku || '',
           name: product.name || '',
-          price: parseFloat(String(product.unit_price || 0)),
+          price: parseFloat(String((product as any).unit_price || 0)),
           status: product.active ? 1 : 0,
           type_id: 'simple',
         })) || []
-      );
+      ) as MagentoProduct[];
     } catch (error) {
       console.error('Error fetching products for Magento:', error);
       return [];
@@ -638,8 +638,8 @@ export const magentoDataService = {
           items:
             order.order_items?.map(item => ({
               id: parseInt(item.id) || 0,
-              name: item.products?.name || '',
-              sku: item.products?.sku || '',
+              name: (item as any).products?.name || '',
+              sku: (item as any).products?.sku || '',
               qty: item.quantity,
               price: item.unit_price || 0,
             })) || [],
