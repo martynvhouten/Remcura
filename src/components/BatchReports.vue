@@ -254,19 +254,19 @@
         name: 'batchNumber',
         label: t('batch.batchNumber'),
         field: 'batchNumber',
-        align: 'left',
+        align: 'left' as const,
       },
       {
         name: 'productName',
         label: t('product.product'),
         field: 'productName',
-        align: 'left',
+        align: 'left' as const,
       },
       {
         name: 'locationName',
         label: t('location.location'),
         field: 'locationName',
-        align: 'left',
+        align: 'left' as const,
       },
     ];
 
@@ -277,13 +277,13 @@
           name: 'expiryDate',
           label: t('batch.expiryDate'),
           field: 'expiryDate',
-          align: 'left',
+          align: 'left' as const,
         },
         {
           name: 'daysUntilExpiry',
           label: t('batch.daysUntilExpiry'),
           field: 'daysUntilExpiry',
-          align: 'center',
+          align: 'center' as const,
         }
       );
     }
@@ -511,6 +511,9 @@
       for (let i = 0; i < 5; i++) {
         const product = products[i % products.length];
         const location = locations[i % locations.length];
+        
+        if (!product || !location) continue;
+        
         const daysOffset = (i - 2) * 30; // Some expired, some future
         const expiryDate = new Date();
         expiryDate.setDate(expiryDate.getDate() + daysOffset);
@@ -531,7 +534,7 @@
         });
       }
 
-      await supabase.from('product_batches').insert(sampleBatches);
+      await supabase.from('product_batches').insert(sampleBatches as any);
     } catch (error) {
       console.error('Error creating sample batches:', error);
     }
