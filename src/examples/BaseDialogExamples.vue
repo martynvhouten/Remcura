@@ -175,15 +175,15 @@
         <div class="mapping-grid">
           <div class="mapping-item">
             <label>Product Name</label>
-            <q-select outlined :options="csvColumns" />
+            <q-select v-model="csvMappingProduct" outlined :options="csvColumns" />
           </div>
           <div class="mapping-item">
             <label>SKU</label>
-            <q-select outlined :options="csvColumns" />
+            <q-select v-model="csvMappingSKU" outlined :options="csvColumns" />
           </div>
           <div class="mapping-item">
             <label>Price</label>
-            <q-select outlined :options="csvColumns" />
+            <q-select v-model="csvMappingPrice" outlined :options="csvColumns" />
           </div>
         </div>
       </div>
@@ -267,15 +267,18 @@
   ];
 
   const csvColumns = ['Column A', 'Column B', 'Column C'];
+  const csvMappingProduct = ref(null);
+  const csvMappingSKU = ref(null);
+  const csvMappingPrice = ref(null);
   const previewData = [
     { id: 1, name: 'Product 1', sku: 'SKU001', price: 19.99 },
     { id: 2, name: 'Product 2', sku: 'SKU002', price: 29.99 },
   ];
 
   const previewColumns = [
-    { name: 'name', label: 'Name', field: 'name', align: 'left' },
-    { name: 'sku', label: 'SKU', field: 'sku', align: 'left' },
-    { name: 'price', label: 'Price', field: 'price', align: 'right' },
+    { name: 'name', label: 'Name', field: 'name', align: 'left' as const },
+    { name: 'sku', label: 'SKU', field: 'sku', align: 'left' as const },
+    { name: 'price', label: 'Price', field: 'price', align: 'right' as const },
   ];
 
   const wizardPrimaryAction = computed(() => {
