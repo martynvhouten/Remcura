@@ -430,6 +430,7 @@
   const route = useRoute();
   const router = useRouter();
   const $q = useQuasar();
+  const { t } = useI18n();
   const orderListsStore = useOrderListsStore();
   const productsStore = useProductsStore();
 
