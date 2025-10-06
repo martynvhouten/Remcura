@@ -71,8 +71,8 @@ export function useTableSorting(
 
       // Handle dates
       if (isDate(aVal) && isDate(bVal)) {
-        const aTime = new Date(aVal).getTime();
-        const bTime = new Date(bVal).getTime();
+        const aTime = new Date(aVal as string | Date).getTime();
+        const bTime = new Date(bVal as string | Date).getTime();
         return descending ? bTime - aTime : aTime - bTime;
       }
 
@@ -126,7 +126,7 @@ export function useTableSorting(
   // Helper function to check if value is a date
   const isDate = (value: unknown): boolean => {
     if (!value) return false;
-    const date = new Date(value);
+    const date = new Date(value as string | Date);
     return (
       (!Number.isNaN(date.getTime()) &&
         typeof value === 'string' &&
