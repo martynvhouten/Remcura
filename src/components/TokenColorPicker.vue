@@ -5,13 +5,13 @@
       <input
         type="color"
         :value="token.value"
-        @input="updateValue($event.target.value)"
+        @input="updateValue(($event.target as HTMLInputElement)?.value ?? '')"
         class="color-input"
       />
       <input
         type="text"
         :value="token.value"
-        @input="updateValue($event.target.value)"
+        @input="updateValue(($event.target as HTMLInputElement)?.value ?? '')"
         @blur="validateColor"
         class="color-text"
         :placeholder="token.cssVar"
