@@ -55,7 +55,7 @@ export class DataSyncManager {
    * Get current offline data
    */
   get offlineData(): OfflineData {
-    return this.data;
+    return this.data as OfflineData;
   }
 
   /**
@@ -193,7 +193,7 @@ export class DataSyncManager {
       });
     }
 
-    return data || [];
+    return (data as any) || [];
   }
 
   /**
@@ -221,7 +221,7 @@ export class DataSyncManager {
     }
 
     return (
-      data?.map(item => ({
+      (data as any)?.map((item: any) => ({
         ...item,
         last_counted: item.last_counted,
       })) || []
