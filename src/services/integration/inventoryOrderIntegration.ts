@@ -274,7 +274,6 @@ export class InventoryOrderIntegrationService {
           `
           id,
           delivery_expected,
-          practice_id,
           suppliers(name)
         `
         )
@@ -283,10 +282,11 @@ export class InventoryOrderIntegrationService {
 
       // Create notifications for overdue orders
       for (const order of overdueOrders || []) {
+        const orderAny = order as any;
         await supabase.from('notifications').insert({
-          practice_id: order.practice_id,
+          practice_id: orderAny.practice_id ?? '',
           title: 'Bestelling is verlaat',
-          message: `Bestelling ${order.id} had ${(order as any).delivery_expected} moeten aankomen`,
+          message: `Bestelling ${orderAny.id} had ${orderAny.delivery_expected} moeten aankomen`,
           category: 'order_update',
           priority: 'normal',
           action_url: '/orders',
