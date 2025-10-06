@@ -11,7 +11,7 @@ import 'quasar/src/css/index.sass';
 // Monitoring service will be lazy loaded
 
 // Import centralized error handling
-import { ErrorHandler } from '@/utils/service-error-handler';
+import { ServiceErrorHandler } from '@/utils/service-error-handler';
 
 // Assumes your root component is App.vue
 // and placed in same folder as main.js
@@ -23,8 +23,8 @@ const myApp = createApp(App);
 
 // Enhanced global error handler using centralized error handling
 myApp.config.errorHandler = (error, instance, info) => {
-  ErrorHandler.handleError(
-    error,
+  ServiceErrorHandler.handle(
+    error as Error,
     {
       service: 'vue',
       operation: 'vue_error_handler',
@@ -36,7 +36,7 @@ myApp.config.errorHandler = (error, instance, info) => {
       },
     },
     {
-      showToUser: false, // Don't show Vue errors to users by default
+      rethrow: false,
       logLevel: 'error',
     }
   );
@@ -47,7 +47,7 @@ const initMonitoringLazy = async () => {
   // Only load monitoring in production or when errors occur
   if (import.meta.env.PROD || import.meta.env.VITE_SENTRY_DSN) {
     const { initializeMonitoring } = await import('./services/monitoring');
-    await initializeMonitoring(router);
+    await initializeMonitoring();
   }
 };
 
@@ -56,8 +56,7 @@ setTimeout(() => {
   initMonitoringLazy().catch(console.warn);
 }, 2000); // Delay 2 seconds to not block initial load
 
-// Setup global error handlers for unhandled promises and JS errors
-ErrorHandler.setupGlobalHandlers();
+// Note: Global error handlers are set up via Vue's errorHandler above
 
 myApp.use(Quasar, {
   plugins: {}, // import Quasar plugins and add here
