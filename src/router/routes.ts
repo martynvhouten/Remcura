@@ -3,7 +3,7 @@ import type {
   UserRole,
   PermissionType,
   ResourceType,
-} from '@/services/permissions';
+} from '@/types/permissions';
 
 // Extend Vue Router meta interface
 declare module 'vue-router' {
