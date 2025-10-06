@@ -97,7 +97,6 @@ export class NetworkMonitor {
       const response = await fetch('/ping', {
         method: 'HEAD',
         mode: 'no-cors',
-        timeout: 3000,
       });
       return true;
     } catch {
@@ -106,7 +105,6 @@ export class NetworkMonitor {
         await fetch('https://httpbin.org/status/200', {
           method: 'HEAD',
           mode: 'no-cors',
-          timeout: 3000,
         });
         return true;
       } catch {
