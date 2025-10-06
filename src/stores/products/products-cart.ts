@@ -46,7 +46,7 @@ export function useProductsCart() {
       product,
       quantity,
       unit_price: product.unitPrice ?? null,
-      supplier_id: supplierId ?? product.supplierId ?? null,
+      supplier_id: supplierId ?? product.supplier?.id ?? null,
     });
   };
 
@@ -95,7 +95,7 @@ export function useProductsCart() {
       product,
       quantity,
       unit_price: product.unitPrice ?? null,
-      supplier_id: supplierId ?? product.supplierId ?? null,
+      supplier_id: supplierId ?? product.supplier?.id ?? null,
     });
   };
 
