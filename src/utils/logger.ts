@@ -79,11 +79,12 @@ class Logger {
  */
 export function toLogData(value: unknown): Record<string, unknown> {
   if (value instanceof Error) {
+    const errorAny = value as any;
     return {
       name: value.name,
       message: value.message,
       stack: value.stack,
-      ...(value.cause && { cause: String(value.cause) }),
+      ...(errorAny.cause && { cause: String(errorAny.cause) }),
     };
   }
 
