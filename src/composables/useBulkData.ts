@@ -120,7 +120,7 @@ export function useBulkData() {
       if (queryError) throw queryError;
 
       const suppliersByProduct: Record<string, SupplierProductRecord[]> = {};
-      (data as SupplierProductRecord[] | null)?.forEach(sp => {
+      (data as unknown as SupplierProductRecord[] | null)?.forEach(sp => {
         if (!suppliersByProduct[sp.product_id]) {
           suppliersByProduct[sp.product_id] = [];
         }
@@ -169,7 +169,7 @@ export function useBulkData() {
       if (queryError) throw queryError;
 
       const batchesByProduct: Record<string, ProductBatchRecord[]> = {};
-      (data as ProductBatchRecord[] | null)?.forEach(batch => {
+      (data as unknown as ProductBatchRecord[] | null)?.forEach(batch => {
         if (!batchesByProduct[batch.product_id]) {
           batchesByProduct[batch.product_id] = [];
         }
@@ -199,7 +199,7 @@ export function useBulkData() {
     error.value = null;
 
     try {
-      let query = supabase
+      let query = (supabase as any)
         .from(table)
         .select(selectFields as any)
         .in(foreignKey as any, entityIds);
@@ -213,7 +213,7 @@ export function useBulkData() {
       if (queryError) throw queryError;
 
       const groupedData: Record<string, T[]> = {};
-      (data as T[] | null)?.forEach(item => {
+      (data as unknown as T[] | null)?.forEach(item => {
         const key = String(item[foreignKey]);
         if (!groupedData[key]) {
           groupedData[key] = [];
