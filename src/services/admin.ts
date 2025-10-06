@@ -564,7 +564,7 @@ export class AdminService {
     // TODO: Implement proper audit log retrieval
     const events: UsageAnalytics[] = await analyticsService.getUsageStats();
 
-    const auditEntries: AuditLogEntry[] = events
+    const auditEntries = (events
       .filter(event => {
         if (filters?.action && event.eventData?.action !== filters.action)
           return false;
@@ -589,7 +589,7 @@ export class AdminService {
         ip_address: event.ipAddress ?? null,
         user_agent: event.userAgent ?? null,
       }))
-      .slice(0, filters?.limit || 100);
+      .slice(0, filters?.limit || 100)) as AuditLogEntry[];
 
     return auditEntries;
   }
@@ -788,15 +788,15 @@ export class AdminService {
 
     // Update user status
     const newRole = activate
-      ? currentMember.role === 'inactive'
+      ? (currentMember.role as any) === 'inactive'
         ? 'assistant'
         : currentMember.role
-      : 'inactive';
+      : ('inactive' as any);
 
     const { error } = await supabase
       .from('practice_members')
       .update({
-        role: newRole,
+        role: newRole as any,
         updated_at: new Date().toISOString(),
       })
       .eq('practice_id', practiceId)
@@ -845,7 +845,7 @@ export class AdminService {
         await this.grantPermission(
           update.userId,
           update.permissionType,
-          'bestellijst',
+          'orders' as any,
           undefined,
           locationId
         );
