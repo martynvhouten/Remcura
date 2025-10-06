@@ -503,10 +503,10 @@ class RoleDashboardConfig {
       : practiceRoles;
 
     return demoRoles.map(role => ({
-      label: t(this.configs[role].titleKey),
+      label: t((this.configs as any)[role].titleKey),
       value: role,
-      icon: this.configs[role].icon,
-      color: this.configs[role].color,
+      icon: (this.configs as any)[role].icon,
+      color: (this.configs as any)[role].color,
     }));
   }
 
