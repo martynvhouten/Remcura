@@ -493,7 +493,11 @@
 
   const autoReorderLists = computed(() => {
     const lists = orderListsStore.orderLists || [];
-    return lists.filter(list => (list as any).auto_reorder_enabled).length;
+    // Explicitly break type inference to avoid deep instantiation
+    const filtered: Array<any> = lists.filter(
+      list => (list as any).auto_reorder_enabled
+    );
+    return filtered.length;
   });
 
   const totalEstimatedValue = computed(() => {
