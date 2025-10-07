@@ -30,8 +30,8 @@ export function useOrderListsItems(orderLists: Ref<OrderListWithItems[]>) {
         throw new Error('Product not found');
       }
 
-      const supplierProduct = product.supplier_products?.find(
-        sp => sp.id === request.supplier_product_id
+      const supplierProduct = (product as any).supplierProducts?.find(
+        (sp: any) => sp.id === request.supplier_product_id
       );
 
       if (!supplierProduct) {

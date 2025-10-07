@@ -52,7 +52,7 @@ export const useSuppliersStore = defineStore('suppliers', () => {
   const lastSyncAt = ref<Date | null>(null);
 
   const activeSuppliers = computed(() =>
-    suppliers.value.filter(supplier => supplier.is_active)
+    suppliers.value.filter((supplier: any) => supplier.is_active)
   );
 
   const suppliersWithSyncEnabled = computed(() =>

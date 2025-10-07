@@ -67,11 +67,11 @@
 <script setup lang="ts">
   import { computed } from 'vue';
   import { useRouter } from 'vue-router';
-  import type { OrderList, OrderAdvice } from '@/types';
+  import type { OrderListDTO } from '@/domain/inventory/dto';
 
   interface Props {
-    orderList: OrderList;
-    reorderAdvice?: OrderAdvice | null;
+    orderList: OrderListDTO;
+    reorderAdvice?: any | null;
   }
 
   const props = defineProps<Props>();

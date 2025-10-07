@@ -142,8 +142,8 @@ export function useOrderListsIntegration(
       for (const item of orderList.items) {
         const product = productsStore.getProductById(item.product_id);
         if (product) {
-          const supplierProduct = product.supplier_products?.find(
-            sp => sp.id === item.supplier_product_id
+          const supplierProduct = (product as any).supplierProducts?.find(
+            (sp: any) => sp.id === item.supplier_product_id
           );
           productsStore.addToCart(
             product,
