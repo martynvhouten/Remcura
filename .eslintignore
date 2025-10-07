@@ -17,3 +17,4 @@ src/types/supabase.ts
 .eslintcache
 lint.json
 *.out
+/tmp/**

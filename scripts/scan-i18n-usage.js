@@ -23,14 +23,11 @@ function scanUsageKeys() {
   const keySet = new Set();
 
   const regexes = [
-    /\$t\(\s*['"]([^'"\)]+)['"]/g, // $t('key')
-    /(?<![\w$])t\(\s*['"]([^'"\)]+)['"]/g, // t('key') not preceded by word or $
-    /i18n\.(?:global\.)?t\(\s*['"]([^'"\)]+)['"]/g, // i18n.global.t('key')
+    /\$t\(\s*['"]([^'")]+)['"]/g, // $t('key')
+    /(?<![\w$])t\(\s*['"]([^'")]+)['"]/g, // t('key') not preceded by word or $
+    /i18n\.(?:global\.)?t\(\s*['"]([^'")]+)['"]/g, // i18n.global.t('key')
   ];
-  const vTRegexes = [
-    /v-t\s*=\s*"([^"]+)"/g,
-    /v-t\s*=\s*'([^']+)'/g,
-  ];
+  const vTRegexes = [/v-t\s*=\s*"([^"]+)"/g, /v-t\s*=\s*'([^']+)'/g];
 
   files.forEach(file => {
     const content = readFile(file);
@@ -90,7 +87,12 @@ function main() {
   const existing = new Set(extractKeys(nl));
   const missing = usage.filter(k => !existing.has(k));
 
-  const result = { usageCount: usage.length, existingCount: existing.size, missingCount: missing.length, missing };
+  const result = {
+    usageCount: usage.length,
+    existingCount: existing.size,
+    missingCount: missing.length,
+    missing,
+  };
   if (process.argv.includes('--json')) {
     console.log(JSON.stringify(result, null, 2));
   } else {
@@ -99,8 +101,14 @@ function main() {
     console.log(`Keys in nl: ${existing.size}`);
     console.log(`Missing: ${missing.length}`);
     if (missing.length) {
-      console.log(missing.slice(0, 50).map(k => ` - ${k}`).join('\n'));
-      if (missing.length > 50) console.log(`... and ${missing.length - 50} more`);
+      console.log(
+        missing
+          .slice(0, 50)
+          .map(k => ` - ${k}`)
+          .join('\n')
+      );
+      if (missing.length > 50)
+        console.log(`... and ${missing.length - 50} more`);
     }
   }
   process.exit(0);
@@ -114,5 +122,3 @@ if (require.main === module) {
     process.exit(1);
   }
 }
-
-

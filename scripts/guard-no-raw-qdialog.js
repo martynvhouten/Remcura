@@ -7,7 +7,9 @@
 const { execSync } = require('child_process');
 
 function run(cmd) {
-  return execSync(cmd, { stdio: ['pipe', 'pipe', 'ignore'] }).toString().trim();
+  return execSync(cmd, { stdio: ['pipe', 'pipe', 'ignore'] })
+    .toString()
+    .trim();
 }
 
 try {
@@ -34,14 +36,17 @@ try {
 
   if (offenders.length) {
     console.error('\nDialog Baseline Guard: Detected raw <q-dialog> usage.');
-    console.error('Please use BaseDialog instead for consistent header/footer, sizing, and a11y.');
+    console.error(
+      'Please use BaseDialog instead for consistent header/footer, sizing, and a11y.'
+    );
     console.error('Offending files:');
     offenders.forEach(f => console.error(' - ' + f));
-    console.error('\nFix: import BaseDialog from \"src/components/base/BaseDialog.vue\" and replace the raw q-dialog.');
+    console.error(
+      '\nFix: import BaseDialog from "src/components/base/BaseDialog.vue" and replace the raw q-dialog.'
+    );
     process.exit(1);
   }
 } catch (e) {
   // On guard failure, do not block commits unexpectedly
   process.exit(0);
 }
-

@@ -4,13 +4,13 @@
     <div class="color-input-wrapper">
       <input
         type="color"
-        :value="token.value"
+        :value="localValue"
         class="color-input"
         @input="updateValue(($event.target as HTMLInputElement)?.value ?? '')"
       />
       <input
         type="text"
-        :value="token.value"
+        :value="localValue"
         class="color-text"
         :placeholder="token.cssVar"
         @input="updateValue(($event.target as HTMLInputElement)?.value ?? '')"
@@ -24,6 +24,8 @@
 </template>
 
 <script setup lang="ts">
+  import { ref, watch } from 'vue';
+
   interface Token {
     name: string;
     cssVar: string;
@@ -43,8 +45,18 @@
   const props = defineProps<Props>();
   const emit = defineEmits<Emits>();
 
+  const localValue = ref(props.token.value);
+
+  // Watch for external changes to token.value
+  watch(
+    () => props.token.value,
+    newValue => {
+      localValue.value = newValue;
+    }
+  );
+
   function updateValue(value: string) {
-    props.token.value = value;
+    localValue.value = value;
     emit('update', props.token.cssVar, value);
   }
 
@@ -53,7 +65,7 @@
     // Basic hex color validation
     if (!/^#[0-9A-F]{6}$/i.test(value)) {
       // Reset to previous valid value if invalid
-      (event.target as HTMLInputElement).value = props.token.value;
+      (event.target as HTMLInputElement).value = localValue.value;
     }
   }
 </script>
