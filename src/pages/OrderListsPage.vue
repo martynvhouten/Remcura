@@ -563,41 +563,44 @@
 
   const filteredOrderLists = computed(() => {
     const lists = orderListsStore.orderLists || [];
-    let result = [...lists];
+    const result: any[] = [];
 
-    // Apply search filter
-    if (filterValues.value.search) {
-      const searchTerm = String(filterValues.value.search).toLowerCase();
-      result = result.filter(
-        list =>
-          list.name.toLowerCase().includes(searchTerm) ||
-          (list.description &&
-            list.description.toLowerCase().includes(searchTerm))
-      );
-    }
+    // Break type inference to avoid deep instantiation
+    for (const list of lists as any[]) {
+      let include = true;
 
-    // Apply status filter
-    if (filterValues.value.status) {
-      result = result.filter(list => list.status === filterValues.value.status);
-    }
+      // Apply search filter
+      if (filterValues.value.search && include) {
+        const searchTerm = String(filterValues.value.search).toLowerCase();
+        const matchesName = list.name?.toLowerCase().includes(searchTerm);
+        const matchesDesc = list.description
+          ?.toLowerCase()
+          .includes(searchTerm);
+        include = matchesName || matchesDesc;
+      }
 
-    // Apply supplier filter
-    if (filterValues.value.supplier) {
-      result = result.filter(
-        list => list.supplier_id === filterValues.value.supplier
-      );
-    }
+      // Apply status filter
+      if (filterValues.value.status && include) {
+        include = list.status === filterValues.value.status;
+      }
 
-    // Apply urgency filter
-    if (filterValues.value.urgency) {
-      result = result.filter(list => {
+      // Apply supplier filter
+      if (filterValues.value.supplier && include) {
+        include = list.supplier_id === filterValues.value.supplier;
+      }
+
+      // Apply urgency filter
+      if (filterValues.value.urgency && include) {
         const urgencyStats = getUrgencyStats(list.id);
-        return (
+        include =
           urgencyStats[
             filterValues.value.urgency as keyof typeof urgencyStats
-          ] > 0
-        );
-      });
+          ] > 0;
+      }
+
+      if (include) {
+        result.push(list);
+      }
     }
 
     return result;
