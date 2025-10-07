@@ -52,21 +52,21 @@
             color="primary"
             icon="home"
             :label="$t('error.goHome')"
-            @click="goHome"
             class="btn-modern"
             unelevated
             no-caps
             :aria-label="$t('error.goHome') + ' - Navigeer naar het dashboard'"
+            @click="goHome"
           />
           <q-btn
             color="primary"
             icon="arrow_back"
             :label="$t('error.goBack')"
-            @click="goBack"
             class="btn-modern"
             outline
             no-caps
             :aria-label="$t('error.goBack') + ' - Ga naar de vorige pagina'"
+            @click="goBack"
           />
         </div>
 
@@ -79,10 +79,10 @@
           >
             <div
               class="help-item"
-              @click="navigateTo('/')"
               role="button"
               tabindex="0"
               :aria-label="`Navigate to ${$t('nav.dashboard')}`"
+              @click="navigateTo('/')"
               @keydown.enter="navigateTo('/')"
               @keydown.space="navigateTo('/')"
             >
@@ -95,10 +95,10 @@
             </div>
             <div
               class="help-item"
-              @click="navigateTo('/products')"
               role="button"
               tabindex="0"
               :aria-label="`Navigate to ${$t('nav.products')}`"
+              @click="navigateTo('/products')"
               @keydown.enter="navigateTo('/products')"
               @keydown.space="navigateTo('/products')"
             >
@@ -111,10 +111,10 @@
             </div>
             <div
               class="help-item"
-              @click="navigateTo('/orders')"
               role="button"
               tabindex="0"
               :aria-label="`Navigate to ${$t('nav.orders')}`"
+              @click="navigateTo('/orders')"
               @keydown.enter="navigateTo('/orders')"
               @keydown.space="navigateTo('/orders')"
             >
@@ -127,10 +127,10 @@
             </div>
             <div
               class="help-item"
-              @click="navigateTo('/settings')"
               role="button"
               tabindex="0"
               :aria-label="`Navigate to ${$t('nav.settings')}`"
+              @click="navigateTo('/settings')"
               @keydown.enter="navigateTo('/settings')"
               @keydown.space="navigateTo('/settings')"
             >

@@ -6,7 +6,7 @@
     size="sm"
     @hide="onHide"
   >
-    <q-form @submit="onSubmit" class="counting-session-form">
+    <q-form class="counting-session-form" @submit="onSubmit">
       <!-- Session Name -->
       <q-input
         v-model="form.name"
@@ -17,7 +17,7 @@
         :rules="[val => !!val || $t('validation.required')]"
         class="form-field"
       >
-        <template v-slot:prepend>
+        <template #prepend>
           <q-icon name="edit" />
         </template>
       </q-input>
@@ -33,7 +33,7 @@
         required
         class="form-field"
       >
-        <template v-slot:prepend>
+        <template #prepend>
           <q-icon name="category" />
         </template>
       </q-select>
@@ -51,10 +51,10 @@
         :rules="[val => (val && val.length > 0) || $t('validation.required')]"
         class="form-field"
       >
-        <template v-slot:prepend>
+        <template #prepend>
           <q-icon name="place" />
         </template>
-        <template v-slot:option="scope">
+        <template #option="scope">
           <q-item v-bind="scope.itemProps">
             <q-item-section avatar>
               <q-icon :name="scope.opt.icon || 'place'" />
@@ -96,7 +96,7 @@
         outlined
         class="form-field"
       >
-        <template v-slot:prepend>
+        <template #prepend>
           <q-icon name="notes" />
         </template>
       </q-input>
@@ -107,9 +107,9 @@
       <q-btn
         color="primary"
         :label="$t('inventory.startCounting')"
-        @click="onSubmit"
         :loading="loading"
         unelevated
+        @click="onSubmit"
       />
     </template>
   </BaseDialog>

@@ -7,22 +7,22 @@
     >
       <template #actions>
         <q-btn
-          @click="showCreateDialog = true"
           color="primary"
           icon="add"
           label="Nieuwe lijst"
           class="app-btn-primary q-mr-sm"
           unelevated
           no-caps
+          @click="showCreateDialog = true"
         />
         <q-btn
-          @click="openMobileCountingInterface"
           color="secondary"
           icon="smartphone"
           label="Mobiel tellen"
           class="app-btn-secondary"
           outline
           no-caps
+          @click="openMobileCountingInterface"
         />
       </template>
     </PageTitle>
@@ -30,7 +30,7 @@
     <!-- Global Reorder Advice Banner -->
     <div v-if="globalOrderAdvice && hasUrgentItems" class="q-mb-lg">
       <q-banner class="bg-warning text-dark rounded-borders">
-        <template v-slot:avatar>
+        <template #avatar>
           <q-icon name="warning" size="32px" />
         </template>
         <div class="text-weight-medium">
@@ -41,21 +41,21 @@
             globalOrderAdvice.total_estimated_cost.toFixed(2)
           }}
         </div>
-        <template v-slot:action>
+        <template #action>
           <q-btn
             flat
             label="Alles bestellen"
-            @click="orderAllUrgentItems"
             :loading="processingGlobalOrder"
             class="app-btn-warning text-dark"
             no-caps
+            @click="orderAllUrgentItems"
           />
           <q-btn
             flat
             label="Details"
-            @click="showGlobalAdviceDialog = true"
             class="app-btn-secondary text-dark"
             no-caps
+            @click="showGlobalAdviceDialog = true"
           />
         </template>
       </q-banner>
@@ -119,14 +119,14 @@
     <!-- Filters -->
     <div class="filters-section q-mb-lg">
       <FilterPanel
-        :preset="orderListsFilterPreset"
         v-model="filterValues"
-        @change="handleFilterChange"
-        @reset="handleFilterReset"
-        @clear="handleFilterClear"
+        :preset="orderListsFilterPreset"
         :loading="loading"
         collapsible
         class="order-lists-filter-panel"
+        @change="handleFilterChange"
+        @reset="handleFilterReset"
+        @clear="handleFilterClear"
       />
     </div>
 
@@ -138,7 +138,7 @@
         class="col-12 col-sm-6 col-md-4 order-list-col"
       >
         <SimpleOrderListCard
-          :order-list="(orderList as any)"
+          :order-list="orderList as any"
           :reorder-advice="getOrderAdviceForList(orderList.id)"
         />
       </div>
@@ -154,7 +154,7 @@
         :pagination="{ rowsPerPage: 10 }"
         class="order-lists-table"
       >
-        <template v-slot:body-cell-name="props">
+        <template #body-cell-name="props">
           <q-td :props="props">
             <div class="text-weight-medium">{{ props.row.name }}</div>
             <div class="text-caption text-grey-6">
@@ -163,7 +163,7 @@
           </q-td>
         </template>
 
-        <template v-slot:body-cell-status="props">
+        <template #body-cell-status="props">
           <q-td :props="props">
             <q-badge
               :color="getStatusColor(props.row.status)"
@@ -172,7 +172,7 @@
           </q-td>
         </template>
 
-        <template v-slot:body-cell-urgency="props">
+        <template #body-cell-urgency="props">
           <q-td :props="props">
             <div class="row q-gutter-xs">
               <q-chip
@@ -195,15 +195,15 @@
           </q-td>
         </template>
 
-        <template v-slot:body-cell-actions="props">
+        <template #body-cell-actions="props">
           <q-td :props="props">
             <q-btn
               flat
               round
               dense
               icon="open_in_new"
-              @click="viewOrderList(props.row)"
               class="q-mr-sm"
+              @click="viewOrderList(props.row)"
             >
               <q-tooltip>Openen</q-tooltip>
             </q-btn>
@@ -219,8 +219,8 @@
                   <q-separator />
                   <q-item
                     clickable
-                    @click="deleteOrderList(props.row)"
                     class="text-negative"
+                    @click="deleteOrderList(props.row)"
                   >
                     <q-item-section>Verwijderen</q-item-section>
                   </q-item>
@@ -251,10 +251,10 @@
       </div>
       <q-btn
         v-if="!hasActiveFilters"
-        @click="showCreateDialog = true"
         color="primary"
         :label="$t('orderLists.newList')"
         class="q-mt-md"
+        @click="showCreateDialog = true"
       />
     </div>
 
@@ -326,10 +326,10 @@
           @click="showGlobalAdviceDialog = false"
         />
         <q-btn
-          @click="orderAllUrgentItems"
           :loading="processingGlobalOrder"
           color="primary"
           :label="$t('orderLists.orderAll')"
+          @click="orderAllUrgentItems"
         />
       </template>
     </BaseDialog>

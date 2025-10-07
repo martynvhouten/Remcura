@@ -1,6 +1,6 @@
 <template>
   <div class="login-form-container">
-    <q-form @submit.prevent="handleLogin" class="login-form" novalidate>
+    <q-form class="login-form" novalidate @submit.prevent="handleLogin">
       <!-- Manual Login Form (collapsible) -->
       <q-slide-transition>
         <div v-show="showManualLogin" class="manual-login-form">
@@ -18,7 +18,7 @@
               required
               :aria-describedby="email.error.value ? 'email-error' : undefined"
             >
-              <template v-slot:prepend>
+              <template #prepend>
                 <q-icon name="email" aria-hidden="true" />
               </template>
             </q-input>
@@ -43,16 +43,15 @@
                 password.error.value ? 'password-error' : 'password-help'
               "
             >
-              <template v-slot:prepend>
+              <template #prepend>
                 <q-icon name="lock" aria-hidden="true" />
               </template>
-              <template v-slot:append>
+              <template #append>
                 <q-btn
                   flat
                   round
                   dense
                   :icon="showPassword ? 'visibility_off' : 'visibility'"
-                  @click="showPassword = !showPassword"
                   class="password-toggle"
                   tabindex="-1"
                   :aria-label="
@@ -60,6 +59,7 @@
                       ? $t('auth.hidePassword')
                       : $t('auth.showPassword')
                   "
+                  @click="showPassword = !showPassword"
                 />
               </template>
             </q-input>
@@ -110,26 +110,26 @@
         <div class="quick-login-buttons">
           <q-btn
             :label="$t('auth.quickLogin.demo')"
-            @click="handleDemoLogin"
             class="app-btn-primary demo-login-btn"
             icon="medical_services"
             unelevated
             no-caps
             :loading="demoLoading"
             size="md"
+            @click="handleDemoLogin"
           >
             <q-tooltip>{{ $t('auth.quickLogin.demoTooltip') }}</q-tooltip>
           </q-btn>
 
           <q-btn
             :label="$t('auth.quickLogin.owner')"
-            @click="handleOwnerLogin"
             class="app-btn-success owner-login-btn"
             icon="admin_panel_settings"
             unelevated
             no-caps
             :loading="ownerLoading"
             size="md"
+            @click="handleOwnerLogin"
           >
             <q-tooltip>{{ $t('auth.quickLogin.ownerTooltip') }}</q-tooltip>
           </q-btn>
@@ -141,7 +141,6 @@
         <div class="footer-actions">
           <q-btn
             :label="$t('auth.manualLogin')"
-            @click="showManualLogin = !showManualLogin"
             class="app-btn-secondary manual-login-btn"
             :icon="
               showManualLogin ? 'keyboard_arrow_up' : 'keyboard_arrow_down'
@@ -149,14 +148,15 @@
             unelevated
             no-caps
             padding="10px 16px"
+            @click="showManualLogin = !showManualLogin"
           />
 
           <q-btn
             :label="$t('auth.forgotPassword')"
-            @click="handleForgotPassword"
             class="app-btn-refresh forgot-btn"
             unelevated
             no-caps
+            @click="handleForgotPassword"
           />
         </div>
 

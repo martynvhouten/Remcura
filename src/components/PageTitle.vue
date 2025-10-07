@@ -13,8 +13,8 @@
           />
           <div class="title-text">
             <h1
-              class="page-title"
               :id="`page-title-${title.replace(/\s+/g, '-').toLowerCase()}`"
+              class="page-title"
             >
               {{ props.title }}
             </h1>

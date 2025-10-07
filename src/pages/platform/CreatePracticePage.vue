@@ -26,7 +26,7 @@
           </template>
 
           <div class="q-pa-md">
-            <q-form @submit="createPractice" class="q-gutter-md">
+            <q-form class="q-gutter-md" @submit="createPractice">
               <div class="row q-gutter-md">
                 <div class="col-md-6 col-12">
                   <q-input

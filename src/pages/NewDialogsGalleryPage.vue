@@ -23,29 +23,29 @@
             label="Small Dialog"
             icon="info"
             color="primary"
-            @click="showSmall = true"
             class="demo-btn"
+            @click="showSmall = true"
           />
           <q-btn
             label="Medium Dialog"
             icon="list"
             color="secondary"
-            @click="showMedium = true"
             class="demo-btn"
+            @click="showMedium = true"
           />
           <q-btn
             label="Large Dialog"
             icon="fullscreen"
             color="accent"
-            @click="showLarge = true"
             class="demo-btn"
+            @click="showLarge = true"
           />
           <q-btn
             label="Persistent Dialog"
             icon="lock"
             color="warning"
-            @click="showPersistent = true"
             class="demo-btn"
+            @click="showPersistent = true"
           />
         </div>
       </section>
@@ -64,29 +64,29 @@
             label="Simple Form"
             icon="edit"
             color="positive"
-            @click="showSimpleForm = true"
             class="demo-btn"
+            @click="showSimpleForm = true"
           />
           <q-btn
             label="Complex Form"
             icon="assignment"
             color="info"
-            @click="showComplexForm = true"
             class="demo-btn"
+            @click="showComplexForm = true"
           />
           <q-btn
             label="Loading Form"
             icon="hourglass_empty"
             color="purple"
-            @click="showLoadingForm = true"
             class="demo-btn"
+            @click="showLoadingForm = true"
           />
           <q-btn
             label="Validation Form"
             icon="error"
             color="negative"
-            @click="showValidationForm = true"
             class="demo-btn"
+            @click="showValidationForm = true"
           />
         </div>
       </section>
@@ -104,22 +104,22 @@
             label="Confirm Close"
             icon="warning"
             color="orange"
-            @click="showConfirmClose = true"
             class="demo-btn"
+            @click="showConfirmClose = true"
           />
           <q-btn
             label="Multi-Step Wizard"
             icon="linear_scale"
             color="teal"
-            @click="showWizard = true"
             class="demo-btn"
+            @click="showWizard = true"
           />
           <q-btn
             label="Nested Dialogs"
             icon="layers"
             color="deep-purple"
-            @click="showNested = true"
             class="demo-btn"
+            @click="showNested = true"
           />
         </div>
       </section>
@@ -164,7 +164,7 @@
             <q-item-label header class="list-header"
               >Sample List Items</q-item-label
             >
-            <q-item v-for="n in 8" :key="n" clickable v-ripple>
+            <q-item v-for="n in 8" :key="n" v-ripple clickable>
               <q-item-section avatar>
                 <q-icon :name="getRandomIcon(n)" :color="getRandomColor(n)" />
               </q-item-section>
@@ -238,7 +238,7 @@
       >
         <div class="dialog-content">
           <q-banner class="bg-warning text-dark">
-            <template v-slot:avatar>
+            <template #avatar>
               <q-icon name="warning" />
             </template>
             This dialog is persistent - you must use the close button or ESC
@@ -466,11 +466,11 @@
             v-model="confirmCloseForm.data"
             outlined
             label="Type something to enable confirm-close"
-            @input="hasUnsavedChanges = true"
             class="q-mb-md"
+            @input="hasUnsavedChanges = true"
           />
           <q-banner class="bg-info text-white">
-            <template v-slot:avatar>
+            <template #avatar>
               <q-icon name="info" />
             </template>
             Start typing to activate the confirm-close feature. Then try to
@@ -493,8 +493,8 @@
           <q-btn
             label="Open Nested Dialog"
             color="primary"
-            @click="showNestedChild = true"
             class="q-mt-md"
+            @click="showNestedChild = true"
           />
         </div>
       </BaseDialog>
@@ -512,7 +512,7 @@
             dialog.
           </p>
           <q-banner class="bg-positive text-white">
-            <template v-slot:avatar>
+            <template #avatar>
               <q-icon name="check_circle" />
             </template>
             Nested dialogs work perfectly with proper z-index management!

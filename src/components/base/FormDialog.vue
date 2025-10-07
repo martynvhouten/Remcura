@@ -1,7 +1,6 @@
 <template>
   <BaseDialog
     :model-value="modelValue"
-    @update:model-value="$emit('update:modelValue', $event)"
     :title="title"
     :subtitle="subtitle"
     :icon="icon"
@@ -12,14 +11,15 @@
     :loading-text="loadingText"
     :persistent="persistent || loading"
     :closable="!loading"
+    @update:model-value="$emit('update:modelValue', $event)"
     @close="handleClose"
   >
     <!-- Form Content -->
     <q-form
-      @submit="handleSubmit"
-      @reset="handleReset"
       class="form-dialog-content"
       aria-live="polite"
+      @submit="handleSubmit"
+      @reset="handleReset"
     >
       <slot />
 
@@ -56,8 +56,8 @@
             :label="resetButtonText"
             color="grey-7"
             flat
-            @click="handleReset"
             :disable="loading"
+            @click="handleReset"
           />
 
           <!-- Cancel button -->
@@ -65,8 +65,8 @@
             :label="cancelButtonText"
             color="grey-7"
             flat
-            @click="handleCancel"
             :disable="loading"
+            @click="handleCancel"
           />
 
           <!-- Submit button -->
@@ -75,9 +75,9 @@
             unelevated
             color="primary"
             :loading="loading"
-            @click="handleSubmit"
             :disable="loading || !canSubmit"
             :icon="submitButtonIcon"
+            @click="handleSubmit"
           />
         </div>
       </div>

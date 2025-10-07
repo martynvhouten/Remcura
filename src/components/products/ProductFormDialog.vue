@@ -8,18 +8,18 @@
     @submit="onSubmit"
     @cancel="closeDialog"
   >
-    <q-form @submit="onSubmit" class="product-form">
+    <q-form class="product-form" @submit="onSubmit">
       <!-- Basic Information Section -->
       <div class="form-section">
         <h3 class="section-title">{{ $t('products.basicInfo') }}</h3>
 
         <!-- Product Name -->
         <q-input
+          ref="nameInput"
           v-model="form.name"
           :label="$t('products.name') + ' *'"
           outlined
           :rules="[rules.required]"
-          ref="nameInput"
         />
 
         <!-- SKU -->
@@ -99,7 +99,7 @@
           outlined
           :hint="$t('products.barcodeHint')"
         >
-          <template v-slot:append>
+          <template #append>
             <q-btn
               icon="qr_code_scanner"
               flat
@@ -331,7 +331,10 @@
 
       let result;
       if (isEdit.value && props.product) {
-        result = await productService.update(props.product.id, productData as any);
+        result = await productService.update(
+          props.product.id,
+          productData as any
+        );
       } else {
         result = await productService.create(productData as any);
       }

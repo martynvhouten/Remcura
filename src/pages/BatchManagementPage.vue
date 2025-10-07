@@ -23,9 +23,9 @@
             round
             icon="refresh"
             size="md"
-            @click="refreshData"
             :loading="refreshing"
             class="app-btn-refresh"
+            @click="refreshData"
           >
             <q-tooltip>{{ $t('common.refresh') }}</q-tooltip>
           </q-btn>
@@ -33,10 +33,10 @@
             v-if="viewMode === 'full'"
             icon="add"
             :label="$t('batch.addBatch')"
-            @click="showAddBatchDialog = true"
             unelevated
             no-caps
             class="app-btn-success"
+            @click="showAddBatchDialog = true"
           />
         </template>
       </PageTitle>
@@ -54,7 +54,11 @@
           >
             <div class="stat-display">
               <div class="stat-value">
-                <q-skeleton v-if="batchStore.loading" type="text" width="40px" />
+                <q-skeleton
+                  v-if="batchStore.loading"
+                  type="text"
+                  width="40px"
+                />
                 <span v-else>{{ totalBatches }}</span>
               </div>
             </div>
@@ -70,7 +74,11 @@
           >
             <div class="stat-display">
               <div class="stat-value">
-                <q-skeleton v-if="batchStore.loading" type="text" width="40px" />
+                <q-skeleton
+                  v-if="batchStore.loading"
+                  type="text"
+                  width="40px"
+                />
                 <span v-else>{{ expiringBatches }}</span>
               </div>
             </div>
@@ -86,7 +94,11 @@
           >
             <div class="stat-display">
               <div class="stat-value">
-                <q-skeleton v-if="batchStore.loading" type="text" width="40px" />
+                <q-skeleton
+                  v-if="batchStore.loading"
+                  type="text"
+                  width="40px"
+                />
                 <span v-else>{{ activeBatches }}</span>
               </div>
             </div>
@@ -102,7 +114,11 @@
           >
             <div class="stat-display">
               <div class="stat-value">
-                <q-skeleton v-if="batchStore.loading" type="text" width="80px" />
+                <q-skeleton
+                  v-if="batchStore.loading"
+                  type="text"
+                  width="80px"
+                />
                 <span v-else>{{ formatCurrency(totalValue, 'EUR') }}</span>
               </div>
             </div>
@@ -121,7 +137,11 @@
           >
             <div class="stat-display">
               <div class="stat-value">
-                <q-skeleton v-if="batchStore.loading" type="text" width="40px" />
+                <q-skeleton
+                  v-if="batchStore.loading"
+                  type="text"
+                  width="40px"
+                />
                 <span v-else>{{ totalBatches }}</span>
               </div>
             </div>
@@ -137,7 +157,11 @@
           >
             <div class="stat-display">
               <div class="stat-value">
-                <q-skeleton v-if="batchStore.loading" type="text" width="40px" />
+                <q-skeleton
+                  v-if="batchStore.loading"
+                  type="text"
+                  width="40px"
+                />
                 <span v-else>{{ expiringBatches }}</span>
               </div>
             </div>
@@ -173,8 +197,8 @@
               )}`"
               icon="warning"
               icon-color="warning"
-              @click="filterExpiring"
               :class="showExpiringOnly ? 'expiring-active' : ''"
+              @click="filterExpiring"
             />
           </div>
 
@@ -197,18 +221,18 @@
           <q-btn
             icon="qr_code_scanner"
             :label="$t('batch.scanBatch')"
-            @click="openBarcodeScanner"
             unelevated
             color="primary"
             class="lite-action-btn"
+            @click="openBarcodeScanner"
           />
           <q-btn
             icon="warning"
             :label="$t('batch.viewExpiring')"
-            @click="filterExpiring"
             unelevated
             :color="showExpiringOnly ? 'warning' : 'grey-6'"
             class="lite-action-btn"
+            @click="filterExpiring"
           />
         </div>
       </div>
@@ -216,12 +240,18 @@
       <!-- Error Banner -->
       <div v-if="batchStore.error" class="q-mb-md">
         <q-banner class="bg-negative text-white" rounded dense>
-          <template v-slot:avatar>
+          <template #avatar>
             <q-icon name="warning" size="sm" />
           </template>
           <div class="text-subtitle2">{{ $t('errors.failedToLoadData') }}</div>
-          <template v-slot:action>
-            <q-btn flat color="white" :label="$t('common.retry')" size="sm" @click="refreshData" />
+          <template #action>
+            <q-btn
+              flat
+              color="white"
+              :label="$t('common.retry')"
+              size="sm"
+              @click="refreshData"
+            />
           </template>
         </q-banner>
       </div>
@@ -229,7 +259,7 @@
       <!-- Expiry Alerts -->
       <div v-if="criticalBatches.length > 0" class="q-mb-lg">
         <q-banner class="bg-red text-white" rounded dense>
-          <template v-slot:avatar>
+          <template #avatar>
             <q-icon name="error" size="sm" />
           </template>
           <div class="text-subtitle2">{{ $t('batch.criticalAlert') }}</div>
@@ -240,13 +270,13 @@
               })
             }}
           </div>
-          <template v-slot:action>
+          <template #action>
             <q-btn
               flat
               color="white"
               :label="$t('batch.viewCritical')"
-              @click="filterCritical"
               size="sm"
+              @click="filterCritical"
             />
           </template>
         </q-banner>
@@ -361,17 +391,33 @@
     </div>
 
     <!-- Add Batch Dialog -->
-    <BaseDialog v-model="showAddBatchDialog" :title="$t('batch.addBatch')" icon="inventory" size="lg">
-      <BatchRegistrationForm @close="showAddBatchDialog = false" @success="onBatchAdded" />
+    <BaseDialog
+      v-model="showAddBatchDialog"
+      :title="$t('batch.addBatch')"
+      icon="inventory"
+      size="lg"
+    >
+      <BatchRegistrationForm
+        @close="showAddBatchDialog = false"
+        @success="onBatchAdded"
+      />
       <template #actions>
-        <q-btn flat :label="$t('common.close')" @click="showAddBatchDialog = false" />
+        <q-btn
+          flat
+          :label="$t('common.close')"
+          @click="showAddBatchDialog = false"
+        />
       </template>
     </BaseDialog>
 
     <!-- Batch Detail Dialog -->
     <BaseDialog
       v-model="showBatchDetailDialog"
-      :title="$t('batch.batchTitle', { batchNumber: selectedBatch?.batch_number || '' })"
+      :title="
+        $t('batch.batchTitle', {
+          batchNumber: selectedBatch?.batch_number || '',
+        })
+      "
       :subtitle="selectedBatch?.product?.name || ''"
       icon="inventory"
       size="md"
@@ -389,11 +435,20 @@
         <div class="detail-row">
           <span class="label">{{ $t('batch.status') }}:</span>
           <q-chip
-            :color="getStatusColor(selectedBatch.raw?.status ?? (selectedBatch.currentQuantity > 0 ? 'active' : 'depleted'))"
+            :color="
+              getStatusColor(
+                selectedBatch.raw?.status ??
+                  (selectedBatch.currentQuantity > 0 ? 'active' : 'depleted')
+              )
+            "
             text-color="white"
             size="sm"
           >
-            {{ $t(`batch.status.${selectedBatch.raw?.status ?? (selectedBatch.currentQuantity > 0 ? 'active' : 'depleted')}`) }}
+            {{
+              $t(
+                `batch.status.${selectedBatch.raw?.status ?? (selectedBatch.currentQuantity > 0 ? 'active' : 'depleted')}`
+              )
+            }}
           </q-chip>
         </div>
       </div>
@@ -409,10 +464,19 @@
     </BaseDialog>
 
     <!-- Barcode Scanner Dialog -->
-    <BaseDialog v-model="showScannerDialog" :title="$t('barcodeScanner.title')" icon="qr_code_scanner" size="md">
+    <BaseDialog
+      v-model="showScannerDialog"
+      :title="$t('barcodeScanner.title')"
+      icon="qr_code_scanner"
+      size="md"
+    >
       <BarcodeScanner v-model="showScannerDialog" @scan="onBarcodeScanned" />
       <template #actions>
-        <q-btn flat :label="$t('common.close')" @click="showScannerDialog = false" />
+        <q-btn
+          flat
+          :label="$t('common.close')"
+          @click="showScannerDialog = false"
+        />
       </template>
     </BaseDialog>
   </PageLayout>
@@ -611,11 +675,14 @@
     // Export batch data as CSV
     const csvData = batchStore.batches.map(batch => ({
       [t('batch.batchNumber')]: batch.batchNumber,
-      [t('product.product')]: (batch as any).productName ?? `Product ${batch.productId}`,
-      [t('location.location')]: (batch as any).locationName ?? `Location ${batch.locationId}`,
+      [t('product.product')]:
+        (batch as any).productName ?? `Product ${batch.productId}`,
+      [t('location.location')]:
+        (batch as any).locationName ?? `Location ${batch.locationId}`,
       [t('batch.currentQuantity')]: batch.currentQuantity,
       [t('batch.expiryDate')]: batch.expiryDate,
-      [t('common.status')]: batch.status ?? (batch.currentQuantity > 0 ? 'active' : 'depleted'),
+      [t('common.status')]:
+        batch.status ?? (batch.currentQuantity > 0 ? 'active' : 'depleted'),
     }));
 
     const csv = convertToCSV(csvData);

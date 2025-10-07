@@ -9,8 +9,11 @@
       :loading="loading"
       class="platform-table"
     >
-      <template v-slot:no-data>
-        <div class="full-width row flex-center q-gutter-sm" :class="error ? 'text-negative' : 'text-grey-6'">
+      <template #no-data>
+        <div
+          class="full-width row flex-center q-gutter-sm"
+          :class="error ? 'text-negative' : 'text-grey-6'"
+        >
           <q-icon size="2em" :name="error ? 'error' : 'info'" />
           <span>{{ error || $t('common.noData') }}</span>
         </div>

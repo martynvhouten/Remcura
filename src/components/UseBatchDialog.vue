@@ -47,7 +47,7 @@
       </div>
 
       <!-- Usage Form -->
-      <q-form @submit="onSubmit" class="q-gutter-md">
+      <q-form class="q-gutter-md" @submit="onSubmit">
         <div class="row q-gutter-md">
           <div class="col-12 col-md-6">
             <q-input
@@ -64,16 +64,16 @@
                   $t('batch.validation.exceededAvailable'),
               ]"
             >
-              <template v-slot:prepend>
+              <template #prepend>
                 <q-icon name="remove_circle" />
               </template>
-              <template v-slot:append>
+              <template #append>
                 <q-btn
                   flat
                   dense
                   icon="select_all"
-                  @click="form.quantity = batch.availableQuantity ?? 0"
                   size="sm"
+                  @click="form.quantity = batch.availableQuantity ?? 0"
                 >
                   <q-tooltip>{{ $t('batch.useAll') }}</q-tooltip>
                 </q-btn>
@@ -102,7 +102,7 @@
         />
 
         <!-- Usage Summary -->
-        <q-card flat bordered class="q-pa-md" v-if="form.quantity > 0">
+        <q-card v-if="form.quantity > 0" flat bordered class="q-pa-md">
           <div class="text-subtitle2 text-grey q-mb-sm">
             {{ $t('batch.usageSummary') }}
           </div>
@@ -120,7 +120,9 @@
                 {{ $t('batch.remainingQuantity') }}
               </div>
               <div class="text-h6 text-green">
-                {{ formatQuantity((batch.availableQuantity ?? 0) - form.quantity) }}
+                {{
+                  formatQuantity((batch.availableQuantity ?? 0) - form.quantity)
+                }}
               </div>
             </div>
             <div class="col-6">
@@ -154,8 +156,8 @@
             :label="$t('common.cancel')"
             color="grey"
             flat
-            @click="$emit('close')"
             :disable="loading"
+            @click="$emit('close')"
           />
           <q-space />
           <q-btn
@@ -232,13 +234,15 @@
   };
 
   const getNewStatusColor = () => {
-    const remaining = (props.batch.availableQuantity ?? 0) - form.value.quantity;
+    const remaining =
+      (props.batch.availableQuantity ?? 0) - form.value.quantity;
     if (remaining <= 0) return 'grey';
     return 'green';
   };
 
   const getNewStatusText = () => {
-    const remaining = (props.batch.availableQuantity ?? 0) - form.value.quantity;
+    const remaining =
+      (props.batch.availableQuantity ?? 0) - form.value.quantity;
     if (remaining <= 0) return t('batch.status.depleted');
     return t('batch.status.active');
   };

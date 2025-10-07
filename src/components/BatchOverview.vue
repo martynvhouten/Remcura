@@ -44,14 +44,14 @@
       class="bg-orange text-white q-mb-md"
       rounded
     >
-      <template v-slot:avatar>
+      <template #avatar>
         <q-icon name="warning" />
       </template>
       <div class="text-weight-medium">{{ $t('batch.expiryAlert') }}</div>
       <div class="text-caption">
         {{ $t('batch.batchesExpiringSoon', { count: expiryAlerts.length }) }}
       </div>
-      <template v-slot:action>
+      <template #action>
         <q-btn
           flat
           color="white"
@@ -76,7 +76,7 @@
         separator="cell"
       >
         <!-- Product column with grouping -->
-        <template v-slot:body-cell-product="props">
+        <template #body-cell-product="props">
           <q-td :props="props">
             <div class="row items-center">
               <q-avatar size="32px" class="q-mr-sm">
@@ -95,7 +95,7 @@
         </template>
 
         <!-- Batch number column with scanner icon -->
-        <template v-slot:body-cell-batchNumber="props">
+        <template #body-cell-batchNumber="props">
           <q-td :props="props">
             <div class="row items-center">
               <q-icon name="qr_code" class="q-mr-xs text-grey icon-size-sm" />
@@ -114,7 +114,7 @@
         </template>
 
         <!-- Location column -->
-        <template v-slot:body-cell-location="props">
+        <template #body-cell-location="props">
           <q-td :props="props">
             <q-chip
               :color="getLocationColor(props.row.locationType)"
@@ -127,7 +127,7 @@
         </template>
 
         <!-- Quantity column with progress bar -->
-        <template v-slot:body-cell-quantity="props">
+        <template #body-cell-quantity="props">
           <q-td :props="props">
             <div class="text-weight-medium">
               {{ formatQuantity(props.row.currentQuantity) }}
@@ -153,7 +153,7 @@
         </template>
 
         <!-- Expiry date column with urgency indicators -->
-        <template v-slot:body-cell-expiry="props">
+        <template #body-cell-expiry="props">
           <q-td :props="props">
             <div class="row items-center">
               <q-icon
@@ -183,7 +183,7 @@
         </template>
 
         <!-- Status column -->
-        <template v-slot:body-cell-status="props">
+        <template #body-cell-status="props">
           <q-td :props="props">
             <q-chip
               :color="getStatusColor(props.row.status)"
@@ -196,7 +196,7 @@
         </template>
 
         <!-- Actions column -->
-        <template v-slot:body-cell-actions="props">
+        <template #body-cell-actions="props">
           <q-td :props="props">
             <div class="row q-gutter-xs">
               <q-btn
@@ -216,8 +216,8 @@
                 flat
                 round
                 color="green"
-                @click="useBatch(props.row)"
                 :disable="props.row.availableQuantity <= 0"
+                @click="useBatch(props.row)"
               >
                 <q-tooltip>{{ $t('batch.useBatch') }}</q-tooltip>
               </q-btn>
@@ -335,7 +335,9 @@
   const showDetailsDialog = ref(false);
   const showUseBatchDialog = ref(false);
   const showExpiringOnly = ref(false);
-  const selectedBatch = ref<ProductBatchDTO | ProductBatchWithDetails | null>(null);
+  const selectedBatch = ref<ProductBatchDTO | ProductBatchWithDetails | null>(
+    null
+  );
 
   // Filters
   const filters = ref({

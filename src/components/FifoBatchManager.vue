@@ -7,7 +7,7 @@
           <q-card-section>
             <div class="text-h6 q-mb-md">{{ $t('batch.fifoSuggestion') }}</div>
 
-            <q-form @submit="generateSuggestion" class="q-gutter-md">
+            <q-form class="q-gutter-md" @submit="generateSuggestion">
               <q-select
                 v-model="form.productId"
                 :options="productOptions"
@@ -104,9 +104,9 @@
               <q-btn
                 color="green"
                 :label="$t('batch.applyFifoSuggestion')"
-                @click="applySuggestion"
                 icon="check"
                 class="full-width"
+                @click="applySuggestion"
               />
             </div>
           </q-card-section>

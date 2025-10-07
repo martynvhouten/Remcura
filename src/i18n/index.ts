@@ -6,7 +6,7 @@ export type { SupportedLocale } from '@/types/i18n';
 const ENABLE_LAZY_LOADING = true;
 
 // Messages for upfront loading (empty for lazy loading)
-let messages: Record<SupportedLocale, any> = {} as any;
+const messages: Record<SupportedLocale, any> = {} as any;
 
 // Get saved locale from localStorage or default to 'nl'
 const getSavedLocale = (): SupportedLocale => {

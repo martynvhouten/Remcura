@@ -15,7 +15,7 @@
       <div class="demo-subtitle">{{ $t('demo.subtitle') }}</div>
     </div>
 
-    <template v-slot:action>
+    <template #action>
       <q-btn flat color="white" icon="info" size="sm" @click="showDemoInfo">
         <q-tooltip>{{ $t('demo.limitations') }}</q-tooltip>
       </q-btn>
@@ -46,11 +46,11 @@
       message: `
       <div class="demo-info-dialog">
         <p><strong>${t('demo.practice')}:</strong> ${t(
-        'demo.practiceDescription'
-      )}</p>
+          'demo.practiceDescription'
+        )}</p>
         <p><strong>${t('demo.limitations')}:</strong> ${t(
-        'demo.limitationsText'
-      )}</p>
+          'demo.limitationsText'
+        )}</p>
         <p><em>{{ $t('demo.changesCanBeReset') }}</em></p>
       </div>
     `,

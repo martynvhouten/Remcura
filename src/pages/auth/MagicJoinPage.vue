@@ -21,13 +21,13 @@
             size="lg"
             class="magic-input"
             :class="{ 'has-code': magicCode.length > 0 }"
-            @input="handleCodeInput"
             autofocus
+            @input="handleCodeInput"
           >
-            <template v-slot:prepend>
+            <template #prepend>
               <q-icon name="auto_awesome" />
             </template>
-            <template v-slot:append>
+            <template #append>
               <q-btn
                 v-if="magicCode"
                 icon="clear"
@@ -72,15 +72,15 @@
               :label="$t('magicJoin.scanQR')"
               icon="qr_code_scanner"
               flat
-              @click="showQRScanner = true"
               class="alt-btn"
+              @click="showQRScanner = true"
             />
             <q-btn
               :label="$t('magicJoin.tryDemo')"
               icon="science"
               flat
-              @click="tryDemo"
               class="alt-btn demo-btn"
+              @click="tryDemo"
             />
           </div>
         </div>

@@ -36,7 +36,7 @@
         class="practices-table"
         title="Practices overview"
       >
-        <template v-slot:body-cell-status="props">
+        <template #body-cell-status="props">
           <q-td :props="props">
             <q-chip
               :color="getStatusColor(props.value)"
@@ -48,7 +48,7 @@
           </q-td>
         </template>
 
-        <template v-slot:body-cell-actions="props">
+        <template #body-cell-actions="props">
           <q-td :props="props">
             <q-btn
               flat

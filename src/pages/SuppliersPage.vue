@@ -12,27 +12,27 @@
             round
             icon="refresh"
             size="md"
-            @click="loadSuppliers"
             :loading="loading"
             class="app-btn-refresh"
+            @click="loadSuppliers"
           >
             <q-tooltip>{{ $t('common.refresh') }}</q-tooltip>
           </q-btn>
           <q-btn
             icon="cloud_upload"
             :label="$t('suppliersPage.importSuppliers')"
-            @click="importSuppliers"
             unelevated
             no-caps
             class="app-btn-secondary"
+            @click="importSuppliers"
           />
           <q-btn
             icon="add"
             :label="$t('suppliersPage.addSupplier')"
-            @click="openAddDialog"
             unelevated
             no-caps
             class="app-btn-success"
+            @click="openAddDialog"
           />
         </template>
       </PageTitle>
@@ -41,14 +41,14 @@
     <!-- FilterPanel component -->
     <div class="filters-section q-mb-lg">
       <FilterPanel
-        :preset="suppliersFilterPreset"
         v-model="filterValues"
-        @change="handleFilterChange"
-        @reset="handleFilterReset"
-        @clear="handleFilterClear"
+        :preset="suppliersFilterPreset"
         :loading="loading"
         collapsible
         class="suppliers-filter-panel"
+        @change="handleFilterChange"
+        @reset="handleFilterReset"
+        @clear="handleFilterClear"
       />
     </div>
 
@@ -169,8 +169,8 @@
                 icon="sync"
                 size="sm"
                 color="positive"
-                @click="syncSupplierProducts(props.row)"
                 :loading="syncing[props.row.id]"
+                @click="syncSupplierProducts(props.row)"
               >
                 <q-tooltip>{{ $t('suppliersPage.syncProducts') }}</q-tooltip>
               </q-btn>
@@ -415,7 +415,9 @@
                             >{{ $t('suppliersPage.orderMethod') }}:</strong
                           >
                           {{
-                            getOrderMethodLabel(selectedSupplier?.order_method ?? 'email')
+                            getOrderMethodLabel(
+                              selectedSupplier?.order_method ?? 'email'
+                            )
                           }}
                         </div>
                         <div>
@@ -451,23 +453,23 @@
                   color="positive"
                   icon="sync"
                   :label="$t('suppliersPage.syncNow')"
-                  @click="syncSupplierProducts(selectedSupplier)"
                   :loading="syncing[selectedSupplier.id]"
                   unelevated
+                  @click="syncSupplierProducts(selectedSupplier)"
                 />
                 <q-btn
                   color="primary"
                   icon="settings"
                   :label="$t('suppliersPage.editSettings')"
-                  @click="editSupplierIntegration"
                   unelevated
+                  @click="editSupplierIntegration"
                 />
                 <q-btn
                   color="secondary"
                   icon="send"
                   :label="$t('suppliersPage.testConnection')"
-                  @click="testConnection"
                   unelevated
+                  @click="testConnection"
                 />
               </div>
             </div>
@@ -955,7 +957,9 @@
     } catch (error: unknown) {
       $q.notify({
         type: 'negative',
-        message: t('suppliersPage.connectionFailed', { error: error instanceof Error ? error.message : 'Unknown error' }),
+        message: t('suppliersPage.connectionFailed', {
+          error: error instanceof Error ? error.message : 'Unknown error',
+        }),
       });
     }
   };
@@ -980,7 +984,11 @@
         throw error;
       }
 
-      const result = data as { success?: boolean; products_synced?: number; error?: string } | null;
+      const result = data as {
+        success?: boolean;
+        products_synced?: number;
+        error?: string;
+      } | null;
       if (result?.success) {
         $q.notify({
           type: 'positive',

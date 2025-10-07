@@ -37,13 +37,13 @@
 
         <div class="demo-actions">
           <q-btn
-            @click="resetDemoData"
             :loading="resetting"
             color="warning"
             icon="refresh"
             :label="$t('demo.resetData')"
             class="reset-btn"
             :disable="resetting"
+            @click="resetDemoData"
           />
 
           <div class="reset-info">

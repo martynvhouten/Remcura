@@ -45,8 +45,8 @@
           <q-card
             class="option-card magic-code-option"
             :class="{ selected: selectedOption === 'magic_code' }"
-            @click="selectOption('magic_code')"
             clickable
+            @click="selectOption('magic_code')"
           >
             <q-card-section class="text-center">
               <div class="option-icon">
@@ -96,8 +96,8 @@
           <q-card
             class="option-card email-option"
             :class="{ selected: selectedOption === 'email_password' }"
-            @click="selectOption('email_password')"
             clickable
+            @click="selectOption('email_password')"
           >
             <q-card-section class="text-center">
               <div class="option-icon">
@@ -110,8 +110,8 @@
 
               <!-- Form Preview -->
               <div
-                class="form-preview"
                 v-if="selectedOption === 'email_password'"
+                class="form-preview"
               >
                 <q-input
                   v-model="emailForm.email"
@@ -160,8 +160,8 @@
           <q-card
             class="option-card device-option"
             :class="{ selected: selectedOption === 'device_remember' }"
-            @click="selectOption('device_remember')"
             clickable
+            @click="selectOption('device_remember')"
           >
             <q-card-section class="text-center">
               <div class="option-icon">
@@ -220,7 +220,7 @@
             class="name-input"
             :rules="[val => !!val || $t('upgrade.nameRequired')]"
           >
-            <template v-slot:prepend>
+            <template #prepend>
               <q-icon name="person" />
             </template>
           </q-input>
@@ -237,15 +237,15 @@
             unelevated
             :loading="creating"
             :disable="!canCreate"
-            @click="createPermanentAccount"
             class="create-btn"
+            @click="createPermanentAccount"
           />
           <q-btn
             :label="$t('upgrade.stayGuest')"
             flat
             color="grey-7"
-            @click="continueAsGuest"
             class="guest-btn"
+            @click="continueAsGuest"
           />
         </div>
       </q-card-actions>
@@ -304,9 +304,7 @@
       return t('upgrade.previewCode');
     }
     const parts = userName.value.split(' ');
-    const cleanName = (parts[0] ?? '')
-      .toUpperCase()
-      .replace(/[^A-Z]/g, '');
+    const cleanName = (parts[0] ?? '').toUpperCase().replace(/[^A-Z]/g, '');
     return `🏥${cleanName}2024`;
   });
 

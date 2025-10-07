@@ -338,7 +338,7 @@ function setNestedProperty(obj, path, value) {
 function formatObjectToTsString(obj, indentLevel = 0) {
   const currentIndent = '  '.repeat(indentLevel);
   const nextIndent = '  '.repeat(indentLevel + 1);
-  let lines = [];
+  const lines = [];
   const keys = Object.keys(obj);
 
   for (let i = 0; i < keys.length; i++) {
@@ -376,7 +376,7 @@ function addKeyToTranslations(key, text) {
   const nlFile = path.join(__dirname, '../src/i18n/nl/index.ts');
 
   try {
-    let content = fs.readFileSync(nlFile, 'utf8');
+    const content = fs.readFileSync(nlFile, 'utf8');
 
     // Extract the current export default object content
     const exportMatch = content.match(/export default\s*({[\s\S]*?});?\s*$/);

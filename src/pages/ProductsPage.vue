@@ -12,9 +12,9 @@
             round
             icon="refresh"
             size="md"
-            @click="refreshData"
             :loading="loading"
             class="app-btn-refresh"
+            @click="refreshData"
           >
             <q-tooltip>{{ $t('common.refresh') }}</q-tooltip>
           </q-btn>
@@ -22,19 +22,19 @@
             v-if="canCreate"
             icon="add"
             :label="$t('products.createProduct')"
-            @click="showCreateProductDialog"
             unelevated
             no-caps
             class="app-btn-secondary"
+            @click="showCreateProductDialog"
           />
           <q-btn
             icon="add_shopping_cart"
             :label="$t('productsPage.viewCart')"
-            @click="showCartDialog = true"
             :disable="cartItemsCount === 0"
             unelevated
             no-caps
             class="app-btn-primary"
+            @click="showCartDialog = true"
           >
             <q-badge
               v-if="cartItemsCount > 0"
@@ -51,14 +51,14 @@
       <!-- FilterPanel component -->
       <div class="filters-section q-mb-lg">
         <FilterPanel
-          :preset="productsFilterPreset"
           v-model="filterValues"
-          @change="handleFilterChange"
-          @reset="handleFilterReset"
-          @clear="handleFilterClear"
+          :preset="productsFilterPreset"
           :loading="loading"
           collapsible
           class="products-filter-panel"
+          @change="handleFilterChange"
+          @reset="handleFilterReset"
+          @clear="handleFilterClear"
         />
       </div>
 
@@ -395,7 +395,7 @@
     availableSuppliers,
     productStats,
   } = storeToRefs(productsStore);
-  
+
   const { orderLists } = storeToRefs(orderListsStore);
 
   // Development mode indicator
@@ -508,7 +508,7 @@
     () =>
       availableCategories.value
         ?.filter((cat): cat is string => cat !== null)
-        .map((cat) => ({
+        .map(cat => ({
           label: cat,
           value: cat,
         })) ?? []
@@ -526,8 +526,11 @@
   const countryOptions = computed(
     () =>
       availableCountries.value
-        ?.filter((country): country is string => country !== null && country !== undefined)
-        .map((country) => ({
+        ?.filter(
+          (country): country is string =>
+            country !== null && country !== undefined
+        )
+        .map(country => ({
           label: `${getCountryFlag(country)} ${getCountryName(country)}`,
           value: country,
         })) ?? []
@@ -552,7 +555,7 @@
   ]);
 
   const supplierOptions = computed(() =>
-    availableSuppliers.value.map((supplier) => ({
+    availableSuppliers.value.map(supplier => ({
       label: typeof supplier === 'string' ? supplier : supplier.name,
       value: typeof supplier === 'string' ? supplier : supplier.id,
     }))

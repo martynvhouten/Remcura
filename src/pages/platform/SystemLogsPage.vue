@@ -38,7 +38,7 @@
         class="system-logs-table"
         title="Application logs"
       >
-        <template v-slot:body-cell-level="props">
+        <template #body-cell-level="props">
           <q-td :props="props">
             <q-chip
               :color="getLogLevelColor(props.value)"

@@ -77,7 +77,7 @@
         class="alerts-table"
         title="Recent alerts"
       >
-        <template v-slot:body-cell-severity="props">
+        <template #body-cell-severity="props">
           <q-td :props="props">
             <q-chip
               :color="getSeverityColor(props.value)"
@@ -89,7 +89,7 @@
           </q-td>
         </template>
 
-        <template v-slot:body-cell-status="props">
+        <template #body-cell-status="props">
           <q-td :props="props">
             <q-chip
               :color="props.value === 'resolved' ? 'positive' : 'negative'"

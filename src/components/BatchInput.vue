@@ -12,15 +12,12 @@
         filterable
         clearable
         required
-        @update:model-value="onProductChange"
         :loading="productsLoading"
+        @update:model-value="onProductChange"
       >
         <!-- @vue-ignore -->
         <template #option="scope">
-          <q-item
-            v-bind="(scope as any)"
-            clickable
-          >
+          <q-item v-bind="scope as any" clickable>
             <q-item-section>
               <q-item-label>{{ (scope as any).option?.name }}</q-item-label>
               <q-item-label caption
@@ -48,8 +45,8 @@
             round
             dense
             icon="qr_code_scanner"
-            @click="openBarcodeScanner"
             :title="$t('batch.scanBatch')"
+            @click="openBarcodeScanner"
           />
         </template>
       </q-input>

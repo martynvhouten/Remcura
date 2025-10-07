@@ -12,31 +12,31 @@
       <div class="device-controls">
         <q-btn-group>
           <q-btn
-            @click="setViewport('mobile')"
             :color="currentViewport === 'mobile' ? 'primary' : 'grey'"
             label="📱 Mobile"
             size="sm"
+            @click="setViewport('mobile')"
           />
           <q-btn
-            @click="setViewport('tablet')"
             :color="currentViewport === 'tablet' ? 'primary' : 'grey'"
             label="📟 Tablet"
             size="sm"
+            @click="setViewport('tablet')"
           />
           <q-btn
-            @click="setViewport('desktop')"
             :color="currentViewport === 'desktop' ? 'primary' : 'grey'"
             label="🖥️ Desktop"
             size="sm"
+            @click="setViewport('desktop')"
           />
         </q-btn-group>
 
         <q-btn
-          @click="toggleDarkMode"
           :icon="darkMode ? 'light_mode' : 'dark_mode'"
           :label="darkMode ? 'Light Mode' : 'Dark Mode'"
           outline
           size="sm"
+          @click="toggleDarkMode"
         />
       </div>
     </div>

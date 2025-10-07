@@ -13,8 +13,8 @@
             round
             flat
             size="md"
-            @click="refreshData"
             class="app-btn-refresh"
+            @click="refreshData"
           >
             <q-tooltip>{{ $t('common.refresh') }}</q-tooltip>
           </q-btn>
@@ -128,14 +128,14 @@
     <!-- Modern FilterPanel Component -->
     <div class="filters-section q-mb-lg">
       <FilterPanel
-        :preset="inventoryFilterPreset"
         v-model="filterValues"
-        @change="handleFilterChange"
-        @reset="handleFilterReset"
-        @clear="handleFilterClear"
+        :preset="inventoryFilterPreset"
         :loading="loading"
         collapsible
         class="inventory-filter-panel"
+        @change="handleFilterChange"
+        @reset="handleFilterReset"
+        @clear="handleFilterClear"
       />
     </div>
 

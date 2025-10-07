@@ -8,36 +8,36 @@
             round
             icon="refresh"
             size="md"
-            @click="refreshOrders"
             :loading="loading"
             class="app-btn-refresh"
+            @click="refreshOrders"
           >
             <q-tooltip>{{ $t('common.refresh') }}</q-tooltip>
           </q-btn>
           <q-btn
             icon="file_download"
             :label="$t('common.export')"
-            @click="showExportDialog = true"
             :loading="exporting"
             unelevated
             no-caps
             class="app-btn-secondary"
+            @click="showExportDialog = true"
           />
           <q-btn
             icon="analytics"
             :label="$t('orders.analytics')"
-            @click="showAnalytics = true"
             unelevated
             no-caps
             class="app-btn-info"
+            @click="showAnalytics = true"
           />
           <q-btn
             icon="add"
             :label="$t('orders.createOrder')"
-            @click="createNewOrder"
             unelevated
             no-caps
             class="app-btn-primary"
+            @click="createNewOrder"
           />
         </template>
       </PageTitle>
@@ -46,24 +46,24 @@
     <!-- FilterPanel component -->
     <div class="filters-section q-mb-lg">
       <FilterPanel
-        :preset="ordersFilterPreset"
         v-model="filterValues"
-        @change="handleFilterChange"
-        @reset="handleFilterReset"
-        @clear="handleFilterClear"
+        :preset="ordersFilterPreset"
         :loading="loading"
         collapsible
         class="orders-filter-panel"
+        @change="handleFilterChange"
+        @reset="handleFilterReset"
+        @clear="handleFilterClear"
       />
     </div>
 
     <!-- Orders Table -->
     <div class="medical-table no-top-content">
       <q-table
+        v-model:selected="selected"
         :rows="filteredOrders"
         :columns="columns"
         :loading="loading"
-        v-model:selected="selected"
         selection="multiple"
         row-key="id"
         :pagination="{ rowsPerPage: 25 }"
@@ -71,7 +71,7 @@
         bordered
         separator="cell"
       >
-        <template v-slot:body-cell-status="props">
+        <template #body-cell-status="props">
           <q-td :props="props" class="text-center">
             <q-chip
               :color="getStatusColor(props.value)"
@@ -83,25 +83,25 @@
           </q-td>
         </template>
 
-        <template v-slot:body-cell-order_date="props">
+        <template #body-cell-order_date="props">
           <q-td :props="props">
             {{ formatDate(props.value) }}
           </q-td>
         </template>
 
-        <template v-slot:body-cell-total_amount="props">
+        <template #body-cell-total_amount="props">
           <q-td :props="props" class="text-right">
             {{ formatCurrency(props.value) }}
           </q-td>
         </template>
 
-        <template v-slot:body-cell-expected_delivery_date="props">
+        <template #body-cell-expected_delivery_date="props">
           <q-td :props="props">
             {{ formatDate(props.value) }}
           </q-td>
         </template>
 
-        <template v-slot:body-cell-actions="props">
+        <template #body-cell-actions="props">
           <q-td :props="props">
             <q-btn
               flat
@@ -585,7 +585,9 @@
 
     // Initialize filter values with defaults
     if (ordersFilterPreset.defaultFilters) {
-      filterValues.value = { ...ordersFilterPreset.defaultFilters } as FilterValues;
+      filterValues.value = {
+        ...ordersFilterPreset.defaultFilters,
+      } as FilterValues;
     }
   });
 </script>

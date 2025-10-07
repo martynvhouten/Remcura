@@ -112,8 +112,8 @@
             color="primary"
             icon="add"
             :label="$t('batch.addNewBatch')"
-            @click="addingNewBatch = true"
             size="sm"
+            @click="addingNewBatch = true"
           />
         </div>
 
@@ -177,10 +177,10 @@
         <q-btn
           color="primary"
           :label="$t('counting.saveCount')"
-          @click="saveEntry"
           :loading="saving"
           :disable="!isValid"
           unelevated
+          @click="saveEntry"
         />
       </q-card-actions>
     </BaseCard>

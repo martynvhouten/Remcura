@@ -12,20 +12,20 @@
             round
             icon="refresh"
             size="md"
-            @click="loadAnalytics"
             :loading="loading"
             class="app-btn-refresh"
+            @click="loadAnalytics"
           >
             <q-tooltip>{{ $t('common.refresh') }}</q-tooltip>
           </q-btn>
           <q-btn
             icon="file_download"
             :label="$t('common.export')"
-            @click="exportAnalytics"
             :loading="exporting"
             unelevated
             no-caps
             class="app-btn-secondary"
+            @click="exportAnalytics"
           />
         </template>
       </PageTitle>
@@ -39,7 +39,6 @@
           :options="periodOptions"
           :label="$t('analyticsPage.period')"
           outlined
-          @update:model-value="loadAnalytics"
           option-value="value"
           option-label="label"
           emit-value
@@ -52,6 +51,7 @@
             background: var(--surface);
             min-height: 48px;
           "
+          @update:model-value="loadAnalytics"
         />
       </div>
     </div>
@@ -201,7 +201,7 @@
               flat
               bordered
             >
-              <template v-slot:no-data="{ message }">
+              <template #no-data="{ message }">
                 <div class="full-width row flex-center text-grey q-gutter-sm">
                   <q-icon size="2em" name="shopping_cart" />
                   <span>{{
@@ -228,7 +228,7 @@
             flat
             bordered
           >
-            <template v-slot:no-data="{ message }">
+            <template #no-data="{ message }">
               <div class="full-width row flex-center text-grey q-gutter-sm">
                 <q-icon size="2em" name="inventory" />
                 <span>{{ message || 'No product updates found' }}</span>
@@ -251,7 +251,7 @@
             flat
             bordered
           >
-            <template v-slot:no-data="{ message }">
+            <template #no-data="{ message }">
               <div class="full-width row flex-center text-grey q-gutter-sm">
                 <q-icon size="2em" name="people" />
                 <span>{{ message || 'No user activity found' }}</span>

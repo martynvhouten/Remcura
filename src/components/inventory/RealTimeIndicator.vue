@@ -8,7 +8,7 @@
       class="status-chip"
     />
 
-    <div class="last-update" v-if="lastUpdate">
+    <div v-if="lastUpdate" class="last-update">
       <q-icon name="schedule" class="icon-size-xs" />
       <span>{{ formatTime(lastUpdate) }}</span>
     </div>

@@ -2,7 +2,7 @@
   <BaseDashboardWidget :hide-header="true">
     <q-list separator>
       <q-item v-for="(item, index) in listItems" :key="index" class="list-item">
-        <q-item-section avatar v-if="item.icon || item.severity">
+        <q-item-section v-if="item.icon || item.severity" avatar>
           <q-icon
             :name="item.icon || getSeverityIcon(item.severity)"
             :color="item.color || getSeverityColor(item.severity)"
@@ -14,12 +14,12 @@
           <q-item-label>{{
             item.title || item.description || item.message
           }}</q-item-label>
-          <q-item-label caption v-if="item.subtitle || item.timestamp">
+          <q-item-label v-if="item.subtitle || item.timestamp" caption>
             {{ item.subtitle || formatTimestamp(item.timestamp) }}
           </q-item-label>
         </q-item-section>
 
-        <q-item-section side v-if="item.value || item.count">
+        <q-item-section v-if="item.value || item.count" side>
           <q-chip
             :color="item.chipColor || 'primary'"
             text-color="white"

@@ -1,19 +1,21 @@
 <template>
   <BaseDialog
     :model-value="modelValue"
-    @update:model-value="$emit('update:modelValue', $event)"
     :title="$t('inventory.quickAdjustment')"
     :subtitle="$t('inventory.adjustStockLevels')"
     icon="tune"
     size="lg"
     :persistent="true"
+    @update:model-value="$emit('update:modelValue', $event)"
   >
     <template #header>
       <div class="row items-center q-pa-md">
         <q-icon name="tune" size="24px" class="q-mr-md" />
         <div class="col">
           <div class="text-h6">{{ $t('inventory.quickAdjustment') }}</div>
-          <div class="text-subtitle2">{{ $t('inventory.adjustStockLevels') }}</div>
+          <div class="text-subtitle2">
+            {{ $t('inventory.adjustStockLevels') }}
+          </div>
         </div>
         <q-space />
         <q-chip
@@ -30,228 +32,328 @@
       </div>
     </template>
 
-      <!-- Product Selection Step -->
-      <div v-if="!selectedProduct" class="q-pa-md">
-        <div class="step-container">
-          <div class="step-header">
-            <q-icon name="search" size="20px" color="primary" />
-            <span class="text-h6 q-ml-sm">{{
-              $t('inventory.selectProduct')
-            }}</span>
-          </div>
+    <!-- Product Selection Step -->
+    <div v-if="!selectedProduct" class="q-pa-md">
+      <div class="step-container">
+        <div class="step-header">
+          <q-icon name="search" size="20px" color="primary" />
+          <span class="text-h6 q-ml-sm">{{
+            $t('inventory.selectProduct')
+          }}</span>
+        </div>
 
-          <div class="row q-gutter-md q-mt-md">
-            <div class="col">
-              <q-select
-                v-model="internalSelectedProduct"
-                :options="availableProducts"
-                option-label="name"
-                option-value="id"
-                :label="$t('inventory.searchProduct')"
-                outlined
-                clearable
-                use-input
-                @filter="filterProducts"
-                @update:model-value="onProductSelected"
-                class="modern-select"
-                :loading="productSearchLoading"
-              >
-                <template v-slot:prepend>
-                  <q-icon name="inventory_2" />
-                </template>
-                <template v-slot:option="scope">
-                  <q-item v-bind="scope.itemProps">
-                    <q-item-section avatar>
-                      <q-avatar size="40px" class="bg-grey-3">
-                        <q-img
-                          v-if="scope.opt.image_url"
-                          :src="scope.opt.image_url"
-                          spinner-color="primary"
-                          style="height: 40px; width: 40px"
-                        />
-                        <q-icon v-else name="inventory_2" color="grey-6" />
-                      </q-avatar>
-                    </q-item-section>
-                    <q-item-section>
-                      <q-item-label>{{ scope.opt.name }}</q-item-label>
-                      <q-item-label caption>
-                        SKU: {{ scope.opt.sku }} • {{ scope.opt.brand }}
-                      </q-item-label>
-                    </q-item-section>
-                    <q-item-section side>
-                      <q-chip
-                        size="sm"
-                        :color="getStockStatusColor(scope.opt)"
-                        text-color="white"
-                      >
-                        {{ scope.opt.total_stock || 0 }} {{ scope.opt.unit }}
-                      </q-chip>
-                    </q-item-section>
-                  </q-item>
-                </template>
-                <template v-slot:no-option>
-                  <q-item>
-                    <q-item-section class="text-grey">
-                      <div class="text-center q-pa-md">
-                        <q-icon
-                          name="search_off"
-                          size="2rem"
-                          color="grey-5"
-                          class="q-mb-sm"
-                        />
-                        <div class="text-subtitle1">
-                          {{ $t('inventory.noProductsFound') }}
-                        </div>
-                        <div class="text-caption text-grey-6">
-                          {{ $t('inventory.tryDifferentSearchTerm') }}
-                        </div>
+        <div class="row q-gutter-md q-mt-md">
+          <div class="col">
+            <q-select
+              v-model="internalSelectedProduct"
+              :options="availableProducts"
+              option-label="name"
+              option-value="id"
+              :label="$t('inventory.searchProduct')"
+              outlined
+              clearable
+              use-input
+              class="modern-select"
+              :loading="productSearchLoading"
+              @filter="filterProducts"
+              @update:model-value="onProductSelected"
+            >
+              <template #prepend>
+                <q-icon name="inventory_2" />
+              </template>
+              <template #option="scope">
+                <q-item v-bind="scope.itemProps">
+                  <q-item-section avatar>
+                    <q-avatar size="40px" class="bg-grey-3">
+                      <q-img
+                        v-if="scope.opt.image_url"
+                        :src="scope.opt.image_url"
+                        spinner-color="primary"
+                        style="height: 40px; width: 40px"
+                      />
+                      <q-icon v-else name="inventory_2" color="grey-6" />
+                    </q-avatar>
+                  </q-item-section>
+                  <q-item-section>
+                    <q-item-label>{{ scope.opt.name }}</q-item-label>
+                    <q-item-label caption>
+                      SKU: {{ scope.opt.sku }} • {{ scope.opt.brand }}
+                    </q-item-label>
+                  </q-item-section>
+                  <q-item-section side>
+                    <q-chip
+                      size="sm"
+                      :color="getStockStatusColor(scope.opt)"
+                      text-color="white"
+                    >
+                      {{ scope.opt.total_stock || 0 }} {{ scope.opt.unit }}
+                    </q-chip>
+                  </q-item-section>
+                </q-item>
+              </template>
+              <template #no-option>
+                <q-item>
+                  <q-item-section class="text-grey">
+                    <div class="text-center q-pa-md">
+                      <q-icon
+                        name="search_off"
+                        size="2rem"
+                        color="grey-5"
+                        class="q-mb-sm"
+                      />
+                      <div class="text-subtitle1">
+                        {{ $t('inventory.noProductsFound') }}
                       </div>
-                    </q-item-section>
-                  </q-item>
-                </template>
-              </q-select>
-            </div>
-            <div class="col-auto">
-              <q-btn
-                icon="qr_code_scanner"
-                color="primary"
-                :size="$q.screen.xs ? 'md' : 'lg'"
-                :label="$q.screen.xs ? '' : $t('inventory.scanBarcode')"
-                @click="showBarcodeScanner = true"
-                class="scan-button"
-                :title="$t('inventory.scanBarcode')"
-                aria-label="Scan barcode"
-              />
-            </div>
+                      <div class="text-caption text-grey-6">
+                        {{ $t('inventory.tryDifferentSearchTerm') }}
+                      </div>
+                    </div>
+                  </q-item-section>
+                </q-item>
+              </template>
+            </q-select>
+          </div>
+          <div class="col-auto">
+            <q-btn
+              icon="qr_code_scanner"
+              color="primary"
+              :size="$q.screen.xs ? 'md' : 'lg'"
+              :label="$q.screen.xs ? '' : $t('inventory.scanBarcode')"
+              class="scan-button"
+              :title="$t('inventory.scanBarcode')"
+              aria-label="Scan barcode"
+              @click="showBarcodeScanner = true"
+            />
           </div>
         </div>
       </div>
+    </div>
 
-      <!-- Enhanced Product Info Card -->
-      <div v-if="selectedProduct" class="q-pa-md">
-        <q-card
-          flat
-          bordered
-          class="product-card bg-gradient-to-r from-blue-50 to-indigo-50"
-        >
-          <q-card-section class="q-pa-lg">
-            <div class="row items-center q-gutter-lg">
-              <!-- Product Image/Icon -->
-              <q-avatar size="80px" class="product-avatar">
-                <q-img
-                  v-if="selectedProduct.image_url"
-                  :src="selectedProduct.image_url"
-                  spinner-color="primary"
-                  style="height: 80px; width: 80px"
-                  class="rounded-borders"
-                />
-                <div
+    <!-- Enhanced Product Info Card -->
+    <div v-if="selectedProduct" class="q-pa-md">
+      <q-card
+        flat
+        bordered
+        class="product-card bg-gradient-to-r from-blue-50 to-indigo-50"
+      >
+        <q-card-section class="q-pa-lg">
+          <div class="row items-center q-gutter-lg">
+            <!-- Product Image/Icon -->
+            <q-avatar size="80px" class="product-avatar">
+              <q-img
+                v-if="selectedProduct.image_url"
+                :src="selectedProduct.image_url"
+                spinner-color="primary"
+                style="height: 80px; width: 80px"
+                class="rounded-borders"
+              />
+              <div
+                v-else
+                class="bg-primary text-white flex flex-center"
+                style="height: 80px; width: 80px"
+              >
+                <q-icon name="inventory_2" size="40px" />
+              </div>
+            </q-avatar>
+
+            <!-- Product Details -->
+            <div class="col">
+              <div class="text-h5 text-weight-bold text-grey-8 q-mb-xs">
+                {{ selectedProduct.name }}
+              </div>
+              <div class="text-subtitle1 text-grey-6 q-mb-sm">
+                SKU: {{ selectedProduct.sku }} •
+                {{ selectedProduct.brand || $t('quickAdjustment.noProduct') }}
+              </div>
+              <div
+                v-if="selectedProduct.description"
+                class="text-body2 text-grey-7 q-mb-md"
+              >
+                {{ selectedProduct.description }}
+              </div>
+
+              <!-- Stock Status Row -->
+              <div class="row items-center q-gutter-md">
+                <q-chip
+                  :color="getStockStatusColor(selectedProduct)"
+                  text-color="white"
+                  size="md"
+                  :icon="getStockStatusIcon(selectedProduct)"
+                >
+                  <span class="text-weight-bold"
+                    >{{ getCurrentStock() }} {{ selectedProduct.unit }}</span
+                  >
+                </q-chip>
+
+                <div v-if="selectedLocation" class="text-caption text-grey-6">
+                  📍 {{ selectedLocation.name }}
+                </div>
+                <q-chip
                   v-else
-                  class="bg-primary text-white flex flex-center"
-                  style="height: 80px; width: 80px"
+                  color="orange"
+                  text-color="white"
+                  size="sm"
+                  icon="warning"
                 >
-                  <q-icon name="inventory_2" size="40px" />
-                </div>
-              </q-avatar>
+                  {{ $t('inventory.noLocationSelected') }}
+                </q-chip>
 
-              <!-- Product Details -->
-              <div class="col">
-                <div class="text-h5 text-weight-bold text-grey-8 q-mb-xs">
-                  {{ selectedProduct.name }}
-                </div>
-                <div class="text-subtitle1 text-grey-6 q-mb-sm">
-                  SKU: {{ selectedProduct.sku }} •
-                  {{ selectedProduct.brand || $t('quickAdjustment.noProduct') }}
-                </div>
                 <div
-                  class="text-body2 text-grey-7 q-mb-md"
-                  v-if="selectedProduct.description"
+                  v-if="selectedProduct.price"
+                  class="text-caption text-grey-6"
                 >
-                  {{ selectedProduct.description }}
-                </div>
-
-                <!-- Stock Status Row -->
-                <div class="row items-center q-gutter-md">
-                  <q-chip
-                    :color="getStockStatusColor(selectedProduct)"
-                    text-color="white"
-                    size="md"
-                    :icon="getStockStatusIcon(selectedProduct)"
-                  >
-                    <span class="text-weight-bold"
-                      >{{ getCurrentStock() }} {{ selectedProduct.unit }}</span
-                    >
-                  </q-chip>
-
-                  <div class="text-caption text-grey-6" v-if="selectedLocation">
-                    📍 {{ selectedLocation.name }}
-                  </div>
-                  <q-chip
-                    v-else
-                    color="orange"
-                    text-color="white"
-                    size="sm"
-                    icon="warning"
-                  >
-                    {{ $t('inventory.noLocationSelected') }}
-                  </q-chip>
-
-                  <div
-                    v-if="selectedProduct.price"
-                    class="text-caption text-grey-6"
-                  >
-                    💰 €{{ Number(selectedProduct.price).toFixed(2) }}
-                  </div>
+                  💰 €{{ Number(selectedProduct.price).toFixed(2) }}
                 </div>
               </div>
+            </div>
 
-              <!-- Actions -->
-              <div class="col-auto">
+            <!-- Actions -->
+            <div class="col-auto">
+              <q-btn
+                flat
+                round
+                icon="edit"
+                class="text-grey-6"
+                :title="$t('inventory.changeProduct')"
+                size="lg"
+                aria-label="Change product"
+                @click="internalSelectedProduct = null"
+              />
+            </div>
+          </div>
+
+          <!-- Additional Product Info -->
+          <div
+            v-if="selectedProduct.barcode || selectedProduct.category"
+            class="q-mt-md q-pt-md border-top"
+          >
+            <div class="row q-gutter-md">
+              <div v-if="selectedProduct.category" class="col-auto">
+                <q-chip size="sm" outline color="blue-grey">
+                  <q-icon name="category" size="xs" class="q-mr-xs" />
+                  {{ selectedProduct.category }}
+                </q-chip>
+              </div>
+              <div v-if="selectedProduct.barcode" class="col-auto">
+                <q-chip size="sm" outline color="blue-grey">
+                  <q-icon name="qr_code" size="xs" class="q-mr-xs" />
+                  {{ selectedProduct.barcode }}
+                </q-chip>
+              </div>
+            </div>
+          </div>
+        </q-card-section>
+      </q-card>
+    </div>
+
+    <!-- Location Selection (if no location provided) -->
+    <div v-if="selectedProduct && !selectedLocation" class="q-pa-md">
+      <div class="step-container">
+        <div class="step-header">
+          <q-icon name="place" size="20px" color="orange" />
+          <span class="text-h6 q-ml-sm">{{
+            $t('inventory.selectLocation')
+          }}</span>
+          <q-chip size="sm" color="orange" text-color="white" class="q-ml-sm">{{
+            $t('common.required')
+          }}</q-chip>
+        </div>
+
+        <q-select
+          v-model="internalSelectedLocation"
+          :options="availableLocations"
+          option-label="name"
+          option-value="id"
+          :label="$t('inventory.selectLocation')"
+          outlined
+          class="modern-select q-mt-md"
+        >
+          <template #prepend>
+            <q-icon name="place" />
+          </template>
+        </q-select>
+      </div>
+    </div>
+
+    <!-- Modern Adjustment Form -->
+    <div v-if="selectedProduct" class="q-pa-md adjustment-section">
+      <div class="adjustment-container">
+        <!-- Step 1: Adjustment Type -->
+        <div class="adjustment-step">
+          <div class="step-header">
+            <q-icon name="tune" size="20px" color="primary" />
+            <span class="text-h6 q-ml-sm">{{
+              $t('inventory.adjustmentType')
+            }}</span>
+          </div>
+          <q-btn-toggle
+            v-model="adjustmentType"
+            toggle-color="primary"
+            :options="adjustmentTypeOptions"
+            class="modern-toggle q-mt-md"
+            :size="$q.screen.xs ? 'md' : 'lg'"
+            spread
+          />
+        </div>
+
+        <!-- Step 2: Quantity Input -->
+        <div class="adjustment-step">
+          <div class="step-header">
+            <q-icon name="pin" size="20px" color="primary" />
+            <span class="text-h6 q-ml-sm">{{ getQuantityLabel() }}</span>
+          </div>
+
+          <div class="quantity-section q-mt-md">
+            <div class="row q-gutter-md items-end">
+              <div class="col">
+                <q-input
+                  v-model.number="quantityInput"
+                  type="number"
+                  :label="getQuantityLabel()"
+                  outlined
+                  min="0"
+                  class="quantity-input"
+                  :error="quantityError"
+                  :error-message="quantityErrorMessage"
+                >
+                  <template #prepend>
+                    <q-icon :name="getQuantityIcon()" />
+                  </template>
+                  <template #append>
+                    <span class="text-caption text-grey-6">{{
+                      selectedProduct.unit
+                    }}</span>
+                  </template>
+                </q-input>
+              </div>
+            </div>
+
+            <!-- Quick Amount Buttons -->
+            <div class="quick-amounts q-mt-md">
+              <div class="text-caption text-grey-6 q-mb-sm">
+                {{ $t('inventory.quickAmounts') }}
+              </div>
+              <div class="row q-gutter-xs">
                 <q-btn
-                  flat
-                  round
-                  icon="edit"
-                  @click="internalSelectedProduct = null"
-                  class="text-grey-6"
-                  :title="$t('inventory.changeProduct')"
-                  size="lg"
-                  aria-label="Change product"
+                  v-for="amount in quickAmounts"
+                  :key="amount"
+                  :label="amount.toString()"
+                  :size="$q.screen.xs ? 'xs' : 'sm'"
+                  outline
+                  color="primary"
+                  class="quick-amount-btn"
+                  @click="setQuickAmount(amount)"
                 />
               </div>
             </div>
+          </div>
+        </div>
 
-            <!-- Additional Product Info -->
-            <div
-              v-if="selectedProduct.barcode || selectedProduct.category"
-              class="q-mt-md q-pt-md border-top"
-            >
-              <div class="row q-gutter-md">
-                <div v-if="selectedProduct.category" class="col-auto">
-                  <q-chip size="sm" outline color="blue-grey">
-                    <q-icon name="category" size="xs" class="q-mr-xs" />
-                    {{ selectedProduct.category }}
-                  </q-chip>
-                </div>
-                <div v-if="selectedProduct.barcode" class="col-auto">
-                  <q-chip size="sm" outline color="blue-grey">
-                    <q-icon name="qr_code" size="xs" class="q-mr-xs" />
-                    {{ selectedProduct.barcode }}
-                  </q-chip>
-                </div>
-              </div>
-            </div>
-          </q-card-section>
-        </q-card>
-      </div>
-
-      <!-- Location Selection (if no location provided) -->
-      <div v-if="selectedProduct && !selectedLocation" class="q-pa-md">
-        <div class="step-container">
+        <!-- Step 3: Reason Selection -->
+        <div class="adjustment-step">
           <div class="step-header">
-            <q-icon name="place" size="20px" color="orange" />
-            <span class="text-h6 q-ml-sm">{{
-              $t('inventory.selectLocation')
-            }}</span>
+            <q-icon name="psychology" size="20px" color="primary" />
+            <span class="text-h6 q-ml-sm">{{ $t('inventory.reason') }}</span>
             <q-chip
               size="sm"
               color="orange"
@@ -260,280 +362,174 @@
               >{{ $t('common.required') }}</q-chip
             >
           </div>
-
           <q-select
-            v-model="internalSelectedLocation"
-            :options="availableLocations"
-            option-label="name"
-            option-value="id"
-            :label="$t('inventory.selectLocation')"
+            v-model="selectedReason"
+            :options="reasonOptions"
+            :label="$t('inventory.selectReason')"
             outlined
+            emit-value
+            map-options
             class="modern-select q-mt-md"
+            :error="reasonError"
+            :error-message="reasonErrorMessage"
           >
-            <template v-slot:prepend>
-              <q-icon name="place" />
+            <template #prepend>
+              <q-icon name="assignment" />
             </template>
           </q-select>
         </div>
-      </div>
 
-      <!-- Modern Adjustment Form -->
-      <div v-if="selectedProduct" class="q-pa-md adjustment-section">
-        <div class="adjustment-container">
-          <!-- Step 1: Adjustment Type -->
-          <div class="adjustment-step">
-            <div class="step-header">
-              <q-icon name="tune" size="20px" color="primary" />
-              <span class="text-h6 q-ml-sm">{{
-                $t('inventory.adjustmentType')
-              }}</span>
-            </div>
-            <q-btn-toggle
-              v-model="adjustmentType"
-              toggle-color="primary"
-              :options="adjustmentTypeOptions"
-              class="modern-toggle q-mt-md"
-              :size="$q.screen.xs ? 'md' : 'lg'"
-              spread
-            />
-          </div>
-
-          <!-- Step 2: Quantity Input -->
-          <div class="adjustment-step">
-            <div class="step-header">
-              <q-icon name="pin" size="20px" color="primary" />
-              <span class="text-h6 q-ml-sm">{{ getQuantityLabel() }}</span>
-            </div>
-
-            <div class="quantity-section q-mt-md">
-              <div class="row q-gutter-md items-end">
-                <div class="col">
-                  <q-input
-                    v-model.number="quantityInput"
-                    type="number"
-                    :label="getQuantityLabel()"
-                    outlined
-                    min="0"
-                    class="quantity-input"
-                    :error="quantityError"
-                    :error-message="quantityErrorMessage"
-                  >
-                    <template v-slot:prepend>
-                      <q-icon :name="getQuantityIcon()" />
-                    </template>
-                    <template v-slot:append>
-                      <span class="text-caption text-grey-6">{{
-                        selectedProduct.unit
-                      }}</span>
-                    </template>
-                  </q-input>
-                </div>
-              </div>
-
-              <!-- Quick Amount Buttons -->
-              <div class="quick-amounts q-mt-md">
-                <div class="text-caption text-grey-6 q-mb-sm">
-                  {{ $t('inventory.quickAmounts') }}
-                </div>
-                <div class="row q-gutter-xs">
-                  <q-btn
-                    v-for="amount in quickAmounts"
-                    :key="amount"
-                    :label="amount.toString()"
-                    :size="$q.screen.xs ? 'xs' : 'sm'"
-                    outline
-                    color="primary"
-                    @click="setQuickAmount(amount)"
-                    class="quick-amount-btn"
-                  />
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <!-- Step 3: Reason Selection -->
-          <div class="adjustment-step">
-            <div class="step-header">
-              <q-icon name="psychology" size="20px" color="primary" />
-              <span class="text-h6 q-ml-sm">{{ $t('inventory.reason') }}</span>
-              <q-chip
-                size="sm"
-                color="orange"
-                text-color="white"
-                class="q-ml-sm"
-                >{{ $t('common.required') }}</q-chip
-              >
-            </div>
-            <q-select
-              v-model="selectedReason"
-              :options="reasonOptions"
-              :label="$t('inventory.selectReason')"
-              outlined
-              emit-value
-              map-options
-              class="modern-select q-mt-md"
-              :error="reasonError"
-              :error-message="reasonErrorMessage"
+        <!-- Step 4: Notes (Optional) -->
+        <div class="adjustment-step">
+          <div class="step-header">
+            <q-icon name="note_add" size="20px" color="grey-6" />
+            <span class="text-h6 q-ml-sm text-grey-7">{{
+              $t('inventory.notes')
+            }}</span>
+            <q-chip
+              size="sm"
+              color="grey-5"
+              text-color="white"
+              class="q-ml-sm"
+              >{{ $t('common.optional') }}</q-chip
             >
-              <template v-slot:prepend>
-                <q-icon name="assignment" />
-              </template>
-            </q-select>
           </div>
-
-          <!-- Step 4: Notes (Optional) -->
-          <div class="adjustment-step">
-            <div class="step-header">
-              <q-icon name="note_add" size="20px" color="grey-6" />
-              <span class="text-h6 q-ml-sm text-grey-7">{{
-                $t('inventory.notes')
-              }}</span>
-              <q-chip
-                size="sm"
-                color="grey-5"
-                text-color="white"
-                class="q-ml-sm"
-                >{{ $t('common.optional') }}</q-chip
-              >
-            </div>
-            <q-input
-              v-model="notes"
-              :label="$t('inventory.notes')"
-              type="textarea"
-              rows="2"
-              outlined
-              :placeholder="$t('inventory.notesPlaceholder')"
-              class="q-mt-md"
-            >
-              <template v-slot:prepend>
-                <q-icon name="edit_note" />
-              </template>
-            </q-input>
-          </div>
-
-          <!-- Enhanced Preview Card -->
-          <q-card
-            v-if="preview && isFormValid"
-            flat
-            bordered
-            class="preview-card bg-gradient-to-r from-blue-50 to-green-50 q-mt-lg"
+          <q-input
+            v-model="notes"
+            :label="$t('inventory.notes')"
+            type="textarea"
+            rows="2"
+            outlined
+            :placeholder="$t('inventory.notesPlaceholder')"
+            class="q-mt-md"
           >
-            <q-card-section class="q-pa-md">
-              <div class="row items-center q-mb-md">
-                <q-icon name="preview" size="24px" color="blue-7" />
-                <span class="text-h6 q-ml-sm text-blue-8">{{
-                  $t('inventory.preview')
-                }}</span>
-                <q-space />
-                <q-chip size="sm" color="blue" text-color="white">
-                  {{
-                    adjustmentType === 'increase'
-                      ? 'Verhogen'
-                      : adjustmentType === 'decrease'
-                        ? 'Verlagen'
-                        : 'Instellen'
-                  }}
-                </q-chip>
-              </div>
-              <div class="preview-content">
-                <div class="row q-gutter-lg items-center">
-                  <div class="col text-center">
-                    <div class="text-caption text-grey-6">
-                      {{ $t('inventory.current') }}
-                    </div>
-                    <div class="text-h5 text-weight-bold">
-                      {{ preview.current }}
-                    </div>
-                    <div class="text-caption">{{ selectedProduct.unit }}</div>
+            <template #prepend>
+              <q-icon name="edit_note" />
+            </template>
+          </q-input>
+        </div>
+
+        <!-- Enhanced Preview Card -->
+        <q-card
+          v-if="preview && isFormValid"
+          flat
+          bordered
+          class="preview-card bg-gradient-to-r from-blue-50 to-green-50 q-mt-lg"
+        >
+          <q-card-section class="q-pa-md">
+            <div class="row items-center q-mb-md">
+              <q-icon name="preview" size="24px" color="blue-7" />
+              <span class="text-h6 q-ml-sm text-blue-8">{{
+                $t('inventory.preview')
+              }}</span>
+              <q-space />
+              <q-chip size="sm" color="blue" text-color="white">
+                {{
+                  adjustmentType === 'increase'
+                    ? 'Verhogen'
+                    : adjustmentType === 'decrease'
+                      ? 'Verlagen'
+                      : 'Instellen'
+                }}
+              </q-chip>
+            </div>
+            <div class="preview-content">
+              <div class="row q-gutter-lg items-center">
+                <div class="col text-center">
+                  <div class="text-caption text-grey-6">
+                    {{ $t('inventory.current') }}
                   </div>
-                  <div class="col-auto flex items-center">
-                    <q-icon
-                      :name="
-                        preview.change >= 0 ? 'arrow_forward' : 'arrow_back'
-                      "
-                      size="24px"
-                      :color="preview.change >= 0 ? 'positive' : 'negative'"
-                    />
-                    <span
-                      class="q-mx-sm text-h6 text-weight-bold"
-                      :class="
-                        preview.change >= 0 ? 'text-positive' : 'text-negative'
-                      "
-                    >
-                      {{ preview.change >= 0 ? '+' : '' }}{{ preview.change }}
-                    </span>
+                  <div class="text-h5 text-weight-bold">
+                    {{ preview.current }}
                   </div>
-                  <div class="col text-center">
-                    <div class="text-caption text-grey-6">
-                      {{ $t('inventory.newQuantity') }}
-                    </div>
-                    <div
-                      class="text-h5 text-weight-bold"
-                      :class="getStatusTextClass(preview.newStatus)"
-                    >
-                      {{ preview.newQuantity }}
-                    </div>
-                    <div class="text-caption">{{ selectedProduct.unit }}</div>
+                  <div class="text-caption">{{ selectedProduct.unit }}</div>
+                </div>
+                <div class="col-auto flex items-center">
+                  <q-icon
+                    :name="preview.change >= 0 ? 'arrow_forward' : 'arrow_back'"
+                    size="24px"
+                    :color="preview.change >= 0 ? 'positive' : 'negative'"
+                  />
+                  <span
+                    class="q-mx-sm text-h6 text-weight-bold"
+                    :class="
+                      preview.change >= 0 ? 'text-positive' : 'text-negative'
+                    "
+                  >
+                    {{ preview.change >= 0 ? '+' : '' }}{{ preview.change }}
+                  </span>
+                </div>
+                <div class="col text-center">
+                  <div class="text-caption text-grey-6">
+                    {{ $t('inventory.newQuantity') }}
                   </div>
+                  <div
+                    class="text-h5 text-weight-bold"
+                    :class="getStatusTextClass(preview.newStatus)"
+                  >
+                    {{ preview.newQuantity }}
+                  </div>
+                  <div class="text-caption">{{ selectedProduct.unit }}</div>
                 </div>
               </div>
-            </q-card-section>
-          </q-card>
-        </div>
+            </div>
+          </q-card-section>
+        </q-card>
       </div>
+    </div>
 
-      <!-- Actions -->
-      <template #actions>
-        <q-btn
-          :label="$t('common.cancel')"
-          flat
-          :size="$q.screen.xs ? 'md' : 'lg'"
-          class="q-mr-md"
-          @click="$emit('update:modelValue', false)"
-          aria-label="Cancel"
-        />
-        <q-btn
-          :label="$t('inventory.adjustStock')"
-          color="primary"
-          :size="$q.screen.xs ? 'md' : 'lg'"
-          unelevated
-          :loading="saving"
-          :disable="!isFormValid"
-          @click="performAdjustment"
-          class="save-button"
-          aria-label="Adjust stock"
-        >
-          <template v-slot:loading>
-            <q-spinner-hourglass class="on-left" />
-            {{ $t('inventory.adjusting') }}
-          </template>
-        </q-btn>
-      </template>
-
-      <!-- Validation Summary -->
-      <q-banner
-        v-if="!isFormValid && (quantityInput !== null || selectedReason)"
-        rounded
-        class="validation-banner q-ma-md"
-        :class="getValidationBannerClass()"
+    <!-- Actions -->
+    <template #actions>
+      <q-btn
+        :label="$t('common.cancel')"
+        flat
+        :size="$q.screen.xs ? 'md' : 'lg'"
+        class="q-mr-md"
+        aria-label="Cancel"
+        @click="$emit('update:modelValue', false)"
+      />
+      <q-btn
+        :label="$t('inventory.adjustStock')"
+        color="primary"
+        :size="$q.screen.xs ? 'md' : 'lg'"
+        unelevated
+        :loading="saving"
+        :disable="!isFormValid"
+        class="save-button"
+        aria-label="Adjust stock"
+        @click="performAdjustment"
       >
-        <template v-slot:avatar>
-          <q-icon name="info" />
+        <template #loading>
+          <q-spinner-hourglass class="on-left" />
+          {{ $t('inventory.adjusting') }}
         </template>
-        <div class="text-subtitle2">
-          {{ $t('inventory.completeRequiredFields') }}
-        </div>
-        <ul class="q-mt-sm">
-          <li v-if="quantityError">{{ quantityErrorMessage }}</li>
-          <li v-if="reasonError">{{ reasonErrorMessage }}</li>
-          <li v-if="!selectedProduct">
-            {{ $t('inventory.selectProductFirst') }}
-          </li>
-          <li v-if="!selectedLocation">
-            {{ $t('inventory.selectLocationFirst') }}
-          </li>
-        </ul>
-      </q-banner>
+      </q-btn>
+    </template>
+
+    <!-- Validation Summary -->
+    <q-banner
+      v-if="!isFormValid && (quantityInput !== null || selectedReason)"
+      rounded
+      class="validation-banner q-ma-md"
+      :class="getValidationBannerClass()"
+    >
+      <template #avatar>
+        <q-icon name="info" />
+      </template>
+      <div class="text-subtitle2">
+        {{ $t('inventory.completeRequiredFields') }}
+      </div>
+      <ul class="q-mt-sm">
+        <li v-if="quantityError">{{ quantityErrorMessage }}</li>
+        <li v-if="reasonError">{{ reasonErrorMessage }}</li>
+        <li v-if="!selectedProduct">
+          {{ $t('inventory.selectProductFirst') }}
+        </li>
+        <li v-if="!selectedLocation">
+          {{ $t('inventory.selectLocationFirst') }}
+        </li>
+      </ul>
+    </q-banner>
     <!-- Barcode Scanner -->
     <BarcodeScanner v-model="showBarcodeScanner" @scan="handleBarcodeScan" />
   </BaseDialog>
@@ -869,7 +865,8 @@
             brand: product.brand,
             image_url: product.imageUrl,
             total_stock: product.totalStock,
-            current_quantity: (product as any).current_quantity ?? product.totalStock,
+            current_quantity:
+              (product as any).current_quantity ?? product.totalStock,
             minimum_quantity: (product as any).minimum_quantity ?? 0,
             price: (product as any).price ?? product.unitPrice,
             description: product.description,
@@ -918,7 +915,9 @@
           brand: matchingProduct.brand,
           image_url: matchingProduct.imageUrl,
           total_stock: matchingProduct.totalStock,
-          current_quantity: (matchingProduct as any).current_quantity ?? matchingProduct.totalStock,
+          current_quantity:
+            (matchingProduct as any).current_quantity ??
+            matchingProduct.totalStock,
           minimum_quantity: (matchingProduct as any).minimum_quantity ?? 0,
           price: (matchingProduct as any).price ?? matchingProduct.unitPrice,
           description: matchingProduct.description,

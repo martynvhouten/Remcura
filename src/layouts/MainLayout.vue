@@ -48,9 +48,9 @@
           <q-btn
             flat
             round
-            @click="goToNotifications"
             :aria-label="t('nav.notifications')"
             class="header-btn"
+            @click="goToNotifications"
           >
             <q-badge
               v-if="notificationStore.hasUnreadNotifications"
@@ -70,11 +70,11 @@
           <q-btn
             flat
             round
-            @click="toggleDarkMode"
             :aria-label="
               $q.dark.isActive ? t('nav.lightMode') : t('nav.darkMode')
             "
             class="header-btn"
+            @click="toggleDarkMode"
           >
             <q-icon
               :name="$q.dark.isActive ? 'light_mode' : 'dark_mode'"
@@ -120,14 +120,14 @@
 
                 <q-separator />
 
-                <q-item clickable v-close-popup @click="goToSettings">
+                <q-item v-close-popup clickable @click="goToSettings">
                   <q-item-section avatar>
                     <q-icon name="settings" />
                   </q-item-section>
                   <q-item-section>{{ t('nav.settings') }}</q-item-section>
                 </q-item>
 
-                <q-item clickable v-close-popup>
+                <q-item v-close-popup clickable>
                   <q-item-section avatar>
                     <q-icon name="help" />
                   </q-item-section>
@@ -137,10 +137,10 @@
                 <q-separator />
 
                 <q-item
-                  clickable
                   v-close-popup
-                  @click="handleLogout"
+                  clickable
                   class="text-negative"
+                  @click="handleLogout"
                 >
                   <q-item-section avatar>
                     <q-icon name="logout" />
@@ -257,7 +257,7 @@
                   }}</q-item-label>
                 </q-item-section>
 
-                <q-item-section side v-if="item.badge" class="hide-when-mini">
+                <q-item-section v-if="item.badge" side class="hide-when-mini">
                   <q-badge
                     :color="item.badgeColor || 'primary'"
                     :label="item.badge"
@@ -268,8 +268,8 @@
 
                 <!-- Expand/Collapse for submenu -->
                 <q-item-section
-                  side
                   v-if="item.submenu"
+                  side
                   class="submenu-chevron hide-when-mini"
                 >
                   <q-icon

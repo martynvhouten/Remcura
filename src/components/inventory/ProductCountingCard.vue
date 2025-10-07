@@ -39,17 +39,17 @@
       <!-- Large Number Display -->
       <div class="count-display">
         <input
+          ref="countInput"
           v-model.number="countValue"
           type="number"
           min="0"
           step="1"
           :placeholder="$t('counting.productFlow.countPlaceholder')"
           class="count-input"
-          @focus="onInputFocus"
-          @blur="onInputBlur"
-          ref="countInput"
           readonly
           inputmode="none"
+          @focus="onInputFocus"
+          @blur="onInputBlur"
         />
         <div class="count-unit">stuks</div>
       </div>
@@ -57,34 +57,34 @@
       <!-- Mobile Numpad -->
       <div class="numpad">
         <div class="numpad-row">
-          <button @click="appendDigit(1)" class="numpad-btn">1</button>
-          <button @click="appendDigit(2)" class="numpad-btn">2</button>
-          <button @click="appendDigit(3)" class="numpad-btn">3</button>
+          <button class="numpad-btn" @click="appendDigit(1)">1</button>
+          <button class="numpad-btn" @click="appendDigit(2)">2</button>
+          <button class="numpad-btn" @click="appendDigit(3)">3</button>
         </div>
         <div class="numpad-row">
-          <button @click="appendDigit(4)" class="numpad-btn">4</button>
-          <button @click="appendDigit(5)" class="numpad-btn">5</button>
-          <button @click="appendDigit(6)" class="numpad-btn">6</button>
+          <button class="numpad-btn" @click="appendDigit(4)">4</button>
+          <button class="numpad-btn" @click="appendDigit(5)">5</button>
+          <button class="numpad-btn" @click="appendDigit(6)">6</button>
         </div>
         <div class="numpad-row">
-          <button @click="appendDigit(7)" class="numpad-btn">7</button>
-          <button @click="appendDigit(8)" class="numpad-btn">8</button>
-          <button @click="appendDigit(9)" class="numpad-btn">9</button>
+          <button class="numpad-btn" @click="appendDigit(7)">7</button>
+          <button class="numpad-btn" @click="appendDigit(8)">8</button>
+          <button class="numpad-btn" @click="appendDigit(9)">9</button>
         </div>
         <div class="numpad-row">
           <button
             v-if="currentStock !== undefined"
-            @click="setCount(currentStock)"
             class="numpad-btn action-btn"
             :class="{ active: countValue === currentStock }"
+            @click="setCount(currentStock)"
           >
             <div class="btn-content">
               <span class="btn-icon">📦</span>
               <span class="btn-label">{{ currentStock }}</span>
             </div>
           </button>
-          <button @click="appendDigit(0)" class="numpad-btn">0</button>
-          <button @click="clearInput" class="numpad-btn action-btn">
+          <button class="numpad-btn" @click="appendDigit(0)">0</button>
+          <button class="numpad-btn action-btn" @click="clearInput">
             <q-icon name="backspace" class="icon-size-lg" />
           </button>
         </div>
@@ -122,34 +122,34 @@
     <div class="action-buttons">
       <q-btn
         v-if="method === 'scan'"
-        @click="$emit('cancel')"
         outline
         color="white"
         no-caps
         class="flex-1"
+        @click="$emit('cancel')"
       >
         <q-icon name="arrow_back" class="q-mr-sm" />
         {{ $t('common.back') }}
       </q-btn>
       <q-btn
         v-else
-        @click="$emit('skip')"
         outline
         color="white"
         no-caps
         class="flex-1"
+        @click="$emit('skip')"
       >
         <q-icon name="skip_next" class="q-mr-sm" />
         {{ $t('counting.productFlow.skip') }}
       </q-btn>
 
       <q-btn
-        @click="confirmCount"
         color="primary"
         :disable="!isValidCount || isLoading"
         :loading="isLoading"
         no-caps
         class="flex-1"
+        @click="confirmCount"
       >
         <q-icon name="check" class="q-mr-sm" />
         {{ $t('counting.productFlow.confirm') }}

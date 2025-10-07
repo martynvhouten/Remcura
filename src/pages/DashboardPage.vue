@@ -40,10 +40,10 @@
             outlined
             style="min-width: 250px; margin-right: 12px"
             :label="$t('dashboard.demoRoleSwitch.label')"
-            @update:model-value="switchDemoRole"
             color="primary"
             :loading="loading"
             class="demo-role-switcher"
+            @update:model-value="switchDemoRole"
           >
             <template #prepend>
               <q-icon name="swap_horiz" />
@@ -68,9 +68,9 @@
             round
             icon="refresh"
             size="md"
-            @click="refreshDashboard"
             :loading="loading"
             class="app-btn-refresh"
+            @click="refreshDashboard"
           >
             <q-tooltip>{{ $t('dashboard.actions.refresh') }}</q-tooltip>
           </q-btn>
@@ -79,8 +79,8 @@
             round
             icon="tune"
             size="md"
-            @click="showCustomizeDialog = true"
             class="app-btn-refresh"
+            @click="showCustomizeDialog = true"
           >
             <q-tooltip>{{ $t('dashboard.actions.customize') }}</q-tooltip>
           </q-btn>
@@ -98,10 +98,10 @@
             :key="action.id"
             :icon="action.icon"
             :label="action.label"
-            @click="$router.push(action.route)"
             unelevated
             no-caps
             :class="getActionButtonClass(action.type)"
+            @click="$router.push(action.route)"
           />
         </div>
       </div>
@@ -185,10 +185,10 @@
         <p>{{ $t('dashboard.empty.subtitle') }}</p>
         <q-btn
           :label="$t('dashboard.empty.addWidgets')"
-          @click="showCustomizeDialog = true"
           unelevated
           no-caps
           class="app-btn-primary"
+          @click="showCustomizeDialog = true"
         />
       </div>
     </div>

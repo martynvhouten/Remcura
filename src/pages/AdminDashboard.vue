@@ -8,27 +8,27 @@
             round
             icon="refresh"
             size="md"
-            @click="refreshData"
             :loading="loading"
             class="app-btn-refresh"
+            @click="refreshData"
           >
             <q-tooltip>{{ $t('common.refresh') }}</q-tooltip>
           </q-btn>
           <q-btn
             icon="tune"
             :label="$t('admin.settings')"
-            @click="showSettings = true"
             unelevated
             no-caps
             class="app-btn-secondary"
+            @click="showSettings = true"
           />
           <q-btn
             icon="manage_search"
             :label="$t('admin.audit')"
-            @click="showAuditLog = true"
             unelevated
             no-caps
             class="app-btn-info"
+            @click="showAuditLog = true"
           />
         </template>
       </PageTitle>
@@ -108,43 +108,43 @@
         <q-btn
           :label="$t('admin.userManagement.invite')"
           icon="person_add"
-          @click="showInviteUser = true"
           unelevated
           no-caps
           class="app-btn-success"
+          @click="showInviteUser = true"
         />
         <q-btn
           :label="$t('locations.add')"
           icon="add_location"
-          @click="showAddLocation = true"
           unelevated
           no-caps
           class="app-btn-success"
+          @click="showAddLocation = true"
         />
         <q-btn
           :label="$t('offline.data.download')"
           icon="download"
-          @click="downloadOfflineData"
           unelevated
           no-caps
           class="app-btn-info"
+          @click="downloadOfflineData"
         />
         <q-btn
           :label="$t('offline.sync.forceSync')"
           icon="sync"
           :loading="syncing"
-          @click="forceSync"
           unelevated
           no-caps
           class="app-btn-secondary"
+          @click="forceSync"
         />
         <q-btn
           :label="$t('exports.title')"
           icon="table_chart"
-          @click="showExportDialog = true"
           unelevated
           no-caps
           class="app-btn-secondary"
+          @click="showExportDialog = true"
         />
       </div>
     </BaseCard>
@@ -209,7 +209,7 @@
             row-key="id"
             :pagination="{ rowsPerPage: 10 }"
           >
-            <template v-slot:body-cell-role="props">
+            <template #body-cell-role="props">
               <q-td :props="props">
                 <q-chip
                   :color="getRoleColor(props.value)"
@@ -221,13 +221,13 @@
               </q-td>
             </template>
 
-            <template v-slot:body-cell-lastActive="props">
+            <template #body-cell-lastActive="props">
               <q-td :props="props">
                 {{ props.value ? formatDate(props.value) : '-' }}
               </q-td>
             </template>
 
-            <template v-slot:body-cell-actions="props">
+            <template #body-cell-actions="props">
               <q-td :props="props">
                 <q-btn-group dense>
                   <q-btn icon="edit" dense flat @click="editUser(props.row)" />
@@ -283,7 +283,7 @@
             row-key="id"
             :pagination="{ rowsPerPage: 10 }"
           >
-            <template v-slot:body-cell-isMain="props">
+            <template #body-cell-isMain="props">
               <q-td :props="props">
                 <q-chip
                   v-if="props.value"
@@ -297,7 +297,7 @@
               </q-td>
             </template>
 
-            <template v-slot:body-cell-isActive="props">
+            <template #body-cell-isActive="props">
               <q-td :props="props">
                 <q-chip
                   :color="props.value ? 'positive' : 'negative'"
@@ -311,7 +311,7 @@
               </q-td>
             </template>
 
-            <template v-slot:body-cell-actions="props">
+            <template #body-cell-actions="props">
               <q-td :props="props">
                 <q-btn-group dense>
                   <q-btn
@@ -366,7 +366,7 @@
             :pagination="{ rowsPerPage: 15 }"
             class="q-mt-md"
           >
-            <template v-slot:body-cell-permissionType="props">
+            <template #body-cell-permissionType="props">
               <q-td :props="props">
                 <q-chip
                   :color="getPermissionColor(props.value)"
@@ -378,7 +378,7 @@
               </q-td>
             </template>
 
-            <template v-slot:body-cell-expiresAt="props">
+            <template #body-cell-expiresAt="props">
               <q-td :props="props">
                 <span v-if="props.value">
                   {{ formatDate(props.value) }}
@@ -396,7 +396,7 @@
               </q-td>
             </template>
 
-            <template v-slot:body-cell-actions="props">
+            <template #body-cell-actions="props">
               <q-td :props="props">
                 <q-btn
                   icon="delete"
@@ -429,7 +429,11 @@
                   </div>
                   <div class="col-6 text-right">
                     <q-linear-progress
-                      :value="(topEvents[0]?.count ? event.count / topEvents[0].count : 0) || 0"
+                      :value="
+                        (topEvents[0]?.count
+                          ? event.count / topEvents[0].count
+                          : 0) || 0
+                      "
                       color="primary"
                       class="q-mr-sm"
                       style="width: 60px; display: inline-block"

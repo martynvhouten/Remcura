@@ -28,7 +28,8 @@
               </span>
               <q-linear-progress
                 :value="
-                  (sessionAny.products_counted ?? 0) / (session.total_products_counted ?? 1)
+                  (sessionAny.products_counted ?? 0) /
+                  (session.total_products_counted ?? 1)
                 "
                 color="primary"
                 size="4px"
@@ -42,9 +43,9 @@
               color="positive"
               icon="check"
               :label="$t('counting.completeSession')"
-              @click="completeSession"
               :disable="!canComplete"
               unelevated
+              @click="completeSession"
             />
 
             <q-btn
@@ -52,8 +53,8 @@
               color="info"
               icon="verified"
               :label="$t('counting.approveSession')"
-              @click="approveSession"
               unelevated
+              @click="approveSession"
             />
           </div>
         </template>
@@ -138,7 +139,9 @@
                 <div class="summary-label">
                   {{ $t('counting.countedProducts') }}
                 </div>
-                <div class="summary-value">{{ sessionAny.products_counted ?? 0 }}</div>
+                <div class="summary-value">
+                  {{ sessionAny.products_counted ?? 0 }}
+                </div>
               </div>
 
               <div class="summary-item">
@@ -148,7 +151,8 @@
                 <div
                   class="summary-value"
                   :class="{
-                    'has-discrepancies': (sessionAny.discrepancies_found ?? 0) > 0,
+                    'has-discrepancies':
+                      (sessionAny.discrepancies_found ?? 0) > 0,
                   }"
                 >
                   {{ sessionAny.discrepancies_found ?? 0 }}
@@ -158,7 +162,9 @@
               <div class="summary-item">
                 <div class="summary-label">{{ $t('common.startedAt') }}</div>
                 <div class="summary-value">
-                  {{ formatDateTime(sessionAny.started_at ?? session.created_at) }}
+                  {{
+                    formatDateTime(sessionAny.started_at ?? session.created_at)
+                  }}
                 </div>
               </div>
 
@@ -216,7 +222,7 @@
               flat
             >
               <!-- Product Column -->
-              <template v-slot:body-cell-product="props">
+              <template #body-cell-product="props">
                 <q-td :props="props">
                   <div class="product-info">
                     <div class="product-name">
@@ -232,7 +238,7 @@
               </template>
 
               <!-- Variance Column -->
-              <template v-slot:body-cell-variance="props">
+              <template #body-cell-variance="props">
                 <q-td :props="props">
                   <q-chip
                     :color="varianceColor(props.value)"
@@ -245,7 +251,7 @@
               </template>
 
               <!-- Status Column -->
-              <template v-slot:body-cell-status="props">
+              <template #body-cell-status="props">
                 <q-td :props="props">
                   <q-chip
                     :color="entryStatusColor(props.value)"
@@ -425,7 +431,8 @@
     entriesLoading.value = true;
     try {
       await countingStore.fetchCountingEntries(props.sessionId);
-      countingEntries.value = (countingStore as any).entries as CountingEntryDTO[];
+      countingEntries.value = (countingStore as any)
+        .entries as CountingEntryDTO[];
       entriesError.value = false;
     } catch (error) {
       console.error('Error loading counting entries:', error);

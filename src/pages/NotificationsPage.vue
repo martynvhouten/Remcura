@@ -11,9 +11,9 @@
           round
           icon="refresh"
           size="md"
-          @click="loadNotifications"
           :loading="loading"
           class="modern-action-btn"
+          @click="loadNotifications"
         >
           <q-tooltip>{{ $t('common.refresh') }}</q-tooltip>
         </q-btn>
@@ -30,9 +30,9 @@
             :color="filter === 'all' ? 'primary' : undefined"
             :text-color="filter === 'all' ? 'white' : 'grey-7'"
             :label="`${$t('notificationsPage.all')} (${notifications.length})`"
-            @click="filter = 'all'"
             class="filter-tab"
             no-caps
+            @click="filter = 'all'"
           />
           <q-btn
             :flat="filter !== 'unread'"
@@ -40,9 +40,9 @@
             :color="filter === 'unread' ? 'primary' : undefined"
             :text-color="filter === 'unread' ? 'white' : 'grey-7'"
             :label="`${$t('notificationsPage.unread')} (${unreadCount})`"
-            @click="filter = 'unread'"
             class="filter-tab"
             no-caps
+            @click="filter = 'unread'"
           />
         </div>
 
@@ -62,20 +62,20 @@
             flat
             icon="mark_email_read"
             :label="$t('notificationsPage.markAllRead')"
-            @click="markAllAsRead"
             :disable="unreadCount === 0"
             color="positive"
             class="action-btn"
             no-caps
+            @click="markAllAsRead"
           />
           <q-btn
             flat
             icon="clear_all"
             :label="$t('notificationsPage.clearAllNotifications')"
-            @click="confirmClearAll"
             color="negative"
             class="action-btn"
             no-caps
+            @click="confirmClearAll"
           />
         </div>
       </div>
@@ -142,8 +142,8 @@
                 icon="mark_email_read"
                 color="positive"
                 size="sm"
-                @click.stop="markAsRead(notification.id)"
                 class="notification-action-btn"
+                @click.stop="markAsRead(notification.id)"
               >
                 <q-tooltip>Markeer als gelezen</q-tooltip>
               </q-btn>
@@ -155,8 +155,8 @@
                 icon="mark_email_unread"
                 color="primary"
                 size="sm"
-                @click.stop="markAsUnread(notification.id)"
                 class="notification-action-btn"
+                @click.stop="markAsUnread(notification.id)"
               >
                 <q-tooltip>Markeer als ongelezen</q-tooltip>
               </q-btn>
@@ -167,8 +167,8 @@
                 icon="delete"
                 color="negative"
                 size="sm"
-                @click.stop="deleteNotification(notification.id)"
                 class="notification-action-btn"
+                @click.stop="deleteNotification(notification.id)"
               >
                 <q-tooltip>Verwijder melding</q-tooltip>
               </q-btn>
@@ -229,7 +229,8 @@
 
     return filtered.sort(
       (a, b) =>
-        new Date(b.created_at ?? '').getTime() - new Date(a.created_at ?? '').getTime()
+        new Date(b.created_at ?? '').getTime() -
+        new Date(a.created_at ?? '').getTime()
     );
   });
 

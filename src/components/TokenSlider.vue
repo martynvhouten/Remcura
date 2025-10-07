@@ -4,12 +4,12 @@
     <div class="slider-wrapper">
       <q-slider
         :model-value="numericValue"
-        @update:model-value="updateValue"
         :min="token.min || 0"
         :max="token.max || 100"
         :step="1"
         color="primary"
         class="token-range"
+        @update:model-value="updateValue"
       />
       <div class="value-display">{{ token.value }}{{ token.unit || '' }}</div>
     </div>

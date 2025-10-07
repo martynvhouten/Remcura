@@ -53,21 +53,21 @@
     <!-- Actions Menu -->
     <q-menu v-model="showActionsMenu" anchor="top right" self="top right">
       <q-list dense class="actions-menu">
-        <q-item clickable @click="openOrderList" v-close-popup>
+        <q-item v-close-popup clickable @click="openOrderList">
           <q-item-section avatar>
             <q-icon name="open_in_new" />
           </q-item-section>
           <q-item-section>Openen</q-item-section>
         </q-item>
 
-        <q-item clickable @click="duplicateList" v-close-popup>
+        <q-item v-close-popup clickable @click="duplicateList">
           <q-item-section avatar>
             <q-icon name="content_copy" />
           </q-item-section>
           <q-item-section>Dupliceren</q-item-section>
         </q-item>
 
-        <q-item clickable @click="exportList" v-close-popup>
+        <q-item v-close-popup clickable @click="exportList">
           <q-item-section avatar>
             <q-icon name="download" />
           </q-item-section>
@@ -77,10 +77,10 @@
         <q-separator />
 
         <q-item
-          clickable
-          @click="editSettings"
-          class="text-primary"
           v-close-popup
+          clickable
+          class="text-primary"
+          @click="editSettings"
         >
           <q-item-section avatar>
             <q-icon name="settings" />
@@ -111,11 +111,11 @@
             flat
             dense
             label="Bestel nu"
-            @click="orderCriticalItems"
             :loading="creatingOrder"
             color="negative"
             size="sm"
             class="alert-btn"
+            @click="orderCriticalItems"
           />
         </div>
       </div>
@@ -157,7 +157,7 @@
     </div>
 
     <!-- Order recommendations -->
-    <div class="order-recommendations q-pt-none" v-if="showRecommendations">
+    <div v-if="showRecommendations" class="order-recommendations q-pt-none">
       <div class="text-subtitle2 q-mb-md">📋 Besteladvies</div>
 
       <!-- Supplier breakdown -->
@@ -253,7 +253,6 @@
       <div class="primary-actions">
         <q-btn
           v-if="hasItemsToOrder"
-          @click="createQuickOrder"
           :loading="creatingOrder"
           icon="shopping_cart"
           :label="`Bestel (${itemsToOrderCount})`"
@@ -262,10 +261,10 @@
           no-caps
           size="sm"
           class="action-btn action-btn--primary"
+          @click="createQuickOrder"
         />
 
         <q-btn
-          @click="openOrderList"
           icon="open_in_new"
           label="Beheren"
           color="primary"
@@ -273,13 +272,13 @@
           no-caps
           size="sm"
           class="action-btn action-btn--secondary"
+          @click="openOrderList"
         />
       </div>
 
       <!-- Secondary Actions -->
       <div class="secondary-actions">
         <q-btn
-          @click="openStockManager"
           flat
           round
           dense
@@ -287,12 +286,12 @@
           color="grey-7"
           size="sm"
           class="icon-btn"
+          @click="openStockManager"
         >
           <q-tooltip>Voorraad beheren</q-tooltip>
         </q-btn>
 
         <q-btn
-          @click="viewAnalytics"
           flat
           round
           dense
@@ -300,12 +299,12 @@
           color="grey-7"
           size="sm"
           class="icon-btn"
+          @click="viewAnalytics"
         >
           <q-tooltip>Analytics</q-tooltip>
         </q-btn>
 
         <q-btn
-          @click="editSettings"
           flat
           round
           dense
@@ -313,6 +312,7 @@
           color="grey-7"
           size="sm"
           class="icon-btn"
+          @click="editSettings"
         >
           <q-tooltip>Instellingen</q-tooltip>
         </q-btn>
@@ -440,10 +440,10 @@
         <q-card-actions align="right" class="q-pa-md">
           <q-btn flat label="Annuleren" @click="showSettingsDialog = false" />
           <q-btn
-            @click="saveSettings"
             :loading="savingSettings"
             color="primary"
             label="Opslaan"
+            @click="saveSettings"
           />
         </q-card-actions>
       </q-card>
@@ -536,7 +536,9 @@
     return 'grey';
   });
 
-  const statusLabel = computed(() => getStatusLabel(props.orderList.status ?? 'draft'));
+  const statusLabel = computed(() =>
+    getStatusLabel(props.orderList.status ?? 'draft')
+  );
 
   const hasUrgentItems = computed(() => {
     return (
@@ -875,7 +877,7 @@
     try {
       await orderListsStore.updateOrderList({
         id: props.orderList.id,
-        ...settingsForm.value
+        ...settingsForm.value,
       });
 
       $q.notify({

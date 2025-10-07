@@ -12,9 +12,9 @@
             round
             icon="refresh"
             size="md"
-            @click="refreshData"
             :loading="movementsLoading"
             class="app-btn-refresh"
+            @click="refreshData"
           >
             <q-tooltip>{{ $t('common.refresh') }}</q-tooltip>
           </q-btn>
@@ -22,10 +22,10 @@
           <q-btn
             icon="file_download"
             :label="$t('common.export')"
-            @click="exportMovements"
             unelevated
             no-caps
             class="app-btn-secondary"
+            @click="exportMovements"
           />
         </template>
       </PageTitle>
@@ -34,14 +34,14 @@
     <!-- FilterPanel component -->
     <div class="filters-section q-mb-lg">
       <FilterPanel
-        :preset="movementsFilterPreset"
         v-model="filterValues"
-        @change="handleFilterChange"
-        @reset="handleFilterReset"
-        @clear="handleFilterClear"
+        :preset="movementsFilterPreset"
         :loading="movementsLoading"
         collapsible
         class="movements-filter-panel"
+        @change="handleFilterChange"
+        @reset="handleFilterReset"
+        @clear="handleFilterClear"
       />
     </div>
 
@@ -56,7 +56,13 @@
         <q-icon name="error_outline" class="q-mr-sm" />
         <div class="col">{{ errorState.message }}</div>
         <div class="col-auto">
-          <q-btn flat dense color="white" :label="$t('common.retry')" @click="errorState.retry?.()" />
+          <q-btn
+            flat
+            dense
+            color="white"
+            :label="$t('common.retry')"
+            @click="errorState.retry?.()"
+          />
         </div>
       </div>
     </q-banner>
@@ -72,10 +78,10 @@
       <!-- Movements Table -->
       <div v-else class="medical-table">
         <q-table
+          v-model:pagination="pagination"
           :rows="filteredMovements"
           :columns="columns as any"
           row-key="id"
-          v-model:pagination="pagination"
           :rows-number="inventoryStore.stockMovementsTotal || 0"
           :loading="movementsLoading"
           :no-data-label="$t('inventory.movements.noData')"
@@ -88,7 +94,7 @@
             <q-inner-loading showing color="primary" />
           </template>
           <!-- Movement Type Column -->
-          <template v-slot:body-cell-movement_type="props">
+          <template #body-cell-movement_type="props">
             <q-td :props="props">
               <q-chip
                 :icon="movementIcon(props.value)"
@@ -101,7 +107,7 @@
           </template>
 
           <!-- Product Column -->
-          <template v-slot:body-cell-product="props">
+          <template #body-cell-product="props">
             <q-td :props="props">
               <div class="product-info">
                 <div class="product-name">
@@ -115,7 +121,7 @@
           </template>
 
           <!-- Quantity Change Column -->
-          <template v-slot:body-cell-quantity_change="props">
+          <template #body-cell-quantity_change="props">
             <q-td :props="props">
               <span
                 :class="{
@@ -131,14 +137,14 @@
           </template>
 
           <!-- Location Column -->
-          <template v-slot:body-cell-location="props">
+          <template #body-cell-location="props">
             <q-td :props="props">
               {{ props.row.location?.name || $t('common.unknownLocation') }}
             </q-td>
           </template>
 
           <!-- Date Column -->
-          <template v-slot:body-cell-created_at="props">
+          <template #body-cell-created_at="props">
             <q-td :props="props">
               <div class="date-info">
                 <div class="date">{{ formatDate(props.value) }}</div>
@@ -148,7 +154,7 @@
           </template>
 
           <!-- Notes Column -->
-          <template v-slot:body-cell-notes="props">
+          <template #body-cell-notes="props">
             <q-td :props="props">
               <span v-if="props.value" class="notes">
                 {{ props.value }}
@@ -158,15 +164,15 @@
           </template>
 
           <!-- Actions Column -->
-          <template v-slot:body-cell-actions="props">
+          <template #body-cell-actions="props">
             <q-td :props="props">
               <q-btn
                 flat
                 round
                 icon="visibility"
                 size="sm"
-                @click="viewMovementDetails(props.row)"
                 :title="$t('common.view')"
+                @click="viewMovementDetails(props.row)"
               />
             </q-td>
           </template>
@@ -187,9 +193,13 @@
           <span class="label">{{ $t('inventory.movementType') }}:</span>
           <q-chip
             :icon="movementIcon(selectedMovement.movement_type as MovementType)"
-            :color="movementColor(selectedMovement.movement_type as MovementType)"
+            :color="
+              movementColor(selectedMovement.movement_type as MovementType)
+            "
             text-color="white"
-            :label="formatMovementType(selectedMovement.movement_type as MovementType)"
+            :label="
+              formatMovementType(selectedMovement.movement_type as MovementType)
+            "
             size="sm"
           />
         </div>
@@ -303,7 +313,11 @@
   const showMovementDetails = ref(false);
   const selectedMovement = ref<MovementWithRelations | null>(null);
   const isUnmounted = ref(false);
-  const errorState = ref<{ visible: boolean; message: string; retry?: () => void }>({ visible: false, message: '' });
+  const errorState = ref<{
+    visible: boolean;
+    message: string;
+    retry?: () => void;
+  }>({ visible: false, message: '' });
   const demoMovements = ref<MovementWithRelations[]>([]);
 
   // Filter system styles
@@ -320,7 +334,9 @@
   // Computed properties
   const practiceId = computed(() => authStore.userProfile?.clinic_id || '');
 
-  const filteredMovements = computed(() => (practiceId.value ? inventoryStore.stockMovements : demoMovements.value));
+  const filteredMovements = computed(() =>
+    practiceId.value ? inventoryStore.stockMovements : demoMovements.value
+  );
 
   const columns = computed(() => [
     {
@@ -389,14 +405,21 @@
         sortBy: pagination.value.sortBy,
         descending: pagination.value.descending,
         filters: {
-          dateRange: filterValues.value.date_range as { start?: string; end?: string } | undefined,
+          dateRange: filterValues.value.date_range as
+            | { start?: string; end?: string }
+            | undefined,
           location_id: (filterValues.value.location_id as string) || undefined,
           movement_type: (filterValues.value.movement_type as any) || undefined,
-          product_search: (filterValues.value.product_search as string) || undefined,
+          product_search:
+            (filterValues.value.product_search as string) || undefined,
         },
       });
       errorState.value = { visible: false, message: '' };
-      $q.notify({ type: 'positive', message: t('common.dataRefreshed'), position: 'top' });
+      $q.notify({
+        type: 'positive',
+        message: t('common.dataRefreshed'),
+        position: 'top',
+      });
     } catch (error) {
       console.error('Error refreshing movements:', error);
       errorState.value = {
@@ -426,7 +449,12 @@
         created_at: iso(new Date(now.getTime() - 3600 * 1000)),
         notes: 'Demo ontvangst',
         product: { id: 'prod-1', name: 'Handschoenen M', sku: 'GLV-M' },
-        location: { id: 'loc-1', name: 'Demo Magazijn', code: 'WH1', location_type: 'warehouse' } as any,
+        location: {
+          id: 'loc-1',
+          name: 'Demo Magazijn',
+          code: 'WH1',
+          location_type: 'warehouse',
+        } as any,
       },
       {
         id: 'demo-mv-2',
@@ -439,8 +467,17 @@
         quantity_after: 9,
         created_at: iso(new Date(now.getTime() - 2 * 3600 * 1000)),
         notes: 'Verbruik behandelkamer',
-        product: { id: 'prod-2', name: 'Desinfectiemiddel 500ml', sku: 'DSF-500' },
-        location: { id: 'loc-1', name: 'Demo Magazijn', code: 'WH1', location_type: 'warehouse' } as any,
+        product: {
+          id: 'prod-2',
+          name: 'Desinfectiemiddel 500ml',
+          sku: 'DSF-500',
+        },
+        location: {
+          id: 'loc-1',
+          name: 'Demo Magazijn',
+          code: 'WH1',
+          location_type: 'warehouse',
+        } as any,
       },
       {
         id: 'demo-mv-3',
@@ -454,7 +491,12 @@
         created_at: iso(new Date(now.getTime() - 3 * 3600 * 1000)),
         notes: 'Aanvulling',
         product: { id: 'prod-3', name: 'Pleisters set', sku: 'PLS-SET' },
-        location: { id: 'loc-2', name: 'Behandelkamer 1', code: 'TR1', location_type: 'treatment' } as any,
+        location: {
+          id: 'loc-2',
+          name: 'Behandelkamer 1',
+          code: 'TR1',
+          location_type: 'treatment',
+        } as any,
       },
       {
         id: 'demo-mv-4',
@@ -468,14 +510,27 @@
         created_at: iso(new Date(now.getTime() - 4 * 3600 * 1000)),
         notes: 'Van magazijn naar behandelkamer',
         product: { id: 'prod-1', name: 'Handschoenen M', sku: 'GLV-M' },
-        location: { id: 'loc-2', name: 'Behandelkamer 1', code: 'TR1', location_type: 'treatment' } as any,
+        location: {
+          id: 'loc-2',
+          name: 'Behandelkamer 1',
+          code: 'TR1',
+          location_type: 'treatment',
+        } as any,
       },
     ] as MovementWithRelations[];
   };
 
   const exportMovements = () => {
     const rows = inventoryStore.stockMovements as MovementWithRelations[];
-    const header = ['type', 'sku', 'product_name', 'delta', 'location', 'created_at', 'note'];
+    const header = [
+      'type',
+      'sku',
+      'product_name',
+      'delta',
+      'location',
+      'created_at',
+      'note',
+    ];
     const csvRows = [header.join(',')];
     for (const r of rows) {
       const type = r.movement_type;
@@ -485,10 +540,20 @@
       const loc = r.location?.name ?? '';
       const created = r.created_at ? new Date(r.created_at).toISOString() : '';
       const note = (r.notes ?? '').replace(/"/g, '""');
-      const line = [type, sku, name, delta, loc, created, `"${note}` + '"'].join(',');
+      const line = [
+        type,
+        sku,
+        name,
+        delta,
+        loc,
+        created,
+        `"${note}` + '"',
+      ].join(',');
       csvRows.push(line);
     }
-    const blob = new Blob([csvRows.join('\n')], { type: 'text/csv;charset=utf-8;' });
+    const blob = new Blob([csvRows.join('\n')], {
+      type: 'text/csv;charset=utf-8;',
+    });
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
@@ -604,7 +669,11 @@
 
   // React to filter and pagination changes for server-side fetch
   watch(
-    () => ({ ...pagination.value, ...filterValues.value, practice: practiceId.value }),
+    () => ({
+      ...pagination.value,
+      ...filterValues.value,
+      practice: practiceId.value,
+    }),
     async () => {
       if (practiceId.value) {
         await refreshData();

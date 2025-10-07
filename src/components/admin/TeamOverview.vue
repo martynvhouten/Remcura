@@ -107,11 +107,11 @@
                   <q-separator />
                   <q-item
                     clickable
-                    @click="toggleMemberStatus(member)"
                     :class="{
                       'text-negative': member.is_active,
                       'text-positive': !member.is_active,
                     }"
+                    @click="toggleMemberStatus(member)"
                   >
                     <q-item-section avatar>
                       <q-icon
@@ -158,8 +158,8 @@
                   round
                   icon="content_copy"
                   size="sm"
-                  @click.stop="copyMagicCode(member)"
                   :disable="!member.personal_magic_code"
+                  @click.stop="copyMagicCode(member)"
                 />
               </div>
 
@@ -295,7 +295,7 @@
         </q-card-section>
 
         <q-card-actions align="right">
-          <q-btn flat :label="$t('common.close')" v-close-popup />
+          <q-btn v-close-popup flat :label="$t('common.close')" />
         </q-card-actions>
       </q-card>
     </q-dialog>

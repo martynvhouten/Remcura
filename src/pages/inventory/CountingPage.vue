@@ -12,9 +12,9 @@
             round
             icon="refresh"
             size="md"
-            @click="refreshData"
             :loading="countingStore.loading"
             class="app-btn-refresh"
+            @click="refreshData"
           >
             <q-tooltip>{{ $t('common.refresh') }}</q-tooltip>
           </q-btn>
@@ -30,7 +30,7 @@
             clearable
             class="status-filter"
           >
-            <template v-slot:prepend>
+            <template #prepend>
               <q-icon name="filter_list" />
             </template>
           </q-select>
@@ -38,10 +38,10 @@
           <q-btn
             icon="add"
             :label="$t('counting.startSession')"
-            @click="showStartSessionDialog"
             unelevated
             no-caps
             class="app-btn-success"
+            @click="showStartSessionDialog"
           />
         </template>
       </PageTitle>
@@ -85,7 +85,11 @@
             <div class="stat-item">
               <div class="stat-label">{{ $t('counting.sessionType') }}</div>
               <div class="stat-value">
-                {{ activeSession.count_all_products ? 'Full Count' : 'Partial Count' }}
+                {{
+                  activeSession.count_all_products
+                    ? 'Full Count'
+                    : 'Partial Count'
+                }}
               </div>
             </div>
 
@@ -96,7 +100,10 @@
               </div>
             </div>
 
-            <div v-if="(activeSession.products_with_variance ?? 0) > 0" class="stat-item">
+            <div
+              v-if="(activeSession.products_with_variance ?? 0) > 0"
+              class="stat-item"
+            >
               <div class="stat-label">{{ $t('counting.discrepancies') }}</div>
               <div class="stat-value discrepancies">
                 {{ activeSession.products_with_variance }}
@@ -116,8 +123,8 @@
             flat
             color="warning"
             :label="$t('counting.completeSession')"
-            @click="completeSession(activeSession)"
             :disable="(activeSession.total_products_counted ?? 0) === 0"
+            @click="completeSession(activeSession)"
           />
         </q-card-actions>
       </BaseCard>
@@ -143,7 +150,7 @@
           @request="onTableRequest"
         >
           <!-- Session Name Column -->
-          <template v-slot:body-cell-name="props">
+          <template #body-cell-name="props">
             <q-td :props="props">
               <div class="session-info">
                 <div class="session-name">{{ props.value }}</div>
@@ -155,7 +162,7 @@
           </template>
 
           <!-- Status Column -->
-          <template v-slot:body-cell-status="props">
+          <template #body-cell-status="props">
             <q-td :props="props">
               <q-chip
                 :color="statusColor(props.value)"
@@ -168,7 +175,7 @@
           </template>
 
           <!-- Progress Column -->
-          <template v-slot:body-cell-progress="props">
+          <template #body-cell-progress="props">
             <q-td :props="props">
               <div class="progress-info">
                 <div class="progress-text">
@@ -185,7 +192,7 @@
           </template>
 
           <!-- Date Column -->
-          <template v-slot:body-cell-started_at="props">
+          <template #body-cell-started_at="props">
             <q-td :props="props">
               <div class="date-info">
                 <div class="date">{{ formatDate(props.value) }}</div>
@@ -195,7 +202,7 @@
           </template>
 
           <!-- Actions Column -->
-          <template v-slot:body-cell-actions="props">
+          <template #body-cell-actions="props">
             <q-td :props="props">
               <div class="action-buttons">
                 <q-btn
@@ -205,8 +212,8 @@
                   icon="play_arrow"
                   size="sm"
                   color="primary"
-                  @click="continueSession(props.row)"
                   :title="$t('counting.continueSession')"
+                  @click="continueSession(props.row)"
                 />
                 <q-btn
                   flat
@@ -214,8 +221,8 @@
                   icon="visibility"
                   size="sm"
                   color="info"
-                  @click="viewSession(props.row)"
                   :title="$t('common.view')"
+                  @click="viewSession(props.row)"
                 />
                 <q-btn
                   v-if="props.row.status === 'active'"
@@ -224,8 +231,8 @@
                   icon="check"
                   size="sm"
                   color="positive"
-                  @click="completeSession(props.row)"
                   :title="$t('counting.completeSession')"
+                  @click="completeSession(props.row)"
                 />
               </div>
             </q-td>
@@ -303,8 +310,9 @@
 
   const activeSession = computed(() => {
     return (
-      countingStore.sessions.find(session => session.status === 'in_progress') ||
-      null
+      countingStore.sessions.find(
+        session => session.status === 'in_progress'
+      ) || null
     );
   });
 

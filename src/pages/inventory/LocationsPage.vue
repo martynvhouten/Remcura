@@ -47,7 +47,7 @@
 
     <!-- Coming Soon Banner -->
     <q-banner rounded class="bg-info text-white q-mb-lg">
-      <template v-slot:avatar>
+      <template #avatar>
         <q-icon name="info" color="white" />
       </template>
       <div class="text-subtitle1">{{ $t('locations.title') }}</div>
@@ -59,14 +59,14 @@
     <!-- FilterPanel component -->
     <div class="filters-section q-mb-lg">
       <FilterPanel
-        :preset="locationsFilterPreset"
         v-model="filterValues"
-        @change="handleFilterChange"
-        @reset="handleFilterReset"
-        @clear="handleFilterClear"
+        :preset="locationsFilterPreset"
         :loading="loading"
         collapsible
         class="locations-filter-panel"
+        @change="handleFilterChange"
+        @reset="handleFilterReset"
+        @clear="handleFilterClear"
       />
     </div>
 
@@ -99,7 +99,7 @@
         :no-data-label="$t('locations.noLocations')"
         @request="onTableRequest"
       >
-        <template v-slot:body-cell-actions="props">
+        <template #body-cell-actions="props">
           <q-td :props="props">
             <q-btn icon="edit" size="sm" flat dense @click="showComingSoon" />
             <q-btn

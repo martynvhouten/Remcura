@@ -29,12 +29,14 @@ function formatObject(obj, indent = 0) {
   const pad = '  '.repeat(indent);
   const padNext = '  '.repeat(indent + 1);
   const keys = Object.keys(obj);
-  let lines = [];
+  const lines = [];
   keys.forEach((k, idx) => {
     const v = obj[k];
     const last = idx === keys.length - 1;
     if (v && typeof v === 'object' && !Array.isArray(v)) {
-      lines.push(`${padNext}${k}: ${formatObject(v, indent + 1).trim()}${last ? '' : ','}`);
+      lines.push(
+        `${padNext}${k}: ${formatObject(v, indent + 1).trim()}${last ? '' : ','}`
+      );
     } else {
       const sv = String(v).replace(/'/g, "\\'");
       lines.push(`${padNext}${k}: '${sv}'${last ? '' : ','}`);
@@ -73,18 +75,23 @@ function main() {
     'orderLists.newList': 'Nieuwe lijst',
     'orderLists.globalAdvice': 'Algemeen besteladvies',
     'orderLists.orderAll': 'Alles bestellen',
-    'orderLists.deleteConfirmText': 'Weet je zeker dat je deze bestellijst wilt verwijderen? Dit kan niet ongedaan worden gemaakt.',
+    'orderLists.deleteConfirmText':
+      'Weet je zeker dat je deze bestellijst wilt verwijderen? Dit kan niet ongedaan worden gemaakt.',
     'common.duplicate': 'Dupliceren',
     'orderLists.addProductSubtitle': 'Zoek en voeg producten toe aan de lijst',
     'products.search': 'Producten zoeken',
     'orderLists.recommendedQty': 'Aanbevolen hoeveelheid',
     'orderLists.confirmPlaceAllTitle': 'Alle bestellingen plaatsen?',
-    'orderLists.confirmPlaceAllBody': 'Weet je zeker dat je alle items in deze lijst wilt bestellen?',
+    'orderLists.confirmPlaceAllBody':
+      'Weet je zeker dat je alle items in deze lijst wilt bestellen?',
     'orderLists.ordersCreated': 'Bestellingen aangemaakt',
     'notificationsPage.markReadError': 'Melding als gelezen markeren mislukt',
-    'notificationsPage.markUnreadError': 'Melding als ongelezen markeren mislukt',
-    'notificationsPage.markAllReadError': 'Alle meldingen als gelezen markeren mislukt',
-    'notificationsPage.deleteNotificationError': 'Verwijderen van melding mislukt',
+    'notificationsPage.markUnreadError':
+      'Melding als ongelezen markeren mislukt',
+    'notificationsPage.markAllReadError':
+      'Alle meldingen als gelezen markeren mislukt',
+    'notificationsPage.deleteNotificationError':
+      'Verwijderen van melding mislukt',
     'notificationsPage.clearAllError': 'Alle meldingen wissen mislukt',
     'platform.errors.loadFailed': 'Laden mislukt',
     'platform.messages.refreshed': 'Gegevens ververst',
@@ -144,7 +151,9 @@ function main() {
   Object.entries(mapping).forEach(([k, v]) => setNested(obj, k, v));
 
   writeNl(content, match, obj);
-  console.log(`Added/updated ${Object.keys(mapping).length} keys in nl/index.ts`);
+  console.log(
+    `Added/updated ${Object.keys(mapping).length} keys in nl/index.ts`
+  );
 }
 
 if (require.main === module) {
@@ -155,5 +164,3 @@ if (require.main === module) {
     process.exit(1);
   }
 }
-
-

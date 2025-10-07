@@ -13,8 +13,8 @@
                 :key="report.type"
                 clickable
                 :active="selectedReport === report.type"
-                @click="selectedReport = report.type"
                 class="report-item"
+                @click="selectedReport = report.type"
               >
                 <q-item-section avatar>
                   <q-icon :name="report.icon" :color="report.color" />
@@ -83,8 +83,8 @@
                 color="primary"
                 icon="assessment"
                 :label="$t('batch.generateReport')"
-                @click="generateReport"
                 :loading="generating"
+                @click="generateReport"
               />
 
               <q-btn
@@ -424,10 +424,10 @@
             daysUntilExpiry < 0
               ? 'expired'
               : daysUntilExpiry <= 7
-              ? 'critical'
-              : daysUntilExpiry <= 30
-              ? 'warning'
-              : 'normal',
+                ? 'critical'
+                : daysUntilExpiry <= 30
+                  ? 'warning'
+                  : 'normal',
         };
       });
 
@@ -461,10 +461,10 @@
               daysUntilExpiry < 0
                 ? 'expired'
                 : daysUntilExpiry <= 7
-                ? 'critical'
-                : daysUntilExpiry <= 30
-                ? 'warning'
-                : 'normal',
+                  ? 'critical'
+                  : daysUntilExpiry <= 30
+                    ? 'warning'
+                    : 'normal',
           };
         });
         reportData.value = retryTransformed;
@@ -511,9 +511,9 @@
       for (let i = 0; i < 5; i++) {
         const product = products[i % products.length];
         const location = locations[i % locations.length];
-        
+
         if (!product || !location) continue;
-        
+
         const daysOffset = (i - 2) * 30; // Some expired, some future
         const expiryDate = new Date();
         expiryDate.setDate(expiryDate.getDate() + daysOffset);
@@ -561,10 +561,10 @@
         i <= 1
           ? 'expired'
           : i <= 3
-          ? 'critical'
-          : i <= 5
-          ? 'warning'
-          : 'normal',
+            ? 'critical'
+            : i <= 5
+              ? 'warning'
+              : 'normal',
     }));
   };
 

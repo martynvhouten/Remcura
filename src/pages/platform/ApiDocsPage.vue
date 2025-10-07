@@ -72,7 +72,7 @@
         class="api-endpoints-table"
         title="API endpoints"
       >
-        <template v-slot:body-cell-method="props">
+        <template #body-cell-method="props">
           <q-td :props="props">
             <q-chip
               :color="getMethodColor(props.value)"
@@ -84,7 +84,7 @@
           </q-td>
         </template>
 
-        <template v-slot:body-cell-status="props">
+        <template #body-cell-status="props">
           <q-td :props="props">
             <q-chip
               :color="props.value === 'active' ? 'positive' : 'negative'"

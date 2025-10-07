@@ -1,7 +1,6 @@
 <template>
   <q-dialog
     :model-value="modelValue"
-    @update:model-value="$emit('update:modelValue', $event)"
     :persistent="persistent"
     :maximized="isMobile && !preventMobileFullscreen"
     :position="position"
@@ -12,12 +11,13 @@
     role="dialog"
     :aria-labelledby="titleId"
     :aria-describedby="subtitleId"
+    @update:model-value="$emit('update:modelValue', $event)"
     aria-modal="true"
     @show="onShow"
     @hide="onHide"
     @escape-key="onEscapeKey"
   >
-    <div :class="cardClasses" @keydown="onKeyDown" ref="dialogRef">
+    <div ref="dialogRef" :class="cardClasses" @keydown="onKeyDown">
       <!-- Loading Overlay -->
       <div v-if="loading" class="dlg__loading-overlay">
         <div class="loading-spinner"></div>
@@ -68,8 +68,8 @@
             </div>
           </div>
           <div class="header-text">
-            <h1 class="dlg__title" :id="titleId">{{ title }}</h1>
-            <p v-if="subtitle" class="dlg__subtitle" :id="subtitleId">
+            <h1 :id="titleId" class="dlg__title">{{ title }}</h1>
+            <p v-if="subtitle" :id="subtitleId" class="dlg__subtitle">
               {{ subtitle }}
             </p>
           </div>

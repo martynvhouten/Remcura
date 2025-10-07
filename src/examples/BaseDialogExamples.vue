@@ -7,7 +7,7 @@
       <div class="example-card">
         <h2>Form Dialog</h2>
         <p>Complete form with validation, loading states, and dirty checking</p>
-        <q-btn @click="showFormDialog = true" class="app-btn-primary">
+        <q-btn class="app-btn-primary" @click="showFormDialog = true">
           Open Form Dialog
         </q-btn>
       </div>
@@ -16,7 +16,7 @@
       <div class="example-card">
         <h2>Confirmation Dialog</h2>
         <p>Simple confirmation with primary/secondary actions</p>
-        <q-btn @click="showConfirmDialog = true" class="app-btn-danger">
+        <q-btn class="app-btn-danger" @click="showConfirmDialog = true">
           Open Confirm Dialog
         </q-btn>
       </div>
@@ -25,7 +25,7 @@
       <div class="example-card">
         <h2>Wizard Dialog</h2>
         <p>Multi-step process with step indicator</p>
-        <q-btn @click="showWizardDialog = true" class="app-btn-secondary">
+        <q-btn class="app-btn-secondary" @click="showWizardDialog = true">
           Open Wizard Dialog
         </q-btn>
       </div>
@@ -51,7 +51,7 @@
       @primary-action="submitForm"
       @secondary-action="cancelForm"
     >
-      <q-form @submit.prevent="submitForm" class="form-content">
+      <q-form class="form-content" @submit.prevent="submitForm">
         <div class="form-row">
           <q-input
             v-model="formData.name"
@@ -175,7 +175,11 @@
         <div class="mapping-grid">
           <div class="mapping-item">
             <label>Product Name</label>
-            <q-select v-model="csvMappingProduct" outlined :options="csvColumns" />
+            <q-select
+              v-model="csvMappingProduct"
+              outlined
+              :options="csvColumns"
+            />
           </div>
           <div class="mapping-item">
             <label>SKU</label>
@@ -183,7 +187,11 @@
           </div>
           <div class="mapping-item">
             <label>Price</label>
-            <q-select v-model="csvMappingPrice" outlined :options="csvColumns" />
+            <q-select
+              v-model="csvMappingPrice"
+              outlined
+              :options="csvColumns"
+            />
           </div>
         </div>
       </div>

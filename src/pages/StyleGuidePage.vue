@@ -262,15 +262,15 @@
             <h4>Input Fields</h4>
             <div class="form-row">
               <q-input
-                outlined
                 v-model="sampleText"
+                outlined
                 label="Standard Input"
                 placeholder="Enter text..."
                 style="flex: 1"
               />
               <q-input
-                outlined
                 v-model="sampleEmail"
+                outlined
                 type="email"
                 label="Email Input"
                 placeholder="user@example.com"
@@ -283,15 +283,15 @@
             <h4>Select Fields</h4>
             <div class="form-row">
               <q-select
-                outlined
                 v-model="sampleSelect"
+                outlined
                 :options="selectOptions"
                 label="Single Select"
                 style="flex: 1"
               />
               <q-select
-                outlined
                 v-model="sampleMultiple"
+                outlined
                 :options="selectOptions"
                 multiple
                 label="Multiple Select"
@@ -304,16 +304,16 @@
             <h4>Form States</h4>
             <div class="form-row">
               <q-input
-                outlined
                 v-model="sampleError"
+                outlined
                 label="Error State"
                 error
                 error-message="This field is required"
                 style="flex: 1"
               />
               <q-input
-                outlined
                 v-model="sampleDisabled"
+                outlined
                 label="Disabled State"
                 disable
                 style="flex: 1"
@@ -396,22 +396,22 @@
               :pagination="{ rowsPerPage: 5 }"
               class="medical-table"
             >
-              <template v-slot:top>
+              <template #top>
                 <div class="table-header">
                   <h4>Sample Data Table</h4>
                   <div class="table-actions">
                     <q-btn
                       flat
                       icon="refresh"
-                      @click="refreshTable"
                       :loading="tableLoading"
+                      @click="refreshTable"
                     />
                     <q-btn color="primary" icon="add" label="Add Item" />
                   </div>
                 </div>
               </template>
 
-              <template v-slot:body-cell-status="props">
+              <template #body-cell-status="props">
                 <q-td :props="props">
                   <q-chip
                     :color="getStatusColor(props.value)"
@@ -422,7 +422,7 @@
                 </q-td>
               </template>
 
-              <template v-slot:body-cell-actions="props">
+              <template #body-cell-actions="props">
                 <q-td :props="props">
                   <q-btn flat icon="edit" size="sm" />
                   <q-btn flat icon="delete" size="sm" color="negative" />
@@ -445,44 +445,44 @@
             <h4>Alert Types</h4>
             <div class="alert-examples">
               <q-banner class="alert-info" rounded>
-                <template v-slot:avatar>
+                <template #avatar>
                   <q-icon name="info" />
                 </template>
                 <strong>Information:</strong> This is an informational message
                 with important details.
-                <template v-slot:action>
+                <template #action>
                   <q-btn flat label="Dismiss" />
                 </template>
               </q-banner>
 
               <q-banner class="alert-success" rounded>
-                <template v-slot:avatar>
+                <template #avatar>
                   <q-icon name="check_circle" />
                 </template>
                 <strong>Success:</strong> Operation completed successfully!
-                <template v-slot:action>
+                <template #action>
                   <q-btn flat label="View Details" />
                 </template>
               </q-banner>
 
               <q-banner class="alert-warning" rounded>
-                <template v-slot:avatar>
+                <template #avatar>
                   <q-icon name="warning" />
                 </template>
                 <strong>Warning:</strong> Please review the following items
                 before proceeding.
-                <template v-slot:action>
+                <template #action>
                   <q-btn flat label="Review" />
                 </template>
               </q-banner>
 
               <q-banner class="alert-error" rounded>
-                <template v-slot:avatar>
+                <template #avatar>
                   <q-icon name="error" />
                 </template>
                 <strong>Error:</strong> An error occurred while processing your
                 request.
-                <template v-slot:action>
+                <template #action>
                   <q-btn flat label="Retry" />
                 </template>
               </q-banner>

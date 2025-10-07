@@ -51,7 +51,6 @@
     <!-- Card Footer -->
     <div class="card-footer">
       <q-btn
-        @click.stop="openOrderList"
         icon="open_in_new"
         label="Beheren"
         color="primary"
@@ -59,6 +58,7 @@
         no-caps
         size="sm"
         class="manage-btn"
+        @click.stop="openOrderList"
       />
     </div>
   </div>

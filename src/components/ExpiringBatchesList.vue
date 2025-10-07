@@ -10,7 +10,7 @@
         bordered
         separator="cell"
       >
-        <template v-slot:body-cell-urgency="props">
+        <template #body-cell-urgency="props">
           <q-td :props="props">
             <q-chip
               :color="getUrgencyColor(props.row.urgencyLevel)"
@@ -22,7 +22,7 @@
           </q-td>
         </template>
 
-        <template v-slot:body-cell-actions="props">
+        <template #body-cell-actions="props">
           <q-td :props="props">
             <q-btn
               icon="visibility"

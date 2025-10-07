@@ -1,7 +1,6 @@
 <template>
   <BaseDialog
     :model-value="modelValue"
-    @update:model-value="$emit('update:modelValue', $event)"
     :title="title"
     :icon="icon"
     :size="size"
@@ -9,6 +8,7 @@
     :header-variant="headerVariant"
     :loading="loading"
     persistent
+    @update:model-value="$emit('update:modelValue', $event)"
     @close="handleCancel"
   >
     <!-- Message Content -->
@@ -57,8 +57,8 @@
           :label="cancelButtonText"
           color="grey-7"
           flat
-          @click="handleCancel"
           :disable="loading"
+          @click="handleCancel"
         />
 
         <!-- Confirm button -->
@@ -66,9 +66,9 @@
           :label="confirmButtonText"
           :color="confirmButtonColor"
           :loading="loading"
-          @click="handleConfirm"
           :disable="loading || !canConfirm"
           :icon="confirmButtonIcon"
+          @click="handleConfirm"
         />
       </div>
     </template>

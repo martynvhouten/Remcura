@@ -8,8 +8,8 @@
             flat
             round
             icon="arrow_back"
-            @click="router.back()"
             class="back-btn"
+            @click="router.back()"
           />
           <span class="breadcrumb-text">Bestellijsten</span>
           <q-icon
@@ -58,56 +58,58 @@
 
           <div class="header-actions">
             <q-btn
-              @click="addProduct"
               icon="add"
-            :label="$t('orderLists.addProduct')"
+              :label="$t('orderLists.addProduct')"
               color="primary"
               unelevated
               no-caps
               class="primary-action"
+              @click="addProduct"
             />
             <q-btn
-              @click="editOrderList"
               icon="edit"
               outline
               color="primary"
               no-caps
               class="secondary-action"
+              @click="editOrderList"
             />
-          <q-btn
-            @click="confirmPlaceAll = true"
-            icon="shopping_cart_checkout"
-            color="primary"
-            no-caps
-            class="primary-action"
-            :label="$t('orderLists.orderAll')"
-          />
+            <q-btn
+              icon="shopping_cart_checkout"
+              color="primary"
+              no-caps
+              class="primary-action"
+              :label="$t('orderLists.orderAll')"
+              @click="confirmPlaceAll = true"
+            />
             <q-btn flat round icon="more_vert" class="menu-btn">
               <q-menu>
                 <q-list dense>
-                <q-item clickable @click="duplicateList" v-close-popup>
+                  <q-item v-close-popup clickable @click="duplicateList">
                     <q-item-section avatar>
                       <q-icon name="content_copy" />
                     </q-item-section>
-                  <q-item-section>{{ $t('common.duplicate') }}</q-item-section>
+                    <q-item-section>{{
+                      $t('common.duplicate')
+                    }}</q-item-section>
                   </q-item>
-                <q-item clickable @click="exportList" v-close-popup>
+                  <q-item v-close-popup clickable @click="exportList">
                     <q-item-section avatar>
                       <q-icon name="download" />
                     </q-item-section>
-                  <q-item-section>{{ $t('common.export') }}</q-item-section>
+                    <q-item-section>{{ $t('common.export') }}</q-item-section>
                   </q-item>
                   <q-separator />
                   <q-item
-                    clickable
-                    @click="deleteList"
                     v-close-popup
+                    clickable
                     class="text-negative"
+                    @click="deleteList"
                   >
                     <q-item-section avatar>
                       <q-icon name="delete" />
                     </q-item-section>
-                  <q-item-section>{{ $t('common.delete') }}</q-item-section>
+                    <q-item-section>{{ $t('common.delete') }}</q-item-section>
                   </q-item>
                 </q-list>
               </q-menu>
@@ -125,11 +127,11 @@
     <!-- Error State -->
     <div v-else-if="error" class="q-pa-lg">
       <q-banner class="bg-negative text-white">
-        <template v-slot:avatar>
+        <template #avatar>
           <q-icon name="error" />
         </template>
         {{ error }}
-        <template v-slot:action>
+        <template #action>
           <q-btn flat label="Opnieuw proberen" @click="loadOrderList" />
         </template>
       </q-banner>
@@ -140,14 +142,14 @@
       <!-- Filters Section -->
       <div class="filters-section q-mb-md">
         <FilterPanel
-          :preset="orderListsFilterPreset"
           v-model="filterValues"
-          @change="handleFilterChange"
-          @reset="handleFilterReset"
-          @clear="handleFilterClear"
+          :preset="orderListsFilterPreset"
           :loading="loadingItems"
           collapsible
           class="order-list-filter-panel"
+          @change="handleFilterChange"
+          @reset="handleFilterReset"
+          @clear="handleFilterClear"
         />
       </div>
 
@@ -168,10 +170,10 @@
               flat
               round
               icon="refresh"
-              @click="loadOrderListItems"
               :loading="loadingItems"
               color="grey-7"
               size="sm"
+              @click="loadOrderListItems"
             >
               <q-tooltip>Vernieuwen</q-tooltip>
             </q-btn>
@@ -193,12 +195,12 @@
         <h3>Geen producten toegevoegd</h3>
         <p>Voeg producten toe aan deze bestellijst om te beginnen.</p>
         <q-btn
-          @click="addProduct"
           icon="add"
           label="Eerste product toevoegen"
           color="primary"
           unelevated
           no-caps
+          @click="addProduct"
         />
       </div>
 
@@ -254,9 +256,9 @@
                   round
                   dense
                   icon="remove"
-                  @click="decrementQuantity(props.row)"
                   :disable="props.row.suggested_quantity <= 0"
                   class="quantity-btn"
+                  @click="decrementQuantity(props.row)"
                 />
                 <q-input
                   v-model.number="props.row.suggested_quantity"
@@ -265,16 +267,16 @@
                   dense
                   outlined
                   class="quantity-input"
-                  @update:model-value="updateItemQuantity(props.row)"
                   style="width: 80px"
+                  @update:model-value="updateItemQuantity(props.row)"
                 />
                 <q-btn
                   flat
                   round
                   dense
                   icon="add"
-                  @click="incrementQuantity(props.row)"
                   class="quantity-btn"
+                  @click="incrementQuantity(props.row)"
                 />
               </div>
             </q-td>
@@ -362,10 +364,10 @@
           outlined
           use-input
           clearable
-          @filter="filterProducts"
           :loading="loadingProducts"
+          @filter="filterProducts"
         >
-          <template v-slot:option="scope">
+          <template #option="scope">
             <q-item v-bind="scope.itemProps">
               <q-item-section avatar>
                 <q-avatar size="sm">
@@ -400,8 +402,12 @@
           {{ $t('orderLists.confirmPlaceAllBody') }}
         </q-card-section>
         <q-card-actions align="right">
-          <q-btn flat :label="$t('common.cancel')" v-close-popup />
-          <q-btn color="primary" :label="$t('orderLists.orderAll')" @click="orderAll()" />
+          <q-btn v-close-popup flat :label="$t('common.cancel')" />
+          <q-btn
+            color="primary"
+            :label="$t('orderLists.orderAll')"
+            @click="orderAll()"
+          />
         </q-card-actions>
       </q-card>
     </q-dialog>
@@ -603,7 +609,8 @@
 
     try {
       const listId = route.params.id as string;
-      orderList.value = (await orderListsStore.getOrderListById(listId)) ?? null;
+      orderList.value =
+        (await orderListsStore.getOrderListById(listId)) ?? null;
       await loadOrderListItems();
     } catch (err) {
       error.value = 'Kon bestellijst niet laden';
@@ -930,7 +937,11 @@
   /* Order list detail page styles */
   .order-detail-page {
     min-height: 100vh;
-    background: linear-gradient(135deg, var(--neutral-50) 0%, var(--neutral-200) 100%);
+    background: linear-gradient(
+      135deg,
+      var(--neutral-50) 0%,
+      var(--neutral-200) 100%
+    );
   }
 
   /* Page Header */
@@ -1165,7 +1176,11 @@
     justify-content: space-between;
     padding: 24px 32px;
     border-bottom: 1px solid var(--border-primary);
-    background: linear-gradient(135deg, var(--neutral-50) 0%, rgba(248, 250, 252, 0.5) 100%);
+    background: linear-gradient(
+      135deg,
+      var(--neutral-50) 0%,
+      rgba(248, 250, 252, 0.5) 100%
+    );
   }
 
   .section-title {

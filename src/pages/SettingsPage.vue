@@ -16,20 +16,20 @@
             round
             icon="refresh"
             size="md"
-            @click="() => {}"
             :loading="false"
             class="app-btn-refresh"
+            @click="() => {}"
           >
             <q-tooltip>{{ $t('common.refresh') }}</q-tooltip>
           </q-btn>
           <q-btn
             icon="save"
             :label="$t('settings.saveSettings')"
-            @click="saveSettings"
             :loading="saving"
             unelevated
             no-caps
             class="app-btn-success"
+            @click="saveSettings"
           />
         </template>
       </PageTitle>
@@ -53,7 +53,7 @@
               readonly
               :aria-label="`${$t('auth.fullName')}: ${userSettings.fullName}`"
             >
-              <template v-slot:prepend>
+              <template #prepend>
                 <q-icon name="person" aria-hidden="true" />
               </template>
             </q-input>
@@ -65,7 +65,7 @@
               readonly
               :aria-label="`${$t('auth.email')}: ${userSettings.email}`"
             >
-              <template v-slot:prepend>
+              <template #prepend>
                 <q-icon name="email" aria-hidden="true" />
               </template>
             </q-input>
@@ -77,7 +77,7 @@
               readonly
               :aria-label="`${$t('settings.role')}: ${userSettings.role}`"
             >
-              <template v-slot:prepend>
+              <template #prepend>
                 <q-icon name="badge" aria-hidden="true" />
               </template>
             </q-input>
@@ -102,7 +102,7 @@
             <BaseCard padding="sm">
               <div class="setting-item">
                 <div class="setting-info">
-                  <div class="setting-label" id="dark-mode-label">
+                  <div id="dark-mode-label" class="setting-label">
                     {{ $t('settings.darkMode') }}
                   </div>
                   <div class="setting-description">
@@ -112,11 +112,11 @@
                 <div class="setting-control">
                   <q-toggle
                     v-model="isDarkMode"
-                    @update:model-value="toggleDarkMode"
                     color="primary"
                     size="lg"
                     :aria-labelledby="'dark-mode-label'"
                     :aria-describedby="'dark-mode-description'"
+                    @update:model-value="toggleDarkMode"
                   />
                   <div id="dark-mode-description" class="sr-only">
                     {{
@@ -136,7 +136,7 @@
             <BaseCard padding="sm">
               <div class="setting-item">
                 <div class="setting-info">
-                  <div class="setting-label" id="theme-label">
+                  <div id="theme-label" class="setting-label">
                     {{ $t('settings.colorSchemeTitle') }}
                   </div>
                   <div class="setting-description">
@@ -147,7 +147,6 @@
                   <q-select
                     v-model="selectedTheme"
                     :options="themeOptions"
-                    @update:model-value="changeTheme"
                     option-value="value"
                     option-label="label"
                     emit-value
@@ -156,6 +155,7 @@
                     dense
                     style="width: 150px"
                     :aria-labelledby="'theme-label'"
+                    @update:model-value="changeTheme"
                   />
                 </div>
               </div>
@@ -187,7 +187,7 @@
                 clinicSettings.name
               }`"
             >
-              <template v-slot:prepend>
+              <template #prepend>
                 <q-icon name="business" aria-hidden="true" />
               </template>
             </q-input>
@@ -202,7 +202,7 @@
                 clinicSettings.contactEmail
               }`"
             >
-              <template v-slot:prepend>
+              <template #prepend>
                 <q-icon name="email" aria-hidden="true" />
               </template>
             </q-input>
@@ -217,7 +217,7 @@
                 clinicSettings.contactPhone
               }`"
             >
-              <template v-slot:prepend>
+              <template #prepend>
                 <q-icon name="phone" aria-hidden="true" />
               </template>
             </q-input>
@@ -232,7 +232,7 @@
                 clinicSettings.address
               }`"
             >
-              <template v-slot:prepend>
+              <template #prepend>
                 <q-icon name="location_on" aria-hidden="true" />
               </template>
             </q-input>

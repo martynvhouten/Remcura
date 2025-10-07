@@ -81,9 +81,9 @@
               size="lg"
               icon="auto_awesome"
               unelevated
-              @click="generateInvite"
               :loading="generating"
               class="generate-btn"
+              @click="generateInvite"
             />
           </div>
         </div>
@@ -111,8 +111,8 @@
               icon="content_copy"
               flat
               round
-              @click="copyCode"
               :tooltip="$t('common.copy')"
+              @click="copyCode"
             />
           </div>
 
@@ -136,22 +136,22 @@
               :label="$t('magicInvite.shareWhatsApp')"
               color="positive"
               icon="message"
-              @click="shareViaWhatsApp"
               unelevated
+              @click="shareViaWhatsApp"
             />
             <q-btn
               :label="$t('magicInvite.showQR')"
               color="primary"
               icon="qr_code"
-              @click="showQRCode"
               unelevated
+              @click="showQRCode"
             />
             <q-btn
               :label="$t('magicInvite.shareEmail')"
               color="secondary"
               icon="email"
-              @click="shareViaEmail"
               unelevated
+              @click="shareViaEmail"
             />
           </div>
         </div>
@@ -190,16 +190,16 @@
                 icon="share"
                 flat
                 round
-                @click="shareInvite(invite)"
                 :tooltip="$t('common.share')"
+                @click="shareInvite(invite)"
               />
               <q-btn
                 icon="delete"
                 flat
                 round
                 color="negative"
-                @click="deleteInvite(invite)"
                 :tooltip="$t('common.delete')"
+                @click="deleteInvite(invite)"
               />
             </div>
           </div>

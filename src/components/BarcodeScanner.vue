@@ -1,12 +1,12 @@
 <template>
   <q-dialog
     :model-value="modelValue"
-    @update:model-value="$emit('update:modelValue', $event)"
     position="standard"
     persistent
     maximized
     transition-show="slide-up"
     transition-hide="slide-down"
+    @update:model-value="$emit('update:modelValue', $event)"
   >
     <q-card class="scanner-card">
       <!-- Header -->
@@ -34,8 +34,8 @@
             dense
             icon="close"
             color="white"
-            @click="closeScanner"
             :title="$t('common.close')"
+            @click="closeScanner"
           />
         </div>
       </q-card-section>
@@ -61,8 +61,8 @@
               color="primary"
               icon="camera_alt"
               ::label="$t('barcodeScanner.scanLabel')"
-              @click="initializeCamera"
               :loading="initializing"
+              @click="initializeCamera"
             />
           </div>
 
@@ -78,8 +78,8 @@
               color="primary"
               icon="refresh"
               :label="$t('common.retry')"
-              @click="initializeCamera"
               :loading="initializing"
+              @click="initializeCamera"
             />
           </div>
 
@@ -147,8 +147,8 @@
                 outlined
                 dense
                 clearable
-                @keyup.enter="processManualInput"
                 class="q-mb-md"
+                @keyup.enter="processManualInput"
               >
                 <template #append>
                   <q-btn
@@ -157,8 +157,8 @@
                     round
                     icon="send"
                     color="primary"
-                    @click="processManualInput"
                     :disable="!manualInput"
+                    @click="processManualInput"
                   />
                 </template>
               </q-input>
@@ -175,8 +175,8 @@
         <q-btn
           flat
           :label="$t('common.cancel')"
-          @click="closeScanner"
           class="q-mr-auto"
+          @click="closeScanner"
         />
 
         <q-btn
@@ -184,9 +184,9 @@
           flat
           icon="flip_camera_android"
           ::label="$t('barcodeScanner.scanLabel')"
-          @click="switchCamera"
           :disable="!canSwitchCamera"
           class="q-mr-sm"
+          @click="switchCamera"
         />
 
         <q-btn
@@ -194,8 +194,8 @@
           flat
           :icon="flashEnabled ? 'flash_off' : 'flash_on'"
           ::label="$t('barcodeScanner.scanLabel')"
-          @click="toggleFlash"
           :disable="!hasFlash"
+          @click="toggleFlash"
         />
       </q-card-actions>
     </q-card>

@@ -433,8 +433,8 @@
         icon="add_shopping_cart"
         color="primary"
         :disable="product?.stock_status === 'out_of_stock'"
-        @click="product && emit('addToCart', product)"
         unelevated
+        @click="product && emit('addToCart', product)"
       />
       <q-btn
         :label="$t('productsPage.addToOrderList')"

@@ -7,8 +7,8 @@
           flat
           dense
           icon="refresh"
-          @click="resetTokens"
           :disable="!hasChanges"
+          @click="resetTokens"
         >
           <q-tooltip>Reset to defaults</q-tooltip>
         </q-btn>
@@ -16,8 +16,8 @@
           flat
           dense
           :icon="isPersistent ? 'save' : 'save_alt'"
-          @click="togglePersistence"
           :color="isPersistent ? 'positive' : 'grey'"
+          @click="togglePersistence"
         >
           <q-tooltip>{{
             isPersistent ? 'Auto-save enabled' : 'Enable auto-save'

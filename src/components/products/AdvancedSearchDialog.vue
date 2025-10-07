@@ -368,18 +368,18 @@
       <q-btn
         color="primary"
         :label="$t('productsPage.advancedSearch.search')"
-        @click="performSearch"
         :disable="!hasValidCriteria"
         icon="search"
         unelevated
+        @click="performSearch"
       />
       <q-btn
         v-if="hasValidCriteria && previewResults.count > 0"
         flat
         color="info"
         :label="$t('productsPage.advancedSearch.previewTable')"
-        @click="$emit('preview-table')"
         icon="table_view"
+        @click="$emit('preview-table')"
       />
     </template>
   </BaseDialog>

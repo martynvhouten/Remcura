@@ -516,7 +516,7 @@ export class AnalyticsService {
       const productsScanned = new Set(
         stockLevelDTOs.map(entry => entry.productId)
       ).size;
-      let lowStockAlerts = lowStockItems?.length || 0;
+      const lowStockAlerts = lowStockItems?.length || 0;
 
       const productUpdateCounts = new Map<
         string,

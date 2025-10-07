@@ -1,16 +1,16 @@
 <template>
   <q-dialog
     :model-value="modelValue"
-    @update:model-value="$emit('update:modelValue', $event)"
     maximized
     transition-show="slide-left"
     transition-hide="slide-right"
+    @update:model-value="$emit('update:modelValue', $event)"
   >
     <q-card class="shopping-cart-dialog">
       <q-card-section class="row items-center q-pb-none">
         <div class="text-h6">{{ $t('productsPage.cart.title') }}</div>
         <q-space />
-        <q-btn icon="close" flat round dense v-close-popup />
+        <q-btn v-close-popup icon="close" flat round dense />
       </q-card-section>
 
       <q-card-section class="cart-content">
@@ -138,7 +138,7 @@
 
       <!-- Cart actions -->
       <q-card-actions v-if="cartItems.length > 0" align="right" class="q-pa-md">
-        <q-btn :label="$t('common.cancel')" flat color="grey" v-close-popup />
+        <q-btn v-close-popup :label="$t('common.cancel')" flat color="grey" />
         <q-btn
           :label="$t('productsPage.cart.checkout')"
           icon="shopping_cart_checkout"

@@ -5,16 +5,16 @@
       <input
         type="color"
         :value="token.value"
-        @input="updateValue(($event.target as HTMLInputElement)?.value ?? '')"
         class="color-input"
+        @input="updateValue(($event.target as HTMLInputElement)?.value ?? '')"
       />
       <input
         type="text"
         :value="token.value"
-        @input="updateValue(($event.target as HTMLInputElement)?.value ?? '')"
-        @blur="validateColor"
         class="color-text"
         :placeholder="token.cssVar"
+        @input="updateValue(($event.target as HTMLInputElement)?.value ?? '')"
+        @blur="validateColor"
       />
     </div>
     <div v-if="token.description" class="token-description">

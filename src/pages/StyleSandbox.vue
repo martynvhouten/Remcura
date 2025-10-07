@@ -188,12 +188,12 @@
             </div>
             <div class="test-preview">
               <q-banner :class="`alert-${alertType}`" rounded>
-                <template v-if="alertIcon" v-slot:avatar>
+                <template v-if="alertIcon" #avatar>
                   <q-icon :name="getAlertIcon(alertType)" />
                 </template>
                 <strong>{{ getAlertTitle(alertType) }}:</strong> This is a
                 sample alert message for testing purposes.
-                <template v-if="alertDismissible" v-slot:action>
+                <template v-if="alertDismissible" #action>
                   <q-btn flat label="Dismiss" />
                 </template>
               </q-banner>
@@ -241,9 +241,25 @@
           <div class="comparison-column">
             <h3>Quasar Components</h3>
             <div class="quasar-controls">
-              <q-input v-model="qInputSmall" outlined label="Small QInput" class="control-sm" dense />
-              <q-input v-model="qInputMedium" outlined label="Medium QInput" class="control-md" />
-              <q-input v-model="qInputLarge" outlined label="Large QInput" class="control-lg" />
+              <q-input
+                v-model="qInputSmall"
+                outlined
+                label="Small QInput"
+                class="control-sm"
+                dense
+              />
+              <q-input
+                v-model="qInputMedium"
+                outlined
+                label="Medium QInput"
+                class="control-md"
+              />
+              <q-input
+                v-model="qInputLarge"
+                outlined
+                label="Large QInput"
+                class="control-lg"
+              />
               <q-select
                 v-model="qSelectValue"
                 outlined
@@ -335,8 +351,8 @@
           This is a sample dialog for testing the dialog system.
         </q-card-section>
         <q-card-actions align="right">
-          <q-btn flat label="Cancel" v-close-popup />
-          <q-btn color="primary" label="OK" v-close-popup />
+          <q-btn v-close-popup flat label="Cancel" />
+          <q-btn v-close-popup color="primary" label="OK" />
         </q-card-actions>
       </q-card>
     </q-dialog>
@@ -344,20 +360,20 @@
     <!-- Sample Menu -->
     <q-menu v-model="showSampleMenu">
       <q-list style="min-width: 200px">
-        <q-item clickable v-close-popup>
+        <q-item v-close-popup clickable>
           <q-item-section avatar>
             <q-icon name="settings" />
           </q-item-section>
           <q-item-section>Settings</q-item-section>
         </q-item>
-        <q-item clickable v-close-popup>
+        <q-item v-close-popup clickable>
           <q-item-section avatar>
             <q-icon name="help" />
           </q-item-section>
           <q-item-section>Help</q-item-section>
         </q-item>
         <q-separator />
-        <q-item clickable v-close-popup>
+        <q-item v-close-popup clickable>
           <q-item-section avatar>
             <q-icon name="logout" />
           </q-item-section>
@@ -392,7 +408,7 @@
   const testValue = ref('');
   const testSelect = ref(null);
   const testTextarea = ref('');
-  
+
   // Comparison section values
   const qInputSmall = ref('');
   const qInputMedium = ref('');

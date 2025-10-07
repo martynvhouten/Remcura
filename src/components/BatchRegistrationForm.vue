@@ -14,7 +14,7 @@
     </q-card-section>
 
     <q-card-section>
-      <q-form @submit="onSubmit" class="q-gutter-md">
+      <q-form class="q-gutter-md" @submit="onSubmit">
         <!-- Product Selection -->
         <div class="row q-gutter-md">
           <div class="col-12 col-md-6">
@@ -29,12 +29,12 @@
               fill-input
               input-debounce="0"
               :loading="loadingProducts"
-              @filter="filterProducts"
               :rules="[rules.required]"
               emit-value
               map-options
+              @filter="filterProducts"
             >
-              <template v-slot:option="scope">
+              <template #option="scope">
                 <q-item v-bind="scope.itemProps">
                   <q-item-section>
                     <q-item-label>{{ scope.opt.name }}</q-item-label>
@@ -74,7 +74,7 @@
               counter
               maxlength="100"
             >
-              <template v-slot:prepend>
+              <template #prepend>
                 <q-icon name="qr_code_scanner" />
               </template>
             </q-input>
@@ -87,7 +87,7 @@
               counter
               maxlength="100"
             >
-              <template v-slot:prepend>
+              <template #prepend>
                 <q-icon name="business" />
               </template>
             </q-input>
@@ -106,7 +106,7 @@
                 val => validateExpiryDate(val),
               ]"
             >
-              <template v-slot:prepend>
+              <template #prepend>
                 <q-icon name="event" />
               </template>
             </q-input>
@@ -119,7 +119,7 @@
               type="date"
               :rules="[rules.required]"
             >
-              <template v-slot:prepend>
+              <template #prepend>
                 <q-icon name="inbox" />
               </template>
             </q-input>
@@ -142,7 +142,7 @@
                 rules.positive,
               ]"
             >
-              <template v-slot:prepend>
+              <template #prepend>
                 <q-icon name="inventory" />
               </template>
             </q-input>
@@ -157,7 +157,7 @@
               min="0"
               :suffix="form.currency"
             >
-              <template v-slot:prepend>
+              <template #prepend>
                 <q-icon name="euro" />
               </template>
             </q-input>
@@ -180,8 +180,8 @@
             :label="$t('common.cancel')"
             color="grey"
             flat
-            @click="resetForm"
             :disable="loading"
+            @click="resetForm"
           />
           <q-space />
           <q-btn

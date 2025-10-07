@@ -32,7 +32,7 @@ function addMissingNamespaces() {
   console.log('📝 Adding only missing namespaces to Dutch...');
 
   const nlFile = 'src/i18n/nl/index.ts';
-  let content = fs.readFileSync(nlFile, 'utf8');
+  const content = fs.readFileSync(nlFile, 'utf8');
 
   // Check if locations namespace already exists
   if (content.includes('locations:')) {
