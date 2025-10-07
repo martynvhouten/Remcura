@@ -107,11 +107,15 @@
   }
 
   const props = withDefaults(defineProps<Props>(), {
+    details: undefined,
     type: 'default',
+    warningText: undefined,
+    consequences: undefined,
     loading: false,
     cancelButtonText: '',
     confirmButtonText: '',
     confirmButtonColor: 'primary',
+    confirmButtonIcon: undefined,
     size: 'sm',
     requiresTextConfirmation: false,
     verificationPrompt: '',

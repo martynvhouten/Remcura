@@ -83,6 +83,8 @@
 
   const props = withDefaults(defineProps<Props>(), {
     alt: '',
+    width: undefined,
+    height: undefined,
     lazy: true,
     quality: 85,
     format: 'auto',
@@ -94,6 +96,7 @@
     useNativeLazyLoading: true,
     rootMargin: '50px',
     threshold: 0.1,
+    aspectRatio: undefined,
     objectFit: 'cover',
     borderRadius: '4px',
     clickable: false,

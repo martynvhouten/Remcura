@@ -115,6 +115,8 @@
     subtitle: undefined,
     iconColor: 'primary',
     severity: 'info',
+    showStatusIcon: false,
+    dismissible: false,
     padding: 'md',
     role: 'region',
     iconVariant: 'default',
@@ -122,6 +124,8 @@
     headerClass: '',
     contentClass: '',
     actionsClass: '',
+    id: undefined,
+    paddingClass: undefined,
   });
 
   const emit = defineEmits<{ close: []; dismiss: [] }>();

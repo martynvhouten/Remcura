@@ -121,6 +121,8 @@
   }
 
   const props = withDefaults(defineProps<Props>(), {
+    subtitle: undefined,
+    icon: undefined,
     size: 'md',
     persistent: false,
     loading: false,
@@ -130,6 +132,7 @@
     cancelButtonText: '',
     submitButtonText: '',
     submitButtonColor: 'primary',
+    submitButtonIcon: undefined,
     canSubmit: true,
     formErrors: () => [],
     showErrorSummary: true,

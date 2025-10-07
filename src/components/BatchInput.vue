@@ -193,8 +193,10 @@
   }
 
   const props = withDefaults(defineProps<Props>(), {
+    modelValue: undefined,
     viewMode: 'full',
     required: true,
+    locationId: undefined,
   });
 
   const emit = defineEmits<Emits>();

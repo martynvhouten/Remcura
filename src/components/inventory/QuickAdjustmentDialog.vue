@@ -562,6 +562,8 @@
 
   const props = withDefaults(defineProps<Props>(), {
     modelValue: false,
+    selectedProduct: undefined,
+    selectedLocation: undefined,
   });
 
   const emit = defineEmits<{

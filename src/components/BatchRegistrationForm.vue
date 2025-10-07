@@ -215,6 +215,8 @@
 
   const props = withDefaults(defineProps<Props>(), {
     embedded: false,
+    prefilledProductId: undefined,
+    prefilledLocationId: undefined,
   });
 
   const emit = defineEmits<{

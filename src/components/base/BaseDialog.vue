@@ -286,6 +286,9 @@
   }
 
   const props = withDefaults(defineProps<Props>(), {
+    title: undefined,
+    subtitle: undefined,
+    icon: undefined,
     persistent: false,
     maximized: false,
     preventMobileFullscreen: false,
@@ -294,18 +297,27 @@
     transitionShow: 'jump-up',
     transitionHide: 'jump-down',
     closable: true,
+    headerClass: undefined,
+    contentClass: undefined,
+    footerClass: undefined,
+    dialogClass: undefined,
     iconSize: '24px',
     variant: 'elegant',
     size: 'md',
     headerVariant: 'solid',
     statusColor: 'primary',
     loading: false,
+    loadingText: undefined,
     actionsDisabled: false,
+    primaryAction: undefined,
+    secondaryAction: undefined,
     primaryActionLoading: false,
+    steps: undefined,
     currentStep: 0,
     showSteps: false,
     autoFocus: true,
     isDirty: false,
+    confirmCloseMessage: undefined,
     keyboardShortcuts: true,
   });
 

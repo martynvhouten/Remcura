@@ -24,7 +24,10 @@
     height?: number | string;
   }
 
-  const props = withDefaults(defineProps<Props>(), { height: 240 });
+  const props = withDefaults(defineProps<Props>(), {
+    options: undefined,
+    height: 240,
+  });
   const emit = defineEmits<{
     (e: 'datapoint-click', payload: { label: string; value: number }): void;
   }>();

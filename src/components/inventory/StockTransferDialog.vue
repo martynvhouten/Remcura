@@ -355,6 +355,7 @@
 
   const props = withDefaults(defineProps<Props>(), {
     modelValue: false,
+    currentLocation: undefined,
   });
 
   const emit = defineEmits<{

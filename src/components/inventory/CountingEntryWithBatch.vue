@@ -227,7 +227,9 @@
   }
 
   const props = withDefaults(defineProps<Props>(), {
+    entry: undefined,
     viewMode: 'full',
+    existingEntry: undefined,
   });
 
   const emit = defineEmits<Emits>();

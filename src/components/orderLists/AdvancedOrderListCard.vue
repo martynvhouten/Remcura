@@ -471,6 +471,7 @@
   }
 
   const props = withDefaults(defineProps<Props>(), {
+    reorderAdvice: undefined,
     showRecommendations: true,
   });
 

@@ -41,6 +41,7 @@
     noTopPadding: false,
     noBottomPadding: false,
     noHorizontalPadding: false,
+    backgroundColor: undefined,
   });
 
   const slots = useSlots();

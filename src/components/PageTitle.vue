@@ -81,9 +81,13 @@
   }
 
   const props = withDefaults(defineProps<Props>(), {
+    subtitle: undefined,
+    icon: undefined,
     iconSize: '24px',
     iconColor: 'primary',
+    badge: undefined,
     badgeColor: 'primary',
+    meta: undefined,
   });
 
   // Define slots using defineSlots instead of useSlots
