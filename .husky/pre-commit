@@ -11,7 +11,7 @@ if git diff --cached --name-only | grep -q "^src/i18n/"; then
   npm run i18n:validate || exit 1
 fi
 
-# 3) Warn-only guard for hardcoded control sizes
-npm run -s guard:hardcoded-controls || true
+# 3) Warn-only guard for hardcoded control sizes (disabled - script not found)
+# npm run -s guard:hardcoded-controls || true
 
 echo "✅ Pre-commit checks passed!"
