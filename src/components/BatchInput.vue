@@ -15,19 +15,17 @@
         @update:model-value="onProductChange"
         :loading="productsLoading"
       >
+        <!-- @vue-ignore -->
         <template #option="scope">
           <q-item
-            v-bind="{
-              selected: (scope as any).selected,
-              focused: (scope as any).focused,
-            }"
+            v-bind="(scope as any)"
             clickable
           >
             <q-item-section>
-              <q-item-label>{{ (scope as any).option.name }}</q-item-label>
+              <q-item-label>{{ (scope as any).option?.name }}</q-item-label>
               <q-item-label caption
-                >{{ (scope as any).option.sku }} •
-                {{ (scope as any).option.category }}</q-item-label
+                >{{ (scope as any).option?.sku }} •
+                {{ (scope as any).option?.category }}</q-item-label
               >
             </q-item-section>
           </q-item>

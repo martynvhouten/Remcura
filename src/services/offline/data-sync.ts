@@ -1,4 +1,4 @@
-import { reactive } from 'vue';
+import { reactive, toRaw } from 'vue';
 import { supabase } from 'src/boot/supabase';
 import { handleSupabaseError } from 'src/utils/service-error-handler';
 import { analyticsService } from '../analytics';
@@ -54,8 +54,8 @@ export class DataSyncManager {
   /**
    * Get current offline data
    */
-  get offlineData(): OfflineData {
-    return this.data as OfflineData;
+  get offlineData(): any {
+    return this.data;
   }
 
   /**
