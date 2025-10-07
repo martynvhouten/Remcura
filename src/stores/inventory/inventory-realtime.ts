@@ -1,7 +1,7 @@
 import { ref, onUnmounted, type Ref } from 'vue';
 import { realtimeService } from '@/boot/supabase';
 import { inventoryLogger } from '@/utils/logger';
-import type { StockLevelRow, StockMovementRow } from '@/types/inventory';
+import type { StockLevelRow } from '@/types/inventory';
 import type { RealtimeChannel } from '@supabase/supabase-js';
 
 export function useInventoryRealtime(
@@ -35,21 +35,7 @@ export function useInventoryRealtime(
     }
   };
 
-  const handleStockMovementUpdate = async (payload: {
-    eventType: string;
-    new: StockMovementRow;
-    old: StockMovementRow;
-  }) => {
-    const practiceId = currentPracticeId.value;
-    if (!practiceId || !fetchStockMovements) {
-      return;
-    }
-
-    if (payload.eventType === 'INSERT') {
-      inventoryLogger.info('📈 New stock movement, refreshing...');
-      await fetchStockMovements(practiceId);
-    }
-  };
+  // Removed unused handleStockMovementUpdate function
 
   const startRealtimeSubscription = (practiceId: string) => {
     if (inventoryChannel.value) {

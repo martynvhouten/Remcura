@@ -1,6 +1,6 @@
 import { ref } from 'vue';
 import { supabase } from '@/boot/supabase';
-import { orderLogger, createLogger } from '@/utils/logger';
+import { createLogger } from '@/utils/logger';
 import { createEventEmitter, StoreEvents } from '@/utils/eventBus';
 import type { ReorderSuggestion } from './orderLists-minmax';
 import type { UrgencyLevel } from '@/types/inventory';
@@ -257,7 +257,7 @@ export function useOrderListsSupplierSplitting() {
 
         supplierOrder.earliest_delivery_date = (earliestDate
           .toISOString()
-          .split('T')[0] ?? '')  as string;
+          .split('T')[0] ?? '') as string;
 
         supplierOrder.latest_delivery_date = (latestDate
           .toISOString()
@@ -328,13 +328,16 @@ export function useOrderListsSupplierSplitting() {
         .map(order => Date.parse(order.estimated_delivery_date))
         .filter(time => Number.isFinite(time));
 
-      const fallbackDate = (new Date().toISOString().split('T')[0] ?? '') as string;
+      const fallbackDate = (new Date().toISOString().split('T')[0] ??
+        '') as string;
       const earliestDelivery = deliveryTimes.length
-        ? (new Date(Math.min(...deliveryTimes)).toISOString().split('T')[0] ?? '') as string
+        ? ((new Date(Math.min(...deliveryTimes)).toISOString().split('T')[0] ??
+            '') as string)
         : fallbackDate;
 
       const latestDelivery = deliveryTimes.length
-        ? (new Date(Math.max(...deliveryTimes)).toISOString().split('T')[0] ?? '') as string
+        ? ((new Date(Math.max(...deliveryTimes)).toISOString().split('T')[0] ??
+            '') as string)
         : fallbackDate;
 
       infoLog('Supplier splitting completed', {

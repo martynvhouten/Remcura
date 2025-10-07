@@ -73,9 +73,8 @@ export class InventoryOrderIntegrationService {
       }
 
       // 5. Create initial notifications for critical items
-      const criticalItems = await inventoryAutomationService.checkLowStockItems(
-        practiceId
-      );
+      const criticalItems =
+        await inventoryAutomationService.checkLowStockItems(practiceId);
       const urgentItems = criticalItems.filter(
         item => item.urgencyLevel === 'critical'
       );
@@ -195,9 +194,8 @@ export class InventoryOrderIntegrationService {
       // 5. Process the order
       if (needsApproval) {
         // Create draft order for approval
-        const result = await centralOrderService.createMultiSupplierOrder(
-          reorderItems
-        );
+        const result =
+          await centralOrderService.createMultiSupplierOrder(reorderItems);
 
         // Create notification for approval
         await supabase.from('notifications').insert({
@@ -222,9 +220,8 @@ export class InventoryOrderIntegrationService {
         };
       } else {
         // Process automatic order
-        const result = await centralOrderService.createMultiSupplierOrder(
-          reorderItems
-        );
+        const result =
+          await centralOrderService.createMultiSupplierOrder(reorderItems);
 
         return {
           itemsAnalyzed: suggestions.length,
@@ -239,7 +236,10 @@ export class InventoryOrderIntegrationService {
         };
       }
     } catch (error) {
-      orderLogger.error('Error in complete reorder workflow:', toLogData(error));
+      orderLogger.error(
+        'Error in complete reorder workflow:',
+        toLogData(error)
+      );
       return {
         itemsAnalyzed: 0,
         itemsToOrder: 0,
@@ -297,7 +297,7 @@ export class InventoryOrderIntegrationService {
       const successfulDeliveries = deliveryResults.filter(
         r => r.stockUpdated
       ).length;
-      const totalErrors = deliveryResults.reduce(
+      const _totalErrors = deliveryResults.reduce(
         (sum, r) => sum + r.errors.length,
         0
       );
@@ -356,7 +356,10 @@ export class InventoryOrderIntegrationService {
         automationStatus: automationSettings,
       };
     } catch (error) {
-      orderLogger.error('Error generating inventory dashboard data:', toLogData(error));
+      orderLogger.error(
+        'Error generating inventory dashboard data:',
+        toLogData(error)
+      );
       throw error;
     }
   }

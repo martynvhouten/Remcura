@@ -354,9 +354,13 @@ export class MagicInviteService {
         ).toISOString(),
         is_active: true,
         can_extend: true,
-        granted_permissions: this.getGuestPermissions(invite.target_role ?? 'guest'),
+        granted_permissions: this.getGuestPermissions(
+          invite.target_role ?? 'guest'
+        ),
         accessible_locations: invite.location_access,
-        restricted_features: this.getRestrictedFeatures(invite.target_role ?? 'guest'),
+        restricted_features: this.getRestrictedFeatures(
+          invite.target_role ?? 'guest'
+        ),
         device_fingerprint: request.device_fingerprint,
         ip_address: request.ip_address || '',
         user_agent: request.user_agent || '',
@@ -398,7 +402,7 @@ export class MagicInviteService {
   }
 
   // 📊 ANALYTICS & TRACKING
-  static async trackInviteView(inviteId: string): Promise<void> {
+  static async trackInviteView(_inviteId: string): Promise<void> {
     try {
       // TODO: Implement analytics tracking when the increment_invite_views RPC function is created
       // Tracking invite view

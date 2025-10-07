@@ -3,12 +3,7 @@ import { realtimeService } from '@/boot/supabase';
 import { createLogger } from '@/utils/logger';
 import { createEventEmitter, StoreEvents } from '@/utils/eventBus';
 import type { OrderListWithItems } from '@/types/stores';
-import type {
-  RealtimePostgresChangesPayload,
-  RealtimePostgresInsertPayload,
-  RealtimePostgresUpdatePayload,
-  RealtimePostgresDeletePayload,
-} from '@supabase/supabase-js';
+import type { RealtimePostgresChangesPayload } from '@supabase/supabase-js';
 import type { Tables } from '@/types';
 import type { RealtimeChannel } from '@supabase/supabase-js';
 
@@ -41,23 +36,7 @@ export function useOrderListsRealtime() {
     | ((practiceId: string) => Promise<void>)
     | null = null;
 
-  type RealtimeEventType = 'INSERT' | 'UPDATE' | 'DELETE';
-  type OrderListItemRecord = {
-    id: string;
-    minimum_stock: number | null;
-    maximum_stock: number | null;
-    current_stock: number | null;
-  };
-  type StockLevelRecord = {
-    product_id: string;
-    location_id: string;
-    current_quantity: number;
-    minimum_quantity: number | null;
-  };
-  type SupplierOrderRecord = {
-    id: string;
-    status: string;
-  };
+  // Removed unused type declarations
 
   type OrderListPayload = RealtimePostgresChangesPayload<Tables<'order_lists'>>;
   type OrderListItemPayload = RealtimePostgresChangesPayload<

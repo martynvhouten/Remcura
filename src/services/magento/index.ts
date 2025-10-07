@@ -1,7 +1,6 @@
 // Enhanced Magento API service with full implementation
 import {
   handleApiError,
-  ServiceErrorHandler,
   validateRequired,
 } from 'src/utils/service-error-handler';
 import { supabase } from 'src/services/supabase';
@@ -166,7 +165,7 @@ class MagentoApiService {
       clearTimeout(timeoutId);
 
       if (!response.ok) {
-        const errorBody = await response.text();
+        const _errorBody = await response.text();
         handleApiError(
           new Error(`HTTP ${response.status}: ${response.statusText}`),
           {
@@ -579,16 +578,14 @@ export const magentoDataService = {
 
       if (error) throw error;
 
-      return (
-        products?.map(product => ({
-          id: parseInt(product.id) || 0,
-          sku: product.sku || '',
-          name: product.name || '',
-          price: parseFloat(String((product as any).unit_price || 0)),
-          status: product.active ? 1 : 0,
-          type_id: 'simple',
-        })) || []
-      ) as MagentoProduct[];
+      return (products?.map(product => ({
+        id: parseInt(product.id) || 0,
+        sku: product.sku || '',
+        name: product.name || '',
+        price: parseFloat(String((product as any).unit_price || 0)),
+        status: product.active ? 1 : 0,
+        type_id: 'simple',
+      })) || []) as MagentoProduct[];
     } catch (error) {
       console.error('Error fetching products for Magento:', error);
       return [];
@@ -628,7 +625,8 @@ export const magentoDataService = {
           id: parseInt(order.id) || 0,
           order_id: parseInt(order.id) || 0,
           increment_id: `INV-${order.order_number || order.id}`,
-          created_at: order.updated_at || order.created_at || new Date().toISOString(),
+          created_at:
+            order.updated_at || order.created_at || new Date().toISOString(),
           grand_total:
             order.order_items?.reduce(
               (sum, item) => sum + (item.total_price || 0),

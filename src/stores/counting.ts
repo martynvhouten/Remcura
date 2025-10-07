@@ -396,7 +396,7 @@ export const useCountingStore = defineStore('counting', () => {
     const systemQuantity = row.system_quantity ?? 0;
     const countedQuantity = row.counted_quantity ?? 0;
     const varianceQuantity = row.variance_quantity ?? 0;
-    const notes = `Stock count adjustment: ${varianceQuantity > 0 ? '+' : ''}${varianceQuantity}`;
+    const _notes = `Stock count adjustment: ${varianceQuantity > 0 ? '+' : ''}${varianceQuantity}`;
 
     return {
       id: row.id,

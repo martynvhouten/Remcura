@@ -3,12 +3,10 @@ import type { Ref } from 'vue';
 import { supabase } from '@/boot/supabase';
 import { inventoryLogger } from '@/utils/logger';
 import type {
-  StockMovement,
   StockMovementInsert,
   StockUpdateRequest,
   MovementWithRelations,
   MovementType,
-  MovementQueryRow,
 } from '@/types/inventory';
 
 // Using shared MovementWithRelations from types

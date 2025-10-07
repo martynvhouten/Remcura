@@ -1,6 +1,6 @@
 import { ref, computed, onUnmounted } from 'vue';
 import { supabase } from '@/boot/supabase';
-import { productLogger, createLogger } from '@/utils/logger';
+import { createLogger } from '@/utils/logger';
 import { createEventEmitter, StoreEvents } from '@/utils/eventBus';
 import type { UserLoggedInPayload } from '@/types/events';
 import { useApiCache } from '@/composables/useCache';
@@ -11,9 +11,7 @@ import type {
   ProductFilter,
   StockLevelRow,
 } from '@/types/inventory';
-import type { Database } from '@/types';
-import type { AnalyticsSummary } from '@/types/analytics';
-import type { SupplierProduct } from '@/types/supplier';
+// Removed unused type imports: Database, AnalyticsSummary, SupplierProduct
 
 // RPC response interface for get_products_with_stock_levels
 
@@ -44,8 +42,6 @@ export function useProductsCore() {
   const productLog = createLogger('Products');
   const infoLog = (message: string, data?: Record<string, unknown>): void =>
     data ? productLog.structured(message, data) : productLog.info(message);
-  const warnLog = (message: string, data?: Record<string, unknown>): void =>
-    data ? productLog.structured(message, data) : productLog.warn(message);
   const errorLog = (message: string, data?: Record<string, unknown>): void =>
     data ? productLog.structured(message, data) : productLog.error(message);
 
@@ -223,14 +219,7 @@ export function useProductsCore() {
     }
   };
 
-  const determineStockStatus = (
-    current: number,
-    minimum: number
-  ): 'in_stock' | 'low_stock' | 'out_of_stock' => {
-    if (current <= 0) return 'out_of_stock';
-    if (current < minimum) return 'low_stock';
-    return 'in_stock';
-  };
+  // Removed unused determineStockStatus function
 
   const fetchCategories = async () => {
     try {
@@ -351,7 +340,9 @@ export function useProductsCore() {
   });
 
   const manualStockProducts = computed(() =>
-    products.value.filter(product => (product as any).batchStatus === 'manual_stock')
+    products.value.filter(
+      product => (product as any).batchStatus === 'manual_stock'
+    )
   );
 
   return {

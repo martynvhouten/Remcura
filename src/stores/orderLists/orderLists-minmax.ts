@@ -1,7 +1,11 @@
 import { ref, computed, onUnmounted } from 'vue';
 import { supabase } from '@/boot/supabase';
-import { orderLogger, createLogger } from '@/utils/logger';
-import type { UrgencyLevel, OrderListInsert, OrderListItemInsert } from '@/types/inventory';
+import { createLogger } from '@/utils/logger';
+import type {
+  UrgencyLevel,
+  OrderListInsert,
+  OrderListItemInsert,
+} from '@/types/inventory';
 
 // Min/Max specific types
 export interface MinMaxItem {
@@ -144,10 +148,9 @@ export function useOrderListsMinMax() {
       );
       const deliveryDate = new Date();
       deliveryDate.setDate(deliveryDate.getDate() + maxLeadTime);
-      estimatedDeliveryDates[supplier] = (
-        deliveryDate.toISOString().split('T')[0] ??
-        new Date().toISOString().split('T')[0]
-      ) as string;
+      estimatedDeliveryDates[supplier] = (deliveryDate
+        .toISOString()
+        .split('T')[0] ?? new Date().toISOString().split('T')[0]) as string;
     });
 
     return {
@@ -216,7 +219,7 @@ export function useOrderListsMinMax() {
   const updateStockLevel = async (
     itemId: string,
     newStockLevel: number,
-    reason?: string
+    _reason?: string
   ) => {
     try {
       log.info(`Updating stock level for item ${itemId} to ${newStockLevel}`);

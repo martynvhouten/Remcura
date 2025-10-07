@@ -359,7 +359,7 @@ export class PermissionService {
 
 // Composable for reactive permission checking
 export function usePermissions() {
-  const authStore = useAuthStore();
+  const _authStore = useAuthStore();
 
   const hasPermission = async (
     permissionType: PermissionType,

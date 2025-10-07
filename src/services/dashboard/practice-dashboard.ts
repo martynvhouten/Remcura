@@ -2,28 +2,9 @@ import { supabase } from '../supabase';
 import { dashboardLogger } from '@/utils/logger';
 import { t } from '@/utils/i18n-service';
 import { ServiceErrorHandler } from '@/utils/service-error-handler';
-import {
-  roleDashboardConfig,
-  type RoleDashboardDefinition,
-} from './role-config';
+import { roleDashboardConfig } from './role-config';
 import type { UserRole } from '@/types/permissions';
-import type { AnalyticsStockLevelDTO } from '@/types/analytics';
-import type { StockLevelView } from '@/types/inventory';
-
-const mapStockLevelToDashboardDTO = (
-  entry: StockLevelView
-): AnalyticsStockLevelDTO => ({
-  productId: entry.productId,
-  locationId: entry.locationId,
-  currentQuantity: entry.currentQuantity ?? 0,
-  minimumQuantity: entry.minimumQuantity ?? 0,
-  reservedQuantity: entry.reservedQuantity ?? 0,
-  availableQuantity: entry.availableQuantity ?? 0,
-  productName: entry.productName ?? undefined,
-  locationName: entry.locationName ?? undefined,
-  preferredSupplierId: entry.preferredSupplierId ?? undefined,
-  updatedAt: entry.updatedAt ?? undefined,
-});
+// Removed unused type imports: AnalyticsStockLevelDTO, StockLevelView
 
 export interface PracticeWidget {
   id: string;
@@ -125,7 +106,10 @@ class PracticeDashboardService {
         alerts,
       };
     } catch (error) {
-      dashboardLogger.error('Error loading practice dashboard:', error as Record<string, unknown>);
+      dashboardLogger.error(
+        'Error loading practice dashboard:',
+        error as Record<string, unknown>
+      );
       throw error;
     }
   }
@@ -241,7 +225,10 @@ class PracticeDashboardService {
         recentActivity: recentActivity?.length || 0,
       };
     } catch (error) {
-      dashboardLogger.error('Error loading metrics:', error as Record<string, unknown>);
+      dashboardLogger.error(
+        'Error loading metrics:',
+        error as Record<string, unknown>
+      );
       // Return fallback metrics
       return {
         totalProducts: 0,
@@ -292,7 +279,9 @@ class PracticeDashboardService {
         const widgetConfig = roleConfig.widgets.find(w => w.id === widgetId);
         widgets.push({
           id: widgetId,
-          title: t((widgetConfig?.titleKey ?? 'dashboard.widgets.error') as string),
+          title: t(
+            (widgetConfig?.titleKey ?? 'dashboard.widgets.error') as string
+          ),
           type: 'alert',
           data: { error: 'Failed to load widget data' },
           size: widgetConfig?.size || 'medium',
@@ -675,7 +664,9 @@ class PracticeDashboardService {
           item.total_items,
           `€${item.total_value}`,
           item.status,
-          item.created_at ? new Date(item.created_at).toLocaleDateString() : 'N/A',
+          item.created_at
+            ? new Date(item.created_at).toLocaleDateString()
+            : 'N/A',
         ]) || [],
     };
   }
@@ -734,14 +725,12 @@ class PracticeDashboardService {
       const createdAt = movement.created_at;
       const movementType = movement.movement_type;
       if (!createdAt || !movementType) return;
-      const week: string = new Date(createdAt).toISOString().split('T')[0] ?? ''; // Simplified to daily for now
+      const week: string =
+        new Date(createdAt).toISOString().split('T')[0] ?? ''; // Simplified to daily for now
       const type: string = movementType;
       if (!weeklyData[week]) weeklyData[week] = {};
-      if (!weeklyData[week][type])
-        weeklyData[week][type] = 0;
-      weeklyData[week][type] += Number(
-        movement.quantity_change ?? 0
-      );
+      if (!weeklyData[week][type]) weeklyData[week][type] = 0;
+      weeklyData[week][type] += Number(movement.quantity_change ?? 0);
     });
 
     return {
@@ -1102,7 +1091,8 @@ class PracticeDashboardService {
           variances: session.products_with_variance ?? 0,
           variance_value: session.total_variance_value,
           completed_at: session.completed_at,
-          status: (session.products_with_variance ?? 0) > 0 ? 'warning' : 'success',
+          status:
+            (session.products_with_variance ?? 0) > 0 ? 'warning' : 'success',
         })) || [],
     };
   }
@@ -1203,7 +1193,10 @@ class PracticeDashboardService {
         }
       }
     } catch (error) {
-      dashboardLogger.error('Error loading alerts:', error as Record<string, unknown>);
+      dashboardLogger.error(
+        'Error loading alerts:',
+        error as Record<string, unknown>
+      );
     }
 
     return alerts;
@@ -1352,7 +1345,7 @@ class PracticeDashboardService {
   }
 
   // GUEST role widget loaders
-  private async loadPublicInfo(practiceId: string) {
+  private async loadPublicInfo(_practiceId: string) {
     return {
       practice_name: 'Demo Practice',
       status: 'Active',
@@ -1362,7 +1355,7 @@ class PracticeDashboardService {
   }
 
   // PLATFORM_OWNER role widget loaders
-  private async loadSystemOverview() {
+  private async loadSystemOverview(_practiceId?: string) {
     // Deze zouden echte platform metrics moeten zijn
     return {
       total_practices: 150,

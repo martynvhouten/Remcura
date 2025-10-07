@@ -4,7 +4,6 @@ import { useAuthStore } from '../auth';
 import { useProductsStore } from '../products';
 import { createLogger } from '@/utils/logger';
 import type {
-  OrderListStatus,
   OrderListDTO,
   OrderListItemDTO,
   OrderListInsert,

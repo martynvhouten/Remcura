@@ -5,8 +5,7 @@ import {
   type SupplierOrder,
   type OrderSendingResult,
 } from '@/stores/orderLists/orderLists-supplier-splitting';
-import { useInventoryMovements } from '@/stores/inventory/inventory-movements';
-import type { ReorderSuggestion } from '@/stores/orderLists/orderLists-minmax';
+// Removed unused imports: useInventoryMovements, ReorderSuggestion
 import type { LowStockItemDTO } from '@/types/analytics';
 import { AnalyticsService } from '@/services/analytics';
 
@@ -287,7 +286,7 @@ export class CentralOrderService {
 
       if (error) throw error;
 
-      return (((data as SupplierOrderRow[] | null) || []).map(order => ({
+      return ((data as SupplierOrderRow[] | null) || []).map(order => ({
         orderId: order.id,
         supplierOrderId: order.id,
         supplierId: order.suppliers?.id ?? '',
@@ -298,7 +297,7 @@ export class CentralOrderService {
         estimatedDelivery: order.delivery_expected ?? null,
         actualDelivery: order.delivery_confirmed_at ?? null,
         lastUpdated: order.updated_at ?? null,
-      })) as any);
+      })) as any;
     } catch (error) {
       orderLogger.error(
         'Error tracking order status:',

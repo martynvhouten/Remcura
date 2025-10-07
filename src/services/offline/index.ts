@@ -153,7 +153,7 @@ export class OfflineService {
 
     try {
       const results = await actionQueue.executeAll();
-      const successCount = results.filter(r => r.success).length;
+      const _successCount = results.filter(r => r.success).length;
       const failureCount = results.filter(r => !r.success).length;
 
       // Sync completed - debug logging removed

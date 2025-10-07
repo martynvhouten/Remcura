@@ -1,9 +1,7 @@
 import { supabase } from '@/boot/supabase';
 import { orderLogger } from '@/utils/logger';
-import type { SupplierOrder } from '@/stores/orderLists/orderLists-supplier-splitting';
 import type { OrderListWithItems } from '@/types/stores';
 import type {
-  OrderListDTO,
   OrderListInsert,
   OrderListItemDTO,
   OrderListItemInsert,
@@ -387,7 +385,8 @@ export class MultiSupplierOrderListService {
       );
       const avgLeadTime =
         items.reduce(
-          (sum, item) => sum + ((item as any).supplier_product?.lead_time_days ?? 0),
+          (sum, item) =>
+            sum + ((item as any).supplier_product?.lead_time_days ?? 0),
           0
         ) / (totalItems || 1);
 
@@ -420,7 +419,8 @@ export class MultiSupplierOrderListService {
         if (!supplier) return;
         supplier.item_count++;
         supplier.total_value += item.unit_price ?? 0;
-        supplier.total_lead_time += (item as any).supplier_product?.lead_time_days ?? 0;
+        supplier.total_lead_time +=
+          (item as any).supplier_product?.lead_time_days ?? 0;
       });
 
       const supplierBreakdown = Array.from(supplierMap.values()).map(

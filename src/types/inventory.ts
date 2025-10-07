@@ -1,9 +1,4 @@
-import type {
-  Tables,
-  TablesInsert,
-  TablesUpdate,
-  Json,
-} from './supabase.generated';
+import type { Tables, TablesInsert, TablesUpdate } from './supabase.generated';
 import type { Database } from './supabase.generated';
 
 type PracticeLocationRow = Tables<'practice_locations'>;

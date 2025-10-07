@@ -410,7 +410,7 @@ export class OrderProcessingService {
     }
 
     const emailSubject = subject || `Order ${order.order_number} - Remcura`;
-    const emailBody = this.generateOrderHTML(order);
+    const _emailBody = this.generateOrderHTML(order);
 
     // In a real implementation, you would call your email service here
     // Debug email logging removed for production

@@ -1,5 +1,5 @@
 import { Notify } from 'quasar';
-import type { AppError, LogData } from '@/types/logging';
+import type { AppError } from '@/types/logging';
 
 export class ErrorHandler {
   static handle(error: Error | AppError, context?: string): void {

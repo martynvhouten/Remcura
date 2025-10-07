@@ -90,7 +90,7 @@ export function useBulkData() {
 
   const loadSupplierProductsForProducts = async (
     productIds: string[],
-    practiceId: string
+    _practiceId: string
   ): Promise<Record<string, SupplierProductRecord[]>> => {
     if (!productIds.length) return {};
 

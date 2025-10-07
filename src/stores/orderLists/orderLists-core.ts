@@ -7,10 +7,7 @@ import {
   OrderListRow,
   OrderListItemRow,
   OrderListStatus,
-  OrderListDTO,
   OrderListItemDTO,
-  OrderListInsert,
-  OrderListItemInsert,
   mapOrderListRowToDTO,
   mapOrderListItemRowToDTO,
 } from '@/types/inventory';
@@ -104,21 +101,25 @@ export function useOrderListsCore() {
         }
       >;
 
-      orderLists.value = (orderListsWithRelations as any).map((orderList: any) => {
-        const dto = mapOrderListRowToDTO(orderList);
-        dto.supplier = orderList.supplier ?? null;
-        const items: OrderListItemDTO[] = (orderList.items ?? []).map((item: any) => {
-          const itemDto = mapOrderListItemRowToDTO(item);
-          itemDto.product = item.product ?? null;
-          itemDto.supplier_product = item.supplier_product ?? null;
-          return itemDto;
-        });
+      orderLists.value = (orderListsWithRelations as any).map(
+        (orderList: any) => {
+          const dto = mapOrderListRowToDTO(orderList);
+          dto.supplier = orderList.supplier ?? null;
+          const items: OrderListItemDTO[] = (orderList.items ?? []).map(
+            (item: any) => {
+              const itemDto = mapOrderListItemRowToDTO(item);
+              itemDto.product = item.product ?? null;
+              itemDto.supplier_product = item.supplier_product ?? null;
+              return itemDto;
+            }
+          );
 
-        return {
-          ...dto,
-          items,
-        } satisfies OrderListWithItems;
-      });
+          return {
+            ...dto,
+            items,
+          } satisfies OrderListWithItems;
+        }
+      );
     } catch (err: unknown) {
       const handledError = ServiceErrorHandler.handle(err as Error, {
         service: 'OrderListsStore',
@@ -232,8 +233,9 @@ export function useOrderListsCore() {
         if (request.supplier_id !== undefined) {
           orderList.supplier_id = request.supplier_id;
           orderList.supplier =
-            (suppliersStore.suppliers as any).find((s: any) => s.id === request.supplier_id) ??
-            null;
+            (suppliersStore.suppliers as any).find(
+              (s: any) => s.id === request.supplier_id
+            ) ?? null;
         }
         if (request.location_id !== undefined) {
           orderList.location_id = request.location_id;
@@ -318,7 +320,9 @@ export function useOrderListsCore() {
       if (error) throw error;
 
       // Update local state
-      const orderList = orderLists.value.find((list: any) => list.id === orderListId);
+      const orderList = orderLists.value.find(
+        (list: any) => list.id === orderListId
+      );
       if (orderList) {
         orderList.status = status;
         orderList.updated_at = updateData.updated_at ?? orderList.updated_at;

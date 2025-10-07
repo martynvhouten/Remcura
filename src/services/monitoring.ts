@@ -4,21 +4,10 @@
  */
 
 import type { Router } from 'vue-router';
-import { logger } from '@/utils/logger';
 
-type StructuredLogger = ReturnType<typeof logger.createContext>;
+// Removed unused logger import and StructuredLogger type
 
-const createStructuredLogger = (context: string) => {
-  const base = logger.createContext(context);
-  return {
-    info: (message: string, data?: Record<string, unknown>) =>
-      data ? base.structured(message, data) : base.info(message),
-    warn: (message: string, data?: Record<string, unknown>) =>
-      data ? base.structured(message, data) : base.warn(message),
-    error: (message: string, data?: Record<string, unknown>) =>
-      data ? base.structured(message, data) : base.error(message),
-  } as StructuredLogger;
-};
+// Removed unused createStructuredLogger function
 
 export interface MonitoringConfig {
   dsn?: string;

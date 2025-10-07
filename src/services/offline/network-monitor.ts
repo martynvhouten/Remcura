@@ -94,7 +94,7 @@ export class NetworkMonitor {
 
     try {
       // Try to fetch a small resource to verify actual connectivity
-      const response = await fetch('/ping', {
+      const _response = await fetch('/ping', {
         method: 'HEAD',
         mode: 'no-cors',
       });

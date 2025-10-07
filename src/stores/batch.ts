@@ -3,14 +3,10 @@ import { ref, computed } from 'vue';
 import { supabase } from '@/boot/supabase';
 import type {
   ProductBatch,
-  ProductBatchWithDetails,
-  ProductBatchWithDetailsView,
-  CreateBatchRequest,
   UpdateBatchRequest,
   ExpiringBatch,
   BatchMovement,
 } from '@/types/inventory';
-import { mapProductBatchRowToDetails } from '@/types/inventory';
 import type { Tables } from '@/types';
 import { ServiceErrorHandler } from '@/utils/service-error-handler';
 import {
@@ -21,12 +17,7 @@ import {
   areBatchNumbersSimilar,
 } from '@/utils/batch-helpers';
 import { toArray } from '@/utils/array';
-import { t } from '@/utils/i18n-service';
-import {
-  mapProductBatchRow,
-  ProductBatchDTO,
-  mapStockLevelRow,
-} from '@/domain/inventory/bridge';
+import { mapProductBatchRow, ProductBatchDTO } from '@/domain/inventory/bridge';
 import {
   toProductBatchInsert,
   toProductBatchUpdate,
@@ -299,7 +290,11 @@ export const useBatchStore = defineStore('batch', () => {
         expiry_date: item.expiry_date,
         current_quantity: item.current_quantity,
         days_until_expiry: item.days_until_expiry,
-        urgency_level: item.urgency_level as 'warning' | 'high' | 'critical' | 'expired',
+        urgency_level: item.urgency_level as
+          | 'warning'
+          | 'high'
+          | 'critical'
+          | 'expired',
       })) as ExpiringBatch[];
       return expiringBatches.value;
     } catch (err) {
@@ -323,14 +318,14 @@ export const useBatchStore = defineStore('batch', () => {
       loading.value = true;
       error.value = null;
 
-      const { data, error: fetchError } = await supabase.rpc(
+      const { data, error: fetchError } = (await supabase.rpc(
         'get_fifo_batches',
         {
           p_product_id: productId,
           p_location_id: locationId,
           p_quantity_needed: quantity,
         }
-      ) as { data: FifoBatchResult[] | null; error: any };
+      )) as { data: FifoBatchResult[] | null; error: any };
 
       if (fetchError) {
         const { data: rows, error: fbError } = await supabase
@@ -635,8 +630,7 @@ export const useBatchStore = defineStore('batch', () => {
     const existingBatch = batches.value.find(
       batch =>
         batch.productId === batchData.product_id &&
-        batch.batchNumber.toLowerCase() ===
-          batchData.batch_number.toLowerCase()
+        batch.batchNumber.toLowerCase() === batchData.batch_number.toLowerCase()
     );
 
     if (existingBatch) {
