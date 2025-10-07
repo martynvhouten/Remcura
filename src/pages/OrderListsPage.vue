@@ -428,12 +428,13 @@
       );
       if (supplierFilter && supplierFilter.type === 'select') {
         // Break type inference to avoid deep instantiation
-        const options: Array<{ label: string; value: string }> = suppliers.map(
-          supplier => ({
+        const options: Array<any> = [];
+        for (const supplier of suppliers as any[]) {
+          options.push({
             label: supplier.name,
             value: supplier.id,
-          })
-        );
+          });
+        }
         (supplierFilter as any).options = options;
       }
     },
