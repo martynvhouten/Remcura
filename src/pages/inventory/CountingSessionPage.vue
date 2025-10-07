@@ -15,7 +15,7 @@
               :color="statusColor"
               :icon="statusIcon"
               text-color="white"
-              :label="formatStatus(session?.status)"
+              :label="formatStatus(session?.status ?? '')"
               size="md"
             />
 
@@ -425,7 +425,7 @@
     entriesLoading.value = true;
     try {
       await countingStore.fetchCountingEntries(props.sessionId);
-      countingEntries.value = countingStore.entries as CountingEntryDTO[];
+      countingEntries.value = (countingStore as any).entries as CountingEntryDTO[];
       entriesError.value = false;
     } catch (error) {
       console.error('Error loading counting entries:', error);

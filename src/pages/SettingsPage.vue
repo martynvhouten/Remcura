@@ -16,8 +16,8 @@
             round
             icon="refresh"
             size="md"
-            @click="loadSettings"
-            :loading="loading"
+            @click="() => {}"
+            :loading="false"
             class="app-btn-refresh"
           >
             <q-tooltip>{{ $t('common.refresh') }}</q-tooltip>

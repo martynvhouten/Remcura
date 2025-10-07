@@ -433,7 +433,7 @@
         icon="add_shopping_cart"
         color="primary"
         :disable="product?.stock_status === 'out_of_stock'"
-        @click="emit('addToCart', product)"
+        @click="product && emit('addToCart', product)"
         unelevated
       />
       <q-btn
@@ -441,7 +441,7 @@
         icon="playlist_add"
         color="secondary"
         outline
-        @click="emit('addToOrderList', product)"
+        @click="product && emit('addToOrderList', product)"
       />
       <q-btn
         :label="$t('common.close')"

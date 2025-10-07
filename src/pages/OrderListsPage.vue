@@ -138,7 +138,7 @@
         class="col-12 col-sm-6 col-md-4 order-list-col"
       >
         <SimpleOrderListCard
-          :order-list="orderList"
+          :order-list="(orderList as any)"
           :reorder-advice="getOrderAdviceForList(orderList.id)"
         />
       </div>

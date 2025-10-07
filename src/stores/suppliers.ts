@@ -60,7 +60,7 @@ export const useSuppliersStore = defineStore('suppliers', () => {
   );
 
   const getSupplierById = computed(
-    () => (id: string) => suppliers.value.find(supplier => supplier.id === id)
+    () => (id: string) => suppliers.value.find((supplier: any) => supplier.id === id)
   );
 
   const getSupplierProductsBySupplier = computed(
@@ -92,7 +92,7 @@ export const useSuppliersStore = defineStore('suppliers', () => {
 
       if (error) throw error;
 
-      suppliers.value = (data ?? []).map(row =>
+      suppliers.value = ((data as any) ?? []).map((row: any) =>
         mapSupplierRowToView(row as SupplierRow)
       );
       lastSyncAt.value = new Date();
@@ -131,8 +131,9 @@ export const useSuppliersStore = defineStore('suppliers', () => {
         throw new Error('Failed to create supplier');
       }
 
-      suppliers.value.push(mapSupplierRowToView(data as SupplierRow));
-      return mapSupplierRowToView(data as SupplierRow);
+      const newSupplier = mapSupplierRowToView((data as any) as SupplierRow);
+      (suppliers.value as any).push(newSupplier);
+      return newSupplier;
     } catch (error) {
       log.error('Error creating supplier', {
         error: error instanceof Error ? error.message : String(error),
@@ -158,11 +159,12 @@ export const useSuppliersStore = defineStore('suppliers', () => {
       }
 
       const index = suppliers.value.findIndex(s => s.id === id);
+      const updatedSupplier = mapSupplierRowToView((data as any) as SupplierRow);
       if (index >= 0) {
-        suppliers.value[index] = mapSupplierRowToView(data as SupplierRow);
+        (suppliers.value as any)[index] = updatedSupplier;
       }
 
-      return mapSupplierRowToView(data as SupplierRow);
+      return updatedSupplier;
     } catch (error) {
       log.error('Error updating supplier', {
         error: error instanceof Error ? error.message : String(error),
@@ -182,7 +184,7 @@ export const useSuppliersStore = defineStore('suppliers', () => {
 
       if (error) throw error;
 
-      suppliers.value = suppliers.value.filter(s => s.id !== id);
+      suppliers.value = (suppliers.value as any).filter((s: any) => s.id !== id);
     } catch (error) {
       log.error('Error deleting supplier', {
         error: error instanceof Error ? error.message : String(error),

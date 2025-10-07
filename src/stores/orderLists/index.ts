@@ -15,8 +15,8 @@ export type {
 
 export const useOrderListsStore = defineStore('orderLists', () => {
   const core = useOrderListsCore();
-  const items = useOrderListsItems(core.orderLists);
-  const integration = useOrderListsIntegration(core.orderLists);
+  const items = useOrderListsItems(core.orderLists as any);
+  const integration = useOrderListsIntegration(core.orderLists as any);
 
   const minmax = useOrderListsMinMax();
   const supplierSplitting = useOrderListsSupplierSplitting();

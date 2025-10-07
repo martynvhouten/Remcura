@@ -36,17 +36,17 @@ export function useOrderListsCore() {
 
   // Getters
   const getOrderListById = computed(() => {
-    return (id: string) => orderLists.value.find(list => list.id === id);
+    return (id: string) => orderLists.value.find((list: any) => list.id === id);
   });
 
   const getOrderListsBySupplier = computed(() => {
     return (supplierId: string) =>
-      orderLists.value.filter(list => list.supplier_id === supplierId);
+      orderLists.value.filter((list: any) => list.supplier_id === supplierId);
   });
 
   const getOrderListsByStatus = computed(() => {
     return (status: OrderListStatus) =>
-      orderLists.value.filter(list => list.status === status);
+      orderLists.value.filter((list: any) => list.status === status);
   });
 
   const orderListStats = computed(() => {
@@ -104,10 +104,10 @@ export function useOrderListsCore() {
         }
       >;
 
-      orderLists.value = orderListsWithRelations.map(orderList => {
+      orderLists.value = (orderListsWithRelations as any).map((orderList: any) => {
         const dto = mapOrderListRowToDTO(orderList);
         dto.supplier = orderList.supplier ?? null;
-        const items: OrderListItemDTO[] = (orderList.items ?? []).map(item => {
+        const items: OrderListItemDTO[] = (orderList.items ?? []).map((item: any) => {
           const itemDto = mapOrderListItemRowToDTO(item);
           itemDto.product = item.product ?? null;
           itemDto.supplier_product = item.supplier_product ?? null;
@@ -175,7 +175,7 @@ export function useOrderListsCore() {
         items: [],
       };
 
-      orderLists.value.unshift(createdOrderList);
+      (orderLists.value as any).unshift(createdOrderList);
       return createdOrderList;
     } catch (err) {
       const handledError = ServiceErrorHandler.handle(err as Error, {
@@ -232,7 +232,7 @@ export function useOrderListsCore() {
         if (request.supplier_id !== undefined) {
           orderList.supplier_id = request.supplier_id;
           orderList.supplier =
-            suppliersStore.suppliers.find(s => s.id === request.supplier_id) ??
+            (suppliersStore.suppliers as any).find((s: any) => s.id === request.supplier_id) ??
             null;
         }
         if (request.location_id !== undefined) {
@@ -318,7 +318,7 @@ export function useOrderListsCore() {
       if (error) throw error;
 
       // Update local state
-      const orderList = orderLists.value.find(list => list.id === orderListId);
+      const orderList = orderLists.value.find((list: any) => list.id === orderListId);
       if (orderList) {
         orderList.status = status;
         orderList.updated_at = updateData.updated_at ?? orderList.updated_at;
