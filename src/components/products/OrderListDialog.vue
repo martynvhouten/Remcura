@@ -336,7 +336,7 @@
     urgent_order: false,
   });
 
-  const orderListItems = ref<OrderListItem[]>([]);
+  const orderListItems = ref<any[]>([]);
   const showAddProductDialog = ref(false);
   const selectedProductId = ref('');
   const newItemQuantity = ref(1);
@@ -432,7 +432,7 @@
     return product?.sku || t('common.noSku');
   };
 
-  const updateItemTotal = (item: OrderListItem) => {
+  const updateItemTotal = (item: any) => {
     item.total_price = item.unit_price * item.requested_quantity;
   };
 

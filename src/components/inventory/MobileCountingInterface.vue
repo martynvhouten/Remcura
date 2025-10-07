@@ -202,7 +202,7 @@
           <Transition name="slide-up">
             <div v-if="showProductInput" class="product-input-container">
               <ProductCountingCard
-                :product="currentProduct"
+                :product="(currentProduct as any)"
                 :method="selectedMethod"
                 :current-stock="currentStock"
                 :is-loading="submitting"
@@ -217,7 +217,7 @@
         <!-- Manual Mode -->
         <div v-if="selectedMethod === 'manual'" class="manual-mode">
           <ProductCountingCard
-            :product="currentProduct"
+            :product="(currentProduct as any)"
             :method="selectedMethod"
             :current-stock="currentStock"
             :is-loading="submitting"
