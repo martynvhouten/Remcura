@@ -427,10 +427,14 @@
         f => f.id === 'supplier'
       );
       if (supplierFilter && supplierFilter.type === 'select') {
-        (supplierFilter as any).options = suppliers.map(supplier => ({
-          label: supplier.name,
-          value: supplier.id,
-        }));
+        // Break type inference to avoid deep instantiation
+        const options: Array<{ label: string; value: string }> = suppliers.map(
+          supplier => ({
+            label: supplier.name,
+            value: supplier.id,
+          })
+        );
+        (supplierFilter as any).options = options;
       }
     },
     { immediate: true }
