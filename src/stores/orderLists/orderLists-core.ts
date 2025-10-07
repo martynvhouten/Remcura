@@ -36,17 +36,27 @@ export function useOrderListsCore() {
 
   // Getters
   const getOrderListById = computed(() => {
-    return (id: string) => orderLists.value.find((list: any) => list.id === id);
+    return (id: string) => {
+      // Break type inference to avoid deep instantiation
+      const lists = orderLists.value as OrderListWithItems[];
+      return lists.find(list => list.id === id);
+    };
   });
 
   const getOrderListsBySupplier = computed(() => {
-    return (supplierId: string) =>
-      orderLists.value.filter((list: any) => list.supplier_id === supplierId);
+    return (supplierId: string) => {
+      // Break type inference to avoid deep instantiation
+      const lists = orderLists.value as OrderListWithItems[];
+      return lists.filter(list => list.supplier_id === supplierId);
+    };
   });
 
   const getOrderListsByStatus = computed(() => {
-    return (status: OrderListStatus) =>
-      orderLists.value.filter((list: any) => list.status === status);
+    return (status: OrderListStatus) => {
+      // Break type inference to avoid deep instantiation
+      const lists = orderLists.value as OrderListWithItems[];
+      return lists.filter(list => list.status === status);
+    };
   });
 
   const orderListStats = computed(() => {
@@ -104,25 +114,22 @@ export function useOrderListsCore() {
         }
       >;
 
-      orderLists.value = (orderListsWithRelations as any).map(
-        (orderList: any) => {
-          const dto = mapOrderListRowToDTO(orderList);
-          dto.supplier = orderList.supplier ?? null;
-          const items: OrderListItemDTO[] = (orderList.items ?? []).map(
-            (item: any) => {
-              const itemDto = mapOrderListItemRowToDTO(item);
-              itemDto.product = item.product ?? null;
-              itemDto.supplier_product = item.supplier_product ?? null;
-              return itemDto;
-            }
-          );
-
-          return {
-            ...dto,
-            items,
-          } satisfies OrderListWithItems;
+      // boundary: external data from Supabase with relations
+      // Break type inference to avoid deep instantiation
+      const result: OrderListWithItems[] = [];
+      for (const orderList of orderListsWithRelations ?? []) {
+        const dto = mapOrderListRowToDTO(orderList);
+        dto.supplier = orderList.supplier ?? null;
+        const items: OrderListItemDTO[] = [];
+        for (const item of orderList.items ?? []) {
+          const itemDto = mapOrderListItemRowToDTO(item);
+          itemDto.product = item.product ?? null;
+          itemDto.supplier_product = item.supplier_product ?? null;
+          items.push(itemDto);
         }
-      );
+        result.push({ ...dto, items });
+      }
+      orderLists.value = result;
     } catch (err: unknown) {
       const handledError = ServiceErrorHandler.handle(err as Error, {
         service: 'OrderListsStore',
@@ -179,7 +186,8 @@ export function useOrderListsCore() {
         items: [],
       };
 
-      (orderLists.value as any).unshift(createdOrderList);
+      // Break type inference to avoid deep instantiation
+      (orderLists.value as OrderListWithItems[]).unshift(createdOrderList);
       return createdOrderList;
     } catch (err) {
       const handledError = ServiceErrorHandler.handle(err as Error, {
@@ -235,8 +243,9 @@ export function useOrderListsCore() {
           orderList.description = request.description;
         if (request.supplier_id !== undefined) {
           orderList.supplier_id = request.supplier_id;
+          // Break type inference to avoid deep instantiation
           orderList.supplier =
-            (suppliersStore.suppliers as any).find(
+            (suppliersStore.suppliers as any[]).find(
               (s: any) => s.id === request.supplier_id
             ) ?? null;
         }
@@ -323,8 +332,9 @@ export function useOrderListsCore() {
       if (error) throw error;
 
       // Update local state
-      const orderList = orderLists.value.find(
-        (list: any) => list.id === orderListId
+      // Break type inference to avoid deep instantiation
+      const orderList = (orderLists.value as OrderListWithItems[]).find(
+        list => list.id === orderListId
       );
       if (orderList) {
         orderList.status = status;

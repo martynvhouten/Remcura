@@ -88,6 +88,7 @@ export function useOrderListsRealtime() {
 
     try {
       if (orderListsChannel.value) {
+        // boundary: external data - Supabase Realtime channel
         await realtimeService.unsubscribe(orderListsChannel.value as any);
         orderListsChannel.value = null;
       }
@@ -98,6 +99,7 @@ export function useOrderListsRealtime() {
         supplierOrdersChannel,
       ]) {
         if (channelRef.value) {
+          // boundary: external data - Supabase Realtime channel
           await realtimeService.unsubscribe(channelRef.value as any);
           channelRef.value = null;
         }

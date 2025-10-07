@@ -10,8 +10,9 @@ import type {
   ProductCategory,
   ProductFilter,
   StockLevelRow,
+  SupplierProductRow,
 } from '@/types/inventory';
-// Removed unused type imports: Database, AnalyticsSummary, SupplierProduct
+// Removed unused type imports: Database, AnalyticsSummary
 
 // RPC response interface for get_products_with_stock_levels
 
@@ -341,7 +342,7 @@ export function useProductsCore() {
 
   const manualStockProducts = computed(() =>
     products.value.filter(
-      product => (product as any).batchStatus === 'manual_stock'
+      product => product.legacy?.batchStatus === 'manual_stock'
     )
   );
 
