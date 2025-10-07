@@ -352,7 +352,7 @@
   const isEditing = computed(() => !!props.orderList);
 
   const supplierOptions = computed(() =>
-    suppliersStore.suppliers.map(supplier => ({
+    (suppliersStore.suppliers as any).map((supplier: any) => ({
       label: supplier.name,
       value: supplier.id,
     }))
