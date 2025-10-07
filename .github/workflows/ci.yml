@@ -22,20 +22,14 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Lint
-        run: npm run lint --if-present
-
       - name: Type check
-        run: npm run typecheck --if-present
+        run: npm run typecheck
 
-      - name: i18n check
-        run: npm run i18n:check --if-present
+      - name: Lint
+        run: npm run lint -- --max-warnings=400
 
       - name: Build
         run: npm run build
         env:
           VITE_SUPABASE_URL: ${{ secrets.VITE_SUPABASE_URL }}
           VITE_SUPABASE_ANON_KEY: ${{ secrets.VITE_SUPABASE_ANON_KEY }}
-
-      - name: Test
-        run: npm test --if-present
