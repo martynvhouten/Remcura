@@ -56,7 +56,7 @@ export const useSuppliersStore = defineStore('suppliers', () => {
   );
 
   const suppliersWithSyncEnabled = computed(() =>
-    suppliers.value.filter(supplier => supplier.sync_enabled)
+    suppliers.value.filter((supplier: any) => supplier.sync_enabled)
   );
 
   const getSupplierById = computed(

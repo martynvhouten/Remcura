@@ -39,7 +39,7 @@
       <div class="basic-info">
         <div class="info-item">
           <q-icon name="inventory" class="info-icon icon-size-sm" />
-          <span>{{ orderList.total_items || 0 }} producten</span>
+          <span>{{ (orderList as any).totalItems || 0 }} producten</span>
         </div>
         <div v-if="hasItemsToOrder" class="info-item order-ready">
           <q-icon name="shopping_cart" class="info-icon icon-size-sm" />

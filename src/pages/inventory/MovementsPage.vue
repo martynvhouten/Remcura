@@ -73,7 +73,7 @@
       <div v-else class="medical-table">
         <q-table
           :rows="filteredMovements"
-          :columns="columns"
+          :columns="columns as any"
           row-key="id"
           v-model:pagination="pagination"
           :rows-number="inventoryStore.stockMovementsTotal || 0"
@@ -483,7 +483,7 @@
       const name = r.product?.name ?? '';
       const delta = String(r.quantity_change ?? 0);
       const loc = r.location?.name ?? '';
-      const created = new Date(r.created_at).toISOString();
+      const created = r.created_at ? new Date(r.created_at).toISOString() : '';
       const note = (r.notes ?? '').replace(/"/g, '""');
       const line = [type, sku, name, delta, loc, created, `"${note}` + '"'].join(',');
       csvRows.push(line);
