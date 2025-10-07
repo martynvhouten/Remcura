@@ -41,6 +41,7 @@ export class OrderProcessingService {
     }
 
     // Generate order number
+    // boundary: external data - Supabase RPC parameter type
     const { data: orderNumber, error: numberError } = await supabase.rpc(
       'generate_order_number',
       { practice_uuid: practiceId } as any
@@ -435,6 +436,7 @@ export class OrderProcessingService {
     }
 
     // Convert to Magento format
+    // boundary: external data - Magento API format
     const magentoOrder: any = {
       status: 'pending',
       items:
@@ -448,6 +450,7 @@ export class OrderProcessingService {
 
     // In a real implementation, you would call the Magento API here
     // For now, we'll simulate it
+    // boundary: external data - Magento API response format
     const simulatedResponse: any = {
       ...magentoOrder,
       id: Math.floor(Math.random() * 10000),

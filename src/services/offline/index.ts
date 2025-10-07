@@ -97,7 +97,7 @@ export class OfflineService {
   addAction(
     type: OfflineAction['type'],
     table: string,
-    data: any,
+    data: any, // Generic data holder for any table row
     priority = 5
   ): string {
     const authStore = useAuthStore();

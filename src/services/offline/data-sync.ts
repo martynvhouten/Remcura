@@ -54,8 +54,9 @@ export class DataSyncManager {
   /**
    * Get current offline data
    */
-  get offlineData(): any {
-    return this.data;
+  get offlineData(): OfflineData {
+    // Break type inference to avoid deep instantiation with reactive proxy
+    return this.data as any as OfflineData;
   }
 
   /**
@@ -138,13 +139,14 @@ export class DataSyncManager {
 
       const cartItems = await this.downloadCartItems(carts);
 
-      // Update data
-      this.data.bestellijsten = bestellijsten as any;
-      this.data.bestellijst_items = items as any;
-      this.data.products = products as any;
-      this.data.shopping_carts = carts as any;
-      this.data.shopping_cart_items = cartItems as any;
-      this.data.last_sync = new Date();
+      // Update data (cast data to break type inference for reactive proxy)
+      const dataAny = this.data as any;
+      dataAny.bestellijsten = bestellijsten;
+      dataAny.bestellijst_items = items;
+      dataAny.products = products;
+      dataAny.shopping_carts = carts;
+      dataAny.shopping_cart_items = cartItems;
+      dataAny.last_sync = new Date();
 
       // Save to storage
       this.saveToStorage();
@@ -193,7 +195,8 @@ export class DataSyncManager {
       });
     }
 
-    return (data as any) || [];
+    // boundary: external data from Supabase
+    return (data as unknown as Bestellijst[]) || [];
   }
 
   /**
@@ -220,12 +223,11 @@ export class DataSyncManager {
       });
     }
 
-    return (
-      (data as any)?.map((item: any) => ({
-        ...item,
-        last_counted: item.last_counted,
-      })) || []
-    );
+    // boundary: external data from Supabase with relations
+    return (data || []).map(item => ({
+      ...item,
+      last_counted: item.last_counted,
+    })) as unknown as BestellijstItem[];
   }
 
   /**

@@ -5,7 +5,7 @@ export interface OfflineAction {
   id: string;
   type: 'create' | 'update' | 'delete';
   table: string;
-  data: any;
+  data: any; // Generic data holder for any table row
   timestamp: Date;
   retry_count: number;
   practice_id: string;
@@ -47,7 +47,7 @@ export class ActionQueue {
   addAction(
     type: OfflineAction['type'],
     table: string,
-    data: any,
+    data: any, // Generic data holder for any table row
     practiceId: string,
     userId: string,
     priority = 5
@@ -297,6 +297,7 @@ export class ActionQueue {
     try {
       const stored = localStorage.getItem(this.storageKey);
       if (stored) {
+        // boundary: external data from localStorage (JSON.parse)
         const parsedActions = JSON.parse(stored);
         this.actions.value = parsedActions.map((action: any) => ({
           ...action,
