@@ -2,10 +2,7 @@ import { supabase } from '@/services/supabase';
 import type {
   Order,
   OrderInsert,
-  OrderItem,
   OrderItemInsert,
-  ShoppingCart,
-  Product,
   OrderWithItems,
 } from '@/types/supabase';
 import type { MagentoOrder } from '@/types/magento';

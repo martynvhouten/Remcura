@@ -50,7 +50,7 @@ function loadTranslationFile(lang) {
 
   try {
     // Load filters first if they exist
-    let filters = {};
+    const filters = {};
     const filtersPath = path.join(I18N_DIR, lang, 'filters.ts');
     if (fs.existsSync(filtersPath)) {
       try {
@@ -59,7 +59,7 @@ function loadTranslationFile(lang) {
           /export default\s*({[\s\S]*});?\s*$/
         );
         if (filtersMatch) {
-          filters = eval(`(${filtersMatch[1]})`);
+          const _filters = eval(`(${filtersMatch[1]})`);
         }
       } catch (filtersError) {
         console.warn(

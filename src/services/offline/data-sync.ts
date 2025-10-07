@@ -1,4 +1,4 @@
-import { reactive, toRaw } from 'vue';
+import { reactive } from 'vue';
 import { supabase } from 'src/boot/supabase';
 import { handleSupabaseError } from 'src/utils/service-error-handler';
 import { analyticsService } from '../analytics';

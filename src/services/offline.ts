@@ -1,12 +1,6 @@
 import { ref, reactive } from 'vue';
 import { supabase } from '@/services/supabase';
-import type {
-  Product,
-  ShoppingCart,
-  ShoppingCartItem,
-  OrderList,
-  OrderListInsert,
-} from '@/types/supabase';
+import type { Product, ShoppingCartItem } from '@/types/supabase';
 import { useAuthStore } from '@/stores/auth';
 import { offlineLogger } from 'src/utils/logger';
 import { analyticsService } from './analytics';

@@ -1,7 +1,5 @@
 import { t } from '@/utils/i18n-service';
 import type { UserRole } from '@/types/permissions';
-import type { PracticeDashboardData } from './practice-dashboard';
-import type { PlatformDashboardData } from './platform-dashboard';
 
 export interface WidgetConfig {
   id: string;

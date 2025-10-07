@@ -1,6 +1,6 @@
 import { supabase } from 'src/boot/supabase';
 import { v4 as uuidv4 } from 'uuid';
-import type { PermanentUser, MagicInvite } from 'src/types/supabase';
+import type { PermanentUser } from 'src/types/supabase';
 import type { TablesInsert } from 'src/types/supabase.generated';
 
 // 🚀 PERMANENT USERS SERVICE

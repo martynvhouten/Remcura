@@ -2,8 +2,6 @@ import { supabase } from '@/services/supabase';
 import type {
   NotificationSettings,
   NotificationSettingsInsert,
-  PushToken,
-  PushTokenInsert,
   NotificationChannel,
   NotificationType,
 } from '@/types/supabase';
@@ -29,12 +27,14 @@ export class NotificationService {
     if ('serviceWorker' in navigator && 'PushManager' in window) {
       try {
         this.registration = await navigator.serviceWorker.register('/sw.js');
-        notificationLogger.info(
-          'Service Worker registered',
-          { registration: this.registration?.scope ?? 'unknown' }
-        );
+        notificationLogger.info('Service Worker registered', {
+          registration: this.registration?.scope ?? 'unknown',
+        });
       } catch (error) {
-        notificationLogger.error('Service Worker registration failed', error as Record<string, unknown>);
+        notificationLogger.error(
+          'Service Worker registration failed',
+          error as Record<string, unknown>
+        );
       }
     }
   }
@@ -430,7 +430,7 @@ export class NotificationService {
         `
         )
         .eq('product_lists.practice_id', practiceId);
-        // TODO: Add filter for current_stock < minimum_stock when RLS supports raw expressions
+      // TODO: Add filter for current_stock < minimum_stock when RLS supports raw expressions
 
       if (error) {
         notificationLogger.error('Failed to check stock levels:', error);
@@ -445,7 +445,10 @@ export class NotificationService {
         );
       }
     } catch (error) {
-      notificationLogger.error('Stock monitoring error', error as Record<string, unknown>);
+      notificationLogger.error(
+        'Stock monitoring error',
+        error as Record<string, unknown>
+      );
     }
   }
 

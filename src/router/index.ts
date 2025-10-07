@@ -124,7 +124,7 @@ export default route((/* { store, ssrContext } */) => {
   });
 
   // Global after navigation hook for tracking
-  Router.afterEach((to, from) => {
+  Router.afterEach((_to, _from) => {
     // Track page views
     // monitoringService.trackEvent('page_view', {
     //   route: to.path,

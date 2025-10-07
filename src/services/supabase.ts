@@ -1,7 +1,6 @@
 import { createClient } from '@supabase/supabase-js';
 import type { Database, Tables, TablesInsert, TablesUpdate } from '@/types';
 import type {
-  StockLevelView,
   PracticeRow,
   ProductRow,
   OrderAdviceResult,
@@ -10,9 +9,6 @@ import type {
   PracticeMemberRow,
   PracticeMemberInsert,
   PracticeMemberUpdate,
-  OrderListRow,
-  ProductBatchWithDetails,
-  OrderListItemInsert,
 } from '@/types/inventory';
 import { handleSupabaseError } from '@/utils/service-error-handler';
 import type {
@@ -128,9 +124,7 @@ export const userProfileService = {
     return data;
   },
 
-  async getByIdWithUserData(
-    id: string
-  ): Promise<
+  async getByIdWithUserData(id: string): Promise<
     PracticeMemberRow & {
       email?: string | null;
       user_metadata?: Record<string, unknown> | null;

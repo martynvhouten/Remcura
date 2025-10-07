@@ -32,7 +32,7 @@ async function resetDemoData() {
 
     // Step 2: Recreate suppliers
     console.log('2️⃣ Recreating suppliers...');
-    const suppliersResult = await execAsync(`
+    const _suppliersResult = await execAsync(`
       mcp execute --tool mcp_supabase_execute_sql \\
         --project-id ${SUPABASE_PROJECT_ID} \\
         --query "
@@ -49,7 +49,7 @@ async function resetDemoData() {
 
     // Step 3: Recreate practice locations
     console.log('3️⃣ Recreating practice locations...');
-    const locationsResult = await execAsync(`
+    const _locationsResult = await execAsync(`
       mcp execute --tool mcp_supabase_execute_sql \\
         --project-id ${SUPABASE_PROJECT_ID} \\
         --query "
@@ -85,7 +85,7 @@ async function resetDemoData() {
 
     // Step 4: Recreate stock levels with realistic data
     console.log('4️⃣ Recreating stock levels...');
-    const stockResult = await execAsync(`
+    const _stockResult = await execAsync(`
       mcp execute --tool mcp_supabase_execute_sql \\
         --project-id ${SUPABASE_PROJECT_ID} \\
         --query "
@@ -129,7 +129,7 @@ async function resetDemoData() {
 
     // Step 5: Recreate sample orders
     console.log('5️⃣ Recreating sample orders...');
-    const ordersResult = await execAsync(`
+    const _ordersResult = await execAsync(`
       mcp execute --tool mcp_supabase_execute_sql \\
         --project-id ${SUPABASE_PROJECT_ID} \\
         --query "

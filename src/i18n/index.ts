@@ -10,7 +10,7 @@ const messages: Record<SupportedLocale, any> = {} as any;
 
 // Get saved locale from localStorage or default to 'nl'
 const getSavedLocale = (): SupportedLocale => {
-  const saved = localStorage.getItem('remcura_locale');
+  const _saved = localStorage.getItem('remcura_locale');
   // We only support Dutch now; ignore any previously saved en/es
   return 'nl';
 };
@@ -141,7 +141,7 @@ export const logTranslationStats = () => {
 
   locales.forEach(locale => {
     if (ENABLE_LAZY_LOADING) {
-      const isLoaded = loadedLanguages.has(locale);
+      const _isLoaded = loadedLanguages.has(locale);
       // Language loaded check
     } else {
       // Count keys for status
@@ -175,17 +175,17 @@ export const preloadAllLanguages = async (): Promise<void> => {
 // Check if lazy loading is enabled
 export const isLazyLoadingEnabled = (): boolean => ENABLE_LAZY_LOADING;
 
-// Helper function to recursively count keys in translation object
-const countKeys = (obj: any, prefix = ''): number => {
-  let count = 0;
-  for (const key in obj) {
-    if (typeof obj[key] === 'object' && obj[key] !== null) {
-      count += countKeys(obj[key], prefix ? `${prefix}.${key}` : key);
-    } else {
-      count++;
-    }
-  }
-  return count;
-};
+// Helper function to recursively count keys in translation object (for future use)
+// const countKeys = (obj: any, prefix = ''): number => {
+//   let count = 0;
+//   for (const key in obj) {
+//     if (typeof obj[key] === 'object' && obj[key] !== null) {
+//       count += countKeys(obj[key], prefix ? `${prefix}.${key}` : key);
+//     } else {
+//       count++;
+//     }
+//   }
+//   return count;
+// };
 
 export default i18n;

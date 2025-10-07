@@ -1,4 +1,4 @@
-import { ref, computed } from 'vue';
+// Vue imports removed - not used in this file
 import { useAuthStore } from 'src/stores/auth';
 import { networkMonitor, type NetworkStatus } from './network-monitor';
 import { actionQueue, type OfflineAction } from './action-queue';

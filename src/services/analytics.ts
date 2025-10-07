@@ -17,9 +17,7 @@ import type {
   TopUsedProductDTO,
 } from '@/types/analytics';
 import type { UsageAnalytics } from '@/types/analytics';
-import { mapProductRow, mapStockLevelRow } from '@/domain/inventory/bridge';
-import type { ProductDTO, StockLevelDTO } from '@/domain/inventory/dto';
-import type { Tables } from '@/types/supabase.generated';
+import type { StockLevelDTO } from '@/domain/inventory/dto';
 
 // Legacy compatibility types
 interface LegacyStockLevel {
@@ -35,25 +33,9 @@ interface LegacyStockLevel {
   updated_at?: string | null;
 }
 
-interface LegacyLowStockProduct {
-  id: string;
-  name: string;
-  stock_levels: LegacyStockLevel[];
-  sku?: string | null;
-  unit_price?: number | null;
-}
+// Removed unused legacy interface types
 
-interface LegacyStockLevelWithMovements extends LegacyStockLevel {
-  stock_movements: StockMovementRow[] | StockMovementRow | null;
-}
-
-interface LegacyUsageAnalytics {
-  user_id: string | null;
-  session_id: string | null;
-  created_at: string;
-}
-
-const toLegacyStockLevel = (dto: StockLevelDTO): LegacyStockLevel => ({
+const _toLegacyStockLevel = (dto: StockLevelDTO): LegacyStockLevel => ({
   product_id: dto.productId,
   location_id: dto.locationId,
   current_quantity: dto.currentQuantity ?? 0,
@@ -66,50 +48,13 @@ const toLegacyStockLevel = (dto: StockLevelDTO): LegacyStockLevel => ({
   updated_at: dto.updatedAt ?? null,
 });
 
-const toLegacyLowStockProduct = (
-  productRow: Tables<'products'>,
-  stockLevels: StockLevelDTO[]
-): LegacyLowStockProduct => ({
-  id: productRow.id,
-  name: productRow.name ?? 'Unknown product',
-  stock_levels: stockLevels.map(toLegacyStockLevel),
-  sku: productRow.sku ?? null,
-  unit_price: productRow.price ?? null,
-});
+// Removed unused toLegacyLowStockProduct function
 
-const toLegacyStockLevelWithMovements = (
-  row: Tables<'stock_levels'> & {
-    stock_movements: StockMovementRow[] | StockMovementRow | null;
-    products?: Tables<'products'> | null;
-  }
-): LegacyStockLevelWithMovements => {
-  const dto = mapStockLevelRow(row);
-  const base = toLegacyStockLevel(dto);
-  const product = row.products ?? null;
-  return {
-    ...base,
-    product_name: base.product_name ?? product?.name ?? undefined,
-    stock_movements: row.stock_movements ?? null,
-  };
-};
+// Removed unused toLegacyStockLevelWithMovements function
 
-const toLegacyUsageAnalytics = (
-  event: UsageAnalytics
-): LegacyUsageAnalytics => ({
-  user_id: event.userId,
-  session_id: event.sessionId,
-  created_at: event.createdAt,
-});
+// Removed unused toLegacyUsageAnalytics function
 
-const toLegacyStockEntry = (
-  entry: Tables<'stock_entries'> & { products?: Tables<'products'> | null }
-) => ({
-  ...entry,
-  counted_quantity: entry.counted_quantity,
-  counted_at: entry.counted_at,
-  created_at: entry.created_at,
-  products: entry.products ?? null,
-});
+// Removed unused toLegacyStockEntry function
 
 interface LowStockItem extends LowStockItemDTO {}
 
@@ -164,11 +109,7 @@ interface StockEntryRow {
   recordedAt: string;
 }
 
-interface InventoryProductRow {
-  id: string;
-  name: string;
-  stock_levels: StockLevelView[] | null;
-}
+// Removed unused InventoryProductRow interface
 
 type JsonRecord = Record<string, unknown>;
 

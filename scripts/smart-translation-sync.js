@@ -14,18 +14,18 @@ const fs = require('fs');
 console.log('🧠 SMART TRANSLATION SYNCHRONIZER');
 console.log('==================================');
 
-// Critical missing namespaces that exist in EN but not in NL
-const missingNamespaces = {
-  // Based on EN structure vs NL analysis
-  locations: {
-    title: 'Locaties',
-    manage: 'Beheer locaties',
-    allLocations: 'Alle locaties',
-    mainLocations: 'Hoofdlocaties',
-    add: 'Locatie toevoegen',
-    noLocations: 'Geen locaties gevonden',
-  },
-};
+// Critical missing namespaces that exist in EN but not in NL (for future use)
+// const missingNamespaces = {
+//   // Based on EN structure vs NL analysis
+//   locations: {
+//     title: 'Locaties',
+//     manage: 'Beheer locaties',
+//     allLocations: 'Alle locaties',
+//     mainLocations: 'Hoofdlocaties',
+//     add: 'Locatie toevoegen',
+//     noLocaties: 'Geen locaties gevonden',
+//   },
+// };
 
 // Add missing namespaces to Dutch (SAFE approach)
 function addMissingNamespaces() {
