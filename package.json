@@ -94,7 +94,15 @@
     "webpack-bundle-analyzer": "^4.10.2"
   },
   "lint-staged": {
-    "**/*": "prettier --write --ignore-unknown"
+    "*.{js,ts,vue}": [
+      "eslint --fix",
+      "prettier --write"
+    ],
+    "*.{css,scss,vue}": [
+      "stylelint --fix",
+      "prettier --write"
+    ],
+    "*.{json,md,html}": "prettier --write"
   },
   "engines": {
     "node": "^18 || ^16 || ^14.19",

@@ -2,29 +2,16 @@
 
 set -e
 
-# 1) Run lint-staged once (formats with Prettier per package.json)
+# 1) Run lint-staged (includes ESLint, Stylelint, and Prettier per package.json)
 npx lint-staged
 
-# 2) Run stylelint on staged CSS/SCSS/Vue files (robust to spaces, allows empty)
-git diff --cached --name-only -z --diff-filter=ACM \
-  | tr '\0' '\n' \
-  | grep -E '\.(css|scss|sass|vue)$' || true
-STAGED_CSS=$(
-  git diff --cached --name-only -z --diff-filter=ACM \
-    | tr '\0' '\n' \
-    | grep -E '\.(css|scss|sass|vue)$' || true
-)
-if [ -n "$STAGED_CSS" ]; then
-  printf '%s\0' $STAGED_CSS | xargs -0 npx stylelint || exit 1
-fi
-
-# 3) Run i18n validation only if i18n files changed
+# 2) Run i18n validation only if i18n files changed
 if git diff --cached --name-only | grep -q "^src/i18n/"; then
   echo "🌐 Detected i18n changes, running validation..."
   npm run i18n:validate || exit 1
 fi
 
-# 4) Warn-only guard for hardcoded control sizes
+# 3) Warn-only guard for hardcoded control sizes
 npm run -s guard:hardcoded-controls || true
 
 echo "✅ Pre-commit checks passed!"

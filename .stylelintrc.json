@@ -1,0 +1,24 @@
+{
+  "extends": ["stylelint-config-standard", "stylelint-config-standard-scss", "stylelint-config-recommended-vue"],
+  "rules": {
+    "no-empty-source": null,
+    "scss/at-rule-no-unknown": null,
+    "selector-pseudo-class-no-unknown": [
+      true,
+      {
+        "ignorePseudoClasses": ["deep", "global"]
+      }
+    ],
+    "selector-pseudo-element-no-unknown": [
+      true,
+      {
+        "ignorePseudoElements": ["v-deep", "v-global", "v-slotted"]
+      }
+    ],
+    "at-rule-no-unknown": null,
+    "function-no-unknown": null,
+    "custom-property-pattern": null,
+    "selector-class-pattern": null
+  },
+  "ignoreFiles": ["dist/**", "node_modules/**", ".quasar/**", "*.d.ts"]
+}
