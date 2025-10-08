@@ -259,16 +259,35 @@
   import { useQuasar } from 'quasar';
 
   // Props & Emits
+  interface Invite {
+    id: string;
+    code?: string;
+    [key: string]: unknown;
+  }
+
+  interface Practice {
+    id: string;
+    name?: string;
+    [key: string]: unknown;
+  }
+
+  interface UpgradeResult {
+    name: string;
+    method: string;
+    personalCode: string | null;
+    email: string | null;
+  }
+
   interface Props {
     modelValue: boolean;
-    invite: any;
-    practice: any;
+    invite: Invite;
+    practice: Practice;
   }
 
   const props = defineProps<Props>();
   const emit = defineEmits<{
     'update:modelValue': [value: boolean];
-    'upgrade-completed': [result: any];
+    'upgrade-completed': [result: UpgradeResult];
     'continue-as-guest': [];
   }>();
 
@@ -456,13 +475,13 @@
 
             &:hover {
               transform: translateY(-4px);
-              box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+              box-shadow: 0 8px 25px rgb(0 0 0 / 15%);
             }
 
             &.selected {
               border-color: #1976d2;
               transform: translateY(-4px);
-              box-shadow: 0 8px 25px rgba(25, 118, 210, 0.3);
+              box-shadow: 0 8px 25px rgb(25 118 210 / 30%);
             }
 
             .option-icon {
@@ -588,7 +607,7 @@
     }
   }
 
-  @media (max-width: 768px) {
+  @media (width <= 768px) {
     .upgrade-dialog {
       .upgrade-card {
         .upgrade-header {

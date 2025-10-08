@@ -241,10 +241,17 @@
   const authStore = useAuthStore();
   const { formatDate } = useFormatting();
 
+  // Local interface for new batch data form
+  interface NewBatchData {
+    batchNumber?: string;
+    expiryDate?: string;
+    quantity?: number;
+  }
+
   // Reactive state
   const countedQuantity = ref<number | null>(null);
   const selectedBatch = ref<ProductBatchViewModel | null>(null);
-  const newBatchData = ref<any>({});
+  const newBatchData = ref<NewBatchData>({});
   const notes = ref('');
   const saving = ref(false);
   const addingNewBatch = ref(false);
@@ -388,7 +395,21 @@
     try {
       saving.value = true;
 
-      const entryData: any = {
+      interface CountingEntryData {
+        session_id: string;
+        product_id: string;
+        location_id: string;
+        system_quantity: number;
+        counted_quantity: number;
+        discrepancy: number;
+        notes: string;
+        counted_by: string;
+        counted_at: string;
+        status: string;
+        batch_id?: string;
+      }
+
+      const entryData: CountingEntryData = {
         session_id: props.sessionId,
         product_id: props.product.id,
         location_id: props.locationId,
@@ -409,7 +430,23 @@
       // Handle new batch creation if needed
       if (addingNewBatch.value && newBatchData.value.batchNumber) {
         // Create new batch first
-        const batchRequest: any = {
+        interface BatchCreateRequest {
+          practice_id: string;
+          product_id: string;
+          location_id: string;
+          batch_number: string;
+          expiry_date?: string;
+          initial_quantity: number;
+          current_quantity: number;
+          unit_cost: number;
+          currency: string;
+        }
+
+        if (!authStore.clinicId) {
+          throw new Error('No practice ID available');
+        }
+
+        const batchRequest: BatchCreateRequest = {
           practice_id: authStore.clinicId,
           product_id: props.product.id,
           location_id: props.locationId,
@@ -421,14 +458,14 @@
           currency: 'EUR',
         };
 
-        const newBatch = await batchStore.createBatch(batchRequest);
+        const newBatch = await batchStore.createBatch(batchRequest as any); // boundary: external data - batchStore may accept different types
         entryData.batch_id = newBatch.id;
       }
 
       // Save the counting entry (this would need to be implemented in a counting store)
       // await countingStore.saveEntry(entryData);
 
-      emit('entry-saved', entryData as CountingEntryDTO);
+      emit('entry-saved', entryData as any as CountingEntryDTO); // boundary: external data - CountingEntryData to CountingEntryDTO
 
       $q.notify({
         type: 'positive',
@@ -509,21 +546,22 @@
   }
 
   .discrepancy-section {
-    animation: fadeIn 0.3s ease-in-out;
+    animation: fade-in 0.3s ease-in-out;
   }
 
-  @keyframes fadeIn {
+  @keyframes fade-in {
     from {
       opacity: 0;
       transform: translateY(-10px);
     }
+
     to {
       opacity: 1;
       transform: translateY(0);
     }
   }
 
-  @media (max-width: 768px) {
+  @media (width <= 768px) {
     .batch-list {
       max-height: 150px;
     }

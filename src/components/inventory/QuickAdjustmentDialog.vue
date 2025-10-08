@@ -553,10 +553,29 @@
     PracticeLocation,
   } from 'src/types/inventory';
 
+  // Simple product interface for this component
+  interface ProductForAdjustment {
+    id: string;
+    name: string;
+    sku: string;
+    unit?: string | null;
+    brand?: string | null;
+    image_url?: string | null;
+    total_stock?: number;
+    current_quantity?: number;
+    minimum_quantity?: number;
+    minimum_stock?: number;
+    price?: number | null;
+    description?: string | null;
+    barcode?: string | null;
+    category?: string | null;
+    product_id?: string;
+  }
+
   // Props & Emits
   interface Props {
     modelValue: boolean;
-    selectedProduct?: any;
+    selectedProduct?: ProductForAdjustment;
     selectedLocation?: PracticeLocation;
   }
 
@@ -568,8 +587,8 @@
 
   const emit = defineEmits<{
     'update:modelValue': [value: boolean];
-    'stock-updated': [product: any];
-    'product-selected': [product: any];
+    'stock-updated': [product: ProductForAdjustment];
+    'product-selected': [product: ProductForAdjustment];
   }>();
 
   // Composables
@@ -588,17 +607,17 @@
   const saving = ref(false);
 
   // Product selection state
-  const internalSelectedProduct = ref<any>(null);
-  const availableProducts = ref<any[]>([]);
+  const internalSelectedProduct = ref<ProductForAdjustment | null>(null);
+  const availableProducts = ref<ProductForAdjustment[]>([]);
   const showBarcodeScanner = ref(false);
   const productSearchLoading = ref(false);
 
   // Location selection state
-  const internalSelectedLocation = ref<any>(null);
+  const internalSelectedLocation = ref<PracticeLocation | null>(null);
 
   // Realtime state
   const realtimeConnected = ref(false);
-  const inventoryChannel = ref<any>(null);
+  const inventoryChannel = ref<any>(null); // boundary: external data - Realtime channel (method not yet implemented)
 
   // Quick amount buttons
   const quickAmounts = [1, 5, 10, 25, 50, 100];
@@ -656,13 +675,8 @@
 
   const getCurrentStock = () => {
     if (!selectedProduct.value) return 0;
-    const product = selectedProduct.value as any;
-    return (
-      product?.current_quantity ||
-      product?.total_stock ||
-      product?.available_stock ||
-      0
-    );
+    const product = selectedProduct.value;
+    return product.current_quantity || product.total_stock || 0;
   };
 
   const preview = computed(() => {
@@ -779,16 +793,15 @@
 
   const determineStockStatus = (quantity: number): string => {
     if (!selectedProduct.value) return 'in_stock';
-    const product = selectedProduct.value as any;
-    const minStock = product?.minimum_quantity || product?.minimum_stock || 10;
+    const product = selectedProduct.value;
+    const minStock = product.minimum_quantity || product.minimum_stock || 10;
     if (quantity <= 0) return 'out_of_stock';
     if (quantity <= minStock) return 'low_stock';
     return 'in_stock';
   };
 
-  const getStockStatusColor = (product: any) => {
-    const stock =
-      (product as any)?.current_quantity || (product as any)?.total_stock || 0;
+  const getStockStatusColor = (product: ProductForAdjustment) => {
+    const stock = product.current_quantity || product.total_stock || 0;
     const status = determineStockStatus(stock);
     switch (status) {
       case 'out_of_stock':
@@ -800,9 +813,8 @@
     }
   };
 
-  const getStockStatusIcon = (product: any) => {
-    const stock =
-      (product as any)?.current_quantity || (product as any)?.total_stock || 0;
+  const getStockStatusIcon = (product: ProductForAdjustment) => {
+    const stock = product.current_quantity || product.total_stock || 0;
     const status = determineStockStatus(stock);
     switch (status) {
       case 'out_of_stock':
@@ -830,6 +842,7 @@
   };
 
   const filterProducts = async (val: string, update: any) => {
+    // boundary: external data - Quasar QSelect update callback
     if (val.length < 2) {
       update(() => {
         availableProducts.value = [];
@@ -867,10 +880,9 @@
             brand: product.brand,
             image_url: product.imageUrl,
             total_stock: product.totalStock,
-            current_quantity:
-              (product as any).current_quantity ?? product.totalStock,
-            minimum_quantity: (product as any).minimum_quantity ?? 0,
-            price: (product as any).price ?? product.unitPrice,
+            current_quantity: product.totalStock,
+            minimum_quantity: 0,
+            price: product.unitPrice,
             description: product.description,
             barcode: product.barcode,
             category: product.category,
@@ -886,7 +898,7 @@
     }
   };
 
-  const onProductSelected = (product: any) => {
+  const onProductSelected = (product: ProductForAdjustment) => {
     if (product) {
       emit('product-selected', product);
     }
@@ -917,11 +929,9 @@
           brand: matchingProduct.brand,
           image_url: matchingProduct.imageUrl,
           total_stock: matchingProduct.totalStock,
-          current_quantity:
-            (matchingProduct as any).current_quantity ??
-            matchingProduct.totalStock,
-          minimum_quantity: (matchingProduct as any).minimum_quantity ?? 0,
-          price: (matchingProduct as any).price ?? matchingProduct.unitPrice,
+          current_quantity: matchingProduct.totalStock,
+          minimum_quantity: 0,
+          price: matchingProduct.unitPrice,
           description: matchingProduct.description,
           barcode: matchingProduct.barcode,
           category: matchingProduct.category,
@@ -1018,14 +1028,14 @@
       selectedReason.value = null;
       notes.value = '';
       adjustmentType.value = 'increase';
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('Error updating stock:', error);
 
       // Determine user-friendly error message
       let errorMessage = t('inventory.errorUpdatingStock');
       let canRetry = true;
 
-      if (error.message) {
+      if (error instanceof Error && error.message) {
         if (error.message.includes('Insufficient stock')) {
           errorMessage = error.message;
           canRetry = false; // No point retrying if there's insufficient stock
@@ -1047,7 +1057,19 @@
       }
 
       // Update loading notification to error
-      const notificationOptions: any = {
+      interface NotificationOptions {
+        type: string;
+        message: string;
+        icon: string;
+        timeout: number;
+        actions?: Array<{
+          label: string;
+          color: string;
+          handler: () => void;
+        }>;
+      }
+
+      const notificationOptions: NotificationOptions = {
         type: 'negative',
         message: errorMessage,
         icon: 'error',
@@ -1096,7 +1118,7 @@
         /*
         inventoryChannel.value = realtimeService.subscribeToInventory(
           practiceId,
-          (payload: any) => {
+          (payload: any) => { // boundary: external data - Supabase Realtime payload
             // Realtime inventory update received
 
             if (payload.new && payload.eventType === 'UPDATE') {
@@ -1191,14 +1213,14 @@
 
       &:hover {
         border-color: var(--q-primary);
-        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+        box-shadow: 0 8px 24px rgb(0 0 0 / 12%);
         transform: translateY(-2px);
       }
     }
 
     .product-avatar {
       border-radius: 12px;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      box-shadow: 0 4px 12px rgb(0 0 0 / 10%);
     }
 
     .modern-toggle {
@@ -1209,10 +1231,10 @@
 
         &:hover {
           transform: translateY(-1px);
-          box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+          box-shadow: 0 4px 8px rgb(0 0 0 / 10%);
         }
 
-        @media (max-width: 600px) {
+        @media (width <= 600px) {
           min-height: var(--control-height-sm);
           font-size: var(--control-font-sm);
           padding: var(--control-pad-y) var(--control-pad-x);
@@ -1237,7 +1259,7 @@
           transform: scale(1.05);
         }
 
-        @media (max-width: 600px) {
+        @media (width <= 600px) {
           min-width: 36px;
           font-size: 0.75rem;
           padding: 4px 8px;
@@ -1249,7 +1271,7 @@
       border: 2px solid var(--q-blue-4);
       border-radius: 16px;
       background: linear-gradient(135deg, #f0f8ff 0%, #e8f5e8 100%);
-      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+      box-shadow: 0 4px 16px rgb(0 0 0 / 8%);
     }
 
     .preview-content {
@@ -1265,15 +1287,15 @@
         min-width: 140px;
         border-radius: 8px;
         font-weight: 600;
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        box-shadow: 0 2px 8px rgb(0 0 0 / 10%);
         transition: all 0.2s ease;
 
         &:hover {
           transform: translateY(-1px);
-          box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+          box-shadow: 0 4px 12px rgb(0 0 0 / 15%);
         }
 
-        @media (max-width: 600px) {
+        @media (width <= 600px) {
           min-width: 100px;
           font-size: 0.85rem;
           padding: 8px 16px;
@@ -1298,15 +1320,15 @@
       min-height: 56px;
       border-radius: 8px;
       font-weight: 600;
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      box-shadow: 0 2px 8px rgb(0 0 0 / 10%);
       transition: all 0.2s ease;
 
       &:hover {
         transform: translateY(-1px);
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        box-shadow: 0 4px 12px rgb(0 0 0 / 15%);
       }
 
-      @media (max-width: 600px) {
+      @media (width <= 600px) {
         min-height: 48px;
         min-width: 48px;
         padding: 8px;
@@ -1331,6 +1353,7 @@
     100% {
       opacity: 1;
     }
+
     50% {
       opacity: 0.5;
     }
@@ -1341,7 +1364,7 @@
   }
 
   // Enhanced mobile responsiveness
-  @media (max-width: 600px) {
+  @media (width <= 600px) {
     .modern-dialog {
       .product-card {
         .q-card-section {

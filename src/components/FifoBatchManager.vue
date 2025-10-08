@@ -80,7 +80,7 @@
                 <q-item-section>
                   <q-item-label>{{ result.batchNumber }}</q-item-label>
                   <q-item-label caption>
-                    {{ $t('batch.useQuantity') }}: {{ result.useQuantity }}
+                    {{ $t('batch.useQuantity') }}: {{ result.quantityToUse }}
                   </q-item-label>
                   <q-item-label caption>
                     {{ $t('batch.expiryDate') }}:
@@ -122,8 +122,17 @@
   import { useQuasar, date } from 'quasar';
   import { useBatchStore } from 'src/stores/batch';
 
+  interface FifoResult {
+    id: string;
+    batchNumber: string;
+    expiryDate: string;
+    currentQuantity: number;
+    quantityToUse: number;
+    daysUntilExpiry: number;
+  }
+
   const emit = defineEmits<{
-    'suggestion-generated': [results: any[]];
+    'suggestion-generated': [results: FifoResult[]];
   }>();
 
   const { t } = useI18n();
@@ -132,7 +141,7 @@
 
   // State
   const loading = ref(false);
-  const fifoResults = ref<any[]>([]);
+  const fifoResults = ref<FifoResult[]>([]);
 
   const form = ref({
     productId: '',
@@ -174,13 +183,20 @@
         form.value.requestedQuantity
       );
 
-      fifoResults.value = results.map((result: any, index: number) => ({
-        ...result,
-        daysUntilExpiry: Math.ceil(
-          (new Date(result.expiryDate).getTime() - Date.now()) /
-            (1000 * 60 * 60 * 24)
-        ),
-      }));
+      fifoResults.value = results.map(
+        (result: any): FifoResult => ({
+          // boundary: external data - fetchFifoBatches result type
+          id: result.id,
+          batchNumber: result.batchNumber,
+          expiryDate: result.expiryDate,
+          currentQuantity: result.currentQuantity,
+          quantityToUse: result.quantityToUse || result.currentQuantity,
+          daysUntilExpiry: Math.ceil(
+            (new Date(result.expiryDate).getTime() - Date.now()) /
+              (1000 * 60 * 60 * 24)
+          ),
+        })
+      );
 
       emit('suggestion-generated', fifoResults.value);
 

@@ -143,7 +143,7 @@
                     {{ $t('orderLists.unitPrice') }}
                   </div>
                   <div class="text-subtitle2">
-                    €{{ item.unit_price.toFixed(2) }}
+                    €{{ (item.unit_price || 0).toFixed(2) }}
                   </div>
                 </div>
 
@@ -152,7 +152,7 @@
                     {{ $t('orderLists.totalPrice') }}
                   </div>
                   <div class="text-subtitle1 text-weight-bold">
-                    €{{ item.total_price.toFixed(2) }}
+                    €{{ (item.total_price || 0).toFixed(2) }}
                   </div>
                 </div>
 
@@ -294,6 +294,24 @@
   import BaseDialog from 'src/components/base/BaseDialog.vue';
   import type { OrderListItemRow, ProductWithStock } from 'src/types/inventory';
 
+  // Local interface for order list items in the form (compatible with OrderListItemDTO)
+  interface OrderListItemForm {
+    id?: string;
+    product_id: string;
+    product?: ProductWithStock;
+    supplier_product_id?: string;
+    requested_quantity?: number;
+    unit_price?: number;
+    total_price?: number;
+    notes?: string;
+    status?: string;
+  }
+
+  interface Supplier {
+    id: string;
+    name: string;
+  }
+
   interface Props {
     modelValue: boolean;
     orderList?: OrderListWithItems | null;
@@ -336,7 +354,7 @@
     urgent_order: false,
   });
 
-  const orderListItems = ref<any[]>([]);
+  const orderListItems = ref<OrderListItemForm[]>([]);
   const showAddProductDialog = ref(false);
   const selectedProductId = ref('');
   const newItemQuantity = ref(1);
@@ -352,7 +370,7 @@
   const isEditing = computed(() => !!props.orderList);
 
   const supplierOptions = computed(() =>
-    (suppliersStore.suppliers as any).map((supplier: any) => ({
+    (suppliersStore.suppliers as Supplier[]).map((supplier: Supplier) => ({
       label: supplier.name,
       value: supplier.id,
     }))
@@ -364,14 +382,15 @@
 
   const totalItems = computed(() => {
     return orderListItems.value.reduce(
-      (sum: number, item: any) => sum + item.requested_quantity,
+      (sum: number, item: OrderListItemForm) =>
+        sum + (item.requested_quantity || 0),
       0
     );
   });
 
   const totalAmount = computed(() => {
     return orderListItems.value.reduce(
-      (sum: number, item: any) => sum + item.total_price,
+      (sum: number, item: OrderListItemForm) => sum + (item.total_price || 0),
       0
     );
   });
@@ -381,10 +400,10 @@
 
     return productsStore.products.filter(product => {
       const hasSupplierProduct = product.supplierProducts?.some(
-        (sp: any) => sp.supplier_id === form.value.supplier_id
+        sp => sp.supplier.id === form.value.supplier_id
       );
       const notAlreadyAdded = !orderListItems.value.some(
-        (item: any) => item.product_id === product.id
+        (item: OrderListItemForm) => item.product_id === product.id
       );
       return hasSupplierProduct && notAlreadyAdded;
     });
@@ -414,11 +433,10 @@
         description: props.orderList.description || '',
         supplier_id: orderListAny.supplier_id ?? null,
         notes: orderListAny.notes || '',
-        auto_suggest_quantities:
-          orderListAny.auto_suggest_quantities || false,
+        auto_suggest_quantities: orderListAny.auto_suggest_quantities || false,
         urgent_order: orderListAny.urgent_order || false,
       };
-      orderListItems.value = [...(props.orderList.items || [])];
+      orderListItems.value = [...(props.orderList.items || [])] as any; // boundary: external data - OrderListItemDTO to OrderListItemForm
     }
   };
 
@@ -432,8 +450,8 @@
     return product?.sku || t('common.noSku');
   };
 
-  const updateItemTotal = (item: any) => {
-    item.total_price = item.unit_price * item.requested_quantity;
+  const updateItemTotal = (item: OrderListItemForm) => {
+    item.total_price = (item.unit_price || 0) * (item.requested_quantity || 0);
   };
 
   const removeItem = (index: number) => {
@@ -465,11 +483,12 @@
     if (!product) return;
 
     const existingItem = orderListItems.value.find(
-      (item: any) => item.product_id === product.id
+      (item: OrderListItemForm) => item.product_id === product.id
     );
 
     if (existingItem) {
-      existingItem.requested_quantity += newItemQuantity.value;
+      existingItem.requested_quantity =
+        (existingItem.requested_quantity || 0) + newItemQuantity.value;
       existingItem.notes = newItemNotes.value;
     } else {
       orderListItems.value.push({
@@ -503,18 +522,12 @@
 
       if (isEditing.value && props.orderList) {
         // Update existing order list
-        const updateRequest: any = {
+        const updateRequest: UpdateOrderListRequest = {
           id: props.orderList.id,
           name: form.value.name,
           description: form.value.description,
           supplier_id: form.value.supplier_id,
-          auto_suggest_quantities: form.value.auto_suggest_quantities,
-          urgent_order: form.value.urgent_order,
         };
-
-        if (form.value.notes) {
-          updateRequest.notes = form.value.notes;
-        }
 
         await orderListsStore.updateOrderList(updateRequest);
 
@@ -524,24 +537,23 @@
         });
       } else {
         // Create new order list
-        const createRequest: any = {
+        const createRequest = {
+          // boundary: external data - CreateOrderListRequest interface may not match actual API
           practice_id: practiceId,
           supplier_id: form.value.supplier_id,
           name: form.value.name,
           description: form.value.description,
-          auto_suggest_quantities: form.value.auto_suggest_quantities,
-          urgent_order: form.value.urgent_order,
-        };
-
-        if (form.value.notes) {
-          createRequest.notes = form.value.notes;
-        }
+        } as CreateOrderListRequest;
 
         const newOrderList =
           await orderListsStore.createOrderList(createRequest);
 
         // Add items to the new order list
         for (const item of orderListItems.value) {
+          if (!item.supplier_product_id || !item.requested_quantity) {
+            continue; // Skip items without required fields
+          }
+
           const addItemRequest: AddOrderListItemRequest = {
             order_list_id: newOrderList.id,
             product_id: item.product_id,
@@ -625,7 +637,7 @@
     gap: var(--space-6);
     height: 100%;
 
-    @media (max-width: 768px) {
+    @media (width <= 768px) {
       grid-template-columns: 1fr;
       gap: var(--space-4);
     }

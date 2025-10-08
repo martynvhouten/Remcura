@@ -347,6 +347,14 @@
     StockTransferRequest,
   } from 'src/types/inventory';
 
+  interface StockTransfer {
+    fromLocation: LocationSummary;
+    toLocation: LocationSummary;
+    product: ProductWithStock;
+    quantity: number;
+    batch?: ProductBatchSummary;
+  }
+
   interface Props {
     modelValue: boolean;
     selectedProduct: ProductWithStock;
@@ -360,7 +368,7 @@
 
   const emit = defineEmits<{
     'update:modelValue': [value: boolean];
-    'transfer-completed': [transfer: any];
+    'transfer-completed': [transfer: StockTransfer];
     'product-selected': [product: ProductWithStock | null];
   }>();
 
@@ -421,7 +429,7 @@
   });
 
   // Available batches for the selected product and location
-  const availableBatches = computed<ProductBatchSummary[]>(() => {
+  const availableBatches = computed(() => {
     if (!props.selectedProduct?.requiresBatchTracking || !fromLocation.value) {
       return [];
     }
@@ -435,12 +443,13 @@
     );
 
     return batches
-      .map((batch: any) => ({
+      .map((batch): any => ({
+        // boundary: external data - batchStore.batches extended with display field
         ...batch,
         batchDisplay: `${batch.batchNumber} (${formatDate(batch.expiryDate)})`,
       }))
       .sort(
-        (a: any, b: any) =>
+        (a, b) =>
           new Date(a.expiryDate).getTime() - new Date(b.expiryDate).getTime()
       );
   });
@@ -547,7 +556,7 @@
         }),
       });
 
-      emit('transfer-completed', transfer);
+      emit('transfer-completed', transfer as any as StockTransfer); // boundary: external data - StockTransferRequest to StockTransfer
       emit('update:modelValue', false);
 
       // Reset form
