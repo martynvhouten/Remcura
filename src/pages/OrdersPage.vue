@@ -281,12 +281,9 @@
       typeof orderDateRange === 'object' &&
       'from' in orderDateRange
     ) {
-      const fromDate = new Date(
-        (orderDateRange as { from?: Date; to?: Date }).from ?? new Date()
-      );
-      const toDate = (orderDateRange as { from?: Date; to?: Date }).to
-        ? new Date((orderDateRange as { from?: Date; to?: Date }).to!)
-        : new Date();
+      const range = orderDateRange as { from?: Date; to?: Date };
+      const fromDate = new Date(range.from ?? new Date());
+      const toDate = range.to ? new Date(range.to) : new Date();
 
       filtered = filtered.filter(order => {
         const orderDate = new Date(order.order_date);
@@ -321,12 +318,9 @@
       typeof deliveryDateRange === 'object' &&
       'from' in deliveryDateRange
     ) {
-      const fromDate = new Date(
-        (deliveryDateRange as { from?: Date; to?: Date }).from ?? new Date()
-      );
-      const toDate = (deliveryDateRange as { from?: Date; to?: Date }).to
-        ? new Date((deliveryDateRange as { from?: Date; to?: Date }).to!)
-        : new Date();
+      const range = deliveryDateRange as { from?: Date; to?: Date };
+      const fromDate = new Date(range.from ?? new Date());
+      const toDate = range.to ? new Date(range.to) : new Date();
 
       filtered = filtered.filter(order => {
         if (!order.expected_delivery_date) {

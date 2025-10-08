@@ -693,11 +693,15 @@
 
   const performAdjustment = async () => {
     if (!selectedStockLevel.value || !adjustmentQuantity.value) return;
+    
+    // Store reference to avoid non-null assertions
+    const stockLevel = selectedStockLevel.value;
+    const practiceId = authStore.clinicId;
 
     try {
       adjusting.value = true;
 
-      const currentQty = selectedStockLevel.value.current_quantity;
+      const currentQty = stockLevel.current_quantity;
       let targetQty = currentQty;
       switch (adjustmentType.value) {
         case 'add':
@@ -717,10 +721,10 @@
       }
 
       // Demo fallback: update local state only, no persistence
-      if (!authStore.clinicId) {
+      if (!practiceId) {
         // Update local list to reflect change
         const idx = stockLevels.value.findIndex(
-          s => s.id === selectedStockLevel.value!.id
+          s => s.id === stockLevel.id
         );
         if (idx !== -1 && stockLevels.value[idx]) {
           const updated = {
@@ -742,14 +746,14 @@
       // Prefer RPC if available, fallback to store update
       const tryRpc = async () => {
         return await supabase.rpc('update_stock_level', {
-          p_practice_id: authStore.clinicId ?? '',
-          p_location_id: selectedStockLevel.value!.location_id,
-          p_product_id: selectedStockLevel.value!.product_id,
+          p_practice_id: practiceId,
+          p_location_id: stockLevel.location_id,
+          p_product_id: stockLevel.product_id,
           p_quantity_change: delta,
           p_movement_type: 'adjustment',
           p_performed_by: authStore.user?.id ?? '',
           p_reference_type: 'manual_adjustment',
-          p_reference_id: selectedStockLevel.value!.id,
+          p_reference_id: stockLevel.id,
           p_reason_code: 'manual_adjustment',
           p_notes: adjustmentReason.value ?? '',
         });
@@ -765,9 +769,9 @@
 
       if (!rpcOk) {
         const request: StockUpdateRequest = {
-          practice_id: authStore.clinicId!,
-          location_id: selectedStockLevel.value.location_id,
-          product_id: selectedStockLevel.value.product_id,
+          practice_id: practiceId,
+          location_id: stockLevel.location_id,
+          product_id: stockLevel.product_id,
           quantity_change: delta,
           movement_type: 'adjustment',
           reason_code: 'manual_adjustment' as any,

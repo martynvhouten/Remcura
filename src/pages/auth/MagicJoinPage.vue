@@ -298,7 +298,7 @@
 
       if (loginResult.success) {
         welcomeMessage.value = t('magicJoin.welcomeBack', {
-          // @ts-ignore - loginResult.user is guaranteed to exist when success is true
+          // @ts-expect-error - loginResult.user is guaranteed to exist when success is true
           name: loginResult.user.full_name,
         });
         showWelcome.value = true;

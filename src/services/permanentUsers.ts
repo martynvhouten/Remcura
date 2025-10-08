@@ -95,7 +95,7 @@ export class PermanentUserService {
         };
       }
 
-      // @ts-ignore - Json type complexity
+      // @ts-expect-error - Supabase RPC return type complexity for error field
       return { success: false, error: data?.error || 'Invalid magic code' };
     } catch (error) {
       console.error('Error validating personal magic code:', error);
@@ -190,7 +190,6 @@ export class PermanentUserService {
         language: 'nl',
       };
 
-      // @ts-ignore - Supabase type complexity with department null/undefined
       const { data: newUser, error } = await supabase
         .from('permanent_users')
         .insert([userData])
@@ -361,9 +360,12 @@ export class PermanentUserService {
     // Simple device fingerprinting (in production, use a proper library)
     const canvas = document.createElement('canvas');
     const ctx = canvas.getContext('2d');
-    ctx!.textBaseline = 'top';
-    ctx!.font = '14px Arial';
-    ctx!.fillText('Device fingerprint', 2, 2);
+    
+    if (ctx) {
+      ctx.textBaseline = 'top';
+      ctx.font = '14px Arial';
+      ctx.fillText('Device fingerprint', 2, 2);
+    }
 
     const fingerprint = [
       navigator.userAgent,

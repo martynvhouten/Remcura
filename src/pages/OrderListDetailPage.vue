@@ -790,10 +790,18 @@
   };
 
   const duplicateList = async () => {
+    if (!orderList.value) {
+      $q.notify({
+        type: 'negative',
+        message: 'Bestellijst niet gevonden',
+      });
+      return;
+    }
+    
     try {
       await orderListsStore.duplicateOrderList(
-        orderList.value!.id,
-        `${orderList.value!.name} (kopie)`
+        orderList.value.id,
+        `${orderList.value.name} (kopie)`
       );
       $q.notify({
         type: 'positive',
@@ -831,14 +839,23 @@
   };
 
   const deleteList = async () => {
+    if (!orderList.value) {
+      $q.notify({
+        type: 'negative',
+        message: 'Bestellijst niet gevonden',
+      });
+      return;
+    }
+    
+    const listId = orderList.value.id;
     $q.dialog({
       title: 'Bestellijst verwijderen',
-      message: `Weet je zeker dat je "${orderList.value?.name}" wilt verwijderen?`,
+      message: `Weet je zeker dat je "${orderList.value.name}" wilt verwijderen?`,
       cancel: true,
       persistent: true,
     }).onOk(async () => {
       try {
-        await orderListsStore.deleteOrderList(orderList.value!.id);
+        await orderListsStore.deleteOrderList(listId);
         $q.notify({
           type: 'positive',
           message: 'Bestellijst verwijderd',

@@ -1,0 +1,23 @@
+﻿node.exe : npm warn Expanding --format to --format-package-lock. This will stop
+ working in the next major version of npm.
+At C:\Program Files\nodejs\npm.ps1:29 char:3
++   & $NODE_EXE $NPM_CLI_JS $args
++   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (npm warn Expand...version of npm. 
+   :String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+npm warn Unknown project config "auto-install-peers". This will stop working in
+ the next major version of npm.
+
+> remcura@1.0.0 lint
+> eslint "src/**/*.{ts,vue}" json
+
+
+Oops! Something went wrong! :(
+
+ESLint: 8.57.1
+
+No files matching the pattern "json" were found.
+Please check for typing mistakes in the pattern.
+

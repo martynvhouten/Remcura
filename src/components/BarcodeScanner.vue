@@ -283,7 +283,11 @@
 
   const validateGTINCheckDigit = (gtin: string): boolean => {
     const digits = gtin.split('').map(Number);
-    const checkDigit = digits.pop()!;
+    const checkDigit = digits.pop();
+    
+    if (checkDigit === undefined) {
+      return false;
+    }
 
     let sum = 0;
     for (let i = 0; i < digits.length; i++) {
@@ -426,8 +430,12 @@
     } catch (err) {
       // Fallback: try image bitmap approach
       try {
-        const bitmap = await createImageBitmap(videoElement.value!);
-        const barcodes = await barcodeDetector!.detect(bitmap);
+        if (!videoElement.value || !barcodeDetector) {
+          return;
+        }
+        
+        const bitmap = await createImageBitmap(videoElement.value);
+        const barcodes = await barcodeDetector.detect(bitmap);
 
         if (barcodes.length > 0) {
           const barcode = barcodes[0];

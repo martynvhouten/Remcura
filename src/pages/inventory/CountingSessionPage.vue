@@ -222,40 +222,40 @@
               flat
             >
               <!-- Product Column -->
-              <template #body-cell-product="props">
-                <q-td :props="props">
+              <template #body-cell-product="cellProps">
+                <q-td :props="cellProps">
                   <div class="product-info">
                     <div class="product-name">
                       {{
-                        props.row.product?.name || t('common.unknownProduct')
+                        cellProps.row.product?.name || t('common.unknownProduct')
                       }}
                     </div>
                     <div class="product-sku">
-                      {{ props.row.product?.sku || '-' }}
+                      {{ cellProps.row.product?.sku || '-' }}
                     </div>
                   </div>
                 </q-td>
               </template>
 
               <!-- Variance Column -->
-              <template #body-cell-variance="props">
-                <q-td :props="props">
+              <template #body-cell-variance="cellProps">
+                <q-td :props="cellProps">
                   <q-chip
-                    :color="varianceColor(props.value)"
-                    :icon="varianceIcon(props.value)"
+                    :color="varianceColor(cellProps.value)"
+                    :icon="varianceIcon(cellProps.value)"
                     text-color="white"
-                    :label="formatVariance(props.value)"
+                    :label="formatVariance(cellProps.value)"
                     size="sm"
                   />
                 </q-td>
               </template>
 
               <!-- Status Column -->
-              <template #body-cell-status="props">
-                <q-td :props="props">
+              <template #body-cell-status="cellProps">
+                <q-td :props="cellProps">
                   <q-chip
-                    :color="entryStatusColor(props.value)"
-                    :label="formatEntryStatus(props.value)"
+                    :color="entryStatusColor(cellProps.value)"
+                    :label="formatEntryStatus(cellProps.value)"
                     size="sm"
                   />
                 </q-td>

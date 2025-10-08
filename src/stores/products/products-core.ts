@@ -10,7 +10,6 @@ import type {
   ProductCategory,
   ProductFilter,
   StockLevelRow,
-  SupplierProductRow,
 } from '@/types/inventory';
 // Removed unused type imports: Database, AnalyticsSummary
 

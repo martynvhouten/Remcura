@@ -51,8 +51,12 @@
 
   function renderChart() {
     if (!canvasEl.value) return;
+    
+    const ctx = canvasEl.value.getContext('2d');
+    if (!ctx) return;
+    
     chart?.destroy();
-    chart = new Chart(canvasEl.value.getContext('2d')!, {
+    chart = new Chart(ctx, {
       type: props.type as any,
       data: buildData(),
       options: {
