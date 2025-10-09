@@ -1,5 +1,6 @@
 import { ref, computed } from 'vue';
 import { setCssVar } from 'quasar';
+import { logger } from '@/utils/logger';
 
 export interface ThemeColors {
   primary: string;
@@ -105,13 +106,16 @@ export const getCurrentTheme = computed(() => themes[currentTheme.value]);
 export function applyTheme(themeName: string) {
   const theme = themes[themeName];
   if (!theme) {
-    console.warn(`Theme "${themeName}" not found, falling back to default`);
+    logger.warn(
+      `Theme "${themeName}" not found, falling back to default`,
+      'THEME'
+    );
     themeName = 'default';
   }
 
   const selectedTheme = themes[themeName];
   if (!selectedTheme) {
-    console.error(`Failed to load theme: ${themeName}`);
+    logger.error(`Failed to load theme: ${themeName}`, 'THEME');
     return;
   }
 

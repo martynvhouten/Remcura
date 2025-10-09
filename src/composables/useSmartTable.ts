@@ -1,5 +1,6 @@
 import { ref, computed, watch } from 'vue';
 import { useQuasar } from 'quasar';
+import { logger } from '@/utils/logger';
 
 export interface TableRow {
   [key: string]: unknown;
@@ -189,8 +190,9 @@ export function useSmartTable<Row extends TableRow = TableRow>(
 
   const loadServerSideData = async () => {
     if (!serverSideLoader) {
-      console.warn(
-        'Server-side strategy selected but no serverSideLoader provided'
+      logger.warn(
+        'Server-side strategy selected but no serverSideLoader provided',
+        'SMART_TABLE'
       );
       return;
     }
@@ -203,7 +205,11 @@ export function useSmartTable<Row extends TableRow = TableRow>(
       totalCount.value = result.totalCount;
       pagination.value.rowsNumber = result.totalCount;
     } catch (error) {
-      console.error('Failed to load server-side data:', error);
+      logger.error(
+        'Failed to load server-side data',
+        'SMART_TABLE',
+        error instanceof Error ? error : undefined
+      );
       $q.notify({
         type: 'negative',
         message: 'Failed to load data',
@@ -243,7 +249,11 @@ export function useSmartTable<Row extends TableRow = TableRow>(
       const data = await loader();
       setData(data);
     } catch (error) {
-      console.error('Failed to load initial data:', error);
+      logger.error(
+        'Failed to load initial data',
+        'SMART_TABLE',
+        error instanceof Error ? error : undefined
+      );
       $q.notify({
         type: 'negative',
         message: 'Failed to load data',
@@ -256,7 +266,10 @@ export function useSmartTable<Row extends TableRow = TableRow>(
   watch(strategy, (newStrategy, oldStrategy) => {
     if (newStrategy === oldStrategy) return;
 
-    console.log(`Table strategy changed from ${oldStrategy} to ${newStrategy}`);
+    logger.info(
+      `Table strategy changed from ${oldStrategy} to ${newStrategy}`,
+      'SMART_TABLE'
+    );
 
     if (newStrategy === 'server-side') {
       void loadServerSideData();

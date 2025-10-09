@@ -492,6 +492,7 @@
     PracticeMember,
     UserPermission,
   } from '@/types/supabase';
+  import { logger } from '@/utils/logger';
 
   // Composables
   const { t } = useI18n();
@@ -679,7 +680,11 @@
       // Calculate active users (role !== 'guest' as a proxy for active)
       stats.activeUsers = users.value.filter(u => u.role !== 'guest').length;
     } catch (error) {
-      console.error('Failed to load users:', error);
+      logger.error(
+        'Failed to load users',
+        'ADMIN_DASHBOARD',
+        error instanceof Error ? error : undefined
+      );
       $q.notify({
         type: 'negative',
         message: t('admin.errors.loadUsersFailed'),
@@ -696,7 +701,11 @@
       stats.totalLocations = locations.value.length;
       stats.activeLocations = locations.value.filter(l => l.is_active).length;
     } catch (error) {
-      console.error('Failed to load locations:', error);
+      logger.error(
+        'Failed to load locations',
+        'ADMIN_DASHBOARD',
+        error instanceof Error ? error : undefined
+      );
       $q.notify({
         type: 'negative',
         message: t('admin.errors.loadLocationsFailed'),
@@ -711,7 +720,11 @@
       loadingPermissions.value = true;
       permissions.value = await adminService.getUserPermissions();
     } catch (error) {
-      console.error('Failed to load permissions:', error);
+      logger.error(
+        'Failed to load permissions',
+        'ADMIN_DASHBOARD',
+        error instanceof Error ? error : undefined
+      );
     } finally {
       loadingPermissions.value = false;
     }
@@ -723,7 +736,11 @@
       stats.pendingSync = syncStatus.pendingActions;
       stats.lastSync = syncStatus.lastSync;
     } catch (error) {
-      console.error('Failed to load stats:', error);
+      logger.error(
+        'Failed to load stats',
+        'ADMIN_DASHBOARD',
+        error instanceof Error ? error : undefined
+      );
     }
   };
 
@@ -740,7 +757,11 @@
       analyticsData.averageSessionTime = 15;
       analyticsData.peakHour = 14;
     } catch (error) {
-      console.error('Failed to load analytics:', error);
+      logger.error(
+        'Failed to load analytics',
+        'ADMIN_DASHBOARD',
+        error instanceof Error ? error : undefined
+      );
     }
   };
 
@@ -755,7 +776,11 @@
         loadAnalytics(),
       ]);
     } catch (error) {
-      console.error('Failed to refresh data:', error);
+      logger.error(
+        'Failed to refresh data',
+        'ADMIN_DASHBOARD',
+        error instanceof Error ? error : undefined
+      );
       $q.notify({
         type: 'negative',
         message: t('common.refreshFailed'),
@@ -773,7 +798,11 @@
         message: t('offline.messages.syncCompleted'),
       });
     } catch (error) {
-      console.error('Failed to download offline data:', error);
+      logger.error(
+        'Failed to download offline data',
+        'ADMIN_DASHBOARD',
+        error instanceof Error ? error : undefined
+      );
       $q.notify({
         type: 'negative',
         message: t('offline.errors.downloadFailed'),
@@ -791,7 +820,11 @@
         message: t('offline.messages.syncCompleted'),
       });
     } catch (error) {
-      console.error('Failed to force sync:', error);
+      logger.error(
+        'Failed to force sync',
+        'ADMIN_DASHBOARD',
+        error instanceof Error ? error : undefined
+      );
       $q.notify({
         type: 'negative',
         message: t('offline.messages.syncFailed'),
@@ -878,7 +911,11 @@
         });
       });
     } catch (error) {
-      console.error('Failed to reset user password:', error);
+      logger.error(
+        'Failed to reset user password',
+        'ADMIN_DASHBOARD',
+        error instanceof Error ? error : undefined
+      );
       $q.notify({
         type: 'negative',
         message: t('admin.errors.failedToSet'),
@@ -910,7 +947,11 @@
         });
       });
     } catch (error) {
-      console.error('Failed to toggle user status:', error);
+      logger.error(
+        'Failed to toggle user status',
+        'ADMIN_DASHBOARD',
+        error instanceof Error ? error : undefined
+      );
       $q.notify({
         type: 'negative',
         message: t('admin.errors.failedToUpdate'),
@@ -960,7 +1001,11 @@
         message: t('locations.notifications.mainLocationSet'),
       });
     } catch (error) {
-      console.error('Failed to set main location:', error);
+      logger.error(
+        'Failed to set main location',
+        'ADMIN_DASHBOARD',
+        error instanceof Error ? error : undefined
+      );
       $q.notify({
         type: 'negative',
         message: t('locations.errors.setMainFailed'),
@@ -977,7 +1022,11 @@
         message: t('permissions.notifications.revoked'),
       });
     } catch (error) {
-      console.error('Failed to revoke permission:', error);
+      logger.error(
+        'Failed to revoke permission',
+        'ADMIN_DASHBOARD',
+        error instanceof Error ? error : undefined
+      );
       $q.notify({
         type: 'negative',
         message: t('permissions.errors.revokeFailed'),
@@ -1009,7 +1058,7 @@
     .stats-card-col {
       padding: 8px;
 
-      @media (max-width: 640px) {
+      @media (width <= 640px) {
         padding: 6px;
       }
     }

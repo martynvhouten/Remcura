@@ -1,4 +1,5 @@
 import { ref } from 'vue';
+import { logger } from '@/utils/logger';
 
 interface CacheItem<T> {
   data: T;
@@ -53,7 +54,11 @@ export function useCache<T = unknown>(
           return memoryCache.get(key) ?? null;
       }
     } catch (error) {
-      console.warn('Cache get error:', error);
+      logger.warn(
+        'Cache get error',
+        'CACHE',
+        error instanceof Error ? error : undefined
+      );
       return null;
     }
   };
@@ -79,7 +84,11 @@ export function useCache<T = unknown>(
       }
       cacheStats.value.size = memoryCache.size;
     } catch (error) {
-      console.warn('Cache set error:', error);
+      logger.warn(
+        'Cache set error',
+        'CACHE',
+        error instanceof Error ? error : undefined
+      );
     }
   };
 
@@ -279,7 +288,10 @@ export function useSmartCache<T = unknown>(
     setInterval(() => {
       const cleaned = cache.cleanExpired();
       if (cleaned > 0) {
-        console.debug(`Cache cleanup: removed ${cleaned} expired items`);
+        logger.debug(
+          `Cache cleanup: removed ${cleaned} expired items`,
+          'CACHE'
+        );
       }
     }, cleanupInterval);
   }

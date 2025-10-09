@@ -192,6 +192,7 @@
   import PageLayout from 'src/components/PageLayout.vue';
   import PageTitle from 'src/components/PageTitle.vue';
   import { BaseCard, InteractiveCard, AlertCard } from 'src/components/cards';
+  import { logger } from '@/utils/logger';
 
   const $q = useQuasar();
   const { t } = useI18n();
@@ -266,7 +267,11 @@
         notification_id: notificationId,
       });
     } catch (error) {
-      console.error('Error marking notification as read:', error);
+      logger.error(
+        'Error marking notification as read',
+        'NOTIFICATIONS',
+        error instanceof Error ? error : undefined
+      );
       $q.notify({
         type: 'negative',
         message: t('notificationsPage.markReadError'),
@@ -282,7 +287,11 @@
         notification_id: notificationId,
       });
     } catch (error) {
-      console.error('Error marking notification as unread:', error);
+      logger.error(
+        'Error marking notification as unread',
+        'NOTIFICATIONS',
+        error instanceof Error ? error : undefined
+      );
       $q.notify({
         type: 'negative',
         message: t('notificationsPage.markUnreadError'),
@@ -306,7 +315,11 @@
         count: unreadCount,
       });
     } catch (error) {
-      console.error('Error marking all as read:', error);
+      logger.error(
+        'Error marking all as read',
+        'NOTIFICATIONS',
+        error instanceof Error ? error : undefined
+      );
       $q.notify({
         type: 'negative',
         message: t('notificationsPage.markAllReadError'),
@@ -327,7 +340,11 @@
         notification_id: notificationId,
       });
     } catch (error) {
-      console.error('Error deleting notification:', error);
+      logger.error(
+        'Error deleting notification',
+        'NOTIFICATIONS',
+        error instanceof Error ? error : undefined
+      );
       $q.notify({
         type: 'negative',
         message: t('notificationsPage.deleteNotificationError'),
@@ -352,7 +369,11 @@
 
         await monitoringService.trackEvent('notifications_cleared_all');
       } catch (error) {
-        console.error('Error clearing all notifications:', error);
+        logger.error(
+          'Error clearing all notifications',
+          'NOTIFICATIONS',
+          error instanceof Error ? error : undefined
+        );
         $q.notify({
           type: 'negative',
           message: t('notificationsPage.clearAllError'),
@@ -661,7 +682,7 @@
   }
 
   // Responsive Design
-  @media (max-width: 768px) {
+  @media (width <= 768px) {
     .notifications-filters {
       flex-direction: column;
       align-items: stretch;
@@ -699,7 +720,7 @@
     }
   }
 
-  @media (max-width: 480px) {
+  @media (width <= 480px) {
     .notifications-container {
       gap: var(--space-4);
     }
