@@ -52,15 +52,15 @@ export const useSuppliersStore = defineStore('suppliers', () => {
   const lastSyncAt = ref<Date | null>(null);
 
   const activeSuppliers = computed(() =>
-    suppliers.value.filter((supplier: any) => supplier.is_active)
+    suppliers.value.filter(supplier => supplier.is_active)
   );
 
   const suppliersWithSyncEnabled = computed(() =>
-    suppliers.value.filter((supplier: any) => supplier.sync_enabled)
+    suppliers.value.filter(supplier => supplier.sync_enabled)
   );
 
   const getSupplierById = computed(
-    () => (id: string) => suppliers.value.find((supplier: any) => supplier.id === id)
+    () => (id: string) => suppliers.value.find(supplier => supplier.id === id)
   );
 
   const getSupplierProductsBySupplier = computed(
@@ -92,8 +92,8 @@ export const useSuppliersStore = defineStore('suppliers', () => {
 
       if (error) throw error;
 
-      suppliers.value = ((data as any) ?? []).map((row: any) =>
-        mapSupplierRowToView(row as SupplierRow)
+      suppliers.value = (data ?? []).map(row =>
+        mapSupplierRowToView(row)
       );
       lastSyncAt.value = new Date();
     } catch (error) {
@@ -131,8 +131,8 @@ export const useSuppliersStore = defineStore('suppliers', () => {
         throw new Error('Failed to create supplier');
       }
 
-      const newSupplier = mapSupplierRowToView((data as any) as SupplierRow);
-      (suppliers.value as any).push(newSupplier);
+      const newSupplier = mapSupplierRowToView(data);
+      suppliers.value.push(newSupplier);
       return newSupplier;
     } catch (error) {
       log.error('Error creating supplier', {
@@ -159,9 +159,9 @@ export const useSuppliersStore = defineStore('suppliers', () => {
       }
 
       const index = suppliers.value.findIndex(s => s.id === id);
-      const updatedSupplier = mapSupplierRowToView((data as any) as SupplierRow);
+      const updatedSupplier = mapSupplierRowToView(data);
       if (index >= 0) {
-        (suppliers.value as any)[index] = updatedSupplier;
+        suppliers.value[index] = updatedSupplier;
       }
 
       return updatedSupplier;
@@ -184,7 +184,7 @@ export const useSuppliersStore = defineStore('suppliers', () => {
 
       if (error) throw error;
 
-      suppliers.value = (suppliers.value as any).filter((s: any) => s.id !== id);
+      suppliers.value = suppliers.value.filter(s => s.id !== id);
     } catch (error) {
       log.error('Error deleting supplier', {
         error: error instanceof Error ? error.message : String(error),
@@ -268,7 +268,7 @@ export const useSuppliersStore = defineStore('suppliers', () => {
             gtin: supplierProductData.gtin ?? null,
             supplier_name: supplierProductData.supplier_name ?? null,
             supplier_sku: supplierProductData.supplier_sku,
-          } as any,
+          },
         ])
         .select()
         .single<SupplierProductRow>();
