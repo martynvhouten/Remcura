@@ -52,15 +52,15 @@ export const useSuppliersStore = defineStore('suppliers', () => {
   const lastSyncAt = ref<Date | null>(null);
 
   const activeSuppliers = computed(() =>
-    suppliers.value.filter(supplier => supplier.is_active)
+    suppliers.value.filter((supplier: SupplierView) => supplier.is_active)
   );
 
   const suppliersWithSyncEnabled = computed(() =>
-    suppliers.value.filter(supplier => supplier.sync_enabled)
+    suppliers.value.filter((supplier: SupplierView) => supplier.sync_enabled)
   );
 
   const getSupplierById = computed(
-    () => (id: string) => suppliers.value.find(supplier => supplier.id === id)
+    () => (id: string) => suppliers.value.find((supplier: SupplierView) => supplier.id === id)
   );
 
   const getSupplierProductsBySupplier = computed(
