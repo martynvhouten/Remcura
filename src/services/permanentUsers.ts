@@ -2,6 +2,7 @@ import { supabase } from 'src/boot/supabase';
 import { v4 as uuidv4 } from 'uuid';
 import type { PermanentUser } from 'src/types/supabase';
 import type { TablesInsert } from 'src/types/supabase.generated';
+import { logger } from '@/utils/logger';
 
 // 🚀 PERMANENT USERS SERVICE
 // Handles the complete upgrade flow from guest to permanent team member
@@ -56,7 +57,11 @@ export class PermanentUserService {
 
       return { type: 'invalid' };
     } catch (error) {
-      console.error('Error detecting login type:', error);
+      logger.error(
+        'Error detecting login type',
+        'PERMANENT_USERS',
+        error instanceof Error ? error : undefined
+      );
       return { type: 'invalid' };
     }
   }
@@ -98,7 +103,11 @@ export class PermanentUserService {
       // @ts-expect-error - Supabase RPC return type complexity for error field
       return { success: false, error: data?.error || 'Invalid magic code' };
     } catch (error) {
-      console.error('Error validating personal magic code:', error);
+      logger.error(
+        'Error validating personal magic code',
+        'PERMANENT_USERS',
+        error instanceof Error ? error : undefined
+      );
       return { success: false, error: 'Invalid magic code' };
     }
   }
@@ -130,7 +139,11 @@ export class PermanentUserService {
 
       return { success: true, invite: data };
     } catch (error) {
-      console.error('Error validating invite code:', error);
+      logger.error(
+        'Error validating invite code',
+        'PERMANENT_USERS',
+        error instanceof Error ? error : undefined
+      );
       return { success: false, error: 'Invalid invite code' };
     }
   }
@@ -232,7 +245,11 @@ export class PermanentUserService {
         personal_code: personalMagicCode || '',
       };
     } catch (error) {
-      console.error('Error creating permanent user:', error);
+      logger.error(
+        'Error creating permanent user',
+        'PERMANENT_USERS',
+        error instanceof Error ? error : undefined
+      );
       return { success: false, error: 'Failed to create permanent user' };
     }
   }
@@ -254,7 +271,11 @@ export class PermanentUserService {
       if (error) throw error;
       return data as string;
     } catch (error) {
-      console.error('Error generating personal magic code:', error);
+      logger.error(
+        'Error generating personal magic code',
+        'PERMANENT_USERS',
+        error instanceof Error ? error : undefined
+      );
       // Fallback generation
       const nameToUse: string = fullName ? fullName.toString() : 'USER';
       const nameParts = nameToUse.split(' ');
@@ -317,7 +338,11 @@ export class PermanentUserService {
 
       await supabase.from('user_sessions').insert([sessionData]);
     } catch (error) {
-      console.error('Error creating user session:', error);
+      logger.error(
+        'Error creating user session',
+        'PERMANENT_USERS',
+        error instanceof Error ? error : undefined
+      );
     }
   }
 
@@ -336,7 +361,11 @@ export class PermanentUserService {
       if (error) throw error;
       return (data || []) as EnhancedPermanentUser[];
     } catch (error) {
-      console.error('Error getting practice team:', error);
+      logger.error(
+        'Error getting practice team',
+        'PERMANENT_USERS',
+        error instanceof Error ? error : undefined
+      );
       return [];
     }
   }
@@ -360,7 +389,7 @@ export class PermanentUserService {
     // Simple device fingerprinting (in production, use a proper library)
     const canvas = document.createElement('canvas');
     const ctx = canvas.getContext('2d');
-    
+
     if (ctx) {
       ctx.textBaseline = 'top';
       ctx.font = '14px Arial';
@@ -439,7 +468,11 @@ export class PermanentUserService {
         login_method: 'email_password',
       };
     } catch (error) {
-      console.error('Error logging in with email:', error);
+      logger.error(
+        'Error logging in with email',
+        'PERMANENT_USERS',
+        error instanceof Error ? error : undefined
+      );
       return { success: false, error: 'Login failed' };
     }
   }

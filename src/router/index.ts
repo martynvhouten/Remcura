@@ -9,6 +9,7 @@ import {
 import routes from './routes';
 import { useAuthStore } from '@/stores/auth';
 import { PermissionService } from '@/services/permissions';
+import { routerLogger } from '@/utils/logger';
 
 /*
  * If not building with SSR mode, you can
@@ -63,10 +64,8 @@ export default route((/* { store, ssrContext } */) => {
         const effectiveRole = userRole || 'guest';
 
         if (!requiredRoles.includes(effectiveRole)) {
-          console.warn(
-            `Access denied. User role: ${effectiveRole}, Required: ${requiredRoles.join(
-              ', '
-            )}`
+          routerLogger.warn(
+            `Access denied. User role: ${effectiveRole}, Required: ${requiredRoles.join(', ')}`
           );
 
           // Only redirect if not dashboard - avoid infinite loops
@@ -76,9 +75,12 @@ export default route((/* { store, ssrContext } */) => {
           }
         }
       } catch (error) {
-        console.error('Error checking user role:', error);
+        routerLogger.error(
+          'Error checking user role',
+          error instanceof Error ? error : undefined
+        );
         // On error, allow access but log the issue for debugging
-        console.warn(
+        routerLogger.warn(
           'Allowing access due to role check error - this should be fixed in production'
         );
       }
@@ -95,7 +97,7 @@ export default route((/* { store, ssrContext } */) => {
         );
 
         if (!hasPermission) {
-          console.warn(
+          routerLogger.warn(
             `Access denied. Missing permission: ${permission} on ${resource}`
           );
 
@@ -106,9 +108,12 @@ export default route((/* { store, ssrContext } */) => {
           }
         }
       } catch (error) {
-        console.error('Error checking permission:', error);
+        routerLogger.error(
+          'Error checking permission',
+          error instanceof Error ? error : undefined
+        );
         // On error, allow access but log the issue for debugging
-        console.warn(
+        routerLogger.warn(
           'Allowing access due to permission check error - this should be fixed in production'
         );
       }

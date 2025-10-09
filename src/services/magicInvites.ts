@@ -2,6 +2,7 @@ import { supabase } from 'src/boot/supabase';
 import type { Json } from '../types/supabase';
 import type { Tables } from '../types/supabase.generated';
 import { v4 as uuidv4 } from 'uuid';
+import { logger } from '@/utils/logger';
 
 // 🎭 REVOLUTIONARY MAGIC INVITE SERVICE
 // The most innovative user management system ever created!
@@ -157,7 +158,11 @@ export class MagicInviteService {
       if (error) throw error;
       return data;
     } catch (error) {
-      console.error('Error generating magic code:', error);
+      logger.error(
+        'Error generating magic code',
+        'MAGIC_INVITES',
+        error instanceof Error ? error : undefined
+      );
       // Fallback generation
       const emojis = ['🏥', '💊', '🦷', '👩‍⚕️', '🔬', '🩺', '💉', '⚕️'];
       const randomEmoji = emojis[Math.floor(Math.random() * emojis.length)];
@@ -227,7 +232,11 @@ export class MagicInviteService {
 
       return mapMagicInviteRow(data);
     } catch (error) {
-      console.error('Error creating magic invite:', error);
+      logger.error(
+        'Error creating magic invite',
+        'MAGIC_INVITES',
+        error instanceof Error ? error : undefined
+      );
       throw new Error('Failed to create magic invite');
     }
   }
@@ -252,7 +261,11 @@ export class MagicInviteService {
         })
         .eq('id', inviteId);
     } catch (error) {
-      console.error('Error updating invite links:', error);
+      logger.error(
+        'Error updating invite links',
+        'MAGIC_INVITES',
+        error instanceof Error ? error : undefined
+      );
     }
   }
 
@@ -290,7 +303,11 @@ export class MagicInviteService {
 
       return data as MagicInvite;
     } catch (error) {
-      console.error('Error validating magic code:', error);
+      logger.error(
+        'Error validating magic code',
+        'MAGIC_INVITES',
+        error instanceof Error ? error : undefined
+      );
       return null;
     }
   }
@@ -316,11 +333,19 @@ export class MagicInviteService {
         .eq('id', inviteId);
 
       if (error) {
-        console.error('Error incrementing invite usage:', error);
+        logger.error(
+          'Error incrementing invite usage',
+          'MAGIC_INVITES',
+          error instanceof Error ? error : undefined
+        );
         throw error;
       }
     } catch (error) {
-      console.error('Error updating invite usage:', error);
+      logger.error(
+        'Error updating invite usage',
+        'MAGIC_INVITES',
+        error instanceof Error ? error : undefined
+      );
       throw error;
     }
   }
@@ -396,7 +421,11 @@ export class MagicInviteService {
 
       return mapGuestSessionRow(data);
     } catch (error) {
-      console.error('Error creating guest session:', error);
+      logger.error(
+        'Error creating guest session',
+        'MAGIC_INVITES',
+        error instanceof Error ? error : undefined
+      );
       throw new Error('Failed to create guest session');
     }
   }
@@ -407,7 +436,11 @@ export class MagicInviteService {
       // TODO: Implement analytics tracking when the increment_invite_views RPC function is created
       // Tracking invite view
     } catch (error) {
-      console.error('Error tracking invite view:', error);
+      logger.error(
+        'Error tracking invite view',
+        'MAGIC_INVITES',
+        error instanceof Error ? error : undefined
+      );
     }
   }
 
@@ -430,7 +463,11 @@ export class MagicInviteService {
         },
       ]);
     } catch (error) {
-      console.error('Error tracking analytics:', error);
+      logger.error(
+        'Error tracking analytics',
+        'MAGIC_INVITES',
+        error instanceof Error ? error : undefined
+      );
     }
   }
 
@@ -515,7 +552,11 @@ export class MagicInviteService {
       if (error) throw error;
       return (data || []).map(mapGuestSessionRow);
     } catch (error) {
-      console.error('Error getting active sessions:', error);
+      logger.error(
+        'Error getting active sessions',
+        'MAGIC_INVITES',
+        error instanceof Error ? error : undefined
+      );
       return [];
     }
   }
@@ -538,7 +579,11 @@ export class MagicInviteService {
         })
         .eq('id', sessionId);
     } catch (error) {
-      console.error('Error extending guest session:', error);
+      logger.error(
+        'Error extending guest session',
+        'MAGIC_INVITES',
+        error instanceof Error ? error : undefined
+      );
       throw new Error('Failed to extend session');
     }
   }
@@ -555,7 +600,11 @@ export class MagicInviteService {
       if (error) throw error;
       return (data || []).map(mapMagicInviteRow);
     } catch (error) {
-      console.error('Error getting practice invites:', error);
+      logger.error(
+        'Error getting practice invites',
+        'MAGIC_INVITES',
+        error instanceof Error ? error : undefined
+      );
       return [];
     }
   }

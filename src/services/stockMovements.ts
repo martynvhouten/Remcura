@@ -2,6 +2,7 @@ import { supabase } from 'src/boot/supabase';
 import { useAuthStore } from 'src/stores/auth';
 import type { MovementType, StockMovement } from '@/types/inventory';
 import type { TablesInsert } from '@/types';
+import { logger } from '@/utils/logger';
 
 export interface CreateStockMovementRequest {
   practice_id: string;
@@ -104,13 +105,21 @@ export class StockMovementService {
         .single();
 
       if (error) {
-        console.error('Error logging stock movement:', error);
+        logger.error(
+          'Error logging stock movement',
+          'STOCK_MOVEMENTS',
+          error instanceof Error ? error : undefined
+        );
         throw error;
       }
 
       return data;
     } catch (error) {
-      console.error('Error in logMovement:', error);
+      logger.error(
+        'Error in logMovement',
+        'STOCK_MOVEMENTS',
+        error instanceof Error ? error : undefined
+      );
       throw error;
     }
   }
@@ -279,7 +288,11 @@ export class StockMovementService {
 
       return { from: fromMovement, to: toMovement };
     } catch (error) {
-      console.error('Error logging transfer movements:', error);
+      logger.error(
+        'Error logging transfer movements',
+        'STOCK_MOVEMENTS',
+        error instanceof Error ? error : undefined
+      );
       throw error;
     }
   }
@@ -335,13 +348,21 @@ export class StockMovementService {
         .limit(limit);
 
       if (error) {
-        console.error('Error fetching product movements:', error);
+        logger.error(
+          'Error fetching product movements',
+          'STOCK_MOVEMENTS',
+          error instanceof Error ? error : undefined
+        );
         throw error;
       }
 
       return data || [];
     } catch (error) {
-      console.error('Error in getProductMovements:', error);
+      logger.error(
+        'Error in getProductMovements',
+        'STOCK_MOVEMENTS',
+        error instanceof Error ? error : undefined
+      );
       throw error;
     }
   }
@@ -370,13 +391,21 @@ export class StockMovementService {
         .limit(limit);
 
       if (error) {
-        console.error('Error fetching location movements:', error);
+        logger.error(
+          'Error fetching location movements',
+          'STOCK_MOVEMENTS',
+          error instanceof Error ? error : undefined
+        );
         throw error;
       }
 
       return data || [];
     } catch (error) {
-      console.error('Error in getLocationMovements:', error);
+      logger.error(
+        'Error in getLocationMovements',
+        'STOCK_MOVEMENTS',
+        error instanceof Error ? error : undefined
+      );
       throw error;
     }
   }
@@ -410,13 +439,21 @@ export class StockMovementService {
       const { data, error } = await query;
 
       if (error) {
-        console.error('Error fetching recent movements:', error);
+        logger.error(
+          'Error fetching recent movements',
+          'STOCK_MOVEMENTS',
+          error instanceof Error ? error : undefined
+        );
         throw error;
       }
 
       return data || [];
     } catch (error) {
-      console.error('Error in getRecentMovements:', error);
+      logger.error(
+        'Error in getRecentMovements',
+        'STOCK_MOVEMENTS',
+        error instanceof Error ? error : undefined
+      );
       throw error;
     }
   }

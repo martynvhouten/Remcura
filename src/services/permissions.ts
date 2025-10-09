@@ -8,6 +8,7 @@ import type {
   RoleDefinition,
 } from '@/types/permissions';
 import type { Database } from '@/types';
+import { logger } from '@/utils/logger';
 
 type PermissionRow =
   Database['public']['Functions']['get_user_permissions']['Returns'][number];
@@ -169,7 +170,10 @@ export class PermissionService {
 
     // If no practiceId (Magic Join users), grant basic read permissions
     if (!practiceId) {
-      console.warn('No practice ID - applying magic join fallback permissions');
+      logger.warn(
+        'No practice ID - applying magic join fallback permissions',
+        'PERMISSIONS'
+      );
       // Grant read access to basic resources for magic join users
       if (
         permissionType === 'read' &&
@@ -190,7 +194,11 @@ export class PermissionService {
       });
 
       if (error) {
-        console.error('Error checking permission:', error);
+        logger.error(
+          'Error checking permission',
+          'PERMISSIONS',
+          error instanceof Error ? error : undefined
+        );
         // Fallback: grant basic read permissions if RPC fails
         if (
           permissionType === 'read' &&
@@ -203,7 +211,11 @@ export class PermissionService {
 
       return data || false;
     } catch (error) {
-      console.error('Error in hasPermission:', error);
+      logger.error(
+        'Error in hasPermission',
+        'PERMISSIONS',
+        error instanceof Error ? error : undefined
+      );
       // Fallback: grant basic read permissions if RPC fails
       if (
         permissionType === 'read' &&
@@ -234,7 +246,11 @@ export class PermissionService {
       });
 
       if (error) {
-        console.error('Error fetching user permissions:', error);
+        logger.error(
+          'Error fetching user permissions',
+          'PERMISSIONS',
+          error instanceof Error ? error : undefined
+        );
         return [];
       }
 
@@ -247,7 +263,11 @@ export class PermissionService {
         )
       );
     } catch (error) {
-      console.error('Error in getUserPermissions:', error);
+      logger.error(
+        'Error in getUserPermissions',
+        'PERMISSIONS',
+        error instanceof Error ? error : undefined
+      );
       return [];
     }
   }
@@ -274,8 +294,9 @@ export class PermissionService {
 
     // If no practiceId, this might be a Magic Join user - give them guest access for now
     if (!practiceId) {
-      console.warn(
-        'No practice ID found - granting guest access for magic join user'
+      logger.warn(
+        'No practice ID found - granting guest access for magic join user',
+        'PERMISSIONS'
       );
       return 'guest';
     }
@@ -293,14 +314,22 @@ export class PermissionService {
         .single();
 
       if (error) {
-        console.error('Error fetching user role:', error);
+        logger.error(
+          'Error fetching user role',
+          'PERMISSIONS',
+          error instanceof Error ? error : undefined
+        );
         // If user not found in practice_members, might be magic join - give guest access
         return 'guest';
       }
 
       return (data?.role as UserRole) || 'guest';
     } catch (error) {
-      console.error('Error in getUserRole:', error);
+      logger.error(
+        'Error in getUserRole',
+        'PERMISSIONS',
+        error instanceof Error ? error : undefined
+      );
       return 'guest';
     }
   }

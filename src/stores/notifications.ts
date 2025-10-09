@@ -3,6 +3,7 @@ import { ref, computed } from 'vue';
 import { supabase } from '@/boot/supabase';
 import { useAuthStore } from './auth';
 import type { Database } from '@/types';
+import { notificationLogger } from '@/utils/logger';
 
 export const useNotificationStore = defineStore('notifications', () => {
   type NotificationRecord =
@@ -48,7 +49,10 @@ export const useNotificationStore = defineStore('notifications', () => {
       const message =
         err instanceof Error ? err.message : 'Failed to load notifications';
       error.value = message;
-      console.error('Error loading notifications:', err);
+      notificationLogger.error(
+        'Error loading notifications',
+        err instanceof Error ? err : undefined
+      );
     } finally {
       loading.value = false;
     }
@@ -77,7 +81,10 @@ export const useNotificationStore = defineStore('notifications', () => {
         notification.read_at = new Date().toISOString();
       }
     } catch (error) {
-      console.error('Error marking notification as read:', error);
+      notificationLogger.error(
+        'Error marking notification as read',
+        error instanceof Error ? error : undefined
+      );
       throw error;
     }
   };
@@ -105,7 +112,10 @@ export const useNotificationStore = defineStore('notifications', () => {
         notification.read_at = null;
       }
     } catch (error) {
-      console.error('Error marking notification as unread:', error);
+      notificationLogger.error(
+        'Error marking notification as unread',
+        error instanceof Error ? error : undefined
+      );
       throw error;
     }
   };
@@ -138,7 +148,10 @@ export const useNotificationStore = defineStore('notifications', () => {
         }
       });
     } catch (error) {
-      console.error('Error marking all as read:', error);
+      notificationLogger.error(
+        'Error marking all as read',
+        error instanceof Error ? error : undefined
+      );
       throw error;
     }
   };
@@ -159,7 +172,10 @@ export const useNotificationStore = defineStore('notifications', () => {
         n => n.id !== notificationId
       );
     } catch (error) {
-      console.error('Error deleting notification:', error);
+      notificationLogger.error(
+        'Error deleting notification',
+        error instanceof Error ? error : undefined
+      );
       throw error;
     }
   };
@@ -183,7 +199,10 @@ export const useNotificationStore = defineStore('notifications', () => {
       // Clear local state
       notifications.value = [];
     } catch (error) {
-      console.error('Error clearing all notifications:', error);
+      notificationLogger.error(
+        'Error clearing all notifications',
+        error instanceof Error ? error : undefined
+      );
       throw error;
     }
   };

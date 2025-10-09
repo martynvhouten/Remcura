@@ -1,5 +1,6 @@
 import { ref } from 'vue';
 import { supabase } from '@/boot/supabase';
+import { logger } from '@/utils/logger';
 
 interface StockLevelRecord {
   product_id: string;
@@ -81,7 +82,11 @@ export function useBulkData() {
       return stockByProduct;
     } catch (err) {
       error.value = err as Error;
-      console.error('Bulk stock loading failed:', err);
+      logger.error(
+        'Bulk stock loading failed',
+        'BULK_DATA',
+        err instanceof Error ? err : undefined
+      );
       return {};
     } finally {
       loading.value = false;
@@ -130,7 +135,11 @@ export function useBulkData() {
       return suppliersByProduct;
     } catch (err) {
       error.value = err as Error;
-      console.error('Bulk supplier products loading failed:', err);
+      logger.error(
+        'Bulk supplier products loading failed',
+        'BULK_DATA',
+        err instanceof Error ? err : undefined
+      );
       return {};
     } finally {
       loading.value = false;
@@ -179,7 +188,11 @@ export function useBulkData() {
       return batchesByProduct;
     } catch (err) {
       error.value = err as Error;
-      console.error('Bulk batch loading failed:', err);
+      logger.error(
+        'Bulk batch loading failed',
+        'BULK_DATA',
+        err instanceof Error ? err : undefined
+      );
       return {};
     } finally {
       loading.value = false;
@@ -224,7 +237,11 @@ export function useBulkData() {
       return groupedData;
     } catch (err) {
       error.value = err as Error;
-      console.error(`Bulk loading failed for ${table}:`, err);
+      logger.error(
+        `Bulk loading failed for ${table}`,
+        'BULK_DATA',
+        err instanceof Error ? err : undefined
+      );
       return {};
     } finally {
       loading.value = false;
