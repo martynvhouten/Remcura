@@ -29,6 +29,22 @@ interface ProductBatchFetchRow extends Tables<'product_batches'> {
   supplier: { id: string; name: string | null } | null;
 }
 
+// Extended update type with optional fields that might be present
+type ExtendedUpdateBatchRequest = UpdateBatchRequest & {
+  product_id?: string;
+  location_id?: string;
+  supplier_id?: string | null;
+  batch_number?: string;
+  supplier_batch_number?: string | null;
+  expiry_date?: string;
+  received_date?: string;
+  available_quantity?: number | null;
+  total_cost?: number | null;
+  currency?: string | null;
+  purchase_order_number?: string | null;
+  invoice_number?: string | null;
+};
+
 // Type for get_fifo_batches RPC function result
 interface FifoBatchResult {
   batch_id: string;
@@ -90,34 +106,19 @@ export const useBatchStore = defineStore('batch', () => {
   );
 
   const batchesSortedByFIFO = computed(() =>
-    sortBatchesFIFO(
-      batches.value.map(batch => ({
-        id: batch.id,
-        expiry_date: batch.expiryDate,
-        current_quantity: batch.currentQuantity,
-        created_at: batch.createdAt,
-      })) as any
-    )
+    sortBatchesFIFO(batches.value)
   );
 
   const criticalBatches = computed(() =>
     filterBatchesByUrgency(
-      batches.value.map(batch => ({
-        id: batch.id,
-        expiry_date: batch.expiryDate,
-        current_quantity: batch.currentQuantity,
-      })) as any,
+      batches.value,
       ['critical', 'expired']
     )
   );
 
   const warningBatches = computed(() =>
     filterBatchesByUrgency(
-      batches.value.map(batch => ({
-        id: batch.id,
-        expiry_date: batch.expiryDate,
-        current_quantity: batch.currentQuantity,
-      })) as any,
+      batches.value,
       ['warning', 'high']
     )
   );
@@ -194,13 +195,14 @@ export const useBatchStore = defineStore('batch', () => {
       const { data, error: fetchError } = await query;
       if (fetchError) throw fetchError;
 
-      batches.value = toArray(data).map(batchRow =>
-        mapProductBatchRow(batchRow as ProductBatchFetchRow, {
-          product: (batchRow as ProductBatchFetchRow).product as any,
-          location: (batchRow as ProductBatchFetchRow).location as any,
-          supplier: (batchRow as ProductBatchFetchRow).supplier as any,
-        })
-      );
+      batches.value = toArray(data).map(batchRow => {
+        const row = batchRow as ProductBatchFetchRow;
+        return mapProductBatchRow(row, {
+          product: row.product,
+          location: row.location,
+          supplier: row.supplier,
+        });
+      });
     } catch (err) {
       const handledError = ServiceErrorHandler.handle(err as Error, {
         service: 'BatchStore',
@@ -247,11 +249,12 @@ export const useBatchStore = defineStore('batch', () => {
 
         if (fbError) throw fbError;
 
-        expiringBatches.value = toArray(fallbackData).map(row => {
-          const mapped = mapProductBatchRow(row as ProductBatchFetchRow, {
-            product: (row as ProductBatchFetchRow).product as any,
-            location: (row as ProductBatchFetchRow).location as any,
-            supplier: (row as ProductBatchFetchRow).supplier as any,
+        expiringBatches.value = toArray(fallbackData).map(batchRow => {
+          const row = batchRow as ProductBatchFetchRow;
+          const mapped = mapProductBatchRow(row, {
+            product: row.product,
+            location: row.location,
+            supplier: row.supplier,
           });
           const diffDays = Math.ceil(
             (new Date(mapped.expiryDate).getTime() - Date.now()) /
@@ -341,33 +344,51 @@ export const useBatchStore = defineStore('batch', () => {
 
         if (fbError) throw fbError;
 
-        fifoBatches.value = toArray(rows).map(row =>
-          mapProductBatchRow(row as ProductBatchFetchRow, {
-            product: (row as ProductBatchFetchRow).product as any,
-            location: (row as ProductBatchFetchRow).location as any,
-            supplier: (row as ProductBatchFetchRow).supplier as any,
-          })
-        );
+        fifoBatches.value = toArray(rows).map(batchRow => {
+          const row = batchRow as ProductBatchFetchRow;
+          return mapProductBatchRow(row, {
+            product: row.product,
+            location: row.location,
+            supplier: row.supplier,
+          });
+        });
         return fifoBatches.value;
       }
 
-      fifoBatches.value = ((data as any) || []).map((entry: any) => ({
-        id: entry.batch_id,
-        practiceId: entry.practice_id,
-        productId: entry.product_id,
-        locationId: entry.location_id,
-        supplierId: entry.supplier_id ?? null,
-        batchNumber: entry.batch_number,
-        expiryDate: entry.expiry_date,
-        receivedDate: entry.received_date ?? entry.expiry_date,
-        currentQuantity: entry.available_quantity ?? entry.current_quantity,
-        reservedQuantity: entry.reserved_quantity ?? 0,
-        availableQuantity: entry.available_quantity ?? entry.current_quantity,
-        unitCost: entry.unit_cost ?? null,
-        totalCost: entry.total_cost ?? null,
-        currency: entry.currency ?? null,
-        status: entry.status ?? null,
-      }));
+      const fifoBatchData = (data || []) as FifoBatchResult[];
+      fifoBatches.value = fifoBatchData
+        .filter(entry => entry.practice_id && entry.product_id && entry.location_id)
+        .map(entry => {
+          const urgency = calculateBatchUrgency(entry.expiry_date);
+          return {
+            id: entry.batch_id,
+            practiceId: entry.practice_id!,
+            productId: entry.product_id!,
+            locationId: entry.location_id!,
+            supplierId: entry.supplier_id ?? null,
+            batchNumber: entry.batch_number,
+            expiryDate: entry.expiry_date,
+            receivedDate: entry.received_date ?? entry.expiry_date,
+            initialQuantity: entry.current_quantity ?? 0,
+            currentQuantity: entry.available_quantity ?? entry.current_quantity ?? 0,
+            reservedQuantity: entry.reserved_quantity ?? 0,
+            availableQuantity: entry.available_quantity ?? entry.current_quantity ?? 0,
+            unitCost: entry.unit_cost ?? null,
+            totalCost: entry.total_cost ?? null,
+            currency: entry.currency ?? null,
+            status: entry.status ?? null,
+            supplierBatchNumber: null,
+            purchaseOrderNumber: null,
+            invoiceNumber: null,
+            qualityCheckPassed: null,
+            qualityNotes: null,
+            quarantineUntil: null,
+            createdAt: null,
+            updatedAt: null,
+            urgencyLevel: urgency.level,
+            daysUntilExpiry: urgency.daysUntilExpiry,
+          };
+        });
       return fifoBatches.value;
     } catch (err) {
       const handledError = ServiceErrorHandler.handle(err as Error, {
@@ -413,33 +434,33 @@ export const useBatchStore = defineStore('batch', () => {
       loading.value = true;
       error.value = null;
 
-      const updatesAny = updates as any;
-      const practiceId = updatesAny.practice_id ?? undefined;
+      const ext = updates as ExtendedUpdateBatchRequest;
+      const practiceId = ext.practice_id ?? undefined;
       const mappedUpdate = toProductBatchUpdate(
         mapProductBatchRow({
           ...updates,
           id,
-          practice_id: updatesAny.practice_id ?? '',
-          product_id: updatesAny.product_id ?? '',
-          location_id: updatesAny.location_id ?? '',
-          supplier_id: updatesAny.supplier_id ?? null,
-          batch_number: updatesAny.batch_number ?? '',
-          supplier_batch_number: updatesAny.supplier_batch_number ?? null,
-          expiry_date: updatesAny.expiry_date ?? '',
-          received_date: updatesAny.received_date ?? '',
-          initial_quantity: updatesAny.current_quantity ?? 0,
-          current_quantity: updatesAny.current_quantity ?? 0,
-          reserved_quantity: updatesAny.reserved_quantity ?? null,
-          available_quantity: updatesAny.available_quantity ?? null,
-          unit_cost: updatesAny.unit_cost ?? null,
-          total_cost: updatesAny.total_cost ?? null,
-          currency: updatesAny.currency ?? null,
-          status: updatesAny.status ?? null,
-          purchase_order_number: updatesAny.purchase_order_number ?? null,
-          invoice_number: updatesAny.invoice_number ?? null,
-          quality_check_passed: updatesAny.quality_check_passed ?? null,
-          quality_notes: updatesAny.quality_notes ?? null,
-          quarantine_until: updatesAny.quarantine_until ?? null,
+          practice_id: ext.practice_id ?? '',
+          product_id: ext.product_id ?? '',
+          location_id: ext.location_id ?? '',
+          supplier_id: ext.supplier_id ?? null,
+          batch_number: ext.batch_number ?? '',
+          supplier_batch_number: ext.supplier_batch_number ?? null,
+          expiry_date: ext.expiry_date ?? '',
+          received_date: ext.received_date ?? '',
+          initial_quantity: ext.current_quantity ?? 0,
+          current_quantity: ext.current_quantity ?? 0,
+          reserved_quantity: ext.reserved_quantity ?? null,
+          available_quantity: ext.available_quantity ?? null,
+          unit_cost: ext.unit_cost ?? null,
+          total_cost: ext.total_cost ?? null,
+          currency: ext.currency ?? null,
+          status: ext.status ?? null,
+          purchase_order_number: ext.purchase_order_number ?? null,
+          invoice_number: ext.invoice_number ?? null,
+          quality_check_passed: ext.quality_check_passed ?? null,
+          quality_notes: ext.quality_notes ?? null,
+          quarantine_until: ext.quarantine_until ?? null,
           created_at: null,
           updated_at: null,
         } as ProductBatch)
@@ -457,14 +478,12 @@ export const useBatchStore = defineStore('batch', () => {
 
       const index = batches.value.findIndex(batch => batch.id === id);
       if (index !== -1) {
-        batches.value[index] = mapProductBatchRow(
-          data as ProductBatchFetchRow,
-          {
-            product: (data as ProductBatchFetchRow).product as any,
-            location: (data as ProductBatchFetchRow).location as any,
-            supplier: (data as ProductBatchFetchRow).supplier as any,
-          }
-        );
+        const row = data as ProductBatchFetchRow;
+        batches.value[index] = mapProductBatchRow(row, {
+          product: row.product,
+          location: row.location,
+          supplier: row.supplier,
+        });
       }
 
       return data;
@@ -667,7 +686,7 @@ export const useBatchStore = defineStore('batch', () => {
         batch.currentQuantity > 0
     );
 
-    const sortedBatches = sortBatchesFIFO(productBatches as any);
+    const sortedBatches = sortBatchesFIFO(productBatches);
     const suggestion = [];
     let remainingQuantity = quantityNeeded;
 
@@ -681,7 +700,7 @@ export const useBatchStore = defineStore('batch', () => {
       suggestion.push({
         batch,
         quantity: quantityFromBatch,
-        urgencyInfo: calculateBatchUrgency(batch.expiry_date),
+        urgencyInfo: calculateBatchUrgency(batch.expiryDate),
       });
 
       remainingQuantity -= quantityFromBatch;

@@ -31,9 +31,9 @@ const toDateString = (
 export const mapProductBatchRow = (
   row: ProductBatchRow,
   relations?: {
-    product?: Pick<Tables<'products'>, 'name' | 'sku'> | null;
-    location?: Pick<Tables<'practice_locations'>, 'name'> | null;
-    supplier?: Pick<Tables<'suppliers'>, 'name'> | null;
+    product?: { id?: string; name: string | null; sku: string | null } | null;
+    location?: { id?: string; name: string | null } | null;
+    supplier?: { id?: string; name: string | null } | null;
   }
 ): ProductBatchDTO => ({
   id: row.id,

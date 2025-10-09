@@ -1,8 +1,17 @@
 import type { ProductBatchWithDetails } from 'src/types/inventory';
+import type { Tables } from '@/types/supabase.generated';
 
 /**
  * Batch validation and formatting utilities
  */
+
+// Minimal interface for batch sorting/filtering operations
+export interface BatchForSorting {
+  id: string;
+  expiryDate: string;
+  currentQuantity: number;
+  raw?: Tables<'product_batches'>;
+}
 
 export interface BatchValidationResult {
   isValid: boolean;
@@ -313,18 +322,18 @@ export const generateSuggestedBatchNumber = (
 /**
  * Sorts batches by FIFO order (first to expire first)
  */
-export const sortBatchesFIFO = (
-  batches: ProductBatchWithDetails[]
-): ProductBatchWithDetails[] => {
+export const sortBatchesFIFO = <T extends BatchForSorting>(
+  batches: T[]
+): T[] => {
   return [...batches].sort((a, b) => {
     // First by expiry date
     const dateComparison =
-      new Date(a.expiry_date).getTime() - new Date(b.expiry_date).getTime();
+      new Date(a.expiryDate).getTime() - new Date(b.expiryDate).getTime();
     if (dateComparison !== 0) return dateComparison;
 
     // Then by received date (older first)
-    const receivedA = new Date((a.raw as any)?.received_date ?? (a.raw as any)?.created_at ?? '').getTime();
-    const receivedB = new Date((b.raw as any)?.received_date ?? (b.raw as any)?.created_at ?? '').getTime();
+    const receivedA = new Date(a.raw?.received_date ?? a.raw?.created_at ?? '').getTime();
+    const receivedB = new Date(b.raw?.received_date ?? b.raw?.created_at ?? '').getTime();
     return receivedA - receivedB;
   });
 };
@@ -332,12 +341,12 @@ export const sortBatchesFIFO = (
 /**
  * Filters batches by urgency level
  */
-export const filterBatchesByUrgency = (
-  batches: ProductBatchWithDetails[],
+export const filterBatchesByUrgency = <T extends BatchForSorting>(
+  batches: T[],
   urgencyLevels: BatchUrgencyInfo['level'][]
-): ProductBatchWithDetails[] => {
+): T[] => {
   return batches.filter(batch => {
-    const urgency = calculateBatchUrgency(batch.expiry_date);
+    const urgency = calculateBatchUrgency(batch.expiryDate);
     return urgencyLevels.includes(urgency.level);
   });
 };
