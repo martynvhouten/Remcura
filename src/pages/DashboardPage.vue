@@ -235,6 +235,7 @@
   import PageTitle from 'src/components/PageTitle.vue';
   import DynamicWidget from 'src/components/dashboard/DynamicWidget.vue';
   import BaseDialog from 'src/components/base/BaseDialog.vue';
+  import { logger } from '@/utils/logger';
 
   const { t } = useI18n();
   const $q = useQuasar();
@@ -327,7 +328,7 @@
       );
       // Dashboard loaded successfully
     } catch (error) {
-      console.error('Failed to load dashboard:', error);
+      logger.error('Failed to load dashboard', 'DASHBOARD', error instanceof Error ? error : undefined);
       $q.notify({
         type: 'negative',
         message: t('dashboard.errors.loadFailed'),
@@ -399,7 +400,7 @@
         icon: 'swap_horiz',
       });
     } catch (error) {
-      console.error('Failed to switch demo role:', error);
+      logger.error('Failed to switch demo role', 'DASHBOARD', error instanceof Error ? error : undefined);
       $q.notify({
         type: 'negative',
         message: t('dashboard.errors.switchFailed'),
@@ -424,7 +425,7 @@
         selectedPracticeId.value = practices.value[0]?.id ?? '';
       }
     } catch (e) {
-      console.error('Failed to load practices for owner', e);
+      logger.error('Failed to load practices for owner', 'DASHBOARD', e instanceof Error ? e : undefined);
     } finally {
       loadingPractices.value = false;
     }

@@ -1,6 +1,7 @@
 import { createI18n } from 'vue-i18n';
 import type { SupportedLocale } from '@/types/i18n';
 export type { SupportedLocale } from '@/types/i18n';
+import { logger } from '@/utils/logger';
 
 // Always use lazy loading to avoid require() issues in Vite
 const ENABLE_LAZY_LOADING = true;
@@ -27,7 +28,7 @@ const missingHandler = (
   _type: string
 ) => {
   if (isDevelopment) {
-    console.warn(`[i18n:missing] ${locale}:${key}`);
+    logger.warn(`[i18n:missing] ${locale}:${key}`, 'I18N');
     return key; // show key in dev
   }
   return '';
@@ -71,7 +72,7 @@ export const loadLanguageAsync = async (
       // Lazy loaded translations
     }
   } catch (error) {
-    console.error(`❌ [i18n] Failed to load ${locale} translations:`, error);
+    logger.error(`Failed to load ${locale} translations`, 'I18N', error instanceof Error ? error : undefined);
     throw error;
   }
 };
@@ -86,7 +87,7 @@ if (ENABLE_LAZY_LOADING) {
       }
     })
     .catch(error => {
-      console.error('❌ [i18n] Failed to load initial translations:', error);
+      logger.error('Failed to load initial translations', 'I18N', error instanceof Error ? error : undefined);
     });
 }
 
@@ -137,7 +138,7 @@ export const logTranslationStats = () => {
   }
 
   const locales: SupportedLocale[] = ['nl'];
-  console.group('🌐 Translation Coverage Statistics');
+  logger.info('Translation Coverage Statistics', 'I18N');
 
   locales.forEach(locale => {
     if (ENABLE_LAZY_LOADING) {
@@ -147,8 +148,6 @@ export const logTranslationStats = () => {
       // Count keys for status
     }
   });
-
-  console.groupEnd();
 };
 
 // Preload all languages (useful for offline apps)
@@ -167,7 +166,7 @@ export const preloadAllLanguages = async (): Promise<void> => {
       // All languages preloaded successfully
     }
   } catch (error) {
-    console.error('❌ [i18n] Failed to preload all languages:', error);
+    logger.error('Failed to preload all languages', 'I18N', error instanceof Error ? error : undefined);
     throw error;
   }
 };

@@ -289,6 +289,7 @@
   import PageLayout from 'src/components/PageLayout.vue';
   import PageTitle from 'src/components/PageTitle.vue';
   import { BaseCard, InteractiveCard, AlertCard } from 'src/components/cards';
+  import { logger } from '@/utils/logger';
 
   // Lazy loaded components
   const MobileCountingInterface = defineAsyncComponent(
@@ -422,7 +423,7 @@
         await loadCountingEntries();
       }
     } catch (error) {
-      console.error('Error loading session:', error);
+      logger.error('Error loading session', 'COUNTING_SESSION', error instanceof Error ? error : undefined);
       loadError.value = true;
     }
   };
@@ -435,7 +436,7 @@
         .entries as CountingEntryDTO[];
       entriesError.value = false;
     } catch (error) {
-      console.error('Error loading counting entries:', error);
+      logger.error('Error loading counting entries', 'COUNTING_SESSION', error instanceof Error ? error : undefined);
       entriesError.value = true;
     } finally {
       entriesLoading.value = false;
@@ -464,7 +465,7 @@
 
         await loadSession();
       } catch (error) {
-        console.error('Error completing session:', error);
+        logger.error('Error completing session', 'COUNTING_SESSION', error instanceof Error ? error : undefined);
         $q.notify({
           type: 'negative',
           message: t('counting.completeFailed'),
@@ -524,7 +525,7 @@
 
         await loadSession();
       } catch (error) {
-        console.error('Error approving session:', error);
+        logger.error('Error approving session', 'COUNTING_SESSION', error instanceof Error ? error : undefined);
         $q.notify({
           type: 'negative',
           message: t('counting.approveFailed'),
