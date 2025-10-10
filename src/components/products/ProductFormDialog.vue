@@ -280,11 +280,13 @@
         brand: props.product.brand || '',
         unit: props.product.unit || 'stuk',
         price: props.product.price || 0,
+        // boundary: currency not in ProductWithStock type
         currency: (props.product as any).currency || 'EUR',
         barcode: props.product.barcode || '',
         active: props.product.active !== false,
         requires_batch_tracking: props.product.requires_batch_tracking || false,
-        gtin: (props.product as any).gtin || '',
+        gtin: props.product.gtin || '',
+        // boundary: accessing snake_case Supabase fields
         gpc_brick_code: (props.product as any).gpc_brick_code || '',
         country_of_origin: (props.product as any).country_of_origin || '',
         product_lifecycle_status:
@@ -331,11 +333,13 @@
 
       let result;
       if (isEdit.value && props.product) {
+        // boundary: productService expects specific product insert/update types
         result = await productService.update(
           props.product.id,
           productData as any
         );
       } else {
+        // boundary: productService expects specific product insert/update types
         result = await productService.create(productData as any);
       }
 

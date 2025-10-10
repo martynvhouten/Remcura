@@ -386,6 +386,7 @@
   };
 
   const handleFilterReset = (event: FilterResetEvent) => {
+    // boundary: preset filters have more specific shape than FilterValues
     filterValues.value = (inventoryFilterPreset.defaultFilters || {}) as any;
   };
 
@@ -521,7 +522,7 @@
   ]);
 
   // Helper functions
-  const getQuantityColor = (stockLevel: any): string => {
+  const getQuantityColor = (stockLevel: StockLevelRow): string => {
     const quantity = stockLevel.current_quantity || 0;
     const minimum = stockLevel.minimum_quantity || 0;
 
@@ -530,7 +531,7 @@
     return 'positive';
   };
 
-  const getQuantityTextColor = (stockLevel: any): string => {
+  const getQuantityTextColor = (stockLevel: StockLevelRow): string => {
     const color = getQuantityColor(stockLevel);
     return color === 'warning' ? 'black' : 'white';
   };
@@ -591,6 +592,7 @@
 
       if (error) throw error;
 
+      // boundary: Supabase query results may have extra JOIN fields beyond StockLevelRow
       stockLevels.value = (data || []).map((level: any) => ({
         id: level.id,
         product_id: level.product_id,
@@ -611,6 +613,7 @@
       await updateLastSync();
       errorState.value = { visible: false, message: '' };
     } catch (error: any) {
+      // boundary: external error types vary
       ServiceErrorHandler.handle(
         error,
         {
@@ -664,7 +667,7 @@
     });
   };
 
-  const adjustStock = (stockLevel: any) => {
+  const adjustStock = (stockLevel: StockLevelRow) => {
     selectedStockLevel.value = stockLevel;
     adjustmentType.value = 'add';
     adjustmentQuantity.value = null;
@@ -672,14 +675,14 @@
     showAdjustDialog.value = true;
   };
 
-  const viewHistory = (stockLevel: any) => {
+  const viewHistory = (stockLevel: StockLevelRow) => {
     $q.notify({
       type: 'info',
       message: t('inventory.historyNotImplemented'),
     });
   };
 
-  const countStock = (stockLevel: any) => {
+  const countStock = (stockLevel: StockLevelRow) => {
     $q.notify({
       type: 'info',
       message: t('inventory.countingNotImplemented'),
@@ -693,7 +696,7 @@
 
   const performAdjustment = async () => {
     if (!selectedStockLevel.value || !adjustmentQuantity.value) return;
-    
+
     // Store reference to avoid non-null assertions
     const stockLevel = selectedStockLevel.value;
     const practiceId = authStore.clinicId;
@@ -723,9 +726,7 @@
       // Demo fallback: update local state only, no persistence
       if (!practiceId) {
         // Update local list to reflect change
-        const idx = stockLevels.value.findIndex(
-          s => s.id === stockLevel.id
-        );
+        const idx = stockLevels.value.findIndex(s => s.id === stockLevel.id);
         if (idx !== -1 && stockLevels.value[idx]) {
           const updated = {
             ...stockLevels.value[idx],
@@ -774,6 +775,7 @@
           product_id: stockLevel.product_id,
           quantity_change: delta,
           movement_type: 'adjustment',
+          // boundary: RPC procedure expects specific enum type for reason_code
           reason_code: 'manual_adjustment' as any,
           notes: adjustmentReason.value || '',
         };
@@ -784,6 +786,7 @@
       closeAdjustDialog();
       await loadStockLevels();
     } catch (error: any) {
+      // boundary: external error types vary
       ServiceErrorHandler.handle(
         error,
         {
@@ -871,6 +874,7 @@
 
     // Initialize filter values with defaults
     if (inventoryFilterPreset.defaultFilters) {
+      // boundary: preset filters have more specific shape than FilterValues
       filterValues.value = inventoryFilterPreset.defaultFilters as any;
     }
   });
@@ -964,6 +968,27 @@
   // DARK MODE SUPPORT
   // ===================================================================
 
+  // Adjustment dialog styles
+  .adjustment-product-info {
+    padding: var(--space-4);
+    background: var(--neutral-50);
+    border-radius: var(--radius-lg);
+    margin-bottom: var(--space-4);
+
+    .product-name {
+      font-size: var(--text-base);
+      font-weight: var(--font-weight-semibold);
+      color: var(--neutral-900);
+      margin-bottom: var(--space-1);
+    }
+
+    .current-stock {
+      font-size: var(--text-sm);
+      color: var(--neutral-600);
+    }
+  }
+
+  // Dark mode adjustments - merged duplicate selectors
   body.body--dark {
     .stats-cards-container {
       .kpi-content {
@@ -997,30 +1022,7 @@
         color: var(--text-secondary);
       }
     }
-  }
 
-  // Adjustment dialog styles
-  .adjustment-product-info {
-    padding: var(--space-4);
-    background: var(--neutral-50);
-    border-radius: var(--radius-lg);
-    margin-bottom: var(--space-4);
-
-    .product-name {
-      font-size: var(--text-base);
-      font-weight: var(--font-weight-semibold);
-      color: var(--neutral-900);
-      margin-bottom: var(--space-1);
-    }
-
-    .current-stock {
-      font-size: var(--text-sm);
-      color: var(--neutral-600);
-    }
-  }
-
-  // Dark mode adjustments
-  body.body--dark {
     .adjustment-product-info {
       background: var(--neutral-800);
 
