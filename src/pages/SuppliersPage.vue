@@ -546,10 +546,11 @@
   });
 
   // Integration config separate object
+  // boundary: flexible integration config shape varies by integration type
   const integrationConfig = ref<any>({});
 
   // Data
-  const suppliers = ref<any[]>([]);
+  const suppliers = ref<Supplier[]>([]);
 
   // Integration type options
   const integrationTypeOptions = computed(() => [
@@ -648,7 +649,10 @@
       statusFilter !== ''
     ) {
       const isActive = Boolean(statusFilter);
-      filtered = filtered.filter(supplier => supplier.active === isActive);
+      // boundary: Supabase generated types missing active field
+      filtered = filtered.filter(
+        supplier => (supplier as any).active === isActive
+      );
     }
 
     // Apply integration type filter
@@ -656,9 +660,11 @@
     if (integrationType) {
       filtered = filtered.filter(supplier => {
         if (integrationType === 'manual') {
-          return !supplier.magento_vendor_id;
+          // boundary: Supabase generated types missing magento_vendor_id field
+          return !(supplier as any).magento_vendor_id;
         } else if (integrationType === 'magento') {
-          return supplier.magento_vendor_id;
+          // boundary: Supabase generated types missing magento_vendor_id field
+          return (supplier as any).magento_vendor_id;
         } else if (integrationType === 'api') {
           // Add logic for API integration when available
           return false;
@@ -811,6 +817,7 @@
 
   const editSupplier = (supplier: Supplier) => {
     editingSupplier.value = supplier;
+    // boundary: form shape differs from Supplier table type
     supplierForm.value = { ...supplier } as any;
     integrationConfig.value = supplier.integration_config || {};
     showDialog.value = true;
@@ -937,6 +944,7 @@
 
   const editSupplierIntegration = () => {
     editingSupplier.value = selectedSupplier.value;
+    // boundary: form shape differs from Supplier table type
     supplierForm.value = { ...selectedSupplier.value } as any;
     showDialog.value = true;
     closeIntegrationDialog();

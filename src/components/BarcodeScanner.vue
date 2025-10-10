@@ -284,7 +284,7 @@
   const validateGTINCheckDigit = (gtin: string): boolean => {
     const digits = gtin.split('').map(Number);
     const checkDigit = digits.pop();
-    
+
     if (checkDigit === undefined) {
       return false;
     }
@@ -307,6 +307,7 @@
     try {
       // Check if BarcodeDetector is supported
       if ('BarcodeDetector' in window) {
+        // boundary: experimental Barcode Detection API not in standard DOM types
         const BarcodeDetectorClass = (window as any).BarcodeDetector;
         const formats = await BarcodeDetectorClass?.getSupportedFormats();
         if (formats.includes('ean_13') || formats.includes('code_128')) {
@@ -339,6 +340,7 @@
       const videoTrack = stream.getVideoTracks()[0];
       if (videoTrack) {
         const capabilities = videoTrack.getCapabilities();
+        // boundary: torch capability not in standard MediaTrackCapabilities type
         hasFlash.value = !!(capabilities as any).torch;
       }
 
@@ -353,6 +355,7 @@
         startScanning();
       }
     } catch (err: any) {
+      // boundary: external camera/media errors have inconsistent types
       console.error('Camera initialization failed:', err);
       error.value =
         err.name === 'NotAllowedError'
@@ -433,7 +436,7 @@
         if (!videoElement.value || !barcodeDetector) {
           return;
         }
-        
+
         const bitmap = await createImageBitmap(videoElement.value);
         const barcodes = await barcodeDetector.detect(bitmap);
 
@@ -509,6 +512,7 @@
       const videoTrack = currentStream.value.getVideoTracks()[0];
       if (videoTrack) {
         await videoTrack.applyConstraints({
+          // boundary: torch constraint not in standard MediaTrackConstraints type
           advanced: [{ torch: !flashEnabled.value } as any],
         });
         flashEnabled.value = !flashEnabled.value;
@@ -646,10 +650,7 @@
 
   .scanning-overlay {
     position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
+    inset: 0;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -661,15 +662,12 @@
     position: relative;
     width: 280px;
     height: 280px;
-    border: 2px solid rgba(255, 255, 255, 0.3);
+    border: 2px solid rgb(255 255 255 / 30%);
     border-radius: 12px;
 
     .scan-corners {
       position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
+      inset: 0;
 
       .corner {
         position: absolute;
@@ -682,7 +680,7 @@
           left: -3px;
           border-right: none;
           border-bottom: none;
-          border-radius: 12px 0 0 0;
+          border-radius: 12px 0 0;
         }
 
         &.corner-tr {
@@ -706,7 +704,7 @@
           right: -3px;
           border-left: none;
           border-top: none;
-          border-radius: 0 0 12px 0;
+          border-radius: 0 0 12px;
         }
       }
     }
@@ -732,10 +730,12 @@
       top: 0;
       opacity: 1;
     }
+
     50% {
       top: calc(100% - 2px);
       opacity: 0.8;
     }
+
     100% {
       top: 0;
       opacity: 1;
@@ -746,7 +746,7 @@
     margin-top: 2rem;
     text-align: center;
     color: white;
-    background: rgba(0, 0, 0, 0.7);
+    background: rgb(0 0 0 / 70%);
     padding: 1rem 1.5rem;
     border-radius: 8px;
     backdrop-filter: blur(10px);
@@ -766,13 +766,13 @@
     .result-chip {
       font-size: 1.1rem;
       padding: 0.5rem 1rem;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+      box-shadow: 0 4px 12px rgb(0 0 0 / 30%);
     }
   }
 
   .manual-input-section {
     padding: 1rem;
-    background: rgba(255, 255, 255, 0.05);
+    background: rgb(255 255 255 / 5%);
     backdrop-filter: blur(10px);
 
     .manual-input-expander {
@@ -786,7 +786,7 @@
   }
 
   .scanner-footer {
-    background: rgba(0, 0, 0, 0.8);
+    background: rgb(0 0 0 / 80%);
     backdrop-filter: blur(10px);
     padding: 1rem;
     color: white;
@@ -794,7 +794,7 @@
   }
 
   // Mobile optimizations
-  @media (max-width: 768px) {
+  @media (width <= 768px) {
     .scan-frame {
       width: 240px;
       height: 240px;

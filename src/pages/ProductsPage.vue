@@ -245,6 +245,7 @@
     />
 
     <!-- Shopping Cart Dialog -->
+    <!-- boundary: cart as any - external component expects different cart shape -->
     <ShoppingCartDialog
       v-model="showCartDialog"
       :cart-items="cart as any"
@@ -256,6 +257,7 @@
     />
 
     <!-- Order List Dialog -->
+    <!-- boundary: as any casts - external component type mismatches -->
     <OrderListDialog
       v-model="showOrderListDialog"
       :order-lists="orderLists"
@@ -284,6 +286,7 @@
     />
 
     <!-- Product Form Dialog -->
+    <!-- boundary: product as any - external component prop type mismatch -->
     <ProductFormDialog
       v-model="showProductFormDialog"
       :product="selectedProductForEdit as any"
@@ -349,6 +352,10 @@
     FilterChangeEvent,
     FilterResetEvent,
   } from '@/types/filters';
+  import type {
+    TablePagination,
+    TableFilters,
+  } from 'src/composables/useSmartTable';
 
   const { t, locale } = useI18n();
   const $q = useQuasar();
@@ -407,7 +414,10 @@
     virtualizationThreshold: 5000, // Switch to virtualization at 5000 products
     debounceMs: 300,
     itemHeight: 60,
-    serverSideLoader: async (pagination: any, filters: any) => {
+    serverSideLoader: async (
+      pagination: TablePagination,
+      filters: TableFilters
+    ) => {
       // Server-side loading for large datasets
       const practiceId = authStore.clinicId;
       if (!practiceId) return { data: [], totalCount: 0 };
@@ -757,6 +767,7 @@
     });
   };
 
+  // boundary: external component passes more specific ProductFilter type
   const handleAdvancedSearch = (criteria: any) => {
     // Apply advanced search criteria to filters
     Object.assign(filters, criteria);
@@ -772,7 +783,7 @@
     });
   };
 
-  const handleSearchPreview = (criteria: any) => {
+  const handleSearchPreview = (criteria: FilterValues) => {
     // For preview, we'll simulate the search without actually applying filters
     const mockCount = Math.floor(Math.random() * products.value.length);
     searchResultsCount.value = mockCount;
@@ -824,6 +835,7 @@
     }
   };
 
+  // boundary: external component returns different product shape
   const onProductSaved = async (product: any) => {
     showProductFormDialog.value = false;
     selectedProductForEdit.value = null;
@@ -934,7 +946,7 @@
   }
 
   // Mobile responsiveness
-  @media (max-width: 768px) {
+  @media (width <= 768px) {
     .products-page {
       .products-table-container {
         overflow-x: auto;
