@@ -51,15 +51,16 @@ export const useSuppliersStore = defineStore('suppliers', () => {
   const loading = ref(false);
   const lastSyncAt = ref<Date | null>(null);
 
-  const activeSuppliers = computed<SupplierView[]>(() =>
+  // boundary: Vue computed + deeply nested Supabase types cause type instantiation depth errors
+  const activeSuppliers = computed(() =>
     suppliers.value.filter((supplier: any) => supplier.is_active)
   );
 
-  const suppliersWithSyncEnabled = computed<SupplierView[]>(() =>
+  const suppliersWithSyncEnabled = computed(() =>
     suppliers.value.filter((supplier: any) => supplier.sync_enabled)
   );
 
-  const getSupplierById = computed<(id: string) => SupplierView | undefined>(
+  const getSupplierById = computed(
     () => (id: string) => suppliers.value.find((supplier: any) => supplier.id === id)
   );
 
