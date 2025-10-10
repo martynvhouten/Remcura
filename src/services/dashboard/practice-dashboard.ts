@@ -2,7 +2,7 @@ import { supabase } from '../supabase';
 import { dashboardLogger } from '@/utils/logger';
 import { t } from '@/utils/i18n-service';
 import { ServiceErrorHandler } from '@/utils/service-error-handler';
-import { roleDashboardConfig } from './role-config';
+import { roleDashboardConfig, type WidgetConfig } from './role-config';
 import type { UserRole } from '@/types/permissions';
 // Removed unused type imports: AnalyticsStockLevelDTO, StockLevelView
 
@@ -10,6 +10,7 @@ export interface PracticeWidget {
   id: string;
   title: string;
   type: 'metric' | 'chart' | 'list' | 'alert' | 'table';
+  // boundary: flexible data shape for different widget types
   data: Record<string, any>;
   size: 'small' | 'medium' | 'large';
   position: number;
@@ -213,6 +214,7 @@ class PracticeDashboardService {
 
       const totalValue =
         inventoryValue?.reduce((total, item) => {
+          // boundary: Supabase JOIN result types
           const price = (item.products as any)?.price || 0;
           return total + (item.current_quantity ?? 0) * price;
         }, 0) || 0;
@@ -299,7 +301,7 @@ class PracticeDashboardService {
     widgetId: string,
     practiceId: string,
     position: number,
-    widgetConfig?: any
+    widgetConfig?: WidgetConfig
   ): Promise<PracticeWidget | null> {
     const baseWidget = {
       id: widgetId,
@@ -624,6 +626,7 @@ class PracticeDashboardService {
       .order('urgency_level', { ascending: false })
       .limit(10);
 
+    // boundary: Supabase JOIN result types
     return {
       items:
         data?.map(item => ({
@@ -657,6 +660,7 @@ class PracticeDashboardService {
 
     return {
       headers: ['Name', 'Supplier', 'Items', 'Value', 'Status', 'Created'],
+      // boundary: Supabase JOIN result types
       rows:
         data?.map(item => [
           item.name,
@@ -688,6 +692,7 @@ class PracticeDashboardService {
       .order('delivery_expected', { ascending: true })
       .limit(10);
 
+    // boundary: Supabase JOIN result types
     return {
       items:
         data?.map(item => ({
@@ -836,6 +841,7 @@ class PracticeDashboardService {
       );
 
     const categoryTotals: Record<string, number> = {};
+    // boundary: Supabase JOIN result types
     data?.forEach(batch => {
       const category = (batch.products as any).category || 'Unknown';
       categoryTotals[category] =
@@ -908,6 +914,7 @@ class PracticeDashboardService {
     const categoryValues: Record<string, number> = {};
     let totalProducts = 0;
 
+    // boundary: Supabase JOIN result types
     data?.forEach(item => {
       const price = Number((item.products as any).price || 0);
       const quantity = Number(item.current_quantity || 0);
@@ -995,6 +1002,7 @@ class PracticeDashboardService {
         'Payment Terms',
         'Last Sync',
       ],
+      // boundary: Supabase JOIN result types
       rows:
         data?.map(supplier => [
           supplier.name,
@@ -1032,6 +1040,7 @@ class PracticeDashboardService {
       { total_days: number; count: number }
     > = {};
 
+    // boundary: Supabase JOIN result types
     data?.forEach(batch => {
       if (!batch.created_at || !batch.received_date) return;
       const category = (batch.products as any).category || 'Unknown';
@@ -1082,6 +1091,7 @@ class PracticeDashboardService {
       .order('completed_at', { ascending: false })
       .limit(10);
 
+    // boundary: Supabase JOIN result types
     return {
       items:
         data?.map(session => ({
@@ -1222,6 +1232,7 @@ class PracticeDashboardService {
       .order('created_at', { ascending: false })
       .limit(10);
 
+    // boundary: Supabase JOIN result types
     return {
       items:
         data?.map(movement => ({
@@ -1247,6 +1258,7 @@ class PracticeDashboardService {
       .eq('practice_id', practiceId);
 
     const locationTotals: Record<string, number> = {};
+    // boundary: Supabase JOIN result types
     data?.forEach(item => {
       const location = (item.practice_locations as any).name;
       locationTotals[location] =
