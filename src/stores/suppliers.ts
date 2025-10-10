@@ -93,7 +93,8 @@ export const useSuppliersStore = defineStore('suppliers', () => {
 
       if (error) throw error;
 
-      suppliers.value = (data ?? []).map(row =>
+      // boundary: Supabase deeply nested types cause type instantiation depth errors
+      suppliers.value = (data ?? []).map((row: any) =>
         mapSupplierRowToView(row)
       );
       lastSyncAt.value = new Date();
@@ -132,8 +133,9 @@ export const useSuppliersStore = defineStore('suppliers', () => {
         throw new Error('Failed to create supplier');
       }
 
-      const newSupplier = mapSupplierRowToView(data);
-      suppliers.value.push(newSupplier);
+      // boundary: Supabase types
+      const newSupplier = mapSupplierRowToView(data as any);
+      (suppliers.value as any).push(newSupplier);
       return newSupplier;
     } catch (error) {
       log.error('Error creating supplier', {
@@ -160,9 +162,10 @@ export const useSuppliersStore = defineStore('suppliers', () => {
       }
 
       const index = suppliers.value.findIndex(s => s.id === id);
-      const updatedSupplier = mapSupplierRowToView(data);
+      // boundary: Supabase types
+      const updatedSupplier = mapSupplierRowToView(data as any);
       if (index >= 0) {
-        suppliers.value[index] = updatedSupplier;
+        (suppliers.value as any)[index] = updatedSupplier;
       }
 
       return updatedSupplier;
@@ -185,7 +188,8 @@ export const useSuppliersStore = defineStore('suppliers', () => {
 
       if (error) throw error;
 
-      suppliers.value = suppliers.value.filter(s => s.id !== id);
+      // boundary: Supabase types
+      (suppliers.value as any) = suppliers.value.filter((s: any) => s.id !== id);
     } catch (error) {
       log.error('Error deleting supplier', {
         error: error instanceof Error ? error.message : String(error),
