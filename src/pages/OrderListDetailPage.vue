@@ -48,9 +48,7 @@
                 >
                 <span class="meta-separator">•</span>
                 <span class="meta-text"
-                  >€{{
-                    formatCurrency((orderList as any)?.total_value || 0)
-                  }}</span
+                  >€{{ formatCurrency(orderList?.total_cost || 0) }}</span
                 >
               </div>
             </div>
@@ -426,6 +424,7 @@
   import SmartTable from '@/components/tables/SmartTable.vue';
   import FilterPanel from '@/components/filters/FilterPanel.vue';
   import type { OrderListWithItems } from '@/types/stores';
+  import type { OrderListItemDTO } from '@/types/inventory';
   import type {
     FilterValues,
     FilterChangeEvent,
@@ -448,12 +447,12 @@
   const processingGlobalOrder = ref(false);
   const error = ref<string | null>(null);
   const orderList = ref<OrderListWithItems | null>(null);
-  const orderListItems = ref<any[]>([]);
+  const orderListItems = ref<OrderListItemDTO[]>([]);
   const showAddProductDialog = ref(false);
   const confirmPlaceAll = ref(false);
-  const selectedProduct = ref<any>(null);
+  const selectedProduct = ref<OrderListItemDTO | null>(null);
   const newItemQuantity = ref(1);
-  const filteredProducts = ref<any[]>([]);
+  const filteredProducts = ref<any[]>([]); // boundary: ProductsStore products structure
 
   // Filter state
   const filterValues = ref<FilterValues>({});
@@ -487,7 +486,7 @@
     {
       name: 'total_price',
       label: 'Totaal',
-      field: (row: any) =>
+      field: (row: OrderListItemDTO) =>
         (row.suggested_quantity || 0) * (row.unit_price || 0),
       align: 'right' as const,
       sortable: true,
@@ -496,7 +495,9 @@
     {
       name: 'supplier',
       label: 'Leverancier',
-      field: (row: any) => row.supplier_product?.supplier?.name || 'Onbekend',
+      // boundary: Supabase types - supplier_product doesn't have supplier relation in generated types
+      field: (row: OrderListItemDTO) =>
+        (row.supplier_product as any)?.supplier?.name || 'Onbekend',
       align: 'left' as const,
       sortable: true,
       style: 'width: 150px',
@@ -559,10 +560,11 @@
       const search = filterValues.value.search.toLowerCase();
       filtered = filtered.filter(
         item =>
-          (item.product_name || item.product?.name || '')
+          // boundary: JOIN query results may have extra fields
+          ((item as any).product_name || item.product?.name || '')
             .toLowerCase()
             .includes(search) ||
-          (item.product_sku || item.product?.sku || '')
+          ((item as any).product_sku || item.product?.sku || '')
             .toLowerCase()
             .includes(search)
       );
@@ -571,8 +573,10 @@
     // Supplier filter
     if (filterValues.value.supplier) {
       filtered = filtered.filter(
+        // boundary: Supabase types - supplier_product doesn't have supplier relation in generated types
         item =>
-          item.supplier_product?.supplier?.id === filterValues.value.supplier
+          (item.supplier_product as any)?.supplier?.id ===
+          filterValues.value.supplier
       );
     }
 
@@ -723,7 +727,8 @@
     addingProduct.value = true;
     try {
       // Find the first supplier product for this product
-      const supplierProduct = selectedProduct.value.supplier_products?.[0];
+      // boundary: ProductsStore product structure
+      const supplierProduct = (selectedProduct.value as any).supplier_product;
       if (!supplierProduct) {
         throw new Error('Geen leverancier gevonden voor dit product');
       }
@@ -758,10 +763,10 @@
     }
   };
 
-  const updateItemQuantity = async (item: any) => {
+  const updateItemQuantity = async (item: OrderListItemDTO) => {
     try {
       await orderListsStore.updateOrderListItem(item.id, {
-        requested_quantity: item.suggested_quantity || item.requested_quantity,
+        requested_quantity: item.suggested_quantity,
       });
 
       $q.notify({
@@ -777,12 +782,12 @@
     }
   };
 
-  const incrementQuantity = (item: any) => {
+  const incrementQuantity = (item: OrderListItemDTO) => {
     item.suggested_quantity = (item.suggested_quantity || 0) + 1;
     updateItemQuantity(item);
   };
 
-  const decrementQuantity = (item: any) => {
+  const decrementQuantity = (item: OrderListItemDTO) => {
     if (item.suggested_quantity > 0) {
       item.suggested_quantity = item.suggested_quantity - 1;
       updateItemQuantity(item);
@@ -797,7 +802,7 @@
       });
       return;
     }
-    
+
     try {
       await orderListsStore.duplicateOrderList(
         orderList.value.id,
@@ -846,7 +851,7 @@
       });
       return;
     }
-    
+
     const listId = orderList.value.id;
     $q.dialog({
       title: 'Bestellijst verwijderen',
@@ -878,18 +883,19 @@
     return 'primary';
   };
 
-  const editItem = (item: any) => {
+  const editItem = (item: OrderListItemDTO) => {
     $q.notify({
       type: 'info',
       message: 'Bewerken functionaliteit komt binnenkort',
     });
   };
 
-  const removeItem = async (item: any) => {
+  const removeItem = async (item: OrderListItemDTO) => {
     $q.dialog({
       title: 'Product verwijderen',
       message: `Weet je zeker dat je "${
-        item.product_name || item.product?.name
+        // boundary: JOIN query results may have extra fields
+        (item as any).product_name || item.product?.name
       }" wilt verwijderen?`,
       cancel: true,
       persistent: true,
@@ -924,6 +930,7 @@
   /* Table Header Styling */
   .table-header {
     padding: 0;
+    margin-bottom: 8px;
   }
 
   .table-info {
@@ -943,14 +950,11 @@
     margin-bottom: 16px;
   }
 
-  .table-header {
-    margin-bottom: 8px;
-  }
-
   /* Ensure medical-table styling is applied */
   .medical-table {
     margin-top: 0;
   }
+
   /* Order list detail page styles */
   .order-detail-page {
     min-height: 100vh;
@@ -1026,8 +1030,8 @@
     border-radius: 16px;
     background: linear-gradient(
       135deg,
-      rgba(30, 58, 138, 0.08),
-      rgba(30, 58, 138, 0.16)
+      rgb(30 58 138 / 8%),
+      rgb(30 58 138 / 16%)
     );
     display: flex;
     align-items: center;
@@ -1044,14 +1048,14 @@
     font-size: 28px;
     font-weight: 700;
     color: var(--text-primary);
-    margin: 0 0 8px 0;
+    margin: 0 0 8px;
     line-height: 1.2;
   }
 
   .page-subtitle {
     font-size: 16px;
     color: var(--text-secondary);
-    margin: 0 0 12px 0;
+    margin: 0 0 12px;
     line-height: 1.4;
   }
 
@@ -1196,7 +1200,7 @@
     background: linear-gradient(
       135deg,
       var(--neutral-50) 0%,
-      rgba(248, 250, 252, 0.5) 100%
+      rgb(248 250 252 / 50%) 100%
     );
   }
 
@@ -1262,13 +1266,13 @@
     font-size: 18px;
     font-weight: 600;
     color: var(--text-primary);
-    margin: 0 0 8px 0;
+    margin: 0 0 8px;
   }
 
   .empty-state p {
     font-size: 14px;
     color: var(--text-secondary);
-    margin: 0 0 24px 0;
+    margin: 0 0 24px;
   }
 
   /* Products Grid */
@@ -1331,9 +1335,9 @@
     font-size: 14px;
     font-weight: 600;
     color: var(--text-primary);
-    margin: 0 0 4px 0;
+    margin: 0 0 4px;
     line-height: 1.3;
-    word-break: break-word;
+    overflow-wrap: break-word;
   }
 
   .product-sku {
@@ -1427,7 +1431,7 @@
   }
 
   /* Responsive Design */
-  @media (max-width: 768px) {
+  @media (width <= 768px) {
     .header-content {
       padding: 16px 20px;
     }

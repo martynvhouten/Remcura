@@ -164,6 +164,7 @@
 
     <!-- Upgrade To Member Dialog -->
     <UpgradeToMemberDialog
+      v-if="currentInvite && currentPractice"
       v-model="showUpgradeDialog"
       :invite="currentInvite"
       :practice="currentPractice"
@@ -176,10 +177,19 @@
 <script setup lang="ts">
   import { ref, computed } from 'vue';
   import { useI18n } from 'vue-i18n';
-  import { useQuasar } from 'quasar';
+  import { useQuasar, type QNotifyOptions } from 'quasar';
   import { useRouter } from 'vue-router';
-  import { PermanentUserService } from 'src/services/permanentUsers';
-  import { MagicInviteService } from 'src/services/magicInvites';
+  import {
+    PermanentUserService,
+    type LoginResult,
+    type CreatePermanentUserRequest,
+  } from 'src/services/permanentUsers';
+  import {
+    MagicInviteService,
+    type MagicInvite,
+  } from 'src/services/magicInvites';
+  import { supabase } from '@/boot/supabase';
+  import type { Tables } from '@/types/supabase.generated';
   import UpgradeToMemberDialog from 'src/components/auth/UpgradeToMemberDialog.vue';
 
   // Composables
@@ -196,8 +206,8 @@
 
   // Upgrade Flow State
   const showUpgradeDialog = ref(false);
-  const currentInvite = ref<any>(null);
-  const currentPractice = ref<any>(null);
+  const currentInvite = ref<MagicInvite | null>(null);
+  const currentPractice = ref<Tables<'practices'> | null>(null);
   const detectedLoginType = ref<'invite' | 'personal' | 'invalid' | null>(null);
 
   // Computed
@@ -290,7 +300,7 @@
   };
 
   // 🚀 Handle Personal Magic Code Login (Existing Team Member)
-  const handlePersonalCodeLogin = async (userData: any) => {
+  const handlePersonalCodeLogin = async (userData: LoginResult) => {
     try {
       const loginResult = await PermanentUserService.validatePersonalMagicCode(
         magicCode.value
@@ -322,7 +332,7 @@
   };
 
   // 📧 Handle Invite Code (Potential Upgrade to Permanent)
-  const handleInviteCode = async (inviteData: any) => {
+  const handleInviteCode = async (inviteData: MagicInvite) => {
     try {
       // Validate the invite code using MagicInviteService
       const validationResult = await MagicInviteService.validateMagicCode(
@@ -362,7 +372,14 @@
       }
 
       // Set current practice and invite data
-      currentPractice.value = (validationResult as any).practices;
+      // Fetch practice details
+      const { data: practice } = await supabase
+        .from('practices')
+        .select('*')
+        .eq('id', validationResult.practice_id)
+        .single();
+
+      currentPractice.value = practice;
       currentInvite.value = validationResult;
 
       // Update last_used_at timestamp and increment usage
@@ -387,7 +404,7 @@
       } else {
         // 👤 REGULAR GUEST ACCESS
         welcomeMessage.value = t('magicJoin.welcomeMessage', {
-          practice: currentPractice.value.name,
+          practice: currentPractice.value?.name || 'Practice',
         });
         showWelcome.value = true;
 
@@ -433,22 +450,37 @@
   };
 
   // 🚀 UPGRADE FLOW HANDLERS
-  const handleUpgradeCompleted = async (upgradeResult: any) => {
+  interface UpgradeResult {
+    name: string;
+    method: string;
+    personalCode: string | null;
+    email: string | null;
+    password?: string;
+  }
+
+  const handleUpgradeCompleted = async (upgradeResult: UpgradeResult) => {
     try {
       $q.loading.show({
         message: t('upgrade.creatingAccount'),
       });
 
+      if (!currentInvite.value) {
+        throw new Error('No invite data available');
+      }
+
       // Create the permanent user account
-      const createRequest: any = {
+      const createRequest: CreatePermanentUserRequest = {
         practice_id: currentInvite.value.practice_id,
         invite_id: currentInvite.value.id,
         full_name: upgradeResult.name,
         role: currentInvite.value.target_role,
         department: currentInvite.value.department,
-        login_method: upgradeResult.method,
-        email: upgradeResult.email,
-        password: upgradeResult.password, // Only if email method
+        login_method: upgradeResult.method as
+          | 'magic_code'
+          | 'email_password'
+          | 'device_remember',
+        email: upgradeResult.email ?? undefined,
+        password: upgradeResult.password,
       };
 
       // Add device_fingerprint only if method is device_remember
@@ -472,7 +504,7 @@
         welcomeMessage.value = successMessage;
         showWelcome.value = true;
 
-        const notifyOptions: any = {
+        const notifyOptions: QNotifyOptions = {
           type: 'positive',
           message: t('upgrade.accountCreated'),
           position: 'top-right',
@@ -510,7 +542,7 @@
     // Continue with the regular guest flow
     if (currentPractice.value) {
       welcomeMessage.value = t('magicJoin.welcomeMessage', {
-        practice: currentPractice.value.name,
+        practice: currentPractice.value.name || 'Practice',
       });
       showWelcome.value = true;
     }
@@ -567,7 +599,7 @@
 
           &.has-code :deep(.q-field__control) {
             border-color: #4caf50;
-            background: rgba(76, 175, 80, 0.05);
+            background: rgb(76 175 80 / 5%);
           }
         }
 
@@ -651,10 +683,40 @@
       }
     }
 
+    .scanner-area {
+      text-align: center;
+      padding: 2rem;
+      color: #666;
+
+      p {
+        margin-top: 1rem;
+      }
+    }
+
+    .welcome-dialog {
+      min-width: 300px;
+      border-radius: 16px;
+
+      .welcome-icon {
+        margin-bottom: 1rem;
+      }
+
+      h3 {
+        margin: 0 0 1rem;
+        color: #1976d2;
+      }
+
+      p {
+        margin: 0 0 2rem;
+        color: #666;
+        line-height: 1.5;
+      }
+    }
+
     .how-it-works-card {
       width: 100%;
       border-radius: 16px;
-      background: rgba(255, 255, 255, 0.7);
+      background: rgb(255 255 255 / 70%);
 
       .how-header {
         display: flex;
@@ -701,39 +763,9 @@
         }
       }
     }
-
-    .scanner-area {
-      text-align: center;
-      padding: 2rem;
-      color: #666;
-
-      p {
-        margin-top: 1rem;
-      }
-    }
-
-    .welcome-dialog {
-      min-width: 300px;
-      border-radius: 16px;
-
-      .welcome-icon {
-        margin-bottom: 1rem;
-      }
-
-      h3 {
-        margin: 0 0 1rem;
-        color: #1976d2;
-      }
-
-      p {
-        margin: 0 0 2rem;
-        color: #666;
-        line-height: 1.5;
-      }
-    }
   }
 
-  @media (max-width: 600px) {
+  @media (width <= 600px) {
     .magic-join-page {
       padding: 0.5rem;
     }
