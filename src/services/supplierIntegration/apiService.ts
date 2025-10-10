@@ -60,6 +60,7 @@ export interface APIOrderPayload {
     currency: string;
   };
   notes?: string;
+  // boundary: flexible external API metadata
   metadata?: Record<string, any>;
 }
 
@@ -159,10 +160,10 @@ export class APIService {
         error_message: response.success ? '' : (response.error ?? ''),
         delivery_expected: order.estimated_delivery_date ?? '',
       } satisfies OrderSendingResult;
-    } catch (error: any) {
+    } catch (error: unknown) {
       orderLogger.error(
         `API order sending failed for ${orderReference}:`,
-        error
+        error instanceof Error ? error : undefined
       );
 
       return {
@@ -340,11 +341,11 @@ export class APIService {
       });
 
       return tokenData.access_token;
-    } catch (error: any) {
-      orderLogger.error('OAuth2 token acquisition failed:', error);
+    } catch (error: unknown) {
+      orderLogger.error('OAuth2 token acquisition failed:', error instanceof Error ? error : undefined);
       throw new Error(
         t('services.supplierIntegration.oauth2AuthenticationFailed', {
-          error: error.message,
+          error: error instanceof Error ? error.message : String(error),
         })
       );
     }
@@ -353,6 +354,7 @@ export class APIService {
   /**
    * Send data to API endpoint
    */
+  // boundary: external API response shape is flexible
   private async sendToAPI(
     config: APIConfig,
     payload: APIOrderPayload,
@@ -408,6 +410,7 @@ export class APIService {
       clearTimeout(timeoutId);
 
       const responseText = await response.text();
+      // boundary: external API response could be JSON or text
       let responseData: any;
 
       try {
@@ -437,8 +440,8 @@ export class APIService {
           body: responseData,
         },
       };
-    } catch (error: any) {
-      if (error.name === 'AbortError') {
+    } catch (error: unknown) {
+      if (error instanceof Error && error.name === 'AbortError') {
         orderLogger.error('API request timed out');
         return {
           success: false,
@@ -446,10 +449,11 @@ export class APIService {
         };
       }
 
-      orderLogger.error(`API sending failed: ${error.message}`);
+      const errorMessage = error instanceof Error ? error.message : String(error);
+      orderLogger.error(`API sending failed: ${errorMessage}`);
       return {
         success: false,
-        error: error.message,
+        error: errorMessage,
       };
     }
   }
@@ -518,6 +522,7 @@ export class APIService {
   /**
    * Flatten object to FormData
    */
+  // boundary: accepts flexible object shapes for API payload flattening
   private flattenObjectToFormData(
     obj: any,
     formData: FormData,
@@ -579,6 +584,7 @@ export class APIService {
   /**
    * Test API connection
    */
+  // boundary: external API response shape is flexible
   async testAPIConnection(
     config: APIConfig
   ): Promise<{ success: boolean; error?: string; response?: any }> {
@@ -604,10 +610,10 @@ export class APIService {
           body: responseText,
         },
       };
-    } catch (error: any) {
+    } catch (error: unknown) {
       return {
         success: false,
-        error: error.message,
+        error: error instanceof Error ? error.message : String(error),
       };
     }
   }
